@@ -1,0 +1,249 @@
+import 'dart:async';
+import 'dart:io';
+import 'dart:io' as io;
+import 'dart:typed_data';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:http_parser/http_parser.dart';
+import 'package:path/path.dart' as p;
+
+
+String urlWithLocallHost="http://192.168.1.11:5000/";
+// String urlWithLocallHost="https://stakeplot.in";
+String url="http://192.168.1.11:5000/api/v1";
+// String url="http://192.168.1.46:5000/api/v1";
+// String urlWithLocallHost2="http://10.0.2.2:5000/api/v1";
+// String url="http://localhost:5000/api/v1";
+// String url="http://10.0.2.2:5000/api/v1";
+// String url="https://stakeplot.in/api/v1";
+// String url="https://stakeplot.in/api/v1";
+// String url="http://localhost:5000/api/v1";
+// String url="http://127.0.0.1:5000";
+
+String valid="Please Enter All Feilds";
+RxString expenses="Loading....".obs;
+RxString aboutUS="".obs;
+RxString avatar="assets/avatar/menp1.svg".obs;
+RxString avatarUser="assets/avatar/menp1.svg".obs;
+
+RxList frdsList=[].obs;
+RxList  frdsListOrigin=[].obs;
+RxBool isBankAccountLink=false.obs;
+RxInt income=0.obs;
+
+
+double maxDC=0;
+double minDC=0;
+
+RxList notificationList = [].obs;
+RxList trasactionsData =[].obs;
+RxList listOfRecentTrasactionsData =[].obs;
+RxList trasactionsHideData =[].obs;
+ RxList trasactionsHistory = [].obs;
+List  lendAmountRemainders =[];
+List<double> trasactionsDataMonthlyCredit =[];
+List<double> trasactionsDataMonthlyDebit =[];
+List<double> trasactionsDataCustomCredit =[];
+List<double> trasactionsDataCustomDebit =[];
+List<String> trasactionsDataCustomLabel =[];
+
+RxBool flagTrasaction =false.obs;
+RxString range = ''.obs;
+List<double> trasactionsDataCreditWeekly =[];
+List<double> trasactionsDataDebitWeekly =[];
+
+RxList trasactionsDataWeekly =[].obs;
+RxList friendRequestList = [].obs;
+RxList messages = [].obs;
+RxList messagesTemp = [].obs;
+RxList roomBills = [].obs;
+RxList questionRoom= [].obs;
+RxList productList= [].obs;
+RxList userPostList= [].obs;
+RxList savedList= [].obs;
+RxList myPostList= [].obs;
+RxList friendsList= [].obs;
+RxList chatList= [].obs;
+RxList chatListOriginal= [].obs;
+RxMap friendsListDetails= {}.obs;
+RxMap chatOfUserList={}.obs;
+RxMap chatOfUserListData={}.obs;
+
+RxBool aboutMe=false.obs;
+RxBool myNotificationBool=false.obs;
+RxBool clickedLinkedBackAccount=false.obs;
+RxBool setBankAccountPassword=false.obs;
+RxBool hideBackAccountPassword=false.obs;
+var coin="Loading....";
+
+bool sizeRoom=false;
+double fontSize=20;
+RxInt budgetLength=0.obs;
+RxInt billLength=0.obs;
+RxInt debtLength=0.obs;
+RxInt paymentLength=0.obs;
+String userAvatar="assets/images2/user.svg";
+RxString userName="Loading...".obs;
+RxString currentId="Loading...".obs;
+RxString Phone="Loading...".obs;
+RxString currency="Loading...".obs;
+RxString score="0".obs;
+RxString email="Loading...".obs;
+String userId=""; 
+RxString splitID="".obs; 
+RxString openTrasactions="Bills".obs;
+RxString targetString="".obs;
+Map<String, dynamic> loginUsersList=Map<String, dynamic>();
+
+List<String> month = [
+  "",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
+];
+int m = DateTime.now().month;
+List targetsData = [];
+List arr = [];
+List scrollAbleList = [].obs;
+List scrollAbleListALl = [].obs;
+RxBool bol = false.obs;
+String tabAmount = "";
+RxInt listIndex=0.obs;
+RxBool reRender = false.obs;
+RxBool reGraph = false.obs;
+RxList likedList = [].obs;
+RxList likedCommentList = [].obs;
+RxList likedProducts = [].obs;
+RxMap<String, int> postCount = <String, int>{}.obs;
+RxMap<String, int> postCommentCount = <String, int>{}.obs;
+RxMap<String, int> supportCount = <String, int>{}.obs;
+List room = [];
+List<String> account = [];
+
+RxBool postInter=false.obs;
+RxBool postDis=false.obs;
+ RxBool acceptReset=false.obs;
+ RxList budgetList=[].obs;
+ RxList debtsList=[].obs;
+ RxList historyListData=[].obs;
+ RxList getTrendingData=[].obs;
+ RxBool hasGetNewNotifications=false.obs;
+
+ class Message {
+  String? text;
+  File? url;  
+  String type;//["image","text","Poll",'post']
+  final bool isMe;
+  var question;
+  String image;
+  var poll;
+  var post;
+  var split;
+  Message({ this.text, required this.isMe,this.url,required this.type,this.question,this.image="",this.poll="",this.post="",this.split=""});
+}
+
+
+String currentPage(context){
+  String modalRoute= ModalRoute.of(context)?.settings.name ?? '';
+  return modalRoute;
+}
+
+void printData(response,[context=""]){
+    //  String data=  response.body;
+
+      print("response");
+      print(response);
+      print(response.statusCode);
+      print(response.body);
+
+    // if(data.contains("JsonWebTokenError"))Navigator.pushNamed(context, '/'); 
+}
+
+
+
+void snackBarCalled(context,String text,[Color colors=Colors.black])
+{
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      duration: Duration(seconds: 2),
+      content: Text(
+        text,
+        style: FontManager().getTextStyle(context,color: Colors.white, fontSize: 15),
+      ),
+      backgroundColor: colors,
+    ));
+}
+
+void snackBarCalledFrds(context,String text,[Color colors=Colors.black])
+{
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      duration: Duration(seconds: 2),
+      action: SnackBarAction(
+              label: 'Click Here',
+              onPressed: () {
+          //        Navigator.push(
+          //   context,
+          //   PageTransition(
+          //     type: PageTransitionType.fade,
+          //     alignment: Alignment.bottomRight,
+          //      duration: Durations.long1,
+          //     child: TribeSearch(),
+          //     isIos: true,
+          //   ),
+          // );
+              },
+            ),
+      content: Row(
+        children: [
+          Text(
+            text,
+            style: FontManager().getTextStyle(context,color: Colors.white, fontSize: 13),
+          ),
+        ],
+      ),
+      backgroundColor: colors,
+    ));
+}
+
+void snackBarAllFeilds(context,[Color colors=Colors.red])
+{
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      duration: Duration(seconds: 2),
+      content: Text(
+        "Please Enter All Feilds...",
+        style: FontManager().getTextStyle(context,color: Colors.white, fontSize: 15),
+      ),
+      backgroundColor: colors,
+    ));
+}
+
+void snackBarAllFeilds2(context,text,[Color colors=Colors.red])
+{
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      duration: Duration(seconds: 2),
+      content: Text(
+        text,
+        style: FontManager().getTextStyle(context,color: Colors.red, fontSize: 15),
+      ),
+      backgroundColor: colors,
+    ));
+}
+
+

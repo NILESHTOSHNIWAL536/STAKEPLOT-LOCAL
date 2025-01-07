@@ -1,0 +1,396 @@
+
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:http/http.dart' as http;
+import 'package:page_transition/page_transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
+
+
+
+void approveBill(context,id,type,notifyId)async
+{
+    // /acceptBill/:id/:accept/:notificationsId
+    String urlPath ="${url}/bill/acceptBill/${id}/${type}/${notifyId}";
+   
+    var responce=await getDataApiCall(urlPath);
+    printData(responce,"");
+    if(getFlagOfResponse(responce))
+    {
+         
+    }
+}
+
+void getRemainders(context)async
+{
+    String urlPath ="${url}/reminders";
+    var responce=await getDataApiCall(urlPath);
+
+    if(getFlagOfResponse(responce))
+    {
+         
+    }
+}
+
+
+void  getNotifications(context)async
+{
+    
+    final SharedPreferences _pref = await SharedPreferences.getInstance();
+    var  accessToken=_pref.getString("accessToken");
+    final response = await http.get(
+    Uri.parse('${url}/user/myNotifications'),
+    // Uri.parse('https://stakeplot.in/api/v1/post/all'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      "Authorization": "$accessToken",
+    },
+  );
+      if(response.statusCode==200  )
+      {
+              
+                  var  his=jsonDecode(response.body);
+                  notificationList.clear();
+                  notificationList.addAll(his['data']);
+                  notificationList.forEach((req){
+                  String type=req['notificationMessage']['type'];
+                  var e=req['notificationMessage'];
+                  if(type=="friendRequest")
+                  {
+                      friendRequestList.add(e['from_id']);
+                  }
+                  });
+              
+            myNotificationBool.value=!myNotificationBool.value;
+            // snackBarCalled(context,"Lend Amount Adde to Dues!",Colors.black);
+      }
+      else{
+      }
+ 
+}
+
+
+
+void  getuserPost(id)async
+{
+    
+    final SharedPreferences _pref = await SharedPreferences.getInstance();
+    var  accessToken=_pref.getString("accessToken");
+    final response = await http.get(
+    // Uri.parse('${url}/post/userDiscussions/${id}'),
+    Uri.parse('${url}/post/myDiscussions'),
+    // Uri.parse('https://stakeplot.in/api/v1/post/feed'),
+    // Uri.parse('https://stakeplot.in/api/v1/post/all'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      "Authorization": "$accessToken",
+    },
+  );
+
+      if(response.statusCode==200)
+      {
+                  var  his=jsonDecode(response.body);
+                  var obj=his['data'];
+              
+
+                   
+                   myPostList.clear();
+                   myPostList.addAll(obj);
+
+
+                     myPostList.forEach((element) {
+                        postCount[element["_id"]]=element['upvotes'];
+                        postCommentCount[element["_id"]]=element['comments'];
+                   });
+      }
+      else{
+          
+      }
+ 
+}
+
+
+
+
+  void getSaved() async {
+    String urlPath ="${url}/post/saved";
+    final SharedPreferences _pref = await SharedPreferences.getInstance();
+    var accessToken = _pref.getString("accessToken");
+    final response = await http.get(
+      Uri.parse(urlPath),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Authorization": "$accessToken",
+      },
+    );
+    
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var his = jsonDecode(response.body);
+      var obj = his['data'];
+     
+      savedList.clear();
+      savedList.addAll(obj);
+        savedList.forEach((element) {
+                        postCount[element["_id"]]=element['upvotes'];
+                         postCommentCount[element["_id"]]=element['comments'];
+                   });
+                  
+    } else {
+    }
+  }
+
+
+
+
+  void  getUserInfomations()async
+{
+    
+    final SharedPreferences _pref = await SharedPreferences.getInstance();
+    var  accessToken=_pref.getString("accessToken");
+    final response = await http.get(
+    Uri.parse('${url}/user/info'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      "Authorization": "$accessToken",
+    },
+  );
+      if(response.statusCode==200)
+      {
+                  var  his=jsonDecode(response.body);
+                  var obj=his['data'];
+
+                    frdsList.clear();
+                    frdsListOrigin.clear();
+                    frdsList.addAll(obj['friendsList']);
+                    frdsListOrigin.addAll(frdsList);
+
+                    aboutMe.value= (obj['aboutMe']=="Hello");
+                    aboutUS.value=obj['aboutMe'];
+
+                  List s=obj['accounts'];
+                  income.value=0;
+                  s.forEach((element){ 
+                         income.value+= int.parse(element['income'].toString());
+                  });
+                    
+                 
+             
+                     var  data=obj;
+                
+                    getuserPost(data['_id']);
+                    getSaved();
+                    currentId.value=data['_id'];
+                    avatar.value=data['avatarType'].toString();
+                    userName.value= data['name'];
+                    email.value= data['email'];
+                    Phone.value= data['phone'];
+                    currency.value= data['currency'];
+                    score.value= data['score'].toString();
+                    coin=data['coins'].toString();
+                    expenses.value=data['expense'].toString();
+                    isBankAccountLink.value=data['isBankAccountLinked'] ?? false;
+           
+                    // savedList.clear();
+                    // savedList.addAll(data['saved'] );
+                    
+                    friendsList.clear();
+                    friendsList.addAll(obj['friendsList']);
+
+                 friendsList.forEach((element)
+                { 
+                    friendsListDetails[element['_id']]={
+                         'name':element['name'],
+                         'avatar':element['avatar'],
+                    };
+                 });
+      }
+      else{
+      }
+}
+
+String getCurrentFormattedDate() {
+  DateTime now = DateTime.now();
+  String formattedDate = DateFormat('yyyy-MM-dd').format(now);
+  return formattedDate;
+}
+
+
+void addLendUserAmount(context,String amount,List members,String name)async{
+    // List nameList=[];
+    // members.forEach((element) {
+    //      nameList.add(
+    //        {
+    //           'member':(element['id']),
+    //           'markAsComplete':false,
+    //        }
+    //      );
+    // }); 
+    
+    final SharedPreferences _pref = await SharedPreferences.getInstance();
+     var  accessToken=_pref.getString("accessToken");
+    //  print('nameList');
+    //  print(nameList);
+
+    final response = await http.post(
+    Uri.parse('${url}/bill'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+       "Authorization": "$accessToken",
+    },
+    body: jsonEncode({
+            "name": name,
+            "amount": amount,
+            "billReceiverId": members[0]['id'],
+            "subcategory":'Lend Money',
+            "Avatar":members[0]['avatar'],
+            "userName":members[0]['name'],
+            'dueDate': getCurrentFormattedDate(),
+       }),
+  );
+      //printData(response,context);
+      if(response.statusCode==200 || response.statusCode==201){
+            final body = json.decode(response.body);
+            snackBarCalled(context,"Lend Amount send to users!",Colors.black);
+            addTransaction(amount, "Lend Bill", name, context, 'cash',true);
+            getUserLend(context);
+          //   Navigator.push(
+          //   context,
+          //   PageTransition(
+          //     type: PageTransitionType.fade,
+          //      duration: Durations.long1,
+          //     child: Home_Screen(),
+          //     isIos: true,
+          //   ),
+          // ); 
+    // }
+      }else{
+           snackBarCalled(context,"can't split error!",Colors.red);
+      }
+        acceptReset.value=false;
+}
+
+
+
+void splitUserAmount(context,String amount,List members,String name)async{
+    List nameList=[];
+    members.forEach((element) {
+         nameList.add(
+           {
+              'member':(element['id']),
+              'markAsComplete':false
+           }
+         );
+    }); 
+
+    final SharedPreferences _pref = await SharedPreferences.getInstance();
+     var  accessToken=_pref.getString("accessToken");
+
+    final response = await http.post(
+    Uri.parse('${url}/split'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+       "Authorization": "$accessToken",
+    },
+    body: jsonEncode({
+        "name": name,
+        "amount": amount,
+        "paymentStatus": nameList,
+        "image":''
+       }),
+  );
+      //printData(response,context);
+      if(response.statusCode==200 || response.statusCode==201){
+            final body = json.decode(response.body);
+           
+            splitID.value=body['id']['_id'];
+            // print("splitID.value");
+            // print(body['id']);
+            // print(splitID.value);
+
+            snackBarCalled(context,"Slit Amount send to users!",Colors.black);
+            addTransaction(amount, "Split Bill", name, context, 'cash',true);
+
+            // addSocketMessage(members);
+          //   Navigator.push(
+          //   context,
+          //   PageTransition(
+          //     type: PageTransitionType.fade,
+          //      duration: Durations.long1,
+          //     child: Home(),
+          //     isIos: true,
+          //   ),
+          // ); 
+    // }
+      }else{
+           snackBarCalled(context,"can't split error!",Colors.red);
+      }
+        acceptReset.value=false;
+
+}
+
+
+
+void aboutuser(context,String about)async{
+    
+    
+    final SharedPreferences _pref = await SharedPreferences.getInstance();
+     var  accessToken=_pref.getString("accessToken");
+
+    final response = await http.patch(
+    Uri.parse('https://stakeplot.in/api/v1/user/updateprofile'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+       "Authorization": "$accessToken",
+    },
+    body: jsonEncode({
+        "aboutMe": about,
+       }),
+  );
+      // printData(response,context);
+      if(response.statusCode==200 || response.statusCode==201){
+          
+            snackBarCalled(context,"Updated users Info!",Colors.black);   
+      }else{
+
+           snackBarCalled(context,"can't edit User Info error!",Colors.red);
+      }
+}
+
+
+void addAccount(context,String account,String money) async {
+   var urlPath = Uri.parse('${url}/user/addAccount');
+  final SharedPreferences _pref = await SharedPreferences.getInstance();
+     var  accessToken=_pref.getString("accessToken");
+
+  final response = await http.post(
+    Uri.parse('${urlPath}'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+       "Authorization": "$accessToken",
+    },
+    body: jsonEncode({
+           'newAccount': account,
+       }),
+  );
+
+
+
+  if (response.statusCode == 200 || response.statusCode==201) {
+    snackBarCalled(context, "Account Added...!");
+    Navigator.pushNamed(context, '/home');
+
+  } else {
+    // //print('Failed to create post: ${response.reasonPhrase}');
+  }
+  
+}
+
+
+
+
+
+
