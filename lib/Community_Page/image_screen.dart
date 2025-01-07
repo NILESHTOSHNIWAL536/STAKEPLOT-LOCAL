@@ -1,0 +1,166 @@
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import './success_post.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
+
+class ImageScreen extends StatefulWidget {
+  final Function(Map<String, dynamic>) onPostCreated;
+  final Map<String, dynamic> userInfo;
+
+  const ImageScreen({
+    Key? key,
+    required this.onPostCreated,
+    required this.userInfo,
+  }) : super(key: key);
+
+  @override
+  State<ImageScreen> createState() => _ImageScreenState();
+}
+
+class _ImageScreenState extends State<ImageScreen> {
+  final TextEditingController textController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
+  bool imageSubmitted = false;
+  File? selectedImage;
+
+  Future<void> _pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        selectedImage = File(image.path);
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return imageSubmitted
+        ? const SuccessPost()
+        : Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              widget.userInfo['profilePic'].toString()),
+                          radius: 24,
+                        ),
+                        const SizedBox(width: 8),
+                        Column(
+                          children: [
+                            Text(widget.userInfo['name'].toString(),
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.normal,
+                                    fontSize: 18,
+                                    color: Colors.black)),
+                            Text('New post',
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.normal,
+                                    fontSize: 12,
+                                    color: Colors.black)),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                GestureDetector(
+                  onTap: _pickImage,
+                  child: Container(
+                    height: 200,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: selectedImage != null
+                        ? Image.file(
+                            selectedImage!,
+                            fit: BoxFit.cover,
+                          )
+                        : const Icon(
+                            Icons.add_photo_alternate,
+                            size: 50,
+                            color: Colors.grey,
+                          ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: titleController,
+                  decoration: InputDecoration(
+                      hintText: 'Enter title',
+                      hintStyle: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.normal,
+                          fontSize: 18,
+                          color: Colors.grey),
+                      border: InputBorder.none),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: textController,
+                  decoration: InputDecoration(
+                      hintText: 'Add your thoughts',
+                      hintStyle: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.normal,
+                          fontSize: 14,
+                          color: Colors.black),
+                      border: InputBorder.none),
+                ),
+                DecoratedContainer(
+                  borderRadius: 24,
+                  backgroundColor: titleController.text.isNotEmpty &&
+                          textController.text.isNotEmpty
+                      ? Colors.blue
+                      : Colors.grey,
+                  child: TextButton(
+                    onPressed: () {
+                      if (selectedImage != null) {
+                        widget.onPostCreated({
+                          'profilePic': 'https://via.placeholder.com/50',
+                          'name': 'You',
+                          'contentType': 'textImage',
+                          'title': titleController.text,
+                          'textContent': textController.text,
+                          'imageContent': selectedImage!.path,
+                          'likeCount': 0,
+                          'isLiked': false
+                        });
+                        setState(() {
+                          imageSubmitted = true;
+                        });
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Please select an image')));
+                      }
+                    },
+                    child: Text('Continue',
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.normal,
+                            fontSize: 18,
+                            color: Colors.black)),
+                  ),
+                )
+              ],
+            ),
+          );
+  }
+
+  @override
+  void dispose() {
+    textController.dispose();
+    titleController.dispose();
+    super.dispose();
+  }
+}
