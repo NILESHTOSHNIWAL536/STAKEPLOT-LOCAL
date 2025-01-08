@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/signup.dart';
 import 'Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 
@@ -15,12 +17,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        scaffoldBackgroundColor:
-            AppColors.backgroundColor, 
+        scaffoldBackgroundColor: AppColors.backgroundColor,
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
-    );
+       initialRoute: '/', 
+        routes: {  
+      '/': (context) =>  Signin(),   
+      '/signup': (context) => SignUp(),  
+      '/home': (context) => HomePage(),  
+  
+    });
   }
 }

@@ -6,7 +6,7 @@ class FontManager {
   TextStyle getTextStyle(
     BuildContext context, {
     Color color = Colors.black,
-    FontWeight lWeight = FontWeight.w400,
+    FontWeight lWeight = FontWeight.normal,
     lineHeight = 1.0,
     maxLines = 2,
     textDirection = TextDirection.ltr,

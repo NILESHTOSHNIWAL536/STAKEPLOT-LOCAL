@@ -7,7 +7,11 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_histo
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/number_picker.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
-//import 'dart:io';
+import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+//import 'dart:io'; 
 
 class HomePage extends StatefulWidget {
   @override
@@ -88,7 +92,8 @@ class HomeScreen extends StatelessWidget {
                 Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    const Icon(Icons.notifications, color: Colors.black),
+                    SvgPicture.asset('assets/icons/Home-page/notification.svg',
+                        height: 15, width: 15),
                     Positioned(
                       right: 0,
                       top: 0,
@@ -109,7 +114,7 @@ class HomeScreen extends StatelessWidget {
 
             // Bank Account Container
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.35,
+              height: MediaQuery.of(context).size.height * 0.25,
               child: NumberPickerScreen(),
             ),
             const SizedBox(height: 20),
@@ -130,7 +135,7 @@ class HomeScreen extends StatelessWidget {
 
             // Pending Users
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.23,
+              height: MediaQuery.of(context).size.height * 0.25,
               child: UserListScreen(),
             ),
             const SizedBox(height: 20),

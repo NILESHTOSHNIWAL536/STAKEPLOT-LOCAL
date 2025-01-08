@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 
 class TransactionHistory extends StatefulWidget {
   const TransactionHistory({super.key});
@@ -43,9 +46,12 @@ class _TransactionHistoryState extends State<TransactionHistory> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
+            Text(
               'Transaction History',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              style: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: AppColors.accentColor),
             ),
             TextButton(
               onPressed: () {
@@ -54,8 +60,11 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                 });
               },
               child: Text(
-                showAllTransactions ? 'Show Less' : 'More',
-                style: const TextStyle(fontSize: 16, color: Colors.greenAccent),
+                showAllTransactions ? 'Show Less' : 'View More',
+                style: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.normal,
+                    fontSize: 14,
+                    color: AppColors.primaryColor),
               ),
             ),
           ],
@@ -133,18 +142,24 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                           children: [
                             Text(
                               "${transaction['date']} - ${transaction['merchant']}",
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                  color: AppColors.accentColor),
                             ),
                             Text(
-                              "₹${transaction['amount']} (${transaction['description']})",
-                            ),
+                                "₹${transaction['amount']} (${transaction['description']})",
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.normal,
+                                    fontSize: 15,
+                                    color: AppColors.bg3)),
                           ],
                         ),
-                        trailing: Text(
-                            transaction['time'] ?? '-'), // Handle null safely
+                        trailing: Text(transaction['time'] ?? '-',
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.normal,
+                                fontSize: 12,
+                                color: AppColors.bg3)), // Handle null safely
                       ),
                     ),
                   ),

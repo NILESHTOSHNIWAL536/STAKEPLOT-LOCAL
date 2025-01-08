@@ -1,0 +1,330 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:get/get.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:intl/intl.dart';
+
+class TextFeildWidget extends StatelessWidget {
+  TextEditingController textEditingController;
+  String lableText;
+  String heading;
+  TextInputType keyBoard;
+  bool flag;
+  TextFeildWidget(
+      {Key? key,
+      required this.textEditingController,
+      required this.heading,
+      required this.keyBoard,
+      required this.lableText,
+      this.flag = true})
+      : super(key: key);
+
+  RxBool show = false.obs;
+
+  @override
+  Widget build(BuildContext context) {
+    //  return Text("data");
+    return Center(
+        child: Container(
+      padding: EdgeInsets.symmetric(vertical: 5),
+      width: MediaQuery.of(context).size.width / 1.1,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 9.0),
+              child: Text(heading,
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 18, lWeight: FontWeight.w600)),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+              keyboardType: keyBoard,
+              controller: textEditingController,
+              obscureText: flag ? false : show.value,
+              decoration: InputDecoration(
+                  // contentPadding: EdgeInsets.all(0),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                  filled: true,
+                  hintText: lableText,
+                  hintStyle: getStyle(context),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(40),
+                      borderSide: BorderSide(color: Colorcodes.textFeild)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(40),
+                      borderSide: BorderSide(color: Colorcodes.textFeild)),
+                  fillColor: Colorcodes.textFeild,
+                  border: InputBorder.none,
+                  suffixIcon: flag
+                      ? null
+                      : Obx(() => InkWell(
+                          onTap: () {
+                            show.value = !show.value;
+                          },
+                          child: Icon(show.value
+                              ? Icons.remove_red_eye_outlined
+                              : Icons.do_disturb_off_outlined)))),
+            ),
+          ],
+        ),
+      ),
+    ));
+  }
+}
+
+TextStyle getStyle(context) {
+  return FontManager().getTextStyle(context,
+      fontSize: 16, lWeight: FontWeight.w600, color: Colorcodes.black);
+}
+
+class TextFeildWidgetPassword extends StatelessWidget {
+  TextEditingController textEditingController;
+  String lableText;
+  String heading;
+  TextInputType keyBoard;
+  bool flag;
+  TextFeildWidgetPassword(
+      {Key? key,
+      required this.textEditingController,
+      required this.heading,
+      required this.keyBoard,
+      required this.lableText,
+      this.flag = true})
+      : super(key: key);
+
+  RxBool show = true.obs;
+
+  @override
+  Widget build(BuildContext context) {
+    //  return Text("data");
+    return Obx(() => Center(
+            child: Container(
+          padding: EdgeInsets.symmetric(vertical: 5),
+          width: MediaQuery.of(context).size.width / 1.1,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 9.0),
+                  child: Text(heading,
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 18, lWeight: FontWeight.w600)),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                  keyboardType: keyBoard,
+                  controller: textEditingController,
+                  obscureText: show.value,
+                  onChanged: (s){
+                    acceptReset.value=false;
+                  },
+                  decoration: InputDecoration(
+                      // contentPadding: EdgeInsets.all(0),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                      filled: true,
+                      hintText: lableText,
+                      hintStyle: getStyle(context),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40),
+                          borderSide: BorderSide(color: Colorcodes.textFeild)),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40),
+                          borderSide: BorderSide(color: Colorcodes.textFeild)),
+                      fillColor: Colorcodes.textFeild,
+                      border: InputBorder.none,
+                      suffixIcon: flag
+                          ? null
+                          : Obx(() => InkWell(
+                              onTap: () {
+                                show.value = !show.value;
+                              },
+                              child: Icon(!show.value
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined)))),
+                ),
+              ],
+            ),
+          ),
+        )));
+  }
+}
+
+class TextFeildWidget2 extends StatelessWidget {
+  String lableText;
+  String heading;
+  TextFeildWidget2({Key? key, required this.heading, required this.lableText})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    //  return Text("data");
+    return Center(
+        child: Container(
+      padding: EdgeInsets.symmetric(vertical: 5),
+      width: MediaQuery.of(context).size.width / 1.1,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 9.0),
+              child: Text(heading,
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 18, lWeight: FontWeight.w600)),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+              keyboardType: TextInputType.name,
+              initialValue: lableText,
+              readOnly: true,
+              // controller: textEditingController,
+              onChanged: (s){
+                    acceptReset.value=false;
+                  },
+
+              decoration: InputDecoration(
+                // contentPadding: EdgeInsets.all(0),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                filled: true,
+                hintText: lableText,
+                hintStyle: getStyle(context),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(40),
+                    borderSide: BorderSide(color: Colorcodes.textFeild)),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(40),
+                    borderSide: BorderSide(color: Colorcodes.textFeild)),
+                fillColor: Colorcodes.textFeild,
+                border: InputBorder.none,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ));
+  }
+}
+
+class TextFeildCalender extends StatelessWidget {
+  TextEditingController textEditingController;
+  String lableText;
+  String heading;
+  TextInputType keyBoard;
+  bool flag;
+  TextFeildCalender(
+      {Key? key,
+      required this.textEditingController,
+      required this.heading,
+      required this.keyBoard,
+      required this.lableText,
+      this.flag = true})
+      : super(key: key);
+
+  RxBool show = false.obs;
+
+  @override
+  Widget build(BuildContext context) {
+    //  return Text("data");
+    return Center(
+        child: GestureDetector(
+      onTap: () async {
+        DateTime? dateTime = await showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2021),
+            lastDate: DateTime(2025));
+        textEditingController.text =
+            DateFormat('yyyy-MM-dd').format(dateTime!).toString();
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 5),
+        width: MediaQuery.of(context).size.width / 1.1,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 9.0),
+                child: Text(heading,
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 18, lWeight: FontWeight.w600)),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TextFormField(
+                keyboardType: keyBoard,
+                controller: textEditingController,
+                obscureText: flag ? false : show.value,
+                onChanged: (s){
+                    acceptReset.value=false;
+                  },
+                decoration: InputDecoration(
+                    // contentPadding: EdgeInsets.all(0),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                    filled: true,
+                    hintText: lableText,
+                    
+                    hintStyle: getStyle(context),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(40),
+                        borderSide: BorderSide(color: Colorcodes.textFeild)),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(40),
+                        borderSide: BorderSide(color: Colorcodes.textFeild)),
+                    fillColor: Colorcodes.textFeild,
+                    border: InputBorder.none,
+                    
+                    suffixIcon: GestureDetector(
+                      onTap: () async {
+                        DateTime? dateTime = await showDatePicker(
+                            context: context,
+                            initialDate:
+                                DateTime.tryParse(textEditingController.text),
+                            firstDate: DateTime(1995),
+                            lastDate: DateTime(2035));
+                        textEditingController.text = DateFormat('yyyy-MM-dd')
+                            .format(dateTime!)
+                            .toString();
+                      },
+                      child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: Colorcodes.paddingSize),
+                          decoration: BoxDecoration(
+                              color: Colorcodes.dropdown,
+                              borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(40),
+                                topRight: Radius.circular(40),
+                              )),
+                          child: Icon(
+                            Icons.arrow_drop_down_sharp,
+                            color: Colorcodes.white,
+                          )),
+                    )),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ));
+  }
+}
