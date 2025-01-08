@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 //import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 
+import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'colors.dart';
+
 class HiddenTransactionsScreen extends StatelessWidget {
   final List<Map<String, String>> hiddenTransactions;
 
@@ -9,12 +13,16 @@ class HiddenTransactionsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Hidden Transactions'),
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Hidden Transactions'),
+      // ),
       body: hiddenTransactions.isEmpty
-          ? const Center(
-              child: Text('No hidden transactions.'),
+          ? Center(
+              child: Text('No hidden transactions.',
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: AppColors.accentColor)),
             )
           : ListView.builder(
               itemCount: hiddenTransactions.length,

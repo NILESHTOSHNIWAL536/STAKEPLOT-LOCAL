@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:confetti/confetti.dart';
 //import 'package:get/get.dart';
+import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 
 class Manualtransaction extends StatefulWidget {
   const Manualtransaction({super.key});
@@ -15,51 +17,38 @@ class _ManualtransactionState extends State<Manualtransaction> {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: AppColors.accentColor,
+        color: AppColors.mt,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
         children: [
           IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.wallet, color: Colors.white),
+            icon: const Icon(Icons.wallet, color: Colors.black),
           ),
           const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                'Manual Transaction',
-                style: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              Text('Manual Transaction',
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.normal,
+                      fontSize: 18,
+                      color: AppColors.accentColor)),
               const SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 4,
-                    horizontal: 12,
-                  ),
-                ),
-                child: TextButton(
-                    onPressed: () {
-                      showCustomModal(context);
-                    },
-                    child: Text('Start now',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: AppColors.primaryColor,
-                        ))),
-              ),
+              DecoratedContainer(
+                  borderRadius: 24,
+                  height: 50,
+                  child: TextButton(
+                      onPressed: () {
+                        showCustomModal(context);
+                      },
+                      child: Text('Start now',
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.normal,
+                              fontSize: 14,
+                              color: AppColors.primaryColor)))),
             ],
           ),
           const Spacer(),
@@ -78,7 +67,7 @@ class _ManualtransactionState extends State<Manualtransaction> {
 void showCustomModal(BuildContext context) {
   showModalBottomSheet(
     context: context,
-    //isScrollControlled: true,
+    isScrollControlled: true,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(16),
@@ -382,10 +371,10 @@ class _ModalContentState extends State<ModalContent>
                               ? 'Manual Transactions'
                               : ''
                           : 'Manual Transactions',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: AppColors.accentColor),
                     ),
                     const SizedBox(height: 16),
 
@@ -400,6 +389,10 @@ class _ModalContentState extends State<ModalContent>
                         decoration: InputDecoration(
                           prefixIcon: const Icon(Icons.attach_money),
                           hintText: 'Enter the amount',
+                          hintStyle: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.normal,
+                              fontSize: 16,
+                              color: AppColors.accentColor),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -424,6 +417,10 @@ class _ModalContentState extends State<ModalContent>
                           readOnly: false,
                           decoration: InputDecoration(
                             hintText: 'Categories',
+                            hintStyle: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.normal,
+                                fontSize: 16,
+                                color: AppColors.accentColor),
                             prefixIcon: const Icon(Icons.search),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
@@ -450,7 +447,11 @@ class _ModalContentState extends State<ModalContent>
                             String category = filteredCategories[index];
                             return ListTile(
                               leading: const Icon(Icons.category),
-                              title: Text(category),
+                              title: Text(category,
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.normal,
+                                      fontSize: 16,
+                                      color: AppColors.accentColor)),
                               onTap: () {
                                 setState(() {
                                   selectedCategory = category;
@@ -469,12 +470,13 @@ class _ModalContentState extends State<ModalContent>
                     // Subcategories List (Visible after category is selected)
                     if (selectedCategory != null &&
                         selectedSubCategory == null) ...[
-                      Text(
-                        '$selectedCategory',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Text('$selectedCategory',
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.normal,
+                              fontSize: 16,
+                              color: AppColors.accentColor)),
+                      SizedBox(
+                        height: 5,
                       ),
                       Wrap(
                         spacing: 8.0, // Horizontal spacing between chips
@@ -501,9 +503,12 @@ class _ModalContentState extends State<ModalContent>
                               ),
                               label: Text(
                                 subCategory,
-                                style: const TextStyle(fontSize: 14),
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.normal,
+                                    fontSize: 14,
+                                    color: AppColors.accentColor),
                               ),
-                              backgroundColor: Colors.grey[100],
+                              backgroundColor: AppColors.button,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16),
                               ),
@@ -522,13 +527,21 @@ class _ModalContentState extends State<ModalContent>
                               // Action for Split Bill button
                               //isSplit = true;
                             },
-                            child: const Text('Bill Split'),
+                            child: Text('Bill Split',
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.normal,
+                                    fontSize: 16,
+                                    color: AppColors.primaryColor)),
                           ),
                           ElevatedButton(
                             onPressed: () {
                               // Action for Continue button
                             },
-                            child: const Text('Lend money'),
+                            child: Text('Lend money',
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.normal,
+                                    fontSize: 16,
+                                    color: AppColors.primaryColor)),
                           ),
                         ],
                       ),
@@ -539,7 +552,11 @@ class _ModalContentState extends State<ModalContent>
                           Center(
                             child: ElevatedButton(
                               onPressed: _showCelebration,
-                              child: const Text('Continue'),
+                              child: Text('Continue',
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.normal,
+                                      fontSize: 16,
+                                      color: AppColors.accentColor)),
                             ),
                           ),
                         ],

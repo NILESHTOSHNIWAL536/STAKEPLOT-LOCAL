@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import './colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 
 class FinanceChartApp extends StatelessWidget {
   const FinanceChartApp({super.key});
@@ -170,25 +172,34 @@ class _FinancePageState extends State<FinancePage> {
     double fontSizeFactor = screenWidth * 0.01;
 
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       body: Padding(
         padding: EdgeInsets.all(screenWidth * 0.04), // Responsive padding
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Weekly Spending and Cash flow',
-              style: TextStyle(fontSize: fontSizeFactor * 3),
-            ),
+            Text('Weekly Spending and Cash flow',
+                //style: TextStyle(fontSize: fontSizeFactor * 3),
+                style: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.normal,
+                    fontSize: fontSizeFactor * 3,
+                    color: AppColors.accentColor)),
             Row(
               children: [
                 Text(
                   '₹${totalSpent.toStringAsFixed(2)}',
-                  style: TextStyle(fontSize: fontSizeFactor * 3),
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.bold,
+                      fontSize: fontSizeFactor * 3,
+                      color: AppColors.accentColor),
                 ),
                 SizedBox(width: screenWidth * 0.02),
                 Text(
                   'This week',
-                  style: TextStyle(fontSize: fontSizeFactor * 2),
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.normal,
+                      fontSize: fontSizeFactor * 2,
+                      color: AppColors.accentColor),
                 ),
                 Spacer(),
                 TextButton.icon(
@@ -196,7 +207,10 @@ class _FinancePageState extends State<FinancePage> {
                   icon: Icon(Icons.timer_rounded),
                   label: Text(
                     'History',
-                    style: TextStyle(fontSize: fontSizeFactor * 2),
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.normal,
+                        fontSize: fontSizeFactor * 2,
+                        color: AppColors.accentColor),
                   ),
                 ),
               ],
@@ -206,13 +220,14 @@ class _FinancePageState extends State<FinancePage> {
               children: [
                 Text(
                   'My Spendings',
-                  style: TextStyle(
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.normal,
                       fontSize: fontSizeFactor * 2,
-                      fontWeight: FontWeight.bold),
+                      color: AppColors.accentColor),
                 ),
                 Row(
                   children: [
-                    ElevatedButton(
+                    TextButton(
                       onPressed: () {
                         setState(() {
                           selectedButton = 'Month';
@@ -221,13 +236,14 @@ class _FinancePageState extends State<FinancePage> {
                       },
                       child: Text(
                         'Month',
-                        style: TextStyle(
-                            color: AppColors.accentColor,
-                            fontSize: fontSizeFactor * 2),
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.normal,
+                            fontSize: fontSizeFactor * 2,
+                            color: AppColors.accentColor),
                       ),
                     ),
                     SizedBox(width: screenWidth * 0.02),
-                    ElevatedButton(
+                    TextButton(
                       onPressed: () {
                         setState(() {
                           selectedButton = 'Week';
@@ -235,21 +251,23 @@ class _FinancePageState extends State<FinancePage> {
                       },
                       child: Text(
                         'Week',
-                        style: TextStyle(
-                            color: AppColors.accentColor,
-                            fontSize: fontSizeFactor * 2),
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.normal,
+                            fontSize: fontSizeFactor * 2,
+                            color: AppColors.accentColor),
                       ),
                     ),
                     SizedBox(width: screenWidth * 0.02),
-                    ElevatedButton(
+                    TextButton(
                       onPressed: () {
                         _pickCustomDateRange(context);
                       },
                       child: Text(
                         'Custom',
-                        style: TextStyle(
-                            color: AppColors.accentColor,
-                            fontSize: fontSizeFactor * 2),
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.normal,
+                            fontSize: fontSizeFactor * 2,
+                            color: AppColors.accentColor),
                       ),
                     ),
                   ],
@@ -304,8 +322,10 @@ class LineChartWidget extends StatelessWidget {
                   getTitlesWidget: (value, meta) {
                     return Text(
                       '₹${value.toInt()}',
-                      style: TextStyle(
-                          fontSize: fontSizeFactor * 1.2), // Adjusted font size
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.normal,
+                          fontSize: fontSizeFactor * 1.2,
+                          color: AppColors.accentColor), // Adjusted font size
                     );
                   },
                 ),
@@ -318,9 +338,10 @@ class LineChartWidget extends StatelessWidget {
                     if (value.toInt() < days.length) {
                       return Text(
                         days[value.toInt()],
-                        style: TextStyle(
-                            fontSize:
-                                fontSizeFactor * 1.2), // Adjusted font size
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.normal,
+                            fontSize: fontSizeFactor * 1.2,
+                            color: AppColors.accentColor), // Adjusted font size
                       );
                     }
                     return SizedBox.shrink();
@@ -373,12 +394,18 @@ class LineChartWidget extends StatelessWidget {
                     if (touchedSpot.bar.color == AppColors.primaryColor) {
                       return LineTooltipItem(
                         'Credited: ₹${touchedSpot.y.toStringAsFixed(2)}',
-                        const TextStyle(color: Colors.green),
+                        FontManager().getTextStyle(context,
+                            lWeight: FontWeight.normal,
+                            fontSize: fontSizeFactor * 1.3,
+                            color: AppColors.accentColor),
                       );
                     } else if (touchedSpot.bar.color == AppColors.accentColor) {
                       return LineTooltipItem(
                         'Debited: ₹${touchedSpot.y.toStringAsFixed(2)}',
-                        const TextStyle(color: Colors.red),
+                        FontManager().getTextStyle(context,
+                            lWeight: FontWeight.normal,
+                            fontSize: fontSizeFactor * 1.3,
+                            color: AppColors.accentColor),
                       );
                     }
                     return null;

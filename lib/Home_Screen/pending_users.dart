@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import './colors.dart';
 
 class UserListScreen extends StatelessWidget {
   final List<Map<String, String>> users = [
@@ -29,64 +32,71 @@ class UserListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Dues to receive',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    // Navigate to the "Show All Users" page
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ShowAllUsersScreen(users: users),
-                      ),
-                    );
-                  },
-                  child: const Text(
-                    'more',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Dues to receive',
+                style: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: AppColors.accentColor),
+              ),
+              GestureDetector(
+                onTap: () {
+                  // Navigate to the "Show All Users" page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ShowAllUsersScreen(users: users),
                     ),
+                  );
+                },
+                child: Text('more',
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.normal,
+                        fontSize: 14,
+                        color: AppColors.primaryColor)),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: 3,
+            itemBuilder: (context, index) {
+              return ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(users[index]["profilePic"] ??
+                      "https://via.placeholder.com/150"),
+                ),
+                title: Text(users[index]["name"] ?? "Unknown User",
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.normal,
+                        fontSize: 16,
+                        color: AppColors.accentColor)),
+                trailing: TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    "Remind now",
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.normal,
+                        fontSize: 14,
+                        color: AppColors.primaryColor),
                   ),
                 ),
-              ],
-            ),
+              );
+            },
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: 3,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(users[index]["profilePic"] ??
-                        "https://via.placeholder.com/150"),
-                  ),
-                  title: Text(users[index]["name"] ?? "Unknown User"),
-                  trailing: TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      "Remind now",
-                      style: TextStyle(color: Colors.green, fontSize: 15),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -101,7 +111,11 @@ class ShowAllUsersScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dues to receive'),
+        title: Text('Dues to receive',
+            style: FontManager().getTextStyle(context,
+                lWeight: FontWeight.bold,
+                fontSize: 18,
+                color: AppColors.accentColor)),
       ),
       body: ListView.builder(
         itemCount: users.length,
@@ -111,12 +125,19 @@ class ShowAllUsersScreen extends StatelessWidget {
               backgroundImage: NetworkImage(users[index]["profilePic"] ??
                   "https://via.placeholder.com/150"),
             ),
-            title: Text(users[index]["name"] ?? "Unknown User"),
+            title: Text(users[index]["name"] ?? "Unknown User",
+                style: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.normal,
+                    fontSize: 16,
+                    color: AppColors.accentColor)),
             trailing: TextButton(
               onPressed: () {},
-              child: const Text(
+              child: Text(
                 "Remind now",
-                style: TextStyle(color: Colors.green, fontSize: 15),
+                style: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.normal,
+                    fontSize: 14,
+                    color: AppColors.primaryColor),
               ),
             ),
           );
@@ -125,7 +146,5 @@ class ShowAllUsersScreen extends StatelessWidget {
     );
   }
 }
-
-
 
 //

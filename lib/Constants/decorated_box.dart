@@ -14,7 +14,7 @@ class DecoratedContainer extends StatelessWidget {
   const DecoratedContainer({
     Key? key,
     required this.child, // The content inside the container
-    this.backgroundColor = AppColors.bg,
+    this.backgroundColor = AppColors.button,
     this.borderRadius = 8.0,
     this.padding = const EdgeInsets.all(8.0),
     //this.elevation = 2.0,

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'colors.dart';
 
 class ChartData {
   final String category;
@@ -54,14 +57,31 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Monthly Expenses',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.normal,
+                      fontSize: 12,
+                      color: AppColors.bg3),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  '\$${totalValue.toStringAsFixed(2)}',
-                  style: const TextStyle(fontSize: 18, color: Colors.blueGrey),
+                Row(
+                  children: [
+                    Text(
+                      '\₹${totalValue.toStringAsFixed(2)}',
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: AppColors.accentColor),
+                    ),
+                    Text(
+                      'This week',
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.bold,
+                          fontSize: 12,
+                          color: AppColors.bg3),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 16),
                 Expanded(
@@ -73,15 +93,15 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                         child: Container(
                           padding: const EdgeInsets.all(16.0),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            //color: Colors.white,
                             borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                              ),
-                            ],
+                            // boxShadow: [
+                            //   BoxShadow(
+                            //     color: Colors.grey.withOpacity(0.2),
+                            //     spreadRadius: 2,
+                            //     blurRadius: 5,
+                            //   ),
+                            // ],
                           ),
                           child: selectedIndex != null
                               ? Column(
@@ -90,21 +110,26 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                   children: [
                                     Text(
                                       'Expenses: ${data[selectedIndex!].category}',
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      style: FontManager().getTextStyle(context,
+                                          lWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                          color: AppColors.accentColor),
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
                                       '${_getMonthlyRange()}',
-                                      style: const TextStyle(
-                                          fontSize: 16, color: Colors.grey),
+                                      style: FontManager().getTextStyle(context,
+                                          lWeight: FontWeight.normal,
+                                          fontSize: 12,
+                                          color: AppColors.bg3),
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
                                       'Amount: \₹${data[selectedIndex!].value.toStringAsFixed(2)}',
-                                      style: const TextStyle(fontSize: 16),
+                                      style: FontManager().getTextStyle(context,
+                                          lWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                          color: AppColors.accentColor),
                                     ),
                                   ],
                                 )
@@ -112,23 +137,29 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const Text(
-                                        'Total Spending',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
+                                      Text('Total Spending',
+                                          style: FontManager().getTextStyle(
+                                              context,
+                                              lWeight: FontWeight.bold,
+                                              fontSize: 18,
+                                              color: AppColors.accentColor)),
                                       const SizedBox(height: 8),
                                       Text(
                                         '${_getMonthlyRange()}',
-                                        style: const TextStyle(
-                                            fontSize: 14, color: Colors.grey),
+                                        style: FontManager().getTextStyle(
+                                            context,
+                                            lWeight: FontWeight.normal,
+                                            fontSize: 12,
+                                            color: AppColors.bg3),
                                       ),
                                       const SizedBox(height: 8),
                                       Text(
                                         'Amount: \₹${totalValue.toStringAsFixed(2)}',
-                                        style: const TextStyle(fontSize: 18),
+                                        style: FontManager().getTextStyle(
+                                            context,
+                                            lWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                            color: AppColors.accentColor),
                                       ),
                                     ],
                                   ),
