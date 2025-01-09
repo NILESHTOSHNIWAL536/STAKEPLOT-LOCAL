@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'Constants/font_manager.dart';
 
+List<Color> color=[Colors.blue,Colors.redAccent,Colors.green,Colors.amber,const Color.fromARGB(255, 52, 137, 137)];
+
 class Colorcodes {
   static Color budgetDarkGreen = const Color.fromRGBO(0, 208, 158, 1);
   static Color budgetLightGreen = const Color.fromRGBO(223, 247, 226, 1);

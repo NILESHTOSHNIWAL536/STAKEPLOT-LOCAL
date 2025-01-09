@@ -17,9 +17,9 @@ import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
 
-String urlWithLocallHost="http://192.168.1.11:5000/";
+String urlWithLocallHost="http://192.168.1.12:5000/";
 // String urlWithLocallHost="https://stakeplot.in";
-String url="http://192.168.1.11:5000/api/v1";
+String url="http://192.168.1.12:5000/api/v1";
 // String url="http://192.168.1.46:5000/api/v1";
 // String urlWithLocallHost2="http://10.0.2.2:5000/api/v1";
 // String url="http://localhost:5000/api/v1";
@@ -245,5 +245,31 @@ void snackBarAllFeilds2(context,text,[Color colors=Colors.red])
       backgroundColor: colors,
     ));
 }
+
+
+List getSearchData(String val,List  data)
+{
+      List findOne=[];
+     data.forEach((element)
+    { 
+            if(element['name'].toString().contains(val)){
+                    findOne.add(element);
+            }
+     });
+      return findOne;
+}
+
+RxList getSearchDataRx(String val,List  data)
+{
+      RxList findOne=[].obs;
+     data.forEach((element)
+    { 
+            if(element['name'].toString().contains(val)){
+                    findOne.add(element);
+            }
+     });
+      return findOne;
+}
+
 
 

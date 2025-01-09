@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/customNoti.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/signup.dart';
 import 'Home_Screen/home_page.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
       '/': (context) =>  Signin(),   
       '/signup': (context) => SignUp(),  
       '/home': (context) => HomePage(),  
+      // '/Notifications': (context) => NotificationsBudget(),  
   
     });
   }

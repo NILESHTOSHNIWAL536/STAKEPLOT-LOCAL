@@ -49,6 +49,8 @@ dependencies:
   firebase_auth: ^5.2.0
   device_info_plus: ^10.1.2
   flutter_svg:
+  socket_io_client: ^3.0.0-beta.2
+  web_socket_channel: ^3.0.0
   
 
 
@@ -57,7 +59,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.3.5
   page_transition: ^2.2.1
-  getwidget: ^5.0.0
+  readmore: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +71,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
+  
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -84,6 +87,16 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/icons/
+    - assets/
+    - assets/images/
+    - assets/images2/
+    - assets/avatar/
+    - assets/svgs/
+    - assets/img/
+    - assets/img/imgs/
+    - assets/trans/
+    - assets/msg.mp3
+    - assets/appicon.jpeg
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

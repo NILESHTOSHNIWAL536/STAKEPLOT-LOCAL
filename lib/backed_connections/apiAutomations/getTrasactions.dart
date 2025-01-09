@@ -339,10 +339,13 @@ void getHideTransactions(context)async
         "Authorization": "$accessToken",
       },
     );
-    // printData(response, context);
+    printData(response, context);
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
       var obj = his['data'];
+      print("---------------------------");
+      print(obj);
+      print("---------------------------");
         trasactionsHistory.clear();
         trasactionsHistory.addAll(obj);
     } else {}

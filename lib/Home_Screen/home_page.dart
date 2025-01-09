@@ -9,6 +9,14 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/number_picker.dar
 import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/customNoti.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 //import 'dart:io'; 
@@ -46,33 +54,45 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  
+
+    @override
+  void initState() {
+    super.initState();
+    getTransaction(context);
+    getTrending();
+    getChatLoader();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_selectedIndex],
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: AppColors.accentColor,
-            selectedItemColor: AppColors.backgroundColor,
-            unselectedItemColor: AppColors.primaryColor,
-            currentIndex: _selectedIndex,
-            onTap: _onItemTapped,
-            items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.search), label: 'Search'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.notifications), label: 'Community'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.person), label: 'Profile'),
-            ],
-          ),
-        ),
-      ),
+      bottomNavigationBar: BottomNavigations(data: 0),
+      // bottomNavigationBar: Padding(
+      //   padding: const EdgeInsets.all(16.0),
+      //   child: ClipRRect(
+      //     borderRadius: BorderRadius.circular(16),
+      //     child: BottomNavigationBar(
+      //       type: BottomNavigationBarType.fixed,
+      //       backgroundColor: AppColors.accentColor,
+      //       selectedItemColor: AppColors.backgroundColor,
+      //       unselectedItemColor: AppColors.primaryColor,
+      //       currentIndex: _selectedIndex,
+      //       onTap: _onItemTapped,
+      //       items: const [
+      //         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+      //         BottomNavigationBarItem(
+      //             icon: Icon(Icons.search), label: 'Search'),
+      //         BottomNavigationBarItem(
+      //             icon: Icon(Icons.notifications), label: 'Community'),
+      //         BottomNavigationBarItem(
+      //             icon: Icon(Icons.person), label: 'Profile'),
+      //       ],
+          // ),
+        // ),
+      // ),
     );
   }
 }
@@ -92,8 +112,22 @@ class HomeScreen extends StatelessWidget {
                 Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    SvgPicture.asset('assets/icons/Home-page/notification.svg',
-                        height: 15, width: 15),
+                    // SvgPicture.asset('assets/icons/Home-page/notification.svg',
+                    //     height: 15, width: 15),
+                    GestureDetector(
+                                          onTap: (){
+                                            //  String currentRoute = ModalRoute.of(context)?.settings.name ?? '';
+    
+                                            if(currentPage(context)!="/Notifications")  Navigator.pushNamed(context, '/Notifications');
+                                          },
+                                          child: NotificationsBudget(
+                                            child: CircleAvatar(
+                                              backgroundColor:Colorcodes.budgetLightGreen ,
+                                              child: Center(child:
+                                               AvatarProfileImage(url: svgIconPath.notifications, width: 10, height: 20))
+                                            ),
+                                          ),
+                     ), 
                     Positioned(
                       right: 0,
                       top: 0,

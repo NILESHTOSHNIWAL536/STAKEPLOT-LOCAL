@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 //import 'package:flutter_application_code_stakeplot/Community_Page/community_showmodal_screen.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/explore_screen.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/text_screen.dart';
+import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:image_picker/image_picker.dart'; // Ensure image_picker is added in pubspec.yaml
 import 'dart:io';
 import 'package:flutter_application_code_stakeplot/Community_Page/poll_screen.dart';
@@ -49,30 +51,36 @@ class _CommunityState extends State<Community> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(18.0),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Welcome Section
-            _buildWelcomeRow(),
-
-            const SizedBox(height: 16),
-
-            // Posts List
-            ListView.builder(
-              shrinkWrap:
-                  true, // Ensures the list only takes up necessary space
-              physics:
-                  NeverScrollableScrollPhysics(), // Prevents nested scrolling issues
-              itemCount: posts.length,
-              itemBuilder: (context, index) {
-                final post = posts[index];
-                return _buildPostCard(post);
-              },
-            ),
-          ],
+    return Scaffold(
+        extendBody: true,
+        backgroundColor: AppColors.backgroundColor,
+         bottomNavigationBar: BottomNavigations(data: 2),
+      
+      body: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Welcome Section
+              _buildWelcomeRow(),
+      
+              const SizedBox(height: 16),
+      
+              // Posts List
+              ListView.builder(
+                shrinkWrap:
+                    true, // Ensures the list only takes up necessary space
+                physics:
+                    NeverScrollableScrollPhysics(), // Prevents nested scrolling issues
+                itemCount: posts.length,
+                itemBuilder: (context, index) {
+                  final post = posts[index];
+                  return _buildPostCard(post);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
