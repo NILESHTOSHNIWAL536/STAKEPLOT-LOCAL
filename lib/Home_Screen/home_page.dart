@@ -17,9 +17,13 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/customNoti.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 
-//import 'dart:io'; 
+//import 'dart:io';
 
 class HomePage extends StatefulWidget {
   @override
@@ -28,6 +32,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    check(context, "homeScreen");
+    getTrending();
+    getPost();
+    getTransaction(context);
+  }
 
   final List<Widget> _pages = [
     HomeScreen(), // The content previously in the ListView
@@ -54,15 +66,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  
-
-    @override
-  void initState() {
-    super.initState();
-    getTransaction(context);
-    getTrending();
-    getChatLoader();
-  }
 
 
   @override
@@ -112,22 +115,8 @@ class HomeScreen extends StatelessWidget {
                 Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    // SvgPicture.asset('assets/icons/Home-page/notification.svg',
-                    //     height: 15, width: 15),
-                    GestureDetector(
-                                          onTap: (){
-                                            //  String currentRoute = ModalRoute.of(context)?.settings.name ?? '';
-    
-                                            if(currentPage(context)!="/Notifications")  Navigator.pushNamed(context, '/Notifications');
-                                          },
-                                          child: NotificationsBudget(
-                                            child: CircleAvatar(
-                                              backgroundColor:Colorcodes.budgetLightGreen ,
-                                              child: Center(child:
-                                               AvatarProfileImage(url: svgIconPath.notifications, width: 10, height: 20))
-                                            ),
-                                          ),
-                     ), 
+                    SvgPicture.asset(HomePageIcons.notification,
+                        height: 30, width: 15),
                     Positioned(
                       right: 0,
                       top: 0,

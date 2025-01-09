@@ -5,6 +5,8 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_histo
 import './colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class FinanceChartApp extends StatelessWidget {
   const FinanceChartApp({super.key});
@@ -204,7 +206,8 @@ class _FinancePageState extends State<FinancePage> {
                 Spacer(),
                 TextButton.icon(
                   onPressed: () {},
-                  icon: Icon(Icons.timer_rounded),
+                  icon: SvgPicture.asset(HomePageIcons.history,
+                      height: 20, width: 15),
                   label: Text(
                     'History',
                     style: FontManager().getTextStyle(context,
@@ -404,7 +407,7 @@ class LineChartWidget extends StatelessWidget {
                         'Debited: ₹${touchedSpot.y.toStringAsFixed(2)}',
                         FontManager().getTextStyle(context,
                             lWeight: FontWeight.normal,
-                            fontSize: fontSizeFactor * 1.3,
+                            fontSize: fontSizeFactor * 1.2,
                             color: AppColors.accentColor),
                       );
                     }

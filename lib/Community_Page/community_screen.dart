@@ -411,7 +411,7 @@ class _CommunityState extends State<Community> {
   }
 
   Widget _buildPostCard(Map<String, dynamic> post) {
-    if (post['contentType'] == 'poll') {
+    if (post['postType'] == 'polled') {
       return Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
