@@ -15,18 +15,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        scaffoldBackgroundColor: AppColors.backgroundColor,
-        useMaterial3: true,
-      ),
-      debugShowCheckedModeBanner: false,
-       initialRoute: '/', 
-        routes: {  
-      '/': (context) =>  Signin(),   
-      '/signup': (context) => SignUp(),  
-      '/home': (context) => HomePage(),  
-  
-    });
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          scaffoldBackgroundColor: AppColors.backgroundColor,
+          useMaterial3: true,
+        ),
+        debugShowCheckedModeBanner: false,
+        initialRoute: '/',
+        routes: {
+          '/': (context) => Signin(),
+          '/signup': (context) => SignUp(),
+          '/home': (context) => HomePage(),
+        });
   }
 }

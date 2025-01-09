@@ -4,6 +4,8 @@ import 'package:confetti/confetti.dart';
 //import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Manualtransaction extends StatefulWidget {
   const Manualtransaction({super.key});
@@ -24,7 +26,11 @@ class _ManualtransactionState extends State<Manualtransaction> {
         children: [
           IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.wallet, color: Colors.black),
+            icon: SvgPicture.asset(
+              HomePageIcons.manualTransaction,
+              height: 30,
+              width: 30,
+            ),
           ),
           const SizedBox(width: 10),
           Column(
@@ -53,10 +59,14 @@ class _ManualtransactionState extends State<Manualtransaction> {
           ),
           const Spacer(),
           // Placeholder for an manual transaction image
-          Container(
-            width: 50,
-            height: 50,
-            color: Colors.grey[300],
+
+          Flexible(
+            child: SvgPicture.asset(
+              Pictures.manualTransactionImage,
+              height: double
+                  .infinity, // Make the SVG fit the height of the container
+              fit: BoxFit.contain, // Scale the image to fit within its bounds
+            ),
           ),
         ],
       ),

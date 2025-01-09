@@ -9,9 +9,13 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/number_picker.dar
 import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 
-//import 'dart:io'; 
+//import 'dart:io';
 
 class HomePage extends StatefulWidget {
   @override
@@ -20,6 +24,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    check(context, "homeScreen");
+    getTrending();
+    getPost();
+    getTransaction(context);
+  }
 
   final List<Widget> _pages = [
     HomeScreen(), // The content previously in the ListView
@@ -92,8 +104,8 @@ class HomeScreen extends StatelessWidget {
                 Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    SvgPicture.asset('assets/icons/Home-page/notification.svg',
-                        height: 15, width: 15),
+                    SvgPicture.asset(HomePageIcons.notification,
+                        height: 30, width: 15),
                     Positioned(
                       right: 0,
                       top: 0,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 //import 'package:flutter_application_code_stakeplot/Community_Page/community_showmodal_screen.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/explore_screen.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/text_screen.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:image_picker/image_picker.dart'; // Ensure image_picker is added in pubspec.yaml
 import 'dart:io';
 import 'package:flutter_application_code_stakeplot/Community_Page/poll_screen.dart';
@@ -66,7 +67,7 @@ class _CommunityState extends State<Community> {
                   true, // Ensures the list only takes up necessary space
               physics:
                   NeverScrollableScrollPhysics(), // Prevents nested scrolling issues
-              itemCount: posts.length,
+              itemCount: getTrendingData.length,
               itemBuilder: (context, index) {
                 final post = posts[index];
                 return _buildPostCard(post);
@@ -403,7 +404,7 @@ class _CommunityState extends State<Community> {
   }
 
   Widget _buildPostCard(Map<String, dynamic> post) {
-    if (post['contentType'] == 'poll') {
+    if (post['postType'] == 'polled') {
       return Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),

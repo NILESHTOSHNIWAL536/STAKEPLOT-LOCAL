@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+import 'colors.dart';
 
 class TransactionHistory extends StatefulWidget {
   const TransactionHistory({super.key});
@@ -38,6 +39,14 @@ class _TransactionHistoryState extends State<TransactionHistory> {
   final Map<int, double> swipeOffsets = {};
   bool showAllTransactions = false;
   final List<Map<String, String>> hiddenTransactions = [];
+
+  @override
+  void initState() {
+    getTransaction(context);
+    // print("transactions -------------------------------------------------");
+    //   print(transactions);
+    //    print("transactions -------------------------------------------------");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +128,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                     child: Container(
                       height: 80,
                       decoration: BoxDecoration(
-                        color: AppColors.backgroundColor,
+                        //color: AppColors.backgroundColor,
                         gradient: LinearGradient(
                           begin: Alignment.centerLeft,
                           end: Alignment.centerRight,
