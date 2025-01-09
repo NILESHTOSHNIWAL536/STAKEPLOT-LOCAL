@@ -1,4 +1,4 @@
-package com.example.flutter_application_code_stakeplot
+package com.stakeplot.adnan
 
 import io.flutter.embedding.android.FlutterActivity
 
