@@ -109,15 +109,15 @@ class _PostCardState extends State<PostCard> {
               onTap:flag?null: () {
 
       
-            //      Navigator.push(
-            //   context,
-            //   PageTransition(
-            //         type: PageTransitionType.fade,
-            //         duration: Durations.long1,
-            //         child:TribeUnique( id:dataObj["_id"] ,dataObj: dataObj,),
-            //         isIos: true,
-            //   ),
-            // );
+                 Navigator.push(
+              context,
+              PageTransition(
+                    type: PageTransitionType.fade,
+                    duration: Durations.long1,
+                    child:TribeUnique( id:dataObj["_id"] ,dataObj: dataObj,),
+                    isIos: true,
+              ),
+            );
                   
               },
               child: Container(
@@ -443,8 +443,8 @@ Widget barGraph(item)
              BarSeries<SalesData, String>(
                dataSource: chartData,
                onPointTap: (pointInteractionDetails) {
-                  if(widget.flag)return;
-
+                  print(widget.flag);
+                   if(widget.flag)return;
                     Navigator.push(
                                 context,
                                 PageTransition(

@@ -143,11 +143,14 @@ List getLastTenUsers(List allUsers) {
           // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
                   //  const SizedBox(height: 20,),
-                   InputDate("Search",TextInputType.name,search),
+                     Hero(
+                    tag: "s",
+                    child:
+                   InputDate("Search",TextInputType.name,search)),
                    const SizedBox(height: 20,),
                   !frdsThere? Loader():frdsList.isEmpty? Text("No Users Found...!"):Column(
                         children: frdsList.map((data) => profileContainer(data)).toList(),
-                   )
+              )
         
         
         

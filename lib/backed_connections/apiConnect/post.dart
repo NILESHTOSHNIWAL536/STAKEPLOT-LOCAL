@@ -662,6 +662,8 @@ void getPost() async {
     // //print(obj);
     historyListData.clear();
     historyListData.addAll(obj);
+    getTrendingData.clear();
+    getTrendingData.addAll(obj);
 
     historyListData.forEach((element) {
       postCount[element["_id"]] = element['upvotes'];

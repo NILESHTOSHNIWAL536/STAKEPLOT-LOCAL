@@ -2,9 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter_application_code_stakeplot/Community_Page/community_showmodal_screen.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/explore_screen.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/text_screen.dart';
+import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart'; // Ensure image_picker is added in pubspec.yaml
 import 'dart:io';
 import 'package:flutter_application_code_stakeplot/Community_Page/poll_screen.dart';
@@ -66,19 +71,26 @@ class _CommunityState extends State<Community> {
               _buildWelcomeRow(),
       
               const SizedBox(height: 16),
+
+              Obx(() =>  getTrendingData.length==0 && findTranding? Loader(): !findTranding && getTrendingData.length==0?Text("No Post yet"):Column(
+                        children: [
+                          Container(child: Column(children:getTrendingData.map((dataObj) =>  PostCard(data:dataObj)).toList())),
+                          SizedBox(height: 100,),
+                        ],
+                      ))
       
               // Posts List
-              ListView.builder(
-                shrinkWrap:
-                    true, // Ensures the list only takes up necessary space
-                physics:
-                    NeverScrollableScrollPhysics(), // Prevents nested scrolling issues
-                itemCount: posts.length,
-                itemBuilder: (context, index) {
-                  final post = posts[index];
-                  return _buildPostCard(post);
-                },
-              ),
+              // ListView.builder(
+              //   shrinkWrap:
+              //       true, // Ensures the list only takes up necessary space
+              //   physics:
+              //       NeverScrollableScrollPhysics(), // Prevents nested scrolling issues
+              //   itemCount: posts.length,
+              //   itemBuilder: (context, index) {
+              //     final post = posts[index];
+              //     return _buildPostCard(post);
+              //   },
+              // ),
             ],
           ),
         ),
@@ -147,19 +159,25 @@ class _CommunityState extends State<Community> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              width: 300,
-              child: TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: 'Search...',
-                  hintStyle: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.normal,
-                      fontSize: 16,
-                      color: Colors.black),
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(22.0),
+              Hero(
+                tag: "TribeSearch",
+              child: Container(
+                width: 300,
+                child: TextField(
+                  controller: _searchController,
+                  onTap: (){
+                       Navigator.pushNamed(context, '/TribeSearch');
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Search...',
+                    hintStyle: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.normal,
+                        fontSize: 16,
+                        color: Colors.black),
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(22.0),
+                    ),
                   ),
                 ),
               ),
