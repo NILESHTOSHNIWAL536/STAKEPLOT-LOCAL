@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 //import 'package:flutter_application_code_stakeplot/Community_Page/community_showmodal_screen.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/explore_screen.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/text_screen.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:image_picker/image_picker.dart'; // Ensure image_picker is added in pubspec.yaml
@@ -52,10 +53,9 @@ class _CommunityState extends State<Community> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        extendBody: true,
-        backgroundColor: AppColors.backgroundColor,
-         bottomNavigationBar: BottomNavigations(data: 2),
-      
+      extendBody: true,
+      backgroundColor: AppColors.backgroundColor,
+      bottomNavigationBar: BottomNavigations(data: 2),
       body: Padding(
         padding: const EdgeInsets.all(18.0),
         child: SingleChildScrollView(
@@ -64,9 +64,9 @@ class _CommunityState extends State<Community> {
             children: [
               // Welcome Section
               _buildWelcomeRow(),
-      
+
               const SizedBox(height: 16),
-      
+
               // Posts List
               ListView.builder(
                 shrinkWrap:
@@ -1546,4 +1546,3 @@ class _CommunityState extends State<Community> {
 //     );
 //   }
 // }
-

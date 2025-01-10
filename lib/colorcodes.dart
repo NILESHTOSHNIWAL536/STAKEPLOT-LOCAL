@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 // import 'package:stakeplot/fontmanager.dart';
 
 import 'Constants/font_manager.dart';
@@ -119,34 +120,34 @@ List originalKeys = keyss;
 Map<String, String> imageMapForHistory = {
   "income": "assets/images2/add.svg",
   "restaurant": "restaurants.svg",
-  "hospital": "hospital.svg",
+  "hospital": Categories.hobbies,
   "drinks": "drinks.svg",
-  "shopping": "shopping.svg",
-  "transport": "transport.svg",
+  "shopping": Categories.shopping,
+  "transport": Categories.travel,
   "household": "household.svg",
   "education": "education.svg",
   "smoke": "smoking.svg",
   "gifting": "gifts.svg",
-  "bills": "bills.svg",
-  "snacks": "snacks.svg",
+  "bills": Categories.bills,
+  "snacks": Categories.snacks,
   "others": "miscellaneous.svg",
   "movies": "movie.svg",
   "rent": "b-rent.svg",
   "clothing-shoes": "b-clothing_shoes.svg",
   "electricity": "b-electricitybills.svg",
-  "emis": "b-emi.svg",
+  "emis": Categories.emi,
   "wifi-dth": "b-wifi_dth.svg",
   "credit bills": "b-credit.svg",
   "credit bill": "b-credit.svg",
-  "sports": "b-sports.svg",
+  "sports": Categories.sports,
   "theatre": "b-movie.svg",
   "repairs": "b-repairs.svg",
   "electronics": "b-electronics.svg",
   "beauty": "b-beauty.svg",
-  "subscriptions": "b-subscriptions.svg",
+  "subscriptions": Categories.subscription,
   "skin care": "b-skincare.svg",
   "restaurants": "b-restaurants.svg",
-  "pet": "b-pets.svg",
+  "pet": Categories.petCare,
   "trips": "b-trips.svg",
   "miscellaneous": "b-miscellaneous.svg",
   "accessories": "b-accessories.svg",
@@ -272,9 +273,5 @@ int getSteps(max, div) {
   }
 }
 
-class AppColors {
-  static const Color primaryColor = Color(0xFF004856);
-  static const Color accentColor = Color(0xFF1E1E1E);
-  static const Color backgroundColor = Color(0xFFF4F4F4);
-}
+
 
