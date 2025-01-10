@@ -182,7 +182,10 @@ class _CommunityState extends State<Community> {
                 ),
               ),
             ),
-            IconButton(onPressed: () {}, icon: Icon(Icons.chat_sharp)),
+            IconButton(onPressed: ()
+             {
+                 Navigator.pushNamed(context, '/TribeChats'); 
+            }, icon: Icon(Icons.chat_sharp)),
           ],
         ),
         SizedBox(

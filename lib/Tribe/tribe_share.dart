@@ -343,7 +343,7 @@ Widget shareButton(){
                                             var jsonData={
                                                   "messageType": "post",
                                                   "receiver": rec,
-                                                  "sender":userId,
+                                                  "sender":currentId.value,
                                                   "message": null,
                                                   "image": null,
                                                   "poll": null,

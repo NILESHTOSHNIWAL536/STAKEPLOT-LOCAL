@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/customNoti.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/signup.dart';
+import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 
@@ -77,8 +78,8 @@ class _MyAppState extends State<MyApp> {
       '/home': (context) => HomePage(),  
       '/Notifications': (context) => Notifications(),  
       '/TribeSearch': (context) => TribeSearch(),  
-       '/Friends': (context) => Friends(),    
-  
+      '/Friends': (context) => Friends(),    
+      '/TribeChats': (context) => TribeChats(),     
     });
   }
 }
