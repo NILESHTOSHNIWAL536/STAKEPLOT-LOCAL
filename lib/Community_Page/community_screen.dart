@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart'
 import 'package:flutter_application_code_stakeplot/Community_Page/text_screen.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
@@ -57,10 +58,9 @@ class _CommunityState extends State<Community> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        extendBody: true,
-        backgroundColor: AppColors.backgroundColor,
-         bottomNavigationBar: BottomNavigations(data: 2),
-      
+      extendBody: true,
+      backgroundColor: AppColors.backgroundColor,
+      bottomNavigationBar: BottomNavigations(data: 2),
       body: Padding(
         padding: const EdgeInsets.all(18.0),
         child: SingleChildScrollView(
@@ -69,7 +69,7 @@ class _CommunityState extends State<Community> {
             children: [
               // Welcome Section
               _buildWelcomeRow(),
-      
+
               const SizedBox(height: 16),
 
               Obx(() =>  getTrendingData.length==0 && findTranding? Loader(): !findTranding && getTrendingData.length==0?Text("No Post yet"):Column(
@@ -1567,4 +1567,3 @@ class _CommunityState extends State<Community> {
 //     );
 //   }
 // }
-

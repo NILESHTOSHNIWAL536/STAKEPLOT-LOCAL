@@ -17,6 +17,7 @@ class Manualtransaction extends StatefulWidget {
 class _ManualtransactionState extends State<Manualtransaction> {
   Widget build(BuildContext context) {
     return Container(
+      //height: 300,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: AppColors.mt,
@@ -60,12 +61,12 @@ class _ManualtransactionState extends State<Manualtransaction> {
           const Spacer(),
           // Placeholder for an manual transaction image
 
-          Flexible(
+          Expanded(
             child: SvgPicture.asset(
               Pictures.manualTransactionImage,
-              height: double
-                  .infinity, // Make the SVG fit the height of the container
-              fit: BoxFit.contain, // Scale the image to fit within its bounds
+              height: MediaQuery.of(context).size.height *
+                  0.25, // Make the SVG fit the height of the container
+              //fit: BoxFit.contain, // Scale the image to fit within its bounds
             ),
           ),
         ],

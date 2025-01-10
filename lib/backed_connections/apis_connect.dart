@@ -251,30 +251,22 @@ void snackBarAllFeilds2(context, text, [Color colors = Colors.red]) {
   ));
 }
 
-
-List getSearchData(String val,List  data)
-{
-      List findOne=[];
-     data.forEach((element)
-    { 
-            if(element['name'].toString().contains(val)){
-                    findOne.add(element);
-            }
-     });
-      return findOne;
+List getSearchData(String val, List data) {
+  List findOne = [];
+  data.forEach((element) {
+    if (element['name'].toString().contains(val)) {
+      findOne.add(element);
+    }
+  });
+  return findOne;
 }
 
-RxList getSearchDataRx(String val,List  data)
-{
-      RxList findOne=[].obs;
-     data.forEach((element)
-    { 
-            if(element['name'].toString().contains(val)){
-                    findOne.add(element);
-            }
-     });
-      return findOne;
+RxList getSearchDataRx(String val, List data) {
+  RxList findOne = [].obs;
+  data.forEach((element) {
+    if (element['name'].toString().contains(val)) {
+      findOne.add(element);
+    }
+  });
+  return findOne;
 }
-
-
-
