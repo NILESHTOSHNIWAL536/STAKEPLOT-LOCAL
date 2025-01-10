@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
@@ -208,6 +209,30 @@ class _SigninState extends State<Signin> {
                             Navigator.pushNamed(context, '/ForgotPassword');
                           },
                           child: Text(("Forgot Password?"),
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                  color: Colorcodes.iconBackGround,
+                                  decoration: TextDecoration.underline)),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: Colorcodes.paddingSize / 3),
+                        child: InkWell(
+                          onTap: () {
+                            // ForgotPassword
+                            // Navigator.pushNamed(context, '/ShareAccountLogin');
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ShareAccountLogin(),
+                              ),
+                          );
+                          },
+                          child: Text(("Link Finvu"),
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.bold,
                                   fontSize: 12,

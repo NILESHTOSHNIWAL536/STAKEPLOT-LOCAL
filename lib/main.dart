@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Profile/friends.dart';
 import 'package:flutter_application_code_stakeplot/Profile/notifications.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/customNoti.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/signup.dart';
@@ -31,34 +32,11 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     initPlatformState();
-     _initFinvuManager();
+     initFinvuManager();
   }
 
- Future<void> initPlatformState() async {
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
+  Future<void> initPlatformState() async {
     if (!mounted) return;
-  }
-
-  void _initFinvuManager() async {
-     finvuManager.initialize(
-        FinvuConfig(
-          finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
-          certificatePins: [
-            // "3RbasfbYK4UP0GTgGKLV9ggrHbdiwzNDJ4s73Mx8AQM=",
-            // "bdrBhpj38ffhxpubzkINl0rG+UyossdhcBYj+Zx2fcc="
-          ],
-        ),
-      );
-
-    await finvuManager.connect(); 
-    var isConnected = await finvuManager.isConnected();
-    print(isConnected);
-    if (!isConnected) {
-        isConnected = await finvuManager.isConnected();
-        print(isConnected); 
-    }
   }
 
   // This widget is the root of your application.
