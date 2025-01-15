@@ -31,6 +31,7 @@ String url = "http://192.168.125.92:5000/api/v1";
 String valid = "Please Enter All Feilds";
 RxString expenses = "Loading....".obs;
 RxString aboutUS = "".obs;
+
 RxString avatar = "assets/avatar/menp1.svg".obs;
 RxString avatarUser = "assets/avatar/menp1.svg".obs;
 

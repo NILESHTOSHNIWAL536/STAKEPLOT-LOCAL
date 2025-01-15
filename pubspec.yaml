@@ -30,6 +30,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  finvu_flutter_sdk:
+    git:
+      url: https://github.com/Cookiejar-technologies/finvu_flutter_sdk.git
+      path: client
+      ref: 1.0.0
+  finvu_flutter_sdk_core:
+    git:
+      url: https://github.com/Cookiejar-technologies/finvu_flutter_sdk.git
+      path: core
+      ref: 1.0.0
   fl_chart:
   syncfusion_flutter_charts:
   get: ^4.6.6
@@ -51,6 +61,7 @@ dependencies:
   flutter_svg:
   socket_io_client: ^3.0.0-beta.2
   web_socket_channel: ^3.0.0
+  # getwidget: ^2.0.4
   
 
 
@@ -71,6 +82,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
+  change_app_package_name: ^1.4.0
   
 
 # For information on the generic Dart part of this file, see the

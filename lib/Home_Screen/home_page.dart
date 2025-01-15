@@ -11,7 +11,9 @@ import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart'
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
@@ -39,6 +41,8 @@ class _HomePageState extends State<HomePage> {
     getTrending();
     getPost();
     getTransaction(context);
+    getAck();
+    getUserInfomations();
   }
 
   final List<Widget> _pages = [
@@ -109,30 +113,8 @@ class HomeScreen extends StatelessWidget {
         child: ListView(
           children: [
             // Top Notifications Row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    SvgPicture.asset(HomePageIcons.notification,
-                        height: 30, width: 15),
-                    Positioned(
-                      right: 0,
-                      top: 0,
-                      child: Container(
-                        width: 12,
-                        height: 12,
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+            NotificationsBudget(child: Text(""),),
+           
             const SizedBox(height: 16),
 
             // Bank Account Container

@@ -90,19 +90,20 @@ class _PostCardState extends State<PostCard> {
         child: Column(
           children: [
             GestureDetector(
-              onTap: flag
-                  ? null
-                  : () {
-                      //      Navigator.push(
-                      //   context,
-                      //   PageTransition(
-                      //         type: PageTransitionType.fade,
-                      //         duration: Durations.long1,
-                      //         child:TribeUnique( id:dataObj["_id"] ,dataObj: dataObj,),
-                      //         isIos: true,
-                      //   ),
-                      // );
-                    },
+              onTap:flag?null: () {
+
+      
+                 Navigator.push(
+              context,
+              PageTransition(
+                    type: PageTransitionType.fade,
+                    duration: Durations.long1,
+                    child:TribeUnique( id:dataObj["_id"] ,dataObj: dataObj,),
+                    isIos: true,
+              ),
+            );
+                  
+              },
               child: Container(
                 padding: const EdgeInsets.fromLTRB(20, 3, 20, 20),
                 decoration: BoxDecoration(
@@ -364,53 +365,56 @@ class _PostCardState extends State<PostCard> {
       height: MediaQuery.of(context).size.height / 4.7,
 
       child: SfCartesianChart(
-        //  primaryXAxis: CategoryAxis(),
-        primaryYAxis: NumericAxis(
-          labelStyle: FontManager().getTextStyle(context,
-              color: Colorcodes.white,
-              fontSize: 13,
-              // color: Colorcodes.white,
-              lWeight: FontWeight.bold),
-          // borderWidth: 0,
-          // majorGridLines: MajorGridLines(
-          //     color: Colorcodes.iconBackGround,
-          //     dashArray: [3, 3, 3, 3]),
-          // axisLine: AxisLine(color: Colorcodes.black),
-          numberFormat: NumberFormat.compact(),
-        ),
-        primaryXAxis: CategoryAxis(
-          labelStyle: FontManager().getTextStyle(context,
-              color: Colorcodes.white, fontSize: 11, lWeight: FontWeight.bold),
-          // axisLine: AxisLine(color: Colorcodes.black),
-        ),
-        isTransposed: true,
-        series: <CartesianSeries>[
-          BarSeries<SalesData, String>(
-            dataSource: chartData,
-            onPointTap: (pointInteractionDetails) {
-              if (widget.flag) return;
-
-              Navigator.push(
-                  context,
-                  PageTransition(
-                    type: PageTransitionType.fade,
-                    duration: Durations.long1,
-                    child: TribeUnique(
-                      id: item["_id"],
-                      dataObj: item,
-                    ),
-                    isIos: true,
-                  ));
-            },
-            xValueMapper: (SalesData sales, _) => sales.month,
-            yValueMapper: (SalesData sales, _) => sales.sales,
-            pointColorMapper: (SalesData data, _) => data.color,
-          )
-        ],
-      ),
-    );
+          //  primaryXAxis: CategoryAxis(),
+            primaryYAxis: NumericAxis(
+                          labelStyle: FontManager().getTextStyle(context,
+                              color: Colorcodes.white,
+                              fontSize: 13,
+                                // color: Colorcodes.white,
+                              lWeight: FontWeight.bold
+                            ),
+                          // borderWidth: 0,
+                          // majorGridLines: MajorGridLines(
+                          //     color: Colorcodes.iconBackGround,
+                          //     dashArray: [3, 3, 3, 3]),
+                          // axisLine: AxisLine(color: Colorcodes.black),
+                           numberFormat: NumberFormat.compact(),
+                        ),
+                        primaryXAxis: CategoryAxis(
+                          labelStyle: FontManager().getTextStyle(context,
+                              color: Colorcodes.white,
+                              fontSize: 11,
+                              lWeight: FontWeight.bold
+                            ),
+                          // axisLine: AxisLine(color: Colorcodes.black),
+                          
+                        ),
+            isTransposed: true,
+           series: <CartesianSeries>[
+             BarSeries<SalesData, String>(
+               dataSource: chartData,
+               onPointTap: (pointInteractionDetails) {
+                  print(widget.flag);
+                   if(widget.flag)return;
+                    Navigator.push(
+                                context,
+                                PageTransition(
+                                      type: PageTransitionType.fade,
+                                      duration: Durations.long1,
+                                      child:TribeUnique( id:item["_id"] ,dataObj: item,),
+                                      isIos: true,
+                                ));
+               },
+               xValueMapper: (SalesData sales, _) => sales.month,
+               yValueMapper: (SalesData sales, _) => sales.sales,
+                pointColorMapper:(SalesData data,  _) => data.color,
+               
+             )
+           ],
+         ),
+        );
   }
-
+  
   Widget pieChart(item) {
     final List<ChartData> chartData = [];
 

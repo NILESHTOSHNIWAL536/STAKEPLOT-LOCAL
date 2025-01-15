@@ -26,11 +26,11 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 List postListIds=[];
 
-  RxList getTrendingData=[].obs;
+  // RxList getTrendingData=[].obs;
+  // RxList historyListData=[].obs;
   bool findData=true;
   bool findTranding=true;
   RxInt indexFlag=0.obs;  
-  RxList historyListData=[].obs;
 
 class TribeHome extends StatefulWidget {
   const TribeHome({Key? key}) : super(key: key);

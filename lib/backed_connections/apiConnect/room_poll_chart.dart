@@ -495,8 +495,7 @@ void updateRoom(context,List expenses,List user,String name,String id,admin)asyn
 
   void  getChatLoader()async
 {
-    getUserInfomations();
-    // print("  print(obj);");
+  
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var  accessToken=_pref.getString("accessToken");
     // //print("getChatLoader");
@@ -509,20 +508,23 @@ void updateRoom(context,List expenses,List user,String name,String id,admin)asyn
     },
   );
     
-
+    //  printData(response);
+    print(userId);
+    print(currentId.value);
+    print(friendsListDetails);
       if(response.statusCode==200 || response.statusCode==201)
       {
                   var  his=jsonDecode(response.body);
                   List obj=his['data'];
-                
-              
+                  // print(obj);
+                 
                  chatList.clear();
                  chatListOriginal.clear();
                obj.forEach((element){
-
+                   print(element);
                    try{
                       var userInfo=element['chats']['details']['_id'];
-                      String key=userInfo['sender']==userId?userInfo['receiver']:userInfo['sender'];
+                      String key=userInfo['sender']==currentId.value?userInfo['receiver']:userInfo['sender'];
                       var typed=element['chats']['details']['messageType'];
                       String type="message...";
                       try{
@@ -540,9 +542,12 @@ void updateRoom(context,List expenses,List user,String name,String id,admin)asyn
                     };
                      chatList.add(data);
                      chatListOriginal.add(data);
+                  
                     
-                    
-                   }catch(e){}
+                   }catch(e){
+                      print("error............in charts");
+                      print(e);
+                   }
 
                 });
                 

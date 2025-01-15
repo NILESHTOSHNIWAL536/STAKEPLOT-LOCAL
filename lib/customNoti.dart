@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
 
@@ -32,6 +34,41 @@ Widget child;
     //                 ),
     //               child: child
     //     ));
-    return Text("Nilesh");
+    // return InkWell(
+    //                   onTap: (){
+    //                       Navigator.pushNamed(context, '/Notifications');
+    //                   },
+    //                   child: SvgPicture.asset(HomePageIcons.notification,
+    //                       height: 30, width: 15),
+    //           );
+   return  Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                   InkWell(
+                      onTap: (){
+                          Navigator.pushNamed(context, '/Notifications');
+                      },
+                      child: SvgPicture.asset(HomePageIcons.notification,
+                          height: 30, width: 15),
+              ),
+               !hasGetNewNotifications.value?   SizedBox.shrink():   Positioned(
+                      right: 0,
+                      top: 0,
+                      child: Container(
+                        width: 12,
+                        height: 12,
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+           );
   }
 }
