@@ -12,6 +12,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
@@ -43,6 +44,7 @@ class _HomePageState extends State<HomePage> {
     getTransaction(context);
     getAck();
     getUserInfomations();
+    getUserLend(context);
   }
 
   final List<Widget> _pages = [
@@ -139,10 +141,7 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Pending Users
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.25,
-              child: UserListScreen(),
-            ),
+            UserListScreen(),
             const SizedBox(height: 20),
 
             // Doughnut Chart
@@ -154,7 +153,7 @@ class HomeScreen extends StatelessWidget {
 
             // Transaction History
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.8,
+              // height: MediaQuery.of(context).size.height * 0.8,
               child: TransactionHistory(),
             ),
           ],

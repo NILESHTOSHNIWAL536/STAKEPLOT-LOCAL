@@ -66,6 +66,8 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                 ),
       
               SizedBox(height: 100,),
+
+              
             ],
           ),
         ),

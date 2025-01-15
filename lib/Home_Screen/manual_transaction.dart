@@ -5,6 +5,7 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Manualtransaction extends StatefulWidget {
@@ -255,6 +256,8 @@ class _ModalContentState extends State<ModalContent>
   late ConfettiController _confettiController;
   late AnimationController _iconAnimationController;
   bool _isCelebrationVisible = false;
+   String? selectedCategory2;
+  String? selectedSubCategory2;
 
   void initState() {
     super.initState();
@@ -311,6 +314,7 @@ class _ModalContentState extends State<ModalContent>
 //celebration after tapping continue
   void _showCelebration() {
     // Trigger confetti and animation
+    
     setState(() {
       _isCelebrationVisible = true;
     });
@@ -498,11 +502,13 @@ class _ModalContentState extends State<ModalContent>
                             onTap: () {
                               setState(() {
                                 selectedSubCategory = subCategory;
+                                 selectedSubCategory2 = subCategory;
                                 categoryFieldController.text =
                                     '$selectedCategory ($selectedSubCategory)';
                                 //isSplitbill = true;
                                 fin =
                                     '$selectedCategory ($selectedSubCategory)';
+                                selectedCategory2=selectedCategory;
                                 resetToInitialScreen();
                               });
                             },
@@ -562,7 +568,10 @@ class _ModalContentState extends State<ModalContent>
                           // Button to trigger celebration
                           Center(
                             child: ElevatedButton(
-                              onPressed: _showCelebration,
+                              onPressed:(){
+                                 addTransaction(amount.toString(),selectedSubCategory2.toString(),selectedCategory2.toString(),context,"cash");
+                                 _showCelebration();
+                                },
                               child: Text('Continue',
                                   style: FontManager().getTextStyle(context,
                                       lWeight: FontWeight.normal,

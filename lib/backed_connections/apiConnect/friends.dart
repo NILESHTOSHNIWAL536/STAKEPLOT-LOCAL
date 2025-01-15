@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:http/http.dart' as http;
@@ -31,6 +32,7 @@ void   addUserAsFrd(id,context)async
       
       if(response.statusCode==200 || response.statusCode==201){
             final body = json.decode(response.body);
+            sendNotificationsToDevice(id,context,"${userName.value} Has Accepted Friend Request..");
             snackBarCalled(context,"Adding user As Friend...!",Colors.black);
             
       }else{
@@ -59,6 +61,7 @@ void  rejectFrdRequest(body,context)async
       //print(response.body);
       if(response.statusCode==200 || response.statusCode==201){
             final body = json.decode(response.body);
+            
             // snackBarCalled(context,"Rem user As Friend...!",Colors.black);
             
       }else{
@@ -87,6 +90,7 @@ void   addUsersendRequest(id,name,context)async
   );
       //printData(response,context);
       if(response.statusCode==200 || response.statusCode==201){
+            sendNotificationsToDevice(id,context,"${userName.value} Has Send U a Friend Request..");
             snackBarCalled(context,"Sending Friend Request...!",Colors.black);
 
             //  Navigator.pop(context); 
