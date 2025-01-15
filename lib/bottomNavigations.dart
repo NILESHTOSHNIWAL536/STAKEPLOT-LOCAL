@@ -8,6 +8,7 @@ import "package:flutter_application_code_stakeplot/Profile/profile.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart";
+import "package:flutter_application_code_stakeplot/profile_screen/profile_screen.dart.dart";
 
 import "package:get/get.dart";
 import "package:shared_preferences/shared_preferences.dart";
@@ -16,8 +17,6 @@ import "package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
-
-
 
 class BottomNavigations extends StatefulWidget {
   int data;
@@ -28,168 +27,136 @@ class BottomNavigations extends StatefulWidget {
 }
 
 class _BottomNavigationsState extends State<BottomNavigations> {
-
-
-
-
   @override
   void initState() {
     super.initState();
-     getRoom();
+    getRoom();
   }
 
-
-
-   void  getRoom()async
-{
-    
+  void getRoom() async {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var  accessToken=_pref.getString("accessToken");
+    var accessToken = _pref.getString("accessToken");
     final response = await http.get(
-    Uri.parse('${url}/room/find'),
-    // Uri.parse('https://stakeplot.in/api/v1/post/all'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
-  
-      if(response.statusCode==200)
-      {
-                  var  his=jsonDecode(response.body);
-                  var obj=his['data'];
-                  
-                      
-      }
-      else{
-      }
- 
-}
+      Uri.parse('${url}/room/find'),
+      // Uri.parse('https://stakeplot.in/api/v1/post/all'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Authorization": "$accessToken",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var his = jsonDecode(response.body);
+      var obj = his['data'];
+    } else {}
+  }
 
   @override
   Widget build(BuildContext context) {
-    
-
     return Container(
-       color: Colorcodes.white,
-      padding: const EdgeInsets.only(left: 5.0,right: 5.0,bottom: 1.5),
+      color: Colorcodes.white,
+      padding: const EdgeInsets.only(left: 5.0, right: 5.0, bottom: 1.5),
       child: Card(
         elevation: Colorcodes.elevation,
         color: Colorcodes.budgetLightGreen,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 5.0,vertical: 3),
+          padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 3),
           child: Row(
-               mainAxisAlignment: MainAxisAlignment.spaceAround,
-               children: [
-                       getContainer(svgIconPath.bottom1, 0),
-                       getContainer(svgIconPath.bottom2, 1),
-                       if(sizeRoom) getContainer('assets/images/room.svg', 2),
-                       getContainer(svgIconPath.bottom3,sizeRoom? 3:2),
-                       getContainer(svgIconPath.bottom4, sizeRoom?4:3),
-               ],
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              getContainer(svgIconPath.bottom1, 0),
+              getContainer(svgIconPath.bottom2, 1),
+              if (sizeRoom) getContainer('assets/images/room.svg', 2),
+              getContainer(svgIconPath.bottom3, sizeRoom ? 3 : 2),
+              getContainer(svgIconPath.bottom4, sizeRoom ? 4 : 3),
+            ],
           ),
         ),
       ),
     );
-
-
-
-
-
   }
-
 
   Widget imageurl(url, int index) {
     return SvgPicture.asset(
       url,
       width: 40,
       height: 40,
-      color: widget.data==index?Colorcodes.debtBody:Colorcodes.black,
+      color: widget.data == index ? Colorcodes.debtBody : Colorcodes.black,
     );
   }
 
-
-
-  Widget getContainer(url, i){
-       return InkWell(
-        onLongPress: () {
-           if (i == 0){ 
-          
-                //  showModalBottomSheet(context: context, 
-                //                      builder: (context){
-                //                            return showUserData(context);
-                //      },);
-                  
-            }
-          else if (i == 2 && widget.data != i){ 
-          
-            //  Navigator.push(
-            //           context,
-            //           MaterialPageRoute(
-            //             builder: (context) => TribeChats(),
-            //           ),
-            //       );
-                  
-            }
-        },
-        onTap: (){
-        if (i == 0 && widget.data != i) pushName( HomePage());
+  Widget getContainer(url, i) {
+    return InkWell(
+      onLongPress: () {
+        if (i == 0) {
+          //  showModalBottomSheet(context: context,
+          //                      builder: (context){
+          //                            return showUserData(context);
+          //      },);
+        } else if (i == 2 && widget.data != i) {
+          //  Navigator.push(
+          //           context,
+          //           MaterialPageRoute(
+          //             builder: (context) => TribeChats(),
+          //           ),
+          //       );
+        }
+      },
+      onTap: () {
+        if (i == 0 && widget.data != i) pushName(HomePage());
         // else if (i == 1 && widget.data != i)pushName(Budget());
-      
-        if(!sizeRoom)
-        {
-              if (i == 2 && widget.data != i)pushName(Community());
-              else if (i == 3 && widget.data != i)pushName(Profile());
-        }else{
+        if (i == 1 && widget.data != i) pushName(ProfileScreenDart());
 
-            // if (i == 2 && widget.data != i)  pushName(RoomHome());
-              if (i == 3 && widget.data != i)pushName(Community());
-            else if (i == 4 && widget.data != i)pushName(Profile());
-      }
+        if (!sizeRoom) {
+          if (i == 2 && widget.data != i)
+            pushName(Community());
+          else if (i == 3 && widget.data != i) pushName(Profile());
+        } else {
+          // if (i == 2 && widget.data != i)  pushName(RoomHome());
+          if (i == 3 && widget.data != i)
+            pushName(Community());
+          else if (i == 4 && widget.data != i) pushName(Profile());
+        }
 
-       setState(() {
-           widget.data=i;
-       });
-        },
-         child: Container(
-           
-            padding: EdgeInsets.symmetric(horizontal: 6,vertical: 3),
-            child: imageurl(url, i),
-         ),
-       );
+        setState(() {
+          widget.data = i;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+        child: imageurl(url, i),
+      ),
+    );
   }
 
+  void pushName(widgetName) {
+    // Get.to(widgetName)
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => widgetName,
+      ),
+    );
+    //  Navigator.push(
+    //       context,
 
- void pushName(widgetName){
-        // Get.to(widgetName)
-          Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-         Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => widgetName,
-                      ),
-                  );
-      //  Navigator.push(
-      //       context,
+    // PageTransition(
+    //    type: PageTransitionType.fade,
+    //   alignment: Alignment.bottomRight,
+    //    duration: Durations.long1,
 
-            // PageTransition(
-            //    type: PageTransitionType.fade,
-            //   alignment: Alignment.bottomRight,
-            //    duration: Durations.long1,
-
-            //   child: widgetName,
-            //   isIos: true,
-            // ),
-          // );
-
-
- }
-
+    //   child: widgetName,
+    //   isIos: true,
+    // ),
+    // );
+  }
 
 //  handleTap(i){
 //     if (i == 0 && widget.data != i) pushName( Home());
 //         else if (i == 1 && widget.data != i)pushName(Budget());
-      
+
 //         if(!sizeRoom)
 //         {
 //               if (i == 2 && widget.data != i)pushName(TribeHome());
@@ -205,215 +172,202 @@ class _BottomNavigationsState extends State<BottomNavigations> {
 //       //      widget.data=i;
 //       //  });
 // }
-
 }
 
+Widget showUserData(BuildContext context) {
+  double width = MediaQuery.of(context).size.width;
+  double height = MediaQuery.of(context).size.height;
 
+  List<String> loginUsers = loginUsersList.keys.toList();
 
-Widget  showUserData(BuildContext context){
-    double width= MediaQuery.of(context).size.width;
-    double height= MediaQuery.of(context).size.height;
+  loginUsers.remove(userName.value);
+  loginUsers.insert(0, userName.value);
 
-    List<String> loginUsers=loginUsersList.keys.toList();
-
-    loginUsers.remove(userName.value);
-    loginUsers.insert(0,userName.value);
-
-  
-
-    return Container(
-        width: width,
-        height:loginUsers.length==0? height/5:height/2.7,
-        decoration:BoxDecoration(
-        color: Colorcodes.budgetLightGreen,
-            borderRadius: BorderRadius.only(
-               topLeft: Radius.circular(40),
-               topRight: Radius.circular(40),
-            ),
-         
-        ) ,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-                width: width/8,
-                height: 4,
-                margin: EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                color: Colorcodes.white,
-                  borderRadius: BorderRadius.circular(10)
-                ),
-            ),
-         loginUsers.length==0?SizedBox.shrink():   Container(
-                width: width/1.1,
-                height: loginUsers.length==1?height/5.7/2 :height/5.7,
+  return Container(
+    width: width,
+    height: loginUsers.length == 0 ? height / 5 : height / 2.7,
+    decoration: BoxDecoration(
+      color: Colorcodes.budgetLightGreen,
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(40),
+        topRight: Radius.circular(40),
+      ),
+    ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          width: width / 8,
+          height: 4,
+          margin: EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+              color: Colorcodes.white, borderRadius: BorderRadius.circular(10)),
+        ),
+        loginUsers.length == 0
+            ? SizedBox.shrink()
+            : Container(
+                width: width / 1.1,
+                height:
+                    loginUsers.length == 1 ? height / 5.7 / 2 : height / 5.7,
                 padding: EdgeInsets.all(5),
                 margin: EdgeInsets.symmetric(vertical: 5),
                 decoration: BoxDecoration(
-                   color: Colorcodes.white,
-                   borderRadius: BorderRadius.circular(20)
-                 
-                ),
-                   
-                child:ListView.builder(
-                    itemBuilder: (context, index) {
-                         String name=loginUsers[index];
-                         dynamic user=loginUsersList[name];
-                        
-                         return InkWell(
-                          onTap: ()async{
-                                TextEditingController emailController=TextEditingController(text: user['email']);
-                                TextEditingController passwordController =TextEditingController(text:user['password']);
-                             final SharedPreferences _pref = await SharedPreferences.getInstance();
-                                _pref.remove("accessToken").then((_) {
-                                // Code to execute after token removal
-                                _pref.setString("accessToken", user['accessToken']);
-                                 Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-                                Navigator.pushReplacementNamed(context, '/home'); 
+                    color: Colorcodes.white,
+                    borderRadius: BorderRadius.circular(20)),
+                child: ListView.builder(
+                  itemBuilder: (context, index) {
+                    String name = loginUsers[index];
+                    dynamic user = loginUsersList[name];
 
-                                //  Navigator.pushReplacementNamed(context, '/'); 
-                              }).catchError((error) {
-                                // Error handling if token removal fails
-                         });
+                    return InkWell(
+                      onTap: () async {
+                        TextEditingController emailController =
+                            TextEditingController(text: user['email']);
+                        TextEditingController passwordController =
+                            TextEditingController(text: user['password']);
+                        final SharedPreferences _pref =
+                            await SharedPreferences.getInstance();
+                        _pref.remove("accessToken").then((_) {
+                          // Code to execute after token removal
+                          _pref.setString("accessToken", user['accessToken']);
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              '/', (Route<dynamic> route) => false);
+                          Navigator.pushReplacementNamed(context, '/home');
 
-                         clearGetX();
-                              
-                              
-                                loginUser(emailController, passwordController, context);
-                              
+                          //  Navigator.pushReplacementNamed(context, '/');
+                        }).catchError((error) {
+                          // Error handling if token removal fails
+                        });
 
-                          },
-                           child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 10,vertical: 2),
-                              child: Row(
-                                  children: [
-                                       AvatarProfileImage(url: user['avatar'], width: 16, height: 16),
-                                        Container(
-                                          width: width/1.8,
-                                          // color: Colorcodes.bedgetBody,
-                                          child: Text(user['name'],
-                                           style: FontManager().getTextStyle(context,
-                                          lWeight: FontWeight.bold,
-                                          fontSize: 17,
-                                          color: Colorcodes.black),
-                                          overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                           
-                                 Obx(() =>    user['name']==userName.value?    Container(
-                                          alignment: Alignment.centerRight,
-                                          child: Icon(
-                                              Icons.check_circle_outlined,
-                                              color: Colorcodes.budgetDarkGreen,
-                                          ),
-                                        ):SizedBox.shrink()),
-                           
-                                       
-                                  ],
-                                                   ) ,
-                                           
-                                
-                           ),
-                         );
-                    },
-                    itemCount: loginUsers.length,
-                  ),
-          ),
-           InkWell(
-            onTap: (){
-                 Navigator.pop(context);
-                Navigator.pushNamed(context, '/');
-            },
-             child: Center(
-               child: Padding(
-                 padding: const EdgeInsets.only(left: 20.0,top: 10),
-                 child: Row(
-                            children: [
-                                       
-                                               CircleAvatar(
-                                                backgroundColor: Colorcodes.white,
-                                                child: AvatarProfileImage(url: svgIconPath.account, width: 10, height: 10)),
-                                             
-                                               const SizedBox(width: 20,),
-                                              Text("Add StakePlot Account",
-                                               style: FontManager().getTextStyle(context,
-                                              lWeight: FontWeight.w500,
-                                              fontSize: 17,
-                                              color: Colorcodes.black)),
-                             ],
+                        clearGetX();
+
+                        loginUser(emailController, passwordController, context);
+                      },
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                        child: Row(
+                          children: [
+                            AvatarProfileImage(
+                                url: user['avatar'], width: 16, height: 16),
+                            Container(
+                              width: width / 1.8,
+                              // color: Colorcodes.bedgetBody,
+                              child: Text(
+                                user['name'],
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.bold,
+                                    fontSize: 17,
+                                    color: Colorcodes.black),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Obx(() => user['name'] == userName.value
+                                ? Container(
+                                    alignment: Alignment.centerRight,
+                                    child: Icon(
+                                      Icons.check_circle_outlined,
+                                      color: Colorcodes.budgetDarkGreen,
+                                    ),
+                                  )
+                                : SizedBox.shrink()),
+                          ],
                         ),
-               ),
-             ),
-           ),
-          logoutWidget(context,true),
-          ],
+                      ),
+                    );
+                  },
+                  itemCount: loginUsers.length,
+                ),
+              ),
+        InkWell(
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.pushNamed(context, '/');
+          },
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20.0, top: 10),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                      backgroundColor: Colorcodes.white,
+                      child: AvatarProfileImage(
+                          url: svgIconPath.account, width: 10, height: 10)),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Text("Add StakePlot Account",
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w500,
+                          fontSize: 17,
+                          color: Colorcodes.black)),
+                ],
+              ),
+            ),
+          ),
         ),
-    );
-
+        logoutWidget(context, true),
+      ],
+    ),
+  );
 }
 
+Widget logoutWidget(context, [flag = false]) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 6),
+    child: Container(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      // height: 50,
+      //  alignment: Alignment.bottomCenter,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          InkWell(
+            onTap: () async {
+              //  home
+              final SharedPreferences _pref =
+                  await SharedPreferences.getInstance();
 
+              await _pref.remove("accessToken");
+              await _pref.remove("token");
+              await _pref.remove("ConsentHandleId");
+              await _pref.remove("consentId");
+              await _pref.remove("from");
+              await _pref.remove("to");
+              await _pref.remove("sessionId");
 
-Widget logoutWidget(context,[flag=false]){
-   return 
-                                 Padding(
-                                   padding: const EdgeInsets.symmetric(vertical: 6),
-                                   child: Container(
-                                   padding: const EdgeInsets.symmetric(vertical: 10),
-                                    // height: 50,
-                                    //  alignment: Alignment.bottomCenter,
-                                     child: Row(
-                                                               mainAxisAlignment: MainAxisAlignment.center,
-                                                               children: [
-                                                                 InkWell(
-                                      onTap: ()async{
-                                          //  home
-                                           final SharedPreferences _pref = await SharedPreferences.getInstance();
-                                          
+              _pref.remove("accessToken").then((_) {
+                // Code to execute after token removal
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/', (Route<dynamic> route) => false);
+                Navigator.pushReplacementNamed(context, '/');
+                //  Navigator.pushReplacementNamed(context, '/');
+              }).catchError((error) {
+                // Error handling if token removal fails
+              });
 
-                                            await  _pref.remove("accessToken");
-                                            await  _pref.remove("token");   
-                                            await  _pref.remove("ConsentHandleId");   
-                                            await  _pref.remove("consentId");   
-                                            await  _pref.remove("from");   
-                                            await  _pref.remove("to");   
-                                            await  _pref.remove("sessionId");   
-
-                         _pref.remove("accessToken").then((_) {
-                                // Code to execute after token removal
-                                 Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-                                Navigator.pushReplacementNamed(context, '/'); 
-                                //  Navigator.pushReplacementNamed(context, '/'); 
-                              }).catchError((error) {
-                                // Error handling if token removal fails
-                         });
-
-                         clearGetX();
-                                                       
-                                   
-                                           
-                                      },
-                                      child: Container( 
-                                        padding:const EdgeInsets.symmetric(vertical: 8),
-                                        width:flag? MediaQuery.of(context).size.width/1.1 :MediaQuery.of(context).size.width/1.2,
-                                        decoration: BoxDecoration(
-                                        color: Colorcodes.budgetDarkGreen,
-                                             borderRadius: BorderRadius.circular(100)
-                                        ),
-                                        child: Center(
-                                          child: Text(("LogOut"),
-                                          style: FontManager().getTextStyle(context,
-                                                                      lWeight: FontWeight.w500,
-                                                                      fontSize: 20,
-                                                                      color: Colorcodes.white)),
-                                        ),
-                                                           ),
-                                                                 ),
-                                                               ],
-                                                             ),
-                                   ),
-            );
-                            
-                 
+              clearGetX();
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              width: flag
+                  ? MediaQuery.of(context).size.width / 1.1
+                  : MediaQuery.of(context).size.width / 1.2,
+              decoration: BoxDecoration(
+                  color: Colorcodes.budgetDarkGreen,
+                  borderRadius: BorderRadius.circular(100)),
+              child: Center(
+                child: Text(("LogOut"),
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.w500,
+                        fontSize: 20,
+                        color: Colorcodes.white)),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }

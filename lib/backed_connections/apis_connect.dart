@@ -16,9 +16,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
-String urlWithLocallHost = "http://192.168.1.15:5000/";
+String urlWithLocallHost = "http://192.168.125.92:5000/";
 // String urlWithLocallHost="https://stakeplot.in";
-String url = "http://192.168.1.15:5000/api/v1";
+String url = "http://192.168.125.92:5000/api/v1";
 // String url="http://192.168.1.46:5000/api/v1";
 // String urlWithLocallHost2="http://10.0.2.2:5000/api/v1";
 // String url="http://localhost:5000/api/v1";
