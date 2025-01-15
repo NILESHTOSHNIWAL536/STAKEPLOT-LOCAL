@@ -104,17 +104,15 @@ class _BottomNavigationsState extends State<BottomNavigations> {
       },
       onTap: () {
         if (i == 0 && widget.data != i) pushName(HomePage());
-        else if (i == 1 && widget.data != i)pushName(Budget());
+        // else if (i == 1 && widget.data != i)pushName(Budget());
         // if (i == 1 && widget.data != i) pushName(ProfileScreenDart());
 
         if (!sizeRoom) {
-          if (i == 2 && widget.data != i)
-            pushName(Community());
+          if (i == 2 && widget.data != i) pushName(Community());
           else if (i == 3 && widget.data != i) pushName(ProfileScreenDart());
         } else {
           // if (i == 2 && widget.data != i)  pushName(RoomHome());
-          if (i == 3 && widget.data != i)
-            pushName(Community());
+          if (i == 3 && widget.data != i) pushName(Community());
           else if (i == 4 && widget.data != i) pushName(ProfileScreenDart());
         }
 
