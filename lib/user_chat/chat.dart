@@ -27,13 +27,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 
 late IO.Socket socket;
 
 // // Model for messages
 // class Message {
 //   String? text;
-//   File? url;  
+//   File? url;
 //   String type;//["image","text","Poll",'post']
 //   final bool isMe;
 //   var question;
@@ -44,68 +45,71 @@ late IO.Socket socket;
 //   Message({ this.text, required this.isMe,this.url,required this.type,this.question,this.image="",this.poll="",this.post="",this.split=""});
 // }
 
-
-
 class Chat extends StatefulWidget {
   var data;
   var myprofile;
   String myId;
-   Chat({ Key? key,required this.data ,required this.myId,required this.myprofile}) : super(key: key);
+  Chat(
+      {Key? key,
+      required this.data,
+      required this.myId,
+      required this.myprofile})
+      : super(key: key);
 
   @override
   _ChatState createState() => _ChatState();
 }
 
 class _ChatState extends State<Chat> {
-  final TextEditingController _textController = TextEditingController(); // Controller for text input
-  TextEditingController search= TextEditingController();
+  final TextEditingController _textController =
+      TextEditingController(); // Controller for text input
+  TextEditingController search = TextEditingController();
   var data;
   int counter = 0;
   Timer? timer;
-  RxString roomId="".obs;
-  RxBool online=false.obs;
+  RxString roomId = "".obs;
+  RxBool online = false.obs;
 
-  FocusNode myFocusNode=FocusNode();
+  FocusNode myFocusNode = FocusNode();
 
-  String path="assets/avatar/menp1.svg";
+  String path = "assets/avatar/menp1.svg";
   ValueNotifier<bool> onlineUser = ValueNotifier<bool>(false);
-  
 
-
-    @override
+  @override
   void initState() {
     super.initState();
-      data=widget.data;
-      //  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-      String room1 = userName.value+data['name'];
-      String room2 = data['name']+userName.value;
+    data = widget.data;
+    //  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    String room1 = userName.value + data['name'];
+    String room2 = data['name'] + userName.value;
 
-      roomId.value =  (room1.compareTo(room2) <= 0) ? room1 : room2;
-
-     
+    roomId.value = (room1.compareTo(room2) <= 0) ? room1 : room2;
 
     getChats(data);
-    path=avatar.value;//widget.myprofile['avatarType'];
+    path = avatar.value; //widget.myprofile['avatarType'];
     // socket=SocketIOManager().createSocketIO(
     //     urlWithLocallHost, '/',
     //     query: 'chatID=${data['_id']}');
-     socket=IO.io(urlWithLocallHost,IO.OptionBuilder().setTransports(['websocket']).enableForceNewConnection().build());
-      // if (socket.connected) {
-      //     socket.disconnect();
-      //     socket.close();
-      //  }
-      // socket = IO.io(urlWithLocallHost, IO.OptionBuilder()
-      //   .setQuery({'chatID': data['_id']})
-      //   .setTransports(['websocket']) 
-      //   .disableAutoConnect()
-      //   .build());
+    socket = IO.io(
+        urlWithLocallHost,
+        IO.OptionBuilder()
+            .setTransports(['websocket'])
+            .enableForceNewConnection()
+            .build());
+    // if (socket.connected) {
+    //     socket.disconnect();
+    //     socket.close();
+    //  }
+    // socket = IO.io(urlWithLocallHost, IO.OptionBuilder()
+    //   .setQuery({'chatID': data['_id']})
+    //   .setTransports(['websocket'])
+    //   .disableAutoConnect()
+    //   .build());
     // socket=IO.io(url,IO.OptionBuilder().setTransports(['websocket']).setPath("/io").disableAutoConnect().build());
-    
-    
-      // initFunt();
-      socket.connect();
-     setUpSocketListener();
 
+    // initFunt();
+    socket.connect();
+    setUpSocketListener();
   }
 
   @override
@@ -118,215 +122,205 @@ class _ChatState extends State<Chat> {
     super.dispose();
   }
 
-
-setUpSocketListener(){
-
+  setUpSocketListener() {
     socket.onConnect((_) {
-      
-        socket.emit("joinRoom",roomId.value);
-        socket.emit("online",roomId.value);
-      });
+      socket.emit("joinRoom", roomId.value);
+      socket.emit("online", roomId.value);
+    });
 
+    socket.onConnectError((data) {});
 
-      socket.onConnectError((data) {
-         
-      });
+    socket.on(
+        "disconnect",
+        (data) => {
+              socket.close(),
+            });
 
+    socket.on(
+        'online',
+        (res) => {
+              onlineUser.value = true,
+            });
 
-
-
-     socket.on("disconnect", (data) => {
-            socket.close(),
-     });
-
-     socket.on('online',(res)=>{
-             onlineUser.value=true,
-     });
-
-     socket.on("message", (data2) => {
-  
-         
-          if(roomId==data2['roomId']) 
-              messages.insert(0,Message(
-                            text: data2['message'] ?? "", 
-                            isMe:false,
-                            type:data2['messageType']??"message",
-                            image: data2['image']?? "",
-                            poll:data2['poll'] ?? "poll",
-                            split: data2['split'] ?? "",
-                            post:   data2['messageType']=="post"? data2['post']['postLocation']:""
-                            // post:  postData,//data2['messageType']=="post"? (data2['post']['postLocation'])??"":"",
-            )),
-            unSeenChat(context,data['_id']),
-            getChatLoader(),
-            getChats(widget.data),
-      });
-
-
-    
-    
-  
-}
+    socket.on(
+        "message",
+        (data2) => {
+              if (roomId == data2['roomId'])
+                messages.insert(
+                    0,
+                    Message(
+                        text: data2['message'] ?? "",
+                        isMe: false,
+                        type: data2['messageType'] ?? "message",
+                        image: data2['image'] ?? "",
+                        poll: data2['poll'] ?? "poll",
+                        split: data2['split'] ?? "",
+                        post: data2['messageType'] == "post"
+                            ? data2['post']['postLocation']
+                            : ""
+                        // post:  postData,//data2['messageType']=="post"? (data2['post']['postLocation'])??"":"",
+                        )),
+              unSeenChat(context, data['_id']),
+              getChatLoader(),
+              getChats(widget.data),
+            });
+  }
 
   void _handleSubmitted(String text) {
-     _textController.clear();
+    _textController.clear();
 
-     var jsonData={
-               
-                      "messageType": "message",
-                      "receiver": data['_id'],
-                       "sender": widget.myId,
-                      "receiverChatID": data['_id'],
-                      "senderChatID": widget.myId,
-                      "message": text,
-                      "image": null,
-                      "poll": null,
-                      "post" : null,
-                      "split" : null,
-                      "roomId":roomId.value,
-     };
+    var jsonData = {
+      "messageType": "message",
+      "receiver": data['_id'],
+      "sender": widget.myId,
+      "receiverChatID": data['_id'],
+      "senderChatID": widget.myId,
+      "message": text,
+      "image": null,
+      "poll": null,
+      "post": null,
+      "split": null,
+      "roomId": roomId.value,
+    };
 
+    messages.insert(
+        0,
+        Message(
+            text: text,
+            isMe: true,
+            type: "message",
+            image: data['image'] ?? "",
+            poll: ""));
 
+    search.clear();
+    // socket.emit('register',  data['_id']);
 
-
-     messages.insert(0,Message(
-                    text: text, 
-                    isMe: true,
-                    type: "message",
-                    image: data['image']?? "",
-                    poll: ""
-     ));
-
-
-      search.clear();
-      // socket.emit('register',  data['_id']);
-
-      socket.emit("message",jsonData);
-      socket.emit("LoadCharts",{
-             "roomId":data['name']+""+data['name'],
-      });
+    socket.emit("message", jsonData);
+    socket.emit("LoadCharts", {
+      "roomId": data['name'] + "" + data['name'],
+    });
   }
 
+  Widget getDataWidget(Message message) {
+    if (message.type == "message") {
+      return text(message.text, message.isMe);
+    } else if (message.type == "poll") {
+      return polled(
+        message.isMe,
+        message.poll,
+      );
+    } else if (message.type == "image") {
+      return imageDisplay(message.text, message.isMe, message.image);
+    } else if (message.type == "post") {
+      return postDisplay(message.text, message.isMe, message.image, message);
+    } else if (message.type == "split") {
+      return spliDisplay(message.text, message.isMe, message.image, message);
+    }
 
-
-    Widget getDataWidget(Message message){
-    
-     
-      if( message.type=="message"){
-           return   text(message.text,message.isMe);
-      }else if(message.type=="poll"){
-          return   polled(message.isMe,message.poll,);
-      }
-      else if(message.type=="image"){
-          return   imageDisplay(message.text,message.isMe,message.image);
-      }
-      else if(message.type=="post"){
-          return   postDisplay(message.text,message.isMe,message.image,message);
-      }
-      else if(message.type=="split"){
-          return   spliDisplay(message.text,message.isMe,message.image,message);
-      }
-     
-      return Text("polled");
+    return Text("polled");
   }
 
-
-  
-  Widget postDisplay( msg,bool,url ,Message message)
-   {
-    return bool?  Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-                 uploadData((message.post)),
-                // PostCard(data: message.post),
-                 profilepath(bool),
-        ],
-     ):Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-                    profilepath(bool),
-                    uploadData((message.post)),
-                    //  PostCard(data: message.post),
-        ],
-     );
-  }
-  
-  Widget spliDisplay( msg,bool,url ,Message message)
-   {
-    return bool?  Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-                 spliData(message),
-                 profilepath(bool),
-        ],
-     ):Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-                    profilepath(bool),
-                    spliData(message),
-        ],
-     );
+  Widget postDisplay(msg, bool, url, Message message) {
+    return bool
+        ? Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              uploadData((message.post)),
+              // PostCard(data: message.post),
+              profilepath(bool),
+            ],
+          )
+        : Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              profilepath(bool),
+              uploadData((message.post)),
+              //  PostCard(data: message.post),
+            ],
+          );
   }
 
-  Widget spliData(Message message){
-     return Container(
-           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-             width: MediaQuery.of(context).size.width/2,
-       decoration: BoxDecoration(
+  Widget spliDisplay(msg, bool, url, Message message) {
+    return bool
+        ? Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              spliData(message),
+              profilepath(bool),
+            ],
+          )
+        : Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              profilepath(bool),
+              spliData(message),
+            ],
+          );
+  }
+
+  Widget spliData(Message message) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      width: MediaQuery.of(context).size.width / 2,
+      decoration: BoxDecoration(
           //  color: Colorcodes.appBarColor,
-            // border: Border.all(width: .5),
-           borderRadius: BorderRadius.circular(20),
-           border: Border.all(
-           width: .5,
-           color: Colorcodes.poll1
-        )
-   
-       ),
-         child: Column(
-             mainAxisAlignment: MainAxisAlignment.start,
-             crossAxisAlignment: CrossAxisAlignment.start,
-             children: [
-                  const SizedBox(height: 6,),
-                  Text(message.split['BillName'],style:  FontManager().getTextStyle(context,fontSize: 18,lWeight: FontWeight.bold,color:  Colorcodes.poll1)),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: Text("Amount: "+doubleToFixed(message.split['Amount'].toString()),style:  FontManager().getTextStyle(context,fontSize: 16,color:  Colorcodes.poll1)),
-                  ),
-                  Text("Share:  "+doubleToFixed(message.split['Share'].toString()).toString(),style:  FontManager().getTextStyle(context,fontSize: 16,color:Colorcodes.poll1)),
-                   const SizedBox(height: 4),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6.0),
-                    child: Text(message.split['isPaid']?"Paid..!":"Pending..!",style:  FontManager().getTextStyle(
-                      context,fontSize: 18,lWeight: FontWeight.bold,
-                      color: (message.split['isPaid']? Colorcodes.poll1:Colorcodes.greyLight)
-                    )),
-                  ),
-                    
-             ],
-         ),
-     );
+          // border: Border.all(width: .5),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(width: .5, color: Colorcodes.poll1)),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            height: 6,
+          ),
+          Text(message.split['BillName'],
+              style: FontManager().getTextStyle(context,
+                  fontSize: 18,
+                  lWeight: FontWeight.bold,
+                  color: Colorcodes.poll1)),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: Text(
+                "Amount: " + doubleToFixed(message.split['Amount'].toString()),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 16, color: Colorcodes.poll1)),
+          ),
+          Text(
+              "Share:  " +
+                  doubleToFixed(message.split['Share'].toString()).toString(),
+              style: FontManager().getTextStyle(context,
+                  fontSize: 16, color: Colorcodes.poll1)),
+          const SizedBox(height: 4),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6.0),
+            child: Text(message.split['isPaid'] ? "Paid..!" : "Pending..!",
+                style: FontManager().getTextStyle(context,
+                    fontSize: 18,
+                    lWeight: FontWeight.bold,
+                    color: (message.split['isPaid']
+                        ? Colorcodes.poll1
+                        : Colorcodes.greyLight))),
+          ),
+        ],
+      ),
+    );
   }
 
+  void getImage() async {
+    final _picker = ImagePicker();
+    final imageData = await _picker.pickImage(source: ImageSource.gallery);
 
+    if (imageData != null) {
+      //  addMessage(context,"image",search.text,data['_id'],data);
+      showData(imageData);
+      // addMessageImage(context, "image","None",data['_id'],File(imageData.path),widget.data,widget.myId,socket,widget.myId,roomId.value,);
 
-   void getImage()async
-   {
-        
-        final _picker = ImagePicker();
-        final imageData= await _picker.pickImage(source: ImageSource.gallery);
-   
-
-        if(imageData!=null){
-            //  addMessage(context,"image",search.text,data['_id'],data);
-              showData(imageData);
-              // addMessageImage(context, "image","None",data['_id'],File(imageData.path),widget.data,widget.myId,socket,widget.myId,roomId.value,);
-
-              // navigate();
-            // setState(() {
-            //       messages.insert(0,Message(isMe: true,url: File(imageData.path),type: "image")); // Add the message to the list
-            //   });
-
-        }
+      // navigate();
+      // setState(() {
+      //       messages.insert(0,Message(isMe: true,url: File(imageData.path),type: "image")); // Add the message to the list
+      //   });
+    }
   }
 
   // Function to build a message bubble
@@ -334,29 +328,27 @@ setUpSocketListener(){
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3.0),
       child: Row(
-        mainAxisAlignment: message.isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment:
+            message.isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           getDataWidget(message),
-      
-      
         ],
       ),
     );
   }
 
-
-
-
-    void navigate()async{
-      
-         Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Chat( data:widget.data,myId: widget.myId,myprofile: widget.myprofile,),
-                      ),
-                  );
+  void navigate() async {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Chat(
+          data: widget.data,
+          myId: widget.myId,
+          myprofile: widget.myprofile,
+        ),
+      ),
+    );
   }
-
 
   // void clear(){
   //   int index=0;
@@ -370,101 +362,135 @@ setUpSocketListener(){
 
   @override
   Widget build(BuildContext context) {
-
-   
-    return  WillPopScope(
+    return WillPopScope(
       onWillPop: () async {
         clearChatData();
         getChatLoader();
         return true;
       },
       child: SafeArea(
-
         child: Scaffold(
-          
           appBar: AppBar(
-            backgroundColor: Colorcodes.budgetLightGreen,
+            //backgroundColor: Colorcodes.budgetLightGreen,
             // leading:
             automaticallyImplyLeading: false,
             centerTitle: false,
             title: ValueListenableBuilder<bool>(
-               valueListenable: onlineUser,
-              builder: (context, snapshot,child) {
-                return Container(
-                  // color: Colorcodes.black,
-                  
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                       GestureDetector(
-                  onTap: (){
-                        clearChatData();
-                        getChatLoader();
-                  },
-                  child: Icon(
-                       Icons.arrow_back
-                  ),
-                ),
-                       
-                         GestureDetector(
-                          onTap: (){
-                              pushDetails();
+                valueListenable: onlineUser,
+                builder: (context, snapshot, child) {
+                  return Container(
+                    // color: Colorcodes.black,
+
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            clearChatData();
+                            getChatLoader();
                           },
-                          child: AvatarProfileImage(url:data['avatar'] ?? "assets/avatar/menp3.svg" , width: 8, height: 17)),
-                         
-                     
-                           GestureDetector(
-                          onTap: (){
+                          child: Icon(Icons.arrow_back),
+                        ),
+                        GestureDetector(
+                            onTap: () {
                               pushDetails();
+                            },
+                            child: AvatarProfileImage(
+                                url:
+                                    data['avatar'] ?? "assets/avatar/menp3.svg",
+                                width: 8,
+                                height: 17)),
+                        GestureDetector(
+                          onTap: () {
+                            pushDetails();
                           },
                           child: Container(
-                            width: MediaQuery.of(context).size.width/1.7,
-                            child: Text(data['name'],
-                            style:  FontManager().getTextStyle(
-                              context,fontSize: 20,lWeight: FontWeight.bold),
+                            width: MediaQuery.of(context).size.width / 1.7,
+                            child: Text(
+                              data['name'],
+                              style: FontManager().getTextStyle(context,
+                                  fontSize: 20, lWeight: FontWeight.bold),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
-                            
                             ),
                           ),
                         ),
-                    ],
-                  ),
-                );
-              }
-            ),
+                        PopupMenuButton<String>(
+                          onSelected: (value) {
+                            // Perform actions based on the selected value
+                            if (value == 'Report') {
+                              // Handle Report action
+                            } else if (value == 'Block user') {
+                              // Handle Block action
+                            } else if (value == 'Mute notification') {
+                              // Handle Mute notification action
+                            } else if (value == 'Clear chat') {
+                              // Handle Clear chat action
+                            }
+                          },
+                          itemBuilder: (BuildContext context) {
+                            return [
+                              PopupMenuItem(
+                                value: 'Report',
+                                child: Text('Report'),
+                              ),
+                              PopupMenuItem(
+                                value: 'Block user',
+                                child: Text('Block user'),
+                              ),
+                              PopupMenuItem(
+                                value: 'Mute notification',
+                                child: Text('Mute notification'),
+                              ),
+                              PopupMenuItem(
+                                value: 'Clear chat',
+                                child: Text('Clear chat'),
+                              ),
+                            ];
+                          },
+                          child: Icon(Icons
+                              .more_vert), // Replace this with your desired icon
+                        )
+                      ],
+                    ),
+                  );
+                }),
           ),
           body: Container(
             height: MediaQuery.of(context).size.height,
             child: Column(
               children: [
-                  //  height: MediaQuery.of(context).size.height/1.28,
+                //  height: MediaQuery.of(context).size.height/1.28,
                 // List of messages
-                Obx(() => 
-                Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    reverse: true,
-                    itemCount: messages.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return _buildMessage(messages[index]);
-                    },
-                  ),
-                )
-                ),
+                Obx(() => Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        reverse: true,
+                        itemCount: messages.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return _buildMessage(messages[index]);
+                        },
+                      ),
+                    )),
                 // Text input and send button
                 Container(
                   margin: EdgeInsets.all(8.0),
+
                   decoration: BoxDecoration(
-                   color: Colorcodes.budgetLightGreen,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                      color: Colorcodes.budgetDarkGreen,
-                      width: .5
-                  )
+                    color: AppColors.button,
+                    borderRadius: BorderRadius.circular(24),
                   ),
-                  child: InputDate("write message..",TextInputType.name,search),
+                  //       decoration: InputDecoration(
+                  //   prefixIcon: Icon(Icons.search),
+                  //   // prefixIconColor: Colorcodes.budgetDarkGreen,
+                  //   filled: true,
+
+                  //   fillColor: AppColors.button,
+                  //   border: InputBorder.none,
+                  // ),
+                  child:
+                      InputDate("write message..", TextInputType.name, search),
                 ),
               ],
             ),
@@ -474,605 +500,573 @@ setUpSocketListener(){
     );
   }
 
-void clearChatData(){
-                    socket.close();        
-                    chatOfUserList.remove(data['_id']);
-                    clear(data);
-                    unSeenChat(context,data['_id']);
-                      // getChatLoader();
-                    Navigator.pop(context);
-}
+  void clearChatData() {
+    socket.close();
+    chatOfUserList.remove(data['_id']);
+    clear(data);
+    unSeenChat(context, data['_id']);
+    // getChatLoader();
+    Navigator.pop(context);
+  }
 
-Widget polled(isme,pollObj)
-{
-    return !isme ? Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-                 profilepath(isme),
-                  poll(pollObj),
-        ],
-     ):Row(
-         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-                     poll(pollObj),
-                     profilepath(isme),
-        ],
-     );
-}
+  Widget polled(isme, pollObj) {
+    return !isme
+        ? Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              profilepath(isme),
+              poll(pollObj),
+            ],
+          )
+        : Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              poll(pollObj),
+              profilepath(isme),
+            ],
+          );
+  }
 
-  
+  Widget polled2(isme, poll) {
+    Future<String> getPolled() async {
+      final SharedPreferences _pref = await SharedPreferences.getInstance();
+      var accessToken = _pref.getString("accessToken");
+      final response = await http.get(
+        Uri.parse('${url}/poll/${poll}'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          "Authorization": "$accessToken",
+        },
+      );
+      return response.body;
+    }
 
-  Widget polled2(isme,poll) 
-  {
-
-     Future<String> getPolled()async
-     {
-         final SharedPreferences _pref = await SharedPreferences.getInstance();
-          var  accessToken=_pref.getString("accessToken");
-          final response = await http.get(
-          Uri.parse('${url}/poll/${poll}'),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-            "Authorization": "$accessToken",
-          },
-        ); 
-       return response.body;
-     } 
-
-    return  FutureBuilder<String>(
-      future:  getPolled(),
+    return FutureBuilder<String>(
+      future: getPolled(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // While data is being fetched, display a loading indicator
-          return !isme ? Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                                profilepath(isme),
-                                  demiData(),
-                        ],
-                    ):Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                                   demiData(),
-                                    profilepath(isme),
-                        ],
-                    );
+          return !isme
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    profilepath(isme),
+                    demiData(),
+                  ],
+                )
+              : Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    demiData(),
+                    profilepath(isme),
+                  ],
+                );
         } else if (snapshot.hasError) {
           // If an error occurs during fetching, display an error message
           return Text('Error: ${snapshot.error}');
         } else {
           // When data is fetched successfully, display the result
-          return calledData(isme,(snapshot.data));
+          return calledData(isme, (snapshot.data));
         }
       },
     );
   }
 
+  Widget calledData(isme, data) {
+    var obj = jsonDecode(data);
 
+    if (obj['data'].isEmpty) return SizedBox.shrink();
 
-
-
-
-  Widget calledData(isme,data){
-
-  
-   var obj=jsonDecode(data);
-
-   if(obj['data'].isEmpty)return SizedBox.shrink();
-   
-
-   return !isme ? Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-                 profilepath(isme),
-                  poll(obj['data'][0]),
-        ],
-     ):Row(
-         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-                     poll(obj['data'][0]),
-                     profilepath(isme),
-        ],
-     );
-
-
+    return !isme
+        ? Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              profilepath(isme),
+              poll(obj['data'][0]),
+            ],
+          )
+        : Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              poll(obj['data'][0]),
+              profilepath(isme),
+            ],
+          );
   }
 
-  Widget text(msg,isme){
-    
-
-     return !isme ? Row(
-         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-
-        children: [
-                 profilepath(isme),
-                 textIsme(msg,isme),
-        ],
-     ):Row(
-         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-                    textIsme(msg,isme),
-                     profilepath(isme),
-        ],
-     );
+  Widget text(msg, isme) {
+    return !isme
+        ? Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              profilepath(isme),
+              textIsme(msg, isme),
+            ],
+          )
+        : Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              textIsme(msg, isme),
+              profilepath(isme),
+            ],
+          );
   }
 
-    
-  Widget imageDisplay( msg,bool,url )
-   {
-    return bool?  Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-                 image(url),
-                 profilepath(bool),
-        ],
-     ):Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-                    profilepath(bool),
-                     image(url),
-        ],
-     );
+  Widget imageDisplay(msg, bool, url) {
+    return bool
+        ? Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              image(url),
+              profilepath(bool),
+            ],
+          )
+        : Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              profilepath(bool),
+              image(url),
+            ],
+          );
   }
 
-
-  Widget profilepath(boolFlag){
+  Widget profilepath(boolFlag) {
     // if(boolFlag)return SizedBox(
     //   width: 10,
     // );
 
-    return chatAvatartImage(url: boolFlag?path:data['avatar'] , width: 7, height: 17);
+    return chatAvatartImage(
+        url: boolFlag ? path : data['avatar'], width: 7, height: 17);
   }
 
+  Widget textIsme(msg, bool isme) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3.0),
+      child: Container(
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width / 1.4,
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: isme ? AppColors.primaryColor : null,
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.zero,
+            topLeft: Radius.circular(10.0),
+            topRight: Radius.circular(10.0),
+            bottomLeft: Radius.circular(10.0),
+          ),
 
-  Widget textIsme(msg,bool isme){
-     return   Padding(
-       padding: const EdgeInsets.symmetric(vertical: 3.0),
-       child: Container(
-                  
-                    constraints: BoxConstraints(
-                          maxWidth:  MediaQuery.of(context).size.width/1.4,
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 14,vertical: 10),
-                    decoration: BoxDecoration(
-                       color: isme? Colorcodes.greyLight:null,
-                       borderRadius: BorderRadius.circular(20),
+          gradient: !isme
+              ? LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Colorcodes.cardShade3,
+                    Colorcodes.cardShade4,
+                  ],
+                )
+              : null,
 
-                         gradient:!isme? LinearGradient(
-                                        begin: Alignment.centerLeft,
-                                        end: Alignment.centerRight,
-                                        colors: [
-                                          Colorcodes.cardShade3,
-                                          Colorcodes.cardShade4,
-                                        ],
-                                 ):null,
-                       
-
-
-
-                      //  border: Border.all(
-                      //     width: .5,
-                      //     color: Colorcodes.poll1
-                      // )
-       
-                    ),
-                    child: Text(msg,
-                    style: FontManager().getTextStyle(context,
-                                                           lWeight: FontWeight.w400,
-                                                           fontSize: 15,
-                                                           letterSpacing: 0.0,
-                                                           color:isme? Colors.black:Colorcodes.white)),
-                ),
-     );
+          //  border: Border.all(
+          //     width: .5,
+          //     color: Colorcodes.poll1
+          // )
+        ),
+        child: Text(msg,
+            style: FontManager().getTextStyle(context,
+                lWeight: FontWeight.w400,
+                fontSize: 15,
+                letterSpacing: 0.0,
+                color: isme ? AppColors.backgroundColor : Colorcodes.white)),
+      ),
+    );
   }
 
-
-
-  Widget InputDate(lableText,keyBoard,Textcontroller){
-
+  Widget InputDate(String labelText, TextInputType keyboardType,
+      TextEditingController textController) {
     return Center(
-        child: Container(
-          // padding: EdgeInsets.symmetric(vertical: 5),
-           decoration: BoxDecoration(
-              // color: Colors.amber,
-              color: Colorcodes.budgetLightGreen,
-              borderRadius: BorderRadius.circular(20)
-              ),
-
-          width: MediaQuery.of(context).size.width/1.1,
-          // height: 50,
-          child: Center(
-            child: Row(
-               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width/1.3,
-                  // color: Colorcodes.appBarColor,
+      child: Container(
+        width: MediaQuery.of(context).size.width / 1.1,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                flex: 3,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                  ),
                   child: TextField(
-                       
-                       keyboardType: keyBoard,
-                        focusNode: myFocusNode,
-                        controller: Textcontroller,
-                         onSubmitted: (value) {
-                                if(value!="")_handleSubmitted(value);
-                                else{
-                                    snackBarCalled(context, "pls enter Valid data");
-                                }
-                                 Textcontroller.clear();
-                                  getChatLoader();
-                                 myFocusNode.requestFocus();
-                         },
-                        //  decoration: InputDecoration(
-                        //       filled: true,
-                        //       hintText: lableText,
-                        //       fillColor:  Colorcodes.chatHeader,
-                        //       border: InputBorder.none,
-                        //     ),
-                      
-
-
-                            decoration: InputDecoration(
+                    keyboardType: keyboardType,
+                    focusNode: myFocusNode,
+                    controller: textController,
+                    onSubmitted: (value) {
+                      if (value.isNotEmpty) {
+                        _handleSubmitted(value);
+                      } else {
+                        snackBarCalled(context, "Please enter valid data");
+                      }
+                      textController.clear();
+                      getChatLoader();
+                      myFocusNode.requestFocus();
+                    },
+                    decoration: InputDecoration(
+                      hintText: labelText,
                       filled: true,
-                      hintText: lableText,
-                      contentPadding: EdgeInsets.all(0),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(
-                            color: Colorcodes.budgetLightGreen
-                        )
+                      prefixIcon: IconButton(
+                        // Added prefix icon for emoji
+                        icon: Icon(Icons.emoji_emotions),
+                        onPressed: () {
+                          // Implement emoji picker or logic here
+                          print("Emoji button pressed");
+                        },
                       ),
-                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(
-                            color: Colorcodes.budgetLightGreen
-                        )
-                      ),
-                      fillColor:   Colorcodes.budgetLightGreen,
+                      fillColor: AppColors.button,
+                      contentPadding: EdgeInsets.zero,
                       border: InputBorder.none,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide: BorderSide(color: Colors.transparent),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide: BorderSide(color: Colors.transparent),
+                      ),
                     ),
-                  
-                          
-                    ),
-                ),
-            
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                     
-                     IconButton(
-                      icon: Icon(Icons.image,size: 30,),
-                      onPressed: () =>  getImage(),
-                    ),
-
-          //            InkWell(
-          //             onTap: (){
-          //                   Navigator.push(
-          //   context,
-          //   PageTransition(
-          //     type: PageTransitionType.bottomToTop,
-             
-          //      duration: Durations.long1,
-          //     child: chatPoll(data: widget.data,),
-          //     isIos: true,
-          //   ),
-          // );
-          //             },
-          //              child: Container(
-          //               height: 35,
-          //               child: ProfileImage(url: "assets/images/poll.svg")
-          //                                  ),
-          //            )
-
-                    ],
                   ),
                 ),
-        
-               
-        
-              ],
-            ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.image, size: 30),
+                      onPressed: getImage,
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.send, size: 30),
+                      onPressed: () {
+                        String value = textController.text;
+                        if (value.isNotEmpty) {
+                          _handleSubmitted(value);
+                        } else {
+                          snackBarCalled(context, "Please enter valid data");
+                        }
+                        textController.clear();
+                        getChatLoader();
+                        myFocusNode.requestFocus();
+                      },
+                    ),
+
+                    // Uncomment or adjust the following for the poll feature if needed
+                    // InkWell(
+                    //   onTap: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       PageTransition(
+                    //         type: PageTransitionType.bottomToTop,
+                    //         duration: Durations.long1,
+                    //         child: ChatPoll(data: widget.data),
+                    //         isIos: true,
+                    //       ),
+                    //     );
+                    //   },
+                    //   child: Container(
+                    //     height: 35,
+                    //     child: ProfileImage(url: "assets/images/poll.svg"),
+                    //   ),
+                    // ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
-      );
+      ),
+    );
   }
 
-
-
-  Widget  image(url){
-
-    if(url=="" || url=="None")return SizedBox.shrink();
-
+  Widget image(url) {
+    if (url == "" || url == "None") return SizedBox.shrink();
 
     return Container(
-      
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        
+
         // border: Border.all(
         //    width: .5,
         //    color: Colorcodes.poll1
         // )
       ),
       padding: const EdgeInsets.symmetric(vertical: 3.0),
-      child:  Image.network(
-                   url,
-                    width: MediaQuery.of(context).size.width / 2,
-                    height: MediaQuery.of(context).size.height / 5,
-                    fit: BoxFit.cover,
-                    color: Colors.black.withOpacity(0.0),
-                    colorBlendMode: BlendMode.exclusion,
-               ),
+      child: Image.network(
+        url,
+        width: MediaQuery.of(context).size.width / 2,
+        height: MediaQuery.of(context).size.height / 5,
+        fit: BoxFit.cover,
+        color: Colors.black.withOpacity(0.0),
+        colorBlendMode: BlendMode.exclusion,
+      ),
       // child: GFImageOverlay(
       //                   width: MediaQuery.of(context).size.width / 1.5,
       //                   height: MediaQuery.of(context).size.height/3.5,
-      //                   // shape: BoxShape.values, 
+      //                   // shape: BoxShape.values,
       //                   image: NetworkImage(url!),
       //                   borderRadius:BorderRadius.circular(10),
       //                   colorFilter:ColorFilter.mode(Colors.black.withOpacity(0.0),
       //                   BlendMode.exclusion),
       //              ),
     );
-     
   }
 
+  Widget poll(e) {
+    List options = e['options'];
+    int index = e['selectedOption'];
+    int s = -1;
 
-
-  
-
-Widget poll(e){
-
-
-  List options=e['options'];
-  int index=e['selectedOption'];
-  int s=-1;
- 
-
- return Padding(
-   padding: const EdgeInsets.only(right: 0.0,top: 5),
-   child: Container(
-       padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-        width: MediaQuery.of(context).size.width/1.4,
-       decoration: BoxDecoration(
+    return Padding(
+      padding: const EdgeInsets.only(right: 0.0, top: 5),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        width: MediaQuery.of(context).size.width / 1.4,
+        decoration: BoxDecoration(
           //  color: Colorcodes.appBarColor,
-             border: Border.all(width: .5,color: Colorcodes.poll1),
-               borderRadius: BorderRadius.circular(9),
-       ),
-       child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(e['question']+"?",style: FontManager().getTextStyle(context,
-                                   lWeight: FontWeight.w600,
-                                      fontSize: 18,
-                                      color: Colorcodes.poll1
-                                )),
-                      ),
-
-                     Column(
-                       mainAxisAlignment: MainAxisAlignment.start,
-                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children:options.map((op) {
-                        // List ll=op['votes'];
-                        // String cal=((ll.length/len)* 100).toStringAsFixed(2);
-                        // len += ll.length ;
-                        s++;
-                        return  Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0),
-                        child: Container(
-                            padding: EdgeInsets.symmetric(vertical: 13,horizontal: 10),
-                            width: MediaQuery.of(context).size.width/1.5,
-                           decoration: BoxDecoration(
-                               color:  index==s?null:Colorcodes.white,
-                                      borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
-                                       gradient:index==s? LinearGradient(
-                                        begin: Alignment.centerLeft,
-                                        end: Alignment.centerRight,
-                                        colors: [
-                                          Colorcodes.poll1,
-                                          Colorcodes.poll2,
-                                        ],
-                                      ):null,
-                                      border: index==s? Border.all(
-                                          color: Colorcodes.poll1
-                                      ):null 
-                                  ,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(op,
+          border: Border.all(width: .5, color: Colorcodes.poll1),
+          borderRadius: BorderRadius.circular(9),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(e['question'] + "?",
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.w600,
+                      fontSize: 18,
+                      color: Colorcodes.poll1)),
+            ),
+            Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: options.map((op) {
+                  // List ll=op['votes'];
+                  // String cal=((ll.length/len)* 100).toStringAsFixed(2);
+                  // len += ll.length ;
+                  s++;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 13, horizontal: 10),
+                        width: MediaQuery.of(context).size.width / 1.5,
+                        decoration: BoxDecoration(
+                          color: index == s ? null : Colorcodes.white,
+                          borderRadius:
+                              BorderRadius.circular(Colorcodes.borderRadius),
+                          gradient: index == s
+                              ? LinearGradient(
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                  colors: [
+                                    Colorcodes.poll1,
+                                    Colorcodes.poll2,
+                                  ],
+                                )
+                              : null,
+                          border: index == s
+                              ? Border.all(color: Colorcodes.poll1)
+                              : null,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(op,
                                 overflow: TextOverflow.ellipsis,
                                 style: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.bold,
-                                                fontSize: 14,
-                                                color: index==s?Colorcodes.white: Colors.black
-                                      )),
+                                    fontSize: 14,
+                                    color: index == s
+                                        ? Colorcodes.white
+                                        : Colors.black)),
 
                             //  myvote ? Text(cal=="0.00"?'0%':cal=="100.00"?"100%":cal+"%",
                             //     style: FontManager().getTextStyle(context,
                             //             lWeight: FontWeight.w400,
                             //             fontSize: 14,
                             //             color: Colors.black)):SizedBox.shrink(),
-
-                              ],
-                            )
-                                           ),
-                 );
-                 }
-                 ).toList()),
-
-],
-       ),
-   ),
- );
-
-}
-
-
-
-Widget demiData(){
-  var options=[1,2,3,4];
-   return Padding(
-   padding: const EdgeInsets.only(right: 0.0,top: 5),
-   child: Container(
-       padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-        width: MediaQuery.of(context).size.width/1.4,
-       decoration: BoxDecoration(
-          //  color: Colorcodes.appBarColor,
-          border: Border.all(width: .5),
-           borderRadius: BorderRadius.circular(5),
-   
-       ),
-       child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("",style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.w500,
-                                  fontSize: 13,
-                                  color: Colors.black)),
-                      ),
-
-                     Column(
-                       mainAxisAlignment: MainAxisAlignment.start,
-                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children:options.map((op) {
-                     
-                        return  Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0),
-                        child: Container(
-                            padding: EdgeInsets.symmetric(vertical: 13,horizontal: 10),
-                            width: MediaQuery.of(context).size.width/1.5,
-                           decoration: BoxDecoration(
-                               color: Colors.white,
-                                borderRadius: BorderRadius.circular(5),
-                                // border: Border.all() 
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("",
-                                style: FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.w400,
-                                        fontSize: 14,
-                                        color: Colors.black)),
-                           
-                              ],
-                            )
-                                           ),
-                 );
-                 }
-                 ).toList()),
-
-],
-       ),
-   ),
- );
-}
-
-
-
-  void showData( imageData){
-       showDialog(context: context, builder: (context){
-                                return Center(
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width/1.2,
-                                    height: MediaQuery.of(context).size.height/3,
-                                    padding: EdgeInsets.symmetric(vertical: 20,horizontal: 10),
-                                    decoration: BoxDecoration(
-                                          color: Colorcodes.white,
-                                          borderRadius: BorderRadius.circular(5)
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                    
-                                      children: [
-
-                                         
-
-                                         Text("Do You Want To Send...!?",
-                                         style: FontManager().getTextStyle(context,
-                                            fontSize: 18,
-                                            color: Colorcodes.black,
-                                            lWeight: FontWeight.bold,
-                                            //  fontFamily: AutofillHints.birthdayDay
-                                        ),),
-
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 10),
-                                          child: Container(
-                                             width: MediaQuery.of(context).size.width,
-                                             height: MediaQuery.of(context).size.height/7,
-                                            child: Image.file(File(imageData.path))
-                                          ),
-                                        ),
-
-                          //  const SizedBox(height: 30,),
-                                        Row(
-                                             mainAxisAlignment: MainAxisAlignment.end,
-                                             children: [
-                                                  textStyleColor("Cancle",Colorcodes.red,data,imageData),
-                                                  const SizedBox(width: 5,),
-                                                  textStyleColor(" Send ",Colorcodes.blue,data,imageData),
-                                             ],
-                                        ),
-                                         
-                                        
-                                       
-                                      ],
-                                    ),
-                                  ),
-                                );
-
-                           },);
+                          ],
+                        )),
+                  );
+                }).toList()),
+          ],
+        ),
+      ),
+    );
   }
 
+  Widget demiData() {
+    var options = [1, 2, 3, 4];
+    return Padding(
+      padding: const EdgeInsets.only(right: 0.0, top: 5),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        width: MediaQuery.of(context).size.width / 1.4,
+        decoration: BoxDecoration(
+          //  color: Colorcodes.appBarColor,
+          border: Border.all(width: .5),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("",
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.w500,
+                      fontSize: 13,
+                      color: Colors.black)),
+            ),
+            Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: options.map((op) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 13, horizontal: 10),
+                        width: MediaQuery.of(context).size.width / 1.5,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(5),
+                          // border: Border.all()
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("",
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.w400,
+                                    fontSize: 14,
+                                    color: Colors.black)),
+                          ],
+                        )),
+                  );
+                }).toList()),
+          ],
+        ),
+      ),
+    );
+  }
 
+  void showData(imageData) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Center(
+          child: Container(
+            width: MediaQuery.of(context).size.width / 1.2,
+            height: MediaQuery.of(context).size.height / 3,
+            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+            decoration: BoxDecoration(
+                color: Colorcodes.white,
+                borderRadius: BorderRadius.circular(5)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Do You Want To Send...!?",
+                  style: FontManager().getTextStyle(
+                    context,
+                    fontSize: 18,
+                    color: Colorcodes.black,
+                    lWeight: FontWeight.bold,
+                    //  fontFamily: AutofillHints.birthdayDay
+                  ),
+                ),
 
-Widget textStyleColor(str,color,data,imageData){
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height / 7,
+                      child: Image.file(File(imageData.path))),
+                ),
+
+                //  const SizedBox(height: 30,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    textStyleColor("Cancle", Colorcodes.red, data, imageData),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    textStyleColor(" Send ", Colorcodes.blue, data, imageData),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget textStyleColor(str, color, data, imageData) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: GestureDetector(
         onTap: () {
-              if(str==" Send ")
-              {
-                    addMessageImage(context,"image","None",data['_id'],File(imageData.path),widget.data,widget.myId,socket,widget.myId,roomId.value,);     
-              }
-             getChatLoader();
-             Navigator.pop(context);
+          if (str == " Send ") {
+            addMessageImage(
+              context,
+              "image",
+              "None",
+              data['_id'],
+              File(imageData.path),
+              widget.data,
+              widget.myId,
+              socket,
+              widget.myId,
+              roomId.value,
+            );
+          }
+          getChatLoader();
+          Navigator.pop(context);
         },
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 15,vertical: 10),
-           decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(5)
-           ),
-          child: Text(str,style: FontManager().getTextStyle(context,
-                 fontSize: 17,
-                 lWeight: FontWeight.w500,
-                 color: Colorcodes.white
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          decoration: BoxDecoration(
+              color: color, borderRadius: BorderRadius.circular(5)),
+          child: Text(
+            str,
+            style: FontManager().getTextStyle(context,
+                fontSize: 17, lWeight: FontWeight.w500, color: Colorcodes.white
                 //  fontStyle: FontStyle.italic
-          ),),
+                ),
+          ),
         ),
       ),
     );
-}
-
-
+  }
 
   Widget uploadData(dataObj2) {
     var dataObj = jsonDecode(dataObj2);
@@ -1083,24 +1077,24 @@ Widget textStyleColor(str,color,data,imageData){
         children: [
           GestureDetector(
             onTap: () {
-                  Navigator.push(
-            context,
-            PageTransition(
+              Navigator.push(
+                context,
+                PageTransition(
                   type: PageTransitionType.fade,
                   duration: Durations.long1,
-                  child:TribeUnique( id:dataObj["_id"] ,dataObj: dataObj,),
+                  child: TribeUnique(
+                    id: dataObj["_id"],
+                    dataObj: dataObj,
+                  ),
                   isIos: true,
-            ),
-          );
+                ),
+              );
             },
             child: Container(
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
                   color: const Color.fromRGBO(249, 246, 238, 1),
-                  border: Border.all(
-                     width: .5,
-                     color: Colorcodes.poll1
-                  ),
+                  border: Border.all(width: .5, color: Colorcodes.poll1),
                   borderRadius: BorderRadius.circular(20)),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -1113,8 +1107,14 @@ Widget textStyleColor(str,color,data,imageData){
                       Container(
                         child: Row(
                           children: [
-                            AvatarProfileImage(url:dataObj["author"]['avatar'] ,width: 10,height: 14,),
-                            const SizedBox(width: 5,),
+                            AvatarProfileImage(
+                              url: dataObj["author"]['avatar'],
+                              width: 10,
+                              height: 14,
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
                             Text((dataObj["author"]['name']),
                                 style: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.w400,
@@ -1123,240 +1123,200 @@ Widget textStyleColor(str,color,data,imageData){
                           ],
                         ),
                       ),
-                     
                     ],
                   ),
                   Container(
-                      width: MediaQuery.of(context).size.width / 1.62,
+                    width: MediaQuery.of(context).size.width / 1.62,
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Text((dataObj['title']),
                         style: FontManager().getTextStyle(context,
                             lWeight: FontWeight.bold,
                             fontSize: 16,
-                            
                             color: Colors.black)),
                   ),
-                    //  Readmore(str:dataObj['title'].toString(),),
+                  //  Readmore(str:dataObj['title'].toString(),),
                   //  ReadMoreText(
                   //     dataObj['title'].toString(),
                   //     trimMode: TrimMode.Line,
                   //     trimLines: 2,
-                      
+
                   //     colorClickableText: Colors.pink,
                   //     trimCollapsedText: 'Show more',
                   //     trimExpandedText: 'Show less',
                   //     moreStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                   // ),
                   //  barGraph(dataObj):pieChart(dataObj)
-                   (dataObj['chartType']=="bargraph" ||  dataObj['chartType']=="piechart")?    
-                dataObj['chartType']=="bargraph"?  barGraph(dataObj):pieChart(dataObj):getMessage(dataObj),
-              // :Container(
-              //       width: MediaQuery.of(context).size.width / 1.62,
-              //       padding: const EdgeInsets.only(bottom: 10.0),
-              //       child: Text(("dataObj['description']['message']!=null?dataObj['description']['message']:dataObj['description']"),
-              //           style: FontManager().getTextStyle(context,
-              //               lWeight: FontWeight.w400,
-              //               fontSize: 13,
-              //               color: Colors.black)),
-              //     ),
-              // :  Readmore(str:dataObj['description']['message']??"",), 
-                 
-                dataObj['image'] != null && dataObj['image'] !="none"  ?
-                 Image.network(
-                    dataObj['image'],
-                    width: MediaQuery.of(context).size.width / 2,
-                    height: MediaQuery.of(context).size.height / 5,
-                    fit: BoxFit.cover,
-                    color: Colors.black.withOpacity(0.0),
-                    colorBlendMode: BlendMode.exclusion,
-                  ):SizedBox.shrink(),
-                //  GFImageOverlay(
-                //         width: MediaQuery.of(context).size.width / 2,
-                //         height: MediaQuery.of(context).size.height/5,
-                //         shape: BoxShape.rectangle, 
-                //         image: NetworkImage(dataObj['image']),
-                //         colorFilter:ColorFilter.mode(Colors.black.withOpacity(0.0),
-                //         BlendMode.exclusion),
-                //    ): SizedBox.shrink(),
-                   
+                  (dataObj['chartType'] == "bargraph" ||
+                          dataObj['chartType'] == "piechart")
+                      ? dataObj['chartType'] == "bargraph"
+                          ? barGraph(dataObj)
+                          : pieChart(dataObj)
+                      : getMessage(dataObj),
+                  // :Container(
+                  //       width: MediaQuery.of(context).size.width / 1.62,
+                  //       padding: const EdgeInsets.only(bottom: 10.0),
+                  //       child: Text(("dataObj['description']['message']!=null?dataObj['description']['message']:dataObj['description']"),
+                  //           style: FontManager().getTextStyle(context,
+                  //               lWeight: FontWeight.w400,
+                  //               fontSize: 13,
+                  //               color: Colors.black)),
+                  //     ),
+                  // :  Readmore(str:dataObj['description']['message']??"",),
+
+                  dataObj['image'] != null && dataObj['image'] != "none"
+                      ? Image.network(
+                          dataObj['image'],
+                          width: MediaQuery.of(context).size.width / 2,
+                          height: MediaQuery.of(context).size.height / 5,
+                          fit: BoxFit.cover,
+                          color: Colors.black.withOpacity(0.0),
+                          colorBlendMode: BlendMode.exclusion,
+                        )
+                      : SizedBox.shrink(),
+                  //  GFImageOverlay(
+                  //         width: MediaQuery.of(context).size.width / 2,
+                  //         height: MediaQuery.of(context).size.height/5,
+                  //         shape: BoxShape.rectangle,
+                  //         image: NetworkImage(dataObj['image']),
+                  //         colorFilter:ColorFilter.mode(Colors.black.withOpacity(0.0),
+                  //         BlendMode.exclusion),
+                  //    ): SizedBox.shrink(),
+
                   const SizedBox(
                     height: 20,
                   ),
-                 
                 ],
               ),
             ),
           ),
-
         ],
       ),
     );
   }
 
+  Widget getMessage(dataObj) {
+    try {
+      return Container(
+        width: MediaQuery.of(context).size.width / 1.62,
+        padding: const EdgeInsets.only(bottom: 10.0),
+        child: Text((dataObj['description']['message']),
+            style: FontManager().getTextStyle(context,
+                lWeight: FontWeight.w400, fontSize: 13, color: Colors.black)),
+      );
+    } catch (e) {
+      return Container(
+        width: MediaQuery.of(context).size.width / 1.62,
+        padding: const EdgeInsets.only(bottom: 10.0),
+        child: Text((dataObj['description']),
+            style: FontManager().getTextStyle(context,
+                lWeight: FontWeight.w400, fontSize: 13, color: Colors.black)),
+      );
+    }
+  }
 
-Widget getMessage(dataObj){
-      try{
-        return  Container(
-                    width: MediaQuery.of(context).size.width / 1.62,
-                    padding: const EdgeInsets.only(bottom: 10.0),
-                    child: Text((dataObj['description']['message']),
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w400,
-                            fontSize: 13,
-                            color: Colors.black)),
-                  );
-      }catch(e){
-          return Container(
-                    width: MediaQuery.of(context).size.width / 1.62,
-                    padding: const EdgeInsets.only(bottom: 10.0),
-                    child: Text((dataObj['description']),
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w400,
-                            fontSize: 13,
-                            color: Colors.black)),
-              );
-      } 
-}
-
- Widget imageurl(url) {
+  Widget imageurl(url) {
     return SvgPicture.asset(
       url,
       height: 30,
     );
   }
 
-
-
-
-  
-Widget barGraph(item)
-{
-
-
+  Widget barGraph(item) {
     //  return Text("bargraph");
-    List<SalesData > chartData = <SalesData>[];
-    List list=item['description']['itemlist'];
-  
-    int j=0;
-    list.forEach((element) {
-    
-            String t1=element['item'];    
-            String t2=element['amount'].toString();  
-            if(j==color.length)j=0;
-            String b=t2==""?"0":t2;
-           
+    List<SalesData> chartData = <SalesData>[];
+    List list = item['description']['itemlist'];
 
-           chartData.add(SalesData(t1,double.parse(b)),);   
-    },);
-       
+    int j = 0;
+    list.forEach(
+      (element) {
+        String t1 = element['item'];
+        String t2 = element['amount'].toString();
+        if (j == color.length) j = 0;
+        String b = t2 == "" ? "0" : t2;
 
+        chartData.add(
+          SalesData(t1, double.parse(b)),
+        );
+      },
+    );
 
     var barSeries = BarSeries<SalesData, String>(
-                    dataSource: chartData,
-
-                    xValueMapper: (SalesData sales, _) => sales.month,
-                    yValueMapper: (SalesData sales, _) => sales.sales,
-                  );
+      dataSource: chartData,
+      xValueMapper: (SalesData sales, _) => sales.month,
+      yValueMapper: (SalesData sales, _) => sales.sales,
+    );
     return Container(
       // width: MediaQuery.of(context).size.width/2,
       // width: 300,
       // height:170,
-       width: MediaQuery.of(context).size.width / 1.62,
-                      height: MediaQuery.of(context).size.height/5,
-      
+      width: MediaQuery.of(context).size.width / 1.62,
+      height: MediaQuery.of(context).size.height / 5,
+
       child: GestureDetector(
-        child:
-           SfCartesianChart(
-                primaryXAxis: CategoryAxis(),
-                 isTransposed: true,
-                series: <CartesianSeries>[
-                  barSeries
-                ],
-              )
-          
-          ),
-        );
-
-}
-
-
-
-
-
-Widget pieChart(item){
-   
-    final List<ChartData> chartData = [];
-
-    List list=item['description']['itemlist'];
-   
-
-    int j=0;
-
-       
-       list.forEach((element) {
-    
-            String t1=element['item'];    
-            String t2=element['amount'].toString();  
-            if(j==color.length)j=0;
-            String b=t2==""?"0":t2;
-            chartData.add(ChartData(t1,list.length==1?100:double.parse(b),color[j++],t1),);   
-       });
-      
-
-       return Padding(
-       padding: const EdgeInsets.symmetric(vertical: 20.0),
-         child: Container(
-            //  width: 30,
-          width: MediaQuery.of(context).size.width / 1.62,
-                      height: MediaQuery.of(context).size.height/5,
-            
-           child: SfCircularChart(
-                        
-                         series: <CircularSeries>[
-                             // Render pie chart
-                             PieSeries<ChartData, String>(
-                                 dataSource: chartData,
-                                
-                                
-                                 radius: "100",
-                                 explodeOffset: "4%",
-                                 
-                                 dataLabelMapper: (ChartData data, _) => '${data.name}', 
-                                 pointColorMapper:(ChartData data,  _) => data.color,
-                                 xValueMapper: (ChartData data, _) => data.x,
-                                 yValueMapper: (ChartData data, _) => data.y, 
-                                 onPointTap: (pointInteractionDetails) {
-                                   
-                                 },
-                                 // strokeWidth: 5.0,
-                                  dataLabelSettings: DataLabelSettings(
-                                   isVisible: true, // Show labels
-                                 ),                              
-                             )
-                         ]
-                     )
-         ),
-       );
-  
-}
-
-  void pushDetails() {
-        Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => UserDetails(data: data,ids:ids),
-                      ),
-                  );
+          child: SfCartesianChart(
+        primaryXAxis: CategoryAxis(),
+        isTransposed: true,
+        series: <CartesianSeries>[barSeries],
+      )),
+    );
   }
 
+  Widget pieChart(item) {
+    final List<ChartData> chartData = [];
 
+    List list = item['description']['itemlist'];
 
+    int j = 0;
 
+    list.forEach((element) {
+      String t1 = element['item'];
+      String t2 = element['amount'].toString();
+      if (j == color.length) j = 0;
+      String b = t2 == "" ? "0" : t2;
+      chartData.add(
+        ChartData(t1, list.length == 1 ? 100 : double.parse(b), color[j++], t1),
+      );
+    });
 
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20.0),
+      child: Container(
+          //  width: 30,
+          width: MediaQuery.of(context).size.width / 1.62,
+          height: MediaQuery.of(context).size.height / 5,
+          child: SfCircularChart(series: <CircularSeries>[
+            // Render pie chart
+            PieSeries<ChartData, String>(
+              dataSource: chartData,
+
+              radius: "100",
+              explodeOffset: "4%",
+
+              dataLabelMapper: (ChartData data, _) => '${data.name}',
+              pointColorMapper: (ChartData data, _) => data.color,
+              xValueMapper: (ChartData data, _) => data.x,
+              yValueMapper: (ChartData data, _) => data.y,
+              onPointTap: (pointInteractionDetails) {},
+              // strokeWidth: 5.0,
+              dataLabelSettings: DataLabelSettings(
+                isVisible: true, // Show labels
+              ),
+            )
+          ])),
+    );
+  }
+
+  void pushDetails() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => UserDetails(data: data, ids: ids),
+      ),
+    );
+  }
 }
 
-class SalesData
- {
+class SalesData {
   final String month;
   final double sales;
 

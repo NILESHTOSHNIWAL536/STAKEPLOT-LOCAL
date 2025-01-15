@@ -20,18 +20,13 @@ String portNo="192.168.1.7";
 // String urlWithLocallHost="https://stakeplot.in";
 String urlWithLocallHost="http://${portNo}:5000/"; 
 String url="http://${portNo}:5000/api/v1";
-// String url="http://192.168.1.46:5000/api/v1";
-// String urlWithLocallHost2="http://10.0.2.2:5000/api/v1";
 // String url="http://localhost:5000/api/v1";
-// String url="http://10.0.2.2:5000/api/v1";
-// String url="https://stakeplot.in/api/v1";
-// String url="https://stakeplot.in/api/v1";
-// String url="http://localhost:5000/api/v1";
-// String url="http://127.0.0.1:5000";
+
 
 String valid = "Please Enter All Feilds";
 RxString expenses = "Loading....".obs;
 RxString aboutUS = "".obs;
+
 RxString avatar = "assets/avatar/menp1.svg".obs;
 RxString avatarUser = "assets/avatar/menp1.svg".obs;
 
