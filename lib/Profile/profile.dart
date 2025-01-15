@@ -185,7 +185,7 @@ class _ProfileState extends State<Profile> {
                     ),
                 
                        const SizedBox(width: 10,),
-                      //  myDis(),   
+                       myDis(),   
                           
                                
                       logoutWidget(context),

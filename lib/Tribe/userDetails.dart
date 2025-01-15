@@ -51,10 +51,6 @@ class _UserDetailsState extends State<UserDetails> {
     super.initState();
     getStatus();
     getConnections();
-    // if (widget.flag) already = widget.ids.contains(widget.data['_id']);
-    // if(friendRequestList.contains(widget.data['_id'])){
-    //   already=true;
-    // }
     getDis();
 
   }
