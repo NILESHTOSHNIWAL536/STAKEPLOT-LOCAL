@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/communityProfileScreen.dart';
 
 class ProfileScreenDart extends StatefulWidget {
@@ -41,13 +42,13 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text('Rohit Sharma',
+                    children:  [
+                      Text(userName.value,
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold)),
-                      Text('rohitsharma@gmail.com',
+                      Text(email.value,
                           style: TextStyle(fontSize: 14)),
-                      Text('+91 45454 54545', style: TextStyle(fontSize: 14)),
+                      Text(Phone.value, style: TextStyle(fontSize: 14)),
                     ],
                   ),
                 ),
@@ -90,7 +91,9 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                         }),
                         Divider(),
                         _buildOption(Icons.group, 'Friends list',
-                            'Check your friends list here'),
+                            'Check your friends list here',onTap: () {
+                              Navigator.pushNamed(context, '/Friends'); 
+                        }),
                       ],
                     ),
                   ),
@@ -176,4 +179,5 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
       onTap: onTap,
     );
   }
+
 }

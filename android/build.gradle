@@ -3,7 +3,7 @@ allprojects {
         google()
         mavenCentral()
         maven { 
-            url 'https://maven.pkg.github.com/Cookiejar-technologies/finvu_flutter_sdk' 
+            url 'https://maven.pkg.github.com/yashwantGehlot/finvu_android_sdk' 
             credentials {
                 username = "NILESHTOSHNIWAL536"
                 password = "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"

@@ -255,6 +255,12 @@ void addLendUserAmount(context,String amount,List members,String name)async{
       if(response.statusCode==200 || response.statusCode==201){
             final body = json.decode(response.body);
             snackBarCalled(context,"Lend Amount send to users!",Colors.black);
+          members.forEach((e)
+           {
+            sendNotificationsToDevice(e['id'],context,"${userName.value} Has Send U a Lend Bill..Of ${name} Of ${amount}");
+           }
+          );
+
             addTransaction(amount, "Lend Bill", name, context, 'cash',true);
             getUserLend(context);
           //   Navigator.push(
@@ -310,6 +316,12 @@ void splitUserAmount(context,String amount,List members,String name)async{
             // print("splitID.value");
             // print(body['id']);
             // print(splitID.value);
+           members.forEach((e)
+           {
+            sendNotificationsToDevice(e['id'],context,"${userName.value} Has Send U a Split Bill..Of ${name} Of ${amount}");
+           });
+            
+
 
             snackBarCalled(context,"Slit Amount send to users!",Colors.black);
             addTransaction(amount, "Split Bill", name, context, 'cash',true);

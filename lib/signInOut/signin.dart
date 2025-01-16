@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -26,7 +27,7 @@ class _SigninState extends State<Signin> {
   // TextEditingController passwordController = TextEditingController();
   // TextEditingController emailController=TextEditingController(text: "user63@gmail.com");
   // TextEditingController passwordController =TextEditingController(text: "user63password");
-  TextEditingController emailController= TextEditingController(text: "roshanchenna2@gmail.com");
+  TextEditingController emailController= TextEditingController(text: "roshanchenna1@gmail.com");
   TextEditingController passwordController= TextEditingController(text: "nilesh123");
 
   Widget InputDate(lableText, keyBoard, Textcontroller) {
@@ -148,6 +149,21 @@ class _SigninState extends State<Signin> {
                     const SizedBox(
                       height: 50,
                     ),
+                  
+                  InkWell(
+                      onTap:()async{
+                         var data=await finvuManager.fipsAllFIPOptions(); 
+                        //  data=data[0].fipId;
+                        print(data);
+                        print(data.first);
+                        print(data.first.fipFitypes);
+                        print(data.first.fipId);
+                        
+                      },
+                      child:Text(" fipsAllFIPOptions() ")
+                  ),
+
+
                     Center(
                       child: Container(
                         width: MediaQuery.of(context).size.width / 1.6,

@@ -4,6 +4,7 @@
 import 'package:finvu_flutter_sdk/finvu_config.dart';
 import 'package:finvu_flutter_sdk_core/finvu_discovered_accounts.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_details.dart';
+import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/ApproveConsentRequest.dart';
@@ -70,13 +71,44 @@ import 'package:shared_preferences/shared_preferences.dart';
      final SharedPreferences _pref = await SharedPreferences.getInstance();
           String? token=await _pref.getString("token");
 
-     Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ApproveConsent(),
-            ));
+           List<FinvuFIPInfo> data=await finvuManager.fipsAllFIPOptions(); 
+           data=[data[0]];
+          
+
+
+          // FinvuFIPInfo  finvuFIPInfo=data.first;
+
+            // data.forEach((e)async{
+            //        print("e.fipId");
+            //        print(e.productName);
+            //        print(e.fipId);
+            //        print(e.fipFitypes);
+
+              //  var d=await finvuManager.fetchFIPDetails(e.fipId); 
+
+              //   print(d.fipId);
+              //   d.typeIdentifiers.forEach((e){
+              //         print("typeIdentifiers-------------------");
+              //         print(e.fiType);
+              //        e.identifiers.forEach((e){
+              //               print("identifiers-------------------");
+              //               print(e.category);
+              //               print(e.type);    
+              //        });
+              //   });
+
+
+                  
+            // });
+
+    //  Navigator.pushReplacement(
+    //                   context,
+    //                   MaterialPageRoute(
+    //                     builder: (context) => ApproveConsent(),
+    //         ));
     // await approveConsentRequest();
     //  ConsentStatus(context,token,handleId.value,custId);
+
     }
     catch(e)
     {
@@ -211,3 +243,15 @@ import 'package:shared_preferences/shared_preferences.dart';
      
     debugPrint('approveConsentRequest');
   }
+
+
+
+
+//     finvu_flutter_sdk_core:
+//     git:
+//       url: https://github.com/yashwantGehlot/finvu_flutter_sdk.git
+//       path: core
+//       ref: v2
+// Yashwant Gehlot
+// 17:17
+// url = uri("https://maven.pkg.github.com/yashwantGehlot/finvu_android_sdk")

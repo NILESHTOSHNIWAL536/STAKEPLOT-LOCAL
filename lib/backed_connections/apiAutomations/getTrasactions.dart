@@ -289,7 +289,7 @@ void addTransaction(String amount, String subCategory, String categories,
     'room': {},
     'isSplit': isSplit,
   };
-
+  print(body);
   final response = await http.post(
     Uri.parse('${url}/transaction/add'),
     headers: <String, String>{

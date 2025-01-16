@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
@@ -318,7 +319,6 @@ void createPollOfCommunityPost(context,String question,List options,roomDetails,
             'pollType':  type, //roomDetails.length!=0?'room':'casual',
             'roomDetails':roomDetails,
             'myVote':'none',
-            'members':members,
             'title': "Poll is Added in the Post",
             'description':
             {
@@ -348,20 +348,20 @@ void createPollOfCommunityPost(context,String question,List options,roomDetails,
             // //print(obj['data']);
 
               questionRoom.add(obj['data']);
-            
+              getPost();
 
                Navigator.pop(context);
-               Navigator.pop(context);
+              //  Navigator.pop(context);
            
-          //   Navigator.pushReplacement(
-          //   context,
-          //   PageTransition(
-          //     type: PageTransitionType.topToBottom,
-          //      duration: Durations.long1,
-          //     child: Poll(),
-          //     isIos: true,
-          //   ),
-          // ); 
+            Navigator.pushReplacement(
+            context,
+            PageTransition(
+              type: PageTransitionType.topToBottom,
+               duration: Durations.long1,
+              child: Community(),
+              isIos: true,
+            ),
+          ); 
             
       }else{
            printData(response);

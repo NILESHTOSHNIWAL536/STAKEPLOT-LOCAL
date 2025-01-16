@@ -1,9 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/profile.dart';
+import 'package:get/get.dart';
 import './colors.dart';
 
-class UserListScreen extends StatelessWidget {
+class UserListScreen extends StatefulWidget {
+  @override
+  State<UserListScreen> createState() => _UserListScreenState();
+}
+
+class _UserListScreenState extends State<UserListScreen> {
+   @override
+  void initState() {
+    getUserLend(context);
+    print("lendAmountRemainders[index]");
+    print(lendAmountRemainders);
+  }
+
   final List<Map<String, String>> users = [
     {"name": "John Doe", "profilePic": "https://via.placeholder.com/150"},
     {"name": "Jane Smith", "profilePic": "https://via.placeholder.com/150"},
@@ -68,36 +85,49 @@ class UserListScreen extends StatelessWidget {
         SizedBox(
           height: 10,
         ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(users[index]["profilePic"] ??
-                      "https://via.placeholder.com/150"),
-                ),
-                title: Text(users[index]["name"] ?? "Unknown User",
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
-                        fontSize: 16,
-                        color: AppColors.accentColor)),
-                trailing: TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    "Remind now",
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
-                        fontSize: 14,
-                        color: AppColors.primaryColor),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
+          
+
+        Obx(()=>  lendAmountRemainders.length >=0 ? getUser():getUser()),
+         
+        
       ],
     );
+  }
+
+
+  Widget  getUser(){
+    return  Container(
+            width: MediaQuery.of(context).size.width/1.1,
+            height: MediaQuery.of(context).size.height/3.5,
+
+            // color: Colorcodes.billHeader,
+            child:ListView.builder(
+              itemCount: lendAmountRemainders.length <= 3 ? lendAmountRemainders.length:3,
+              itemBuilder: (context, index) {
+                var data=lendAmountRemainders[index];
+               
+                return ListTile(
+                  leading: CircleAvatar(
+                            backgroundColor: Colorcodes.budgetLightGreen,
+                            child: ProfileImage(
+                                url: data['Avatar'] ?? 'assets/avatar/menp4.svg'
+                       )),
+                  title: Text(data["userName"] ?? "Unknown User"),
+                  trailing:  InkWell(
+                    onTap: (){
+                         
+                          sendNotificationsToDevice(data['_id'],context,"You Need To Pay Lend To ${userName.value} of ${data['amount']??"0000"}");
+                          // print(currentId.value);
+                    },
+                    child: Text(
+                    ( data["billApproved"] ?? true )? "Remind now":"Didn't Approved",
+                      style: TextStyle(color: Colors.green, fontSize: 15),
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
   }
 }
 
@@ -117,32 +147,33 @@ class ShowAllUsersScreen extends StatelessWidget {
                 fontSize: 18,
                 color: AppColors.accentColor)),
       ),
-      body: ListView.builder(
-        itemCount: users.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            leading: CircleAvatar(
-              backgroundImage: NetworkImage(users[index]["profilePic"] ??
-                  "https://via.placeholder.com/150"),
-            ),
-            title: Text(users[index]["name"] ?? "Unknown User",
-                style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.normal,
-                    fontSize: 16,
-                    color: AppColors.accentColor)),
-            trailing: TextButton(
-              onPressed: () {},
-              child: Text(
-                "Remind now",
-                style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.normal,
-                    fontSize: 14,
-                    color: AppColors.primaryColor),
+      body: Expanded(
+              child:  ListView.builder(
+                itemCount: lendAmountRemainders.length,
+                itemBuilder: (context, index) {
+                  var data=lendAmountRemainders[index];
+                  return ListTile(
+                    leading: CircleAvatar(
+                              backgroundColor: Colorcodes.budgetLightGreen,
+                              child: ProfileImage(
+                                  url: data['Avatar'] ?? 'assets/avatar/menp4.svg'
+                         )),
+                    title: Text(data["userName"] ?? "Unknown User"),
+                    trailing:  InkWell(
+                      onTap: (){
+                         
+                          sendNotificationsToDevice(data['_id'],context,"You Need To Pay Lend To ${userName.value} of ${data['amount']??"0000"}");
+                          // print(currentId.value);
+                    },
+                      child: Text(
+                      ( data["billApproved"] ?? true )? "Remind now":"Didn't Approved",
+                        style: TextStyle(color: Colors.green, fontSize: 15),
+                      ),
+                    ),
+                  );
+                },
               ),
-            ),
-          );
-        },
-      ),
+            )
     );
   }
 }

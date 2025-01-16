@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/otpScreen.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+import 'package:flutter_application_code_stakeplot/main.dart';
 
 class ApproveConsent extends StatelessWidget {
   const ApproveConsent({ Key? key }) : super(key: key);
@@ -54,7 +55,24 @@ class ApproveConsent extends StatelessWidget {
                         approveConsentRequest(context);
                   },
                   child: getButton(context,"Approve consent")
+
+
+
                 ),
+
+
+                  InkWell(
+                      onTap:()async{
+                         var data=await finvuManager.fipsAllFIPOptions(); 
+                        //  data=data[0].fipId;
+                        print(data);
+                        print(data.first);
+                        print(data.first.fipFitypes);
+                        print(data.first.fipId);
+                        
+                      },
+                      child:Text(" fipsAllFIPOptions() ")
+                  ),
       
               SizedBox(height: 100,),
             ],

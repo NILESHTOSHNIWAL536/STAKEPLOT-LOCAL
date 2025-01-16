@@ -16,17 +16,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
-String urlWithLocallHost = "http://192.168.1.15:5000/";
+String portNo="localhost";
 // String urlWithLocallHost="https://stakeplot.in";
-String url = "http://192.168.1.15:5000/api/v1";
-// String url="http://192.168.1.46:5000/api/v1";
-// String urlWithLocallHost2="http://10.0.2.2:5000/api/v1";
+String urlWithLocallHost="http://${portNo}:5000/"; 
+String url="http://${portNo}:5000/api/v1";
 // String url="http://localhost:5000/api/v1";
-// String url="http://10.0.2.2:5000/api/v1";
-// String url="https://stakeplot.in/api/v1";
-// String url="https://stakeplot.in/api/v1";
-// String url="http://localhost:5000/api/v1";
-// String url="http://127.0.0.1:5000";
+
 
 String valid = "Please Enter All Feilds";
 RxString expenses = "Loading....".obs;
@@ -48,7 +43,7 @@ RxList trasactionsData = [].obs;
 RxList listOfRecentTrasactionsData = [].obs;
 RxList trasactionsHideData = [].obs;
 RxList trasactionsHistory = [].obs;
-List lendAmountRemainders = [];
+RxList lendAmountRemainders = [].obs;
 List<double> trasactionsDataMonthlyCredit = [];
 List<double> trasactionsDataMonthlyDebit = [];
 List<double> trasactionsDataCustomCredit = [];
