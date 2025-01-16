@@ -2,6 +2,7 @@ import 'dart:convert';
 import "package:flutter/material.dart";
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/donut_chart.dart';
 import 'package:flutter_application_code_stakeplot/Profile/profile.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
@@ -80,35 +81,38 @@ class _PostCardState extends State<PostCard> {
 
   Widget uploadData(dataObj, bool flag) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 5),
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 7),
+      //padding: const EdgeInsets.all(16),
       child: Card(
         elevation: Colorcodes.elevation5,
-        color: Colorcodes.white1,
+        color: AppColors.mt,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
         ),
         child: Column(
           children: [
             GestureDetector(
-              onTap:flag?null: () {
-
-      
-                 Navigator.push(
-              context,
-              PageTransition(
-                    type: PageTransitionType.fade,
-                    duration: Durations.long1,
-                    child:TribeUnique( id:dataObj["_id"] ,dataObj: dataObj,),
-                    isIos: true,
-              ),
-            );
-                  
-              },
+              onTap: flag
+                  ? null
+                  : () {
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          type: PageTransitionType.fade,
+                          duration: Durations.long1,
+                          child: TribeUnique(
+                            id: dataObj["_id"],
+                            dataObj: dataObj,
+                          ),
+                          isIos: true,
+                        ),
+                      );
+                    },
               child: Container(
-                padding: const EdgeInsets.fromLTRB(20, 3, 20, 20),
+                padding: const EdgeInsets.fromLTRB(15, 3, 15, 15),
                 decoration: BoxDecoration(
                     // color: const Color.fromRGBO(249, 246, 238, 1),
-                    color: Colorcodes.iconBackGround,
+                    color: AppColors.mt,
                     borderRadius:
                         BorderRadius.circular(Colorcodes.borderRadius)),
                 child: Column(
@@ -125,7 +129,7 @@ class _PostCardState extends State<PostCard> {
                               AvatarProfileImage(
                                 url: dataObj["author"]['avatar'],
                                 width: 10,
-                                height: 13,
+                                height: 15,
                               ),
                               const SizedBox(
                                 width: 10,
@@ -134,7 +138,7 @@ class _PostCardState extends State<PostCard> {
                                   style: FontManager().getTextStyle(context,
                                       lWeight: FontWeight.bold,
                                       fontSize: 18,
-                                      color: Colorcodes.white)),
+                                      color: AppColors.bg1)),
                             ],
                           ),
                         ),
@@ -151,14 +155,23 @@ class _PostCardState extends State<PostCard> {
                         ),
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Text((dataObj['title']),
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: Colorcodes.white)),
-                    ),
+                    (dataObj['isPoll'] ?? false)
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(dataObj['pollData']['question'] + "?",
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                    color: AppColors.bg1)),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Text((dataObj['title']),
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: AppColors.bg1)),
+                          ),
                     // Readmore(str:dataObj['title'].toString(),),
                     //   ReadMoreText(
                     //     dataObj['title'].toString(),
@@ -275,10 +288,10 @@ class _PostCardState extends State<PostCard> {
           onTap: () {
             if (!fill.value) {
               savePostData(context, widget.data);
-              snackBarCalled(context, "Post is Saved...!!");
+              snackBarCalled(context, "Saved post successfully...!!");
               fill.value = true;
             } else
-              snackBarCalled(context, "Post is Already Saved...!!");
+              snackBarCalled(context, "You have already saved the post..!!");
           },
           child: Obx(() => SvgPicture.asset(
                 fill.value
@@ -302,12 +315,12 @@ class _PostCardState extends State<PostCard> {
   Widget popUpBox(id, context) {
     return PopupMenuButton(
       initialValue: 2,
-      color: Colorcodes.budgetLightGreen,
+      color: AppColors.bg3,
       child: Center(
           child: Icon(
         Icons.more_vert_outlined,
         size: 25,
-        color: Colorcodes.white,
+        color: AppColors.bg2,
       )),
       onSelected: (value) {
         if (value == 1) {
@@ -365,56 +378,53 @@ class _PostCardState extends State<PostCard> {
       height: MediaQuery.of(context).size.height / 4.7,
 
       child: SfCartesianChart(
-          //  primaryXAxis: CategoryAxis(),
-            primaryYAxis: NumericAxis(
-                          labelStyle: FontManager().getTextStyle(context,
-                              color: Colorcodes.white,
-                              fontSize: 13,
-                                // color: Colorcodes.white,
-                              lWeight: FontWeight.bold
-                            ),
-                          // borderWidth: 0,
-                          // majorGridLines: MajorGridLines(
-                          //     color: Colorcodes.iconBackGround,
-                          //     dashArray: [3, 3, 3, 3]),
-                          // axisLine: AxisLine(color: Colorcodes.black),
-                           numberFormat: NumberFormat.compact(),
-                        ),
-                        primaryXAxis: CategoryAxis(
-                          labelStyle: FontManager().getTextStyle(context,
-                              color: Colorcodes.white,
-                              fontSize: 11,
-                              lWeight: FontWeight.bold
-                            ),
-                          // axisLine: AxisLine(color: Colorcodes.black),
-                          
-                        ),
-            isTransposed: true,
-           series: <CartesianSeries>[
-             BarSeries<SalesData, String>(
-               dataSource: chartData,
-               onPointTap: (pointInteractionDetails) {
-                  print(widget.flag);
-                   if(widget.flag)return;
-                    Navigator.push(
-                                context,
-                                PageTransition(
-                                      type: PageTransitionType.fade,
-                                      duration: Durations.long1,
-                                      child:TribeUnique( id:item["_id"] ,dataObj: item,),
-                                      isIos: true,
-                                ));
-               },
-               xValueMapper: (SalesData sales, _) => sales.month,
-               yValueMapper: (SalesData sales, _) => sales.sales,
-                pointColorMapper:(SalesData data,  _) => data.color,
-               
-             )
-           ],
-         ),
-        );
+        //  primaryXAxis: CategoryAxis(),
+        primaryYAxis: NumericAxis(
+          labelStyle: FontManager().getTextStyle(context,
+              color: Colorcodes.white,
+              fontSize: 13,
+              // color: Colorcodes.white,
+              lWeight: FontWeight.bold),
+          // borderWidth: 0,
+          // majorGridLines: MajorGridLines(
+          //     color: Colorcodes.iconBackGround,
+          //     dashArray: [3, 3, 3, 3]),
+          // axisLine: AxisLine(color: Colorcodes.black),
+          numberFormat: NumberFormat.compact(),
+        ),
+        primaryXAxis: CategoryAxis(
+          labelStyle: FontManager().getTextStyle(context,
+              color: Colorcodes.white, fontSize: 11, lWeight: FontWeight.bold),
+          // axisLine: AxisLine(color: Colorcodes.black),
+        ),
+        isTransposed: true,
+        series: <CartesianSeries>[
+          BarSeries<SalesData, String>(
+            dataSource: chartData,
+            onPointTap: (pointInteractionDetails) {
+              print(widget.flag);
+              if (widget.flag) return;
+              Navigator.push(
+                  context,
+                  PageTransition(
+                    type: PageTransitionType.fade,
+                    duration: Durations.long1,
+                    child: TribeUnique(
+                      id: item["_id"],
+                      dataObj: item,
+                    ),
+                    isIos: true,
+                  ));
+            },
+            xValueMapper: (SalesData sales, _) => sales.month,
+            yValueMapper: (SalesData sales, _) => sales.sales,
+            pointColorMapper: (SalesData data, _) => data.color,
+          )
+        ],
+      ),
+    );
   }
-  
+
   Widget pieChart(item) {
     final List<ChartData> chartData = [];
 
@@ -500,76 +510,75 @@ Widget poll(e, context) {
 
   return Padding(
     padding: const EdgeInsets.only(right: 0.0, top: 5),
-    child: Container(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      width: MediaQuery.of(context).size.width / 1.4,
-      decoration: BoxDecoration(
-        //  color: Colorcodes.appBarColor,
-        border: Border.all(width: .5, color: Colorcodes.poll1),
-        borderRadius: BorderRadius.circular(9),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(e['question'] + "?",
-                style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.w600,
-                    fontSize: 18,
-                    color: Colorcodes.poll1)),
-          ),
-          Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: options.map((op) {
-                // List ll=op['votes'];
-                // String cal=((ll.length/len)* 100).toStringAsFixed(2);
-                // len += ll.length ;
-                s++;
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 13, horizontal: 10),
-                      width: MediaQuery.of(context).size.width / 1.5,
-                      decoration: BoxDecoration(
-                        color: index == s ? null : Colorcodes.white,
-                        borderRadius:
-                            BorderRadius.circular(Colorcodes.borderRadius),
-                        gradient: index == s
-                            ? LinearGradient(
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                                colors: [
-                                  Colorcodes.poll1,
-                                  Colorcodes.poll2,
-                                ],
-                              )
-                            : null,
-                        border: index == s
-                            ? Border.all(color: Colorcodes.poll1)
-                            : null,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(op,
-                              overflow: TextOverflow.ellipsis,
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                  color: index == s
-                                      ? Colorcodes.white
-                                      : Colors.black)),
-                        ],
-                      )),
-                );
-              }).toList()),
-        ],
-      ),
+    // child: Container(
+    //   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+    //   width: MediaQuery.of(context).size.width / 1.4,
+    //   decoration: BoxDecoration(
+    //     //  color: Colorcodes.appBarColor,
+    //     border: Border.all(width: .5, color: Colorcodes.poll1),
+    //     borderRadius: BorderRadius.circular(9),
+    //   ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(e['question'] + "?",
+              style: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.w600,
+                  fontSize: 18,
+                  color: AppColors.bg1)),
+        ),
+        Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: options.map((op) {
+              // List ll=op['votes'];
+              // String cal=((ll.length/len)* 100).toStringAsFixed(2);
+              // len += ll.length ;
+              s++;
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 13, horizontal: 10),
+                    width: MediaQuery.of(context).size.width / 1.5,
+                    decoration: BoxDecoration(
+                      color: index == s ? null : Colorcodes.white,
+                      borderRadius:
+                          BorderRadius.circular(Colorcodes.borderRadius),
+                      gradient: index == s
+                          ? LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: [
+                                AppColors.pollSelected,
+                                AppColors.pollSelected,
+                              ],
+                            )
+                          : null,
+                      border: index == s
+                          ? Border.all(color: AppColors.button)
+                          : null,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(op,
+                            overflow: TextOverflow.ellipsis,
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: index == s
+                                    ? AppColors.bg1
+                                    : AppColors.bg1)),
+                      ],
+                    )),
+              );
+            }).toList()),
+      ],
     ),
+    //),
   );
 }
 
@@ -658,33 +667,33 @@ Widget getQuestionsAndOptions(e, context, flag, PostId) {
 
   optionsList.addAll(options);
   int indexVal = -1;
-
+  double width = MediaQuery.of(context).size.width;
   return Obx(() => Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(5.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              width: MediaQuery.of(context).size.width / 1.3,
-              decoration: BoxDecoration(
-                //  color: Colorcodes.appBarColor,
-                border: Border.all(width: .5, color: Colorcodes.white),
-                //  borderRadius: BorderRadius.circular(9),
-              ),
+              width: width <= 500 ? width / 1.4 : width / 1.3,
+              // decoration: BoxDecoration(
+              //   //  color: Colorcodes.appBarColor,
+              //   border: Border.all(width: .5, color: AppColors.button),
+              //   //  borderRadius: BorderRadius.circular(9),
+              // ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(e['question'] + "?",
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w600,
-                            fontSize: 18,
-                            color: Colorcodes.white)),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(8.0),
+                  //   child: Text(e['question'] + "?",
+                  //       style: FontManager().getTextStyle(context,
+                  //           lWeight: FontWeight.w600,
+                  //           fontSize: 18,
+                  //           color: AppColors.bg1)),
+                  // ),
                   Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -732,12 +741,11 @@ Widget getQuestionsAndOptions(e, context, flag, PostId) {
                                 child: Container(
                                     padding: EdgeInsets.symmetric(
                                         vertical: 13, horizontal: 10),
-                                    width:
-                                        MediaQuery.of(context).size.width / 1.4,
+                                    //width: MediaQuery.of(context).size.width,
                                     decoration: BoxDecoration(
                                         color: op['option'] == s
                                             ? null
-                                            : Colorcodes.white,
+                                            : AppColors.backgroundColor,
                                         borderRadius: BorderRadius.circular(
                                             Colorcodes.borderRadius),
                                         gradient: op['option'] == s
@@ -745,14 +753,14 @@ Widget getQuestionsAndOptions(e, context, flag, PostId) {
                                                 begin: Alignment.centerLeft,
                                                 end: Alignment.centerRight,
                                                 colors: [
-                                                  Colorcodes.poll1,
-                                                  Colorcodes.poll2,
+                                                  AppColors.pollSelected,
+                                                  AppColors.pollSelected,
                                                 ],
                                               )
                                             : null,
                                         border: !isSe
                                             ? Border.all(
-                                                color: Colorcodes.poll1)
+                                                color: AppColors.button)
                                             : null),
                                     child: Row(
                                       mainAxisAlignment:
@@ -766,8 +774,8 @@ Widget getQuestionsAndOptions(e, context, flag, PostId) {
                                                   lWeight: FontWeight.bold,
                                                   fontSize: 14,
                                                   color: isSe
-                                                      ? Colorcodes.white
-                                                      : Colors.black)),
+                                                      ? AppColors.bg1
+                                                      : AppColors.bg1)),
                                         ),
                                         myvote.value
                                             ? Text(
@@ -782,8 +790,8 @@ Widget getQuestionsAndOptions(e, context, flag, PostId) {
                                                             FontWeight.bold,
                                                         fontSize: 14,
                                                         color: isSe
-                                                            ? Colorcodes.white
-                                                            : Colors.black))
+                                                            ? AppColors.bg1
+                                                            : AppColors.bg1))
                                             : SizedBox.shrink(),
                                       ],
                                     )),

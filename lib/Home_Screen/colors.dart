@@ -10,4 +10,6 @@ class AppColors {
   static const Color bg3 = Color(0xFF48484A);
   static const Color mt = Color(0xFFFFFFFF); // manual
   static const Color bg5 = Color(0xFFF3F5F5);
+  static const Color bg6 = Color(0xFF404040);
+  static const Color pollSelected = Color(0xFF97B2B8);
 }
