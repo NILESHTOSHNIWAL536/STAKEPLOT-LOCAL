@@ -567,6 +567,7 @@ class _TribeSearchState extends State<TribeChats> {
     return Scaffold(
       bottomNavigationBar: BottomNavigations(data: sizeRoom ? 3 : 2),
       extendBody: true,
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: InkWell(
@@ -587,13 +588,17 @@ class _TribeSearchState extends State<TribeChats> {
           // mainAxisAlignment: MainAxisAlignment.start,
           // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text('Messages'),
+            Text('Messages',
+                style: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 24,
+                    color: AppColors.message)),
             const SizedBox(
               height: 23,
             ),
             InputDate2("Search", TextInputType.name, search),
             const SizedBox(
-              height: 18,
+              height: 16,
             ),
             Obx(() => reloadCharts.value ? getChatList() : getChatList()),
           ],
@@ -757,12 +762,21 @@ class _TribeSearchState extends State<TribeChats> {
                           (item['name']),
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.w500,
-                              fontSize: 20,
-                              color: Colors.black),
+                              fontSize: 18,
+                              color: AppColors.message),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 2),
+                        Text(
+                        item['latestMessage'] ?? 'No messages yet',
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.w400,
+                            fontSize: 12,
+                            color: AppColors.message.withOpacity(0.7)),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                       ],
                     ),
                   ),
@@ -771,7 +785,7 @@ class _TribeSearchState extends State<TribeChats> {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: Colorcodes.budgetLightGreen,
+                        color: AppColors.primaryColor,
                         borderRadius: BorderRadius.circular(100),
                         border: Border.all(
                           width: 0.3,
@@ -783,18 +797,15 @@ class _TribeSearchState extends State<TribeChats> {
                           item['count'].toString(),
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.bold,
-                              fontSize: 14,
-                              color: Colorcodes.dropdown),
+                              fontSize: 12,
+                              color: AppColors.bg5),
                         ),
                       ),
                     ),
                 ],
               ),
             ),
-            const Divider(
-              thickness: 1,
-              color: Colors.grey,
-            ),
+            const Divider(),
           ],
         ),
       ),

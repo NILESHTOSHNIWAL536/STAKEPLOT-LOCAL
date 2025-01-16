@@ -141,3 +141,10 @@ class SubCategories {
 class Pictures {
   static String manualTransactionImage = "assets/Images/manualTransaction.svg";
 }
+
+class LikeComment {
+  static String likeCommentShare = "assets/icons/likeComment/";
+  static String likes = "assets/icons/likeComment/likes.svg";
+  static String comments = "assets/icons/likeComment/comment.svg";
+  static String share = "assets/icons/likeComment/Send.svg";
+}

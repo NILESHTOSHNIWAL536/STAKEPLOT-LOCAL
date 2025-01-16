@@ -1,5 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:image_picker/image_picker.dart';
 import './success_post.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
@@ -73,16 +76,12 @@ class _TextScreenState extends State<TextScreen> {
                       children: [
                         Row(
                           children: [
-                            CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                  widget.userInfo['profilePic'].toString()),
-                              radius: 24,
-                            ),
+                             AvatarProfileImage(url:  avatar.value, width: 5, height: 10),
                             const SizedBox(width: 8),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(widget.userInfo['name'].toString(),
+                                Text(userName.value.toString(),
                                     style: FontManager().getTextStyle(context,
                                         lWeight: FontWeight.normal,
                                         fontSize: 18,
@@ -184,22 +183,43 @@ class _TextScreenState extends State<TextScreen> {
                       child: TextButton(
                         onPressed: () {
                           if (contentController.text.isNotEmpty) {
-                            widget.onPostCreated({
-                              'profilePic':
-                                  widget.userInfo['profilePic'].toString(),
-                              'name': widget.userInfo['name'].toString(),
-                              'contentType': 'textImage',
-                              'title': titleController.text,
-                              'content': contentController.text,
-                              'imageContent': selectedImage != null
-                                  ? selectedImage!.path
-                                  : '',
-                              'likeCount': 0,
-                              'isLiked': false,
-                            });
-                            setState(() {
-                              postSubmitted = true;
-                            });
+                            // widget.onPostCreated({
+                            //   'profilePic':
+                            //       widget.userInfo['profilePic'].toString(),
+                            //   'name': widget.userInfo['name'].toString(),
+                            //   'contentType': 'textImage',
+                            //   'title': titleController.text,
+                            //   'content': contentController.text,
+                            //   'imageContent': selectedImage != null
+                            //       ? selectedImage!.path
+                            //       : '',
+                            //   'likeCount': 0,
+                            //   'isLiked': false,
+                            // });
+                            // setState(() {
+                            //   postSubmitted = true;
+                            // });
+                          
+                           if(showImage && selectedImage==null){
+                                   snackBarAllFeilds2(context,"Pls Upload Image...");
+                                   return;
+                            } 
+                           
+                            if(titleController.text.toString().trim()=="" || contentController.text.toString().trim()==""){
+                                  snackBarAllFeilds(context);
+                                  return ;
+                            }
+
+                              if(selectedImage!=null)
+                            {
+                              // createPost(context,titleController.text,descriptionsController.text,url!);
+                               onUploadImage(selectedImage!,context,titleController.text,contentController.text);
+                            }
+                            else{ 
+                               createPostWithOutImage(context,titleController.text,contentController.text);
+                            }
+
+
                           }
                         },
                         child: Text('Continue',

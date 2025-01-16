@@ -227,9 +227,7 @@ void updateTheTagOfTarnsactions(
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
       var obj = his['data'];
-      print("---------------------------");
-      print(obj);
-      print("---------------------------");
+    
         trasactionsHistory.clear();
         trasactionsHistory.addAll(obj);
     } else {}
@@ -324,8 +322,6 @@ void getTransaction(context) async {
     var obj = his['data'];
     trasactionsHistory.clear();
     trasactionsHistory.addAll(obj);
-    print("transactions -------------------------------------------------");
-    print(trasactionsHistory);
-    print("transactions -------------------------------------------------");
+   
   } else {}
 }

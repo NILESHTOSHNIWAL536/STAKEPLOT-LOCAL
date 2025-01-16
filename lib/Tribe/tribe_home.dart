@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_share.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
@@ -1167,116 +1169,57 @@ Widget popUpBox(id, context) {
 
 Widget vote(context, dataObj, data) {
   String idData = dataObj["_id"];
-  // String countComment=postCommentCount[idData].toString();
+  String likeKey = "liked" + dataObj["_id"];
+  bool isLiked = likedList.contains(likeKey);
   return Obx(() => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            color: Colorcodes.iconBackGround,
+            //color: Colorcodes.iconBackGround,
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-            //  decoration: BoxDecoration(
-            //       // border: Border.all(),
-            //       // borderRadius: BorderRadius.circular(100)
-            //  ),
             child: Row(
               children: [
-                // const SizedBox(width: 2,),
                 Container(
                   height: 25,
                   child: GestureDetector(
                     onTap: () {
-                      String l1 = "liked" + dataObj["_id"];
-                      bool liked = likedList.contains(l1);
+                      String likeKey = "liked" + dataObj["_id"];
+                      bool isLiked = likedList.contains(likeKey);
 
-                      String l2 = "disliked" + dataObj["_id"];
-                      bool disliked = likedList.contains(l2);
-                      upvoteGlobal(context, "Post", dataObj["_id"], dataObj);
-                      // likedList.remove("liked"+dataObj["_id"])  :likedList.add("liked"+dataObj["_id"]);
-
-                      if (liked) {
-                        likedList.remove(l1);
+                      // Toggle like status
+                      if (isLiked) {
+                        likedList.remove(likeKey);
                         postCount[idData] = postCount[idData]! - 1;
-                        // if(postCount[idData]!<0)
-                        // {
-                        //   postCount[idData]=0;
-                        // }
+                        if (postCount[idData]! < 0) {
+                          postCount[idData] = 0;
+                        }
                       } else {
-                        likedList.add(l1);
+                        likedList.add(likeKey);
                         postCount[idData] = postCount[idData]! + 1;
                       }
-                      likedList.remove(l2);
+
+                      // Update the server with new vote status
+                      upvoteGlobal(context, "Post", dataObj["_id"], dataObj);
                       reRender.value = !reRender.value;
                     },
-                    child: likedList.contains("liked" + dataObj["_id"])
-                        ? upvoteLiked(context)
-                        : upvoteLike(context),
+                    child: likeIcon(context, isLiked),
                   ),
                 ),
-
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5.0),
                   child: Text(
-                      reRender.value
-                          ? postCount[dataObj['_id']]! < 0
-                              ? postCount[dataObj['_id']].toString()
-                              : (postCount[dataObj['_id']].toString())
-                          : (postCount[dataObj['_id']].toString()),
-                      // child: Text(reRender.value? postCount[dataObj['_id']]!<0? '0':  (postCount[dataObj['_id']].toString()):(postCount[dataObj['_id']].toString()),
-                      // child: Text((dataObj["upvotes"].toString()),
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.w400,
-                          fontSize: 18,
-                          color: Colorcodes.white)),
-                ),
-
-                Container(
-                  height: 25,
-                  child: GestureDetector(
-                    onTap: () {
-                      downvoteBlobal(context, "Post", dataObj["_id"], dataObj);
-                      String l1 = "liked" + dataObj["_id"];
-                      bool liked = likedList.contains(l1);
-
-                      String l2 = "disliked" + dataObj["_id"];
-                      bool disliked = likedList.contains(l2);
-                      // likedList.remove("liked"+dataObj["_id"])  :likedList.add("liked"+dataObj["_id"]);
-                      reRender.value = !reRender.value;
-                      if (disliked) {
-                        if (liked) {
-                          postCount[idData] = postCount[idData]! - 1;
-                          if (postCount[idData]! < 0) {
-                            postCount[idData] = 0;
-                          }
-                          likedList.remove(l1);
-                        }
-                        likedList.remove(l2);
-                      } else {
-                        //  likedList.add(l1);
-                        if (liked) {
-                          postCount[idData] = postCount[idData]! - 1;
-                          if (postCount[idData]! < 0) {
-                            postCount[idData] = 0;
-                          }
-                          likedList.remove(l1);
-                        }
-
-                        //  postCount[idData]=postCount[idData]!-1;
-                        likedList.add(l2);
-                      }
-                    },
-                    child: likedList.contains("disliked" + dataObj["_id"])
-                        ? downvoteLiked(context)
-                        : downvoteLike(context),
-                    // child: const Icon(
-                    //   Icons.arrow_drop_down_outlined,
-                    //   size: 35,
-                    //   color: Colors.black,
-                    // ),
+                    reRender.value
+                        ? postCount[dataObj['_id']]! < 0
+                            ? '0'
+                            : (postCount[dataObj['_id']].toString())
+                        : (postCount[dataObj['_id']].toString()),
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.w400,
+                        fontSize: 12,
+                        color: AppColors.likesharecommentCount),
                   ),
                 ),
-
-                //  const SizedBox(width: 2,),
               ],
             ),
           ),
@@ -1285,58 +1228,70 @@ Widget vote(context, dataObj, data) {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  color: Colorcodes.iconBackGround,
                   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                  //      decoration: BoxDecoration(
-                  //       border: Border.all(),
-                  //       borderRadius: BorderRadius.circular(100)
-                  //  ),
                   child: Row(
                     children: [
                       Container(
                           height: 25,
                           child: SvgPicture.asset(
-                            svgIconPath.comment,
-                            color: Colorcodes.white,
-                          )
-                          // child: ProfileImage(url: "assets/images/comment.svg",)
-                          ),
+                            LikeComment.comments,
+                            height: 25,
+                          )),
                       const SizedBox(
                         width: 6,
                       ),
                       Text(
-                          postCommentCount[idData].toString() == 'null'
-                              ? dataObj["comments"].toString()
-                              : postCommentCount[idData].toString(),
-                          style: FontManager().getTextStyle(context,
-                              // Text(dataObj["comments"].toString(),style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.w400,
-                              fontSize: 18,
-                              color: Colorcodes.white)),
+                        postCommentCount[idData].toString() == 'null'
+                            ? dataObj["comments"].toString()
+                            : postCommentCount[idData].toString(),
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.w400,
+                            fontSize: 12,
+                            color: AppColors.likesharecommentCount),
+                      ),
                       const SizedBox(width: 7),
                     ],
                   ),
                 ),
                 const SizedBox(width: 15),
                 Container(
-                  color: Colorcodes.iconBackGround,
                   child: InkWell(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          backgroundColor: Colorcodes.appBarColor,
-                          builder: (context) {
-                            return TribeShare(data: data, dataObj: dataObj);
-                          },
-                        );
-                      },
-                      child: imageurlcard(svgIconPath.share)),
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        backgroundColor: Colorcodes.appBarColor,
+                        builder: (context) {
+                          return TribeShare(data: data, dataObj: dataObj);
+                        },
+                      );
+                    },
+                    child: SvgPicture.asset(
+                      LikeComment.share,
+                      height: 25,
+                    ),
+                  ),
                 ),
               ],
             ),
           )
         ],
       ));
+}
+
+// Helper function to get the appropriate icon based on like status
+// Helper function to get the appropriate SVG based on like status
+Widget likeIcon(BuildContext context, bool isLiked) {
+  return isLiked
+      ? SvgPicture.asset(
+          LikeComment.likes, // Path to your filled heart SVG
+          //color: Colors.red,
+          height: 25,
+        )
+      : SvgPicture.asset(
+          LikeComment.likes, // Path to your outlined heart SVG
+          //color: Colors.white,
+          height: 25,
+        );
 }
 
 void upvoteGlobal(context, String str, String objectId, dataObj) async {
@@ -1357,51 +1312,258 @@ void upvoteGlobal(context, String str, String objectId, dataObj) async {
     final body = json.decode(response.body);
 
     if (!postListIds.contains(objectId)) {
-      //  setState(() {
       dataObj["upvotes"]++;
-      // });
-      //  snackBarCalled(context,"Liked!",Colors.black);
       postListIds.add(objectId);
     } else {
-      //  setState(() {
       dataObj["upvotes"]--;
-      // });
-      //  snackBarCalled(context,"Removed Liked!",Colors.black);
       postListIds.remove(objectId);
     }
-    //  Navigator.pop(context);
-    //  Navigator.pushNamed(context, '/TribeHome');
-  } else {
-    //  snackBarCalled(context,"error while Liked!",Colors.red);
   }
 }
 
-void downvoteBlobal(context, String str, String objectId, dataObj) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  final response = await http.post(
-    Uri.parse('${url}/downvote/'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
-      'onModel': str.toString(),
-      'objectId': objectId,
-    }),
-  );
+// Note: If 'upvoteGlobal' is meant to handle both like and unlike, you might need to adjust how it interacts with the server.
+// If not, you might need to implement or modify a 'downvoteBlobal' function for removing likes.
+// Widget vote(context, dataObj, data) {
+//   String idData = dataObj["_id"];
+//   // String countComment=postCommentCount[idData].toString();
+//   return Obx(() => Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//         crossAxisAlignment: CrossAxisAlignment.center,
+//         children: [
+//           Container(
+//             color: Colorcodes.iconBackGround,
+//             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+//             //  decoration: BoxDecoration(
+//             //       // border: Border.all(),
+//             //       // borderRadius: BorderRadius.circular(100)
+//             //  ),
+//             child: Row(
+//               children: [
+//                 // const SizedBox(width: 2,),
+//                 Container(
+//                   height: 25,
+//                   child: GestureDetector(
+//                     onTap: () {
+//                       String l1 = "liked" + dataObj["_id"];
+//                       bool liked = likedList.contains(l1);
 
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
-    //  snackBarCalled(context,"DisLiked!",Colors.black);
+//                       String l2 = "disliked" + dataObj["_id"];
+//                       bool disliked = likedList.contains(l2);
+//                       upvoteGlobal(context, "Post", dataObj["_id"], dataObj);
+//                       // likedList.remove("liked"+dataObj["_id"])  :likedList.add("liked"+dataObj["_id"]);
 
-    if (postListIds.contains(objectId)) {
-      // setState(() {
-      dataObj["upvotes"]--;
-      // });
-      postListIds.remove(objectId);
-    }
-  } else {
-    //  snackBarCalled(context,"error while DisLiked!",Colors.red);
-  }
-}
+//                       if (liked) {
+//                         likedList.remove(l1);
+//                         postCount[idData] = postCount[idData]! - 1;
+//                         // if(postCount[idData]!<0)
+//                         // {
+//                         //   postCount[idData]=0;
+//                         // }
+//                       } else {
+//                         likedList.add(l1);
+//                         postCount[idData] = postCount[idData]! + 1;
+//                       }
+//                       likedList.remove(l2);
+//                       reRender.value = !reRender.value;
+//                     },
+//                     child: likedList.contains("liked" + dataObj["_id"])
+//                         ? upvoteLiked(context)
+//                         : upvoteLike(context),
+//                   ),
+//                 ),
+
+//                 Padding(
+//                   padding: const EdgeInsets.symmetric(horizontal: 5.0),
+//                   child: Text(
+//                       reRender.value
+//                           ? postCount[dataObj['_id']]! < 0
+//                               ? postCount[dataObj['_id']].toString()
+//                               : (postCount[dataObj['_id']].toString())
+//                           : (postCount[dataObj['_id']].toString()),
+//                       // child: Text(reRender.value? postCount[dataObj['_id']]!<0? '0':  (postCount[dataObj['_id']].toString()):(postCount[dataObj['_id']].toString()),
+//                       // child: Text((dataObj["upvotes"].toString()),
+//                       style: FontManager().getTextStyle(context,
+//                           lWeight: FontWeight.w400,
+//                           fontSize: 18,
+//                           color: Colorcodes.white)),
+//                 ),
+
+//                 Container(
+//                   height: 25,
+//                   child: GestureDetector(
+//                     onTap: () {
+//                       downvoteBlobal(context, "Post", dataObj["_id"], dataObj);
+//                       String l1 = "liked" + dataObj["_id"];
+//                       bool liked = likedList.contains(l1);
+
+//                       String l2 = "disliked" + dataObj["_id"];
+//                       bool disliked = likedList.contains(l2);
+//                       // likedList.remove("liked"+dataObj["_id"])  :likedList.add("liked"+dataObj["_id"]);
+//                       reRender.value = !reRender.value;
+//                       if (disliked) {
+//                         if (liked) {
+//                           postCount[idData] = postCount[idData]! - 1;
+//                           if (postCount[idData]! < 0) {
+//                             postCount[idData] = 0;
+//                           }
+//                           likedList.remove(l1);
+//                         }
+//                         likedList.remove(l2);
+//                       } else {
+//                         //  likedList.add(l1);
+//                         if (liked) {
+//                           postCount[idData] = postCount[idData]! - 1;
+//                           if (postCount[idData]! < 0) {
+//                             postCount[idData] = 0;
+//                           }
+//                           likedList.remove(l1);
+//                         }
+
+//                         //  postCount[idData]=postCount[idData]!-1;
+//                         likedList.add(l2);
+//                       }
+//                     },
+//                     child: likedList.contains("disliked" + dataObj["_id"])
+//                         ? downvoteLiked(context)
+//                         : downvoteLike(context),
+//                     // child: const Icon(
+//                     //   Icons.arrow_drop_down_outlined,
+//                     //   size: 35,
+//                     //   color: Colors.black,
+//                     // ),
+//                   ),
+//                 ),
+
+//                 //  const SizedBox(width: 2,),
+//               ],
+//             ),
+//           ),
+//           Container(
+//             child: Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: [
+//                 Container(
+//                   //color: Colorcodes.iconBackGround,
+//                   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+//                   //      decoration: BoxDecoration(
+//                   //       border: Border.all(),
+//                   //       borderRadius: BorderRadius.circular(100)
+//                   //  ),
+//                   child: Row(
+//                     children: [
+//                       Container(
+//                           height: 25,
+//                           child: SvgPicture.asset(
+//                             LikeComment.comments,
+//                             height: 25,
+//                             //color: Colorcodes.white,
+//                           )
+//                           // child: ProfileImage(url: "assets/images/comment.svg",)
+//                           ),
+//                       const SizedBox(
+//                         width: 6,
+//                       ),
+//                       Text(
+//                           postCommentCount[idData].toString() == 'null'
+//                               ? dataObj["comments"].toString()
+//                               : postCommentCount[idData].toString(),
+//                           style: FontManager().getTextStyle(context,
+//                               // Text(dataObj["comments"].toString(),style: FontManager().getTextStyle(context,
+//                               lWeight: FontWeight.w400,
+//                               fontSize: 18,
+//                               color: Colorcodes.white)),
+//                       const SizedBox(width: 7),
+//                     ],
+//                   ),
+//                 ),
+//                 const SizedBox(width: 15),
+//                 Container(
+//                   //color: Colorcodes.iconBackGround,
+//                   child: InkWell(
+//                       onTap: () {
+//                         showModalBottomSheet(
+//                           context: context,
+//                           backgroundColor: Colorcodes.appBarColor,
+//                           builder: (context) {
+//                             return TribeShare(data: data, dataObj: dataObj);
+//                           },
+//                         );
+//                       },
+//                       child: SvgPicture.asset(
+//                         LikeComment.share,
+//                         height: 25,
+//                       )),
+//                 ),
+//               ],
+//             ),
+//           )
+//         ],
+//       ));
+// }
+
+// void upvoteGlobal(context, String str, String objectId, dataObj) async {
+//   final SharedPreferences _pref = await SharedPreferences.getInstance();
+//   var accessToken = _pref.getString("accessToken");
+//   final response = await http.post(
+//     Uri.parse('${url}/upvote/'),
+//     headers: <String, String>{
+//       'Content-Type': 'application/json; charset=UTF-8',
+//       "Authorization": "$accessToken",
+//     },
+//     body: jsonEncode({
+//       'onModel': str.toString(),
+//       'objectId': objectId,
+//     }),
+//   );
+//   if (response.statusCode == 200 || response.statusCode == 201) {
+//     final body = json.decode(response.body);
+
+//     if (!postListIds.contains(objectId)) {
+//       //  setState(() {
+//       dataObj["upvotes"]++;
+//       // });
+//       //  snackBarCalled(context,"Liked!",Colors.black);
+//       postListIds.add(objectId);
+//     } else {
+//       //  setState(() {
+//       dataObj["upvotes"]--;
+//       // });
+//       //  snackBarCalled(context,"Removed Liked!",Colors.black);
+//       postListIds.remove(objectId);
+//     }
+//     //  Navigator.pop(context);
+//     //  Navigator.pushNamed(context, '/TribeHome');
+//   } else {
+//     //  snackBarCalled(context,"error while Liked!",Colors.red);
+//   }
+// }
+
+// void downvoteBlobal(context, String str, String objectId, dataObj) async {
+//   final SharedPreferences _pref = await SharedPreferences.getInstance();
+//   var accessToken = _pref.getString("accessToken");
+//   final response = await http.post(
+//     Uri.parse('${url}/downvote/'),
+//     headers: <String, String>{
+//       'Content-Type': 'application/json; charset=UTF-8',
+//       "Authorization": "$accessToken",
+//     },
+//     body: jsonEncode({
+//       'onModel': str.toString(),
+//       'objectId': objectId,
+//     }),
+//   );
+
+//   if (response.statusCode == 200 || response.statusCode == 201) {
+//     final body = json.decode(response.body);
+//     //  snackBarCalled(context,"DisLiked!",Colors.black);
+
+//     if (postListIds.contains(objectId)) {
+//       // setState(() {
+//       dataObj["upvotes"]--;
+//       // });
+//       postListIds.remove(objectId);
+//     }
+//   } else {
+//     //  snackBarCalled(context,"error while DisLiked!",Colors.red);
+//   }
+// }

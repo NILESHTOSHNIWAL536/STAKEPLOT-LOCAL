@@ -85,6 +85,7 @@ RxInt billLength = 0.obs;
 RxInt debtLength = 0.obs;
 RxInt paymentLength = 0.obs;
 String userAvatar = "assets/images2/user.svg";
+RxString userAvatarProfile = "assets/images2/user.svg".obs;
 RxString userName = "Loading...".obs;
 RxString currentId = "Loading...".obs;
 RxString Phone = "Loading...".obs;

@@ -223,84 +223,86 @@ class _TransactionHistoryState extends State<TransactionHistory> {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
-            final transaction =trasactionsHistory[index]; // Get the transaction details
-            var transactionList =transaction['transactions']; // Get transaction list
+            final transaction =
+                trasactionsHistory[index]; // Get the transaction details
+            var transactionList =
+                transaction['transactions']; // Get transaction list
             final date = transaction['date'];
             final total = transaction['total'];
-            return getTransactionListUi(transaction,date,total,transactionList);
+            return getTransactionListUi(
+                transaction, date, total, transactionList);
           },
         ),
       ],
     );
   }
 
-
-Widget getTransactionListUi(transactions,date,total,List listTransactions){
+  Widget getTransactionListUi(
+      transactions, date, total, List listTransactions) {
     return Card(
-         elevation: Colorcodes.elevation3,
-         color: Colorcodes.white,
-         
-         child: Padding(
-           padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 10),
-           child: Column(
+      elevation: Colorcodes.elevation3,
+      color: Colorcodes.white,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Row(
-                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                               crossAxisAlignment: CrossAxisAlignment.center,
-                               children: [
-                                   Text(date.toString()),
-                                   Text(total.toString()),
-                               ],  
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Column(
-                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                               crossAxisAlignment: CrossAxisAlignment.center,
-                               children: listTransactions.map((data)=>historyTransactions(data)).toList(),  
-                            ),
-                          ),
-           
-                         Divider(
-                          thickness: 1,
-                          indent: 10,
-                          endIndent: 10,
-                         ), 
-                        
+                  Text(date.toString()),
+                  Text(total.toString()),
                 ],
-           ),
-         ),
-    );
-}
-
-Widget historyTransactions(EachTransactions){
-  print(EachTransactions);
-   return Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-           children: [
-                   Row(
-                    children: [
-                      TrasactionIconImage(
-                                          url: Categories.link +
-                                              (imageMapForHistory[
-                                                      EachTransactions['category']] ??
-                                                  imageMapForHistory['others']
-                                                      .toString()),
-                            ),
-                        Text((" "+EachTransactions['category']+"( "+EachTransactions['name']+" )")),
-                    ],
-                   ),
-                   Text(EachTransactions['amount'].toString()),
-           ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: listTransactions
+                    .map((data) => historyTransactions(data))
+                    .toList(),
+              ),
+            ),
+            Divider(
+              thickness: 1,
+              indent: 10,
+              endIndent: 10,
+            ),
+          ],
         ),
-   );
-}
+      ),
+    );
+  }
 
-
+  Widget historyTransactions(EachTransactions) {
+    print(EachTransactions);
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              TrasactionIconImage(
+                url: Categories.link +
+                    (imageMapForHistory[EachTransactions['category']] ??
+                        imageMapForHistory['others'].toString()),
+              ),
+              Text((" " +
+                  EachTransactions['category'] +
+                  "( " +
+                  EachTransactions['name'] +
+                  " )")),
+            ],
+          ),
+          Text(EachTransactions['amount'].toString()),
+        ],
+      ),
+    );
+  }
 }

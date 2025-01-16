@@ -370,8 +370,9 @@ class _ChatState extends State<Chat> {
       },
       child: SafeArea(
         child: Scaffold(
+          backgroundColor: AppColors.backgroundColor,
           appBar: AppBar(
-            //backgroundColor: Colorcodes.budgetLightGreen,
+            backgroundColor: AppColors.backgroundColor,
             // leading:
             automaticallyImplyLeading: false,
             centerTitle: false,
@@ -379,8 +380,7 @@ class _ChatState extends State<Chat> {
                 valueListenable: onlineUser,
                 builder: (context, snapshot, child) {
                   return Container(
-                    // color: Colorcodes.black,
-
+                    color: AppColors.backgroundColor,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -410,7 +410,7 @@ class _ChatState extends State<Chat> {
                             child: Text(
                               data['name'],
                               style: FontManager().getTextStyle(context,
-                                  fontSize: 20, lWeight: FontWeight.bold),
+                                  fontSize: 18, lWeight: FontWeight.bold),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                             ),
@@ -433,19 +433,35 @@ class _ChatState extends State<Chat> {
                             return [
                               PopupMenuItem(
                                 value: 'Report',
-                                child: Text('Report'),
+                                child: Text('Report',
+                                    style: FontManager().getTextStyle(context,
+                                        lWeight: FontWeight.normal,
+                                        fontSize: 14,
+                                        color: AppColors.primaryColor)),
                               ),
                               PopupMenuItem(
                                 value: 'Block user',
-                                child: Text('Block user'),
+                                child: Text('Block user',
+                                    style: FontManager().getTextStyle(context,
+                                        lWeight: FontWeight.normal,
+                                        fontSize: 14,
+                                        color: AppColors.primaryColor)),
                               ),
                               PopupMenuItem(
                                 value: 'Mute notification',
-                                child: Text('Mute notification'),
+                                child: Text('Mute notification',
+                                    style: FontManager().getTextStyle(context,
+                                        lWeight: FontWeight.normal,
+                                        fontSize: 14,
+                                        color: AppColors.primaryColor)),
                               ),
                               PopupMenuItem(
                                 value: 'Clear chat',
-                                child: Text('Clear chat'),
+                                child: Text('Clear chat',
+                                    style: FontManager().getTextStyle(context,
+                                        lWeight: FontWeight.normal,
+                                        fontSize: 14,
+                                        color: AppColors.primaryColor)),
                               ),
                             ];
                           },
@@ -669,8 +685,8 @@ class _ChatState extends State<Chat> {
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: [
-                    Colorcodes.cardShade3,
-                    Colorcodes.cardShade4,
+                    AppColors.mt,
+                    AppColors.mt,
                   ],
                 )
               : null,
@@ -685,7 +701,7 @@ class _ChatState extends State<Chat> {
                 lWeight: FontWeight.w400,
                 fontSize: 15,
                 letterSpacing: 0.0,
-                color: isme ? AppColors.backgroundColor : Colorcodes.white)),
+                color: isme ? AppColors.backgroundColor : AppColors.bg1)),
       ),
     );
   }
@@ -845,7 +861,8 @@ class _ChatState extends State<Chat> {
         width: MediaQuery.of(context).size.width / 1.4,
         decoration: BoxDecoration(
           //  color: Colorcodes.appBarColor,
-          border: Border.all(width: .5, color: Colorcodes.poll1),
+          color: AppColors.mt,
+          // border: Border.all(width: .5, color: Colorcodes.poll1),
           borderRadius: BorderRadius.circular(9),
         ),
         child: Column(
@@ -858,7 +875,7 @@ class _ChatState extends State<Chat> {
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.w600,
                       fontSize: 18,
-                      color: Colorcodes.poll1)),
+                      color: AppColors.bg1)),
             ),
             Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -883,8 +900,8 @@ class _ChatState extends State<Chat> {
                                   begin: Alignment.centerLeft,
                                   end: Alignment.centerRight,
                                   colors: [
-                                    Colorcodes.poll1,
-                                    Colorcodes.poll2,
+                                    AppColors.pollSelected,
+                                    AppColors.pollSelected,
                                   ],
                                 )
                               : null,
@@ -1015,7 +1032,7 @@ class _ChatState extends State<Chat> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    textStyleColor("Cancle", Colorcodes.red, data, imageData),
+                    textStyleColor("Cancel", Colorcodes.red, data, imageData),
                     const SizedBox(
                       width: 5,
                     ),

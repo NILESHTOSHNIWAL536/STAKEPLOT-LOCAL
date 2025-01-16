@@ -560,10 +560,9 @@ void createPost(
 // }
 
 void createPostWithOutImage(context, String title, String description) async {
-  var urlPath = Uri.parse('${url}/post');
+  var urlPath = Uri.parse('${url}/post/withOutImage');
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
-
   final response = await http.post(
     Uri.parse('${urlPath}'),
     headers: <String, String>{
@@ -579,12 +578,14 @@ void createPostWithOutImage(context, String title, String description) async {
       // 'image':'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIIflRYCVKZcDr-fVqpR8t4vyyCkslvRFkfA&s'
     }),
   );
-
+   printData(response);
   if (response.statusCode == 200 || response.statusCode == 201) {
+          snackBarCalled(context, 'Post Uploaded successfully....');
   } else {}
 
   getPost();
   getTrending();
+   Navigator.pop(context);
   postDis.value = false;
 }
 

@@ -72,13 +72,24 @@ class _CommunityState extends State<Community> {
 
               const SizedBox(height: 16),
 
-              Obx(() =>  getTrendingData.length==0 && findTranding? Loader(): !findTranding && getTrendingData.length==0?Text("No Post yet"):Column(
-                        children: [
-                          Container(child: Column(children:getTrendingData.map((dataObj) =>  PostCard(data:dataObj)).toList())),
-                          SizedBox(height: 100,),
-                        ],
-                      ))
-      
+              Obx(() => getTrendingData.length == 0 && findTranding
+                  ? Loader()
+                  : !findTranding && getTrendingData.length == 0
+                      ? Text("No Post yet")
+                      : Column(
+                          children: [
+                            Container(
+                                child: Column(
+                                    children: getTrendingData
+                                        .map((dataObj) =>
+                                            PostCard(data: dataObj))
+                                        .toList())),
+                            SizedBox(
+                              height: 100,
+                            ),
+                          ],
+                        ))
+
               // Posts List
               // ListView.builder(
               //   shrinkWrap:
@@ -149,7 +160,7 @@ class _CommunityState extends State<Community> {
                         style: FontManager().getTextStyle(context,
                             lWeight: FontWeight.normal,
                             fontSize: 12,
-                            color: Colors.black),
+                            color: AppColors.bg1),
                       )),
                 ],
               ),
@@ -159,33 +170,36 @@ class _CommunityState extends State<Community> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-              Hero(
-                tag: "TribeSearch",
+            Hero(
+              tag: "TribeSearch",
               child: Container(
-                width: 300,
+                width: MediaQuery.sizeOf(context).width / 1.34,
                 child: TextField(
                   controller: _searchController,
-                  onTap: (){
-                       Navigator.pushNamed(context, '/TribeSearch');
+                  onTap: () {
+                    Navigator.pushNamed(context, '/TribeSearch');
                   },
                   decoration: InputDecoration(
+                    filled: true,
                     hintText: 'Search...',
+                    fillColor: AppColors.button,
                     hintStyle: FontManager().getTextStyle(context,
                         lWeight: FontWeight.normal,
-                        fontSize: 16,
+                        fontSize: 14,
                         color: Colors.black),
                     prefixIcon: Icon(Icons.search),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(22.0),
+                      borderRadius: BorderRadius.circular(24.0),
                     ),
                   ),
                 ),
               ),
             ),
-            IconButton(onPressed: ()
-             {
-                 Navigator.pushNamed(context, '/TribeChats'); 
-            }, icon: Icon(Icons.chat_sharp)),
+            IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/TribeChats');
+                },
+                icon: Icon(Icons.chat_sharp)),
           ],
         ),
         SizedBox(

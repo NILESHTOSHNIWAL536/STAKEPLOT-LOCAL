@@ -112,6 +112,8 @@ flutter:
     - assets/icons/Navigation_bar/
     - assets/icons/Home-page/
     - assets/icons/Categories/
+    - assets/icons/likeComment/
+
     - assets/Images/
     
   #   - images/a_dot_burr.jpeg

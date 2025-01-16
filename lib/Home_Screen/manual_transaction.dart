@@ -731,7 +731,7 @@ void addSocketMessage(addedUser,String amount,String splitName,String splitID) {
     isScrollControlled: true,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
-        top: Radius.circular(16),
+        top: Radius.circular(18),
       ),
     ),
     builder: (BuildContext context) {
