@@ -374,6 +374,7 @@ Future<void> handleSignInGoogle(BuildContext context) async {
             savedList.clear();
             myPostList.clear();
             friendsList.clear();
+            frdsListOrigin.clear();
             chatList.clear();
             chatListOriginal.clear();
             friendsListDetails.clear();

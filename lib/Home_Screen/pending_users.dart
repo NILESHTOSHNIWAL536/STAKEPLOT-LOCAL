@@ -115,7 +115,7 @@ class _UserListScreenState extends State<UserListScreen> {
                   title: Text(data["userName"] ?? "Unknown User"),
                   trailing:  InkWell(
                     onTap: (){
-                          print(data);
+                         
                           sendNotificationsToDevice(data['_id'],context,"You Need To Pay Lend To ${userName.value} of ${data['amount']??"0000"}");
                           // print(currentId.value);
                     },
@@ -149,7 +149,7 @@ class ShowAllUsersScreen extends StatelessWidget {
       ),
       body: Expanded(
               child:  ListView.builder(
-                itemCount: lendAmountRemainders.length <= 3 ? lendAmountRemainders.length:3,
+                itemCount: lendAmountRemainders.length,
                 itemBuilder: (context, index) {
                   var data=lendAmountRemainders[index];
                   return ListTile(
@@ -159,9 +159,16 @@ class ShowAllUsersScreen extends StatelessWidget {
                                   url: data['Avatar'] ?? 'assets/avatar/menp4.svg'
                          )),
                     title: Text(data["userName"] ?? "Unknown User"),
-                    trailing:  Text(
-                    ( data["billApproved"] ?? true )? "Remind now":"Didn't Approved",
-                      style: TextStyle(color: Colors.green, fontSize: 15),
+                    trailing:  InkWell(
+                      onTap: (){
+                         
+                          sendNotificationsToDevice(data['_id'],context,"You Need To Pay Lend To ${userName.value} of ${data['amount']??"0000"}");
+                          // print(currentId.value);
+                    },
+                      child: Text(
+                      ( data["billApproved"] ?? true )? "Remind now":"Didn't Approved",
+                        style: TextStyle(color: Colors.green, fontSize: 15),
+                      ),
                     ),
                   );
                 },

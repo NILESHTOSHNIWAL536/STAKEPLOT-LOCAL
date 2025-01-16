@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import './success_post.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 //import 'dart:io';
@@ -56,30 +57,26 @@ class _PollScreenState extends State<PollScreen> {
   void _createPoll() {
     if (_questionController.text.isNotEmpty &&
         _optionControllers.every((controller) => controller.text.isNotEmpty)) {
-      setState(() {
+     
         question = _questionController.text;
-        options =
-            _optionControllers.map((controller) => controller.text).toList();
-        votes = {for (var option in options!) option: 0};
-      });
+      // List<String>  options = _optionControllers.map((controller) => controller.text).toList();
+        List options=[];
+      
+      _optionControllers.map((controller){
+           String op=  controller.text;
+            options.add({"option": op,});
+      }).toList();
 
-      // Pass poll data to parent
-      widget.onPollPosted({
-        'profilePic': 'https://via.placeholder.com/50',
-        'name': 'You',
-        'contentType': 'poll',
-        'question': question!,
-        'options': options!,
-        'votes': votes!,
-        "likeCount": 0,
-        "isLiked": false,
-      });
-      setState(() {
-        pollSubmitted = true;
-      });
 
-      // Close the screen
-      //Navigator.pop(context);
+
+       
+        createPollOfCommunityPost(context,question.toString(),options,{},[],"casual"); 
+
+        
+
+      
+
+     
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -210,7 +207,7 @@ class _PollScreenState extends State<PollScreen> {
                               color: Colors.black,
                             ),
                           )
-                        : const SizedBox(),
+                        : const SizedBox.shrink(),
                   ),
                   const SizedBox(height: 20),
                   DecoratedContainer(
