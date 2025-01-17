@@ -210,7 +210,7 @@ class _TextScreenState extends State<TextScreen> {
                                   return ;
                             }
 
-                              if(selectedImage!=null)
+                              if(selectedImage!=null && showImage)
                             {
                               // createPost(context,titleController.text,descriptionsController.text,url!);
                                onUploadImage(selectedImage!,context,titleController.text,contentController.text);

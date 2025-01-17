@@ -212,13 +212,13 @@ class _ChatState extends State<Chat> {
     } else if (message.type == "image") {
       return imageDisplay(message.text, message.isMe, message.image);
     } else if (message.type == "post") {
-      var dataObj = jsonDecode(message.post);
+      // var dataObj = jsonDecode(message.post);
 
-      if (dataObj['isPoll'])
-        return polled(
-          message.isMe,
-          dataObj['pollData'],
-        );
+      // if (dataObj['isPoll'])
+      //   return polled(
+      //     message.isMe,
+      //     dataObj['pollData'],
+      //   );
 
       return postDisplay(message.text, message.isMe, message.image, message);
     } else if (message.type == "split") {
@@ -889,9 +889,10 @@ class _ChatState extends State<Chat> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: options.map((op) {
-                  var obj = jsonDecode(op);
-                  print(obj);
-                  List ll = obj['votes'] ?? [];
+                  // var obj = jsonDecode(op);
+                  print(op);
+                  print(op['options']??"");
+                  // List ll = obj['votes'] ?? [];
                   // String cal=((ll.length/len)* 100).toStringAsFixed(2);
                   // len += ll.length ;
                   s++;
@@ -922,7 +923,7 @@ class _ChatState extends State<Chat> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(obj['option'].toString(),
+                            Text(op['option'].toString(),
                                 overflow: TextOverflow.ellipsis,
                                 style: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.bold,
@@ -1097,7 +1098,7 @@ class _ChatState extends State<Chat> {
 
   Widget uploadData(dataObj2) {
     var dataObj = jsonDecode(dataObj2);
-    // return Text("post");
+   
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
       child: Column(
@@ -1152,7 +1153,13 @@ class _ChatState extends State<Chat> {
                       ),
                     ],
                   ),
-                  Container(
+
+                    // var dataObj = jsonDecode(message.post);
+
+      dataObj['isPoll']?
+         poll(
+          dataObj['pollData'],
+        ): Container(
                     width: MediaQuery.of(context).size.width / 1.62,
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Text((dataObj['title']),
@@ -1222,6 +1229,8 @@ class _ChatState extends State<Chat> {
   }
 
   Widget getMessage(dataObj) {
+    if(dataObj['isPoll']?? false)return SizedBox.shrink();
+        
     try {
       return Container(
         width: MediaQuery.of(context).size.width / 1.62,
