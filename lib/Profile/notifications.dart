@@ -406,10 +406,10 @@ class _NotificationsState extends State<Notifications> {
 
   Widget divider() {
     return Divider(
-      thickness: 2,
-      indent: 10,
-      color: Colorcodes.budgetDarkGreen,
-    );
+        // thickness: 2,
+        // indent: 10,
+        // color: Colorcodes.budgetDarkGreen,
+        );
   }
 
   Widget messageChannel(name, id) {
