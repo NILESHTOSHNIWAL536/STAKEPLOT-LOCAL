@@ -891,7 +891,7 @@ class _ChatState extends State<Chat> {
                 children: options.map((op) {
                   // var obj = jsonDecode(op);
                   print(op);
-                  print(op['options']??"");
+                  print(op['options'] ?? "");
                   // List ll = obj['votes'] ?? [];
                   // String cal=((ll.length/len)* 100).toStringAsFixed(2);
                   // len += ll.length ;
@@ -1098,7 +1098,7 @@ class _ChatState extends State<Chat> {
 
   Widget uploadData(dataObj2) {
     var dataObj = jsonDecode(dataObj2);
-   
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
       child: Column(
@@ -1118,10 +1118,12 @@ class _ChatState extends State<Chat> {
                 ),
               );
             },
+            //poll in chat code 
             child: Container(
+              width: MediaQuery.of(context).size.width / 1.62,
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
-                  color: const Color.fromRGBO(249, 246, 238, 1),
+                  color: AppColors.mt,
                   border: Border.all(width: .5, color: Colorcodes.poll1),
                   borderRadius: BorderRadius.circular(20)),
               child: Column(
@@ -1154,20 +1156,21 @@ class _ChatState extends State<Chat> {
                     ],
                   ),
 
-                    // var dataObj = jsonDecode(message.post);
+                  // var dataObj = jsonDecode(message.post);
 
-      dataObj['isPoll']?
-         poll(
-          dataObj['pollData'],
-        ): Container(
-                    width: MediaQuery.of(context).size.width / 1.62,
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text((dataObj['title']),
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: Colors.black)),
-                  ),
+                  dataObj['isPoll']
+                      ? poll(
+                          dataObj['pollData'],
+                        )
+                      : Container(
+                          width: MediaQuery.of(context).size.width / 1.62,
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Text((dataObj['title']),
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colors.black)),
+                        ),
                   //  Readmore(str:dataObj['title'].toString(),),
                   //  ReadMoreText(
                   //     dataObj['title'].toString(),
@@ -1229,8 +1232,8 @@ class _ChatState extends State<Chat> {
   }
 
   Widget getMessage(dataObj) {
-    if(dataObj['isPoll']?? false)return SizedBox.shrink();
-        
+    if (dataObj['isPoll'] ?? false) return SizedBox.shrink();
+
     try {
       return Container(
         width: MediaQuery.of(context).size.width / 1.62,

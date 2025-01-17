@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/explore_screen.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/text_screen.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
@@ -141,15 +143,19 @@ class _CommunityState extends State<Community> {
               child: Column(
                 children: [
                   DecoratedContainer(
-                      width: 55,
-                      height: 55,
+                      // width: MediaQuery.sizeOf(context).width / 6,
+                      // height: MediaQuery.sizeOf(context).width / 6,
                       borderRadius: 18,
                       child: IconButton(
                         onPressed: () async {
                           await showModal({});
                           //await CommunityShowModalScreen();
                         },
-                        icon: const Icon(Icons.add),
+                        icon: AvatarProfileImage(
+                          url: LikeComment.plus,
+                          height: 20,
+                          width: 20,
+                        ),
                       )),
                   TextButton(
                       onPressed: () async {
@@ -173,7 +179,7 @@ class _CommunityState extends State<Community> {
             Hero(
               tag: "TribeSearch",
               child: Container(
-                width: MediaQuery.sizeOf(context).width / 1.34,
+                width: MediaQuery.sizeOf(context).width / 1.45,
                 child: TextField(
                   controller: _searchController,
                   onTap: () {
@@ -196,10 +202,15 @@ class _CommunityState extends State<Community> {
               ),
             ),
             IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/TribeChats');
-                },
-                icon: Icon(Icons.chat_sharp)),
+              onPressed: () {
+                Navigator.pushNamed(context, '/TribeChats');
+              },
+              icon: AvatarProfileImage(
+                url: LikeComment.message,
+                height: 18,
+                width: 18,
+              ),
+            ),
           ],
         ),
         SizedBox(

@@ -512,7 +512,7 @@ class _TribeHomeState extends State<TribeHome> {
                     // ),
 
                     const SizedBox(
-                      height: 20,
+                      height: 5,
                     ),
 
                     //  dataObj['image']  != null && dataObj['image'] !="none"  ?     GFImageOverlay(
@@ -525,9 +525,9 @@ class _TribeHomeState extends State<TribeHome> {
                     //           BlendMode.exclusion),
                     //      ):SizedBox.shrink(),
 
-                    const SizedBox(
-                      height: 5,
-                    ),
+                    // const SizedBox(
+                    //   height: 5,
+                    // ),
 
                     vote(context, dataObj, data),
                   ],
@@ -1203,8 +1203,8 @@ Widget vote(context, dataObj, data) {
                       upvoteGlobal(context, "Post", dataObj["_id"], dataObj);
                       reRender.value = !reRender.value;
                     },
-                    child:  likeIcon(context, likedList.contains("liked" + dataObj["_id"])),
-                  
+                    child: likeIcon(
+                        context, likedList.contains("liked" + dataObj["_id"])),
                   ),
                 ),
                 Padding(
@@ -1283,7 +1283,11 @@ Widget vote(context, dataObj, data) {
 // Helper function to get the appropriate SVG based on like status
 Widget likeIcon(BuildContext context, bool isLiked) {
   return isLiked
-      ? Icon(Icons.heart_broken,color: Colorcodes.red,size: 30,)
+      ? Icon(
+          Icons.heart_broken,
+          color: Colorcodes.red,
+          size: 30,
+        )
       : SvgPicture.asset(
           LikeComment.likes, // Path to your outlined heart SVG
           //color: Colors.white,
