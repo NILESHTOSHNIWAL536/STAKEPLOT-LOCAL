@@ -1203,7 +1203,8 @@ Widget vote(context, dataObj, data) {
                       upvoteGlobal(context, "Post", dataObj["_id"], dataObj);
                       reRender.value = !reRender.value;
                     },
-                    child: likeIcon(context, isLiked),
+                    child:  likeIcon(context, likedList.contains("liked" + dataObj["_id"])),
+                  
                   ),
                 ),
                 Padding(
@@ -1216,8 +1217,8 @@ Widget vote(context, dataObj, data) {
                         : (postCount[dataObj['_id']].toString()),
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w400,
-                        fontSize: 12,
-                        color: AppColors.likesharecommentCount),
+                        fontSize: 15,
+                        color: AppColors.bg1),
                   ),
                 ),
               ],
@@ -1282,16 +1283,23 @@ Widget vote(context, dataObj, data) {
 // Helper function to get the appropriate SVG based on like status
 Widget likeIcon(BuildContext context, bool isLiked) {
   return isLiked
-      ? SvgPicture.asset(
-          LikeComment.likes, // Path to your filled heart SVG
-          //color: Colors.red,
-          height: 25,
-        )
+      ? Icon(Icons.heart_broken,color: Colorcodes.red,size: 30,)
       : SvgPicture.asset(
           LikeComment.likes, // Path to your outlined heart SVG
           //color: Colors.white,
           height: 25,
         );
+  // return isLiked
+  //     ? SvgPicture.asset(
+  //         LikeComment.likes, // Path to your filled heart SVG
+  //         color: Colors.red,
+  //         height: 25,
+  //       )
+  //     : SvgPicture.asset(
+  //         LikeComment.likes, // Path to your outlined heart SVG
+  //         //color: Colors.white,
+  //         height: 25,
+  //       );
 }
 
 void upvoteGlobal(context, String str, String objectId, dataObj) async {
