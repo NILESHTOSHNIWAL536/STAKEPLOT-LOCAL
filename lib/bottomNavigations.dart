@@ -55,22 +55,36 @@ class _BottomNavigationsState extends State<BottomNavigations> {
 
   @override
   Widget build(BuildContext context) {
+    //int selectedIndex = 0;
     return Container(
-      color: Colorcodes.white,
+      //color: Colorcodes.white,
       padding: const EdgeInsets.only(left: 5.0, right: 5.0, bottom: 1.5),
       child: Card(
         elevation: Colorcodes.elevation,
         color: AppColors.accentColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24), // Rounded corners
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 3),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               getContainer(NavBarIcons.home, 0),
-              getContainer(svgIconPath.bottom2, 1),
-              if (sizeRoom) getContainer('assets/images/room.svg', 2),
-              getContainer(svgIconPath.bottom3, sizeRoom ? 3 : 2),
-              getContainer(svgIconPath.bottom4, sizeRoom ? 4 : 3),
+              getContainer(NavBarIcons.screen2, 1),
+              if (sizeRoom)
+                getContainer(
+                  'assets/images/room.svg',
+                  2,
+                ),
+              getContainer(
+                NavBarIcons.community,
+                sizeRoom ? 3 : 2,
+              ),
+              getContainer(
+                svgIconPath.bottom4,
+                sizeRoom ? 4 : 3,
+              ),
             ],
           ),
         ),
@@ -88,25 +102,20 @@ class _BottomNavigationsState extends State<BottomNavigations> {
   }
 
   Widget getContainer(url, i) {
+    bool isSelected =
+        widget.data == i; // Check if the current index is selected
+
     return InkWell(
       onLongPress: () {
         if (i == 0) {
-          //  showModalBottomSheet(context: context,
-          //                      builder: (context){
-          //                            return showUserData(context);
-          //      },);
+          // Handle long press for index 0
         } else if (i == 2 && widget.data != i) {
-          //  Navigator.push(
-          //           context,
-          //           MaterialPageRoute(
-          //             builder: (context) => TribeChats(),
-          //           ),
-          //       );
+          // Handle long press for index 2
         }
       },
       onTap: () {
         if (i == 0 && widget.data != i) pushName(HomePage());
-        // else if (i == 1 && widget.data != i)pushName(Budget());
+        // else if (i == 1 && widget.data != i) pushName(Budget());
         // if (i == 1 && widget.data != i) pushName(ProfileScreenDart());
 
         if (!sizeRoom) {
@@ -114,18 +123,25 @@ class _BottomNavigationsState extends State<BottomNavigations> {
             pushName(Community());
           else if (i == 3 && widget.data != i) pushName(ProfileScreenDart());
         } else {
-          // if (i == 2 && widget.data != i)  pushName(RoomHome());
+          // if (i == 2 && widget.data != i) pushName(RoomHome());
           if (i == 3 && widget.data != i)
             pushName(Community());
           else if (i == 4 && widget.data != i) pushName(ProfileScreenDart());
         }
 
         setState(() {
-          widget.data = i;
+          widget.data = i; // Update selected index
         });
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+        decoration: isSelected
+            ? BoxDecoration(
+                color: AppColors.bg5, // White background for the selected item
+                borderRadius: BorderRadius.circular(24), // Rounded corners
+              )
+            : null, // No special decoration for unselected items
+        padding: EdgeInsets.symmetric(
+            horizontal: 6, vertical: 3), // Adjust padding as needed
         child: imageurl(url, i),
       ),
     );
