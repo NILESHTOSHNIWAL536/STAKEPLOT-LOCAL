@@ -35,95 +35,98 @@ class NumberPickerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return Scaffold(
       // Wrap content with SingleChildScrollView
-      child: Container(
-        padding: const EdgeInsets.only(top: 8, left: 16, right: 16, bottom: 0),
-        //padding: const EdgeInsets.only(right: 8),
+      body: SafeArea(
+        child: Container(
+          padding:
+              const EdgeInsets.only(top: 8, left: 16, right: 16, bottom: 0),
+          //padding: const EdgeInsets.only(right: 8),
 
-        decoration: BoxDecoration(
-          color: AppColors.accentColor,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: FutureBuilder<Map<String, dynamic>>(
-          future: fetchBankAccountData(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (!snapshot.hasData) {
-              return const Center(child: Text('No data available'));
-            }
-            final data = snapshot.data!;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              //mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.more_vert),
+          decoration: BoxDecoration(
+            color: AppColors.accentColor,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: FutureBuilder<Map<String, dynamic>>(
+            future: fetchBankAccountData(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData) {
+                return const Center(child: Text('No data available'));
+              }
+              final data = snapshot.data!;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                //mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.more_vert),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  data['accountName'],
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.normal,
-                      fontSize: 16,
-                      color: AppColors.backgroundColor),
-                ),
-                const SizedBox(height: 10),
-                Text('Available Balance',
+                  const SizedBox(height: 8),
+                  Text(
+                    data['accountName'],
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.normal,
                         fontSize: 16,
-                        color: AppColors.backgroundColor)),
-                //const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '\u{20B9}${data['availableBalance'].toStringAsFixed(2)}',
+                        color: AppColors.backgroundColor),
+                  ),
+                  const SizedBox(height: 10),
+                  Text('Available Balance',
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.normal,
                           fontSize: 16,
+                          color: AppColors.backgroundColor)),
+                  //const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '\u{20B9}${data['availableBalance'].toStringAsFixed(2)}',
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.normal,
+                            fontSize: 16,
+                            color: AppColors.backgroundColor),
+                      ),
+                      Row(
+                        children: [
+                          Column(
+                            children: [
+                              Row(
+                                children: [
+                                  // First Digit Picker
+                                  _buildPicker(controller.firstDigit, context),
+                                  const Divider(),
+                                  // Second Digit Picker
+                                  _buildPicker(controller.secondDigit, context),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Obx(
+                    () => Text(
+                      "Selected: ${controller.firstDigit.value}${controller.secondDigit.value}",
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.normal,
+                          fontSize: 14,
                           color: AppColors.backgroundColor),
                     ),
-                    Row(
-                      children: [
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                // First Digit Picker
-                                _buildPicker(controller.firstDigit, context),
-                                const Divider(),
-                                // Second Digit Picker
-                                _buildPicker(controller.secondDigit, context),
-                              ],
-                            ),
-                            const SizedBox(height: 10),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Obx(
-                  () => Text(
-                    "Selected: ${controller.firstDigit.value}${controller.secondDigit.value}",
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
-                        fontSize: 14,
-                        color: AppColors.backgroundColor),
                   ),
-                ),
-              ],
-            );
-          },
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
