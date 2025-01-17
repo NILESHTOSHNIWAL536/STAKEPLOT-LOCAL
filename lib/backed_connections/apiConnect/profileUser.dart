@@ -163,6 +163,12 @@ void  getuserPost(id)async
                   var  his=jsonDecode(response.body);
                   var obj=his['data'];
 
+                     likedList.clear();
+      likedProducts.clear();
+      likedList.addAll(obj["likedPosts"]);
+      likedList.addAll(obj["likedComments"]);
+      likedProducts.addAll(obj["likedProducts"]);
+
                     frdsList.clear();
                     frdsListOrigin.clear();
                     frdsList.addAll(obj['friendsList']);
@@ -211,6 +217,60 @@ void  getuserPost(id)async
       else{
       }
 }
+
+
+
+ void getUserInfo() async {
+    final SharedPreferences _pref = await SharedPreferences.getInstance();
+    var accessToken = _pref.getString("accessToken");
+    final response = await http.get(
+      Uri.parse('${url}/user/info'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Authorization": "$accessToken",
+      },
+    );
+    if (response.statusCode == 200) {
+      var his = jsonDecode(response.body);
+      var obj = his['data'];
+      
+
+      List s = obj['accounts'];
+      final SharedPreferences _pref = await SharedPreferences.getInstance();
+
+      // likedList.clear();
+      // likedProducts.clear();
+      // likedList.addAll(obj["likedPosts"]);
+      // likedList.addAll(obj["likedComments"]);
+      // likedProducts.addAll(obj["likedProducts"]);
+      isBankAccountLink.value=obj['isBankAccountLinked'] ?? false;
+   
+      s.forEach((element) {
+        if (!account.contains(element['name'])) {
+          account.add(element['name']);
+          // accountMap[element['name']]= double.parse(element['balance'].toString());
+        }
+      });
+
+    
+        _pref.setString("userId", obj['_id']);
+        userId = obj['_id'];
+        
+        if (obj['roomsAssociated'].length > 0) {
+          room = obj['roomsAssociated'];
+       
+          var r = {
+            'name': obj['roomsAssociated'][0]['name'] ?? "",
+            'id': obj['roomsAssociated'][0]['id'] ?? "",
+            "expenseType": "running",
+            "expenseId": null
+          };
+          
+          room.insert(0, r);
+        }
+      
+    } else {}
+  }
 
 String getCurrentFormattedDate() {
   DateTime now = DateTime.now();

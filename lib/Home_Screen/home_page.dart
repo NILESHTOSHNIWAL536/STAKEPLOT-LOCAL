@@ -45,7 +45,10 @@ class _HomePageState extends State<HomePage> {
     getAck();
     getUserInfomations();
     getUserLend(context);
+    // getUserInfo();
   }
+
+
 
   final List<Widget> _pages = [
     HomeScreen(), // The content previously in the ListView
