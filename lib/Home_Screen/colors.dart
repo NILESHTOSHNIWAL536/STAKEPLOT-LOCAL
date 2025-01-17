@@ -15,6 +15,7 @@ class AppColors {
   static const Color message = Color(0xFF1B1A57);
   static const Color border = Color(0xFFEBEBEB);
   static const Color userName = Color(0xFF898989);
+  static const Color tab = Color(0xFFD9D9D9);
 
   static const Color likesharecommentCount = Color(0xFF454545);
 }

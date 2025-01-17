@@ -3,6 +3,8 @@ import "package:flutter/cupertino.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter/material.dart";
 import "package:flutter_application_code_stakeplot/Community_Page/community_screen.dart";
+import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
+import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/home_page.dart";
 import "package:flutter_application_code_stakeplot/Profile/profile.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
@@ -58,13 +60,13 @@ class _BottomNavigationsState extends State<BottomNavigations> {
       padding: const EdgeInsets.only(left: 5.0, right: 5.0, bottom: 1.5),
       child: Card(
         elevation: Colorcodes.elevation,
-        color: Colorcodes.budgetLightGreen,
+        color: AppColors.accentColor,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 3),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              getContainer(svgIconPath.bottom1, 0),
+              getContainer(NavBarIcons.home, 0),
               getContainer(svgIconPath.bottom2, 1),
               if (sizeRoom) getContainer('assets/images/room.svg', 2),
               getContainer(svgIconPath.bottom3, sizeRoom ? 3 : 2),
@@ -108,11 +110,13 @@ class _BottomNavigationsState extends State<BottomNavigations> {
         // if (i == 1 && widget.data != i) pushName(ProfileScreenDart());
 
         if (!sizeRoom) {
-          if (i == 2 && widget.data != i) pushName(Community());
+          if (i == 2 && widget.data != i)
+            pushName(Community());
           else if (i == 3 && widget.data != i) pushName(ProfileScreenDart());
         } else {
           // if (i == 2 && widget.data != i)  pushName(RoomHome());
-          if (i == 3 && widget.data != i) pushName(Community());
+          if (i == 3 && widget.data != i)
+            pushName(Community());
           else if (i == 4 && widget.data != i) pushName(ProfileScreenDart());
         }
 

@@ -76,7 +76,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
                       child: Container(
                         height: 200,
                         decoration: BoxDecoration(
-                          color: Colors.green,
+                          color: Colors.lightBlueAccent,
                           image: _coverImage != null
                               ? DecorationImage(
                                   image: FileImage(_coverImage!),
@@ -99,7 +99,8 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
                           radius: 50,
                           backgroundImage: _profileImage != null
                               ? FileImage(_profileImage!)
-                              : const AssetImage('assets/profile_placeholder.jpg')
+                              : const AssetImage(
+                                      'assets/profile_placeholder.jpg')
                                   as ImageProvider,
                           child: _profileImage == null
                               ? const Icon(
@@ -117,22 +118,18 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
                 // User Details
                 Column(
                   children: [
-                    Text(
-                      dummyData['name'].toString(),
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.w600,
-                          //fontSize: MediaQuery.of(context).size.width * 0.04,
-                          //fontSize: 12,
-                          color: AppColors.bg1)
-                    ),
-                    Text(
-                      dummyData['username'].toString(),
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.w400,
-                          //fontSize: MediaQuery.of(context).size.width * 0.04,
-                          //fontSize: 12,
-                          color: AppColors.userName)
-                    ),
+                    Text(dummyData['name'].toString(),
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.w600,
+                            //fontSize: MediaQuery.of(context).size.width * 0.04,
+                            //fontSize: 12,
+                            color: AppColors.bg1)),
+                    Text(dummyData['username'].toString(),
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.w400,
+                            //fontSize: MediaQuery.of(context).size.width * 0.04,
+                            //fontSize: 12,
+                            color: AppColors.userName)),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
                       child: Row(
@@ -173,29 +170,97 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
                       length: 3, // Number of tabs
                       child: Column(
                         children: [
-                          const TabBar(
-                            indicatorColor: Colors.blue,
-                            tabs: [
-                              Tab(text: 'Posts'),
-                              Tab(text: 'Polls'),
-                              Tab(text: 'Exploria'),
-                            ],
+                          Container(
+                            padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+
+                                  //color: Colors.green,
+                                  border: Border.all(color: AppColors.border),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(16))),
+                              child: TabBar(
+                                indicator: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      16), // Rounded corners
+                                  color: AppColors.tab,
+                                ),
+                                // Padding for labels
+                                labelColor: AppColors
+                                    .primaryColor, // Text color for selected tab
+                                unselectedLabelColor: AppColors
+                                    .bg1, // Text color for unselected tabs
+
+                                tabs: [
+                                  Tab(child: Text('Posts')),
+                                  Tab(text: 'Polls'),
+                                  Tab(text: 'Exploria'),
+                                ],
+                              ),
+                            ),
                           ),
                           SizedBox(
                             height: 300, // Adjust as needed for TabBarView
                             child: TabBarView(
                               children: [
-                                Center(child:feedWidgets("post")),
-                                Center(child: pollWidgets("poll")
-                                ),
+                                Center(child: feedWidgets("post")),
+                                Center(child: pollWidgets("poll")),
                                 Center(
-                                    child: Text(dummyData['exploria'].toString())),
+                                    child:
+                                        Text(dummyData['exploria'].toString())),
                               ],
                             ),
                           ),
                         ],
                       ),
                     ),
+                    // DefaultTabController(
+                    //   length: 3,
+                    //   child: Column(
+                    //     children: [
+                    //       Container(
+                    //         color: Colors
+                    //             .grey[200], // Background color for the TabBar
+                    //         child: TabBar(
+                    //           indicator: BoxDecoration(
+                    //             borderRadius: BorderRadius.circular(
+                    //                 30), // Rounded corners
+                    //             color: Colors
+                    //                 .blue, // Selected tab background color
+                    //           ),
+                    //           labelColor:
+                    //               Colors.white, // Text color for selected tab
+                    //           unselectedLabelColor: Colors
+                    //               .black, // Text color for unselected tabs
+                    //           labelStyle: TextStyle(
+                    //             fontWeight: FontWeight.bold,
+                    //             fontSize: 16,
+                    //           ),
+                    //           unselectedLabelStyle: TextStyle(
+                    //             fontWeight: FontWeight.normal,
+                    //             fontSize: 14,
+                    //           ),
+                    //           tabs: const [
+                    //             Tab(text: 'Posts'),
+                    //             Tab(text: 'Polls'),
+                    //             Tab(text: 'Exploria'),
+                    //           ],
+                    //         ),
+                    //       ),
+                    //       Expanded(
+                    //         child: TabBarView(
+                    //           children: [
+                    //             Center(child: feedWidgets("post")),
+                    //             Center(child: pollWidgets("poll")),
+                    //             Center(
+                    //                 child:
+                    //                     Text(dummyData['exploria'].toString())),
+                    //           ],
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // )
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -207,39 +272,47 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
     );
   }
 
-    Widget feedWidgets(String type){
-
-      return Expanded(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                    child: Wrap(
-                          children: myPostList.map((item) => (item['isPoll'] ?? false) ?SizedBox.shrink(): PostCard(data: item)).toList(),
-                    ),
+  Widget feedWidgets(String type) {
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              child: Wrap(
+                children: myPostList
+                    .map((item) => (item['isPoll'] ?? false)
+                        ? SizedBox.shrink()
+                        : PostCard(data: item))
+                    .toList(),
               ),
-              SizedBox(height: 100,),           
-            ],
-          ),
+            ),
+            SizedBox(
+              height: 100,
+            ),
+          ],
         ),
-      );
+      ),
+    );
   }
 
-    Widget pollWidgets(String type){
-
-      return Expanded(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                    child: Wrap(
-                          children: myPostList.map((item) => (item['isPoll'] ?? false) ? PostCard(data: item):SizedBox.shrink()).toList()
-              )),
-              SizedBox(height: 100,),           
-            ],
-          ),
+  Widget pollWidgets(String type) {
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+                child: Wrap(
+                    children: myPostList
+                        .map((item) => (item['isPoll'] ?? false)
+                            ? PostCard(data: item)
+                            : SizedBox.shrink())
+                        .toList())),
+            SizedBox(
+              height: 100,
+            ),
+          ],
         ),
-      );
+      ),
+    );
   }
-  
 }
