@@ -16,7 +16,7 @@ String str;
                                                     style: FontManager().getTextStyle(context,
                                       lWeight: FontWeight.w500,
                                       fontSize: 14,
-                                      color: Colorcodes.white),
+                                      color: Colorcodes.black),
                                                     trimMode: TrimMode.Line,
                                                     trimLines: 4,
                                                     

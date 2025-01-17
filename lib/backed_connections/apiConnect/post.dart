@@ -220,8 +220,7 @@ void createPostCopy(
     body: jsonEncode({
       'title': title,
       'description': {'message': description},
-      'imageBase64':
-          base, //"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA5CAYAAABqMUjBAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADDSURBVHgB7dnLCcJAFEbh/44WYCm+3amlaAVqB3YgVqC1uHMhWIKNyDW+CnCERG/OB5NkE4bDwMAwEgAAAAD8qu5gvOkXQxVoqgJmtvTn50olS6oZgqMjODqCoyM4OoKjq12wKVNvNF4Uv7eVwzV7zb5XFj+fjoetMuSfltzWxbOlb7zDP/ZYp3KDr8k66aqpMpj57v52t7kypIYu+ie94cTvQxVgl46O4OgIjo7g6AiOjuDoKrlM85R3SgIAAACA0twANp8cFnCd2FoAAAAASUVORK5CYII=",
+      'imageBase64':base, //"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA5CAYAAABqMUjBAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADDSURBVHgB7dnLCcJAFEbh/44WYCm+3amlaAVqB3YgVqC1uHMhWIKNyDW+CnCERG/OB5NkE4bDwMAwEgAAAAD8qu5gvOkXQxVoqgJmtvTn50olS6oZgqMjODqCoyM4OoKjq12wKVNvNF4Uv7eVwzV7zb5XFj+fjoetMuSfltzWxbOlb7zDP/ZYp3KDr8k66aqpMpj57v52t7kypIYu+ie94cTvQxVgl46O4OgIjo7g6AiOjuDoKrlM85R3SgIAAACA0twANp8cFnCd2FoAAAAASUVORK5CYII=",
       'fileName': 'file7'
     }),
   );
@@ -575,7 +574,6 @@ void createPostWithOutImage(context, String title, String description) async {
         'message': description,
       },
       'isPoll': false,
-      // 'image':'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIIflRYCVKZcDr-fVqpR8t4vyyCkslvRFkfA&s'
     }),
   );
    printData(response);
@@ -621,7 +619,7 @@ void getTrending() async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
   final response = await http.get(
-    Uri.parse('${url}/post/trending'),
+    Uri.parse('${url}/post/feed'),
     // Uri.parse('https://stakeplot.in/api/v1/post/all'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
