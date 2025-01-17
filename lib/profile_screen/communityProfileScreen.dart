@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -42,7 +44,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.bg5,
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -64,7 +66,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
                         },
                         label: const Text(
                           'Edit cover',
-                          style: TextStyle(color: Colors.blue),
+                          style: TextStyle(color: AppColors.bg1),
                         ),
                         icon: const Icon(Icons.edit),
                       ),
@@ -117,17 +119,19 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
                   children: [
                     Text(
                       dummyData['name'].toString(),
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w600,
+                          //fontSize: MediaQuery.of(context).size.width * 0.04,
+                          //fontSize: 12,
+                          color: AppColors.bg1)
                     ),
                     Text(
                       dummyData['username'].toString(),
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 16,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w400,
+                          //fontSize: MediaQuery.of(context).size.width * 0.04,
+                          //fontSize: 12,
+                          color: AppColors.userName)
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16.0),

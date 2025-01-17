@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/communityProfileScreen.dart';
 
@@ -13,20 +15,23 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              // Edit details action
-            },
-            child: const Text('Edit details',
-                style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Profile'),
+      //   actions: [
+      //     TextButton(
+      //       onPressed: () {
+      //         // Edit details action
+      //       },
+      //       child: Text('Edit details',
+      //           style: FontManager().getTextStyle(context,
+      //               lWeight: FontWeight.w500,
+      //               //fontSize: MediaQuery.of(context).size.width * 0.04,
+      //               color: AppColors.bg1)),
+      //     ),
+      //   ],
+      // ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(top: 20, left: 16, right: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -34,21 +39,32 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
             Row(
               children: [
                 CircleAvatar(
-                  radius: 40,
+                  radius: 30,
                   backgroundImage: NetworkImage(
                       'https://example.com/profile.jpg'), // Replace with actual image URL
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children:  [
+                    children: [
                       Text(userName.value,
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.w600,
+                              //fontSize: MediaQuery.of(context).size.width * 0.04,
+                              color: AppColors.bg1)),
                       Text(email.value,
-                          style: TextStyle(fontSize: 14)),
-                      Text(Phone.value, style: TextStyle(fontSize: 14)),
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.w400,
+                              //fontSize: MediaQuery.of(context).size.width * 0.04,
+                              fontSize: 12,
+                              color: AppColors.bg1)),
+                      Text(Phone.value,
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.w400,
+                              //fontSize: MediaQuery.of(context).size.width * 0.04,
+                              fontSize: 12,
+                              color: AppColors.bg1)),
                     ],
                   ),
                 ),
@@ -56,7 +72,11 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                   icon: Icon(Icons.edit, color: Colors.blue),
                   onPressed: () {},
                   label: Text('Edit details',
-                      style: TextStyle(color: Colors.blue)),
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w500,
+                          //fontSize: MediaQuery.of(context).size.width * 0.04,
+                          fontSize: 12,
+                          color: AppColors.bg1)),
                 )
               ],
             ),
@@ -68,17 +88,9 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                   // First Container for Community profile and Friends list
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                    ),
+                        color: AppColors.mt,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: AppColors.border)),
                     child: Column(
                       children: [
                         _buildOption(Icons.person, 'Community profile',
@@ -91,8 +103,8 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                         }),
                         Divider(),
                         _buildOption(Icons.group, 'Friends list',
-                            'Check your friends list here',onTap: () {
-                              Navigator.pushNamed(context, '/Friends'); 
+                            'Check your friends list here', onTap: () {
+                          Navigator.pushNamed(context, '/Friends');
                         }),
                       ],
                     ),
@@ -101,17 +113,9 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                   // Second Container for Support, Terms & conditions, and Privacy policy
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                    ),
+                        color: AppColors.mt,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: AppColors.border)),
                     child: Column(
                       children: [
                         _buildOption(Icons.support, 'Support',
@@ -129,17 +133,9 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                   // Third Container for Log out
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                    ),
+                        color: AppColors.mt,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: AppColors.border)),
                     child: _buildOption(Icons.logout, 'Log out',
                         'You can login and log out from your account',
                         isLogout: true),
@@ -166,18 +162,27 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
       {Function()? onTap, bool isLogout = false}) {
     return ListTile(
       leading: Container(
-        padding: EdgeInsets.all(8),
+        padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(8),
-        ),
+            color: AppColors.mt,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: AppColors.border)),
         child: Icon(icon, color: Colors.blue),
       ),
-      title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text(subtitle, style: TextStyle(color: Colors.grey[600])),
-      trailing: isLogout ? Icon(Icons.logout, color: Colors.red) : null,
+      title: Text(title,
+          style: FontManager().getTextStyle(context,
+              lWeight: FontWeight.w500,
+              //fontSize: MediaQuery.of(context).size.width * 0.04,
+              fontSize: 16,
+              color: AppColors.bg1)),
+      subtitle: Text(subtitle,
+          style: FontManager().getTextStyle(context,
+              lWeight: FontWeight.w400,
+              //fontSize: MediaQuery.of(context).size.width * 0.04,
+              fontSize: 14,
+              color: AppColors.bg1)),
+      //trailing: isLogout ? Icon(Icons.logout, color: Colors.red) : null,
       onTap: onTap,
     );
   }
-
 }

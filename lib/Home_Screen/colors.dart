@@ -12,7 +12,9 @@ class AppColors {
   static const Color bg5 = Color(0xFFF3F5F5);
   static const Color bg6 = Color(0xFF404040);
   static const Color pollSelected = Color(0xFF97B2B8);
-    static const Color message = Color(0xFF1B1A57);
+  static const Color message = Color(0xFF1B1A57);
+  static const Color border = Color(0xFFEBEBEB);
+  static const Color userName = Color(0xFF898989);
 
   static const Color likesharecommentCount = Color(0xFF454545);
 }
