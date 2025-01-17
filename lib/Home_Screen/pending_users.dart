@@ -14,7 +14,7 @@ class UserListScreen extends StatefulWidget {
 }
 
 class _UserListScreenState extends State<UserListScreen> {
-   @override
+  @override
   void initState() {
     getUserLend(context);
     print("lendAmountRemainders[index]");
@@ -85,49 +85,46 @@ class _UserListScreenState extends State<UserListScreen> {
         SizedBox(
           height: 10,
         ),
-          
-
-        Obx(()=>  lendAmountRemainders.length >=0 ? getUser():getUser()),
-         
-        
+        Obx(() => lendAmountRemainders.length >= 0 ? getUser() : getUser()),
       ],
     );
   }
 
+  Widget getUser() {
+    return Container(
+      width: MediaQuery.of(context).size.width / 1.1,
+      height: MediaQuery.of(context).size.height / 3.5,
 
-  Widget  getUser(){
-    return  Container(
-            width: MediaQuery.of(context).size.width/1.1,
-            height: MediaQuery.of(context).size.height/3.5,
+      // color: Colorcodes.billHeader,
+      child: ListView.builder(
+        itemCount:
+            lendAmountRemainders.length <= 3 ? lendAmountRemainders.length : 3,
+        itemBuilder: (context, index) {
+          var data = lendAmountRemainders[index];
 
-            // color: Colorcodes.billHeader,
-            child:ListView.builder(
-              itemCount: lendAmountRemainders.length <= 3 ? lendAmountRemainders.length:3,
-              itemBuilder: (context, index) {
-                var data=lendAmountRemainders[index];
-               
-                return ListTile(
-                  leading: CircleAvatar(
-                            backgroundColor: Colorcodes.budgetLightGreen,
-                            child: ProfileImage(
-                                url: data['Avatar'] ?? 'assets/avatar/menp4.svg'
-                       )),
-                  title: Text(data["userName"] ?? "Unknown User"),
-                  trailing:  InkWell(
-                    onTap: (){
-                         
-                          sendNotificationsToDevice(data['_id'],context,"You Need To Pay Lend To ${userName.value} of ${data['amount']??"0000"}");
-                          // print(currentId.value);
-                    },
-                    child: Text(
-                    ( data["billApproved"] ?? true )? "Remind now":"Didn't Approved",
-                      style: TextStyle(color: Colors.green, fontSize: 15),
-                    ),
-                  ),
-                );
+          return ListTile(
+            leading: CircleAvatar(
+                backgroundColor: Colorcodes.budgetLightGreen,
+                child: ProfileImage(
+                    url: data['Avatar'] ?? 'assets/avatar/menp4.svg')),
+            title: Text(data["userName"] ?? "Unknown User"),
+            trailing: InkWell(
+              onTap: () {
+                sendNotificationsToDevice(data['_id'], context,
+                    "You need to pay lend To ${userName.value} of ${data['amount'] ?? "0000"}");
+                // print(currentId.value);
               },
+              child: Text(
+                (data["billApproved"] ?? true)
+                    ? "Remind now"
+                    : "Didn't approve",
+                style: TextStyle(color: AppColors.primaryColor, fontSize: 15),
+              ),
             ),
           );
+        },
+      ),
+    );
   }
 }
 
@@ -140,41 +137,42 @@ class ShowAllUsersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Dues to receive',
-            style: FontManager().getTextStyle(context,
-                lWeight: FontWeight.bold,
-                fontSize: 18,
-                color: AppColors.accentColor)),
-      ),
-      body: Expanded(
-              child:  ListView.builder(
-                itemCount: lendAmountRemainders.length,
-                itemBuilder: (context, index) {
-                  var data=lendAmountRemainders[index];
-                  return ListTile(
-                    leading: CircleAvatar(
-                              backgroundColor: Colorcodes.budgetLightGreen,
-                              child: ProfileImage(
-                                  url: data['Avatar'] ?? 'assets/avatar/menp4.svg'
-                         )),
-                    title: Text(data["userName"] ?? "Unknown User"),
-                    trailing:  InkWell(
-                      onTap: (){
-                         
-                          sendNotificationsToDevice(data['_id'],context,"You Need To Pay Lend To ${userName.value} of ${data['amount']??"0000"}");
-                          // print(currentId.value);
-                    },
-                      child: Text(
-                      ( data["billApproved"] ?? true )? "Remind now":"Didn't Approved",
-                        style: TextStyle(color: Colors.green, fontSize: 15),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            )
-    );
+        appBar: AppBar(
+          title: Text('Dues to receive',
+              style: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: AppColors.accentColor)),
+        ),
+        body: Expanded(
+          child: ListView.builder(
+            itemCount: lendAmountRemainders.length,
+            itemBuilder: (context, index) {
+              var data = lendAmountRemainders[index];
+              return ListTile(
+                leading: CircleAvatar(
+                    backgroundColor: Colorcodes.budgetLightGreen,
+                    child: ProfileImage(
+                        url: data['Avatar'] ?? 'assets/avatar/menp4.svg')),
+                title: Text(data["userName"] ?? "Unknown User"),
+                trailing: InkWell(
+                  onTap: () {
+                    sendNotificationsToDevice(data['_id'], context,
+                        "You Need To Pay Lend To ${userName.value} of ${data['amount'] ?? "0000"}");
+                    // print(currentId.value);
+                  },
+                  child: Text(
+                    (data["billApproved"] ?? true)
+                        ? "Remind now"
+                        : "Didn't approve",
+                    style:
+                        TextStyle(color: AppColors.primaryColor, fontSize: 15),
+                  ),
+                ),
+              );
+            },
+          ),
+        ));
   }
 }
 

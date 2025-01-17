@@ -72,8 +72,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,8 +97,8 @@ class _HomePageState extends State<HomePage> {
       //         BottomNavigationBarItem(
       //             icon: Icon(Icons.person), label: 'Profile'),
       //       ],
-          // ),
-        // ),
+      // ),
+      // ),
       // ),
     );
   }
@@ -109,54 +107,58 @@ class _HomePageState extends State<HomePage> {
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        child: ListView(
-          children: [
-            // Top Notifications Row
-            NotificationsBudget(child: Text(""),),
-           
-            const SizedBox(height: 16),
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: ListView(
+            children: [
+              // Top Notifications Row
+              NotificationsBudget(
+                child: Text(""),
+              ),
 
-            // Bank Account Container
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.25,
-              child: NumberPickerScreen(),
-            ),
-            const SizedBox(height: 20),
+              const SizedBox(height: 10),
 
-            // Finance Chart
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.4,
-              child: const FinanceChartApp(),
-            ),
-            const SizedBox(height: 20),
+              // Bank Account Container
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.25,
+                child: NumberPickerScreen(),
+              ),
+              //const SizedBox(height: 10),
 
-            // Manual Transaction Container
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.25,
-              child: Manualtransaction(),
-            ),
-            const SizedBox(height: 20),
+              // Finance Chart
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.3,
+                child: const FinanceChartApp(),
+              ),
+              //const SizedBox(height: 20),
 
-            // Pending Users
-            UserListScreen(),
-            const SizedBox(height: 20),
+              // Manual Transaction Container
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.2,
+                child: Manualtransaction(),
+              ),
+              //const SizedBox(height: 20),
 
-            // Doughnut Chart
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.4,
-              child: DoughnutChartExample(),
-            ),
-            const SizedBox(height: 20),
+              // Pending Users
+              UserListScreen(),
+              //const SizedBox(height: 20),
 
-            // Transaction History
-            SizedBox(
-              // height: MediaQuery.of(context).size.height * 0.8,
-              child: TransactionHistory(),
-            ),
-          ],
+              // Doughnut Chart
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.3,
+                child: DoughnutChartExample(),
+              ),
+              //const SizedBox(height: 20),
+
+              // Transaction History
+              SizedBox(
+                // height: MediaQuery.of(context).size.height * 0.8,
+                child: TransactionHistory(),
+              ),
+            ],
+          ),
         ),
       ),
     );

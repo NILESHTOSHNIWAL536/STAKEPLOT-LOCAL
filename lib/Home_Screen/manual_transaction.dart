@@ -10,10 +10,12 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
@@ -55,12 +57,12 @@ class _ManualtransactionState extends State<Manualtransaction> {
               Text('Manual Transaction',
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.normal,
-                      fontSize: 18,
+                      fontSize: MediaQuery.of(context).size.width * 0.04,
                       color: AppColors.accentColor)),
               const SizedBox(height: 8),
               DecoratedContainer(
                   borderRadius: 24,
-                  height: 50,
+                  height: MediaQuery.of(context).size.height * 0.05,
                   child: TextButton(
                       onPressed: () {
                         showCustomModal(context);
@@ -68,21 +70,27 @@ class _ManualtransactionState extends State<Manualtransaction> {
                       child: Text('Start now',
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.normal,
-                              fontSize: 14,
+                              fontSize: 12,
                               color: AppColors.primaryColor)))),
             ],
           ),
           const Spacer(),
           // Placeholder for an manual transaction image
 
-          Expanded(
-            child: SvgPicture.asset(
-              Pictures.manualTransactionImage,
-              height: MediaQuery.of(context).size.height *
-                  0.25, // Make the SVG fit the height of the container
-              //fit: BoxFit.contain, // Scale the image to fit within its bounds
-            ),
-          ),
+          AvatarProfileImage(
+            url: Pictures.manualTransactionImage,
+            height: 8,
+            width: 8,
+          )
+
+          // Expanded(
+          // child: SvgPicture.asset(
+          //   Pictures.manualTransactionImage,
+          //   height: MediaQuery.of(context).size.height *
+          //       0.4, // Make the SVG fit the height of the container
+          //   //fit: BoxFit.contain, // Scale the image to fit within its bounds
+          // ),
+          // ),
         ],
       ),
     );
@@ -103,8 +111,6 @@ void showCustomModal(BuildContext context) {
     },
   );
 }
-
-
 
 class ModalContent extends StatefulWidget {
   const ModalContent({Key? key}) : super(key: key);
@@ -271,14 +277,13 @@ class _ModalContentState extends State<ModalContent>
   late ConfettiController _confettiController;
   late AnimationController _iconAnimationController;
   bool _isCelebrationVisible = false;
-   String? selectedCategory2;
+  String? selectedCategory2;
   String? selectedSubCategory2;
   // List  addedUser=[];
   // List addedMembers=[];
-  RxBool isSplit=false.obs;
-  RxBool isLend=false.obs;
-   late IO.Socket socket;
-   
+  RxBool isSplit = false.obs;
+  RxBool isLend = false.obs;
+  late IO.Socket socket;
 
   void initState() {
     super.initState();
@@ -291,16 +296,18 @@ class _ModalContentState extends State<ModalContent>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    socket=IO.io(urlWithLocallHost,IO.OptionBuilder().setTransports(['websocket']).build());
+    socket = IO.io(urlWithLocallHost,
+        IO.OptionBuilder().setTransports(['websocket']).build());
     setUpSocketListener();
     // Initialize with all categories
   }
 
-   setUpSocketListener()
-   {
-     socket.on("disconnect", (data) => {
-            socket.close(),
-     });    
+  setUpSocketListener() {
+    socket.on(
+        "disconnect",
+        (data) => {
+              socket.close(),
+            });
   }
 
   void dispose() {
@@ -344,7 +351,7 @@ class _ModalContentState extends State<ModalContent>
 //celebration after tapping continue
   void _showCelebration() {
     // Trigger confetti and animation
-    
+
     setState(() {
       _isCelebrationVisible = true;
     });
@@ -532,13 +539,13 @@ class _ModalContentState extends State<ModalContent>
                             onTap: () {
                               setState(() {
                                 selectedSubCategory = subCategory;
-                                 selectedSubCategory2 = subCategory;
+                                selectedSubCategory2 = subCategory;
                                 categoryFieldController.text =
                                     '$selectedCategory ($selectedSubCategory)';
                                 //isSplitbill = true;
                                 fin =
                                     '$selectedCategory ($selectedSubCategory)';
-                                selectedCategory2=selectedCategory;
+                                selectedCategory2 = selectedCategory;
                                 resetToInitialScreen();
                               });
                             },
@@ -574,13 +581,10 @@ class _ModalContentState extends State<ModalContent>
                               // Action for Split Bill button
                               //isSplit = true;
                               // splitBill();
-                              isSplit.value=true;
-                              isLend.value=false;
+                              isSplit.value = true;
+                              isLend.value = false;
 
                               showCustomFriendsModal(context);
-
-                               
-
                             },
                             child: Text('Bill Split',
                                 style: FontManager().getTextStyle(context,
@@ -591,10 +595,9 @@ class _ModalContentState extends State<ModalContent>
                           ElevatedButton(
                             onPressed: () {
                               // Action for Continue button
-                              isSplit.value=false;
-                              isLend.value=true;
+                              isSplit.value = false;
+                              isLend.value = true;
                               showCustomFriendsModal(context);
-
                             },
                             child: Text('Lend money',
                                 style: FontManager().getTextStyle(context,
@@ -610,19 +613,29 @@ class _ModalContentState extends State<ModalContent>
                           // Button to trigger celebration
                           Center(
                             child: ElevatedButton(
-                              onPressed:(){
-
-                                 if(isSplit.value){
-                                       splitBill(selectedCategory2.toString(), amount.toString(), selectedSubCategory2.toString(),true);
-                                      
-                                 }else if(isLend.value){
-                                       splitBill(selectedCategory2.toString(), amount.toString(), selectedSubCategory2.toString(),false);
-                                     
-                                 }else{
-                                    addTransaction(amount.toString(),selectedSubCategory2.toString(),selectedCategory2.toString(),context,"cash");
-                                 }
-                                 _showCelebration();
-                                },
+                              onPressed: () {
+                                if (isSplit.value) {
+                                  splitBill(
+                                      selectedCategory2.toString(),
+                                      amount.toString(),
+                                      selectedSubCategory2.toString(),
+                                      true);
+                                } else if (isLend.value) {
+                                  splitBill(
+                                      selectedCategory2.toString(),
+                                      amount.toString(),
+                                      selectedSubCategory2.toString(),
+                                      false);
+                                } else {
+                                  addTransaction(
+                                      amount.toString(),
+                                      selectedSubCategory2.toString(),
+                                      selectedCategory2.toString(),
+                                      context,
+                                      "cash");
+                                }
+                                _showCelebration();
+                              },
                               child: Text('Continue',
                                   style: FontManager().getTextStyle(context,
                                       lWeight: FontWeight.normal,
@@ -637,220 +650,198 @@ class _ModalContentState extends State<ModalContent>
                 ),
         ));
   }
-  
-             
-             void splitBill(categories,amount,subCategories,bool isSplit) 
-             {
-                               
-                                  if(categories=="" || amount=="" || subCategories=="")
-                                  {
-                                        snackBarAllFeilds(context);
-                                        return;
-                                  }
-                                  if(addedMembers.length<=0)
-                                  {
-                                    snackBarCalled(context, "Pls Add Members....!",Colors.red);
-                                    return;
-                                  }
 
-                                  if(acceptReset.value)return;
-                                  acceptReset.value=true;
-                              
-                               if(isSplit) splitUserAmount(context,amount,addedMembers,categories,subCategories);
-                               else  addLendUserAmount(context,amount,addedMembers,categories,subCategories);
-              }
+  void splitBill(categories, amount, subCategories, bool isSplit) {
+    if (categories == "" || amount == "" || subCategories == "") {
+      snackBarAllFeilds(context);
+      return;
+    }
+    if (addedMembers.length <= 0) {
+      snackBarCalled(context, "Pls Add Members....!", Colors.red);
+      return;
+    }
 
+    if (acceptReset.value) return;
+    acceptReset.value = true;
 
+    if (isSplit)
+      splitUserAmount(context, amount, addedMembers, categories, subCategories);
+    else
+      addLendUserAmount(
+          context, amount, addedMembers, categories, subCategories);
+  }
 
-  
-void addSocketMessage(addedUser,String amount,String splitName,String splitID) {
+  void addSocketMessage(
+      addedUser, String amount, String splitName, String splitID) {
+    //  home
+    //     //  Navigator.pushNamed(context, '/home');
+    //  if(frdsList.isEmpty){
+    //       //   Navigator.pop(context);
+    //       // Navigator.pushNamed(context, '/TribeSearch');
+    //       return;
+    //  }
+    // {
+    //                   "name": frdsList[index]['name'],
+    //                   "id": values,
+    //                   'avatar':frdsList[index]['avatar'],
+    //                   "balance": 200
+    // },
+    // print('splitID');
+    // print(splitID);
+    // print(addedUser);
+    if (addedUser.isEmpty) {
+      // snackBarCalled(context, "No Friend Added");
+      return;
+    }
 
-                                  //  home
-                              //     //  Navigator.pushNamed(context, '/home'); 
-                              //  if(frdsList.isEmpty){
-                              //       //   Navigator.pop(context);
-                              //       // Navigator.pushNamed(context, '/TribeSearch'); 
-                              //       return;
-                              //  }
-                                // {
-                                //                   "name": frdsList[index]['name'],
-                                //                   "id": values,
-                                //                   'avatar':frdsList[index]['avatar'],
-                                //                   "balance": 200
-                                // },
-                                  // print('splitID');
-                                  // print(splitID);
-                                  // print(addedUser);
-                                 if(addedUser.isEmpty){
-                  
-                                  // snackBarCalled(context, "No Friend Added");
-                                  return;
-                                 }
-     
+    // int index=0;
 
-                                  // int index=0;
-                               
-                                  addedUser.forEach((rec) { 
-                                                            
-  
-                                                String room1 =rec['name']+userName.value;
-                                                String room2 =userName.value+rec['name'];
-                                                // index++;
-                                                 String  roomId =  (room1.compareTo(room2) <= 0) ? room1 : room2;
+    addedUser.forEach((rec) {
+      String room1 = rec['name'] + userName.value;
+      String room2 = userName.value + rec['name'];
+      // index++;
+      String roomId = (room1.compareTo(room2) <= 0) ? room1 : room2;
 
-                                            var jsonData={
-                                                  "messageType": "split",
-                                                  "receiver": rec['id'],
-                                                  "sender":currentId.value,
-                                                  "message": null,
-                                                  "image": null,
-                                                  "poll": null,
-                                                  "post":null,
-                                              "split": {
-                                                    "BillName" : splitName,
-                                                    "Amount" :   amount,
-                                                    "Share" : ((double.parse(amount) / (addedUser.length+1)).toString()),
-                                                    "isPaid" : false,
-                                                    "splitId" :  splitID,
-                                                },
-                                                  "roomId":roomId,
-                                          };
+      var jsonData = {
+        "messageType": "split",
+        "receiver": rec['id'],
+        "sender": currentId.value,
+        "message": null,
+        "image": null,
+        "poll": null,
+        "post": null,
+        "split": {
+          "BillName": splitName,
+          "Amount": amount,
+          "Share": ((double.parse(amount) / (addedUser.length + 1)).toString()),
+          "isPaid": false,
+          "splitId": splitID,
+        },
+        "roomId": roomId,
+      };
 
-              
-                                          socket.emit("joinRoom",roomId);
-                                          socket.emit("message",jsonData);
-                                          String userToSend=rec['name']+""+rec['name'];
-                                          socket.emit("LoadCharts",{"roomId":userToSend,});
-                                  });
-}
+      socket.emit("joinRoom", roomId);
+      socket.emit("message", jsonData);
+      String userToSend = rec['name'] + "" + rec['name'];
+      socket.emit("LoadCharts", {
+        "roomId": userToSend,
+      });
+    });
+  }
 
-  
   void showCustomFriendsModal(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(
-        top: Radius.circular(18),
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(18),
+        ),
       ),
-    ),
-    builder: (BuildContext context) {
-      return FriendsUi(); // Use the modal widget here
-    },
-  );
-}
+      builder: (BuildContext context) {
+        return FriendsUi(); // Use the modal widget here
+      },
+    );
+  }
 
-
-
-
-
-void splitUserAmount(context,String amount,List members,String name,String subCategories)async{
-    List nameList=[];
+  void splitUserAmount(context, String amount, List members, String name,
+      String subCategories) async {
+    List nameList = [];
     members.forEach((element) {
-         nameList.add(
-           {
-              'member':(element['id']),
-              'markAsComplete':false
-           }
-         );
-    }); 
+      nameList.add({'member': (element['id']), 'markAsComplete': false});
+    });
 
     final SharedPreferences _pref = await SharedPreferences.getInstance();
-     var  accessToken=_pref.getString("accessToken");
+    var accessToken = _pref.getString("accessToken");
 
     final response = await http.post(
-    Uri.parse('${url}/split'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-       "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
+      Uri.parse('${url}/split'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Authorization": "$accessToken",
+      },
+      body: jsonEncode({
         "name": name,
         "amount": amount,
         "paymentStatus": nameList,
-        "image":''
-       }),
-  );
-      //printData(response,context);
-      if(response.statusCode==200 || response.statusCode==201){
-            final body = json.decode(response.body);
-            print("Lend Bill ----------------------- ");
-            print(body);
-           
-            splitID.value=body['id']['_id'];
-            print("splitID.value");
-            print(splitID.value);
+        "image": ''
+      }),
+    );
+    //printData(response,context);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final body = json.decode(response.body);
+      print("Lend Bill ----------------------- ");
+      print(body);
 
-             members.forEach((e)
-           {
-            sendNotificationsToDevice(e['id'],context,"${userName.value} Has Send U a Split Bill..Of ${name} Of ${amount}");
-           });
-            addSocketMessage(addedMembers,amount.toString(),selectedCategory2.toString(), splitID.value);
+      splitID.value = body['id']['_id'];
+      print("splitID.value");
+      print(splitID.value);
 
-            snackBarCalled(context,"Slit Amount send to users!",Colors.black);
-            addTransaction(amount, "Split Bill (${subCategories})", name, context, 'cash',true);
+      members.forEach((e) {
+        sendNotificationsToDevice(e['id'], context,
+            "${userName.value} Has Send U a Split Bill..Of ${name} Of ${amount}");
+      });
+      addSocketMessage(addedMembers, amount.toString(),
+          selectedCategory2.toString(), splitID.value);
 
-      
-      }else{
-           snackBarCalled(context,"can't split error!",Colors.red);
-      }
-        acceptReset.value=false;
+      snackBarCalled(context, "Slit Amount send to users!", Colors.black);
+      addTransaction(
+          amount, "Split Bill (${subCategories})", name, context, 'cash', true);
+    } else {
+      snackBarCalled(context, "can't split error!", Colors.red);
+    }
+    acceptReset.value = false;
+  }
 
-}
-
-
-
-
-void addLendUserAmount(context,String amount,List members,String name,String subCategories)async{
-    
+  void addLendUserAmount(context, String amount, List members, String name,
+      String subCategories) async {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
-     var  accessToken=_pref.getString("accessToken");
+    var accessToken = _pref.getString("accessToken");
     //  print('nameList');
     //  print(nameList);
 
     final response = await http.post(
-    Uri.parse('${url}/bill'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-       "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
-            "name": name,
-            "amount": amount,
-            "billReceiverId": members[0]['id'],
-            "subcategory":'Lend Money',
-            "Avatar":members[0]['avatar'],
-            "userName":members[0]['name'],
-            'dueDate': getCurrentFormattedDate(),
-       }),
-  );
-      //printData(response,context);
-      if(response.statusCode==200 || response.statusCode==201){
-            final body = json.decode(response.body);
-           members.forEach((e)
-           {
-            sendNotificationsToDevice(e['id'],context,"${userName.value} Has Send U a Lend Bill..Of ${name} Of ${amount}");
-           }
-          );
+      Uri.parse('${url}/bill'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Authorization": "$accessToken",
+      },
+      body: jsonEncode({
+        "name": name,
+        "amount": amount,
+        "billReceiverId": members[0]['id'],
+        "subcategory": 'Lend Money',
+        "Avatar": members[0]['avatar'],
+        "userName": members[0]['name'],
+        'dueDate': getCurrentFormattedDate(),
+      }),
+    );
+    //printData(response,context);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final body = json.decode(response.body);
+      members.forEach((e) {
+        sendNotificationsToDevice(e['id'], context,
+            "${userName.value} Has Send U a Lend Bill..Of ${name} Of ${amount}");
+      });
 
-            snackBarCalled(context,"Lend Amount send to users!",Colors.black);
-            addTransaction(amount, "Lend Bill (${subCategories})", name, context, 'cash',true);
-            // addSocketMessage(addedMembers,amount.toString(),selectedCategory2.toString()+"Lend Bill (${subCategories})", splitID.value);
-            getUserLend(context);
-            Navigator.push(
-            context,
-            PageTransition(
-              type: PageTransitionType.fade,
-               duration: Durations.long1,
-              child: HomePage(),
-              isIos: true,
-            ),
-          ); 
-    // }
-      }else{
-           snackBarCalled(context,"can't split error!",Colors.red);
-      }
-        acceptReset.value=false;
-}
-              
+      snackBarCalled(context, "Lend Amount send to users!", Colors.black);
+      addTransaction(
+          amount, "Lend Bill (${subCategories})", name, context, 'cash', true);
+      // addSocketMessage(addedMembers,amount.toString(),selectedCategory2.toString()+"Lend Bill (${subCategories})", splitID.value);
+      getUserLend(context);
+      Navigator.push(
+        context,
+        PageTransition(
+          type: PageTransitionType.fade,
+          duration: Durations.long1,
+          child: HomePage(),
+          isIos: true,
+        ),
+      );
+      // }
+    } else {
+      snackBarCalled(context, "can't split error!", Colors.red);
+    }
+    acceptReset.value = false;
+  }
 }

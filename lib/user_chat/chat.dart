@@ -212,6 +212,14 @@ class _ChatState extends State<Chat> {
     } else if (message.type == "image") {
       return imageDisplay(message.text, message.isMe, message.image);
     } else if (message.type == "post") {
+      var dataObj = jsonDecode(message.post);
+
+      if (dataObj['isPoll'])
+        return polled(
+          message.isMe,
+          dataObj['pollData'],
+        );
+
       return postDisplay(message.text, message.isMe, message.image, message);
     } else if (message.type == "split") {
       return spliDisplay(message.text, message.isMe, message.image, message);
@@ -850,8 +858,8 @@ class _ChatState extends State<Chat> {
   }
 
   Widget poll(e) {
-    List options = e['options'];
-    int index = e['selectedOption'];
+    List options = e['options'] ?? [];
+    int index = 0; // e['selectedOption'];
     int s = -1;
 
     return Padding(
@@ -881,7 +889,9 @@ class _ChatState extends State<Chat> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: options.map((op) {
-                  // List ll=op['votes'];
+                  var obj = jsonDecode(op);
+                  print(obj);
+                  List ll = obj['votes'] ?? [];
                   // String cal=((ll.length/len)* 100).toStringAsFixed(2);
                   // len += ll.length ;
                   s++;
@@ -912,7 +922,7 @@ class _ChatState extends State<Chat> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(op,
+                            Text(obj['option'].toString(),
                                 overflow: TextOverflow.ellipsis,
                                 style: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.bold,
