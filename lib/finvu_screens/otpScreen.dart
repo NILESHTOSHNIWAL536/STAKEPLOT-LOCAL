@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:get/get.dart';
@@ -228,7 +229,7 @@ class _OtpscreenState extends State<Otpscreen> {
                                                           onTap: (){
                                                             //  Navigator.pushNamed(context,'/signup'); 
                                                             // resendOptUser(context,widget.data['email'],widget.data['name']);
-                                                            loginToAutoTractions(context,number);
+                                                            loginToAutoTractions(context);
 
                                                           },
                                  child: Center(
