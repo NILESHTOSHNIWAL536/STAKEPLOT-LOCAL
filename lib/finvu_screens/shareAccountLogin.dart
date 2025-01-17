@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/otpScreen.dart';
 
 class ShareAccountLogin extends StatefulWidget {
@@ -54,7 +55,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                 InkWell(
                   onTap: (){
                     //  Otpscreen
-                    loginToAutoTractions(context,number);
+                    loginToAutoTractions(context);
                   //    Navigator.pushReplacement(
                   //     context,
                   //     MaterialPageRoute(
