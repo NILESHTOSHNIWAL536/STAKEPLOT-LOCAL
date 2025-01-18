@@ -4,7 +4,13 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 
 import 'Constants/font_manager.dart';
 
-List<Color> color=[Colors.blue,Colors.redAccent,Colors.green,Colors.amber,const Color.fromARGB(255, 52, 137, 137)];
+List<Color> color = [
+  Colors.blue,
+  Colors.redAccent,
+  Colors.green,
+  Colors.amber,
+  const Color.fromARGB(255, 52, 137, 137)
+];
 
 class Colorcodes {
   static Color budgetDarkGreen = const Color.fromRGBO(0, 208, 158, 1);
@@ -84,6 +90,7 @@ class Colorcodes {
   static double fontSizeHistory = 16;
   static double paddingTopDesign = 40;
   static double paddingTopScroll = 20;
+  static double space = 15;
 }
 
 // class StaticCode{
@@ -272,6 +279,3 @@ int getSteps(max, div) {
     return 1;
   }
 }
-
-
-
