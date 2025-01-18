@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/otpScreen.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 
-class ShareAccountLogin extends StatefulWidget {
-  const ShareAccountLogin({ Key? key }) : super(key: key);
+
+class FetchAccount extends StatelessWidget {
+const FetchAccount({ Key? key }) : super(key: key);
 
   @override
-  _ShareAccountLoginState createState() => _ShareAccountLoginState();
-}
-
-class _ShareAccountLoginState extends State<ShareAccountLogin> {
-  @override
-  Widget build(BuildContext context) {
-    return  Scaffold(
+  Widget build(BuildContext context){
+    return Scaffold(
       // bottomNavigationBar: BottomNavigations(data: sizeRoom?3:2),
        extendBody: true,
         appBar: AppBar(
@@ -65,7 +60,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                      Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Otpscreen(),
+                        builder: (context) => DiscoverAccount(),
                       ),
                   );
                   },
@@ -82,21 +77,3 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
     );
   }
 }
-
-
-
-Widget getButton(context,str){
-
-    return Container(
-                  width: MediaQuery.of(context).size.width/3,
-                  // height:MediaQuery.of(context).size.height,
-                  padding: EdgeInsets.symmetric(horizontal: 10,vertical: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.cyan,
-                  ),
-                  child: Text(str),
-          );
-}
-
-
-

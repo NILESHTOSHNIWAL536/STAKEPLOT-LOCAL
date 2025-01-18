@@ -229,14 +229,11 @@ class _FinvuAccountState extends State<FinvuAccount> {
   void verify(String otp,context) async {
 
     try{
-    var login = await finvuManager.verifyLoginOtp(
-      otp,
-      otpReference,
-    );
+    var login = await finvuManager.verifyLoginOtp(otp,otpReference,);
     //  print("verifyLoginOtp");
     //  print(login.userId);
-     final SharedPreferences _pref = await SharedPreferences.getInstance();
-          String? token=await _pref.getString("token");
+    final SharedPreferences _pref = await SharedPreferences.getInstance();
+    String? token=await _pref.getString("token");
     
     //  Navigator.push(
     //   context,

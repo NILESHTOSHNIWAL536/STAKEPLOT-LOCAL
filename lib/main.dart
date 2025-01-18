@@ -52,7 +52,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-       initialRoute: '/ShareAccountLogin', 
+       initialRoute: '/FinvuAccount', 
         routes:
     {  
       '/': (context) =>  Signin(),   
