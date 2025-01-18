@@ -69,6 +69,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                       builder: (context) => widget.flag? DiscoverAccount():Otpscreen(),
                     ),
                   );
+
                 },
                 child: getButton(context,widget.flag? "Fetch Bank Account":"Share Account")),
           ],

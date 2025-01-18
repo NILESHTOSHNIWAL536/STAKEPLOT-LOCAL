@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 // import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -235,13 +236,13 @@ class _FinvuAccountState extends State<FinvuAccount> {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     String? token=await _pref.getString("token");
     
-    //  Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => DiscoverAccount(),
-    //   ),
-    // );
-    Navigator.pushNamed(context, "/discover");
+     Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ShareAccountLogin(flag: true,),
+      ),
+    );
+    // Navigator.pushNamed(context, "/discover");
 
     //  getConsentRequestDetails();
     //  fetchLinkedAccounts();
