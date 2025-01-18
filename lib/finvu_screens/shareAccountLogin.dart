@@ -42,7 +42,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        color: Colors.amber,
+        color: AppColors.backgroundColor,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -78,16 +78,16 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
 
 Widget getButton(context, str) {
   return Container(
-    width: MediaQuery.of(context).size.width / 1.4,
+    width: MediaQuery.of(context).size.width / 1.1,
     // height:MediaQuery.of(context).size.height,
     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
     decoration: BoxDecoration(
-        color: AppColors.bg6, borderRadius: BorderRadius.circular(10)),
+        color: AppColors.accentColor, borderRadius: BorderRadius.circular(30)),
     child: Center(
       child: Text(
         str,
         style: FontManager().getTextStyle(context,
-            lWeight: FontWeight.bold, fontSize: 24, color: Colorcodes.white),
+            lWeight: FontWeight.bold, fontSize: 18, color: AppColors.bg5),
       ),
     ),
   );
