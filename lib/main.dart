@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/customNoti.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/finvuAccount.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/signup.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
@@ -51,7 +52,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-       initialRoute: '/FinvuAccount', 
+       initialRoute: '/ShareAccountLogin', 
         routes:
     {  
       '/': (context) =>  Signin(),   
@@ -63,6 +64,7 @@ class _MyAppState extends State<MyApp> {
       '/TribeChats': (context) => TribeChats(), 
       '/FinvuAccount': (context) =>  FinvuAccount(),   
       '/discover': (context) =>  DiscoverAccount(),     
+      '/ShareAccountLogin': (context) =>  ShareAccountLogin(),     
     });
   }
 }

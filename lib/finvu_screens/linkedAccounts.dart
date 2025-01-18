@@ -330,7 +330,7 @@ import 'package:flutter_application_code_stakeplot/main.dart';
         print(data);
         if(data=="Account data not found.")return;
        
-       Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+      //  Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
       String url = "http://${"192.168.1.11"}:5000/api/v1";
              
             final response = await http.post(
@@ -353,7 +353,7 @@ import 'package:flutter_application_code_stakeplot/main.dart';
               // isBankAccountLink.value=true;
               print(body);
             
-              Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+              // Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
         } else{
             
         }
