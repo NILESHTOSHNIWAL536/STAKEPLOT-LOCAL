@@ -1,4 +1,3 @@
-
 import "dart:convert";
 // import "dart:ffi";
 
@@ -6,6 +5,7 @@ import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
+import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart";
@@ -17,21 +17,15 @@ import "package:get/get.dart";
 import 'package:http/http.dart' as http;
 import "package:shared_preferences/shared_preferences.dart";
 
-
 class Notifications extends StatefulWidget {
-  const Notifications({ Key? key }) : super(key: key);
+  const Notifications({Key? key}) : super(key: key);
 
   @override
   _NotificationsState createState() => _NotificationsState();
 }
 
 class _NotificationsState extends State<Notifications> {
-  
-bool flag=true;
-
-
-    
-
+  bool flag = true;
 
   @override
   void initState() {
@@ -40,80 +34,70 @@ bool flag=true;
     getNotifications(context);
   }
 
-
-  void  getTransaction()async
-{
-    
+  void getTransaction() async {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var  accessToken=_pref.getString("accessToken");
+    var accessToken = _pref.getString("accessToken");
     final response = await http.get(
-    Uri.parse('${url}/user/myNotifications'),
-    // Uri.parse('https://stakeplot.in/api/v1/post/all'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
+      Uri.parse('${url}/user/myNotifications'),
+      // Uri.parse('https://stakeplot.in/api/v1/post/all'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Authorization": "$accessToken",
+      },
+    );
 
-  
+    if (response.statusCode == 200) {
+      if (response.body.isEmpty) {
+        snackBarCalled(context, "No Notifications");
+        return;
+      }
+      var his = jsonDecode(response.body);
 
-      if(response.statusCode==200  )
-      {
-               if(response.body.isEmpty){
-                snackBarCalled(context, "No Notifications");
-                return;
-               }
-                  var  his=jsonDecode(response.body);
-                
-                   notificationList.clear();
-                   notificationList.addAll(his['data']);
-                    notificationList.forEach((req){
-                         String type=req['notificationMessage']['type'];
-                         var e=req['notificationMessage'];
-                        if(type=="friendRequest")
-                        {
-                            friendRequestList.add(e['from_id']);
-                        }
-                    });
-                 setState(() {
-                    flag=false;                   
-                 });
-                 hasGetNewNotifications.value=false;
-                 myNotificationBool.value!= myNotificationBool.value;
-      }
-      else{
-      }
- 
-}
-  int index=-1;
+      notificationList.clear();
+      notificationList.addAll(his['data']);
+      notificationList.forEach((req) {
+        String type = req['notificationMessage']['type'];
+        var e = req['notificationMessage'];
+        if (type == "friendRequest") {
+          friendRequestList.add(e['from_id']);
+        }
+      });
+      setState(() {
+        flag = false;
+      });
+      hasGetNewNotifications.value = false;
+      myNotificationBool.value != myNotificationBool.value;
+    } else {}
+  }
+
+  int index = -1;
 
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
-      backgroundColor: Colorcodes.budgetDarkGreen,
-      body: Column(
-        children: [
+    return Scaffold(
+        backgroundColor: AppColors.backgroundColor,
+        body: Column(children: [
           UserProfileHeader(name: "Notifications"),
           Expanded(
             child: Container(
-                 width: MediaQuery.of(context).size.width,
-                   height: MediaQuery.of(context).size.height/1.165,
-                    margin:  EdgeInsets.only(top: Colorcodes.paddingTopDesign),
-                    padding:  EdgeInsets.symmetric(vertical: Colorcodes.paddingTopScroll),
-                   decoration: BoxDecoration(
-                      color: Colorcodes.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(Colorcodes.borderCut),
-                            topRight: Radius.circular(Colorcodes.borderCut),
-                           )
-            
-                   ),
-                    child:Obx(() =>  myNotificationBool.value?notifiableElement():notifiableElement()
-          
-           )),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height / 1.165,
+                //margin:  EdgeInsets.only(top: Colorcodes.paddingTopDesign),
+                padding:
+                    EdgeInsets.symmetric(vertical: Colorcodes.paddingTopScroll),
+                //  decoration: BoxDecoration(
+                //     color: Colorcodes.white,
+                //       borderRadius: BorderRadius.only(
+                //           topLeft: Radius.circular(Colorcodes.borderCut),
+                //           topRight: Radius.circular(Colorcodes.borderCut),
+                //          )
+
+                //  ),
+                child: Obx(() => myNotificationBool.value
+                    ? notifiableElement()
+                    : notifiableElement())),
           )
-      ])                 
-    );   
+        ]));
   }
   //   return Scaffold(
 
@@ -129,7 +113,7 @@ bool flag=true;
   //                 color: Colors.white,
   //                  fontSize: 20
   //              ),),
-           
+
   //     ),
 
   //     // flag ?Center(child: Text("No Notifications")):
@@ -140,7 +124,7 @@ bool flag=true;
   //                   child: Column(
   //                          mainAxisAlignment: MainAxisAlignment.start,
   //                           crossAxisAlignment: CrossAxisAlignment.center,
-                            
+
   //                           children: obj.map((e) => getContainer(e)).toList(),
   //                   ),
   //                 ),
@@ -148,381 +132,381 @@ bool flag=true;
   //   );
   // }
 
-
-  Widget notifiableElement(){
-     return  notificationList.length==0 && flag? Loader() : notificationList.length==0 ?
-            Center(
+  Widget notifiableElement() {
+    return notificationList.length == 0 && flag
+        ? Loader()
+        : notificationList.length == 0
+            ? Center(
                 child: Container(
-                 height: MediaQuery.of(context).size.height/1.1,
-                child: Text("No Notifications",
-                style: FontManager().getTextStyle(context)))): ListView(
-                children: notificationList.map((e) => getContainer(e)).toList(),);
+                    height: MediaQuery.of(context).size.height / 1.1,
+                    child: Text("No Notifications",
+                        style: FontManager().getTextStyle(context))))
+            : ListView(
+                children: notificationList.map((e) => getContainer(e)).toList(),
+              );
   }
 
-
-Widget getContainer(e){
-  
-  
-    var notifyId=e['_id'];
-    String type=e['notificationMessage']['type'];
-    e=e['notificationMessage'];
+  Widget getContainer(e) {
+    var notifyId = e['_id'];
+    String type = e['notificationMessage']['type'];
+    e = e['notificationMessage'];
     index++;
-    if(type=="friendRequest" && e['status']!=null && e['status']=='accepted'){
-         return  messageChannelProfile("${e['from_name']} accepted your friend Request..",e['from_id'].toString(),e['avatarType']??"");
+    if (type == "friendRequest" &&
+        e['status'] != null &&
+        e['status'] == 'accepted') {
+      return messageChannelProfile(
+          "${e['from_name']} accepted your friend Request..",
+          e['from_id'].toString(),
+          e['avatarType'] ?? "");
     }
-    if(type=="friendRequest"){
-         return  friends(e['from_name'],e['from_id'].toString(),e['avatarType'],e,index);
-    }
-   
-    else if(type=="split"){
-         return  messageChannelProfile("${e['username']}, has shared the bill of ${e['billname']} of ₹${e['amount']?? "400"}",e['id'].toString(),e['avatarType']??"");
-    }
-    else if(type=="roomBill"){
-         return  messageChannelProfile("${e['from_name']}, has shared the bill in Room",e['from_id'].toString(),e['avatarType']??"");
-    }
-    else if(type=="room"){
-         return  messageChannelProfile("${e['from_name']}, has added in the room  ${e['roomName']}",e['from_id'].toString(),e['avatarType']??"");
-    }
-    else if(type=="comment"){
-         return  messageChannelProfile("${e['username']} has commented on your post",e['id'].toString(),e['avatarType']??"");
-    }
-    else if(type=="lendRequest"){
-         return  lendRequest(e['from_name'],e['from_id'].toString(),e['avatarType'],e,index,e['name']??"",notifyId);
-    }
-    else if(type=="lendAccepted" || type=="rejectedLend"){
-          type= type=="lendAccepted" ?"Accepted":"Rejected";
+    if (type == "friendRequest") {
+      return friends(
+          e['from_name'], e['from_id'].toString(), e['avatarType'], e, index);
+    } else if (type == "split") {
+      return messageChannelProfile(
+          "${e['username']}, has shared the bill of ${e['billname']} of ₹${e['amount'] ?? "400"}",
+          e['id'].toString(),
+          e['avatarType'] ?? "");
+    } else if (type == "roomBill") {
+      return messageChannelProfile(
+          "${e['from_name']}, has shared the bill in Room",
+          e['from_id'].toString(),
+          e['avatarType'] ?? "");
+    } else if (type == "room") {
+      return messageChannelProfile(
+          "${e['from_name']}, has added in the room  ${e['roomName']}",
+          e['from_id'].toString(),
+          e['avatarType'] ?? "");
+    } else if (type == "comment") {
+      return messageChannelProfile(
+          "${e['username']} has commented on your post",
+          e['id'].toString(),
+          e['avatarType'] ?? "");
+    } else if (type == "lendRequest") {
+      return lendRequest(e['from_name'], e['from_id'].toString(),
+          e['avatarType'], e, index, e['name'] ?? "", notifyId);
+    } else if (type == "lendAccepted" || type == "rejectedLend") {
+      type = type == "lendAccepted" ? "Accepted" : "Rejected";
 
-         return  messageChannelProfile("${e['username']} ${type} your Lended Request of ${e['name']} of worth ..₹${e['amount'] ?? '400'}",e['from_id'].toString(),e['avatarType']??"") ;
+      return messageChannelProfile(
+          "${e['username']} ${type} your Lended Request of ${e['name']} of worth ..₹${e['amount'] ?? '400'}",
+          e['from_id'].toString(),
+          e['avatarType'] ?? "");
     }
-    
-    return SizedBox(child: Text("hello"),);
-}
 
-Widget lendRequest(String name,String id,String avatar,e,index,String itemName,String notifyId){
-   
+    return SizedBox(
+      child: Text("hello"),
+    );
+  }
+
+  Widget lendRequest(String name, String id, String avatar, e, index,
+      String itemName, String notifyId) {
     return Center(
       child: Container(
-                padding: EdgeInsets.symmetric(vertical: 0,horizontal: 5),
-                 decoration: BoxDecoration(
-                //  color:const Color.fromRGBO(249, 246, 238, 1),
-                     borderRadius: BorderRadius.circular(10)
-                 ),
-                width: MediaQuery.of(context).size.width/1.1,
-                child: Column(
-                  children: [
-                    Row(
-                         children: [
-                          // AvatarProfileImage(url:avatar , width: 8, height: 18),
-                              getAvatarh(avatar),
-                          
-                          
-                               const SizedBox(width: 5,),
-                            
-                                Container(
-                                  width: MediaQuery.of(context).size.width/1.5,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(("${name} has lent you ₹${e['amount'] ?? '500'} for ${itemName}"),
-                                      style: FontManager().getTextStyle(context,
-                                          lWeight: FontWeight.bold,
-                                          fontSize: 24,
-                                          color: Colors.black),
-                                          //  maxLines: 1,
-                                            // overflow: TextOverflow.ellipsis,
-                                          ),
-                                       const SizedBox(height: 5,), 
-                                    
-                                     Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                         children: [
-                                               InkWell(
-                                                 onTap: (){
-                                                     
-                                                      approveBill(context,e['bill_id']??"","accept",notifyId); 
-                                                      getNotifications(context);
-                                                      setState(() {
-                                                        
-                                                      });
-                                                 },
-                                                 child: Container( 
-                                                   padding:const EdgeInsets.symmetric(horizontal:20,vertical: 7),
-                                                   decoration: BoxDecoration(
-                                                   color:const Color.fromRGBO(97, 143, 214, 1),
-                                                        borderRadius: BorderRadius.circular(5)
-                                                   ),
-                                                   child: Text(("Approve"),
-                                                   style: FontManager().getTextStyle(context,
-                                                                               lWeight: FontWeight.bold,
-                                                                               fontSize: 14,
-                                                                               color: Colors.white)),
-                                                                      ),
-                                               ),
-                                               const SizedBox(width: 10,), 
-                                               InkWell(
-                                                 onTap: (){
-                                                    
-                                                      approveBill(context,e['bill_id']??"","reject",notifyId); 
-                                                      getNotifications(context);
-                                                       setState(() {
-                                                        
-                                                      });
-                                          
-                                                      
-                                                 },
-                                                 child: Container( 
-                                                   padding:const EdgeInsets.symmetric(horizontal:20,vertical: 7),
-                                                   decoration: BoxDecoration(
-                                                   color: Colors.white,
-                                                   border: Border.all(
-                                                    width: .5
-                                                   ),
-                                                        borderRadius: BorderRadius.circular(5)
-                                                   ),
-                                                   child: Text(("Reject"),
-                                                   style: FontManager().getTextStyle(context,
-                                                                               lWeight: FontWeight.bold,
-                                                                               fontSize: 14,
-                                                                               color: Colors.black)),
-                                                                      ),
-                                               ), 
-                                         ],
-                                     ),
-                                    
-                                    // divider()
-                                  ],
-                                ),
-                              ),
-                              
-                          
-                         ],
-                    ),
-                      divider()
-                  ],
+        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+        decoration: BoxDecoration(
+            //  color:const Color.fromRGBO(249, 246, 238, 1),
+            borderRadius: BorderRadius.circular(10)),
+        width: MediaQuery.of(context).size.width / 1.1,
+        child: Column(
+          children: [
+            Row(
+              children: [
+                // AvatarProfileImage(url:avatar , width: 8, height: 18),
+                getAvatarh(avatar),
+
+                const SizedBox(
+                  width: 5,
                 ),
-              ),
-    );
-}
 
-Widget friends(String name,String id,String avatar,e,index){
-    return Center(
-      child: Container(
-                padding: EdgeInsets.symmetric(vertical: 0,horizontal: 5),
-                 decoration: BoxDecoration(
-                //  color:const Color.fromRGBO(249, 246, 238, 1),
-                     borderRadius: BorderRadius.circular(10)
-                 ),
-                width: MediaQuery.of(context).size.width/1.1,
-                child: Column(
-                  children: [
-                    Row(
-                         children: [
-                          // AvatarProfileImage(url:avatar , width: 8, height: 18),
-                              getAvatarh(avatar),
-                          
-                          
-                               const SizedBox(width: 5,),
-                            
-                                Container(
-                                  width: MediaQuery.of(context).size.width/1.5,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text((name),
-                                      style: FontManager().getTextStyle(context,
-                                          lWeight: FontWeight.bold,
-                                          fontSize: 24,
-                                          color: Colors.black),
-                                          //  maxLines: 1,
-                                            // overflow: TextOverflow.ellipsis,
-                                          ),
-                                       const SizedBox(height: 5,), 
-                                    
-                                     Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                         children: [
-                                               InkWell(
-                                                 onTap: (){
-                                                     //  home
-                                                      // Navigator.pushNamed(context, '/home'); 
-                                                      addUserAsFrd(id,context);
-                                                      getNotifications(context);
-                    
-                                                    
-                                                 },
-                                                 child: Container( 
-                                                   padding:const EdgeInsets.symmetric(horizontal:20,vertical: 7),
-                                                   decoration: BoxDecoration(
-                                                   color:const Color.fromRGBO(97, 143, 214, 1),
-                                                        borderRadius: BorderRadius.circular(5)
-                                                   ),
-                                                   child: Text(("Accept"),
-                                                   style: FontManager().getTextStyle(context,
-                                                                               lWeight: FontWeight.bold,
-                                                                               fontSize: 14,
-                                                                               color: Colors.white)),
-                                                                      ),
-                                               ),
-                                               const SizedBox(width: 10,), 
-                                               InkWell(
-                                                 onTap: (){
-                                                     //  home
-                                                      // Navigator.pushNamed(context, '/home'); 
-                                                        rejectFrdRequest(e, context);
-                                                        getNotifications(context);
-                                                        setState(() {
-                                                        
-                                                      });
-                                                    //  notificationList.removeAt(index);
-                                                      
-                                                 },
-                                                 child: Container( 
-                                                   padding:const EdgeInsets.symmetric(horizontal:20,vertical: 7),
-                                                   decoration: BoxDecoration(
-                                                   color: Colors.white,
-                                                   border: Border.all(
-                                                    width: .5
-                                                   ),
-                                                        borderRadius: BorderRadius.circular(5)
-                                                   ),
-                                                   child: Text(("Reject"),
-                                                   style: FontManager().getTextStyle(context,
-                                                                               lWeight: FontWeight.bold,
-                                                                               fontSize: 14,
-                                                                               color: Colors.black)),
-                                                                      ),
-                                               ), 
-                                         ],
-                                     ),
-                                    
-                                    // divider()
-                                  ],
-                                ),
-                              ),
-                              
-                          
-                         ],
-                    ),
-                      divider()
-                  ],
-                ),
-              ),
-    );
-}
-
-
-Widget divider(){
-  return   Divider(
-                     thickness: 2,
-                     indent: 10,
-                     color: Colorcodes.budgetDarkGreen,
-                  );
-}
-
-Widget messageChannel(name,id){
-    return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 5),
-      child: Center(
-        child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
-                   decoration: BoxDecoration(
-                  //  color:const Color.fromRGBO(249, 246, 238, 1),
-                       borderRadius: BorderRadius.circular(10)
-                   ),
-                  width: MediaQuery.of(context).size.width/1.1,
+                Container(
+                  width: MediaQuery.of(context).size.width / 1.5,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text((name),
+                      Text(
+                        ("${name} has lent you ₹${e['amount'] ?? '500'} for ${itemName}"),
                         style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w500,
-                            fontSize: 14,
+                            lWeight: FontWeight.bold,
+                            fontSize: 24,
                             color: Colors.black),
-                             maxLines: 1,
-                             overflow: TextOverflow.ellipsis,
+                        //  maxLines: 1,
+                        // overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              approveBill(context, e['bill_id'] ?? "", "accept",
+                                  notifyId);
+                              getNotifications(context);
+                              setState(() {});
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 7),
+                              decoration: BoxDecoration(
+                                  color: const Color.fromRGBO(97, 143, 214, 1),
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Text(("Approve"),
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: Colors.white)),
                             ),
-                         const SizedBox(height: 5,), 
-                      divider()
-                  
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              approveBill(context, e['bill_id'] ?? "", "reject",
+                                  notifyId);
+                              getNotifications(context);
+                              setState(() {});
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 7),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(width: .5),
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Text(("Reject"),
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: Colors.black)),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      // divider()
                     ],
                   ),
                 ),
+              ],
+            ),
+            divider()
+          ],
+        ),
       ),
     );
-}
+  }
 
-Widget messageChannelProfile(name,id,avatar){
+  Widget friends(String name, String id, String avatar, e, index) {
+    return Center(
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+        decoration: BoxDecoration(
+            //  color:const Color.fromRGBO(249, 246, 238, 1),
+            borderRadius: BorderRadius.circular(10)),
+        width: MediaQuery.of(context).size.width / 1.1,
+        child: Column(
+          children: [
+            Row(
+              children: [
+                // AvatarProfileImage(url:avatar , width: 8, height: 18),
+                getAvatarh(avatar),
+
+                const SizedBox(
+                  width: 5,
+                ),
+
+                Container(
+                  width: MediaQuery.of(context).size.width / 1.5,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        (name),
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.bold,
+                            fontSize: 24,
+                            color: Colors.black),
+                        //  maxLines: 1,
+                        // overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              //  home
+                              // Navigator.pushNamed(context, '/home');
+                              addUserAsFrd(id, context);
+                              getNotifications(context);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 7),
+                              decoration: BoxDecoration(
+                                  color: const Color.fromRGBO(97, 143, 214, 1),
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Text(("Accept"),
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: Colors.white)),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              //  home
+                              // Navigator.pushNamed(context, '/home');
+                              rejectFrdRequest(e, context);
+                              getNotifications(context);
+                              setState(() {});
+                              //  notificationList.removeAt(index);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 7),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(width: .5),
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Text(("Reject"),
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: Colors.black)),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      // divider()
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            divider()
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget divider() {
+    return Divider(
+        // thickness: 2,
+        // indent: 10,
+        // color: Colorcodes.budgetDarkGreen,
+        );
+  }
+
+  Widget messageChannel(name, id) {
     return Padding(
-     padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 5),
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
       child: Center(
         child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 1,horizontal: 5),
-                   decoration: BoxDecoration(
-                  //  color:const Color.fromRGBO(249, 246, 238, 1),
-                       borderRadius: BorderRadius.circular(10)
-                   ),
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    children: [
-                      Row(
-                           children: [
-                                 
-                        getAvatarh(avatar),
-                        
-                        const SizedBox(width: 2,),
-                            
-                                Container(
-                                  width: MediaQuery.of(context).size.width/1.4,
-                                  //  color: Colorcodes.blue,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text((name),
-                                        style: FontManager().getTextStyle(context,
-                                            lWeight: FontWeight.w600,
-                                            fontSize: 14,
-                                            lineHeight: 1.3,
-                                            color: Colors.black),
-                                            // maxLines: 1,
-                                            // overflow: TextOverflow.ellipsis,
-                                            ),
-                                        //  const SizedBox(height: 5,), 
-                                                              
-                                    ],
-                                  ),
-                                ), 
-                           ],
-                      ),
-                      divider()
-                    ],
-                  ),
-                ),
+          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+          decoration: BoxDecoration(
+              //  color:const Color.fromRGBO(249, 246, 238, 1),
+              borderRadius: BorderRadius.circular(10)),
+          width: MediaQuery.of(context).size.width / 1.1,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                (name),
+                style: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: Colors.black),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              divider()
+            ],
+          ),
+        ),
       ),
     );
-}
+  }
 
+  Widget messageChannelProfile(name, id, avatar) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+      child: Center(
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 1, horizontal: 5),
+          decoration: BoxDecoration(
+              //  color:const Color.fromRGBO(249, 246, 238, 1),
+              borderRadius: BorderRadius.circular(10)),
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  getAvatarh(avatar),
+                  const SizedBox(
+                    width: 2,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width / 1.4,
+                    //  color: Colorcodes.blue,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          (name),
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.w600,
+                              fontSize: 14,
+                              lineHeight: 1.3,
+                              color: Colors.black),
+                          // maxLines: 1,
+                          // overflow: TextOverflow.ellipsis,
+                        ),
+                        //  const SizedBox(height: 5,),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              divider()
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
+  Widget poll(e) {
+    // List options=e['options'];
+    // String s="2";//e['myVote'];
+    // bool myvote=e['myVote']!="none";
+    // int len=4;
 
+    return Text("Poll");
 
-Widget poll(e){
-  // List options=e['options'];
-  // String s="2";//e['myVote'];
-  // bool myvote=e['myVote']!="none";
-  // int len=4;
-
-  return Text("Poll");
-
-
-  // options.forEach((element) { 
-  //     List ll=element['votes'];
-  //      len += ll.length ;
-  // });
-
-  
+    // options.forEach((element) {
+    //     List ll=element['votes'];
+    //      len += ll.length ;
+    // });
 
 //  return Padding(
 //    padding: const EdgeInsets.all(10.0),
@@ -532,7 +516,7 @@ Widget poll(e){
 //        decoration: BoxDecoration(
 //            color: Colorcodes.appBarColor,
 //            borderRadius: BorderRadius.circular(5),
-   
+
 //        ),
 //        child: Column(
 //               mainAxisAlignment: MainAxisAlignment.start,
@@ -564,7 +548,7 @@ Widget poll(e){
 //                              decoration: BoxDecoration(
 //                                  color: s.endsWith((options.indexOf(op)+1).toString())? Colors.grey[100]:Colors.white,
 //                                   borderRadius: BorderRadius.circular(5),
-//                                   // border: Border.all() 
+//                                   // border: Border.all()
 //                               ),
 //                               child: Row(
 //                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -590,11 +574,9 @@ Widget poll(e){
 //        ),
 //    ),
 //  );
-
-}
-
- Widget getAvatarh(avatar) {
-    return AvatarProfileImage(url: avatar, width: 12, height: 18);
   }
 
+  Widget getAvatarh(avatar) {
+    return AvatarProfileImage(url: avatar, width: 12, height: 18);
+  }
 }
