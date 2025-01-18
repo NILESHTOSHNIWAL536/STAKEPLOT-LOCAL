@@ -355,7 +355,7 @@ class _AccessState extends State<Access> {
                                                     color: AppColors.bg1,
                                                   ),
                                                 ),
-                                                SizedBox(height: 20),
+                                                SizedBox(height: 40),
                                                 Container(
                                                   width: MediaQuery.of(context)
                                                           .size
