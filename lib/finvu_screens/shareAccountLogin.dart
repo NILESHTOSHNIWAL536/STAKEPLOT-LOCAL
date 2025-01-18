@@ -3,11 +3,13 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/otpScreen.dart';
 
-class ShareAccountLogin extends StatefulWidget {
-  const ShareAccountLogin({Key? key}) : super(key: key);
+class ShareAccountLogin extends StatefulWidget { 
+  bool flag = false;
+   ShareAccountLogin({Key? key,this.flag=false}) : super(key: key);
 
   @override
   _ShareAccountLoginState createState() => _ShareAccountLoginState();
@@ -64,11 +66,11 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Otpscreen(),
+                      builder: (context) => widget.flag? DiscoverAccount():Otpscreen(),
                     ),
                   );
                 },
-                child: getButton(context, "Share Account")),
+                child: getButton(context,widget.flag? "Fetch Bank Account":"Share Account")),
           ],
         ),
       ),

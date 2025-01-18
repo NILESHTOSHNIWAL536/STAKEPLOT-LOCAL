@@ -66,9 +66,6 @@ const FetchAccount({ Key? key }) : super(key: key);
                   },
                   child: getButton(context,"Fetch Bank Account")
                 ),
-      
-              
-
               
             ],
           ),
