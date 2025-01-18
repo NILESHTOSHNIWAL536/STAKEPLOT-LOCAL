@@ -55,13 +55,13 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                 InkWell(
                   onTap: (){
                     //  Otpscreen
-                    loginToAutoTractions(context);
-                  //    Navigator.pushReplacement(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //       builder: (context) => Otpscreen(),
-                  //     ),
-                  // );
+                    // loginToAutoTractions(context);
+                     Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Otpscreen(),
+                      ),
+                  );
                   },
                   child: getButton(context,"Share Account")
                 ),
