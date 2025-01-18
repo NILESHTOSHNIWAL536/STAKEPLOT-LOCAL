@@ -10,10 +10,13 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/verifyLinkAccount.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/verifyOTP.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 
 RxInt count=0.obs;
+
+RxMap<String,List> listOfAccount=<String,List>{}.obs;
 
 class LinkingAccount extends StatefulWidget {
   List<FinvuFIPInfo> listOfBankAccount;
@@ -132,20 +135,20 @@ class _LinkingAccountState extends State<LinkingAccount> {
  
 
   
-  Widget getListOfFinvuBanks( List<FinvuDiscoveredAccountInfo> account)
+  Widget getListOfFinvuBanks( List<FinvuDiscoveredAccountInfo> account,FinvuFIPDetails fipDetails)
   {
       return Column(
-           children: account.map((bankData)=>getBackUi(bankData)).toList(),
+           children: account.map((bankData)=>getBackUi(bankData,fipDetails)).toList(),
       );     
   }
 
-  Widget  getBackUi(FinvuDiscoveredAccountInfo bankData){
+  Widget  getBackUi(FinvuDiscoveredAccountInfo bankData,FinvuFIPDetails fipDetails){
       return InkWell(
         onTap: ()async{
             //  FinvuFIPDetails fipDetails,
             //   List<FinvuDiscoveredAccountInfo> accounts,
            try{
-            // FinvuAccountLinkingRequestReference linkingReference=await finvuManager.linkAccounts(widget.fipDetails,[bankData]);
+            FinvuAccountLinkingRequestReference linkingReference=await finvuManager.linkAccounts(fipDetails,[bankData]);
            
             //     Navigator.push(
             //   context,
@@ -153,6 +156,12 @@ class _LinkingAccountState extends State<LinkingAccount> {
             //     builder: (context) => VerifyLinkAccount(linkingReference:linkingReference ),
             //   ),
             // );
+                     showModalBottomSheet(context: context, builder: (context)
+                    {
+                          return VerifyOtp(linkingReference: linkingReference,flag: 1,);
+                     },);
+
+
            }catch(e){
                print(e);
                snackBarCalled(context, "Account Already linked....");
@@ -160,30 +169,31 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
         },
         child: Container(
+              
              width: MediaQuery.of(context).size.width,
              padding: EdgeInsets.symmetric(vertical: 10),
              child: Wrap(
-               spacing: 20,
-              //  mainAxisAlignment: MainAxisAlignment.start,
+               spacing: 2,
+                alignment: WrapAlignment.start,
+                crossAxisAlignment: WrapCrossAlignment.center,
+            //  mainAxisAlignment: MainAxisAlignment.start,
             //  crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                    Checkbox(value: bankData.isBlank, onChanged: (x){}),
+                    const SizedBox(width: 10,),
                     Text(bankData.fiType.toString(),style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w500, fontSize: 13, color: Colorcodes.black),),
+                                    lWeight: FontWeight.w500, fontSize: 15, color: Colorcodes.black),),
                     const SizedBox(width: 10,),
                     Text(bankData.accountType.toString(),style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w500, fontSize: 13, color: Colorcodes.black),),
+                                    lWeight: FontWeight.w500, fontSize: 15, color: Colorcodes.black),),
                     const SizedBox(width: 10,),
                     Text(bankData.accountReferenceNumber.toString(),style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w500, fontSize: 13, color: Colorcodes.black),),
+                                    lWeight: FontWeight.w500, fontSize: 15, color: Colorcodes.black),),
               ],
              ) ,
         ),
       );
   }
-
-
-
-
 
   
  Future<Widget> linkedaccoutnData(bankData)async
@@ -191,6 +201,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
              String fipId=bankData.fipId;
              FinvuFIPInfo finvuFIPInfo=bankData;
+             FinvuFIPDetails fipDetails;
               List<FinvuDiscoveredAccountInfo> info=[];
  
           try{
@@ -211,7 +222,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
              });
 
          });
-          FinvuFIPDetails fipDetails=FinvuFIPDetails(fipId:fipId , typeIdentifiers: fetchFIPDetails.typeIdentifiers);
+           fipDetails=FinvuFIPDetails(fipId:fipId , typeIdentifiers: fetchFIPDetails.typeIdentifiers);
    
           info=await finvuManager.discoverAccounts(
             fipDetails,finvuFIPInfo.fipFitypes,finvuTypeIdentifierInfo);
@@ -235,7 +246,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
          child: Column(
            children: [
               getBankNameAndImage(bankData),
-              getListOfFinvuBanks(info),
+              getListOfFinvuBanks(info,fipDetails),
            ],
          ),
     );
@@ -252,7 +263,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                       ),
                       SizedBox(width: 10,),
                       Text(bankData.productName.toString(),style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 15,
                       ),),
                       SizedBox(width: 10,),
                       InkWell(
@@ -261,11 +272,15 @@ class _LinkingAccountState extends State<LinkingAccount> {
                                 
                         },
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 20),
-                          child: Text("Link".toString(),style: TextStyle(fontSize: 14,),),
-                                             ),
+                          decoration: BoxDecoration(
+                             color: Colorcodes.cardShade5,
+                             borderRadius: BorderRadiusDirectional.circular(10)
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 3),
+                          child: Text("Link".toString(),style: TextStyle(fontSize: 14,color: Colorcodes.white),),
                       ),
-                 ],
+                  ),
+                ],
              );
  }
 

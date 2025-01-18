@@ -352,8 +352,7 @@ import 'package:flutter_application_code_stakeplot/main.dart';
               final body = json.decode(response.body);
               // isBankAccountLink.value=true;
               print(body);
-            
-              // Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+              Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
         } else{
             
         }
