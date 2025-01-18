@@ -149,15 +149,31 @@
 //     );
 //   }
 // }
+import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/access.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/finvuAccount.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/otpScreen.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+// import 'package:sms_otp_auto_verify/sms_otp_auto_verify.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/access.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+import 'package:flutter_application_code_stakeplot/main.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 
 class VerifyOtp extends StatefulWidget {
-  const VerifyOtp({super.key});
+  int flag;
+  final FinvuAccountLinkingRequestReference? linkingReference;
+  VerifyOtp({super.key, this.flag = 0, this.linkingReference});
 
   @override
   State<VerifyOtp> createState() => _VerifyOtpState();
@@ -259,12 +275,13 @@ class _VerifyOtpState extends State<VerifyOtp> {
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Access(),
-                      ),
-                    );
+                    // Navigator.pushReplacement(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => Access(),
+                    //   ),
+                    // );
+                    loginToAutoTractions(context);
                   },
                   child: Text(
                     "Resend",
@@ -282,13 +299,13 @@ class _VerifyOtpState extends State<VerifyOtp> {
             GestureDetector(
               onTap: _isOtpValid
                   ? () {
-                      // _onOtpSubmit();
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ShareAccountLogin(flag: true),
-                        ),
-                      );
+                      int f = widget.flag;
+                      if (f == 0)
+                        verify(_otpCode, context);
+                      else if (f == 1) {
+                        //  linkingReference
+                        linkAccount(_otpCode);
+                      }
                     }
                   : null,
               child: Container(
@@ -317,5 +334,25 @@ class _VerifyOtpState extends State<VerifyOtp> {
         ),
       ),
     );
+  }
+
+  void linkAccount(otp) async {
+    try {
+      // print(_controller.text);
+      var data = await finvuManager.confirmAccountLinking(
+          widget.linkingReference!, otp);
+
+      snackBarCalled(context, "Linked Found SuccessFully...");
+      Navigator.pop(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Access(),
+        ),
+      );
+    } catch (e) {
+      snackBarCalled(context,
+          "Error while Linking verify Otp/ Or Already Linked...", Colors.red);
+    }
   }
 }
