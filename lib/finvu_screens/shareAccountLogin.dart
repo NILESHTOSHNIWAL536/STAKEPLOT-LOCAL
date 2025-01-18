@@ -5,11 +5,12 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/otpScreen.dart';
 
-class ShareAccountLogin extends StatefulWidget { 
+class ShareAccountLogin extends StatefulWidget {
   bool flag = false;
-   ShareAccountLogin({Key? key,this.flag=false}) : super(key: key);
+  ShareAccountLogin({Key? key, this.flag = false}) : super(key: key);
 
   @override
   _ShareAccountLoginState createState() => _ShareAccountLoginState();
@@ -66,11 +67,13 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => widget.flag? DiscoverAccount():Otpscreen(),
+                      builder: (context) =>
+                          widget.flag ? DiscoverAccount() : MobileNumber(),
                     ),
                   );
                 },
-                child: getButton(context,widget.flag? "Fetch Bank Account":"Share Account")),
+                child: getButton(context,
+                    widget.flag ? "Fetch Bank Account" : "Share Account")),
           ],
         ),
       ),

@@ -61,6 +61,7 @@ dependencies:
   flutter_svg:
   socket_io_client: ^3.0.0-beta.2
   web_socket_channel: ^3.0.0
+  sms_otp_auto_verify: ^2.2.0
   # getwidget: ^2.0.4
   
 
