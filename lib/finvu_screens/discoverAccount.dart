@@ -13,7 +13,10 @@ import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 
 List<FinvuFIPInfo> fipDis=[];
+RxList isSeletedBankAccout=[].obs;
+RxList<FinvuFIPInfo> listOfBankAccount=<FinvuFIPInfo>[].obs;
 RxBool getBanks=false.obs;
+RxBool addBank=false.obs;
 
 class DiscoverAccount extends StatefulWidget {
   const DiscoverAccount({ Key? key }) : super(key: key);
@@ -50,9 +53,6 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
            child: Expanded(
              child: SingleChildScrollView(
                child:Column(children: [
-                        
-
-                   
 
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
@@ -62,7 +62,15 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
 
                     Obx(()=>getBanks.value? getListOfFinvuBanks(): getListOfFinvuBanks()),
 
-                    getButton(context, "Fetch Bank Account.."),
+                    InkWell(
+                      onTap: () {
+                           getBankAccount();
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: getButton(context, "Fetch Bank Account.."),
+                      ),
+                    ),
 
                ]),
              ),
@@ -75,10 +83,18 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
 
   Widget getListOfFinvuBanks()
   {
-      return Column(
-           mainAxisAlignment: MainAxisAlignment.start,
-           crossAxisAlignment: CrossAxisAlignment.start,
-           children: fipDis.map((bankData)=>getBackUi(bankData)).toList(),
+      return Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height/1.4,
+        child: SingleChildScrollView(
+          child: Expanded(
+            child: Column(
+                 mainAxisAlignment: MainAxisAlignment.start,
+                 crossAxisAlignment: CrossAxisAlignment.start,
+                 children: fipDis.map((bankData)=>getBackUi(bankData)).toList(),
+            ),
+          ),
+        ),
       );     
   }
 
@@ -132,6 +148,21 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+                Obx(()=>Checkbox(value: addBank.value?isSeletedBankAccout.contains(bankData.fipId):isSeletedBankAccout.contains(bankData.fipId), onChanged: (boolVale)
+                  {     
+                      
+                       
+                        if(boolVale!){
+                               listOfBankAccount.removeWhere((item) => item.fipId == bankData.fipId);
+                                isSeletedBankAccout.remove(bankData.fipId);
+                        }else{
+                             listOfBankAccount.add(bankData);
+                             isSeletedBankAccout.add(bankData.fipId);
+                        }
+                          addBank.value=!addBank.value;
+                        // boolVale! ? isSeletedBankAccout.add(bankData.fipId):isSeletedBankAccout.remove(bankData.fipId);
+                  })),
+                   SizedBox(width: 10,),
                   Container(
                     width: 50,
                     height: 50,
@@ -145,6 +176,13 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
            ) ,
        ),
      );
+  }
+  
+  void getBankAccount() {
+        if(listOfBankAccount.isEmpty){
+             snackBarCalled(context, "Pick atleast one to proceed...",Colorcodes.red);
+             return;
+        }
   }
 
 
