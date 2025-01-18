@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
@@ -29,11 +30,11 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
           crossAxisAlignment: CrossAxisAlignment.center,
            children: [
             // const Spacer(),
-                     Text(("Finvu"),
+                     Text(("Stakeplot"),
                      style: FontManager().getTextStyle(context,
                        lWeight: FontWeight.bold,
                        fontSize: 24,
-                       color: Colorcodes.services),
+                       color: AppColors.bg1),
                   
              
                  ),
