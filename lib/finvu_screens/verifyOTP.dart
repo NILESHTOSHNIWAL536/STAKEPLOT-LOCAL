@@ -94,7 +94,16 @@ class _VerifyOtpState extends State<VerifyOtp> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Didn't received OTP? "),
+                //Text("Didn't received OTP? "),
+                // TextButton(
+                //     onPressed: () {
+                //       showModalBottomSheet(
+                //           context: context,
+                //           builder: (BuildContext context) {
+                //             return VerifyOtp();
+                //           });
+                //     },
+                //     child: Text("Didn't received OTP? ")),
                 TextButton(onPressed: () {}, child: Text("Resend"))
               ],
             ),
