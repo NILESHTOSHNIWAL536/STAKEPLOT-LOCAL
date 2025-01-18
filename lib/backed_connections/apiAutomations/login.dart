@@ -14,8 +14,8 @@ import 'package:shared_preferences/shared_preferences.dart';
   // FinvuManager finvuManager = FinvuManager();
   String otpReference = "";
   String displayText = '';
-  String number="8978958221";//  9347064783
-  String custId="${number}@finvu";
+  RxString number="8978958221".obs;//  9347064783
+  String custId="${number.value}@finvu";
   RxString handleId="0393a738-3d64-4860-b5ca-ea687ac74d18".obs;
   RxString consentUserId="0393a738-3d64-4860-b5ca-ea687ac74d18".obs;
   RxBool fetchedData=false.obs;

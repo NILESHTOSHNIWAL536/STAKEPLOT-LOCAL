@@ -164,7 +164,7 @@ class VerifyOtp extends StatefulWidget {
 }
 
 class _VerifyOtpState extends State<VerifyOtp> {
-  final int _otpCodeLength = 4; // OTP length
+  final int _otpCodeLength = 6; // OTP length
   String _otpCode = ""; // Captured OTP code
   bool _isOtpValid = false; // Validate OTP length
   final TextEditingController _otpController = TextEditingController();
@@ -192,11 +192,21 @@ class _VerifyOtpState extends State<VerifyOtp> {
 
   @override
   Widget build(BuildContext context) {
-    final double boxSize = MediaQuery.of(context).size.width * 0.15;
+    final double boxSize = MediaQuery.of(context).size.width * 0.12;
 
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
-        title: Text('Verify OTP'),
+        backgroundColor: AppColors.backgroundColor,
+        title: Text(
+          'Verify OTP',
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.bold,
+            fontSize: 18,
+            color: AppColors.accentColor,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -238,6 +248,15 @@ class _VerifyOtpState extends State<VerifyOtp> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Text(
+                  "Didn't receive OTP?",
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: AppColors.bg1,
+                  ),
+                ),
                 TextButton(
                   onPressed: () {
                     Navigator.pushReplacement(
@@ -247,7 +266,15 @@ class _VerifyOtpState extends State<VerifyOtp> {
                       ),
                     );
                   },
-                  child: Text("Resend"),
+                  child: Text(
+                    "Resend",
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w400,
+                      fontSize: 14,
+                      color: AppColors.bg3,
+                    ),
+                  ),
                 ),
               ],
             ),

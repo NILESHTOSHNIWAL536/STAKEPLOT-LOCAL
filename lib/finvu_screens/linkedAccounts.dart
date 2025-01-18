@@ -40,8 +40,8 @@ import 'package:flutter_application_code_stakeplot/main.dart';
   
     var login =
         await finvuManager.loginWithUsernameOrMobileNumberAndConsentHandle(
-      '${number}@finvu',
-      '${number}',
+      '${number.value}@finvu',
+      '${number.value}',
       handleId,
     );
 
@@ -58,7 +58,7 @@ import 'package:flutter_application_code_stakeplot/main.dart';
   void   loginToAutoTractions(context)async
   {
         //  String custId="${""}@finvu";
-        String custId="${number}@finvu";
+        String custId="${number.value}@finvu";
       
         final SharedPreferences _pref = await SharedPreferences.getInstance();
         //  _pref.setString("custId", custId);

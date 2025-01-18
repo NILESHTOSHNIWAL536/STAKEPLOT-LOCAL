@@ -55,6 +55,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
               height: MediaQuery.of(context).size.height / 4,
               width: MediaQuery.of(context).size.width / 1.2,
               color: Colorcodes.barGraphOrange,
+              child: Image.network(""),
               // decoration: BoxDecoration(
               //     borderRadius: BorderRadius.circular(24),
               //     border: Border.all(color: Colors.black)),
@@ -71,6 +72,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                           widget.flag ? DiscoverAccount() : MobileNumber(),
                     ),
                   );
+
                 },
                 child: getButton(context,
                     widget.flag ? "Fetch Bank Account" : "Share Account")),

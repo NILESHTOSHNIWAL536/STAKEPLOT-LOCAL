@@ -37,7 +37,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
     var login = await finvuManager.loginWithUsernameOrMobileNumberAndConsentHandle(
               custId,
-              number,
+              number.value,
               handleId.value,
           );
 
@@ -153,8 +153,16 @@ import 'package:shared_preferences/shared_preferences.dart';
   }
   void  LOGOUT() async {
     
+       final SharedPreferences _pref = await SharedPreferences.getInstance();
     try{
-        await finvuManager.logout();  
+        _pref.remove("token");
+        _pref.remove("from");
+        _pref.remove("to");
+        _pref.remove("sessionId");
+        _pref.remove("consentId");
+        _pref.remove("ConsentHandleId");
+        await finvuManager.logout(); 
+      
         print("Logout user...");
     }catch(e){
          print(e);
