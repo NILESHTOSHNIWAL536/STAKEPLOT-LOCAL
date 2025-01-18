@@ -4,10 +4,11 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/finvuAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/otpScreen.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
-import 'package:sms_otp_auto_verify/sms_otp_auto_verify.dart';
+// import 'package:sms_otp_auto_verify/sms_otp_auto_verify.dart';
 
 class VerifyOtp extends StatefulWidget {
   const VerifyOtp({super.key});
@@ -70,27 +71,27 @@ class _VerifyOtpState extends State<VerifyOtp> {
             //   textAlign: TextAlign.center,
             // ),
             SizedBox(height: 20),
-            TextFieldPin(
-              textController: _otpController, // Controller for the OTP field
-              autoFocus: true, // Automatically focus on the OTP field
-              codeLength: _otpCodeLength, // Set OTP length to 4
-              alignment: MainAxisAlignment.center, // Align center
-              defaultBoxSize: boxSize, // Size of each OTP box
-              margin: 8.0, // Spacing between boxes
-              selectedBoxSize: boxSize, // Highlighted box size
-              textStyle: TextStyle(fontSize: 18, color: Colors.black),
-              defaultDecoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.grey),
-              ),
-              selectedDecoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.blue, width: 2),
-              ),
-              onChange: _onOtpChanged, // Callback on OTP change
-            ),
+            // TextFieldPin(
+            //   textController: _otpController, // Controller for the OTP field
+            //   autoFocus: true, // Automatically focus on the OTP field
+            //   codeLength: _otpCodeLength, // Set OTP length to 4
+            //   alignment: MainAxisAlignment.center, // Align center
+            //   defaultBoxSize: boxSize, // Size of each OTP box
+            //   margin: 8.0, // Spacing between boxes
+            //   selectedBoxSize: boxSize, // Highlighted box size
+            //   textStyle: TextStyle(fontSize: 18, color: Colors.black),
+            //   defaultDecoration: BoxDecoration(
+            //     color: Colors.grey[200],
+            //     borderRadius: BorderRadius.circular(10),
+            //     border: Border.all(color: Colors.grey),
+            //   ),
+            //   selectedDecoration: BoxDecoration(
+            //     color: Colors.white,
+            //     borderRadius: BorderRadius.circular(10),
+            //     border: Border.all(color: Colors.blue, width: 2),
+            //   ),
+            //   onChange: _onOtpChanged, // Callback on OTP change
+            // ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -101,15 +102,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
             SizedBox(height: 20),
             GestureDetector(
               onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ShareAccountLogin(
-                      flag: true,
-                    ),
-                  ),
-                );
-                // Call ShareAccountLogin
+                         verify("673194",context);
               }, // Enable only if valid
               child: Container(
                 width: MediaQuery.of(context).size.width / 1.1,

@@ -7,11 +7,39 @@ import 'package:finvu_flutter_sdk_core/finvu_fip_details.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 // import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+
+
+
+ void verify(String otp,context) async {
+
+    try{
+    var login = await finvuManager.verifyLoginOtp(otp,otpReference,);
+
+    final SharedPreferences _pref = await SharedPreferences.getInstance();
+    String? token=await _pref.getString("token");
+    
+     Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ShareAccountLogin(flag: true,),
+      ),
+    );
+
+    }catch(e){
+        snackBarCalled(context, "Invalid Otp/Number...");
+    }
+  }
+
+
+
+
 
 class FinvuAccount extends StatefulWidget {
   const FinvuAccount({ Key? key }) : super(key: key);
@@ -204,7 +232,7 @@ class _FinvuAccountState extends State<FinvuAccount> {
 
     var login = await finvuManager.loginWithUsernameOrMobileNumberAndConsentHandle(
               custId,
-              number,
+              number.value,
               handleId.value,
           );
 
@@ -227,52 +255,52 @@ class _FinvuAccountState extends State<FinvuAccount> {
 
   }
 
-  void verify(String otp,context) async {
+  // void verify(String otp,context) async {
 
-    try{
-    var login = await finvuManager.verifyLoginOtp(otp,otpReference,);
-    //  print("verifyLoginOtp");
-    //  print(login.userId);
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    String? token=await _pref.getString("token");
+  //   try{
+  //   var login = await finvuManager.verifyLoginOtp(otp,otpReference,);
+  //   //  print("verifyLoginOtp");
+  //   //  print(login.userId);
+  //   final SharedPreferences _pref = await SharedPreferences.getInstance();
+  //   String? token=await _pref.getString("token");
     
-     Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ShareAccountLogin(flag: true,),
-      ),
-    );
-    // Navigator.pushNamed(context, "/discover");
+  //    Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => ShareAccountLogin(flag: true,),
+  //     ),
+  //   );
+  //   // Navigator.pushNamed(context, "/discover");
 
-    //  getConsentRequestDetails();
-    //  fetchLinkedAccounts();
-    //  approveConsentRequest();
+  //   //  getConsentRequestDetails();
+  //   //  fetchLinkedAccounts();
+  //   //  approveConsentRequest();
 
-    //  ConsentStatus(context,token,handleId.value,custId);
+  //   //  ConsentStatus(context,token,handleId.value,custId);
 
-    //  WebSocket message received:
+  //   //  WebSocket message received:
 
 
-    }catch(e){
-        // print(e);
-    }
+  //   }catch(e){
+  //       // print(e);
+  //   }
 
-    // try{
-    // List<FinvuLinkedAccountDetailsInfo> data =await  finvuManager.fetchLinkedAccounts();
-    // print("------------------------------");
-    // data.forEach((e){
-    //       print(e.userId);
-    //       print(e.consentIdList);
-    //       print(e.fiType);
-    //       print(e.fipId);
-    //       print(e);
-    // });
-    // }catch(e){
-    //      print(e);
-    // }
+  //   // try{
+  //   // List<FinvuLinkedAccountDetailsInfo> data =await  finvuManager.fetchLinkedAccounts();
+  //   // print("------------------------------");
+  //   // data.forEach((e){
+  //   //       print(e.userId);
+  //   //       print(e.consentIdList);
+  //   //       print(e.fiType);
+  //   //       print(e.fipId);
+  //   //       print(e);
+  //   // });
+  //   // }catch(e){
+  //   //      print(e);
+  //   // }
      
     
-  }
+  // }
 
   void fetchLinkedAccounts() async {
     
@@ -359,7 +387,7 @@ class _FinvuAccountState extends State<FinvuAccount> {
                  FinvuTypeIdentifierInfo obj=FinvuTypeIdentifierInfo(
                    category: ele.category,
                    type: ele.type,
-                   value:number , // dou
+                   value:number.value , // dou
                  );
                   finvuTypeIdentifierInfo.add(obj);       
              });
@@ -387,10 +415,10 @@ class _FinvuAccountState extends State<FinvuAccount> {
 
 
  void completeMobileVerification()async{
-     var sa=await finvuManager.completeMobileVerification(number,_controller.text);
+     var sa=await finvuManager.completeMobileVerification(number.value,_controller.text);
  }
  void initiateMobileVerification()async{
-     var d=await finvuManager.initiateMobileVerification(number);
+     var d=await finvuManager.initiateMobileVerification(number.value);
  }
 
   void approveConsentRequest() async {
