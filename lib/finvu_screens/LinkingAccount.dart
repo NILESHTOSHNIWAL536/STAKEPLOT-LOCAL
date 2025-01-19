@@ -117,7 +117,7 @@ Widget accountLinkedUi(){
           children: [
             Row(
                  children: [
-                            CircleAvatar(
+                           const CircleAvatar(
                               child: Icon(Icons.breakfast_dining_rounded,size: 20,color: Colors.cyan,)
                           ),
                           SizedBox(width: 10,),
@@ -133,11 +133,7 @@ Widget accountLinkedUi(){
                  ],
             ),
         
-               Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text("Select Atleast One Account To Share",style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.bold, fontSize: 15, color: Colorcodes.black),),
-                  ),
+                textStyle("Select Atleast One Account To Share",15),
         
                   bankAccountList(),
           ],
@@ -254,8 +250,8 @@ Widget accountLinkedUi(){
              FinvuFIPDetails fipDetails;
               List<FinvuDiscoveredAccountInfo> info=[];
      try{
-        var fetchFIPDetails=await finvuManager.fetchFIPDetails(fipId); //dhanagarbank
-        // var fetchFIPDetails=await finvuManager.fetchFIPDetails("dhanagarbank");
+        var fetchFIPDetails=await finvuManager.fetchFIPDetails(fipId); 
+      
         var typeIdentifiers=fetchFIPDetails.typeIdentifiers;
 
         List<FinvuTypeIdentifierInfo> finvuTypeIdentifierInfo=[];
@@ -277,11 +273,9 @@ Widget accountLinkedUi(){
             fipDetails,finvuFIPInfo.fipFitypes,finvuTypeIdentifierInfo);
 
           count += info.length;
-          // count.refresh();
+         
          
       }catch(e){
-          //  snackBarCalled(context,"No Account Found...");
-          print(e);   
           return SizedBox.shrink();
       } 
 
@@ -300,10 +294,8 @@ Widget accountLinkedUi(){
                         height: 30,
                         child: Image.network(bankData.productIconUri.toString())
                       ),
-                      SizedBox(width: 10,),
-                      Text(bankData.productName.toString(),style: TextStyle(
-                        fontSize: 15,
-                      ),),
+                      const SizedBox(width: 10,),
+                      textStyle(bankData.productName,15),
                       SizedBox(width: 10,),
                       InkWell(
                         onTap: ()
