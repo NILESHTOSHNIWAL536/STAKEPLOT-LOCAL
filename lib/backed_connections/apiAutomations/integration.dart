@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/ApproveConsentRequest.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchData.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -155,12 +156,21 @@ import 'package:shared_preferences/shared_preferences.dart';
     
        final SharedPreferences _pref = await SharedPreferences.getInstance();
     try{
+
+ listOfAccountAdded.clear();
+
+ FinvuFIPDetailsList.clear();
+ accountAdded.clear();
+ accountLinked.clear();
+ accountLinked.clear();
+ 
         _pref.remove("token");
         _pref.remove("from");
         _pref.remove("to");
         _pref.remove("sessionId");
         _pref.remove("consentId");
         _pref.remove("ConsentHandleId");
+
         await finvuManager.logout(); 
       
         print("Logout user...");

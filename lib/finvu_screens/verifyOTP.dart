@@ -156,6 +156,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/finvuAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
@@ -171,7 +172,8 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 class VerifyOtp extends StatefulWidget {
     int flag;
    final FinvuAccountLinkingRequestReference? linkingReference; 
-   VerifyOtp({super.key,this.flag=0,this.linkingReference});
+   String fid="";
+   VerifyOtp({super.key,this.flag=0,this.linkingReference,this.fid=""});
 
   @override
   State<VerifyOtp> createState() => _VerifyOtpState();
@@ -213,7 +215,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
         title: Text('Verify OTP'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.symmetric(vertical: 30,horizontal: 4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -282,12 +284,12 @@ class _VerifyOtpState extends State<VerifyOtp> {
                   : null,
               child: Container(
                 width: MediaQuery.of(context).size.width / 1.1,
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
                 decoration: BoxDecoration(
                   color: _isOtpValid
                       ? AppColors.accentColor
                       : Colors.grey, // Button color based on validity
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
                   child: Text(
@@ -315,15 +317,10 @@ class _VerifyOtpState extends State<VerifyOtp> {
                                   // print(_controller.text);
                                   var  data = await finvuManager.confirmAccountLinking(widget.linkingReference!,otp);
                                  
-                                snackBarCalled(context,"Linked Found SuccessFully..."); 
-                                Navigator.pop(context);  
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Access(),
-                                  ),
-                                );  
-
+                                snackBarCalled(context,"Linked Bank SuccessFully..."); 
+                                Navigator.pop(context); 
+                                accountLinked.add(widget.fid); 
+                               
                                   }catch(e){
                                          snackBarCalled(context,"Error while Linking verify Otp/ Or Already Linked...",Colors.red);   
                                   }

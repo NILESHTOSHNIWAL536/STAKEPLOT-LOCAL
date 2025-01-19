@@ -45,7 +45,7 @@ class _AccessState extends State<Access> {
 
   String formatDate(String dateString) {
   DateTime date = DateTime.parse(dateString);
-  return DateFormat('MMM yyyy').format(date); // Format as Aug 2024
+  return DateFormat('d MMM yyyy').format(date); // Format as Aug 2024
 }
 
   @override
@@ -55,7 +55,7 @@ class _AccessState extends State<Access> {
         
         backgroundColor: AppColors.backgroundColor,
         body: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(20.0, 16, 16, 0),
+          padding: const EdgeInsets.fromLTRB(10.0, 16, 16, 0),
           child:Obx(()=> !flag.value? Loader():Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -69,7 +69,7 @@ class _AccessState extends State<Access> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(20.0, 25, 20, 0),
+                padding: const EdgeInsets.fromLTRB(10.0, 25, 10, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -95,9 +95,10 @@ class _AccessState extends State<Access> {
                     ),
                     SizedBox(height: 20),
                     Container(
-                      height: MediaQuery.of(context).size.height / 2.7,
-                      width: MediaQuery.of(context).size.width / 1.1,
-                      padding: const EdgeInsets.all(16),
+                      // height: MediaQuery.of(context).size.height / 2.7,
+                      // width: MediaQuery.of(context).size.width ,
+                      padding: const EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: Colors.blue[50],
                         borderRadius: BorderRadius.circular(10),
@@ -125,11 +126,11 @@ class _AccessState extends State<Access> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 5),
+
                               Padding(
                                 padding: const EdgeInsets.only(left: 35),
                                 child: Text(
-                                  "1 Savings Account",
+                                  "${fetchAccountData.length} Account Are Linked..",
                                   style: FontManager().getTextStyle(
                                     context,
                                     lWeight: FontWeight.w400,
@@ -138,9 +139,27 @@ class _AccessState extends State<Access> {
                                   ),
                                 ),
                               ),
+
+                              SizedBox(height: 5),
+                              Column(
+                                 mainAxisAlignment: MainAxisAlignment.center,
+                                 crossAxisAlignment: CrossAxisAlignment.center,
+                                 children: fetchAccountData.map((e){
+                                    return Row(
+                                       mainAxisAlignment: MainAxisAlignment.center,
+                                 crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text(e.accountType),
+                                        SizedBox(width: 5),
+                                        Text(e.accountReferenceNumber),
+                                      ],
+                                    );
+                                 }).toList(),
+                              ),
+                              
                             ],
                           ),
-                          SizedBox(height: 15),
+                          SizedBox(height: 5),
                           Divider(),
       
                           // Section 2: Permission Validity
@@ -167,7 +186,7 @@ class _AccessState extends State<Access> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 35),
                                 child: Text(
-                                  formatDate( finvuConsentRequestDetailInfo.dataDateTimeRange.from.toString())+" to "+ formatDate(finvuConsentRequestDetailInfo.dataDateTimeRange.to.toString()),
+                                  formatDate( finvuConsentRequestDetailInfo.consentDateTimeRange.from.toString())+" to "+ formatDate(finvuConsentRequestDetailInfo.consentDateTimeRange.to.toString()),
                                   // "From 17 Aug 2024 to 18 Sept 2024",
                                   style: FontManager().getTextStyle(
                                     context,
@@ -179,7 +198,7 @@ class _AccessState extends State<Access> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 15),
+                          SizedBox(height: 5),
                           Divider(),
       
                           // Section 3: Frequency of Access
@@ -206,7 +225,7 @@ class _AccessState extends State<Access> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 35),
                                 child: Text(
-                                  "We can access your information one-time. Per Week",
+                                  "We can access your information one-time Per Week.",
                                   style: FontManager().getTextStyle(
                                     context,
                                     lWeight: FontWeight.w400,
@@ -217,7 +236,7 @@ class _AccessState extends State<Access> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 15),
+                          SizedBox(height: 5),
       
                           // Section 4: View More Details
                           GestureDetector(
@@ -266,7 +285,7 @@ class _AccessState extends State<Access> {
                                                   ),
                                                   SizedBox(height: 5),
                                                   Text(
-                                                     formatDate( finvuConsentRequestDetailInfo.dataDateTimeRange.from.toString()),
+                                                     formatDate( finvuConsentRequestDetailInfo.consentDateTimeRange.from.toString()),
                                                     style: FontManager()
                                                         .getTextStyle(
                                                       context,
@@ -335,7 +354,7 @@ class _AccessState extends State<Access> {
                                                   ),
                                                   SizedBox(height: 5),
                                                   Text(
-                                                    "1 month",
+                                                    finvuConsentRequestDetailInfo.consentDataLifePeriod.value.toString()+finvuConsentRequestDetailInfo.consentDataLifePeriod.unit.toString(),
                                                     style: FontManager()
                                                         .getTextStyle(
                                                       context,
@@ -358,7 +377,7 @@ class _AccessState extends State<Access> {
                                                   ),
                                                   SizedBox(height: 5),
                                                   Text(
-                                                    formatDate( finvuConsentRequestDetailInfo.dataDateTimeRange.from.toString()),
+                                                    formatDate( finvuConsentRequestDetailInfo.consentDateTimeRange.to.toString()),
                                                     style: FontManager()
                                                         .getTextStyle(
                                                       context,
@@ -380,8 +399,9 @@ class _AccessState extends State<Access> {
                                                     ),
                                                   ),
                                                   SizedBox(height: 5),
-                                                  Text(
-                                                    finvuConsentRequestDetailInfo.fiTypes![0] ,
+                                              Wrap(
+                                                children: finvuConsentRequestDetailInfo.fiTypes!.map((e)=>   Text(
+                                                     e + ",",
                                                     style: FontManager()
                                                         .getTextStyle(
                                                       context,
@@ -389,7 +409,7 @@ class _AccessState extends State<Access> {
                                                       fontSize: 16,
                                                       color: AppColors.bg1,
                                                     ),
-                                                  ),
+                                                  )).toList()),
                                                   SizedBox(height: 20),
                                                   InkWell(
                                                     onTap: (){
@@ -479,10 +499,10 @@ class _AccessState extends State<Access> {
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width / 1.1,
-                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
                         decoration: BoxDecoration(
                           color: AppColors.accentColor,
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         child: Center(
                           child: Text(

@@ -3,11 +3,13 @@
   import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
+import 'package:get/get.dart';
   import 'package:http/http.dart' as http;
   import 'package:shared_preferences/shared_preferences.dart';
   import 'package:flutter/material.dart';
  
   // List listOfTransactions=[];
+ RxList fetchedTrsacntionList=[].obs;
   var baseUrl="https://dhanaprayoga.fiu.finfactor.in/finsense/API/V2";
 
   var headers={
@@ -158,7 +160,7 @@ import 'package:flutter_application_code_stakeplot/main.dart';
                    String consentId=body['body']['consentId'];
                   //  print("--------------- consentId=body['body']['consentId'] ------------- ");
                   //  print(consentId);
-                  //  _pref.setString("consentId", consentId);
+                   _pref.setString("consentId", consentId);
                    ConsentFromAndToRequest(context, accessToken, ConsentHandleId, custId,consentId);
               }else{ //72533714-0530-4ed9-87d9-eb662a49c17a
                   
@@ -329,6 +331,8 @@ import 'package:flutter_application_code_stakeplot/main.dart';
   {
         print(data);
         if(data=="Account data not found.")return;
+        fetchedTrsacntionList.add(['']);
+        fetchedTrsacntionList.refresh();
        
       //  Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
       String url = "http://${"192.168.1.11"}:5000/api/v1";
