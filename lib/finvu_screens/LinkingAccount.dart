@@ -4,13 +4,11 @@ import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/access.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/verifyLinkAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/verifyOTP.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
@@ -79,9 +77,8 @@ Widget accountLinkedUi(){
          child: accountLinked.isEmpty? Column(
              mainAxisAlignment: MainAxisAlignment.spaceAround,
              children: [
-                   Text("Please tap on 'Link Now' to link your bank",
-                   style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.w400, fontSize: 11, color: Colorcodes.black)),
+                  
+                   textStyle("Please tap on 'Link Now' to link your bank",12),
                   const SizedBox(height: 20,),
                   InkWell(
                     onTap: (){
@@ -128,17 +125,11 @@ Widget accountLinkedUi(){
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                              children: [
-                               Text("Bank Accounts",style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.w400, fontSize: 16, color: Colorcodes.black),),
-                              
-                               Text("${count.value} Account discovered",style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.w400, fontSize: 16, color: Colorcodes.black),),
+                               textStyle("Bank Accounts",16),
+                               textStyle("${count.value} Account discovered",16),
+                        
                              ],
                            ),
-                  
-        
-        
-            
                  ],
             ),
         
@@ -187,22 +178,6 @@ Widget accountLinkedUi(){
   }).toList(),
 ),
                   
-            // child: Column(
-            //                   children: widget.listOfBankAccount.map((account) {
-            //                     return FutureBuilder<Widget>(
-            //                       future: linkedaccoutnData(account),
-            //                       builder: (context, snapshot) {
-            //                         if (snapshot.connectionState == ConnectionState.waiting) {
-            //                           return CircularProgressIndicator(); // Show loading indicator
-            //                         } else if (snapshot.hasError) {
-            //                           return Text("Error: ${snapshot.error}");
-            //                         } else {
-            //                           return snapshot.data ?? SizedBox.shrink(); // Return the widget from Future
-            //                         }
-            //                       },
-            //                     );
-            //           }).toList(),
-            // ),
           ),
         ),
       );
@@ -233,42 +208,41 @@ Widget accountLinkedUi(){
                     },);
 
            }catch(e){
-               print(e);
                snackBarCalled(context, "Account Already linked....");
            }
   }
 
   Widget  getBackUi(FinvuDiscoveredAccountInfo bankData,FinvuFIPDetails fipDetails){
-      return InkWell(
-        onTap: ()async{
-                // addAccountToMap(fipDetails.fipId,);
-        },
-        child: Container(
-              
-             width: MediaQuery.of(context).size.width,
-             padding: EdgeInsets.symmetric(vertical: 10),
-             child: Wrap(
-               spacing: 2,
-                alignment: WrapAlignment.start,
-                crossAxisAlignment: WrapCrossAlignment.center,
-         
-              children: [
-                  Obx(()=> Checkbox(value:accountAdded.contains(bankData.accountReferenceNumber), onChanged:(b){
-                           addAccountToMap(fipDetails.fipId,bankData.accountReferenceNumber,bankData); 
-                    })),
-                    const SizedBox(width: 10,),
-                    Text(bankData.fiType.toString(),style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w500, fontSize: 15, color: Colorcodes.black),),
-                    const SizedBox(width: 10,),
-                    Text(bankData.accountType.toString(),style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w500, fontSize: 15, color: Colorcodes.black),),
-                    const SizedBox(width: 10,),
-                    Text(bankData.accountReferenceNumber.toString(),style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w500, fontSize: 15, color: Colorcodes.black),),
-              ],
-             ) ,
-        ),
+      return Container(
+           width: MediaQuery.of(context).size.width,
+           padding: EdgeInsets.symmetric(vertical: 4),
+           child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+             child: Expanded(
+               child: Row(
+                children: [
+                    Obx(()=> Checkbox(value:accountAdded.contains(bankData.accountReferenceNumber), onChanged:(b){
+                             addAccountToMap(fipDetails.fipId,bankData.accountReferenceNumber,bankData); 
+                      })),
+      
+                       textStyle(bankData.fiType),
+                       textStyle(bankData.accountType),
+                       textStyle(bankData.accountReferenceNumber),
+                ],
+               ),
+             ),
+           ) ,
       );
+  }
+
+  Widget textStyle(text,[fontsize=12]){
+     return Column(
+       children: [
+                 const SizedBox(width: 7,),
+                        Text(text.toString(),style: FontManager().getTextStyle(context,
+                                        lWeight: FontWeight.w500, fontSize: fontsize, color: Colorcodes.black),),
+       ],
+     );
   }
 
   
@@ -303,6 +277,7 @@ Widget accountLinkedUi(){
             fipDetails,finvuFIPInfo.fipFitypes,finvuTypeIdentifierInfo);
 
           count += info.length;
+          // count.refresh();
          
       }catch(e){
           //  snackBarCalled(context,"No Account Found...");
@@ -350,10 +325,6 @@ Widget accountLinkedUi(){
  
 void addAccountToMap(String fipId, String accountReferenceNumber,FinvuDiscoveredAccountInfo bankData) {
   bool flag = accountAdded.contains(accountReferenceNumber);
-  print('accountAdded-----------------------------');
-  print(accountAdded);
-  print(accountReferenceNumber);
-  print(flag);
 
   if (flag) {
     // If already added, remove from `accountAdded` and `listOfAccountAdded`
@@ -377,16 +348,10 @@ void addAccountToMap(String fipId, String accountReferenceNumber,FinvuDiscovered
     }
    
    listOfAccountAdded[fipId]?.add(bankData);
-  
-  
   }
-
   // Update the observables
   listOfAccountAdded.refresh();
   accountAdded.refresh();
-  print(listOfAccountAdded);
-  print(accountAdded);
 }
-
 
 }
