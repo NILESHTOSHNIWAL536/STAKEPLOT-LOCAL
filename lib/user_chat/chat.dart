@@ -274,7 +274,7 @@ class _ChatState extends State<Chat> {
           //  color: Colorcodes.appBarColor,
           // border: Border.all(width: .5),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(width: .5, color: Colorcodes.poll1)),
+          border: Border.all(width: .5, color: AppColors.primaryColor)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -286,19 +286,19 @@ class _ChatState extends State<Chat> {
               style: FontManager().getTextStyle(context,
                   fontSize: 18,
                   lWeight: FontWeight.bold,
-                  color: Colorcodes.poll1)),
+                  color: AppColors.bg1)),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10.0),
             child: Text(
                 "Amount: " + doubleToFixed(message.split['Amount'].toString()),
-                style: FontManager().getTextStyle(context,
-                    fontSize: 16, color: Colorcodes.poll1)),
+                style: FontManager()
+                    .getTextStyle(context, fontSize: 16, color: AppColors.bg2)),
           ),
           Text(
               "Share:  " +
                   doubleToFixed(message.split['Share'].toString()).toString(),
-              style: FontManager().getTextStyle(context,
-                  fontSize: 16, color: Colorcodes.poll1)),
+              style: FontManager()
+                  .getTextStyle(context, fontSize: 16, color: AppColors.bg2)),
           const SizedBox(height: 4),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 6.0),
@@ -499,7 +499,7 @@ class _ChatState extends State<Chat> {
                     )),
                 // Text input and send button
                 Container(
-                  margin: EdgeInsets.all(8.0),
+                  // margin: EdgeInsets.all(8.0),
 
                   decoration: BoxDecoration(
                     color: AppColors.button,
@@ -718,10 +718,10 @@ class _ChatState extends State<Chat> {
       TextEditingController textController) {
     return Center(
       child: Container(
-        width: MediaQuery.of(context).size.width / 1.1,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-        ),
+        width: MediaQuery.of(context).size.width,
+        // decoration: BoxDecoration(
+        //   borderRadius: BorderRadius.circular(24),
+        // ),
         child: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -729,9 +729,9 @@ class _ChatState extends State<Chat> {
               Expanded(
                 flex: 3,
                 child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24),
-                  ),
+                  // decoration: BoxDecoration(
+                  //   borderRadius: BorderRadius.circular(24),
+                  // ),
                   child: TextField(
                     keyboardType: keyboardType,
                     focusNode: myFocusNode,
@@ -761,11 +761,11 @@ class _ChatState extends State<Chat> {
                       contentPadding: EdgeInsets.zero,
                       border: InputBorder.none,
                       enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24),
+                        // borderRadius: BorderRadius.circular(24),
                         borderSide: BorderSide(color: Colors.transparent),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24),
+                        // borderRadius: BorderRadius.circular(24),
                         borderSide: BorderSide(color: Colors.transparent),
                       ),
                     ),
@@ -865,7 +865,7 @@ class _ChatState extends State<Chat> {
     return Padding(
       padding: const EdgeInsets.only(right: 0.0, top: 5),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        padding: EdgeInsets.only(right: 5.0, left: 5.0, top: 10, bottom: 3.0),
         width: MediaQuery.of(context).size.width / 1.4,
         decoration: BoxDecoration(
           //  color: Colorcodes.appBarColor,
@@ -900,7 +900,7 @@ class _ChatState extends State<Chat> {
                     padding: const EdgeInsets.symmetric(vertical: 4.0),
                     child: Container(
                         padding:
-                            EdgeInsets.symmetric(vertical: 13, horizontal: 10),
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                         width: MediaQuery.of(context).size.width / 1.5,
                         decoration: BoxDecoration(
                           color: index == s ? null : Colorcodes.white,
@@ -1118,7 +1118,7 @@ class _ChatState extends State<Chat> {
                 ),
               );
             },
-            //poll in chat code 
+            //poll in chat code
             child: Container(
               width: MediaQuery.of(context).size.width / 1.62,
               padding: const EdgeInsets.all(15),

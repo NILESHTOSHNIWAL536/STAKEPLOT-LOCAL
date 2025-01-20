@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import './colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -184,7 +185,7 @@ class _FinancePageState extends State<FinancePage> {
                 //style: TextStyle(fontSize: fontSizeFactor * 3),
                 style: FontManager().getTextStyle(context,
                     lWeight: FontWeight.normal,
-                    fontSize: fontSizeFactor * 3,
+                    fontSize: fontSizeFactor * 4,
                     color: AppColors.accentColor)),
             Row(
               children: [
@@ -204,16 +205,18 @@ class _FinancePageState extends State<FinancePage> {
                       color: AppColors.accentColor),
                 ),
                 Spacer(),
-                TextButton.icon(
-                  onPressed: () {},
-                  icon: SvgPicture.asset(HomePageIcons.history,
-                      height: 20, width: 15),
-                  label: Text(
-                    'History',
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
-                        fontSize: fontSizeFactor * 2,
-                        color: AppColors.accentColor),
+                DecoratedContainer(
+                  child: TextButton.icon(
+                    onPressed: () {},
+                    icon: AvatarProfileImage(
+                        url: HomePageIcons.history, width: 34, height: 34),
+                    label: Text(
+                      'History',
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.normal,
+                          fontSize: fontSizeFactor * 2.3,
+                          color: AppColors.accentColor),
+                    ),
                   ),
                 ),
               ],
@@ -225,7 +228,7 @@ class _FinancePageState extends State<FinancePage> {
                   'My Spendings',
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.normal,
-                      fontSize: fontSizeFactor * 2,
+                      fontSize: fontSizeFactor * 2.5,
                       color: AppColors.accentColor),
                 ),
                 Row(
@@ -241,7 +244,7 @@ class _FinancePageState extends State<FinancePage> {
                         'Month',
                         style: FontManager().getTextStyle(context,
                             lWeight: FontWeight.normal,
-                            fontSize: fontSizeFactor * 2,
+                            fontSize: fontSizeFactor * 2.5,
                             color: AppColors.accentColor),
                       ),
                     ),
@@ -256,7 +259,7 @@ class _FinancePageState extends State<FinancePage> {
                         'Week',
                         style: FontManager().getTextStyle(context,
                             lWeight: FontWeight.normal,
-                            fontSize: fontSizeFactor * 2,
+                            fontSize: fontSizeFactor * 2.5,
                             color: AppColors.accentColor),
                       ),
                     ),
@@ -269,7 +272,7 @@ class _FinancePageState extends State<FinancePage> {
                         'Custom',
                         style: FontManager().getTextStyle(context,
                             lWeight: FontWeight.normal,
-                            fontSize: fontSizeFactor * 2,
+                            fontSize: fontSizeFactor * 2.5,
                             color: AppColors.accentColor),
                       ),
                     ),

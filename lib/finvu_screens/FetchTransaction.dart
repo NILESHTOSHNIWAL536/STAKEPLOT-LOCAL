@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+import 'package:get/get.dart';
   // fetch(context);
 
 class FetchTransaction extends StatelessWidget {
@@ -14,22 +15,25 @@ const FetchTransaction({ Key? key }) : super(key: key);
     return Scaffold(
       // bottomNavigationBar: BottomNavigations(data: sizeRoom?3:2),
       extendBody: true,
+      bottomSheet: bottomSheet(context),
       appBar: AppBar(
           centerTitle: true,
           automaticallyImplyLeading: false,
           title: Container(
             width: MediaQuery.of(context).size.width,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // const Spacer(),
-                Text(
-                  ("Fetch Bank Transactions"),
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.bold,
-                      fontSize: 24,
-                      color: AppColors.bg1),
+                Center(
+                  child: Text(
+                    ("Fetch Bank Transactions"),
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.bold,
+                        fontSize: 17,
+                        color: AppColors.bg1),
+                  ),
                 ),
               ],
             ),
@@ -43,16 +47,21 @@ const FetchTransaction({ Key? key }) : super(key: key);
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              height: MediaQuery.of(context).size.height / 4,
+             Container(
+              height: MediaQuery.of(context).size.height / 3,
               width: MediaQuery.of(context).size.width / 1.2,
-              color: Colorcodes.barGraphOrange,
-              child: Image.network(""),
-              // decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(24),
-              //     border: Border.all(color: Colors.black)),
+              // color: Colorcodes.barGraphOrange,
+              child: Image.network(bankImage),
             ),
-            // SizedBox.shrink(),
+            SizedBox(height: 20,),
+            // fetchedTrsacntionList
+
+           Obx(()=> fetchedTrsacntionList.isEmpty?Text("Data is Not Yet Fetched"):Container(
+                child: getTranSactions(),
+           )),
+
+            SizedBox(height: 20,),
+          
             InkWell(
                 onTap: () {
                   //  Otpscreen
@@ -60,11 +69,23 @@ const FetchTransaction({ Key? key }) : super(key: key);
                    fetch(context);
 
                 },
-                child: getButton(context,"Fetch Trasactions")),
+             child: getButton(context,"Fetch Trasactions")),
           ],
         ),
       ),
     );
 
   }  // fetch(context);
+
+
+
+ Widget getTranSactions(){
+      return Column(
+          children: fetchedTrsacntionList.map((e){
+              return Container(
+                   child: Text("data"),
+              );
+          }).toList(),
+      );
+  }
 }

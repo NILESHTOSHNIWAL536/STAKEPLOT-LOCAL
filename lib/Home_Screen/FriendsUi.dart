@@ -36,20 +36,24 @@ class _FriendsUiState extends State<FriendsUi> {
       height: MediaQuery.of(context).size.height / 2.1,
       child: Expanded(
         child: Padding(
-          padding: const EdgeInsets.only(top: 16, left: 18, right: 18),
+          padding: const EdgeInsets.only(top: 24, left: 18, right: 18),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Select people',
                     style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
+                        lWeight: FontWeight.bold,
                         fontSize: 16,
                         color: AppColors.bg1)),
+                SizedBox(
+                  height: 10,
+                ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
                   child: InputDat('Search', TextInputType.name, Textcontroller),
                 ),
+
                 Text('My friends',
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.normal,
@@ -62,13 +66,13 @@ class _FriendsUiState extends State<FriendsUi> {
                 addedMembers.length > 0
                     ? Container(
                         width: MediaQuery.of(context).size.width,
-                        height: 70,
+                        height: MediaQuery.of(context).size.width / 7,
                         child: ListView(
                           scrollDirection: Axis.horizontal,
                           children: addedMembers.map((element) {
                             return Container(
                               width: MediaQuery.of(context).size.width / 6,
-                              height: 60,
+                              height: MediaQuery.of(context).size.width / 7,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -82,7 +86,7 @@ class _FriendsUiState extends State<FriendsUi> {
                                                 url: element['avatar'] ??
                                                     userAvatar,
                                                 width: 10,
-                                                height: 18)),
+                                                height: 20)),
                                       ),
                                       Positioned(
                                         right: 0,
@@ -114,6 +118,7 @@ class _FriendsUiState extends State<FriendsUi> {
                                       child: Text(element['name'],
                                           style: FontManager().getTextStyle(
                                               context,
+                                              fontSize: 12,
                                               overflow: TextOverflow.fade)))
                                 ],
                               ),

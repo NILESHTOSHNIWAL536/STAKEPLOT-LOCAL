@@ -99,8 +99,8 @@ class _TextScreenState extends State<TextScreen> {
                           children: [
                             DecoratedContainer(
                               borderRadius: 30,
-                              height: 50,
-                              width: 50,
+                              // height: 50,
+                              // width: 50,
                               child: IconButton(
                                 onPressed: () {
                                   setState(() {

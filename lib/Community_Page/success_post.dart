@@ -26,9 +26,9 @@ class _SuccessPostState extends State<SuccessPost> {
           const SizedBox(height: 30),
           DecoratedContainer(
             borderRadius: 24,
-            height: MediaQuery.of(context).size.height *
-                0.07, // 7% of screen height
-            width: MediaQuery.of(context).size.width * 0.8,
+            // height: MediaQuery.of(context).size.height *
+            //     0.07, // 7% of screen height
+            // width: MediaQuery.of(context).size.width * 0.8,
             child: TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Return to the previous screen

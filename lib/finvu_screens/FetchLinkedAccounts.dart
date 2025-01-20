@@ -15,6 +15,7 @@ import 'package:get/get.dart';
 
 List<FinvuLinkedAccountDetailsInfo> fetchAccountData=[];
 RxBool getBanks=false.obs;
+RxBool getFetch=false.obs;
 
 class FetchLinkedAccounts extends StatefulWidget {
   const FetchLinkedAccounts({ Key? key }) : super(key: key);

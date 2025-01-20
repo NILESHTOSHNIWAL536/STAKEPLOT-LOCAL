@@ -4,10 +4,15 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/FetchLinkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/otpScreen.dart';
+import 'package:flutter_application_code_stakeplot/main.dart';
+
+String bankImage="https://static.vecteezy.com/system/resources/thumbnails/023/364/757/small_2x/3d-illustration-of-bank-building-and-money-bag-png.png";
+
 
 class ShareAccountLogin extends StatefulWidget {
   bool flag = false;
@@ -18,6 +23,25 @@ class ShareAccountLogin extends StatefulWidget {
 }
 
 class _ShareAccountLoginState extends State<ShareAccountLogin> {
+
+
+
+ 
+    @override
+  void initState() {
+    super.initState();
+    if(widget.flag)getData();
+  }
+
+  void getData()async
+  {
+     fipDis=await finvuManager.fipsAllFIPOptions();
+     fipDisOrginal.clear();
+     fipDisOrginal.addAll(fipDis);
+     getBanks.value=!getBanks.value;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,6 +67,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
               ],
             ),
           )),
+      bottomSheet: bottomSheet(context),
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -53,13 +78,10 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              height: MediaQuery.of(context).size.height / 4,
+              height: MediaQuery.of(context).size.height / 3,
               width: MediaQuery.of(context).size.width / 1.2,
-              color: Colorcodes.barGraphOrange,
-              child: Image.network(""),
-              // decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(24),
-              //     border: Border.all(color: Colors.black)),
+              // color: Colorcodes.barGraphOrange,
+              child: Image.network(bankImage),
             ),
             // SizedBox.shrink(),
             InkWell(
@@ -68,7 +90,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                   // loginToAutoTractions(context);
                   if(!widget.flag)LOGOUT();
                   
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
@@ -77,8 +99,8 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                   );
 
                 },
-                child: getButton(context,
-                    widget.flag ? "Fetch Bank Account" : "Share Account")),
+                child:  getButton(context,
+                    widget.flag ? getFetch.value? "Loading...":"Fetch Bank Account" : "Share Account")),
           ],
         ),
       ),
@@ -88,17 +110,39 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
 
 Widget getButton(context, str) {
   return Container(
-    width: MediaQuery.of(context).size.width / 1.1,
+    width: MediaQuery.of(context).size.width / 1.2,
     // height:MediaQuery.of(context).size.height,
-    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
     decoration: BoxDecoration(
-        color: AppColors.accentColor, borderRadius: BorderRadius.circular(30)),
+        color: AppColors.accentColor, borderRadius: BorderRadius.circular(12)),
     child: Center(
       child: Text(
         str,
         style: FontManager().getTextStyle(context,
-            lWeight: FontWeight.bold, fontSize: 18, color: AppColors.bg5),
+            lWeight: FontWeight.bold, fontSize: 15, color: AppColors.bg5),
       ),
     ),
   );
+}
+
+
+
+Widget bottomSheet(context){
+   return Container(
+            width: MediaQuery.of(context).size.width,
+            height: 20,
+            decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                     color: Colorcodes.greyLight
+                  ),
+                )
+            ),
+            child: Center(
+                child: Text("Powered By RBI-Regulated AA",style: TextStyle(
+                    fontSize: 7,
+                    fontWeight: FontWeight.bold
+                ),),
+            ),
+      );
 }

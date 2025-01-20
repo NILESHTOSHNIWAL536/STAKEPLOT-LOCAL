@@ -4,22 +4,25 @@ import 'package:finvu_flutter_sdk_core/finvu_fip_details.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/FetchLinkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 
 List<FinvuFIPInfo> fipDis=[];
+List<FinvuFIPInfo> fipDisOrginal=[];
 RxList isSeletedBankAccout=[].obs;
 RxList<FinvuFIPInfo> listOfBankAccount=<FinvuFIPInfo>[].obs;
-RxBool getBanks=false.obs;
+// RxBool getBanks=false.obs;
 RxBool addBank=false.obs;
 
 class DiscoverAccount extends StatefulWidget {
-  const DiscoverAccount({ Key? key }) : super(key: key);
+  const  DiscoverAccount({ Key? key }) : super(key: key);
 
   @override
   _DiscoverAccountState createState() => _DiscoverAccountState();
@@ -27,15 +30,20 @@ class DiscoverAccount extends StatefulWidget {
 
 class _DiscoverAccountState extends State<DiscoverAccount> {
 
+    TextEditingController search = TextEditingController();
+
     @override
   void initState() {
     super.initState();
     getData();
+    getFetch.value=false;
   }
 
   void getData()async
   {
      fipDis=await finvuManager.fipsAllFIPOptions();
+     fipDisOrginal.clear();
+     fipDisOrginal.addAll(fipDis);
      getBanks.value=!getBanks.value;
   }
 
@@ -43,8 +51,11 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Selete Bank..." ,style: FontManager().getTextStyle(context,
-            lWeight: FontWeight.bold, fontSize: 18, color: Colorcodes.black),),
+        automaticallyImplyLeading: false,
+        title: Center(
+          child: Text("Select Bank" ,style: FontManager().getTextStyle(context,
+              lWeight: FontWeight.bold, fontSize: 18, color: Colorcodes.black),),
+        ),
         backgroundColor: Colorcodes.white,
       ),
       body: Container(
@@ -56,9 +67,11 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
 
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
-                    child: Text("Pick atleast one to proceed..." ,style: FontManager().getTextStyle(context,
+                    child: Text("Pick atleast one bank to proceed..." ,style: FontManager().getTextStyle(context,
                          lWeight: FontWeight.bold, fontSize: 18, color: Colorcodes.black),),
                   ),
+
+                  InputDate("Search", TextInputType.name, search),
 
                     Obx(()=>getBanks.value? getListOfFinvuBanks(): getListOfFinvuBanks()),
 
@@ -68,7 +81,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: getButton(context, "Fetch Bank Account.."),
+                        child: getButton(context, "Fetch Bank Account"),
                       ),
                     ),
 
@@ -85,7 +98,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   {
       return Container(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height/1.4,
+        height: MediaQuery.of(context).size.height/1.5,
         child: SingleChildScrollView(
           child: Expanded(
             child: Column(
@@ -97,7 +110,6 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
         ),
       );     
   }
-
 
   void addBackToList(boolVale,bankData)
   { 
@@ -115,7 +127,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   Widget getBackUi(FinvuFIPInfo bankData){
      return Container(
          width: MediaQuery.of(context).size.width,
-         padding: EdgeInsets.symmetric(vertical: 10,horizontal: 20),
+         padding: EdgeInsets.symmetric(vertical: 5,horizontal: 13),
          child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -135,18 +147,81 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                   onTap: (){
                      addBackToList(isSeletedBankAccout.contains(bankData.fipId),bankData);
                   },
-                  child: Text(bankData.productName.toString(),style: TextStyle(
-                    fontSize: 15,
-                  ),),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width/1.8,
+                    child: Text(bankData.productName.toString(),style: TextStyle(
+                      fontSize: 15,
+                      overflow:TextOverflow.ellipsis
+                    ),),
+                  ),
                 ),
           ],
          ) ,
      );
   }
+
+  void searchFinvuAccount()async{
+       if(search.text.isEmpty){
+       
+                fipDis.clear();
+                fipDis.addAll(fipDisOrginal);
+              
+       }else{
+          fipDis.clear();
+      
+          fipDisOrginal.forEach((fipAccount){
+                  print(fipDis);
+                  if(fipAccount.productName.toString().toLowerCase().contains(search.text.toLowerCase())){
+                        fipDis.add(fipAccount);
+                  }
+          });
+      }
+       getBanks.value=!getBanks.value;
+  }
+
+
+  Widget InputDate(lableText, keyBoard, Textcontroller) {
+    return Center(
+      child: Container(
+        // margin: EdgeInsets.symmetric(vertical: 5),
+        // color:  Color.fromRGBO(246, 246, 246, 1),
+        // height: 50,
+        width: MediaQuery.of(context).size.width / 1.1,
+        child: Center(
+          child: TextFormField(
+            keyboardType: keyBoard,
+            controller: Textcontroller,
+            onChanged: (value) {
+                   searchFinvuAccount();
+            },
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.search),
+              //prefixIconColor: Colorcodes.budgetDarkGreen,
+              filled: true,
+              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 14),
+              hintText: lableText,
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(24),
+                // borderSide: BorderSide(color: Colorcodes.budgetDarkGreen
+                //     // color: Color.fromRGBO(249, 246, 238, 1)
+                //     )
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(24),
+                //borderSide: BorderSide(color: Colorcodes.budgetDarkGreen)
+              ),
+              fillColor: AppColors.button,
+              border: InputBorder.none,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
   
   void getBankAccount() {
         if(listOfBankAccount.isEmpty){
-             snackBarCalled(context, "Pick atleast one to proceed...",Colorcodes.red);
+             snackBarCalled(context, "Pick atleast one Bank to proceed...",Colorcodes.red);
              return;
         }else{
             //  listOfBankAccount
@@ -178,7 +253,9 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                  FinvuTypeIdentifierInfo obj=FinvuTypeIdentifierInfo(
                    category: ele.category,
                    type: ele.type,
+                   
                    value:number.value , // dou
+                   
                  );
                   finvuTypeIdentifierInfo.add(obj);       
              });
