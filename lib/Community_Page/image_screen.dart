@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -67,14 +68,14 @@ class _ImageScreenState extends State<ImageScreen> {
                                 children: [
                                   Text(userName.value.toString(),
                                       style: FontManager().getTextStyle(context,
-                                          lWeight: FontWeight.normal,
+                                          lWeight: FontWeight.w600,
                                           fontSize: 18,
-                                          color: Colors.black)),
+                                          color: AppColors.bg1)),
                                   Text('New post',
                                       style: FontManager().getTextStyle(context,
-                                          lWeight: FontWeight.normal,
+                                          lWeight: FontWeight.w400,
                                           fontSize: 12,
-                                          color: Colors.black)),
+                                          color: AppColors.bg1)),
                                 ],
                               ),
                             ],
@@ -109,9 +110,9 @@ class _ImageScreenState extends State<ImageScreen> {
                         decoration: InputDecoration(
                             hintText: 'Enter title',
                             hintStyle: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.normal,
+                                lWeight: FontWeight.w600,
                                 fontSize: 18,
-                                color: Colors.grey),
+                                color: AppColors.bg1),
                             border: InputBorder.none),
                       ),
                       const SizedBox(height: 10),
@@ -122,20 +123,20 @@ class _ImageScreenState extends State<ImageScreen> {
                             hintStyle: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.normal,
                                 fontSize: 14,
-                                color: Colors.black),
+                                color: AppColors.bg1),
                             border: InputBorder.none),
                       ),
                       DecoratedContainer(
                         borderRadius: 24,
                         backgroundColor: titleController.text.isNotEmpty &&
                                 textController.text.isNotEmpty
-                            ? Colors.blue
-                            : Colors.grey,
+                            ? AppColors.primaryColor
+                          : AppColors.button,
                         child: TextButton(
                           onPressed: () {
                               if(selectedImage==null)
                               {
-                                   snackBarAllFeilds2(context,"Pls Upload Image...");
+                                   snackBarAllFeilds2(context,"Please Upload Image...");
                                    return;
                                } 
                            
@@ -154,10 +155,15 @@ class _ImageScreenState extends State<ImageScreen> {
                             }
                           },
                           child: Text('Continue',
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.normal,
-                                  fontSize: 18,
-                                  color: Colors.black)),
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w600,
+                              fontSize: 18,
+                              color: titleController.text.isNotEmpty &&
+                                      textController.text.isNotEmpty
+                                  ? Colors.white
+                                  : Colors.black,
+                            )),
                         ),
                       )
                     ],

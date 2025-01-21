@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -76,21 +77,22 @@ class _TextScreenState extends State<TextScreen> {
                       children: [
                         Row(
                           children: [
-                             AvatarProfileImage(url:  avatar.value, width: 5, height: 10),
+                            AvatarProfileImage(
+                                url: avatar.value, width: 5, height: 10),
                             const SizedBox(width: 8),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(userName.value.toString(),
                                     style: FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.normal,
+                                        lWeight: FontWeight.w600,
                                         fontSize: 18,
-                                        color: Colors.black)),
+                                        color: AppColors.bg1)),
                                 Text('New post',
                                     style: FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.normal,
+                                        lWeight: FontWeight.w400,
                                         fontSize: 12,
-                                        color: Colors.black)),
+                                        color: AppColors.bg1)),
                               ],
                             ),
                           ],
@@ -113,14 +115,15 @@ class _TextScreenState extends State<TextScreen> {
                             const Positioned(
                               top: 0,
                               right: 0,
-                              child: Text(
-                                '+',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
+                              // child: Text(
+                              //   '+',
+                              //   style: TextStyle(
+                              //     fontSize: 22,
+                              //     fontWeight: FontWeight.bold,
+                              //     color: Colors.black,
+                              //   ),
+                              // ),
+                              child: Icon(Icons.add),
                             ),
                           ],
                         ),
@@ -132,9 +135,9 @@ class _TextScreenState extends State<TextScreen> {
                       decoration: InputDecoration(
                           hintText: 'Enter title',
                           hintStyle: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.normal,
+                              lWeight: FontWeight.w700,
                               fontSize: 18,
-                              color: Colors.grey),
+                              color: AppColors.bg1),
                           border: InputBorder.none),
                     ),
                     const SizedBox(height: 10),
@@ -170,7 +173,7 @@ class _TextScreenState extends State<TextScreen> {
                         hintStyle: FontManager().getTextStyle(context,
                             lWeight: FontWeight.normal,
                             fontSize: 14,
-                            color: Colors.black),
+                            color: AppColors.bg1),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -178,8 +181,8 @@ class _TextScreenState extends State<TextScreen> {
                       borderRadius: 24,
                       backgroundColor: titleController.text.isNotEmpty &&
                               contentController.text.isNotEmpty
-                          ? Colors.blue
-                          : Colors.grey,
+                          ? AppColors.primaryColor
+                          : AppColors.button,
                       child: TextButton(
                         onPressed: () {
                           if (contentController.text.isNotEmpty) {
@@ -199,34 +202,40 @@ class _TextScreenState extends State<TextScreen> {
                             // setState(() {
                             //   postSubmitted = true;
                             // });
-                          
-                           if(showImage && selectedImage==null){
-                                   snackBarAllFeilds2(context,"Pls Upload Image...");
-                                   return;
-                            } 
-                           
-                            if(titleController.text.toString().trim()=="" || contentController.text.toString().trim()==""){
-                                  snackBarAllFeilds(context);
-                                  return ;
+
+                            if (showImage && selectedImage == null) {
+                              snackBarAllFeilds2(
+                                  context, "Please Upload Image...");
+                              return;
                             }
 
-                              if(selectedImage!=null && showImage)
-                            {
+                            if (titleController.text.toString().trim() == "" ||
+                                contentController.text.toString().trim() ==
+                                    "") {
+                              snackBarAllFeilds(context);
+                              return;
+                            }
+
+                            if (selectedImage != null && showImage) {
                               // createPost(context,titleController.text,descriptionsController.text,url!);
-                               onUploadImage(selectedImage!,context,titleController.text,contentController.text);
+                              onUploadImage(selectedImage!, context,
+                                  titleController.text, contentController.text);
+                            } else {
+                              createPostWithOutImage(context,
+                                  titleController.text, contentController.text);
                             }
-                            else{ 
-                               createPostWithOutImage(context,titleController.text,contentController.text);
-                            }
-
-
                           }
                         },
                         child: Text('Continue',
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.normal,
-                                fontSize: 18,
-                                color: Colors.black)),
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w600,
+                              fontSize: 18,
+                              color: titleController.text.isNotEmpty &&
+                                      contentController.text.isNotEmpty
+                                  ? Colors.white
+                                  : Colors.black,
+                            )),
                       ),
                     )
                   ],

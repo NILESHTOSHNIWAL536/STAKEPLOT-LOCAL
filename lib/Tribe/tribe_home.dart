@@ -547,16 +547,15 @@ class _TribeHomeState extends State<TribeHome> {
       child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-              color: AppColors.userName,
-              ),
+            color: AppColors.userName,
+          ),
           child: Column(
             children: [
               dataComment(),
               dataComment(),
               dataComment(),
               dataComment(),
-              InputDate(
-                  "Add a comment", TextInputType.number, calController1),
+              InputDate("Add a comment", TextInputType.number, calController1),
             ],
           )),
     );
@@ -1260,7 +1259,7 @@ Widget vote(context, dataObj, data) {
                     onTap: () {
                       showModalBottomSheet(
                         context: context,
-                        backgroundColor: Colorcodes.appBarColor,
+                        backgroundColor: AppColors.backgroundColor,
                         builder: (context) {
                           return TribeShare(data: data, dataObj: dataObj);
                         },

@@ -391,48 +391,49 @@ class _CommunityState extends State<Community> {
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 24,
-                ),
+                // SizedBox(
+                //   height: 24,
+                // ),
                 // ... existing code ...
-                Align(
-                  alignment: Alignment.center,
-                  child: DecoratedContainer(
-                    // width:
-                    //     MediaQuery.of(context).size.width - 50, // Match padding
+                // This code of exploria is meant for later purposes
+                // Align(
+                //   alignment: Alignment.center,
+                //   child: DecoratedContainer(
+                //     // width:
+                //     //     MediaQuery.of(context).size.width - 50, // Match padding
 
-                    // height: 60.0,
-                    borderRadius: 24,
-                    child: TextButton.icon(
-                      icon: Icon(Icons.explore),
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Close the current modal
-                        showModalBottomSheet(
-                          context: context,
-                          //isScrollControlled: true,
-                          builder: (context) {
-                            return Container(
-                              height: MediaQuery.of(context).size.height * 0.7,
-                              // 80% of screen height
-                              child: ExploreModal(
-                                onPostCreated: (newPost) {
-                                  setState(() {
-                                    posts.add(newPost);
-                                  });
-                                },
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      label: Text('Exploria',
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.normal,
-                              fontSize: 18,
-                              color: Colors.black)),
-                    ),
-                  ),
-                ),
+                //     // height: 60.0,
+                //     borderRadius: 24,
+                //     child: TextButton.icon(
+                //       icon: Icon(Icons.explore),
+                //       onPressed: () {
+                //         Navigator.of(context).pop(); // Close the current modal
+                //         showModalBottomSheet(
+                //           context: context,
+                //           //isScrollControlled: true,
+                //           builder: (context) {
+                //             return Container(
+                //               height: MediaQuery.of(context).size.height * 0.7,
+                //               // 80% of screen height
+                //               child: ExploreModal(
+                //                 onPostCreated: (newPost) {
+                //                   setState(() {
+                //                     posts.add(newPost);
+                //                   });
+                //                 },
+                //               ),
+                //             );
+                //           },
+                //         );
+                //       },
+                //       label: Text('Exploria',
+                //           style: FontManager().getTextStyle(context,
+                //               lWeight: FontWeight.normal,
+                //               fontSize: 18,
+                //               color: Colors.black)),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
