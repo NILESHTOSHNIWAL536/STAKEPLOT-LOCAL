@@ -80,7 +80,6 @@ class _PostCardState extends State<PostCard> {
   }
 
   Widget uploadData(dataObj, bool flag) {
-    
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 7),
       //padding: const EdgeInsets.all(16),
@@ -193,7 +192,7 @@ class _PostCardState extends State<PostCard> {
                                 : dataObj['chartType'] == "bargraph"
                                     ? barGraph(dataObj)
                                     : pieChart(dataObj)),
-                      // Readmore(str:dataObj['description']['message'].toString(),),
+                    // Readmore(str:dataObj['description']['message'].toString(),),
                     // Padding(
                     //   padding: const EdgeInsets.only(bottom: 10.0),
                     //   child: Text((dataObj['description']['message']),
@@ -208,10 +207,13 @@ class _PostCardState extends State<PostCard> {
                       height: 20,
                     ),
 
-                    dataObj['image'] != null && (dataObj['image'] != "none" &&  dataObj['image'] != "")
+                    dataObj['image'] != null &&
+                            (dataObj['image'] != "none" &&
+                                dataObj['image'] != "")
                         ? Center(
-                            child: imageget("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLjPJGXPue6XcmdBqKKIYLEb1VUmExkIr0zA&s"),
-                            // child: imageget(dataObj['image']),
+                            // child: imageget(
+                            //     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLjPJGXPue6XcmdBqKKIYLEb1VUmExkIr0zA&s"),
+                            child: imageget(dataObj['image']),
                             //  child: GFImageOverlay(
                             //           width: MediaQuery.of(context).size.width / 1.3,
                             //           height: MediaQuery.of(context).size.height/3,
@@ -250,6 +252,8 @@ class _PostCardState extends State<PostCard> {
   }
 
   Widget imageget(imageUrl) {
+    print("imageUrl");
+    print(imageUrl);
     return FutureBuilder<ui.Image>(
       future: _loadImage(imageUrl),
       builder: (context, snapshot) {
@@ -295,7 +299,6 @@ class _PostCardState extends State<PostCard> {
   }
 
   Widget text(item) {
-    
     try {
       return Readmore(str: item['description']['message'].toString());
     } catch (e) {
