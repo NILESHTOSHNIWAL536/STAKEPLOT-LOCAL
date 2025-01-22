@@ -96,19 +96,29 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
 
   Widget getListOfFinvuBanks()
   {
+      // return Container(
+      //   width: MediaQuery.of(context).size.width,
+      //   height: MediaQuery.of(context).size.height/1.5,
+      //   child: SingleChildScrollView(
+      //     child: Expanded(
+      //       child: Column(
+      //            mainAxisAlignment: MainAxisAlignment.start,
+      //            crossAxisAlignment: CrossAxisAlignment.start,
+      //            children: fipDis.map((bankData)=>getBackUi(bankData)).toList(),
+      //       ),
+      //     ),
+      //   ),
+      // );
       return Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height/1.5,
-        child: SingleChildScrollView(
-          child: Expanded(
-            child: Column(
-                 mainAxisAlignment: MainAxisAlignment.start,
-                 crossAxisAlignment: CrossAxisAlignment.start,
-                 children: fipDis.map((bankData)=>getBackUi(bankData)).toList(),
-            ),
-          ),
-        ),
-      );     
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height / 1.5,
+                    child: ListView.builder(
+                      itemCount: fipDis.length,
+                      itemBuilder: (context, index) {
+                        return getBackUi(fipDis[index]); 
+                      },
+                    ),
+          );     
   }
 
   void addBackToList(boolVale,bankData)

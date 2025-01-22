@@ -1,3 +1,4 @@
+import 'package:finvu_flutter_sdk/finvu_manager.dart';
 import 'package:finvu_flutter_sdk_core/finvu_discovered_accounts.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_details.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
@@ -13,8 +14,8 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:flutter_application_code_stakeplot/finvu_screens/verifyOTP.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 
-RxInt count = 0.obs;
 
 RxMap<String, List<FinvuDiscoveredAccountInfo>> listOfAccountAdded =
     <String, List<FinvuDiscoveredAccountInfo>>{}.obs;
@@ -22,6 +23,7 @@ RxMap<String, FinvuFIPDetails> FinvuFIPDetailsList =
     <String, FinvuFIPDetails>{}.obs;
 RxList accountAdded = [].obs;
 RxList accountLinked = [].obs;
+RxInt count = 0.obs;
 
 class LinkingAccount extends StatefulWidget {
   List<FinvuFIPInfo> listOfBankAccount;
@@ -32,25 +34,46 @@ class LinkingAccount extends StatefulWidget {
 }
 
 class _LinkingAccountState extends State<LinkingAccount> {
+
+  final int _otpCodeLength = 6; // OTP length
+  RxString _otpCode = "".obs; // Captured OTP code
+  RxBool _isOtpValid = false.obs; // Validate OTP length
+   TextEditingController otpController = TextEditingController();
+
+ 
+
+     @override
+  void initState() {
+    super.initState();
+    count.value=0;
+    getLinkedAccountList();
+  }
+
+
+  void getLinkedAccountList()async{
+          // var data=await  FinvuManager().fetchLinkedAccounts();
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    // final double boxSize = MediaQuery.of(context).size.width * 0.12;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Link Accounts"),
         backgroundColor: AppColors.backgroundColor,
       ),
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
-          //width: MediaQuery.of(context).size.width / 1.1,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                child: Align(
-                  alignment: Alignment.topLeft,
+      body: SingleChildScrollView(
+        child: Expanded(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height/1.2,
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
                   child: Text(
                     "Select account to share",
                     style: FontManager().getTextStyle(context,
@@ -59,23 +82,23 @@ class _LinkingAccountState extends State<LinkingAccount> {
                         color: AppColors.bg1),
                   ),
                 ),
-              ),
-              // SizedBox(
-              //   width: 10,
-              // ),
-              BankInfoUiContainer(),
-              const Spacer(),
-              InkWell(
-                  onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return accountLinkedUi();
-                      },
-                    );
-                  },
-                  child: getButton(context, "Authorise")),
-            ],
+                // SizedBox(
+                //   width: 10,
+                // ),
+                BankInfoUiContainer(),
+                // const Spacer(),
+                InkWell(
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return accountLinkedUi();
+                        },
+                      );
+                    },
+                    child: getButton(context, "Authorise")),
+              ],
+            ),
           ),
         ),
       ),
@@ -173,8 +196,8 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
   Widget bankAccountList() {
     return Container(
-      //padding: const EdgeInsets.fromLTRB(14, 5, 16, 5),
-      height: MediaQuery.of(context).size.height / 2,
+      padding: const EdgeInsets.fromLTRB(14, 5, 16, 5),
+      height: MediaQuery.of(context).size.height / 1.7,
       child: SingleChildScrollView(
         child: Expanded(
           child: Column(
@@ -224,20 +247,132 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
       FinvuAccountLinkingRequestReference linkingReference =
           await finvuManager.linkAccounts(fipDetails, bankData);
+
       showModalBottomSheet(
         context: context,
         builder: (context) {
-          return VerifyOtp(
-            linkingReference: linkingReference,
-            flag: 1,
-            fid: fipId,
-          );
+          return verify(linkingReference,fipId);
+          // return VerifyOtp(
+          //   linkingReference: linkingReference,
+          //   flag: 1,
+          //   fid: fipId,
+          // );
         },
       );
     } catch (e) {
-      snackBarCalled(context, "Account already linked....");
+      print(e);
+      snackBarCalled(context, "Added check has Some Linked Account....");
     }
   }
+
+
+
+ Widget verify(linkingReference,fid){
+    return  Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height/2,
+      decoration: BoxDecoration(
+         color: Colorcodes.white,
+      ),
+      child: Column(
+        children: [
+          const SizedBox(height: 20,),
+          Text("Verify Otp"),
+          const SizedBox(height: 20,),
+          PinCodeTextField(
+                    appContext: context,
+                    length: _otpCodeLength,
+                    controller: otpController,
+                    keyboardType: TextInputType.number,
+                    autoFocus: true,
+                    animationType: AnimationType.fade,
+                    pinTheme: PinTheme(
+                      shape: PinCodeFieldShape.box,
+                      borderRadius: BorderRadius.circular(10),
+                      fieldHeight: MediaQuery.of(context).size.width * 0.12,
+                      fieldWidth: MediaQuery.of(context).size.width * 0.12,
+                      activeFillColor: Colors.white,
+                      activeColor: Colors.blue,
+                      selectedFillColor: Colors.white,
+                      selectedColor: Colors.blue,
+                      inactiveFillColor: Colors.grey[200],
+                      inactiveColor: Colors.grey,
+                    ),
+                    enableActiveFill: true,
+                    textStyle: TextStyle(fontSize: 18, color: Colors.black),
+                    onChanged: (value) {
+                    
+                        _otpCode.value = value;
+                        _isOtpValid.value = value.length == _otpCodeLength;
+                    },
+                    // onCompleted: (value) {
+                    //   _onOtpSubmit();
+                    // },
+                ),
+           const SizedBox(height: 20,),
+
+           GestureDetector(
+              onTap: _isOtpValid.value
+                  ? () {
+                        if(_isOtpValid.value){
+                         linkAccount(_otpCode.value,linkingReference,fid);
+                        }else{
+                           snackBarCalled(context, "pls enter otp of length 6");
+                        }
+                    
+                    }
+                  : null,
+              child:Obx(()=> _isOtpValid.value ? getColorVerify():getColorVerify(),
+           )),
+        ],
+      ),
+    );
+ }
+
+ Widget getColorVerify(){
+     return Container(
+                width: MediaQuery.of(context).size.width / 1.1,
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                decoration: BoxDecoration(
+                  color: _isOtpValid.value
+                      ? AppColors.accentColor
+                      : Colors.grey, // Button color based on validity
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Center(
+                  child: Text(
+                    "Verify",
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: AppColors.bg5,
+                    ),
+                  ),
+                ),
+              );
+ }
+
+
+   void linkAccount(String otp,linkingReference,String fid) async {
+      try {
+      
+        var data = await finvuManager.confirmAccountLinking(
+            linkingReference!, otp);
+        snackBarCalled(context, "Linked Bank SuccessFully...");
+        Navigator.pop(context);
+       
+        accountLinked.add(fid);
+        otpController=TextEditingController();
+        _otpCode.value="";
+        _isOtpValid.value=false;
+      } catch (e) {
+        print(e);
+        snackBarCalled(context,
+            "Error while Linking verify Otp/ Or Already Linked...", Colors.red);
+      }
+  }
+
 
   Widget getBackUi(
       FinvuDiscoveredAccountInfo bankData, FinvuFIPDetails fipDetails) {
@@ -254,10 +389,10 @@ class _LinkingAccountState extends State<LinkingAccount> {
                   onChanged: (b) {
                     addAccountToMap(fipDetails.fipId,
                         bankData.accountReferenceNumber, bankData);
-                  })),
+               })),
               textStyle(bankData.fiType),
               textStyle(bankData.accountType),
-              textStyle(bankData.accountReferenceNumber),
+              textStyle(bankData.maskedAccountNumber),
             ],
           ),
         ),
@@ -339,9 +474,11 @@ class _LinkingAccountState extends State<LinkingAccount> {
           onTap: () {
             LinkingBank(FinvuFIPDetailsList[bankData.fipId]!, bankData.fipId);
           },
-          child: Obx(() => accountLinked.contains(bankData.fipId)
-              ? SizedBox.shrink()
-              : Container(
+          child: 
+          // Obx(() => accountLinked.contains(bankData.fipId)
+          //     ? SizedBox.shrink()
+          //     : 
+              Container(
                   decoration: BoxDecoration(
                       color: Colorcodes.cardShade5,
                       borderRadius: BorderRadiusDirectional.circular(10)),
@@ -350,7 +487,8 @@ class _LinkingAccountState extends State<LinkingAccount> {
                     "Link".toString(),
                     style: TextStyle(fontSize: 14, color: Colorcodes.white),
                   ),
-                )),
+                )
+                // ),
         ),
       ],
     );

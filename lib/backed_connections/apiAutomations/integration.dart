@@ -264,6 +264,26 @@ import 'package:shared_preferences/shared_preferences.dart';
   }
 
 
+//  void initFinvuManager() async {
+//      finvuManager.initialize(
+//         FinvuConfig(
+//           finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
+//           certificatePins: [
+//             // "3RbasfbYK4UP0GTgGKLV9ggrHbdiwzNDJ4s73Mx8AQM=",
+//             // "bdrBhpj38ffhxpubzkINl0rG+UyossdhcBYj+Zx2fcc="
+//           ],
+//         ),
+//       );
+
+//     await finvuManager.connect(); 
+//     var isConnected = await finvuManager.isConnected();
+//     print(isConnected);
+//     if (!isConnected) {
+//         isConnected = await finvuManager.isConnected();
+//         print(isConnected); 
+//     }
+//   }
+
 
 
 //     finvu_flutter_sdk_core:

@@ -339,30 +339,10 @@ class _VerifyOtpState extends State<VerifyOtp> {
   }
 
   void linkAccount(otp) async {
-    try {
-      // print(_controller.text);
-      var data = await finvuManager.confirmAccountLinking(
-          widget.linkingReference!, otp);
-
-      snackBarCalled(context, "Linked Found SuccessFully...");
-      Navigator.pop(context);
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => Access(),
-      //   ),
-      // );
-    } catch (e) {
-      snackBarCalled(context,
-          "Error while Linking verify Otp/ Or Already Linked...", Colors.red);
-    }
-
-    void linkAccount(otp) async {
       try {
         // print(_controller.text);
         var data = await finvuManager.confirmAccountLinking(
             widget.linkingReference!, otp);
-
         snackBarCalled(context, "Linked Bank SuccessFully...");
         Navigator.pop(context);
         accountLinked.add(widget.fid);
@@ -370,6 +350,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
         snackBarCalled(context,
             "Error while Linking verify Otp/ Or Already Linked...", Colors.red);
       }
-    }
   }
+
+
 }
