@@ -38,185 +38,187 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
       // ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(top: 40, left: 16, right: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Profile section
-              Row(
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage: NetworkImage(
-                        'https://example.com/profile.jpg'), // Replace with actual image URL
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
+          padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Profile section
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundImage: NetworkImage(
+                          'https://example.com/profile.jpg'), // Replace with actual image URL
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(userName.value,
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.w600,
+                                  //fontSize: MediaQuery.of(context).size.width * 0.04,
+                                  color: AppColors.bg1)),
+                          Text(email.value,
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.w400,
+                                  //fontSize: MediaQuery.of(context).size.width * 0.04,
+                                  fontSize: 12,
+                                  color: AppColors.bg1)),
+                          Text(Phone.value,
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.w400,
+                                  //fontSize: MediaQuery.of(context).size.width * 0.04,
+                                  fontSize: 12,
+                                  color: AppColors.bg1)),
+                        ],
+                      ),
+                    ),
+                    TextButton.icon(
+                      icon: AvatarProfileImage(
+                        url: ProfileIcons.edit,
+                        height: 28,
+                        width: 28,
+                      ),
+                      onPressed: () {},
+                      label: Text('Edit details',
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.w500,
+                              //fontSize: MediaQuery.of(context).size.width * 0.04,
+                              fontSize: 12,
+                              color: AppColors.bg1)),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 20),
+                // Options list
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  child: Expanded(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(userName.value,
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.w600,
-                                //fontSize: MediaQuery.of(context).size.width * 0.04,
-                                color: AppColors.bg1)),
-                        Text(email.value,
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.w400,
-                                //fontSize: MediaQuery.of(context).size.width * 0.04,
-                                fontSize: 12,
-                                color: AppColors.bg1)),
-                        Text(Phone.value,
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.w400,
-                                //fontSize: MediaQuery.of(context).size.width * 0.04,
-                                fontSize: 12,
-                                color: AppColors.bg1)),
+                        // First Container for Community profile and Friends list
+                        Container(
+                          decoration: BoxDecoration(
+                              color: AppColors.mt,
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(color: AppColors.border)),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(12, 14, 12, 14),
+                            child: Column(
+                              children: [
+                                _buildOption(
+                                    AvatarProfileImage(
+                                      url: ProfileIcons.communityProf,
+                                      height: 24,
+                                      width: 24,
+                                    ),
+                                    'Community profile',
+                                    'Check your community profile', onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            CommunityProfileScreen()),
+                                  );
+                                }),
+                                Divider(),
+                                _buildOption(
+                                    AvatarProfileImage(
+                                      url: ProfileIcons.friends,
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                    'Friends list',
+                                    'Check your friends list here', onTap: () {
+                                  Navigator.pushNamed(context, '/Friends');
+                                }),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        // Second Container for Support, Terms & conditions, and Privacy policy
+                        Container(
+                          decoration: BoxDecoration(
+                              color: AppColors.mt,
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(color: AppColors.border)),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 14, 10, 10),
+                            child: Column(
+                              children: [
+                                _buildOption(
+                                    AvatarProfileImage(
+                                      url: ProfileIcons.support,
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                    'Support',
+                                    'We are available 24x7 on your service'),
+                                Divider(),
+                                _buildOption(
+                                    AvatarProfileImage(
+                                      url: ProfileIcons.terms,
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                    'Terms & conditions',
+                                    'Please follow our terms and conditions'),
+                                Divider(),
+                                _buildOption(
+                                    SizedBox(
+                                      height: 40,
+                                      width: 40,
+                                      child: AvatarProfileImage(
+                                        url: ProfileIcons.privacyPolicy,
+                                        height: 22,
+                                        width: 22,
+                                      ),
+                                    ),
+                                    'Privacy policy',
+                                    'We respect your privacy'),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        // Third Container for Log out
+                        Container(
+                          decoration: BoxDecoration(
+                              color: AppColors.mt,
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(color: AppColors.border)),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 14, 14, 14),
+                            child: _buildOption(
+                                AvatarProfileImage(
+                                  url: ProfileIcons.logout,
+                                  height: 22,
+                                  width: 22,
+                                ),
+                                'Log out',
+                                'You can login and log out from your account',
+                                isLogout: true),
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Text(
+                            'Stakeplot\nApp version 1.0',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.grey, fontSize: 12),
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  TextButton.icon(
-                    icon: AvatarProfileImage(
-                      url: ProfileIcons.edit,
-                      height: 22,
-                      width: 22,
-                    ),
-                    onPressed: () {},
-                    label: Text('Edit details',
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w500,
-                            //fontSize: MediaQuery.of(context).size.width * 0.04,
-                            fontSize: 12,
-                            color: AppColors.bg1)),
-                  )
-                ],
-              ),
-              const SizedBox(height: 20),
-              // Options list
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                child: Expanded(
-                  child: Column(
-                    children: [
-                      // First Container for Community profile and Friends list
-                      Container(
-                        decoration: BoxDecoration(
-                            color: AppColors.mt,
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: AppColors.border)),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(15, 16, 20, 16),
-                          child: Column(
-                            children: [
-                              _buildOption(
-                                  AvatarProfileImage(
-                                    url: ProfileIcons.communityProf,
-                                    height: 22,
-                                    width: 22,
-                                  ),
-                                  'Community profile',
-                                  'Check your community profile', onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          CommunityProfileScreen()),
-                                );
-                              }),
-                              Divider(),
-                              _buildOption(
-                                  AvatarProfileImage(
-                                    url: ProfileIcons.friends,
-                                    height: 22,
-                                    width: 22,
-                                  ),
-                                  'Friends list',
-                                  'Check your friends list here', onTap: () {
-                                Navigator.pushNamed(context, '/Friends');
-                              }),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      // Second Container for Support, Terms & conditions, and Privacy policy
-                      Container(
-                        decoration: BoxDecoration(
-                            color: AppColors.mt,
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: AppColors.border)),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(15, 16, 20, 16),
-                          child: Column(
-                            children: [
-                              _buildOption(
-                                  AvatarProfileImage(
-                                    url: ProfileIcons.support,
-                                    height: 22,
-                                    width: 22,
-                                  ),
-                                  'Support',
-                                  'We are available 24x7 on your service'),
-                              Divider(),
-                              _buildOption(
-                                  AvatarProfileImage(
-                                    url: ProfileIcons.terms,
-                                    height: 22,
-                                    width: 22,
-                                  ),
-                                  'Terms & conditions',
-                                  'Please follow our terms and conditions'),
-                              Divider(),
-                              _buildOption(
-                                  SizedBox(
-                                    height: 40,
-                                    width: 40,
-                                    child: AvatarProfileImage(
-                                      url: ProfileIcons.privacyPolicy,
-                                      height: 22,
-                                      width: 22,
-                                    ),
-                                  ),
-                                  'Privacy policy',
-                                  'We respect your privacy'),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      // Third Container for Log out
-                      Container(
-                        decoration: BoxDecoration(
-                            color: AppColors.mt,
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: AppColors.border)),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(15, 16, 20, 16),
-                          child: _buildOption(
-                              AvatarProfileImage(
-                                url: ProfileIcons.logout,
-                                height: 22,
-                                width: 22,
-                              ),
-                              'Log out',
-                              'You can login and log out from your account',
-                              isLogout: true),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Text(
-                          'Stakeplot\nApp version 1.0',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -240,8 +242,8 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
             borderRadius: BorderRadius.circular(14),
             border: Border.all(color: AppColors.border)),
         child: SizedBox(
-          height: 30,
-          width: 30,
+          height: 33,
+          width: 33,
           child: icon, // Use the passed widget directly
         ),
       ),
