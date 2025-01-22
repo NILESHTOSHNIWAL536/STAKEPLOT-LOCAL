@@ -346,12 +346,12 @@ class _VerifyOtpState extends State<VerifyOtp> {
 
       snackBarCalled(context, "Linked Found SuccessFully...");
       Navigator.pop(context);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Access(),
-        ),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => Access(),
+      //   ),
+      // );
     } catch (e) {
       snackBarCalled(context,
           "Error while Linking verify Otp/ Or Already Linked...", Colors.red);

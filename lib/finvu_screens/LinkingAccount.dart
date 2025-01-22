@@ -49,12 +49,15 @@ class _LinkingAccountState extends State<LinkingAccount> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6),
-                child: Text(
-                  "Select account to share",
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: AppColors.bg1),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    "Select account to share",
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: AppColors.bg1),
+                  ),
                 ),
               ),
               // SizedBox(
@@ -133,7 +136,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
   Widget BankInfoUiContainer() {
     return Container(
       //width: MediaQuery.of(context).size.width / 1.2,
-      padding: const EdgeInsets.all(12.0),
+      //padding: const EdgeInsets.all(12.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -159,6 +162,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
             ],
           ),
           //const Divider(thickness: 1, height: 20),
+          const SizedBox(height: 10),
           textStyle("Select atleast One Account To Share", 15),
           const SizedBox(height: 10),
           bankAccountList(),
@@ -169,8 +173,8 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
   Widget bankAccountList() {
     return Container(
-      padding: const EdgeInsets.fromLTRB(14, 5, 16, 5),
-      height: MediaQuery.of(context).size.height / 1.5,
+      //padding: const EdgeInsets.fromLTRB(14, 5, 16, 5),
+      height: MediaQuery.of(context).size.height / 2,
       child: SingleChildScrollView(
         child: Expanded(
           child: Column(
@@ -239,7 +243,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
       FinvuDiscoveredAccountInfo bankData, FinvuFIPDetails fipDetails) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.symmetric(vertical: 4),
+      //padding: EdgeInsets.symmetric(vertical: 20),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Expanded(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -290,7 +291,7 @@ void storeDataOfTransactions(context, data, consentHandleId, from, to,
   fetchedTrsacntionList.refresh();
 
   //  Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-  String url = "http://${"192.168.1.11"}:5000/api/v1";
+  String url = "http://${portNo}:5000/api/v1";
 
   final response = await http.post(Uri.parse('${url}/transactionauto/'),
       // headers: headers,
