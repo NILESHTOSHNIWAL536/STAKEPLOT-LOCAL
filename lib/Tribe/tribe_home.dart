@@ -543,20 +543,19 @@ class _TribeHomeState extends State<TribeHome> {
   Widget commentedData() {
     TextEditingController calController1 = TextEditingController();
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: Container(
-          padding: const EdgeInsets.all(15),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-              color: const Color.fromRGBO(249, 246, 238, 1),
-              borderRadius: BorderRadius.circular(20)),
+            color: AppColors.userName,
+          ),
           child: Column(
             children: [
               dataComment(),
               dataComment(),
               dataComment(),
               dataComment(),
-              InputDate(
-                  "write comment..", TextInputType.number, calController1),
+              InputDate("Add a comment", TextInputType.number, calController1),
             ],
           )),
     );
@@ -1260,7 +1259,7 @@ Widget vote(context, dataObj, data) {
                     onTap: () {
                       showModalBottomSheet(
                         context: context,
-                        backgroundColor: Colorcodes.appBarColor,
+                        backgroundColor: AppColors.backgroundColor,
                         builder: (context) {
                           return TribeShare(data: data, dataObj: dataObj);
                         },

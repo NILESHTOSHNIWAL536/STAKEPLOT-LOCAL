@@ -570,6 +570,7 @@ class _TribeSearchState extends State<TribeChats> {
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        backgroundColor: AppColors.backgroundColor,
         leading: InkWell(
             onTap: () {
               Navigator.pop(context);
@@ -619,7 +620,7 @@ class _TribeSearchState extends State<TribeChats> {
                       child: Text(StringConstant.chatText,
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.bold,
-                              lineHeight: 1.3,
+                              lineHeight: 1.2,
                               fontSize: 24,
                               color: Colorcodes.dropdown))),
                 ),
@@ -719,7 +720,7 @@ class _TribeSearchState extends State<TribeChats> {
     double width = MediaQuery.of(context).size.width;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
       child: GestureDetector(
         onTap: () {
           messages.clear();
@@ -738,8 +739,8 @@ class _TribeSearchState extends State<TribeChats> {
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 7),
-              width: width / 1,
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 4),
+              //width: width / 1,
               child: Row(
                 children: [
                   AvatarProfileImage(
@@ -769,14 +770,14 @@ class _TribeSearchState extends State<TribeChats> {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                        item['latestMessage'] ?? 'No messages yet',
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w400,
-                            fontSize: 12,
-                            color: AppColors.message.withOpacity(0.7)),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                          item['latestMessage'] ?? 'No messages yet',
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.w400,
+                              fontSize: 12,
+                              color: AppColors.message.withOpacity(0.7)),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ],
                     ),
                   ),

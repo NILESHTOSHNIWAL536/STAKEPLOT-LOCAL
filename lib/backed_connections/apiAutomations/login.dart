@@ -15,6 +15,8 @@ import 'package:shared_preferences/shared_preferences.dart';
   String otpReference = "";
   String displayText = '';
   RxString number="8978958221".obs;//  9347064783
+  //double numericValue = double.tryParse(number.value) ?? 0.0;
+
   String custId="${number.value}@finvu";
   RxString handleId="0393a738-3d64-4860-b5ca-ea687ac74d18".obs;
   RxString consentUserId="0393a738-3d64-4860-b5ca-ea687ac74d18".obs;

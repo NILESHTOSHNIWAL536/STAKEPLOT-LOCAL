@@ -11,7 +11,6 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 
-
 void clearStack(BuildContext context) {
   Navigator.of(context)
       .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
@@ -25,9 +24,7 @@ void expire(responce, BuildContext context) {
           .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
       Navigator.pushReplacementNamed(context, '/');
     }
-  } catch (e) {
- 
-  }
+  } catch (e) {}
 }
 
 void check(context, String flag) async {
@@ -38,39 +35,41 @@ void check(context, String flag) async {
   }
 }
 
-void loginUser(TextEditingController emailController,
-      TextEditingController passwordController, BuildContext context,[bool flag=false]) async {
-      final SharedPreferences _pref = await SharedPreferences.getInstance();
-      final response = await http.post(
-        Uri.parse('${url}/user/login'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode({
-          'email': emailController.text.toString(),
-          'userpassword': passwordController.text.toString(),
-        }),
-      );
+Future<void> loginUser(TextEditingController emailController,
+    TextEditingController passwordController, BuildContext context,
+    [bool flag = false]) async {
+  final SharedPreferences _pref = await SharedPreferences.getInstance();
+  final response = await http.post(
+    Uri.parse('${url}/user/login'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode({
+      'email': emailController.text.toString(),
+      'userpassword': passwordController.text.toString(),
+    }),
+  );
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    
-    String accessToken = body['data']['accessToken'];
-    _pref.setString("accessToken",  "Bearer "+accessToken);
-    storeinmap(body,_pref, passwordController.text);
-   
-    currentId.value=body['data']['_id'];
-    Phone.value=body['data']['phone'];
-    isBankAccountLink.value=body['data']['isBankAccountLinked'];
 
-    if(flag)return;
-   
+    String accessToken = body['data']['accessToken'];
+    _pref.setString("accessToken", "Bearer " + accessToken);
+    storeinmap(body, _pref, passwordController.text);
+
+    currentId.value = body['data']['_id'];
+    Phone.value = body['data']['phone'];
+    isBankAccountLink.value = body['data']['isBankAccountLinked'];
+
+    if (flag) return;
+
     // isBankAccountLink.value ?  getUserInfoBackDetails(context): loginToAutoTractions(context, Phone.value);
-  
-    Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
-     acceptReset.value=false;
+
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+    acceptReset.value = false;
     // Navigator.popAndPushNamed(context, '/home');
   } else {
-      acceptReset.value=false;
+    acceptReset.value = false;
     var snackBar = SnackBar(
       duration: Durations.medium4,
       content: Text(
@@ -87,32 +86,30 @@ void loginUser(TextEditingController emailController,
   }
 }
 
-void storeinmap(body,SharedPreferences _pref,String password) {
+void storeinmap(body, SharedPreferences _pref, String password) {
+  var jsonObj = body['data'];
 
-  var jsonObj=body['data'];
+  var bodyObj = {
+    "accessToken": "Bearer " + jsonObj['accessToken'],
+    "name": jsonObj['name'],
+    "password": password,
+    "email": jsonObj['email'],
+    "avatar": jsonObj['avatarType'],
+  };
 
-    var bodyObj={
-      "accessToken":"Bearer "+jsonObj['accessToken'],
-      "name":jsonObj['name'],
-      "password":password,
-      "email":jsonObj['email'],
-      "avatar":jsonObj['avatarType'],
-    };
+  Map<String, dynamic> map = Map<String, dynamic>();
 
-    Map<String, dynamic> map=Map<String, dynamic>();
+  if (_pref.containsKey("loginUsers")) {
+    String mapData = _pref.getString("loginUsers").toString();
+    map = jsonDecode(mapData);
+  }
 
-    if(_pref.containsKey("loginUsers")){
-          String mapData= _pref.getString("loginUsers").toString();
-          map=jsonDecode(mapData);
-    }
+  map[jsonObj['name']] = bodyObj;
 
-    map[jsonObj['name']]=bodyObj;
+  _pref.setString("loginUsers", jsonEncode(map));
 
-    _pref.setString("loginUsers",jsonEncode(map));
-
-    loginUsersList.clear();
-    loginUsersList.addAll(map);
-  
+  loginUsersList.clear();
+  loginUsersList.addAll(map);
 }
 
 void getOTP(context, String name, String email) async {
@@ -132,7 +129,7 @@ void getOTP(context, String name, String email) async {
   // printData(response, context);
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-  
+
     snackBarCalled(context, "Sended Otp To Email Id...!", Colors.black);
   } else {
     snackBarCalled(context, "can't send opt!", Colors.red);
@@ -248,7 +245,7 @@ void resendOpt(context, email, name) async {
     },
     body: jsonEncode({'email': email, "name": name, 'type': 'resetPassword'}),
   );
-  
+
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     snackBarCalled(context, "ReSended Otp To Email Id...!", Colors.black);
@@ -271,7 +268,7 @@ void resendOptUser(context, email, name) async {
       "name": name,
     }),
   );
- 
+
   printData(response, context);
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
@@ -298,7 +295,7 @@ void loginUser2(TextEditingController emailController,
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     String accessToken = body['data']['accessToken'];
-    _pref.setString("accessToken", "Bearer "+accessToken);
+    _pref.setString("accessToken", "Bearer " + accessToken);
     // snackBarCalled(context, "User logined..",Colors.green);
     // .pop(context);Navigator
     // Get.p
@@ -330,128 +327,116 @@ Future<void> handleSignInGoogle(BuildContext context) async {
 
   String serverClientId =
       "191971007715-768tpapqjlkvcj4grgfi66md6fh3a89m.apps.googleusercontent.com";
-  String mobile="637011980078-s9kioj0kh6pkqebbf20h6fk45ufujsbg.apps.googleusercontent.com";
-  String web="637011980078-snckpvhmqpcog8jejihnr8ioonvf1n22.apps.googleusercontent.com";
-  // String serverClientId = 
+  String mobile =
+      "637011980078-s9kioj0kh6pkqebbf20h6fk45ufujsbg.apps.googleusercontent.com";
+  String web =
+      "637011980078-snckpvhmqpcog8jejihnr8ioonvf1n22.apps.googleusercontent.com";
+  // String serverClientId =
   //     "637011980078-s9kioj0kh6pkqebbf20h6fk45ufujsbg.apps.googleusercontent.com";
 
   // GoogleSignIn _googleSignIn = GoogleSignIn(serverClientId:serverClientId,);
 
-  
   try {
-  
     // var googleUser = await _googleSignIn.signIn();
-   
+
     // if (googleUser != null) {
-      // final GoogleSignInAuthentication googleAuth =
-      //     await googleUser.authentication;
+    // final GoogleSignInAuthentication googleAuth =
+    //     await googleUser.authentication;
 
-      // final SharedPreferences _pref = await SharedPreferences.getInstance();
-      // //  _pref.setString("accessToken", "Bearer "+accessToken);
-      // _pref.setString("accessToken", "Google "+googleAuth.accessToken.toString());
-   
-      // Navigator.pushNamed(context, '/home');
-      
+    // final SharedPreferences _pref = await SharedPreferences.getInstance();
+    // //  _pref.setString("accessToken", "Bearer "+accessToken);
+    // _pref.setString("accessToken", "Google "+googleAuth.accessToken.toString());
 
-      // You can use the ID Token to authenticate with your backend
+    // Navigator.pushNamed(context, '/home');
+
+    // You can use the ID Token to authenticate with your backend
     // } else {
-     
+
     // }
-  } catch (error) {
-    
-  }
+  } catch (error) {}
 }
 
+void clearGetX() {
+  income = 0.obs;
+  messages.clear();
+  messagesTemp.clear();
+  roomBills.clear();
+  questionRoom.clear();
+  productList.clear();
+  userPostList.clear();
+  savedList.clear();
+  myPostList.clear();
+  friendsList.clear();
+  frdsListOrigin.clear();
+  chatList.clear();
+  chatListOriginal.clear();
+  friendsListDetails.clear();
+  chatOfUserList.clear();
+  chatOfUserListData.clear();
+  aboutMe = false.obs;
+  sizeRoom = false;
+  fontSize = 20;
+  budgetLength = 0.obs;
+  billLength = 0.obs;
+  debtLength = 0.obs;
+  paymentLength = 0.obs;
+  keyss = originalKeys;
+  room = [];
+  account = [];
+  notificationList.clear();
+  hasGetNewNotifications.value = false;
+  userName = "Loading...".obs;
+  currentId = "Loading...".obs;
+  Phone = "Loading...".obs;
+  currency = "Loading...".obs;
+  score = "Loading...".obs;
+  email = "Loading...".obs;
+  userId = "";
+  targetString = "".obs;
+  //  listOfCater =<Plot> [].obs;
+  isBankAccountLink.value = true;
+  trasactionsData.clear();
+  isBankAccountLink.value = false;
+}
 
- void clearGetX() {
-            income=0.obs;
-            messages.clear();
-            messagesTemp.clear();
-            roomBills.clear();
-            questionRoom.clear();
-            productList.clear();
-            userPostList.clear();
-            savedList.clear();
-            myPostList.clear();
-            friendsList.clear();
-            frdsListOrigin.clear();
-            chatList.clear();
-            chatListOriginal.clear();
-            friendsListDetails.clear();
-            chatOfUserList.clear();
-            chatOfUserListData.clear();
-            aboutMe=false.obs;
-            sizeRoom=false;
-            fontSize=20;
-            budgetLength=0.obs;
-            billLength=0.obs;
-            debtLength=0.obs;
-            paymentLength=0.obs;
-            keyss=originalKeys;
-            room=[];
-            account=[];
-            notificationList.clear();
-            hasGetNewNotifications.value=false;
-              userName="Loading...".obs;
-            currentId="Loading...".obs;
-            Phone="Loading...".obs;
-            currency="Loading...".obs;
-            score="Loading...".obs;
-            email="Loading...".obs;
-            userId=""; 
-         targetString="".obs;
-        //  listOfCater =<Plot> [].obs;
-           isBankAccountLink.value=true;
-           trasactionsData.clear();
-           isBankAccountLink.value=false;     
-  }
+void oneSignalApis(context) async {
+  String appId = "ff897875-4bac-4b0c-9bb6-a371998d4d1c";
 
+  await OneSignal.shared.setAppId(appId);
 
-
-
-void oneSignalApis(context)async{
-   
-  String appId="ff897875-4bac-4b0c-9bb6-a371998d4d1c";
-  
- await OneSignal.shared.setAppId(appId);
- 
-
- 
-OneSignal().promptUserForPushNotificationPermission().then((granted) {
+  OneSignal().promptUserForPushNotificationPermission().then((granted) {
     if (granted) {
       print("Notification permission granted");
     } else {
       print("Notification permission not granted");
     }
   });
- var status =await OneSignal.shared.getDeviceState();
- String? userDeviceId = status?.userId; 
- print("userDeviceId");// Get us the device Unique Id
- print(userDeviceId);// Get us the device Unique Id
- await  getDeviceInfo(userDeviceId!,context);
- 
+  var status = await OneSignal.shared.getDeviceState();
+  String? userDeviceId = status?.userId;
+  print("userDeviceId"); // Get us the device Unique Id
+  print(userDeviceId); // Get us the device Unique Id
+  await getDeviceInfo(userDeviceId!, context);
 
- OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-  print("Notification Opened: ${result.notification.additionalData}");
+  OneSignal.shared
+      .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+    print("Notification Opened: ${result.notification.additionalData}");
 
-  String? screen = result.notification.additionalData?['screen'];
-  print("Screen to Navigate To: $screen");
-  // var data=await  getDeviceInfo();
+    String? screen = result.notification.additionalData?['screen'];
+    print("Screen to Navigate To: $screen");
+    // var data=await  getDeviceInfo();
 
-  if (screen != null) {
-    Navigator.pushNamed(context, screen); // Navigate to the screen
-  } else {
-    print("No screen specified in additional data.");
-  }
-});
+    if (screen != null) {
+      Navigator.pushNamed(context, screen); // Navigate to the screen
+    } else {
+      print("No screen specified in additional data.");
+    }
+  });
 
   // var data=await  getDeviceInfo();
   // print(data);
 }
 
-
-
-Future<void> getDeviceInfo(String playerId,context) async {
+Future<void> getDeviceInfo(String playerId, context) async {
   final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   Map<String, String> deviceData = {};
 
@@ -462,7 +447,7 @@ Future<void> getDeviceInfo(String playerId,context) async {
       // print(androidInfo);
       // print(androidInfo.device);
       deviceData = {
-        'deviceId':playerId,
+        'deviceId': playerId,
         'deviceName': androidInfo.device ?? 'Unknown',
         // 'manufacturer': androidInfo.manufacturer ?? 'Unknown',
         'os': 'Android',
@@ -472,7 +457,7 @@ Future<void> getDeviceInfo(String playerId,context) async {
       // For iOS devices
       final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       deviceData = {
-        'deviceId':playerId,
+        'deviceId': playerId,
         'deviceName': iosInfo.name ?? 'Unknown',
         // 'manufacturer': 'Apple',
         'os': 'iOS',
@@ -480,7 +465,7 @@ Future<void> getDeviceInfo(String playerId,context) async {
       };
     } else {
       deviceData = {
-        'deviceId':playerId,
+        'deviceId': playerId,
         'deviceName': 'Unknown',
         // 'manufacturer': 'Unknown',
         'os': 'Unknown',
@@ -489,18 +474,15 @@ Future<void> getDeviceInfo(String playerId,context) async {
     }
   } catch (e) {
     print('Error getting device info: $e');
-  }  
-  
-  await addThisDeviceToBackend(deviceData,context);
- 
+  }
+
+  await addThisDeviceToBackend(deviceData, context);
 }
 
+Future<void> addThisDeviceToBackend(deviceData, context) async {
+  final SharedPreferences _pref = await SharedPreferences.getInstance();
+  var accessToken = _pref.getString("accessToken");
 
-Future<void> addThisDeviceToBackend(deviceData,context)async
-{
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-     var accessToken = _pref.getString("accessToken");
-  
   final response = await http.post(
     Uri.parse('${url}/notify/addDeviceToNotify/'),
     headers: <String, String>{

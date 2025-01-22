@@ -89,6 +89,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                   //  Otpscreen
                   // loginToAutoTractions(context);
                   if(!widget.flag)LOGOUT();
+                  if(!widget.flag)initFinvuManager();
                   
                   Navigator.push(
                     context,

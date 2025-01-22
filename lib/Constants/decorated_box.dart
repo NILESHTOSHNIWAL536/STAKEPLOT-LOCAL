@@ -8,8 +8,8 @@ class DecoratedContainer extends StatelessWidget {
   final EdgeInsets padding;
   //final double elevation;
   //final BoxShadow? boxShadow;
-  final double? width;
-  final double? height;
+  final double minWidth;
+  final double minHeight;
 
   const DecoratedContainer({
     Key? key,
@@ -19,33 +19,28 @@ class DecoratedContainer extends StatelessWidget {
     this.padding = const EdgeInsets.all(8.0),
     //this.elevation = 2.0,
     //this.boxShadow,
-    this.width, // Optional width
-    this.height, // Optional height
+    this.minWidth = 10.0, // Default minimum width
+    this.minHeight = 10.0, // Optional height
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      //elevation: elevation,
       borderRadius: BorderRadius.circular(borderRadius),
       color: backgroundColor,
-      child: Container(
-        width: width,
-        height: height,
-        padding: padding,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(borderRadius),
-          // boxShadow: boxShadow != null
-          //     ? [boxShadow!]
-          //     : [
-          //         BoxShadow(
-          //           color: Colors.black.withOpacity(0.1),
-          //           blurRadius: 4.0,
-          //           offset: const Offset(0, 2),
-          //         ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minWidth: minWidth,
+          minHeight: minHeight,
         ),
-        child: Center(child: child),
+        child: Container(
+          padding: padding,
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(borderRadius),
+          ),
+          child: child,
+        ),
       ),
     );
   }

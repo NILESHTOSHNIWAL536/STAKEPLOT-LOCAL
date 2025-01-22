@@ -29,25 +29,7 @@ class Community extends StatefulWidget {
 }
 
 class _CommunityState extends State<Community> {
-  final List<Map<String, dynamic>> posts = [
-    {
-      'profilePic': 'https://via.placeholder.com/50',
-      'name': 'John Doe',
-      'contentType': 'text',
-      'content': 'This is a text-only post. Welcome to our community!',
-      'title': 'title here',
-      "likeCount": 0,
-      "isLiked": false
-    },
-    {
-      'profilePic': 'https://via.placeholder.com/50',
-      'name': 'Jane Smith',
-      'contentType': 'image',
-      'content': 'https://via.placeholder.com/300',
-      "likeCount": 0,
-      "isLiked": false
-    },
-  ];
+  final List<Map<String, dynamic>> posts = [];
 
   String? selectedImage;
   String CurrentUser = 'user1';
@@ -122,12 +104,15 @@ class _CommunityState extends State<Community> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Welcome back to',
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.normal,
-                      fontSize: 18,
-                      color: Colors.black),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    'Welcome back to',
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.normal,
+                        fontSize: 18,
+                        color: Colors.black),
+                  ),
                 ),
                 Text(
                   'Financial Community',
@@ -153,8 +138,8 @@ class _CommunityState extends State<Community> {
                         },
                         icon: AvatarProfileImage(
                           url: LikeComment.plus,
-                          height: 20,
-                          width: 20,
+                          height: 22,
+                          width: 22,
                         ),
                       )),
                   TextButton(
@@ -207,8 +192,8 @@ class _CommunityState extends State<Community> {
               },
               icon: AvatarProfileImage(
                 url: LikeComment.message,
-                height: 18,
-                width: 18,
+                height: 20,
+                width: 20,
               ),
             ),
           ],
@@ -275,8 +260,8 @@ class _CommunityState extends State<Community> {
                         //crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           DecoratedContainer(
-                            width: 90.0,
-                            height: 60.0,
+                            // width: 90.0,
+                            // height: 60.0,
                             child: IconButton(
                               icon: const Icon(Icons.text_fields),
                               onPressed: () {
@@ -317,8 +302,8 @@ class _CommunityState extends State<Community> {
                         //crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           DecoratedContainer(
-                            width: 90.0,
-                            height: 60.0,
+                            // width: 90.0,
+                            // height: 60.0,
                             child: IconButton(
                               icon: const Icon(Icons.image_rounded),
                               onPressed: () {
@@ -358,8 +343,8 @@ class _CommunityState extends State<Community> {
                         //crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           DecoratedContainer(
-                            width: 90.0,
-                            height: 60.0,
+                            // width: 90.0,
+                            // height: 60.0,
                             child: IconButton(
                               icon: const Icon(Icons.poll_outlined),
                               onPressed: () {
@@ -406,48 +391,49 @@ class _CommunityState extends State<Community> {
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 24,
-                ),
+                // SizedBox(
+                //   height: 24,
+                // ),
                 // ... existing code ...
-                Align(
-                  alignment: Alignment.center,
-                  child: DecoratedContainer(
-                    width:
-                        MediaQuery.of(context).size.width - 50, // Match padding
+                // This code of exploria is meant for later purposes
+                // Align(
+                //   alignment: Alignment.center,
+                //   child: DecoratedContainer(
+                //     // width:
+                //     //     MediaQuery.of(context).size.width - 50, // Match padding
 
-                    height: 60.0,
-                    borderRadius: 24,
-                    child: TextButton.icon(
-                      icon: Icon(Icons.explore),
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Close the current modal
-                        showModalBottomSheet(
-                          context: context,
-                          //isScrollControlled: true,
-                          builder: (context) {
-                            return Container(
-                              height: MediaQuery.of(context).size.height * 0.7,
-                              // 80% of screen height
-                              child: ExploreModal(
-                                onPostCreated: (newPost) {
-                                  setState(() {
-                                    posts.add(newPost);
-                                  });
-                                },
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      label: Text('Exploria',
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.normal,
-                              fontSize: 18,
-                              color: Colors.black)),
-                    ),
-                  ),
-                ),
+                //     // height: 60.0,
+                //     borderRadius: 24,
+                //     child: TextButton.icon(
+                //       icon: Icon(Icons.explore),
+                //       onPressed: () {
+                //         Navigator.of(context).pop(); // Close the current modal
+                //         showModalBottomSheet(
+                //           context: context,
+                //           //isScrollControlled: true,
+                //           builder: (context) {
+                //             return Container(
+                //               height: MediaQuery.of(context).size.height * 0.7,
+                //               // 80% of screen height
+                //               child: ExploreModal(
+                //                 onPostCreated: (newPost) {
+                //                   setState(() {
+                //                     posts.add(newPost);
+                //                   });
+                //                 },
+                //               ),
+                //             );
+                //           },
+                //         );
+                //       },
+                //       label: Text('Exploria',
+                //           style: FontManager().getTextStyle(context,
+                //               lWeight: FontWeight.normal,
+                //               fontSize: 18,
+                //               color: Colors.black)),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

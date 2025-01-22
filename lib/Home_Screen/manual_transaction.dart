@@ -34,53 +34,58 @@ class _ManualtransactionState extends State<Manualtransaction> {
   Widget build(BuildContext context) {
     return Container(
       //height: 300,
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
         color: AppColors.mt,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          IconButton(
-            onPressed: () {},
-            icon: SvgPicture.asset(
-              HomePageIcons.manualTransaction,
-              height: 30,
-              width: 30,
-            ),
-          ),
-          const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text('Manual Transaction',
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.normal,
-                      fontSize: MediaQuery.of(context).size.width * 0.04,
-                      color: AppColors.accentColor)),
-              const SizedBox(height: 8),
-              DecoratedContainer(
-                  borderRadius: 24,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: TextButton(
-                      onPressed: () {
-                        showCustomModal(context);
-                      },
-                      child: Text('Start now',
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.normal,
-                              fontSize: 12,
-                              color: AppColors.primaryColor)))),
-            ],
-          ),
-          const Spacer(),
-          // Placeholder for an manual transaction image
+              IconButton(
+                  onPressed: () {},
+                  icon: AvatarProfileImage(
+                    url: HomePageIcons.manualTransaction,
+                    height: 20,
+                    width: 20,
+                  )),
+              SizedBox(width: MediaQuery.of(context).size.width / 28),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Manual Transaction',
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w600,
+                          fontSize: MediaQuery.of(context).size.width * 0.04,
+                          color: AppColors.accentColor)),
+                  const SizedBox(height: 8),
+                  DecoratedContainer(
+                      borderRadius: 24,
+                      //height: MediaQuery.of(context).size.height * 0.04,
+                      child: TextButton(
+                          onPressed: () {
+                            showCustomModal(context);
+                          },
+                          child: Text('Start now',
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.normal,
+                                  fontSize: 12,
+                                  color: AppColors.primaryColor)))),
+                ],
+              ),
+              //const Spacer(),
+              // Placeholder for an manual transaction image
 
-          AvatarProfileImage(
-            url: Pictures.manualTransactionImage,
-            height: 8,
-            width: 8,
+              AvatarProfileImage(
+                url: Pictures.manualTransactionImage,
+                height: 9,
+                width: 20,
+              ),
+            ],
           )
 
           // Expanded(
@@ -439,7 +444,7 @@ class _ModalContentState extends State<ModalContent>
 
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.attach_money),
+                          prefixIcon: const Icon(Icons.currency_rupee),
                           hintText: 'Enter the amount',
                           hintStyle: FontManager().getTextStyle(context,
                               lWeight: FontWeight.normal,
@@ -657,7 +662,7 @@ class _ModalContentState extends State<ModalContent>
       return;
     }
     if (addedMembers.length <= 0) {
-      snackBarCalled(context, "Pls Add Members....!", Colors.red);
+      snackBarCalled(context, "Please add members....!", Colors.red);
       return;
     }
 
@@ -779,12 +784,12 @@ class _ModalContentState extends State<ModalContent>
 
       members.forEach((e) {
         sendNotificationsToDevice(e['id'], context,
-            "${userName.value} Has Send U a Split Bill..Of ${name} Of ${amount}");
+            "${userName.value} has send u a Split Bill..Of ${name} Of ${amount}");
       });
       addSocketMessage(addedMembers, amount.toString(),
           selectedCategory2.toString(), splitID.value);
 
-      snackBarCalled(context, "Slit Amount send to users!", Colors.black);
+      snackBarCalled(context, "Split amount sent to users!", Colors.black);
       addTransaction(
           amount, "Split Bill (${subCategories})", name, context, 'cash', true);
     } else {
@@ -821,10 +826,10 @@ class _ModalContentState extends State<ModalContent>
       final body = json.decode(response.body);
       members.forEach((e) {
         sendNotificationsToDevice(e['id'], context,
-            "${userName.value} Has Send U a Lend Bill..Of ${name} Of ${amount}");
+            "${userName.value} has sent u a lend bill..Of ${name} Of ${amount}");
       });
 
-      snackBarCalled(context, "Lend Amount send to users!", Colors.black);
+      snackBarCalled(context, "Lend amount sent to users!", Colors.black);
       addTransaction(
           amount, "Lend Bill (${subCategories})", name, context, 'cash', true);
       // addSocketMessage(addedMembers,amount.toString(),selectedCategory2.toString()+"Lend Bill (${subCategories})", splitID.value);
@@ -840,7 +845,7 @@ class _ModalContentState extends State<ModalContent>
       );
       // }
     } else {
-      snackBarCalled(context, "can't split error!", Colors.red);
+      snackBarCalled(context, "can't split ,error!", Colors.red);
     }
     acceptReset.value = false;
   }

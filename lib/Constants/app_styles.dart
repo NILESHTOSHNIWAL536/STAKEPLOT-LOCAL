@@ -150,3 +150,14 @@ class LikeComment {
   static String plus = "assets/icons/likeComment/Plus.svg";
   static String message = "assets/icons/likeComment/Messagecircle.svg";
 }
+
+class ProfileIcons {
+  static String profileIcon = "assets/icons/profileScreen/";
+  static String communityProf = "assets/icons/profileScreen/CommunityProf.svg";
+  static String edit = "assets/icons/profileScreen/Edit.svg";
+  static String friends = "assets/icons/profileScreen/friends.svg";
+  static String logout = "assets/icons/profileScreen/logout.svg";
+  static String privacyPolicy = "assets/icons/profileScreen/privacyPolicy.svg";
+  static String support = "assets/icons/profileScreen/support.svg";
+  static String terms = "assets/icons/profileScreen/terms.svg";
+}

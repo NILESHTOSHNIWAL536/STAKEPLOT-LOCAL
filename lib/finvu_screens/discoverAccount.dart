@@ -53,7 +53,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Center(
-          child: Text("Selete Banks" ,style: FontManager().getTextStyle(context,
+          child: Text("Select Bank" ,style: FontManager().getTextStyle(context,
               lWeight: FontWeight.bold, fontSize: 18, color: Colorcodes.black),),
         ),
         backgroundColor: Colorcodes.white,
@@ -67,7 +67,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
 
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
-                    child: Text("Pick atleast one  Bank to proceed..." ,style: FontManager().getTextStyle(context,
+                    child: Text("Pick atleast one bank to proceed..." ,style: FontManager().getTextStyle(context,
                          lWeight: FontWeight.bold, fontSize: 18, color: Colorcodes.black),),
                   ),
 
@@ -81,7 +81,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: getButton(context, "Fetch Bank Account.."),
+                        child: getButton(context, "Fetch Bank Account"),
                       ),
                     ),
 
@@ -96,19 +96,29 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
 
   Widget getListOfFinvuBanks()
   {
+      // return Container(
+      //   width: MediaQuery.of(context).size.width,
+      //   height: MediaQuery.of(context).size.height/1.5,
+      //   child: SingleChildScrollView(
+      //     child: Expanded(
+      //       child: Column(
+      //            mainAxisAlignment: MainAxisAlignment.start,
+      //            crossAxisAlignment: CrossAxisAlignment.start,
+      //            children: fipDis.map((bankData)=>getBackUi(bankData)).toList(),
+      //       ),
+      //     ),
+      //   ),
+      // );
       return Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height/1.5,
-        child: SingleChildScrollView(
-          child: Expanded(
-            child: Column(
-                 mainAxisAlignment: MainAxisAlignment.start,
-                 crossAxisAlignment: CrossAxisAlignment.start,
-                 children: fipDis.map((bankData)=>getBackUi(bankData)).toList(),
-            ),
-          ),
-        ),
-      );     
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height / 1.5,
+                    child: ListView.builder(
+                      itemCount: fipDis.length,
+                      itemBuilder: (context, index) {
+                        return getBackUi(fipDis[index]); 
+                      },
+                    ),
+          );     
   }
 
   void addBackToList(boolVale,bankData)
@@ -253,7 +263,9 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                  FinvuTypeIdentifierInfo obj=FinvuTypeIdentifierInfo(
                    category: ele.category,
                    type: ele.type,
+                   
                    value:number.value , // dou
+                   
                  );
                   finvuTypeIdentifierInfo.add(obj);       
              });

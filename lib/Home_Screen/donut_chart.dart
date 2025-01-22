@@ -61,7 +61,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                   'Monthly Expenses',
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.normal,
-                      fontSize: 12,
+                      fontSize: 14,
                       color: AppColors.bg3),
                 ),
                 const SizedBox(height: 4),
@@ -182,7 +182,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                     selectedIndex == null ||
                                             selectedIndex == index
                                         ? data.color
-                                        : data.color.withOpacity(0.3),
+                                        : data.color.withOpacity(0.0),
                                 explode: true,
                                 explodeIndex: selectedIndex,
                                 dataLabelSettings:

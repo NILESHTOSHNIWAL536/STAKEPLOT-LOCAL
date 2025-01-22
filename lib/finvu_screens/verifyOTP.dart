@@ -153,6 +153,9 @@ import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/access.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -168,12 +171,11 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-
 class VerifyOtp extends StatefulWidget {
-    int flag;
-   final FinvuAccountLinkingRequestReference? linkingReference; 
-   String fid="";
-   VerifyOtp({super.key,this.flag=0,this.linkingReference,this.fid=""});
+  int flag;
+  final FinvuAccountLinkingRequestReference? linkingReference;
+  String fid = "";
+  VerifyOtp({super.key, this.flag = 0, this.linkingReference, this.fid = ""});
 
   @override
   State<VerifyOtp> createState() => _VerifyOtpState();
@@ -208,14 +210,24 @@ class _VerifyOtpState extends State<VerifyOtp> {
 
   @override
   Widget build(BuildContext context) {
-    final double boxSize = MediaQuery.of(context).size.width * 0.15;
+    final double boxSize = MediaQuery.of(context).size.width * 0.12;
 
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
-        title: Text('Verify OTP'),
+        backgroundColor: AppColors.backgroundColor,
+        title: Text(
+          'Verify OTP',
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.bold,
+            fontSize: 18,
+            color: AppColors.accentColor,
+          ),
+        ),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 30,horizontal: 4),
+        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -254,6 +266,15 @@ class _VerifyOtpState extends State<VerifyOtp> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Text(
+                  "Didn't receive OTP?",
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: AppColors.bg1,
+                  ),
+                ),
                 TextButton(
                   onPressed: () {
                     // Navigator.pushReplacement(
@@ -264,7 +285,15 @@ class _VerifyOtpState extends State<VerifyOtp> {
                     // );
                     loginToAutoTractions(context);
                   },
-                  child: Text("Resend"),
+                  child: Text(
+                    "Resend",
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w400,
+                      fontSize: 14,
+                      color: AppColors.bg3,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -272,14 +301,13 @@ class _VerifyOtpState extends State<VerifyOtp> {
             GestureDetector(
               onTap: _isOtpValid
                   ? () {
-                      int f=widget.flag;
-                      if(f==0)verify(_otpCode,context);
-                       else if(f==1){
+                      int f = widget.flag;
+                      if (f == 0)
+                        verify(_otpCode, context);
+                      else if (f == 1) {
                         //  linkingReference
-                         linkAccount(_otpCode);
-                        
-                       }
-                     
+                        linkAccount(_otpCode);
+                      }
                     }
                   : null,
               child: Container(
@@ -310,19 +338,19 @@ class _VerifyOtpState extends State<VerifyOtp> {
     );
   }
 
-
-
-  void linkAccount(otp)async{
-   try{
-                                  // print(_controller.text);
-                                  var  data = await finvuManager.confirmAccountLinking(widget.linkingReference!,otp);
-                                 
-                                snackBarCalled(context,"Linked Bank SuccessFully..."); 
-                                Navigator.pop(context); 
-                                accountLinked.add(widget.fid); 
-                               
-                                  }catch(e){
-                                         snackBarCalled(context,"Error while Linking verify Otp/ Or Already Linked...",Colors.red);   
-                                  }
+  void linkAccount(otp) async {
+      try {
+        // print(_controller.text);
+        var data = await finvuManager.confirmAccountLinking(
+            widget.linkingReference!, otp);
+        snackBarCalled(context, "Linked Bank SuccessFully...");
+        Navigator.pop(context);
+        accountLinked.add(widget.fid);
+      } catch (e) {
+        snackBarCalled(context,
+            "Error while Linking verify Otp/ Or Already Linked...", Colors.red);
+      }
   }
+
+
 }

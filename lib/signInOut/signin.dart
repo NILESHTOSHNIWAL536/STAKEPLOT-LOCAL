@@ -150,18 +150,18 @@ class _SigninState extends State<Signin> {
                       height: 50,
                     ),
                   
-                  InkWell(
-                      onTap:()async{
-                         var data=await finvuManager.fipsAllFIPOptions(); 
-                        //  data=data[0].fipId;
-                        print(data);
-                        print(data.first);
-                        print(data.first.fipFitypes);
-                        print(data.first.fipId);
+                  // InkWell(
+                  //     onTap:()async{
+                  //        var data=await finvuManager.fipsAllFIPOptions(); 
+                  //       //  data=data[0].fipId;
+                  //       print(data);
+                  //       print(data.first);
+                  //       print(data.first.fipFitypes);
+                  //       print(data.first.fipId);
                         
-                      },
-                      child:Text(" fipsAllFIPOptions() ")
-                  ),
+                  //     },
+                  //     child:Text(" fipsAllFIPOptions() ")
+                  // ),
 
 
                     Center(
@@ -251,7 +251,7 @@ class _SigninState extends State<Signin> {
                           child: Text(("Link Finvu"),
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.bold,
-                                  fontSize: 12,
+                                  fontSize: 15,
                                   color: Colorcodes.iconBackGround,
                                   decoration: TextDecoration.underline)),
                         ),

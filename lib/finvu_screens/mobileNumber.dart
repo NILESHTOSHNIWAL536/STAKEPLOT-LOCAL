@@ -68,7 +68,7 @@ class _MobileNumberState extends State<MobileNumber> {
               onTap: () {
                 // Handle OTP logic here
                 if(_phoneController.text.length!=10){
-                    snackBarCalled(context, "Pls Enter Valid Mobile No....",Colorcodes.red);
+                    snackBarCalled(context, "Please enter valid mobile number....",Colorcodes.red);
                     return;
                 };
                 String phoneNumber = _phoneController.text;

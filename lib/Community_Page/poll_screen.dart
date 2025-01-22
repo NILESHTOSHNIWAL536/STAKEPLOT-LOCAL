@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import './success_post.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
@@ -57,26 +58,19 @@ class _PollScreenState extends State<PollScreen> {
   void _createPoll() {
     if (_questionController.text.isNotEmpty &&
         _optionControllers.every((controller) => controller.text.isNotEmpty)) {
-     
-        question = _questionController.text;
+      question = _questionController.text;
       // List<String>  options = _optionControllers.map((controller) => controller.text).toList();
-        List options=[];
-      
-      _optionControllers.map((controller){
-           String op=  controller.text;
-            options.add({"option": op,});
+      List options = [];
+
+      _optionControllers.map((controller) {
+        String op = controller.text;
+        options.add({
+          "option": op,
+        });
       }).toList();
 
-
-
-       
-        createPollOfCommunityPost(context,question.toString(),options,{},[],"casual"); 
-
-        
-
-      
-
-     
+      createPollOfCommunityPost(
+          context, question.toString(), options, {}, [], "casual");
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -123,15 +117,15 @@ class _PollScreenState extends State<PollScreen> {
                         Text(
                           widget.userInfo['name'].toString(),
                           style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.normal,
+                              lWeight: FontWeight.w600,
                               fontSize: 18,
-                              color: Colors.black),
+                              color: AppColors.bg1),
                         ),
                         Text('New post',
                             style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.normal,
+                                lWeight: FontWeight.w400,
                                 fontSize: 14,
-                                color: Colors.black)),
+                                color: AppColors.bg1)),
                       ],
                     ),
                   ],
@@ -142,9 +136,9 @@ class _PollScreenState extends State<PollScreen> {
                     decoration: InputDecoration(
                       hintText: 'Ask a question',
                       hintStyle: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.normal,
+                          lWeight: FontWeight.w600,
                           fontSize: 16,
-                          color: Colors.black),
+                          color: AppColors.bg1),
                       border: InputBorder.none,
                     ),
                   ),
@@ -162,11 +156,11 @@ class _PollScreenState extends State<PollScreen> {
                                   hintStyle: FontManager().getTextStyle(context,
                                       lWeight: FontWeight.normal,
                                       fontSize: 14,
-                                      color: Colors.black),
+                                      color: AppColors.bg1),
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(16))),
-                                  fillColor: Colors.grey[300],
+                                  fillColor: AppColors.button,
                                   filled: true,
                                   suffixIcon: _showCross[index]
                                       ? IconButton(
@@ -204,7 +198,7 @@ class _PollScreenState extends State<PollScreen> {
                               context,
                               lWeight: FontWeight.normal,
                               fontSize: 14,
-                              color: Colors.black,
+                              color: AppColors.bg1,
                             ),
                           )
                         : const SizedBox.shrink(),
@@ -215,15 +209,21 @@ class _PollScreenState extends State<PollScreen> {
                       backgroundColor: _questionController.text.isNotEmpty &&
                               _optionControllers.every(
                                   (controller) => controller.text.isNotEmpty)
-                          ? Colors.blue
-                          : Colors.grey,
+                          ? AppColors.primaryColor
+                          : AppColors.button,
                       child: TextButton(
                         onPressed: _createPoll,
                         child: Text('Continue',
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.normal,
-                                fontSize: 18,
-                                color: Colors.black)),
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.normal,
+                              fontSize: 18,
+                              color: _questionController.text.isNotEmpty &&
+                                      _optionControllers.every((controller) =>
+                                          controller.text.isNotEmpty)
+                                  ? Colors.white
+                                  : Colors.black,
+                            )),
                       )),
                 ] else ...[
                   Card(
