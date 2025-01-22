@@ -231,13 +231,17 @@ Widget accountLinkedUi(){
       );
   }
 
-  Widget textStyle(text,[fontsize=12]){
-     return Column(
-       children: [
-                 const SizedBox(width: 7,),
-                        Text(text.toString(),style: FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.w500, fontSize: fontsize, color: Colorcodes.black),),
-       ],
+  Widget textStyle(text,[double fontsize=12]){
+     return Padding(
+       padding: const EdgeInsets.symmetric(vertical: 4),
+       child: Column(
+         children: [
+                   const SizedBox(width: 7,),
+                          Text(text.toString(),style: FontManager().getTextStyle(context,
+                                          lWeight: FontWeight.w500, fontSize: fontsize, color: Colorcodes.black),),
+                   const SizedBox(width: 7,),
+         ],
+       ),
      );
   }
 
