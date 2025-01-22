@@ -64,7 +64,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height / 1.2,
             padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 3.0),
             child: Column(
               children: [
                 Padding(
@@ -80,44 +80,29 @@ class _LinkingAccountState extends State<LinkingAccount> {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
+
                 BankInfoUiContainer(),
+
                 // const Spacer(),
                 InkWell(
-                  onTap: () {
-                    // showModalBottomSheet(
-                    //   context: context,
-                    //   builder: (context) {
-                    //     return accountLinkedUi();
-                    //   },
-                    // );
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Access(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width / 1.2,
-                    // height:MediaQuery.of(context).size.height,
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
-                    decoration: BoxDecoration(
-                        color: AppColors.accentColor,
-                        borderRadius: BorderRadius.circular(24)),
-                    child: Center(
-                      child: Text(
-                        "Authorise",
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.bold,
-                            fontSize: 15,
-                            color: AppColors.bg5),
-                      ),
-                    ),
-                  ),
-                )
+                    onTap: () {
+                      // showModalBottomSheet(
+                      //   context: context,
+                      //   builder: (context) {
+                      //     return accountLinkedUi();
+                      //   },
+                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Access(),
+                        ),
+                      );
+                    },
+                    child: getButton(context, "Authorise")),
               ],
             ),
           ),
@@ -180,12 +165,9 @@ class _LinkingAccountState extends State<LinkingAccount> {
   Widget BankInfoUiContainer() {
     return Container(
       //width: MediaQuery.of(context).size.width / 1.2,
-
+      padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: AppColors.mt,
-      ),
-      padding: const EdgeInsets.all(16.0),
+          borderRadius: BorderRadius.circular(16), color: AppColors.mt),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -204,15 +186,22 @@ class _LinkingAccountState extends State<LinkingAccount> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  textStyle("Bank Accounts", 16),
-                  textStyle("${count.value} Account(s) discovered", 16),
+                  //textStyle("Bank Accounts", 16),
+                  Text(
+                    "Bank Accounts",
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: AppColors.bg1),
+                  ),
+                  textStyle("${count.value} account(s) discovered", 14),
                 ],
               ),
             ],
           ),
           //const Divider(thickness: 1, height: 20),
           const SizedBox(height: 10),
-          textStyle("Select atleast One Account To Share", 15),
+          textStyle("Select atleast 1 Account to share from", 14),
           const SizedBox(height: 10),
           bankAccountList(),
         ],
@@ -222,35 +211,33 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
   Widget bankAccountList() {
     return Container(
-      color: AppColors.mt,
       //padding: const EdgeInsets.fromLTRB(14, 5, 16, 5),
+      //here we can change height
       height: MediaQuery.of(context).size.height / 1.7,
       child: SingleChildScrollView(
-        child: Expanded(
-          child: Column(
-            children: widget.listOfBankAccount.map((account) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Display bank name and image before calling linkedaccoutnData
-                  getBankNameAndImage(account),
-                  FutureBuilder<Widget>(
-                    future: linkedaccoutnData(account),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator(); // Show loading indicator
-                      } else if (snapshot.hasError) {
-                        return Text("Error: ${snapshot.error}");
-                      } else {
-                        return snapshot.data ??
-                            SizedBox.shrink(); // Return the widget from Future
-                      }
-                    },
-                  ),
-                ],
-              );
-            }).toList(),
-          ),
+        child: Column(
+          children: widget.listOfBankAccount.map((account) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Display bank name and image before calling linkedaccoutnData
+                getBankNameAndImage(account),
+                FutureBuilder<Widget>(
+                  future: linkedaccoutnData(account),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator(); // Show loading indicator
+                    } else if (snapshot.hasError) {
+                      return Text("Error: ${snapshot.error}");
+                    } else {
+                      return snapshot.data ??
+                          SizedBox.shrink(); // Return the widget from Future
+                    }
+                  },
+                ),
+              ],
+            );
+          }).toList(),
         ),
       ),
     );
@@ -295,9 +282,9 @@ class _LinkingAccountState extends State<LinkingAccount> {
   Widget verify(linkingReference, fid) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 2,
+      height: MediaQuery.of(context).size.height / 1.5,
       decoration: BoxDecoration(
-        color: Colorcodes.white,
+        color: AppColors.mt,
       ),
       child: Column(
         children: [
@@ -346,7 +333,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                       if (_isOtpValid.value) {
                         linkAccount(_otpCode.value, linkingReference, fid);
                       } else {
-                        snackBarCalled(context, "pls enter otp of length 6");
+                        snackBarCalled(context, "please enter otp of length 6");
                       }
                     }
                   : null,
@@ -404,34 +391,27 @@ class _LinkingAccountState extends State<LinkingAccount> {
       FinvuDiscoveredAccountInfo bankData, FinvuFIPDetails fipDetails) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      //padding: EdgeInsets.symmetric(vertical: 20),
+      //padding: EdgeInsets.symmetric(vertical: 2),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        child: Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              // Obx(() => Checkbox(
-              //     value: accountAdded.contains(bankData.accountReferenceNumber),
-              //     onChanged: (b) {
-              //       addAccountToMap(fipDetails.fipId,
-              //           bankData.accountReferenceNumber, bankData);
-              //     })),
-              Row(
-                children: [
-                  textStyle(bankData.fiType),
-                  textStyle(bankData.accountType),
-                  textStyle(bankData.maskedAccountNumber),
-                ],
-              ),
-              Obx(() => Checkbox(
-                  value: accountAdded.contains(bankData.accountReferenceNumber),
-                  onChanged: (b) {
-                    addAccountToMap(fipDetails.fipId,
-                        bankData.accountReferenceNumber, bankData);
-                  })),
-            ],
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Obx(() => Checkbox(
+                value: accountAdded.contains(bankData.accountReferenceNumber),
+                onChanged: (b) {
+                  addAccountToMap(fipDetails.fipId,
+                      bankData.accountReferenceNumber, bankData);
+                })),
+            Row(
+              children: [
+                textStyle(bankData.fiType),
+                textStyle(bankData.accountType),
+                textStyle(bankData.maskedAccountNumber),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -495,39 +475,41 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
   Widget getBankNameAndImage(FinvuFIPInfo bankData) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Container(
-            width: 30,
-            height: 30,
-            child: Image.network(bankData.productIconUri.toString())),
-        const SizedBox(
-          width: 10,
-        ),
-        textStyle(bankData.productName, 15),
-        SizedBox(
-          width: 10,
+        Row(
+          children: [
+            Container(
+                width: 30,
+                height: 30,
+                child: Image.network(bankData.productIconUri.toString())),
+            const SizedBox(
+              width: 10,
+            ),
+            textStyle(bankData.productName, 15),
+          ],
         ),
         InkWell(
-          onTap: () {
-            otpController=TextEditingController(text: "");
-            LinkingBank(FinvuFIPDetailsList[bankData.fipId]!, bankData.fipId);
-          },
-          child: 
-          // Obx(() => accountLinked.contains(bankData.fipId)
-          //     ? SizedBox.shrink()
-          //     : 
-              Container(
-                  decoration: BoxDecoration(
-                      color: Colorcodes.cardShade5,
-                      borderRadius: BorderRadiusDirectional.circular(10)),
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                  child: Text(
-                    "Link".toString(),
-                    style: TextStyle(fontSize: 14, color: Colorcodes.white),
-                  ),
-                )
-                // ),
-        ),
+            onTap: () {
+              otpController = TextEditingController(text: "");
+              LinkingBank(FinvuFIPDetailsList[bankData.fipId]!, bankData.fipId);
+            },
+            child:
+                // Obx(() => accountLinked.contains(bankData.fipId)
+                //     ? SizedBox.shrink()
+                //     :
+                Container(
+              decoration: BoxDecoration(
+                  color: Colorcodes.cardShade5,
+                  borderRadius: BorderRadiusDirectional.circular(12)),
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+              child: Text(
+                "Link now".toString(),
+                style: TextStyle(fontSize: 12, color: Colorcodes.white),
+              ),
+            )
+            // ),
+            ),
       ],
     );
   }
