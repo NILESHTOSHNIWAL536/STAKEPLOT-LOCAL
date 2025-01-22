@@ -63,12 +63,12 @@ class ApproveConsent extends StatelessWidget {
 
                   InkWell(
                       onTap:()async{
-                         var data=await finvuManager.fipsAllFIPOptions(); 
+                        //  var data=await finvuManager.fipsAllFIPOptions(); 
                         //  data=data[0].fipId;
-                        print(data);
-                        print(data.first);
-                        print(data.first.fipFitypes);
-                        print(data.first.fipId);
+                        // print(data);
+                        // print(data.first);
+                        // print(data.first.fipFitypes);
+                        // print(data.first.fipId);
                         
                       },
                       child:Text(" fipsAllFIPOptions() ")

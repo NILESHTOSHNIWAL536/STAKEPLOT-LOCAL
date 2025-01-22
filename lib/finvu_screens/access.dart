@@ -35,10 +35,14 @@ class _AccessState extends State<Access> {
   }
 
   void getInfomationsAboutUser() async {
+    try{
     fetchAccountData = await finvuManager.fetchLinkedAccounts();
-    finvuConsentRequestDetailInfo =
-        await finvuManager.getConsentRequestDetails(handleId.value);
+    finvuConsentRequestDetailInfo = await finvuManager.getConsentRequestDetails(handleId.value);
     flag.value = true;
+    }catch(e){
+      print(handleId.value);
+      print(e);
+    }
   }
 
   String formatDate(String dateString) {
@@ -660,14 +664,7 @@ class _AccessState extends State<Access> {
       FinvuProcessConsentRequestResponse response =
           await finvuManager.approveConsentRequest(
               finvuConsentRequestDetailInfo, fetchAccountData);
-      //  print(handleId.value);
-      //  print(response.consentIntentId);
-      response.consentInfo!.forEach((e) {
-        // print("e.consentId----------------");
-        // print(e.consentId);
-        // print(e.fipId);
-      });
-
+  
       snackBarCalled(context, "approved ConsentRequest");
       Navigator.push(
         context,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -98,10 +99,8 @@ void ConsentRequestPlus(context, accessToken, custId) async {
       final body = json.decode(response.body);
       String ConsentHandleId = (body['body']['ConsentHandle']);
       String url = (body['body']['url']);
-      // _pref.setString("ConsentHandleId", ConsentHandleId);
-      // clickedLinkedBackAccount.value=true;
-      print("ConsentHandleId");
-      print(ConsentHandleId);
+    
+     
       login(ConsentHandleId);
       handleId.value = ConsentHandleId;
       ConsentStatus(context, accessToken, ConsentHandleId, custId);
@@ -183,7 +182,7 @@ void ConsentFromAndToRequest(
         "Authorization": "$accessToken",
       },
     );
-    // printData(response, context);
+    printData(response, context);
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
       // print('ConsentDetail-----------');

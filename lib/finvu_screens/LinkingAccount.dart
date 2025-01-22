@@ -471,6 +471,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
         ),
         InkWell(
           onTap: () {
+            otpController=TextEditingController(text: "");
             LinkingBank(FinvuFIPDetailsList[bankData.fipId]!, bankData.fipId);
           },
           child: 
