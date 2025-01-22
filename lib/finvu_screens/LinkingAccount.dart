@@ -508,25 +508,26 @@ class _LinkingAccountState extends State<LinkingAccount> {
           width: 10,
         ),
         InkWell(
-            onTap: () {
-              LinkingBank(FinvuFIPDetailsList[bankData.fipId]!, bankData.fipId);
-            },
-            child:
-                // Obx(() => accountLinked.contains(bankData.fipId)
-                //     ? SizedBox.shrink()
-                //     :
-                Container(
-              decoration: BoxDecoration(
-                  color: Colorcodes.cardShade5,
-                  borderRadius: BorderRadiusDirectional.circular(10)),
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-              child: Text(
-                "Link".toString(),
-                style: TextStyle(fontSize: 14, color: Colorcodes.white),
-              ),
-            )
-            // ),
-            ),
+          onTap: () {
+            otpController=TextEditingController(text: "");
+            LinkingBank(FinvuFIPDetailsList[bankData.fipId]!, bankData.fipId);
+          },
+          child: 
+          // Obx(() => accountLinked.contains(bankData.fipId)
+          //     ? SizedBox.shrink()
+          //     : 
+              Container(
+                  decoration: BoxDecoration(
+                      color: Colorcodes.cardShade5,
+                      borderRadius: BorderRadiusDirectional.circular(10)),
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                  child: Text(
+                    "Link".toString(),
+                    style: TextStyle(fontSize: 14, color: Colorcodes.white),
+                  ),
+                )
+                // ),
+        ),
       ],
     );
   }

@@ -73,6 +73,7 @@ dependencies:
   shared_preferences: ^2.3.5
   page_transition: ^2.2.1
   readmore: ^3.0.0
+  rename_app: ^1.6.2
   # sms_otp_auto_verify: ^2.2.0
 
 dev_dependencies:
