@@ -40,12 +40,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
   RxBool _isOtpValid = false.obs; // Validate OTP length
   final TextEditingController _otpController = TextEditingController();
 
-  @override
-  void dispose() {
-    _otpController.dispose(); // Dispose controller to avoid memory leaks
-    super.dispose();
-  }
-
+ 
 
      @override
   void initState() {
