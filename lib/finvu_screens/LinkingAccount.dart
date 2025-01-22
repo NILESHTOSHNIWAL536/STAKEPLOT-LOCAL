@@ -38,7 +38,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
   final int _otpCodeLength = 6; // OTP length
   RxString _otpCode = "".obs; // Captured OTP code
   RxBool _isOtpValid = false.obs; // Validate OTP length
-  final TextEditingController _otpController = TextEditingController();
+   TextEditingController otpController = TextEditingController();
 
  
 
@@ -281,7 +281,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
           PinCodeTextField(
                     appContext: context,
                     length: _otpCodeLength,
-                    controller: _otpController,
+                    controller: otpController,
                     keyboardType: TextInputType.number,
                     autoFocus: true,
                     animationType: AnimationType.fade,
@@ -355,14 +355,16 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
    void linkAccount(String otp,linkingReference,String fid) async {
       try {
-         print("otp");
-         print(otp);
+      
         var data = await finvuManager.confirmAccountLinking(
             linkingReference!, otp);
         snackBarCalled(context, "Linked Bank SuccessFully...");
         Navigator.pop(context);
-        print("done....");
+       
         accountLinked.add(fid);
+        otpController=TextEditingController();
+        _otpCode.value="";
+        _isOtpValid.value=false;
       } catch (e) {
         print(e);
         snackBarCalled(context,
