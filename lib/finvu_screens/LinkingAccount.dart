@@ -4,6 +4,7 @@ import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -36,29 +37,31 @@ class _LinkingAccountState extends State<LinkingAccount> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Link Accounts"),
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundColor,
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Container(
-          width: MediaQuery.of(context).size.width / 1.1,
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
+          //width: MediaQuery.of(context).size.width / 1.1,
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 6),
                 child: Text(
                   "Select account to share",
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.bold,
                       fontSize: 18,
-                      color: Colorcodes.black),
+                      color: AppColors.bg1),
                 ),
               ),
-              SizedBox(
-                width: 10,
-              ),
+              // SizedBox(
+              //   width: 10,
+              // ),
               BankInfoUiContainer(),
+              const Spacer(),
               InkWell(
                   onTap: () {
                     showModalBottomSheet(
@@ -102,7 +105,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
               )
             : Column(
                 children: [
-                  Text("${accountLinked.length} Banks Nas Linked..",
+                  Text("${accountLinked.length} Banks Linked..",
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.w400,
                           fontSize: 11,
@@ -129,8 +132,10 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
   Widget BankInfoUiContainer() {
     return Container(
-      width: MediaQuery.of(context).size.width / 1.2,
+      //width: MediaQuery.of(context).size.width / 1.2,
+      padding: const EdgeInsets.all(12.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
@@ -148,12 +153,14 @@ class _LinkingAccountState extends State<LinkingAccount> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   textStyle("Bank Accounts", 16),
-                  textStyle("${count.value} Account discovered", 16),
+                  textStyle("${count.value} Account(s) discovered", 16),
                 ],
               ),
             ],
           ),
-          textStyle("Select Atleast One Account To Share", 15),
+          //const Divider(thickness: 1, height: 20),
+          textStyle("Select atleast One Account To Share", 15),
+          const SizedBox(height: 10),
           bankAccountList(),
         ],
       ),
@@ -162,6 +169,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
   Widget bankAccountList() {
     return Container(
+      padding: const EdgeInsets.fromLTRB(14, 5, 16, 5),
       height: MediaQuery.of(context).size.height / 1.5,
       child: SingleChildScrollView(
         child: Expanded(
@@ -223,7 +231,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
         },
       );
     } catch (e) {
-      snackBarCalled(context, "Account Already linked....");
+      snackBarCalled(context, "Account already linked....");
     }
   }
 
@@ -264,7 +272,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
           style: FontManager().getTextStyle(context,
               lWeight: FontWeight.w500,
               fontSize: fontsize,
-              color: Colorcodes.black),
+              color: AppColors.bg1),
         ),
       ],
     );
