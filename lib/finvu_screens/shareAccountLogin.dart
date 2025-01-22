@@ -1,10 +1,15 @@
+import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
+import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchLinkedAccounts.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
@@ -36,6 +41,13 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
   void getData()async
   {
      fipDis=await finvuManager.fipsAllFIPOptions();
+     List<FinvuLinkedAccountDetailsInfo> data=await finvuManager.fetchLinkedAccounts();
+     listofLinkedAccount.clear();
+     if(data.isNotEmpty){
+                      data.forEach((finvu){
+                             listofLinkedAccount.add(finvu.accountReferenceNumber.toString());
+                      });
+     }
      fipDisOrginal.clear();
      fipDisOrginal.addAll(fipDis);
      getBanks.value=!getBanks.value;

@@ -149,20 +149,30 @@ class _AccessState extends State<Access> {
                                         SizedBox(height: 5),
                                         Column(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                              MainAxisAlignment.start,
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                              CrossAxisAlignment.start,
                                           children: fetchAccountData.map((e) {
-                                            return Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Text(e.accountType),
-                                                SizedBox(width: 5),
-                                                Text(e.accountReferenceNumber),
-                                              ],
+                                            return SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Container(
+                                                width: MediaQuery.of(context).size.width/1.1,
+                                                child: Expanded(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(e.fipName),
+                                                      SizedBox(width: 10),
+                                                      Text(e.accountType),
+                                                      SizedBox(width: 10),
+                                                      Text(e.accountReferenceNumber),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
                                             );
                                           }).toList(),
                                         ),

@@ -35,7 +35,7 @@ class LinkingAccount extends StatefulWidget {
 
 class _LinkingAccountState extends State<LinkingAccount> {
 
-  final int _otpCodeLength = 6; // OTP length
+  final int _otpCodeLength = 8; // OTP length
   RxString _otpCode = "".obs; // Captured OTP code
   RxBool _isOtpValid = false.obs; // Validate OTP length
    TextEditingController otpController = TextEditingController();
@@ -375,6 +375,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
   Widget getBackUi(
       FinvuDiscoveredAccountInfo bankData, FinvuFIPDetails fipDetails) {
+     String id= bankData.accountReferenceNumber.toString();
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.symmetric(vertical: 4),
@@ -383,12 +384,13 @@ class _LinkingAccountState extends State<LinkingAccount> {
         child: Expanded(
           child: Row(
             children: [
-              Obx(() => Checkbox(
+              Obx(() => !listofLinkedAccount.contains(id)? Checkbox(
                   value: accountAdded.contains(bankData.accountReferenceNumber),
                   onChanged: (b) {
                     addAccountToMap(fipDetails.fipId,
                         bankData.accountReferenceNumber, bankData);
-               })),
+               }):Text("Linked.. ")
+               ),
               textStyle(bankData.fiType),
               textStyle(bankData.accountType),
               textStyle(bankData.maskedAccountNumber),

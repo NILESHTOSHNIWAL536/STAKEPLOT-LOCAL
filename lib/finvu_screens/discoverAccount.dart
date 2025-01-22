@@ -142,10 +142,18 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-              Obx(()=>Checkbox(value: addBank.value?isSeletedBankAccout.contains(bankData.fipId):isSeletedBankAccout.contains(bankData.fipId), onChanged: (boolVale)
-                {     
+              Obx(()=>
+              Checkbox(
+                value: addBank.value?isSeletedBankAccout.contains(bankData.fipId):isSeletedBankAccout.contains(bankData.fipId),
+                 onChanged: (boolVale)
+                {  
+                   
                      addBackToList(boolVale,bankData);
-                })),
+                },
+          
+                
+                )
+              ),
                  SizedBox(width: 10,),
                 Container(
                   width: 50,
