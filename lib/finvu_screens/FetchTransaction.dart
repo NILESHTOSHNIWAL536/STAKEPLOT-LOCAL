@@ -57,7 +57,7 @@ const FetchTransaction({ Key? key }) : super(key: key);
             // fetchedTrsacntionList
 
            Obx(()=> fetchedTrsacntionList.isEmpty?Text("Data is Not Yet Fetched"):Container(
-                child: getTranSactions(),
+                child: getTranSactions(context),
            )),
 
             SizedBox(height: 20,),
@@ -79,13 +79,22 @@ const FetchTransaction({ Key? key }) : super(key: key);
 
 
 
- Widget getTranSactions(){
-      return Column(
-          children: fetchedTrsacntionList.map((e){
-              return Container(
-                   child: Text("data"),
-              );
-          }).toList(),
+ Widget getTranSactions(context){
+      return Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height/5,
+        child: SingleChildScrollView(
+          child: Expanded(
+            child: Column(
+                children: fetchedTrsacntionList.map((e){
+                  print(e);
+                    return Container(
+                         child: Text(e.toString()),
+                    );
+                }).toList(),
+            ),
+          ),
+        ),
       );
   }
 }

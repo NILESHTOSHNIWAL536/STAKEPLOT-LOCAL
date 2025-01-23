@@ -275,9 +275,7 @@ void FetchData(context, accessToken, consentHandleId, custId, from, to,
   );
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    //  isBankAccountLink.value=true;
-     print("data ------------");
-     print(body);
+    
     storeDataOfTransactions(context, body['body'], consentHandleId, from, to,
         accessToken, custId, consentId, sessionId);
   } else {}
@@ -287,7 +285,8 @@ void storeDataOfTransactions(context, data, consentHandleId, from, to,
     accessToken, custId, consentId, sessionId) async {
   print(data);
   if (data == "Account data not found.") return;
-  fetchedTrsacntionList.add(['']);
+  fetchedTrsacntionList.clear();
+  fetchedTrsacntionList.add([data.toString()]);
   fetchedTrsacntionList.refresh();
 
   //  Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
@@ -309,8 +308,8 @@ void storeDataOfTransactions(context, data, consentHandleId, from, to,
     final body = json.decode(response.body);
     // isBankAccountLink.value=true;
     print(body);
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    // Navigator.of(context)
+    //     .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
   } else {}
 }
 
