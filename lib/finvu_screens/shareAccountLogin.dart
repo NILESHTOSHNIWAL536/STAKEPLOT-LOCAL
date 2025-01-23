@@ -124,6 +124,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                   itemCount: autoScrollItems.length,
                   
                   itemBuilder: (context, index) {
+                    
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Container(
