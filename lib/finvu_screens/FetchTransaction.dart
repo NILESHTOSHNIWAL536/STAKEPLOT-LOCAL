@@ -15,7 +15,7 @@ const FetchTransaction({ Key? key }) : super(key: key);
     return Scaffold(
       // bottomNavigationBar: BottomNavigations(data: sizeRoom?3:2),
       extendBody: true,
-      bottomSheet: bottomSheet(context),
+      //bottomSheet: bottomSheet(context),
       appBar: AppBar(
           centerTitle: true,
           automaticallyImplyLeading: false,

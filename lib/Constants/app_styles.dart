@@ -161,3 +161,12 @@ class ProfileIcons {
   static String support = "assets/icons/profileScreen/support.svg";
   static String terms = "assets/icons/profileScreen/terms.svg";
 }
+
+class Sign {
+  static String signup = "assets/icons/Signup/";
+  static String transform = "assets/icons/Signup/Transform.svg";
+  static String india = "assets/icons/Signup/india.svg";
+  static String protection = "assets/icons/Signup/protection.svg";
+  static String minimise = "assets/icons/Signup/Minimize.svg";
+  static String maximise = "assets/icons/Signup/Maximise.svg";
+}
