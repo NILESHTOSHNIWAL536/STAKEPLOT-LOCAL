@@ -252,6 +252,8 @@ void FIRequestStatus(context, accessToken, consentHandleId, custId, from, to,
       "Authorization": "$accessToken",
     },
   );
+  print('response');
+  printData(response);
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     print("body");

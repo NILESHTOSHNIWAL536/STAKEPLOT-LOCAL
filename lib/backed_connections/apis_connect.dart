@@ -169,6 +169,12 @@ String currentPage(context) {
   return modalRoute;
 }
 
+String toUpperCase(String str) {
+  if (str.isEmpty) return str;
+  return str[0].toUpperCase() + str.substring(1);
+}
+
+
 void printData(response, [context = ""]) {
   //  String data=  response.body;
 
