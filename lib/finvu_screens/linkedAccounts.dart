@@ -112,6 +112,7 @@ void ConsentStatus(context, accessToken, ConsentHandleId, custId) async {
   print("ConsentStatus");
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   if (_pref.containsKey("consentId")) {
+    print(_pref.getString("consentId"));
     ConsentFromAndToRequest(context, accessToken, ConsentHandleId, custId,
         (_pref.getString("consentId")));
   } else {
@@ -171,6 +172,8 @@ void ConsentFromAndToRequest(
   final SharedPreferences _pref = await SharedPreferences.getInstance();
 
   if (_pref.containsKey("from") && _pref.containsKey("to")) {
+     print(_pref.getString("from"));
+     print(_pref.getString("to"));
     FIRequest(context, accessToken, ConsentHandleId, custId,
         _pref.getString("from"), _pref.getString("to"), consentId);
   } else {
@@ -205,6 +208,7 @@ void FIRequest(
   if (_pref.containsKey("sessionId")) {
     FIRequestStatus(context, accessToken, consentHandleId, custId, from, to,
         consentId, _pref.getString("sessionId"));
+         print(_pref.getString("sessionId"));
   } else {
     final response = await http.post(Uri.parse('${baseUrl}/FIRequest'),
         // headers: headers,
@@ -250,8 +254,8 @@ void FIRequestStatus(context, accessToken, consentHandleId, custId, from, to,
   );
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    // print("body");
-    // print(body);
+    print("body");
+    print(body);
     FetchData(context, accessToken, consentHandleId, custId, from, to,
         consentId, sessionId);
   } else {}
@@ -274,8 +278,8 @@ void FetchData(context, accessToken, consentHandleId, custId, from, to,
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     //  isBankAccountLink.value=true;
-    //  print("data ------------");
-    //  print(body);
+     print("data ------------");
+     print(body);
     storeDataOfTransactions(context, body['body'], consentHandleId, from, to,
         accessToken, custId, consentId, sessionId);
   } else {}
@@ -289,7 +293,7 @@ void storeDataOfTransactions(context, data, consentHandleId, from, to,
   fetchedTrsacntionList.refresh();
 
   //  Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-  String url = "http://${"192.168.1.11"}:5000/api/v1";
+  String url = "http://${portNo}:5000/api/v1";
 
   final response = await http.post(Uri.parse('${url}/transactionauto/'),
       // headers: headers,

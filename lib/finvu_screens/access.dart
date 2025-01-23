@@ -35,11 +35,12 @@ class _AccessState extends State<Access> {
   }
 
   void getInfomationsAboutUser() async {
-    try{
-    fetchAccountData = await finvuManager.fetchLinkedAccounts();
-    finvuConsentRequestDetailInfo = await finvuManager.getConsentRequestDetails(handleId.value);
-    flag.value = true;
-    }catch(e){
+    try {
+      fetchAccountData = await finvuManager.fetchLinkedAccounts();
+      finvuConsentRequestDetailInfo =
+          await finvuManager.getConsentRequestDetails(handleId.value);
+      flag.value = true;
+    } catch (e) {
       print(handleId.value);
       print(e);
     }
@@ -82,7 +83,7 @@ class _AccessState extends State<Access> {
                                 "Give Permission",
                                 style: FontManager().getTextStyle(
                                   context,
-                                  lWeight: FontWeight.w500,
+                                  lWeight: FontWeight.bold,
                                   fontSize: 16,
                                   color: AppColors.bg1,
                                 ),
@@ -126,7 +127,7 @@ class _AccessState extends State<Access> {
                                               "Accounts Shared",
                                               style: FontManager().getTextStyle(
                                                 context,
-                                                lWeight: FontWeight.w500,
+                                                lWeight: FontWeight.bold,
                                                 fontSize: 16,
                                                 color: AppColors.bg1,
                                               ),
@@ -137,11 +138,11 @@ class _AccessState extends State<Access> {
                                           padding:
                                               const EdgeInsets.only(left: 35),
                                           child: Text(
-                                            "${fetchAccountData.length} Account Are Linked..",
+                                            "${fetchAccountData.length} Account(s) are linked",
                                             style: FontManager().getTextStyle(
                                               context,
                                               lWeight: FontWeight.w400,
-                                              fontSize: 15,
+                                              fontSize: 14,
                                               color: AppColors.bg1,
                                             ),
                                           ),
@@ -153,26 +154,36 @@ class _AccessState extends State<Access> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: fetchAccountData.map((e) {
-                                            return SingleChildScrollView(
-                                              scrollDirection: Axis.horizontal,
-                                              child: Container(
-                                                width: MediaQuery.of(context).size.width/1.1,
-                                                child: Expanded(
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment.start,
-                                                    children: [
-                                                      Text(e.fipName),
+                                            return Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                 Text(e.fipName),
                                                       SizedBox(width: 10),
-                                                      Text(e.accountType),
-                                                      SizedBox(width: 10),
-                                                      Text(e.accountReferenceNumber),
-                                                    ],
+                                                Text(
+                                                  e.accountType,
+                                                  style: FontManager()
+                                                      .getTextStyle(
+                                                    context,
+                                                    lWeight: FontWeight.w400,
+                                                    fontSize: 14,
+                                                    color: AppColors.bg1,
                                                   ),
                                                 ),
-                                              ),
+                                                SizedBox(width: 5),
+                                                Text(
+                                                  e.accountReferenceNumber,
+                                                  style: FontManager()
+                                                      .getTextStyle(
+                                                    context,
+                                                    lWeight: FontWeight.w400,
+                                                    fontSize: 14,
+                                                    color: AppColors.bg1,
+                                                  ),
+                                                ),
+                                              ],
                                             );
                                           }).toList(),
                                         ),
@@ -195,7 +206,7 @@ class _AccessState extends State<Access> {
                                               "Permission Validity",
                                               style: FontManager().getTextStyle(
                                                 context,
-                                                lWeight: FontWeight.w500,
+                                                lWeight: FontWeight.bold,
                                                 fontSize: 16,
                                                 color: AppColors.bg1,
                                               ),
@@ -220,7 +231,7 @@ class _AccessState extends State<Access> {
                                             // "From 17 Aug 2024 to 18 Sept 2024",
                                             style: FontManager().getTextStyle(
                                               context,
-                                              lWeight: FontWeight.w400,
+                                              lWeight: FontWeight.w500,
                                               fontSize: 15,
                                               color: AppColors.bg1,
                                             ),
@@ -245,7 +256,7 @@ class _AccessState extends State<Access> {
                                               "Frequency of Access",
                                               style: FontManager().getTextStyle(
                                                 context,
-                                                lWeight: FontWeight.w500,
+                                                lWeight: FontWeight.bold,
                                                 fontSize: 16,
                                                 color: AppColors.bg1,
                                               ),
@@ -257,7 +268,7 @@ class _AccessState extends State<Access> {
                                           padding:
                                               const EdgeInsets.only(left: 35),
                                           child: Text(
-                                            "We can access your information one-time Per Week.",
+                                            "We can access your information one-time.",
                                             style: FontManager().getTextStyle(
                                               context,
                                               lWeight: FontWeight.w400,
@@ -285,7 +296,7 @@ class _AccessState extends State<Access> {
                                                 child: SingleChildScrollView(
                                                   padding:
                                                       const EdgeInsets.fromLTRB(
-                                                          20.0, 40, 16, 10),
+                                                          20.0, 20, 16, 10),
                                                   child: Column(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
@@ -306,7 +317,7 @@ class _AccessState extends State<Access> {
                                                         padding:
                                                             const EdgeInsets
                                                                 .fromLTRB(20.0,
-                                                                25, 20, 0),
+                                                                20, 20, 0),
                                                         child: Column(
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
@@ -573,7 +584,7 @@ class _AccessState extends State<Access> {
                                       },
                                       child: Center(
                                         child: Text(
-                                          "View More Details",
+                                          "View more Details",
                                           style: FontManager().getTextStyle(
                                             context,
                                             lWeight: FontWeight.w600,
@@ -608,7 +619,7 @@ class _AccessState extends State<Access> {
                                 ],
                               ),
                               SizedBox(
-                                height: MediaQuery.of(context).size.height / 7,
+                                height: MediaQuery.of(context).size.height / 6,
                               ),
                               InkWell(
                                 onTap: () {
@@ -636,22 +647,26 @@ class _AccessState extends State<Access> {
                                   ),
                                 ),
                               ),
-                              Container(
-                                width: MediaQuery.of(context).size.width / 1.1,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 20),
-                                decoration: BoxDecoration(
-                                  //color: AppColors.accentColor,
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    "Decline",
-                                    style: FontManager().getTextStyle(
-                                      context,
-                                      lWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      color: AppColors.bg1,
+                              InkWell(
+                                onTap: () {},
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.1,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 20),
+                                  decoration: BoxDecoration(
+                                    //color: AppColors.accentColor,
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "Decline",
+                                      style: FontManager().getTextStyle(
+                                        context,
+                                        lWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: AppColors.bg1,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -674,7 +689,7 @@ class _AccessState extends State<Access> {
       FinvuProcessConsentRequestResponse response =
           await finvuManager.approveConsentRequest(
               finvuConsentRequestDetailInfo, fetchAccountData);
-  
+
       snackBarCalled(context, "approved ConsentRequest");
       Navigator.push(
         context,

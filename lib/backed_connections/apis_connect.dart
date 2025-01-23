@@ -16,7 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
-String portNo = "localhost";
+String portNo = "192.168.1.4";
 // String urlWithLocallHost="https://stakeplot.in";
 String urlWithLocallHost = "http://192.168.1.4:5000/";
 String url = "http://192.168.1.4:5000/api/v1";

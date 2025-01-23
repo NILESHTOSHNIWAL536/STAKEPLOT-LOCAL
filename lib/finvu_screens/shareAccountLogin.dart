@@ -127,7 +127,7 @@ Widget getButton(context, str) {
     // height:MediaQuery.of(context).size.height,
     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
     decoration: BoxDecoration(
-        color: AppColors.accentColor, borderRadius: BorderRadius.circular(12)),
+        color: AppColors.accentColor, borderRadius: BorderRadius.circular(24)),
     child: Center(
       child: Text(
         str,

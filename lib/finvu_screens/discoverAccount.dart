@@ -1,4 +1,3 @@
-
 import 'package:finvu_flutter_sdk_core/finvu_discovered_accounts.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_details.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
@@ -14,189 +13,323 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 
-List<FinvuFIPInfo> fipDis=[];
-List<FinvuFIPInfo> fipDisOrginal=[];
-RxList isSeletedBankAccout=[].obs;
-RxList<FinvuFIPInfo> listOfBankAccount=<FinvuFIPInfo>[].obs;
+List<FinvuFIPInfo> fipDis = [];
+List<FinvuFIPInfo> fipDisOrginal = [];
+RxList isSeletedBankAccout = [].obs;
+RxList<FinvuFIPInfo> listOfBankAccount = <FinvuFIPInfo>[].obs;
 // RxBool getBanks=false.obs;
-RxBool addBank=false.obs;
+RxBool addBank = false.obs;
 
 class DiscoverAccount extends StatefulWidget {
-  const  DiscoverAccount({ Key? key }) : super(key: key);
+  const DiscoverAccount({Key? key}) : super(key: key);
 
   @override
   _DiscoverAccountState createState() => _DiscoverAccountState();
 }
 
 class _DiscoverAccountState extends State<DiscoverAccount> {
+  TextEditingController search = TextEditingController();
 
-    TextEditingController search = TextEditingController();
-
-    @override
+  @override
   void initState() {
     super.initState();
     getData();
-    getFetch.value=false;
+    getFetch.value = false;
   }
 
-  void getData()async
-  {
-     fipDis=await finvuManager.fipsAllFIPOptions();
-     fipDisOrginal.clear();
-     fipDisOrginal.addAll(fipDis);
-     getBanks.value=!getBanks.value;
+  void getData() async {
+    fipDis = await finvuManager.fipsAllFIPOptions();
+    fipDisOrginal.clear();
+    fipDisOrginal.addAll(fipDis);
+    getBanks.value = !getBanks.value;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
+        backgroundColor: AppColors.backgroundColor,
         automaticallyImplyLeading: false,
-        title: Center(
-          child: Text("Select Bank" ,style: FontManager().getTextStyle(context,
-              lWeight: FontWeight.bold, fontSize: 18, color: Colorcodes.black),),
+        title: Align(
+          alignment: Alignment.topLeft,
+          child: Text(
+            "Select Banks you use",
+            style: FontManager().getTextStyle(context,
+                lWeight: FontWeight.bold,
+                fontSize: 18,
+                color: AppColors.accentColor),
+          ),
         ),
-        backgroundColor: Colorcodes.white,
+        //backgroundColor: Colorcodes.white,
       ),
-      body: Container(
-           width: MediaQuery.of(context).size.width,
-           height: MediaQuery.of(context).size.height,
-           child: Expanded(
-             child: SingleChildScrollView(
-               child:Column(children: [
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
-                    child: Text("Pick atleast one bank to proceed..." ,style: FontManager().getTextStyle(context,
-                         lWeight: FontWeight.bold, fontSize: 18, color: Colorcodes.black),),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 10, 12, 0),
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+              color: AppColors.mt, borderRadius: BorderRadius.circular(16)),
+          //padding: EdgeInsets.all(16),
+          child: SingleChildScrollView(
+            child: Column(children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    "Pick atleast one bank to proceed",
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: AppColors.bg1),
                   ),
-
-                  InputDate("Search", TextInputType.name, search),
-
-                    Obx(()=>getBanks.value? getListOfFinvuBanks(): getListOfFinvuBanks()),
-
-                    InkWell(
-                      onTap: () {
-                           getBankAccount();
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: getButton(context, "Fetch Bank Account"),
-                      ),
-                    ),
-
-               ]),
-             ),
-           ),
+                ),
+              ),
+              InputDate("Search", TextInputType.name, search),
+              Obx(() => getBanks.value
+                  ? getListOfFinvuBanks()
+                  : getListOfFinvuBanks()),
+              InkWell(
+                onTap: () {
+                  getBankAccount();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: getButton(context, "Fetch Bank Account"),
+                ),
+              ),
+            ]),
+          ),
+        ),
       ),
     );
   }
 
-
-
-  Widget getListOfFinvuBanks()
-  {
-      // return Container(
-      //   width: MediaQuery.of(context).size.width,
-      //   height: MediaQuery.of(context).size.height/1.5,
-      //   child: SingleChildScrollView(
-      //     child: Expanded(
-      //       child: Column(
-      //            mainAxisAlignment: MainAxisAlignment.start,
-      //            crossAxisAlignment: CrossAxisAlignment.start,
-      //            children: fipDis.map((bankData)=>getBackUi(bankData)).toList(),
-      //       ),
-      //     ),
-      //   ),
-      // );
-      return Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height / 1.5,
-                    child: ListView.builder(
-                      itemCount: fipDis.length,
-                      itemBuilder: (context, index) {
-                        return getBackUi(fipDis[index]); 
-                      },
-                    ),
-          );     
+  Widget getListOfFinvuBanks() {
+    // return Container(
+    //   width: MediaQuery.of(context).size.width,
+    //   height: MediaQuery.of(context).size.height/1.5,
+    //   child: SingleChildScrollView(
+    //     child: Expanded(
+    //       child: Column(
+    //            mainAxisAlignment: MainAxisAlignment.start,
+    //            crossAxisAlignment: CrossAxisAlignment.start,
+    //            children: fipDis.map((bankData)=>getBackUi(bankData)).toList(),
+    //       ),
+    //     ),
+    //   ),
+    // );
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height / 1.5,
+      child: ListView.builder(
+        itemCount: fipDis.length,
+        itemBuilder: (context, index) {
+          return getBackUi(fipDis[index]);
+        },
+      ),
+    );
   }
 
-  void addBackToList(boolVale,bankData)
-  { 
-                if(boolVale!){
-                          listOfBankAccount.removeWhere((item) => item.fipId == bankData.fipId);
-                          isSeletedBankAccout.remove(bankData.fipId);
+  // void addBackToList(boolVale, bankData) {
+  //   if (boolVale!) {
+  //     listOfBankAccount.removeWhere((item) => item.fipId == bankData.fipId);
+  //     isSeletedBankAccout.remove(bankData.fipId);
+  //   } else {
+  //     listOfBankAccount.add(bankData);
+  //     isSeletedBankAccout.add(bankData.fipId);
+  //   }
+  //   addBank.value = !addBank.value;
+  // }
 
-                    }else{
-                             listOfBankAccount.add(bankData);
-                             isSeletedBankAccout.add(bankData.fipId);
-                }
-                          addBank.value=!addBank.value;
-  }
+  //                   }else{
+  //                            listOfBankAccount.add(bankData);
+  //                            isSeletedBankAccout.add(bankData.fipId);
+  //               }
+  //                         addBank.value=!addBank.value;
+  // }
 
-  Widget getBackUi(FinvuFIPInfo bankData){
-     return Container(
-         width: MediaQuery.of(context).size.width,
-         padding: EdgeInsets.symmetric(vertical: 5,horizontal: 13),
-         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-              Obx(()=>
-              Checkbox(
-                value: addBank.value?isSeletedBankAccout.contains(bankData.fipId):isSeletedBankAccout.contains(bankData.fipId),
-                 onChanged: (boolVale)
-                {  
+  // Widget getBackUi(FinvuFIPInfo bankData){
+  //    return Container(
+  //        width: MediaQuery.of(context).size.width,
+  //        padding: EdgeInsets.symmetric(vertical: 5,horizontal: 13),
+  //        child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.start,
+  //         crossAxisAlignment: CrossAxisAlignment.center,
+  //         children: [
+  //             Obx(()=>
+  //             Checkbox(
+  //               value: addBank.value?isSeletedBankAccout.contains(bankData.fipId):isSeletedBankAccout.contains(bankData.fipId),
+  //                onChanged: (boolVale)
+  //               {  
                    
-                     addBackToList(boolVale,bankData);
-                },
+  //                    addBackToList(boolVale,bankData);
+  //               },
           
                 
-                )
-              ),
-                 SizedBox(width: 10,),
-                Container(
-                  width: 50,
-                  height: 50,
-                  child: Image.network(bankData.productIconUri.toString())
-                ),
-                SizedBox(width: 10,),
-                InkWell(
-                  onTap: (){
-                     addBackToList(isSeletedBankAccout.contains(bankData.fipId),bankData);
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width/1.8,
-                    child: Text(bankData.productName.toString(),style: TextStyle(
-                      fontSize: 15,
-                      overflow:TextOverflow.ellipsis
-                    ),),
-                  ),
-                ),
-          ],
-         ) ,
-     );
-  }
+  //               )
+  //             ),
+  //                SizedBox(width: 10,),
+  //               Container(
+  //                 width: 50,
+  //                 height: 50,
+  //                 child: Image.network(bankData.productIconUri.toString())
+  //               ),
+  //               SizedBox(width: 10,),
+  //               InkWell(
+  //                 onTap: (){
+  //                    addBackToList(isSeletedBankAccout.contains(bankData.fipId),bankData);
+  //                 },
+  //                 child: Container(
+  //                   width: MediaQuery.of(context).size.width/1.8,
+  //                   child: Text(bankData.productName.toString(),style: TextStyle(
+  //                     fontSize: 15,
+  //                     overflow:TextOverflow.ellipsis
+  //                   ),),
+  //                 ),
+  //               ),
+  //         ],
+  //        ) ,
+  //    );
+  // }
 
-  void searchFinvuAccount()async{
-       if(search.text.isEmpty){
+  // void searchFinvuAccount()async{
+  //      if(search.text.isEmpty){
        
-                fipDis.clear();
-                fipDis.addAll(fipDisOrginal);
+  //               fipDis.clear();
+  //               fipDis.addAll(fipDisOrginal);
               
-       }else{
-          fipDis.clear();
-      
-          fipDisOrginal.forEach((fipAccount){
-                  print(fipDis);
-                  if(fipAccount.productName.toString().toLowerCase().contains(search.text.toLowerCase())){
-                        fipDis.add(fipAccount);
-                  }
-          });
+  //      }else{
+  //         fipDis.clear();
+  //         fipDisOrginal.forEach((fipAccount){
+  //                 print(fipDis);
+  //                 if(fipAccount.productName.toString().toLowerCase().contains(search.text.toLowerCase())){
+  //                       fipDis.add(fipAccount);
+  //                 }
+  //         });
+  //   }
+  // }
+
+  //modified code for checkbox
+  void addBackToList(bool? boolVale, FinvuFIPInfo bankData) {
+    if (boolVale == true) {
+      // Add to the selected list
+      if (!isSeletedBankAccout.contains(bankData.fipId)) {
+        isSeletedBankAccout.add(bankData.fipId);
+        listOfBankAccount.add(bankData);
       }
-       getBanks.value=!getBanks.value;
+    } else {
+      // Remove from the selected list
+      isSeletedBankAccout.remove(bankData.fipId);
+      listOfBankAccount.removeWhere((item) => item.fipId == bankData.fipId);
+    }
+    addBank.value = !addBank.value; // Trigger UI update
   }
 
+
+  // Widget getBackUi(FinvuFIPInfo bankData) {
+  //   return Container(
+  //     width: MediaQuery.of(context).size.width,
+  //     padding: EdgeInsets.symmetric(vertical: 5, horizontal: 13),
+  //     child: Row(
+  //       mainAxisAlignment: MainAxisAlignment.start,
+  //       crossAxisAlignment: CrossAxisAlignment.center,
+  //       children: [
+  //         Obx(() => Checkbox(
+  //             value: addBank.value
+  //                 ? isSeletedBankAccout.contains(bankData.fipId)
+  //                 : isSeletedBankAccout.contains(bankData.fipId),
+  //             onChanged: (boolVale) {
+  //               addBackToList(boolVale, bankData);
+  //             })),
+  //         SizedBox(
+  //           width: 10,
+  //         ),
+  //         Container(
+  //             width: 50,
+  //             height: 50,
+  //             child: Image.network(bankData.productIconUri.toString())),
+  //         SizedBox(
+  //           width: 10,
+  //         ),
+  //         InkWell(
+  //           onTap: () {
+  //             addBackToList(
+  //                 isSeletedBankAccout.contains(bankData.fipId), bankData);
+  //           },
+  //           child: Container(
+  //             width: MediaQuery.of(context).size.width / 1.8,
+  //             child: Text(
+  //               bankData.productName.toString(),
+  //               style: TextStyle(fontSize: 15, overflow: TextOverflow.ellipsis),
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+  //modified code for checkbox
+  Widget getBackUi(FinvuFIPInfo bankData) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 13),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Obx(() => Checkbox(
+                value: isSeletedBankAccout.contains(bankData.fipId),
+                onChanged: (bool? boolVale) {
+                  // Toggle the checkbox selection
+                  addBackToList(boolVale, bankData);
+                },
+              )),
+          SizedBox(width: 10),
+          Container(
+            width: 50,
+            height: 50,
+            child: Image.network(
+              bankData.productIconUri.toString(),
+              fit: BoxFit.contain,
+            ),
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              bankData.productName.toString(),
+              style: TextStyle(
+                fontSize: 15,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void searchFinvuAccount() async {
+    if (search.text.isEmpty) {
+      fipDis.clear();
+      fipDis.addAll(fipDisOrginal);
+    } else {
+      fipDis.clear();
+
+      fipDisOrginal.forEach((fipAccount) {
+        print(fipDis);
+        if (fipAccount.productName
+            .toString()
+            .toLowerCase()
+            .contains(search.text.toLowerCase())) {
+          fipDis.add(fipAccount);
+        }
+      });
+    }
+    getBanks.value = !getBanks.value;
+  }
 
   Widget InputDate(lableText, keyBoard, Textcontroller) {
     return Center(
@@ -210,7 +343,9 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
             keyboardType: keyBoard,
             controller: Textcontroller,
             onChanged: (value) {
-                   searchFinvuAccount();
+              Future.delayed(const Duration(milliseconds: 300), () {
+                searchFinvuAccount();
+              });
             },
             decoration: InputDecoration(
               prefixIcon: Icon(Icons.search),
@@ -236,72 +371,65 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
       ),
     );
   }
-  
+
   void getBankAccount() {
-        if(listOfBankAccount.isEmpty){
-             snackBarCalled(context, "Pick atleast one Bank to proceed...",Colorcodes.red);
-             return;
-        }else{
-            //  listOfBankAccount
-                    Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => LinkingAccount(listOfBankAccount: listOfBankAccount,),
-              ),
-            );
-        }
+    if (listOfBankAccount.isEmpty) {
+      snackBarCalled(
+          context, "Pick atleast one Bank to proceed...", Colorcodes.red);
+      return;
+    } else {
+      //  listOfBankAccount
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LinkingAccount(
+            listOfBankAccount: listOfBankAccount,
+          ),
+        ),
+      );
+    }
   }
 
+  void linkedaccoutnData(bankData) async {
+    String fipId = bankData.fipId;
+    FinvuFIPInfo finvuFIPInfo = bankData;
 
- void linkedaccoutnData(bankData)async
- {
+    try {
+      var fetchFIPDetails =
+          await finvuManager.fetchFIPDetails(fipId); //dhanagarbank
+      // var fetchFIPDetails=await finvuManager.fetchFIPDetails("dhanagarbank");
+      var typeIdentifiers = fetchFIPDetails.typeIdentifiers;
 
-             String fipId=bankData.fipId;
-             FinvuFIPInfo finvuFIPInfo=bankData;
- 
-          try{
-        var fetchFIPDetails=await finvuManager.fetchFIPDetails(fipId); //dhanagarbank
-        // var fetchFIPDetails=await finvuManager.fetchFIPDetails("dhanagarbank");
-        var typeIdentifiers=fetchFIPDetails.typeIdentifiers;
+      List<FinvuTypeIdentifierInfo> finvuTypeIdentifierInfo = [];
 
-        List<FinvuTypeIdentifierInfo> finvuTypeIdentifierInfo=[];
+      typeIdentifiers.forEach((e) {
+        e.identifiers.forEach((ele) {
+          FinvuTypeIdentifierInfo obj = FinvuTypeIdentifierInfo(
+            category: ele.category,
+            type: ele.type,
 
-         typeIdentifiers.forEach((e){
-             e.identifiers.forEach((ele){
-                 FinvuTypeIdentifierInfo obj=FinvuTypeIdentifierInfo(
-                   category: ele.category,
-                   type: ele.type,
-                   
-                   value:number.value , // dou
-                   
-                 );
-                  finvuTypeIdentifierInfo.add(obj);       
-             });
+            value: number.value, // dou
+          );
+          finvuTypeIdentifierInfo.add(obj);
+        });
+      });
+      FinvuFIPDetails fipDetails = FinvuFIPDetails(
+          fipId: fipId, typeIdentifiers: fetchFIPDetails.typeIdentifiers);
 
-         });
-          FinvuFIPDetails fipDetails=FinvuFIPDetails(fipId:fipId , typeIdentifiers: fetchFIPDetails.typeIdentifiers);
-   
-          List<FinvuDiscoveredAccountInfo> info=await finvuManager.discoverAccounts(
-            fipDetails,finvuFIPInfo.fipFitypes,finvuTypeIdentifierInfo);
+      List<FinvuDiscoveredAccountInfo> info =
+          await finvuManager.discoverAccounts(
+              fipDetails, finvuFIPInfo.fipFitypes, finvuTypeIdentifierInfo);
 
-
-          //  Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => LinkingAccount(account: info,fipDetails: fipDetails,),
-          //     ),
-          //   );
-
-
-      }catch(e){
-           snackBarCalled(context,"No Account Found...");   
-      } 
-
-
- }
-
-
-
+      //  Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (context) => LinkingAccount(account: info,fipDetails: fipDetails,),
+      //     ),
+      //   );
+    } catch (e) {
+      snackBarCalled(context, "No Account Found...");
+    }
+  }
 }
 
 
