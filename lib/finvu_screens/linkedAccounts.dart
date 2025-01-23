@@ -252,10 +252,8 @@ void FIRequestStatus(context, accessToken, consentHandleId, custId, from, to,
       "Authorization": "$accessToken",
     },
   );
+ 
   if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
-    print("body");
-    print(body);
     FetchData(context, accessToken, consentHandleId, custId, from, to,
         consentId, sessionId);
   } else {}
@@ -263,8 +261,8 @@ void FIRequestStatus(context, accessToken, consentHandleId, custId, from, to,
 
 void FetchData(context, accessToken, consentHandleId, custId, from, to,
     consentId, sessionId) async {
-  print("FetchData ..............");
-  String urlFetch = "${baseUrl}/FIFetch/${custId}/${consentId}/${sessionId}";
+  String urlFetch  = "${baseUrl}/FIFetch/${custId}/${consentId}/${sessionId}";
+  print("FetchData..............");
   print(urlFetch);
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   final response = await http.get(

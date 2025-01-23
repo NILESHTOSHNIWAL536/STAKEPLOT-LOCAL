@@ -1,4 +1,5 @@
 import 'package:finvu_flutter_sdk_core/finvu_consent_info.dart';
+import 'package:finvu_flutter_sdk_core/finvu_fip_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -37,8 +38,7 @@ class _AccessState extends State<Access> {
   void getInfomationsAboutUser() async {
     try {
       fetchAccountData = await finvuManager.fetchLinkedAccounts();
-      finvuConsentRequestDetailInfo =
-          await finvuManager.getConsentRequestDetails(handleId.value);
+      finvuConsentRequestDetailInfo = await finvuManager.getConsentRequestDetails(handleId.value);
       flag.value = true;
     } catch (e) {
       print(handleId.value);
@@ -51,8 +51,55 @@ class _AccessState extends State<Access> {
     return DateFormat('d MMM yyyy').format(date); // Format as Aug 2024
   }
 
+
+  Widget topHeader(){
+    return Column(
+         children: [
+               Padding(
+                          padding: const EdgeInsets.fromLTRB(10.0, 25, 10, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                            
+                              Text(
+                                "Give Permission",
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  color: AppColors.bg1,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              RichText(
+                                  text: TextSpan(
+                                    text: "To share your accounts with Stakeplot for ", // Regular text
+                                    style: FontManager().getTextStyle(
+                                      context,
+                                      lWeight: FontWeight.w400,
+                                      fontSize: 17,
+                                      color: AppColors.bg1,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: "processing your loan application.", // Highlighted text
+                                        style: FontManager().getTextStyle(
+                                          context,
+                                          lWeight: FontWeight.w600, // Make it bold or different weight
+                                          fontSize: 17,
+                                          color: AppColors.primaryColor, // Highlight color
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              SizedBox(height: 20),
+         ],
+        ))]);
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return SafeArea(
       child: Scaffold(
           backgroundColor: AppColors.backgroundColor,
@@ -61,226 +108,43 @@ class _AccessState extends State<Access> {
             child: Obx(
               () => !flag.value
                   ? Loader()
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Details',
-                          style: FontManager().getTextStyle(
-                            context,
-                            lWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: AppColors.bg1,
-                          ),
+                  : Container(
+                      height: MediaQuery.of(context).size.height/1.1,
+                      width: MediaQuery.of(context).size.width,
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                                topHeader(),
+                                informationBankAccount(),
+                                pauseOrCancle(),
+                                const Spacer(),
+                                givePermissionOrDecline(),
+                              ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10.0, 25, 10, 0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 10),
-                              Text(
-                                "Give Permission",
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: AppColors.bg1,
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                              Text(
-                                "To share your accounts with Stakeplot for processing your loan application.",
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.w400,
-                                  fontSize: 16,
-                                  color: AppColors.bg1,
-                                ),
-                              ),
-                              SizedBox(height: 20),
-                              Container(
-                                // height: MediaQuery.of(context).size.height / 2.7,
-                                // width: MediaQuery.of(context).size.width ,
-                                padding: const EdgeInsets.all(10),
-                                margin: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue[50],
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // Section 1: Accounts Shared
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Icon(
-                                                Icons
-                                                    .account_balance_wallet_outlined,
-                                                color: Colors.blue),
-                                            SizedBox(width: 10),
-                                            Text(
-                                              "Accounts Shared",
-                                              style: FontManager().getTextStyle(
-                                                context,
-                                                lWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                                color: AppColors.bg1,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 35),
-                                          child: Text(
-                                            "${fetchAccountData.length} Account(s) are linked",
-                                            style: FontManager().getTextStyle(
-                                              context,
-                                              lWeight: FontWeight.w400,
-                                              fontSize: 14,
-                                              color: AppColors.bg1,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(height: 5),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: fetchAccountData.map((e) {
-                                            return Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                 Text(e.fipName),
-                                                      SizedBox(width: 10),
-                                                Text(
-                                                  e.accountType,
-                                                  style: FontManager()
-                                                      .getTextStyle(
-                                                    context,
-                                                    lWeight: FontWeight.w400,
-                                                    fontSize: 14,
-                                                    color: AppColors.bg1,
-                                                  ),
-                                                ),
-                                                SizedBox(width: 5),
-                                                Text(
-                                                  e.accountReferenceNumber,
-                                                  style: FontManager()
-                                                      .getTextStyle(
-                                                    context,
-                                                    lWeight: FontWeight.w400,
-                                                    fontSize: 14,
-                                                    color: AppColors.bg1,
-                                                  ),
-                                                ),
-                                              ],
-                                            );
-                                          }).toList(),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 5),
-                                    Divider(),
+                  ),  
+            ),
+          )),
+    );
+  }
 
-                                    // Section 2: Permission Validity
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Icon(Icons.date_range_outlined,
-                                                color: Colors.blue),
-                                            SizedBox(width: 10),
-                                            Text(
-                                              "Permission Validity",
-                                              style: FontManager().getTextStyle(
-                                                context,
-                                                lWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                                color: AppColors.bg1,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(height: 5),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 35),
-                                          child: Text(
-                                            formatDate(
-                                                    finvuConsentRequestDetailInfo
-                                                        .consentDateTimeRange
-                                                        .from
-                                                        .toString()) +
-                                                " to " +
-                                                formatDate(
-                                                    finvuConsentRequestDetailInfo
-                                                        .consentDateTimeRange.to
-                                                        .toString()),
-                                            // "From 17 Aug 2024 to 18 Sept 2024",
-                                            style: FontManager().getTextStyle(
-                                              context,
-                                              lWeight: FontWeight.w500,
-                                              fontSize: 15,
-                                              color: AppColors.bg1,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 5),
-                                    Divider(),
 
-                                    // Section 3: Frequency of Access
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Icon(Icons.access_time_outlined,
-                                                color: Colors.blue),
-                                            SizedBox(width: 10),
-                                            Text(
-                                              "Frequency of Access",
-                                              style: FontManager().getTextStyle(
-                                                context,
-                                                lWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                                color: AppColors.bg1,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(height: 5),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 35),
-                                          child: Text(
-                                            "We can access your information one-time.",
-                                            style: FontManager().getTextStyle(
-                                              context,
-                                              lWeight: FontWeight.w400,
-                                              fontSize: 15,
-                                              color: AppColors.bg1,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 5),
+  Widget informationBankAccount(){
+    String range= formatDate(finvuConsentRequestDetailInfo.consentDateTimeRange.from.toString()) +" to " +formatDate(finvuConsentRequestDetailInfo.consentDateTimeRange.to.toString());
+      return Column(
+          children: [
+              accounts("Accounts Shared","${fetchAccountData.length} Account(s) are linked",Icons.account_balance_wallet_outlined),
+              accounts("Permission Validity",range,Icons.date_range_rounded),
+              accounts("Frequency of Access","We can access your information one-time.",Icons.access_time),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: viewMore(),
+              ),
+          ],
+      );
+  }
 
+  Widget  viewMore(){
+      return 
                                     // Section 4: View More Details
                                     GestureDetector(
                                       onTap: () {
@@ -527,51 +391,13 @@ class _AccessState extends State<Access> {
                                                                           ),
                                                                         ))
                                                                     .toList()),
-                                                            SizedBox(
-                                                                height: 20),
+                                                            SizedBox(height: 20),
                                                             InkWell(
                                                               onTap: () {
                                                                 Navigator.pop(
                                                                     context);
                                                               },
-                                                              child: Container(
-                                                                width: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width /
-                                                                    1.1,
-                                                                padding: EdgeInsets
-                                                                    .symmetric(
-                                                                        horizontal:
-                                                                            10,
-                                                                        vertical:
-                                                                            20),
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: AppColors
-                                                                      .accentColor,
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              30),
-                                                                ),
-                                                                child: Center(
-                                                                  child: Text(
-                                                                    "Understand",
-                                                                    style: FontManager()
-                                                                        .getTextStyle(
-                                                                      context,
-                                                                      lWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      fontSize:
-                                                                          16,
-                                                                      color: AppColors
-                                                                          .bg5,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
+                                                              child: getButton(context, "Understand")
                                                             ),
                                                           ],
                                                         ),
@@ -593,35 +419,216 @@ class _AccessState extends State<Access> {
                                           ),
                                         ),
                                       ),
+                        );
+  }
+
+  Widget accounts(String title,String value,IconData icon)
+{
+        return Container(
+          // width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 20),
+          child: Row(
+                                        crossAxisAlignment:CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+          
+                                            Container(
+                                              padding: EdgeInsets.all(4),
+                                              decoration: BoxDecoration(
+                                                 color: Colorcodes.white,
+                                                 borderRadius: BorderRadius.circular(10)
+                                              ),
+                                              child: Icon(
+                                                   icon,
+                                                    color: AppColors.primaryColor,
+                                                    size: 30,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 10,),
+                                      
+                                          Column(
+                                        crossAxisAlignment:CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                title,
+                                                style: FontManager().getTextStyle(
+                                                  context,
+                                                  lWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                  color: AppColors.bg1,
+                                                ),
+                                              ),
+                                          const SizedBox(height: 5,),
+                                          Container(
+                                            width: MediaQuery.of(context).size.width/1.7,
+                                            child: Text(
+                                              value,
+                                              style: FontManager().getTextStyle(
+                                                context,
+                                                lWeight: FontWeight.w400,
+                                                fontSize: 14,
+                                                color: AppColors.bg1,
+                                              ),
+                                              overflow: TextOverflow.clip,
+                                            ),
+                                          ),
+                                        title=="Accounts Shared"?viewInfo():SizedBox.shrink()
+          
+                                        ],
+                                   ),
+                                        
+                                         
+                                        ],
+                       ),
+        );
+  }
+
+Widget viewInfo(){
+    return InkWell(
+      onTap: (){
+          showModalBottomSheet(context: context, builder: (context){
+                return Container(
+                    child: accountInfo(),
+                );
+          });
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(left: 3,top: 5),
+        child: Text("View More", style: FontManager()
+                                                          .getTextStyle(
+                                                        context,
+                                                        lWeight: FontWeight.w400,
+                                                        fontSize: 14,
+                                                        color: Colorcodes.blue,
+                                ),),
+      ),
+    );
+}
+
+
+Widget accountInfo(){
+   return  Container(
+    width: MediaQuery.of(context).size.width,
+    height: MediaQuery.of(context).size.height/3,
+    padding: EdgeInsets.symmetric(horizontal: 10,vertical: 4),
+     child: SingleChildScrollView(
+       child: Expanded(
+         child: Column(
+           
+                             mainAxisAlignment:MainAxisAlignment.start,
+                             crossAxisAlignment:CrossAxisAlignment.start,
+           children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                    mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment:CrossAxisAlignment.center,
+                  children: [
+                     textStyle("Linked Bank Account",15,AppColors.primaryColor,FontWeight.bold),
+                     InkWell(
+                      onTap: (){
+                          Navigator.pop(context);
+                      },
+                      child: Icon(Icons.close)
+                    ),
+                  ],
+              ),
+            ),
+             Column(
+                             mainAxisAlignment:MainAxisAlignment.start,
+                             crossAxisAlignment:CrossAxisAlignment.start,
+                             children: fetchAccountData.map((e){
+                             String url=  bankImageAndid.containsKey(e.fipId)? bankImageAndid[e.fipId].toString():"".toString();
+                              //  var d=await finvuManager.fetchFIPDetails(e.fipId);
+                               return Padding(
+                                 padding: const EdgeInsets.symmetric(vertical: 5),
+                                 child: Row(
+                                   mainAxisAlignment:MainAxisAlignment.start,
+                                   crossAxisAlignment:CrossAxisAlignment.center,
+                                   children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                                        child: Container(
+                                          width: 40,
+                                          height: 30,
+                                          child: Image.network(
+                                            url,
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ),
+                                      ),
+                                      textStyle(e.fipName),
+                                      const SizedBox(width: 5,),
+                                      textStyle(e.accountType),
+                                      const SizedBox(width: 5,),
+                                      textStyle(e.maskedAccountNumber),
+                                     ],
+                                  ),
+                               );
+                            }).toList(),
+                    ),
+           ],
+         ),
+       ),
+     ),
+   );
+}
+
+  Widget textStyle(text, [double fontsize = 12,Color c=AppColors.bg1,FontWeight fontWeight=FontWeight.w500]) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            width: 7,
+          ),
+          Text(
+            text.toString(),
+            style: FontManager().getTextStyle(context,
+                lWeight: fontWeight,
+                fontSize: fontsize,
+                color:c
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+
+
+
+  Widget pauseOrCancle(){
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Icon(Icons.info_outline, color: Colors.grey),
+                                    SizedBox(width: 10),
+                                    Expanded(
+                                      child: Text(
+                                        "You can pause or cancel sharing anytime via your Finvu app.",
+                                        style: FontManager().getTextStyle(
+                                          context,
+                                          lWeight: FontWeight.w400,
+                                          fontSize: 15,
+                                          color: AppColors.bg3,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
-                              ),
-                              SizedBox(height: 20),
+    );
+  }
 
-                              // Footer: Pause or Cancel Sharing
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Icon(Icons.info_outline, color: Colors.grey),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                    child: Text(
-                                      "You can pause or cancel sharing anytime via your Finvu app.",
-                                      style: FontManager().getTextStyle(
-                                        context,
-                                        lWeight: FontWeight.w400,
-                                        fontSize: 15,
-                                        color: AppColors.bg3,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: MediaQuery.of(context).size.height / 6,
-                              ),
-                              InkWell(
+  Widget givePermissionOrDecline(){
+     return Column(
+         children: [
+                 InkWell(
                                 onTap: () {
                                   approveConsentRequest();
                                 },
@@ -671,14 +678,8 @@ class _AccessState extends State<Access> {
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-            ),
-          )),
-    );
+         ],
+     );
   }
 
   void approveConsentRequest() async {

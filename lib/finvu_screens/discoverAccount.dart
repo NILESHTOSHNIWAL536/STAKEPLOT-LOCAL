@@ -16,6 +16,7 @@ import 'package:get/get.dart';
 List<FinvuFIPInfo> fipDis = [];
 List<FinvuFIPInfo> fipDisOrginal = [];
 RxList isSeletedBankAccout = [].obs;
+RxMap<String,String> bankImageAndid=RxMap();
 RxList<FinvuFIPInfo> listOfBankAccount = <FinvuFIPInfo>[].obs;
 // RxBool getBanks=false.obs;
 RxBool addBank = false.obs;
@@ -46,61 +47,49 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      appBar: AppBar(
+    return SafeArea(
+      child: Scaffold(
         backgroundColor: AppColors.backgroundColor,
-        automaticallyImplyLeading: false,
-        title: Align(
-          alignment: Alignment.topLeft,
-          child: Text(
-            "Select Banks you use",
-            style: FontManager().getTextStyle(context,
-                lWeight: FontWeight.bold,
-                fontSize: 18,
-                color: AppColors.accentColor),
-          ),
-        ),
-        //backgroundColor: Colorcodes.white,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(12, 10, 12, 0),
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-              color: AppColors.mt, borderRadius: BorderRadius.circular(16)),
-          //padding: EdgeInsets.all(16),
-          child: SingleChildScrollView(
-            child: Column(children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    "Pick atleast one bank to proceed",
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: AppColors.bg1),
+       
+        body: Padding(
+          padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            decoration: BoxDecoration(
+                color: AppColors.mt, borderRadius: BorderRadius.circular(16)),
+            //padding: EdgeInsets.all(16),
+            child: SingleChildScrollView(
+              child: Column(children: [
+                Padding(
+                  padding:const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "Pick atleast one to proceed",
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: AppColors.bg1),
+                    ),
                   ),
                 ),
-              ),
-              InputDate("Search", TextInputType.name, search),
-              Obx(() => getBanks.value
-                  ? getListOfFinvuBanks()
-                  : getListOfFinvuBanks()),
-              InkWell(
-                onTap: () {
-                  getBankAccount();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: getButton(context, "Fetch Bank Account"),
+                // SizedBox(height: 5),
+                InputDate("Search", TextInputType.name, search),
+                Obx(() => getBanks.value
+                    ? getListOfFinvuBanks()
+                    : getListOfFinvuBanks()),
+                InkWell(
+                  onTap: () {
+                    getBankAccount();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: getButton(context, "Continue"),
+                  ),
                 ),
-              ),
-            ]),
+              ]),
+            ),
           ),
         ),
       ),
@@ -108,22 +97,9 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   }
 
   Widget getListOfFinvuBanks() {
-    // return Container(
-    //   width: MediaQuery.of(context).size.width,
-    //   height: MediaQuery.of(context).size.height/1.5,
-    //   child: SingleChildScrollView(
-    //     child: Expanded(
-    //       child: Column(
-    //            mainAxisAlignment: MainAxisAlignment.start,
-    //            crossAxisAlignment: CrossAxisAlignment.start,
-    //            children: fipDis.map((bankData)=>getBackUi(bankData)).toList(),
-    //       ),
-    //     ),
-    //   ),
-    // );
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 1.5,
+      height: MediaQuery.of(context).size.height / 1.4,
       child: ListView.builder(
         itemCount: fipDis.length,
         itemBuilder: (context, index) {
@@ -132,85 +108,6 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
       ),
     );
   }
-
-  // void addBackToList(boolVale, bankData) {
-  //   if (boolVale!) {
-  //     listOfBankAccount.removeWhere((item) => item.fipId == bankData.fipId);
-  //     isSeletedBankAccout.remove(bankData.fipId);
-  //   } else {
-  //     listOfBankAccount.add(bankData);
-  //     isSeletedBankAccout.add(bankData.fipId);
-  //   }
-  //   addBank.value = !addBank.value;
-  // }
-
-  //                   }else{
-  //                            listOfBankAccount.add(bankData);
-  //                            isSeletedBankAccout.add(bankData.fipId);
-  //               }
-  //                         addBank.value=!addBank.value;
-  // }
-
-  // Widget getBackUi(FinvuFIPInfo bankData){
-  //    return Container(
-  //        width: MediaQuery.of(context).size.width,
-  //        padding: EdgeInsets.symmetric(vertical: 5,horizontal: 13),
-  //        child: Row(
-  //         mainAxisAlignment: MainAxisAlignment.start,
-  //         crossAxisAlignment: CrossAxisAlignment.center,
-  //         children: [
-  //             Obx(()=>
-  //             Checkbox(
-  //               value: addBank.value?isSeletedBankAccout.contains(bankData.fipId):isSeletedBankAccout.contains(bankData.fipId),
-  //                onChanged: (boolVale)
-  //               {  
-                   
-  //                    addBackToList(boolVale,bankData);
-  //               },
-          
-                
-  //               )
-  //             ),
-  //                SizedBox(width: 10,),
-  //               Container(
-  //                 width: 50,
-  //                 height: 50,
-  //                 child: Image.network(bankData.productIconUri.toString())
-  //               ),
-  //               SizedBox(width: 10,),
-  //               InkWell(
-  //                 onTap: (){
-  //                    addBackToList(isSeletedBankAccout.contains(bankData.fipId),bankData);
-  //                 },
-  //                 child: Container(
-  //                   width: MediaQuery.of(context).size.width/1.8,
-  //                   child: Text(bankData.productName.toString(),style: TextStyle(
-  //                     fontSize: 15,
-  //                     overflow:TextOverflow.ellipsis
-  //                   ),),
-  //                 ),
-  //               ),
-  //         ],
-  //        ) ,
-  //    );
-  // }
-
-  // void searchFinvuAccount()async{
-  //      if(search.text.isEmpty){
-       
-  //               fipDis.clear();
-  //               fipDis.addAll(fipDisOrginal);
-              
-  //      }else{
-  //         fipDis.clear();
-  //         fipDisOrginal.forEach((fipAccount){
-  //                 print(fipDis);
-  //                 if(fipAccount.productName.toString().toLowerCase().contains(search.text.toLowerCase())){
-  //                       fipDis.add(fipAccount);
-  //                 }
-  //         });
-  //   }
-  // }
 
   //modified code for checkbox
   void addBackToList(bool? boolVale, FinvuFIPInfo bankData) {
@@ -229,83 +126,65 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   }
 
 
-  // Widget getBackUi(FinvuFIPInfo bankData) {
-  //   return Container(
-  //     width: MediaQuery.of(context).size.width,
-  //     padding: EdgeInsets.symmetric(vertical: 5, horizontal: 13),
-  //     child: Row(
-  //       mainAxisAlignment: MainAxisAlignment.start,
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       children: [
-  //         Obx(() => Checkbox(
-  //             value: addBank.value
-  //                 ? isSeletedBankAccout.contains(bankData.fipId)
-  //                 : isSeletedBankAccout.contains(bankData.fipId),
-  //             onChanged: (boolVale) {
-  //               addBackToList(boolVale, bankData);
-  //             })),
-  //         SizedBox(
-  //           width: 10,
-  //         ),
-  //         Container(
-  //             width: 50,
-  //             height: 50,
-  //             child: Image.network(bankData.productIconUri.toString())),
-  //         SizedBox(
-  //           width: 10,
-  //         ),
-  //         InkWell(
-  //           onTap: () {
-  //             addBackToList(
-  //                 isSeletedBankAccout.contains(bankData.fipId), bankData);
-  //           },
-  //           child: Container(
-  //             width: MediaQuery.of(context).size.width / 1.8,
-  //             child: Text(
-  //               bankData.productName.toString(),
-  //               style: TextStyle(fontSize: 15, overflow: TextOverflow.ellipsis),
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
+  
   //modified code for checkbox
   Widget getBackUi(FinvuFIPInfo bankData) {
+     bankImageAndid[bankData.fipId]=bankData.productIconUri.toString();
+     
     return Container(
       width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 13),
+      padding: EdgeInsets.symmetric(vertical: 3, horizontal: 7),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Obx(() => Checkbox(
+         
+         
+          InkWell(
+            onTap: (){
+               addBackToList(isSeletedBankAccout.contains(bankData.fipId), bankData);
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Container(
+                width: 50,
+                height: 50,
+                child: Image.network(
+                  bankData.productIconUri.toString(),
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ),
+          
+          Expanded(
+            child:   InkWell(
+            onTap: (){
+               addBackToList(isSeletedBankAccout.contains(bankData.fipId), bankData);
+            },
+              child: Text(
+                bankData.productName.toString(),
+                style: TextStyle(
+                  fontSize: 15,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+          ),
+
+           Obx(() => Checkbox(
                 value: isSeletedBankAccout.contains(bankData.fipId),
+                activeColor: AppColors.primaryColor,
+                
+                 shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(2), // Apply border radius
+                ),
                 onChanged: (bool? boolVale) {
                   // Toggle the checkbox selection
                   addBackToList(boolVale, bankData);
                 },
-              )),
-          SizedBox(width: 10),
-          Container(
-            width: 50,
-            height: 50,
-            child: Image.network(
-              bankData.productIconUri.toString(),
-              fit: BoxFit.contain,
-            ),
-          ),
-          SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              bankData.productName.toString(),
-              style: TextStyle(
-                fontSize: 15,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ),
+          )),
+
         ],
       ),
     );
@@ -332,39 +211,42 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   }
 
   Widget InputDate(lableText, keyBoard, Textcontroller) {
-    return Center(
-      child: Container(
-        // margin: EdgeInsets.symmetric(vertical: 5),
-        // color:  Color.fromRGBO(246, 246, 246, 1),
-        // height: 50,
-        width: MediaQuery.of(context).size.width / 1.1,
-        child: Center(
-          child: TextFormField(
-            keyboardType: keyBoard,
-            controller: Textcontroller,
-            onChanged: (value) {
-              Future.delayed(const Duration(milliseconds: 300), () {
-                searchFinvuAccount();
-              });
-            },
-            decoration: InputDecoration(
-              prefixIcon: Icon(Icons.search),
-              //prefixIconColor: Colorcodes.budgetDarkGreen,
-              filled: true,
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 14),
-              hintText: lableText,
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(24),
-                // borderSide: BorderSide(color: Colorcodes.budgetDarkGreen
-                //     // color: Color.fromRGBO(249, 246, 238, 1)
-                //     )
+    return Padding(
+      padding: const EdgeInsets.only(top:4,bottom: 10),
+      child: Center(
+        child: Container(
+          // margin: EdgeInsets.symmetric(vertical: 5),
+          // color:  Color.fromRGBO(246, 246, 246, 1),
+          // height: 50,
+          width: MediaQuery.of(context).size.width / 1.1,
+          child: Center(
+            child: TextFormField(
+              keyboardType: keyBoard,
+              controller: Textcontroller,
+              onChanged: (value) {
+                Future.delayed(const Duration(milliseconds: 300), () {
+                  searchFinvuAccount();
+                });
+              },
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.search),
+                //prefixIconColor: Colorcodes.budgetDarkGreen,
+                filled: true,
+                contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 14),
+                hintText: lableText,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(24),
+                  borderSide: BorderSide(color: Colorcodes.white
+                      // color: Color.fromRGBO(249, 246, 238, 1)
+                      )
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(24),
+                  borderSide: BorderSide(color: Colorcodes.white)
+                ),
+                fillColor: AppColors.button,
+                border: InputBorder.none,
               ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(24),
-                //borderSide: BorderSide(color: Colorcodes.budgetDarkGreen)
-              ),
-              fillColor: AppColors.button,
-              border: InputBorder.none,
             ),
           ),
         ),
@@ -419,6 +301,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
       List<FinvuDiscoveredAccountInfo> info =
           await finvuManager.discoverAccounts(
               fipDetails, finvuFIPInfo.fipFitypes, finvuTypeIdentifierInfo);
+
 
       //  Navigator.push(
       //     context,
