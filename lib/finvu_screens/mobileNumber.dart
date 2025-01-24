@@ -122,6 +122,7 @@ class _MobileNumberState extends State<MobileNumber> {
                 // );
                 showModalBottomSheet(
                     context: context,
+                    isScrollControlled: true,
                     builder: (BuildContext context) {
                       return verifyaotp(context);
                     });
@@ -138,93 +139,103 @@ class _MobileNumberState extends State<MobileNumber> {
   }
 
   Widget verifyaotp(context) {
-    return SingleChildScrollView(
-      //reverse: true,
-      child: Container(
-        
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height / 2.7,
-        decoration:const BoxDecoration(
-            // color: AppColors.mt,
-            borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        )),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(vertical: 10),
-            //   child: Center(
-            //       child: textStyle("Securely authorize each selected account", 14,
-            //           Colorcodes.black, FontWeight.bold)),
-            // ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              child: textStyle(
-                  "OTP Verification", 20, AppColors.bg1, FontWeight.bold),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
-              child: textStyle("Enter the OTP sent to ${number.value}", 15,
-                  AppColors.bg1, FontWeight.w400),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: PinCodeTextField(
-                appContext: context,
-                length: _otpCodeLength,
-                controller: otpController,
-                keyboardType: TextInputType.number,
-                autoFocus: true,
-                animationType: AnimationType.fade,
-                pinTheme: PinTheme(
-                  shape: PinCodeFieldShape.box,
-                  borderRadius: BorderRadius.circular(10),
-                  fieldHeight: MediaQuery.of(context).size.width * 0.12,
-                  fieldWidth: MediaQuery.of(context).size.width * 0.12,
-                  activeFillColor: Colors.white,
-                  activeColor: Colors.blue,
-                  selectedFillColor: Colors.white,
-                  selectedColor: Colors.blue,
-                  inactiveFillColor: Colors.grey[200],
-                  inactiveColor: Colors.grey,
-                ),
-                enableActiveFill: true,
-                textStyle: TextStyle(fontSize: 20, color: Colors.black),
-                onChanged: (value) {
-                  _otpCode.value = value;
-                  _isOtpValid.value = value.length == _otpCodeLength;
-                },
+    return DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        minChildSize: 0.7,
+        maxChildSize: 0.9,
+        expand: false,
+        builder: (context, ScrollController) {
+          return SingleChildScrollView(
+            controller: ScrollController,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height / 2.7,
+              decoration: const BoxDecoration(
+                  color: AppColors.mt,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  )),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(vertical: 10),
+                  //   child: Center(
+                  //       child: textStyle("Securely authorize each selected account", 14,
+                  //           Colorcodes.black, FontWeight.bold)),
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 25, horizontal: 20),
+                    child: textStyle(
+                        "OTP Verification", 20, AppColors.bg1, FontWeight.bold),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
+                    child: textStyle("Enter the OTP sent to ${number.value}",
+                        15, AppColors.bg1, FontWeight.w400),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: PinCodeTextField(
+                      appContext: context,
+                      length: _otpCodeLength,
+                      controller: otpController,
+                      keyboardType: TextInputType.number,
+                      autoFocus: true,
+                      animationType: AnimationType.fade,
+                      pinTheme: PinTheme(
+                        shape: PinCodeFieldShape.box,
+                        borderRadius: BorderRadius.circular(10),
+                        fieldHeight: MediaQuery.of(context).size.width * 0.12,
+                        fieldWidth: MediaQuery.of(context).size.width * 0.12,
+                        activeFillColor: Colors.white,
+                        activeColor: Colors.blue,
+                        selectedFillColor: Colors.white,
+                        selectedColor: Colors.blue,
+                        inactiveFillColor: Colors.grey[200],
+                        inactiveColor: Colors.grey,
+                      ),
+                      enableActiveFill: true,
+                      textStyle: TextStyle(fontSize: 20, color: Colors.black),
+                      onChanged: (value) {
+                        _otpCode.value = value;
+                        _isOtpValid.value = value.length == _otpCodeLength;
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Center(
+                    child: GestureDetector(
+                        onTap: _isOtpValid.value
+                            ? () {
+                                if (_isOtpValid.value) {
+                                  verify(_otpCode.value, context);
+                                } else {
+                                  snackBarCalled(
+                                      context, "please enter otp of length 6");
+                                }
+                              }
+                            : null,
+                        child: Obx(
+                          () => _isOtpValid.value
+                              ? getColorVerify()
+                              : getColorVerify(),
+                        )),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
-            Center(
-              child: GestureDetector(
-                  onTap: _isOtpValid.value
-                      ? () {
-                          if (_isOtpValid.value) {
-                            verify(_otpCode.value, context);
-                          } else {
-                            snackBarCalled(
-                                context, "please enter otp of length 6");
-                          }
-                        }
-                      : null,
-                  child: Obx(
-                    () => _isOtpValid.value ? getColorVerify() : getColorVerify(),
-                  )),
-            ),
-          ],
-        ),
-      ),
-    );
+          );
+        });
   }
 
   Widget textStyle(text,
