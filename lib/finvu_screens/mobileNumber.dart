@@ -123,7 +123,9 @@ class _MobileNumberState extends State<MobileNumber> {
                 showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
+                    
                     builder: (BuildContext context) {
+                      
                       return verifyaotp(context);
                     });
 
@@ -141,9 +143,10 @@ class _MobileNumberState extends State<MobileNumber> {
   Widget verifyaotp(context) {
     return DraggableScrollableSheet(
         initialChildSize: 0.7,
-        minChildSize: 0.7,
+        minChildSize: 0.3,
         maxChildSize: 0.9,
         expand: false,
+        
         builder: (context, ScrollController) {
           return SingleChildScrollView(
             controller: ScrollController,
