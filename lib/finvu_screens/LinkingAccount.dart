@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/access.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/verifyOTP.dart';
@@ -74,14 +75,14 @@ class _LinkingAccountState extends State<LinkingAccount> {
               ),
 
               const SizedBox(
-                height: 10,
+                height: 5,
               ),
             
               BankInfoUiContainer(),
 
               bankAccountList(),
             
-            
+              const SizedBox(height: 5,),
               InkWell(
                   onTap: () {
                     showModalBottomSheet(
@@ -92,8 +93,27 @@ class _LinkingAccountState extends State<LinkingAccount> {
                     );
                   },
                   child: getButton(context, "Authorise")),
-            ],
-          ),
+                listofLinkedAccount.isNotEmpty? Column(
+                      children: [
+
+                  const SizedBox(height: 5,),
+                      InkWell(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return fetchDataOfLinkedAccount();
+                              },
+                            );
+                          },
+                          child: getButton(context, "Fetch Now")),
+                    ],
+                ):SizedBox.shrink(),
+
+
+
+                 ],
+           ),
         ),
       ),
     );
@@ -178,6 +198,92 @@ class _LinkingAccountState extends State<LinkingAccount> {
               ));
   }
 
+  Widget fetchDataOfLinkedAccount()
+  {
+    return Container(
+        width: MediaQuery.of(context).size.width,
+        height: accountLinked.isEmpty
+            ? MediaQuery.of(context).size.height / 3.5
+            : MediaQuery.of(context).size.height / 3,
+        child: accountLinked.isEmpty
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                   const SizedBox(
+                    height: 20,
+                  ),
+
+                  // textStyle("Please tap on 'Fetch Now' to Fetch your bank Transactions", 14),
+                  // const SizedBox(
+                  //   height: 20,
+                  // ),
+                    Container(
+                      width: MediaQuery.of(context).size.width/1.1,
+                      // padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Center(
+                        child: Text(
+                          "Your selected bank is not yet linked. Before proceeding, ensure that the specified bank is linked By clicking on Fecth Now U can Fetch Your Linked Account Trsactions".toString(),
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.w600,
+                              fontSize: 14,
+                              color:Colorcodes.red
+                          ),
+                        ),
+                      ),
+                    ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Icon(Icons.warning_outlined,color: Colorcodes.red,size: 30,),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FetchTransaction(),
+                          ),
+                        );
+                      },
+                      child: getButton(context, "Fetch Now")),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("${accountLinked.length} Banks Linked..",
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.bold,
+                          fontSize: 14,
+                          color: Colorcodes.black)),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Access(),
+                          ),
+                        );
+                      },
+                      child: getButton(context, "continue")),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ));
+  }
+
   Widget BankInfoUiContainer() {
     return Container(
       padding: const EdgeInsets.all(12.0),
@@ -226,37 +332,40 @@ class _LinkingAccountState extends State<LinkingAccount> {
   }
 
   Widget bankAccountList() {
+    double height=MediaQuery.of(context).size.height;
     return Container(
       //padding: const EdgeInsets.fromLTRB(14, 5, 16, 5),
       //here we can change height
       width: MediaQuery.of(context).size.width/1.1,
-      height: MediaQuery.of(context).size.height / 1.45,
+      height: listofLinkedAccount.isNotEmpty? height / 1.55:height/1.45,
       child: SingleChildScrollView(
-        child: Column(
-          children: widget.listOfBankAccount.map((account) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Display bank name and image before calling linkedaccoutnData
-                getBankNameAndImage(account),
-              
-                FutureBuilder<Widget>(
-                  future: linkedaccoutnData(account),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator(); // Show loading indicator
-                    } else if (snapshot.hasError) {
-                      return Text("Error: ${snapshot.error}");
-                    } else {
-                      return snapshot.data ??
-                          SizedBox.shrink(); // Return the widget from Future
-                    }
-                  },
-                ),
-              ],
-            );
-          }).toList(),
+        child: Expanded(
+          child: Column(
+            children: widget.listOfBankAccount.map((account) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Display bank name and image before calling linkedaccoutnData
+                  getBankNameAndImage(account),
+                
+                  FutureBuilder<Widget>(
+                    future: linkedaccoutnData(account),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator(); // Show loading indicator
+                      } else if (snapshot.hasError) {
+                        return Text("Error: ${snapshot.error}");
+                      } else {
+                        return snapshot.data ??
+                            SizedBox.shrink(); // Return the widget from Future
+                      }
+                    },
+                  ),
+                ],
+              );
+            }).toList(),
+          ),
         ),
       ),
     );
@@ -288,11 +397,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
         context: context,
         builder: (context2) {
           return verify(linkingReference, fipId,fipDetails,info,context);
-          // return VerifyOtp(
-          //   linkingReference: linkingReference,
-          //   flag: 1,
-          //   fid: fipId,
-          // );
+      
         },
       );
     } catch (e) {
@@ -301,90 +406,100 @@ class _LinkingAccountState extends State<LinkingAccount> {
   }
 
   Widget verify(linkingReference, fid,FinvuFIPDetails fipDetails,FinvuFIPInfo info,context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 1.9,
-      decoration: BoxDecoration(
-        // color: AppColors.mt,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(40),
-          topRight: Radius.circular(40),
-        )
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Center(child: textStyle("Securely authorize each selected account",14,Colorcodes.black,FontWeight.bold)),
-          ),
-        
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: getBankNameAndImage(info,false),
-          ),
-        
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 20),
-            child: textStyle("OTP Verification",15,Colorcodes.black,FontWeight.bold),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4,horizontal: 20),
-            child: textStyle("Enter the OTP sent to ${number.value}",15,Colorcodes.black,FontWeight.w400),
-          ),
-          const SizedBox(height: 10,),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: PinCodeTextField(
-              appContext: context,
-              length: _otpCodeLength,
-              controller: otpController,
-              keyboardType: TextInputType.number,
-              autoFocus: true,
-              animationType: AnimationType.fade,
-              pinTheme: PinTheme(
-                shape: PinCodeFieldShape.box,
-                borderRadius: BorderRadius.circular(10),
-                fieldHeight: MediaQuery.of(context).size.width * 0.12,
-                fieldWidth: MediaQuery.of(context).size.width * 0.12,
-                activeFillColor: Colors.white,
-                activeColor: Colors.blue,
-                selectedFillColor: Colors.white,
-                selectedColor: Colors.blue,
-                inactiveFillColor: Colors.grey[200],
-                inactiveColor: Colors.grey,
-              ),
-              enableActiveFill: true,
-              textStyle: TextStyle(fontSize: 20, color: Colors.black),
-              onChanged: (value) {
-                _otpCode.value = value;
-                _isOtpValid.value = value.length == _otpCodeLength;
-              },
-             
+    return DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        minChildSize: 0.7,
+        maxChildSize: 0.9,
+        expand: false,
+        builder: (context, ScrollController) {
+          return SingleChildScrollView(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height / 1.9,
+            decoration: BoxDecoration(
+              // color: AppColors.mt,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(40),
+                topRight: Radius.circular(40),
+              )
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Center(child: textStyle("Securely authorize each selected account",14,Colorcodes.black,FontWeight.bold)),
+                ),
+              
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: getBankNameAndImage(info,false),
+                ),
+              
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 20),
+                  child: textStyle("OTP Verification",15,Colorcodes.black,FontWeight.bold),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4,horizontal: 20),
+                  child: textStyle("Enter the OTP sent to ${number.value}",15,Colorcodes.black,FontWeight.w400),
+                ),
+                const SizedBox(height: 10,),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: PinCodeTextField(
+                    appContext: context,
+                    length: _otpCodeLength,
+                    controller: otpController,
+                    keyboardType: TextInputType.number,
+                    autoFocus: true,
+                    animationType: AnimationType.fade,
+                    pinTheme: PinTheme(
+                      shape: PinCodeFieldShape.box,
+                      borderRadius: BorderRadius.circular(10),
+                      fieldHeight: MediaQuery.of(context).size.width * 0.12,
+                      fieldWidth: MediaQuery.of(context).size.width * 0.12,
+                      activeFillColor: Colors.white,
+                      activeColor: Colors.blue,
+                      selectedFillColor: Colors.white,
+                      selectedColor: Colors.blue,
+                      inactiveFillColor: Colors.grey[200],
+                      inactiveColor: Colors.grey,
+                    ),
+                    enableActiveFill: true,
+                    textStyle: TextStyle(fontSize: 20, color: Colors.black),
+                    onChanged: (value) {
+                      _otpCode.value = value;
+                      _isOtpValid.value = value.length == _otpCodeLength;
+                    },
+                   
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Center(
+                  child: GestureDetector(
+                      onTap: _isOtpValid.value
+                          ? () {
+                              if (_isOtpValid.value) {
+                                linkAccount(_otpCode.value, linkingReference, fid,context);
+                              } else {
+                                snackBarCalled(context, "please enter otp of length 6");
+                              }
+                            }
+                          : null,
+                      child: Obx(
+                        () => _isOtpValid.value ? getColorVerify() : getColorVerify(),
+                      )),
+                ),
+              ],
             ),
           ),
-          const SizedBox(
-            height: 20,
-          ),
-          Center(
-            child: GestureDetector(
-                onTap: _isOtpValid.value
-                    ? () {
-                        if (_isOtpValid.value) {
-                          linkAccount(_otpCode.value, linkingReference, fid,context);
-                        } else {
-                          snackBarCalled(context, "please enter otp of length 6");
-                        }
-                      }
-                    : null,
-                child: Obx(
-                  () => _isOtpValid.value ? getColorVerify() : getColorVerify(),
-                )),
-          ),
-        ],
-      ),
+        );
+      }
     );
   }
 
@@ -447,7 +562,6 @@ class _LinkingAccountState extends State<LinkingAccount> {
                      formatMaskedAccount(bankData),
                      const SizedBox(height: 2,),
                      listofLinkedAccount.contains(id)?textStyle("Linked",13,Colorcodes.graphColor2):SizedBox.shrink()
-      
                 ],
             ),
             const Spacer(),
@@ -545,6 +659,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
           fipDetails, finvuFIPInfo.fipFitypes, finvuTypeIdentifierInfo);
 
       count.value += info.length;
+      count.refresh();
     } catch (e) {
       return SizedBox.shrink();
     }

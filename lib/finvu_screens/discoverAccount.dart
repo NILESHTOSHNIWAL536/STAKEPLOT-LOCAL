@@ -81,6 +81,8 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                     : getListOfFinvuBanks()),
                 InkWell(
                   onTap: () {
+                    count.value=0;
+                    count.refresh();
                     getBankAccount();
                   },
                   child: Padding(
