@@ -165,14 +165,10 @@ class _MobileNumberState extends State<MobileNumber> {
   }
 
   Widget verifyaotp(context) {
-    return DraggableScrollableSheet(
-        initialChildSize: 0.7,
-        minChildSize: 0.3,
-        maxChildSize: 0.9,
-        expand: false,
-        builder: (context, ScrollController) {
-          return SingleChildScrollView(
-            controller: ScrollController,
+    return AnimatedPadding(
+      padding: MediaQuery.of(context).viewInsets,// Adjusts padding when keyboard appears
+      duration: const Duration(milliseconds: 100),
+      curve: Curves.easeOut,
             child: Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height / 2.7,
@@ -294,7 +290,7 @@ class _MobileNumberState extends State<MobileNumber> {
               ),
             ),
           );
-        });
+        
   }
 
   Widget textStyle(text,

@@ -52,12 +52,12 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
         backgroundColor: AppColors.backgroundColor,
        
         body: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+          padding: const EdgeInsets.fromLTRB(12, 20, 12, 10),
           child: Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
-                color: AppColors.mt, borderRadius: BorderRadius.circular(16)),
+            // decoration: BoxDecoration(
+            //     color: AppColors.mt, borderRadius: BorderRadius.circular(16)),
             //padding: EdgeInsets.all(16),
             child: SingleChildScrollView(
               child: Column(children: [
@@ -75,7 +75,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                   ),
                 ),
                 // SizedBox(height: 5),
-                InputDate("Search", TextInputType.name, search),
+                InputDate("Search for banks", TextInputType.name, search),
                 Obx(() => getBanks.value
                     ? getListOfFinvuBanks()
                     : getListOfFinvuBanks()),
@@ -166,10 +166,15 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
             },
               child: Text(
                 bankData.productName.toString(),
-                style: TextStyle(
-                  fontSize: 15,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                // style: TextStyle(
+                //   fontSize: 15,
+                //   overflow: TextOverflow.ellipsis,
+                // ),
+                style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w400,
+                          fontSize: 15,
+                          color: AppColors.bg1,
+                          overflow: TextOverflow.ellipsis)
               ),
             ),
           ),
@@ -232,19 +237,24 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
               },
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.search),
+                prefixIconColor: AppColors.primaryColor,
                 //prefixIconColor: Colorcodes.budgetDarkGreen,
                 filled: true,
                 contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 14),
                 hintText: lableText,
+                hintStyle:  FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: AppColors.bg3),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide(color: Colorcodes.white
+                  borderSide: BorderSide(color: AppColors.border
                       // color: Color.fromRGBO(249, 246, 238, 1)
                       )
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide(color: Colorcodes.white)
+                  borderSide: BorderSide(color: AppColors.border)
                 ),
                 fillColor: AppColors.button,
                 border: InputBorder.none,
@@ -259,7 +269,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   void getBankAccount() {
     if (listOfBankAccount.isEmpty) {
       snackBarCalled(
-          context, "Pick atleast one Bank to proceed...", Colorcodes.red);
+          context, "Pick atleast one Bank to proceed", Colorcodes.red);
       return;
     } else {
       //  listOfBankAccount

@@ -169,4 +169,8 @@ class Sign {
   static String protection = "assets/icons/Signup/protection.svg";
   static String minimise = "assets/icons/Signup/Minimize.svg";
   static String maximise = "assets/icons/Signup/Maximise.svg";
+  static String budgeting = "assets/icons/Signup/Budgeting.svg";
+  static String growth = "assets/icons/Signup/growth.svg";
+  static String comm = "assets/icons/Signup/Comm.svg";
+  static String management = "assets/icons/Signup/Management.svg";
 }
