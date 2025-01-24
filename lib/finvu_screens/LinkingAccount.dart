@@ -412,7 +412,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
     
     return AnimatedPadding(
       padding: MediaQuery.of(context).viewInsets,// Adjusts padding when keyboard appears
-      duration: const Duration(milliseconds: 50),
+      duration: const Duration(milliseconds: 100),
       curve: Curves.easeOut,
       child: Container(
         width: MediaQuery.of(context).size.width,
