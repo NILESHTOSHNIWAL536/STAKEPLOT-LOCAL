@@ -3,17 +3,21 @@ import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
+// import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/finvuAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/otpScreen.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/verifyOTP.dart';
+import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MobileNumber extends StatefulWidget {
   const MobileNumber({super.key});
@@ -114,12 +118,7 @@ class _MobileNumberState extends State<MobileNumber> {
                 LOGOUT();
                 loginToAutoTractions(context);
                 otpController = TextEditingController();
-                // Navigator.pushReplacement(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => VerifyOtp(),
-                //   ),
-                // );
+              
                 showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
@@ -136,6 +135,36 @@ class _MobileNumberState extends State<MobileNumber> {
         ),
       ),
     );
+  }
+
+
+    void  LOGOUT() async {
+    
+       final SharedPreferences _pref = await SharedPreferences.getInstance();
+    try{
+
+ listOfAccountAdded.clear();
+
+ FinvuFIPDetailsList.clear();
+ accountAdded.clear();
+ accountLinked.clear();
+ accountLinked.clear();
+ 
+        _pref.remove("token");
+        _pref.remove("from");
+        _pref.remove("to");
+        _pref.remove("sessionId");
+        _pref.remove("consentId");
+        _pref.remove("ConsentHandleId");
+
+        await finvuManager.logout(); 
+      
+        print("Logout user...");
+    }catch(e){
+         print(e);
+    }
+     
+    debugPrint('getConsentHandleStatus');
   }
 
   Widget verifyaotp(context) {

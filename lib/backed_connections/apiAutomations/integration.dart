@@ -68,8 +68,7 @@ import 'package:shared_preferences/shared_preferences.dart';
       otp,
       otpReference,
     );
-     print("verifyLoginOtp");
-     print(login.userId);
+    
      final SharedPreferences _pref = await SharedPreferences.getInstance();
           String? token=await _pref.getString("token");
 
