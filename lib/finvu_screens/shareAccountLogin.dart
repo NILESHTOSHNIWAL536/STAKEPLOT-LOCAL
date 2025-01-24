@@ -58,32 +58,24 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
   }
 
  void _startAutoScroll() {
-  _timer = Timer.periodic(Duration(milliseconds: 50), (timer) { // Reduced duration for smoother feel
-    if (_scrollController.hasClients) {
-      double maxScroll = _scrollController.position.maxScrollExtent;
-      double currentScroll = _scrollController.offset;
-      double delta = 2.0; // Reduced delta for finer control over speed
+    _timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+      if (_scrollController.hasClients) {
+        double maxScroll = _scrollController.position.maxScrollExtent;
+        double currentScroll = _scrollController.offset;
+        double delta = 4.0; // Speed of the auto-scroll
 
-      if (currentScroll + delta >= maxScroll) {
-        // Instead of jumping, animate back to the start with a small delay
-        Future.delayed(const Duration(milliseconds: 100), () {
-          _scrollController.animateTo(
-            0.0,
-            duration: Duration(milliseconds: 500), // Smooth transition duration
-            curve: Curves.easeInOut, // Start and end slowly, speed up in the middle
-          );
-        });
-      } else {
-        // Animate to the new position rather than jumping
-        _scrollController.animateTo(
-          currentScroll + delta,
-          duration: Duration(milliseconds: 50), // Adjust based on how smooth you want it
-          curve: Curves.linear, // Straight line speed for a steady scroll
-        );
+        // If we've reached the end, reset to the start, but with a small delay
+        if (currentScroll + delta >= maxScroll) {
+          Future.delayed(const Duration(milliseconds: 100), () {
+            _scrollController.jumpTo(0.0);
+          });
+        } else {
+          // Smoothly move the scroll position
+          _scrollController.jumpTo(currentScroll + delta);
+        }
       }
-    }
-  });
-}
+    });
+  }
 
   void getData() async {
     fipDis = await finvuManager.fipsAllFIPOptions();
