@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -99,8 +100,7 @@ void ConsentRequestPlus(context, accessToken, custId) async {
       final body = json.decode(response.body);
       String ConsentHandleId = (body['body']['ConsentHandle']);
       String url = (body['body']['url']);
-    
-     
+
       login(ConsentHandleId);
       handleId.value = ConsentHandleId;
       ConsentStatus(context, accessToken, ConsentHandleId, custId);
@@ -331,3 +331,43 @@ void fetch(context) async {
     //  print(e);
   }
 }
+
+
+ void  LOGOUT() async {
+    
+       final SharedPreferences _pref = await SharedPreferences.getInstance();
+try{
+
+ listOfAccountAdded.clear();
+ FinvuFIPDetailsList.clear();
+ accountCountList.clear();
+ accountAdded.clear();
+ accountLinked.clear();
+ fipDis.clear();
+ fipDisOrginal.clear();
+ accountLinked.clear();
+ isSeletedBankAccout.clear();
+ bankImageAndid.clear();
+ listOfBankAccount.clear();
+ fetchAccountData.clear();
+ fetchedTrsacntionList.clear();
+ count.value=0;
+ addBank.value = false;
+ getBanks.value=false;
+ getFetch.value =false;
+//  number.value="";
+//  consentUserId.value="";
+//  handleId.value="";
+ _pref.remove("token");
+ _pref.remove("from");
+ _pref.remove("to");
+ _pref.remove("sessionId");
+ _pref.remove("consentId");
+ _pref.remove("ConsentHandleId");
+ await finvuManager.logout(); 
+   print("Logout user...");
+  }catch(e){
+         print(e);
+  } 
+    debugPrint('getConsentHandleStatus');
+  }

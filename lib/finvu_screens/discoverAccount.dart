@@ -13,13 +13,13 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 
-List<FinvuFIPInfo> fipDis = [];
-List<FinvuFIPInfo> fipDisOrginal = [];
-RxList isSeletedBankAccout = [].obs;
-RxMap<String,String> bankImageAndid=RxMap();
-RxList<FinvuFIPInfo> listOfBankAccount = <FinvuFIPInfo>[].obs;
-// RxBool getBanks=false.obs;
-RxBool addBank = false.obs;
+// List<FinvuFIPInfo> fipDis = [];
+// List<FinvuFIPInfo> fipDisOrginal = [];
+// RxList isSeletedBankAccout = [].obs;
+// RxMap<String,String> bankImageAndid=RxMap();
+// RxList<FinvuFIPInfo> listOfBankAccount = <FinvuFIPInfo>[].obs;
+// // RxBool getBanks=false.obs;
+// RxBool addBank = false.obs;
 
 class DiscoverAccount extends StatefulWidget {
   const DiscoverAccount({Key? key}) : super(key: key);

@@ -5,21 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/FetchLinkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/otpScreen.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'dart:async';
-import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
+
 
 String bankImage =
     "https://static.vecteezy.com/system/resources/thumbnails/023/364/757/small_2x/3d-illustration-of-bank-building-and-money-bag-png.png";
@@ -62,7 +58,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
       if (_scrollController.hasClients) {
         double maxScroll = _scrollController.position.maxScrollExtent;
         double currentScroll = _scrollController.offset;
-        double delta = 8.0; // Speed of the auto-scroll
+        double delta = 6.0; // Speed of the auto-scroll
 
         // If we've reached the end, reset to the start, but with a small delay
         if (currentScroll + delta >= maxScroll) {
@@ -209,7 +205,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: InkWell(
                   onTap: () {
-                    if (!widget.flag) LOGOUT();
+                   
                     if (!widget.flag) initFinvuManager();
 
                     Navigator.push(

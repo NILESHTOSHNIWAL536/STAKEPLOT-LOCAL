@@ -10,12 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 
-List<FinvuLinkedAccountDetailsInfo> fetchAccountData=[];
-RxBool getBanks=false.obs;
-RxBool getFetch=false.obs;
 
 class FetchLinkedAccounts extends StatefulWidget {
   const FetchLinkedAccounts({ Key? key }) : super(key: key);
