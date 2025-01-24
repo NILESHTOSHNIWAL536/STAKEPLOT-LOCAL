@@ -80,6 +80,8 @@ class _MobileNumberState extends State<MobileNumber> {
             // TextField for entering phone number
             TextField(
               controller: _phoneController, // Attach the controller
+              maxLength: 10,
+              autocorrect: true,
               keyboardType: TextInputType.phone, // Phone input keyboard
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.phone_android_outlined),
@@ -97,7 +99,7 @@ class _MobileNumberState extends State<MobileNumber> {
                   borderRadius: BorderRadius.circular(16),
                   borderSide: BorderSide.none,
                 ),
-
+              
                 //prefixIcon: Icon(Icons.phone),
                 //hintText: 'Mobile Number',
               ),
@@ -115,7 +117,7 @@ class _MobileNumberState extends State<MobileNumber> {
                 ;
                 String phoneNumber = _phoneController.text;
                 number.value = phoneNumber;
-                LOGOUT();
+                LOGOUT();         
                 loginToAutoTractions(context);
                 otpController = TextEditingController();
 
@@ -137,33 +139,8 @@ class _MobileNumberState extends State<MobileNumber> {
     );
   }
 
-  void LOGOUT() async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    try {
-      listOfAccountAdded.clear();
 
-      FinvuFIPDetailsList.clear();
-      accountAdded.clear();
-      accountLinked.clear();
-      accountLinked.clear();
-
-      _pref.remove("token");
-      _pref.remove("from");
-      _pref.remove("to");
-      _pref.remove("sessionId");
-      _pref.remove("consentId");
-      _pref.remove("ConsentHandleId");
-
-      await finvuManager.logout();
-
-      print("Logout user...");
-    } catch (e) {
-      print(e);
-    }
-
-    debugPrint('getConsentHandleStatus');
-  }
-
+   
   Widget verifyaotp(context) {
     return AnimatedPadding(
       padding: MediaQuery.of(context).viewInsets,// Adjusts padding when keyboard appears

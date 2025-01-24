@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
@@ -63,10 +68,22 @@ const FetchTransaction({ Key? key }) : super(key: key);
             SizedBox(height: 20,),
           
             InkWell(
-                onTap: () {
+                onTap: ()async {
                   //  Otpscreen
                   // loginToAutoTractions(context);
-                   fetch(context);
+                 if(directFetch.value){
+                       String urlPath = "${url}/transactionauto/";
+                        var response=await getDataApiCall(urlPath);
+                        printData(response);
+                         if (getFlagOfResponse(response)) {
+                            trasactionsData.clear();
+                            var his = jsonDecode(response.body);
+                            fetchedTrsacntionList.clear();
+                            fetchedTrsacntionList.addAll(his['data']);
+                            // changeTrasactiondata();
+                          } else {}
+
+                 }else fetch(context);
 
                 },
              child: getButton(context,"Fetch Trasactions")),

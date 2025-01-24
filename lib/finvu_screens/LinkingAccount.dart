@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:finvu_flutter_sdk/finvu_manager.dart';
 import 'package:finvu_flutter_sdk_core/finvu_discovered_accounts.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_details.dart';
@@ -6,6 +8,7 @@ import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -16,15 +19,28 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/verifyOTP.dart'
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
-RxMap<String, List<FinvuDiscoveredAccountInfo>> listOfAccountAdded =
-    <String, List<FinvuDiscoveredAccountInfo>>{}.obs;
-RxMap<String, FinvuFIPDetails> FinvuFIPDetailsList =
-    <String, FinvuFIPDetails>{}.obs;
+
+RxMap<String, List<FinvuDiscoveredAccountInfo>> listOfAccountAdded = <String, List<FinvuDiscoveredAccountInfo>>{}.obs;
+RxMap<String, FinvuFIPDetails> FinvuFIPDetailsList =<String, FinvuFIPDetails>{}.obs;
+RxMap<String, int> accountCountList=<String, int>{}.obs;
 RxList accountAdded = [].obs;
 RxList accountLinked = [].obs;
 RxInt count = 0.obs;
+List<FinvuFIPInfo> fipDis = [];
+List<FinvuFIPInfo> fipDisOrginal = [];
+RxList isSeletedBankAccout = [].obs;
+RxMap<String,String> bankImageAndid=RxMap();
+RxList<FinvuFIPInfo> listOfBankAccount = <FinvuFIPInfo>[].obs;
+// RxBool getBanks=false.obs;
+RxBool addBank = false.obs;
+List<FinvuLinkedAccountDetailsInfo> fetchAccountData=[];
+RxBool getBanks=false.obs;
+RxBool getFetch=false.obs;
+RxBool directFetch=false.obs;
+
+
+
 
 class LinkingAccount extends StatefulWidget {
   List<FinvuFIPInfo> listOfBankAccount;
@@ -44,6 +60,9 @@ class _LinkingAccountState extends State<LinkingAccount> {
   void initState() {
     super.initState();
     count.value = 0;
+     print(number.value);
+     print(consentUserId.value);
+     print(handleId.value);
   }
 
   @override
@@ -180,6 +199,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                   ),
                   InkWell(
                       onTap: () {
+                         directFetch.value=false;
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -240,14 +260,41 @@ class _LinkingAccountState extends State<LinkingAccount> {
                     height: 10,
                   ),
                   InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
+                      onTap: ()async {
+                       
+                      //   String urlPath = "${url}/transactionauto/userDetails";
+                      //   var data=await getDataApiCall(urlPath);
+                      //   printData(data);
+
+                      //   if(getFlagOfResponse(data))
+                      // {
+                      //     // print(data);
+                      //     var his = jsonDecode(data.body);
+                      //     // print(data);
+                      //     final SharedPreferences _pref = await SharedPreferences.getInstance();
+                      //     var res=(his['data']['Bank']);
+                      //     try{
+                      //     _pref.setString("consentId", res['consentId']);
+                      //     _pref.setString("consentHandleId", res['consentHandleId']);
+                      //     _pref.setString("sessionId", res['sessionId']);
+                      //     _pref.setString("from", res['from']);
+                      //     _pref.setString("to", res['to']);
+                      //     }catch(e){
+                      //       print(e);
+                      //     }
+
+                           Navigator.pop(context);
+                           directFetch.value=true;
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => FetchTransaction(),
                           ),
                         );
+
+                        // }else{
+
+                        // }
                       },
                       child: getButton(context, "Fetch Now")),
                   const SizedBox(
@@ -568,11 +615,17 @@ class _LinkingAccountState extends State<LinkingAccount> {
   void linkAccount(
       String otp, linkingReference, String fid, BuildContext context) async {
     try {
-      var data =
+      FinvuConfirmAccountLinkingInfo data =
           await finvuManager.confirmAccountLinking(linkingReference!, otp);
       snackBarCalled(context, "Linked Bank SuccessFully...");
       Navigator.pop(context);
-
+      
+         data.linkedAccounts.forEach((finvu) {
+           listofLinkedAccount.add(finvu.accountReferenceNumber.toString());
+         });
+         listOfAccountAdded.remove(fid);
+         listofLinkedAccount.refresh();
+       
       accountLinked.add(fid);
       otpController = TextEditingController();
       _otpCode.value = "";
@@ -595,17 +648,13 @@ class _LinkingAccountState extends State<LinkingAccount> {
         child: Row(
           children: [
             Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                formatMaskedAccount(bankData),
-                const SizedBox(
-                  height: 2,
-                ),
-                listofLinkedAccount.contains(id)
-                    ? textStyle("Linked", 13, Colorcodes.graphColor2)
-                    : SizedBox.shrink()
-              ],
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                     formatMaskedAccount(bankData),
+                     const SizedBox(height: 2,),
+                    Obx(()=> listofLinkedAccount.contains(id)?textStyle("Linked",13,Colorcodes.graphColor2):SizedBox.shrink())
+                ],
             ),
             const Spacer(),
             checkBoxForAccountLink(bankData, fipDetails, id),

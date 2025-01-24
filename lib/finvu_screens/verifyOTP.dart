@@ -194,20 +194,7 @@ class _VerifyOtpState extends State<VerifyOtp> {
     super.dispose();
   }
 
-  /// Method to validate OTP and proceed
-  // void _onOtpSubmit() {
-  //   if (_otpCode.length == _otpCodeLength) {
-  //     print("OTP Entered: $_otpCode");
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text("OTP Verified: $_otpCode")),
-  //     );
-  //     // Navigate to next screen or perform verification
-  //   } else {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text("Please enter a valid OTP")),
-  //     );
-  //   }
-  // }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -352,6 +339,5 @@ class _VerifyOtpState extends State<VerifyOtp> {
             "Error while Linking verify Otp/ Or Already Linked...", Colors.red);
       }
   }
-
-
 }
+
