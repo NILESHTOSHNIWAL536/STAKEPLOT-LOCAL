@@ -124,6 +124,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                   itemCount: autoScrollItems.length,
                   
                   itemBuilder: (context, index) {
+                    
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Container(
@@ -236,14 +237,14 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
 
   Widget bottomSheet(BuildContext context) {
   return AnimatedContainer(
-    duration: const Duration(milliseconds: 500),
+    duration: const Duration(milliseconds: 800),
     curve: Curves.easeInOut,
     width: MediaQuery.of(context).size.width,
     constraints: BoxConstraints(
-      minHeight: MediaQuery.of(context).size.height / 10,
+      minHeight: MediaQuery.of(context).size.height / 11.4,
       maxHeight: _isExpanded
           ? MediaQuery.of(context).size.height / 2 // Expanded height
-          : MediaQuery.of(context).size.height / 10, // Collapsed height
+          : MediaQuery.of(context).size.height / 11.4, // Collapsed height
     ),
     decoration: const BoxDecoration(
       color: AppColors.rbi1,
