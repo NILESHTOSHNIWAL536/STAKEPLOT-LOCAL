@@ -43,14 +43,14 @@ dependencies:
   fl_chart: ^0.65.0
   syncfusion_flutter_charts: ^22.2.9
   get: ^4.6.6
-  http:
+  http: ^1.3.0
   confetti: ^0.7.0
-  swipeable_tile:
-  file_picker:
+  swipeable_tile: ^2.0.1
+  file_picker: ^8.1.7
   image_picker: ^0.8.4+4
   image_picker_web:
   permission_handler: ^10.2.0  # For permission handling (only for mobile)
-  fluttertoast:
+  fluttertoast: ^8.2.10
   google_fonts: ^6.2.1
   flutter_polls: ^0.1.6
   firebase_core: ^3.4.0
@@ -58,7 +58,7 @@ dependencies:
   onesignal_flutter: ^3.2.7
   firebase_auth: ^5.2.0
   device_info_plus: ^10.1.2
-  flutter_svg:
+  flutter_svg: ^2.0.17
   socket_io_client: ^3.0.0-beta.2
   web_socket_channel: ^3.0.0
   flutter_keyboard_visibility: ^6.0.0
