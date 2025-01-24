@@ -36,11 +36,11 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
   double w = 30;
 
   final List<Map<String, dynamic>> autoScrollItems = [
-    {'icon': Icons.attach_money, 'text': 'Budgeting'},
-    {'icon': Icons.money, 'text': 'Management'},
+    {'icon': Icons.account_balance_wallet, 'text': 'Budgeting'},
+    {'icon': Icons.business, 'text': 'Management'},
     
     {'icon': Icons.trending_up, 'text': 'Growth'},
-    {'icon': Icons.commute, 'text': 'Community'},
+    {'icon': Icons.people, 'text': 'Community'},
     
   ];
 
@@ -54,24 +54,32 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
   }
 
  void _startAutoScroll() {
-    _timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
-      if (_scrollController.hasClients) {
-        double maxScroll = _scrollController.position.maxScrollExtent;
-        double currentScroll = _scrollController.offset;
-        double delta = 6.0; // Speed of the auto-scroll
+  _timer = Timer.periodic(Duration(milliseconds: 50), (timer) { // Reduced duration for smoother feel
+    if (_scrollController.hasClients) {
+      double maxScroll = _scrollController.position.maxScrollExtent;
+      double currentScroll = _scrollController.offset;
+      double delta = 2.0; // Reduced delta for finer control over speed
 
-        // If we've reached the end, reset to the start, but with a small delay
-        if (currentScroll + delta >= maxScroll) {
-          Future.delayed(Duration(milliseconds: 100), () {
-            _scrollController.jumpTo(0.0);
-          });
-        } else {
-          // Smoothly move the scroll position
-          _scrollController.jumpTo(currentScroll + delta);
-        }
+      if (currentScroll + delta >= maxScroll) {
+        // Instead of jumping, animate back to the start with a small delay
+        Future.delayed(const Duration(milliseconds: 100), () {
+          _scrollController.animateTo(
+            0.0,
+            duration: Duration(milliseconds: 500), // Smooth transition duration
+            curve: Curves.easeInOut, // Start and end slowly, speed up in the middle
+          );
+        });
+      } else {
+        // Animate to the new position rather than jumping
+        _scrollController.animateTo(
+          currentScroll + delta,
+          duration: Duration(milliseconds: 50), // Adjust based on how smooth you want it
+          curve: Curves.linear, // Straight line speed for a steady scroll
+        );
       }
-    });
-  }
+    }
+  });
+}
 
   void getData() async {
     fipDis = await finvuManager.fipsAllFIPOptions();
