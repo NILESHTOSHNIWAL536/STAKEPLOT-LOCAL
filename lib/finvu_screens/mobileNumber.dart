@@ -118,13 +118,11 @@ class _MobileNumberState extends State<MobileNumber> {
                 LOGOUT();
                 loginToAutoTractions(context);
                 otpController = TextEditingController();
-              
+
                 showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
-                    
                     builder: (BuildContext context) {
-                      
                       return verifyaotp(context);
                     });
 
@@ -139,33 +137,30 @@ class _MobileNumberState extends State<MobileNumber> {
     );
   }
 
+  void LOGOUT() async {
+    final SharedPreferences _pref = await SharedPreferences.getInstance();
+    try {
+      listOfAccountAdded.clear();
 
-    void  LOGOUT() async {
-    
-       final SharedPreferences _pref = await SharedPreferences.getInstance();
-    try{
+      FinvuFIPDetailsList.clear();
+      accountAdded.clear();
+      accountLinked.clear();
+      accountLinked.clear();
 
- listOfAccountAdded.clear();
+      _pref.remove("token");
+      _pref.remove("from");
+      _pref.remove("to");
+      _pref.remove("sessionId");
+      _pref.remove("consentId");
+      _pref.remove("ConsentHandleId");
 
- FinvuFIPDetailsList.clear();
- accountAdded.clear();
- accountLinked.clear();
- accountLinked.clear();
- 
-        _pref.remove("token");
-        _pref.remove("from");
-        _pref.remove("to");
-        _pref.remove("sessionId");
-        _pref.remove("consentId");
-        _pref.remove("ConsentHandleId");
+      await finvuManager.logout();
 
-        await finvuManager.logout(); 
-      
-        print("Logout user...");
-    }catch(e){
-         print(e);
+      print("Logout user...");
+    } catch (e) {
+      print(e);
     }
-     
+
     debugPrint('getConsentHandleStatus');
   }
 
@@ -175,7 +170,6 @@ class _MobileNumberState extends State<MobileNumber> {
         minChildSize: 0.3,
         maxChildSize: 0.9,
         expand: false,
-        
         builder: (context, ScrollController) {
           return SingleChildScrollView(
             controller: ScrollController,
@@ -242,8 +236,41 @@ class _MobileNumberState extends State<MobileNumber> {
                       },
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
+
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 5),
+                          child: Text(
+                            "Didn't you receive the OTP?  ",
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w200,
+                              fontSize: 12,
+                              color: AppColors.bg3,
+                            ),
+                          ),
+                        ),
+                        
+                        GestureDetector(
+                          onTap: () {
+                            verifyaotp(context);
+                          },
+                          child: Text(
+                            "Resend OTP",
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w400,
+                              fontSize: 12,
+                              color: AppColors.primaryColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   Center(
                     child: GestureDetector(
@@ -294,12 +321,12 @@ class _MobileNumberState extends State<MobileNumber> {
   Widget getColorVerify() {
     return Container(
       width: MediaQuery.of(context).size.width / 1.1,
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
       decoration: BoxDecoration(
         color: _isOtpValid.value
             ? AppColors.primaryColor
             : AppColors.bg3, // Button color based on validity
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(30),
       ),
       child: Center(
         child: Text(
