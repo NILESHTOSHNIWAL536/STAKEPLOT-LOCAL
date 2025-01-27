@@ -84,29 +84,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigations(data: 0),
-      // bottomNavigationBar: Padding(
-      //   padding: const EdgeInsets.all(16.0),
-      //   child: ClipRRect(
-      //     borderRadius: BorderRadius.circular(16),
-      //     child: BottomNavigationBar(
-      //       type: BottomNavigationBarType.fixed,
-      //       backgroundColor: AppColors.accentColor,
-      //       selectedItemColor: AppColors.backgroundColor,
-      //       unselectedItemColor: AppColors.primaryColor,
-      //       currentIndex: _selectedIndex,
-      //       onTap: _onItemTapped,
-      //       items: const [
-      //         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-      //         BottomNavigationBarItem(
-      //             icon: Icon(Icons.search), label: 'Search'),
-      //         BottomNavigationBarItem(
-      //             icon: Icon(Icons.notifications), label: 'Community'),
-      //         BottomNavigationBarItem(
-      //             icon: Icon(Icons.person), label: 'Profile'),
-      //       ],
-      // ),
-      // ),
-      // ),
     );
   }
 }
