@@ -13,8 +13,45 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:get/get.dart';
 
-RxList categoriesSeleted = [].obs;
-RxBool getCategories = false.obs;
+RxList categoriesSeleted=[].obs;
+RxBool getCategories=false.obs;
+Map<String, dynamic> categoryWeights = {
+  "Essentials": {
+    "percentage": 50.0,
+    "subcategories": {
+      "Food": 15.0,
+      "Health": 8.0,
+      "Bills": 10.0,
+      "Education": 7.0,
+      "Insurance": 5.0,
+      "PersonalCare": 3.0,
+      "PetCare": 2.0
+    }
+  },
+  "Lifestyle": {
+    "percentage": 30.0,
+    "subcategories": {
+      "Snacks": 3.0,
+      "Travel": 7.0,
+      "Entertainment": 5.0,
+      "Shopping": 5.0,
+      "Services": 2.0,
+      "Events": 2.0,
+      "Sports": 3.0,
+      "Alcohol": 3.0
+    }
+  },
+  "Savings": {
+    "percentage": 20.0,
+    "subcategories": {
+      "Investments": 10.0,
+      "EMI": 8.0,
+      "Hobbies": 2.0
+    }
+  }
+};
+
+
 
 class Budget extends StatefulWidget {
   const Budget({Key? key}) : super(key: key);
@@ -35,17 +72,24 @@ class _BudgetState extends State<Budget> {
     getTopFiveCater();
   }
 
-  void getTopFiveCater() async {
-    String urlPath = "${url}/budget/top-five-categories/";
-    try {
-      var responce = await getDataApiCall(urlPath);
-      if (getFlagOfResponse(responce)) {
-        var his = jsonDecode(responce.body);
-        categoriesSeleted.clear();
-        categoriesSeleted.addAll(his['data']);
-        getCategories.value = !getCategories.value;
+
+
+  void getTopFiveCater()async
+  {
+     String urlPath= "${url}/budget/top-five-categories/";
+      try{
+          var responce=await getDataApiCall(urlPath);
+          if(getFlagOfResponse(responce))
+          {
+              var  his=jsonDecode(responce.body);
+              categoriesSeleted.clear();
+              print(his);
+              categoriesSeleted.addAll(his['data']);
+              getCategories.value=! getCategories.value;
+          }
+      }catch(e){
       }
-    } catch (e) {}
+    
   }
 
   @override
@@ -128,20 +172,26 @@ class _BudgetState extends State<Budget> {
               },
               child: getButton(context, "Continue")),
         ],
-      ),
+
+       ),
+     );
+ }
+
+
+
+
+ Widget rowPer(){
+   return Row(
+                           mainAxisAlignment: MainAxisAlignment.spaceAround,
+                           children: [
+                                getPeriod("Weekly"),
+                                getPeriod("Monthly"),
+                                getPeriod("Yearly"),
+                         ],
     );
   }
 
-  Widget rowPer() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        getPeriod("Weekly"),
-        getPeriod("Monthly"),
-        getPeriod("Yearly"),
-      ],
-    );
-  }
+
 
   Widget getPeriod(text) {
     return Container(
@@ -163,11 +213,11 @@ class _BudgetState extends State<Budget> {
     );
   }
 
-  void bedgetCalculator() {
-    if (nameController.text == "" ||
-        amountController.text == "" ||
-        period.value == "") {
-      snackBarCalled(context, "Pls Enter All Feilds...", Colorcodes.red);
+ void bedgetCalculator()
+ {
+    if(nameController.text=="" || amountController.text=="" || period.value==""){
+              snackBarCalled(context,"Pls Enter All Feilds...",Colorcodes.red);
+              return;
     }
     Navigator.push(
       context,
