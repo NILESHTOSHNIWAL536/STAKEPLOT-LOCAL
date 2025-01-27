@@ -62,7 +62,6 @@ dependencies:
   socket_io_client: ^3.0.0-beta.2
   web_socket_channel: ^3.0.0
   flutter_keyboard_visibility: ^6.0.0
-  
   pin_code_fields: ^8.0.1
   liquid_progress_indicator_v2: ^0.5.0
   # getwidget: ^2.0.4
