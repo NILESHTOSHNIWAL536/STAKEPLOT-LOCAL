@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Profile/notifications.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
+import 'package:flutter_application_code_stakeplot/controller.dart/userController.dart';
 import 'package:flutter_application_code_stakeplot/customNoti.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/finvuAccount.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/signup.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
+import 'package:get/get.dart';
 import 'Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 
@@ -20,6 +22,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 FinvuManager finvuManager = FinvuManager();
 
 void main() {
+   Get.put(UserController()); 
   runApp(const MyApp());
 }
 

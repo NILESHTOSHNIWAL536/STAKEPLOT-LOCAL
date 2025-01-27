@@ -9,6 +9,7 @@ import "package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
+import "package:flutter_application_code_stakeplot/controller.dart/userController.dart";
 import "package:flutter_application_code_stakeplot/headersList/userProfileHeader.dart";
 import "package:flutter_application_code_stakeplot/profile.dart";
 import "package:get/get.dart";
@@ -36,47 +37,8 @@ class _FriendsState extends State<Friends> {
 
   @override
   Widget build(BuildContext context) {
-    List data=["Nilesh","Sai Teja","Manaish","Kamlesh","Krishna"];
-    // return Scaffold(
-    //   // bottomNavigationBar:  BottomNavigations(data: 0),
-    //    extendBody: true,
-    //      backgroundColor: Colorcodes.lightTheamGreyColor,
-    //   appBar:AppBar(
-    //      backgroundColor: Colorcodes.debtHeader,
-    //         // automaticallyImplyLeading: false,
-    //         title:Row(
-    //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //              children: [
-    //                   Text(("Friends list"),
-    //                                     style: FontManager().getTextStyle(context,
-    //                                                                 lWeight: FontWeight.w400,
-    //                                                                 fontSize: fontSize,
-    //                                                                 color: Colors.black)),
-                  
-    //              ],
-    //         ),
-            
-    // ),
-    // body: Container(
-    //        height: MediaQuery.of(context).size.height, 
-    //        padding:const EdgeInsets.symmetric(horizontal: 2,vertical: 10),
-    //        child: SingleChildScrollView(
-    //          child: Column(
-    //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //                 crossAxisAlignment: CrossAxisAlignment.start,
-    //                 children:
-    //                 [
-                   
-    //                 friendsList.isEmpty?Text("No Frds Yet",style:FontManager().getTextStyle(context,)):Column(
-    //                       children: friendsList.map((d) => d==null? Text(""):profileContainer(d)).toList(),
-    //                   )
-
-    //                 ],  
-    //          ),
-    //        ),
-    //   ),
-    
-    // );
+    final UserController userController = Get.find<UserController>();
+   
     return Scaffold(
        extendBody: true,
         backgroundColor: Colorcodes.budgetDarkGreen,
@@ -102,15 +64,13 @@ class _FriendsState extends State<Friends> {
                     
                 ),
                 child: ListView(
-                  // mainAxisAlignment: MainAxisAlignment.start,
-                  // crossAxisAlignment: CrossAxisAlignment.start,
+              
                   children: [
                     
-                   Obx(() =>  friendsList.isEmpty?Center(child: Text("No Frds Yet",style:FontManager().getTextStyle(context,))):Column(
-                          children: friendsList.map((d) => d==null? Text(""):profileContainer(d)).toList(),
+                   Obx(() => userController.friendsList.isEmpty?Center(child: Text("No Frds Yet",style:FontManager().getTextStyle(context,))):Column(
+                          children: userController.friendsList.map((d) => d==null? Text(""):profileContainer(d)).toList(),
                       )),
                   
-                       
                           ],
                       ),
                     ),

@@ -19,12 +19,14 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/controller.dart/userController.dart';
 import 'package:flutter_application_code_stakeplot/customNoti.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:get/get.dart';
 
 //import 'dart:io';
 
@@ -35,6 +37,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+   final UserController userController = Get.find<UserController>();
 
   @override
   void initState() {
@@ -45,6 +48,7 @@ class _HomePageState extends State<HomePage> {
     getAck();
     getUserInfomations();
     getUserLend(context);
+    userController.fetchUserInfo();
     // getUserInfo();
   }
 
