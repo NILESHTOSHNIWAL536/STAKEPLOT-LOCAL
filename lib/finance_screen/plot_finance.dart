@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Profile/notifications.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
+import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/customNoti.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/finvuAccount.dart';
@@ -27,6 +28,7 @@ class _PlotFinanceState extends State<PlotFinance> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomNavigations(data: 1),
       backgroundColor: AppColors.backgroundColor,
       body: SingleChildScrollView(
         child: Padding(
@@ -61,11 +63,11 @@ class _PlotFinanceState extends State<PlotFinance> {
                 children: [
                   _buildCard(
                     title: 'Budget',
-                    iconPath: 'assets/budget_icon.png',
+                    icon:Icon(Icons.monetization_on),
                   ),
                   _buildCard(
                     title: 'Debt',
-                    iconPath: 'assets/debt_icon.png',
+                    icon:Icon(Icons.attach_money_sharp)
                   ),
                 ],
               ),
@@ -109,7 +111,7 @@ class _PlotFinanceState extends State<PlotFinance> {
     );
   }
 
-  Widget _buildCard({required String title, required String iconPath}) {
+  Widget _buildCard({required String title,icon}) {
     return Container(
       width: 160,
       height: 100,
@@ -120,7 +122,7 @@ class _PlotFinanceState extends State<PlotFinance> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(iconPath, height: 40, width: 40),
+          icon,
           SizedBox(height: 8),
           Text(
             title,
@@ -136,12 +138,14 @@ class _PlotFinanceState extends State<PlotFinance> {
 
   Widget _buildCalculatorTile(String title, String subtitle, IconData icon) {
     return Container(
+      height: MediaQuery.sizeOf(context).height/2,
       decoration: BoxDecoration(
         color: AppColors.mt,
         borderRadius: BorderRadius.circular(20),
+        
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
