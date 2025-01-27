@@ -40,7 +40,7 @@ class Categories {
   static String support = "Support.svg";
   static String travel = "Travel.svg";
 
-  static List<String> categoriesLsit=[
+  static List<String> categoriesList=[
          alcohal,bills,children,emi,entertainment,events,
          food,health,hobbies,insurance,personalCare,petCare,
          services,snacks,sports,subscription,support,travel

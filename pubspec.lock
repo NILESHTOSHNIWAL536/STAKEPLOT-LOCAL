@@ -762,6 +762,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.6.2"
+  searchfield:
+    dependency: "direct main"
+    description:
+      name: searchfield
+      sha256: "95f0630953ed7a5dda1290c3af61225700560e7f4876845a7aa8212848d40912"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.1"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -911,6 +919,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.2"
+  textfield_search:
+    dependency: "direct main"
+    description:
+      name: textfield_search
+      sha256: "8924a263c34ad71542acbabb22a3a2da153f5647bc187b1949929e33d3793146"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.11.1"
   typed_data:
     dependency: transitive
     description:

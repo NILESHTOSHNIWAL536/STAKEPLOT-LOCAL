@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
-import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -10,7 +10,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/BudgetOverView
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:get/get.dart';
-// import 'package:getwidget/getwidget.dart';
+
 
 
 class BudgetSearch extends StatefulWidget {
@@ -25,6 +25,7 @@ class BudgetSearch extends StatefulWidget {
 
 class _BudgetSearchState extends State<BudgetSearch> {
   TextEditingController nameController= TextEditingController(text: "");
+  String selectedValue=categoriesSeleted[0]??"";
   @override
   Widget build(BuildContext context) {
     double height =MediaQuery.of(context).size.height;
@@ -34,7 +35,7 @@ class _BudgetSearchState extends State<BudgetSearch> {
       child: Scaffold(
        
         body: getBudgetUiScreen(height,width),
-        bottomNavigationBar: BottomNavigations(data: 1),
+        // bottomNavigationBar: BottomNavigations(data: 1),
       ),
     );
 
@@ -62,7 +63,7 @@ class _BudgetSearchState extends State<BudgetSearch> {
                        text: "Budget Categories",
                        fontsize: 20,
                       fontWeight: FontWeight.bold
-                                       ),
+                   ),
                    
                    SizedBox(height: Colorcodes.paddingSize/2,),
                    searchList(width,height),
@@ -104,6 +105,25 @@ class _BudgetSearchState extends State<BudgetSearch> {
  }
 
 
+//  Widget search(){
+//   return  Container(
+//           width: MediaQuery.of(context).size.width,
+//            child: SearchField<String>(
+          
+//                   suggestions: Categories.categoriesList
+//                       .map((e) => SearchFieldListItem<String>(e)) // Convert String list to SearchFieldListItem
+//                       .toList(),
+//                   onSuggestionTap: (SearchFieldListItem<String> x) {
+//                     setState(() {
+//                       selectedValue = x.searchKey; // Store selected category
+//                     });
+
+//                   },
+//                 ),
+//         );
+// }
+
+
 Widget getUipartOfCatero(BuildContext context,String name){
   return Container(
          padding: EdgeInsets.symmetric(horizontal: 5,vertical: 7),
@@ -138,15 +158,59 @@ Widget getUipartOfCatero(BuildContext context,String name){
                 TextFeildWidgetCustom
                 (
                     textEditingController: nameController,
-                    heading: "Name",
+                    heading: "Search",
                     keyBoard: TextInputType.emailAddress,
                     lableText: "Enter the name",
                     icon: ProfileIcons.friends,
                     flag: false,
                 ),
-
                 
+                Container(
+                    width: width,
+                    height: height/3,
+                    decoration: BoxDecoration(
+                    color: Colorcodes.white,
+                    borderRadius: BorderRadius.circular(10)
+                  ),
+                    child: SingleChildScrollView(
+                      child: Expanded(
+                        child: Obx(()=>  getCategories.value?getSearchBox(): getSearchBox())
+                      ),
+                    ),
+                ),
+              
           ],
+      ),
+    );
+}
+
+Widget getSearchBox(){
+   return Column(
+                            children: Categories.categoriesList.map((categorie){
+                                return listViewOfcategorie(categorie);
+                            }).toList(),
+                        );
+}
+
+Widget listViewOfcategorie(String categorie){
+    String s=categorie.substring(0,categorie.length-4);
+    if(categoriesSeleted.contains(s))return SizedBox.shrink();
+    return InkWell(
+      onTap: (){
+            categoriesSeleted.add(s);
+            getCategories.value=!getCategories.value;
+            getCategories.refresh();
+
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5),
+        child: Row(
+             children: [
+                    AvatarProfileImage(url: Categories.link+categorie, width: 20, height: 20),
+                    const SizedBox(width: 20,),
+                    textStyle(context: context,text: s)
+             ],
+        ),
       ),
     );
 }
