@@ -50,50 +50,85 @@ class _BudgetSearchState extends State<BudgetSearch> {
       decoration: BoxDecoration(
          color: AppColors.backgroundColor
       ),
-       child: Column(
-           mainAxisAlignment: MainAxisAlignment.start,
-           crossAxisAlignment: CrossAxisAlignment.start,
-           children: [
-              SizedBox(height: Colorcodes.paddingSize,),
-                 textStyle(
-                  context: context,
-                   text: "Budget Categories",
-                   fontsize: 20,
-                  fontWeight: FontWeight.bold
-                                   ),
-               
-               SizedBox(height: Colorcodes.paddingSize/2,),
-               searchList(width,height),
-                SizedBox(height: Colorcodes.paddingSize,),
-          
-                 Obx(()=> getCategories.value? getListOfCat():getListOfCat()),
-
-                SizedBox(height: Colorcodes.paddingSize,),
-
-                InkWell(
-                  onTap: (){
-                         Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BudgetOverView(amount:widget.amount, name: widget.name, period: widget.period),
-                      ),
-                    );  
-                  },
-                  child: getButton(context, "Continue")
-                ),
-           ],
+       child: SingleChildScrollView(
+         child: Expanded(
+           child: Column(
+               mainAxisAlignment: MainAxisAlignment.start,
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                  SizedBox(height: Colorcodes.paddingSize,),
+                     textStyle(
+                      context: context,
+                       text: "Budget Categories",
+                       fontsize: 20,
+                      fontWeight: FontWeight.bold
+                                       ),
+                   
+                   SizedBox(height: Colorcodes.paddingSize/2,),
+                   searchList(width,height),
+                    SizedBox(height: Colorcodes.paddingSize,),
+              
+                     Obx(()=> getCategories.value? getListOfCat():getListOfCat()),
+           
+                    SizedBox(height: Colorcodes.paddingSize,),
+           
+                    InkWell(
+                      onTap: (){
+                             Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BudgetOverView(amount:widget.amount, name: widget.name, period: widget.period),
+                          ),
+                        );  
+                      },
+                      child: getButton(context, "Continue")
+                    ),
+               ],
+           ),
+         ),
        ),
      );
  }
 
  Widget getListOfCat(){
-  return Column(
-                  children: categoriesSeleted.map((name){
-                      return   textStyle(context: context,text: name.toString(),fontsize: 16);
-                  }).toList(),
-               );
+  return Container(
+    width: MediaQuery.of(context).size.width,
+    child:  Wrap(
+      spacing: 8.0, // Adjust spacing between items
+      runSpacing: 8.0, // Adjust spacing between lines
+                      children: categoriesSeleted.map((name){
+                        return   getUipartOfCatero(context,name.toString());
+                    }).toList(),
+             ),
+  );
  }
 
+
+Widget getUipartOfCatero(BuildContext context,String name){
+  return Container(
+         padding: EdgeInsets.symmetric(horizontal: 5,vertical: 7),
+         decoration: BoxDecoration(
+           borderRadius: BorderRadius.circular(4),
+            color: Colorcodes.white,
+         ),
+         child: Row(
+           mainAxisSize: MainAxisSize.min,
+            children: [
+                   textStyle(context: context,text: toUpperCase(name.toString()),fontsize: 16),
+                   const SizedBox(width: 10,),
+                   InkWell(
+                      onTap: (){
+                             categoriesSeleted.remove(name);
+                             getCategories.value=!getCategories.value;
+                      },
+                      child: Icon(Icons.close,color: AppColors.primaryColor,size: 20,),
+                   ),
+  
+            ],
+         ),
+         
+    );
+}
 
  Widget searchList(double width,double height){
     return Container(
