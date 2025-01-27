@@ -16,7 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
-String portNo = "192.168.107.54";
+String portNo = "192.168.1.11";
 // String portNo = "192.168.1.11";
 // String urlWithLocallHost="https://stakeplot.in";
 String urlWithLocallHost = "http://${portNo}:5000/";
@@ -39,7 +39,7 @@ double maxDC = 0;
 double minDC = 0;
 
 RxList notificationList = [].obs;
-RxList<String>  listofLinkedAccount=<String>[].obs;
+RxList<String> listofLinkedAccount = <String>[].obs;
 RxList trasactionsData = [].obs;
 RxList listOfRecentTrasactionsData = [].obs;
 RxList trasactionsHideData = [].obs;
@@ -174,7 +174,6 @@ String toUpperCase(String str) {
   if (str.isEmpty) return str;
   return str[0].toUpperCase() + str.substring(1);
 }
-
 
 void printData(response, [context = ""]) {
   //  String data=  response.body;
