@@ -10,6 +10,7 @@ import "package:flutter_application_code_stakeplot/Profile/profile.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart";
+import "package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/profile_screen.dart.dart";
 
 import "package:get/get.dart";
@@ -115,7 +116,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
       },
       onTap: () {
         if (i == 0 && widget.data != i) pushName(HomePage());
-        // else if (i == 1 && widget.data != i) pushName(Budget());
+         else if (i == 1 && widget.data != i) pushName(PlotFinance());
         // if (i == 1 && widget.data != i) pushName(ProfileScreenDart());
 
         if (!sizeRoom) {
