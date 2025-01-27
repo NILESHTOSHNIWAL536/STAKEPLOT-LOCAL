@@ -64,15 +64,13 @@ class _FriendsState extends State<Friends> {
                     
                 ),
                 child: ListView(
-                  // mainAxisAlignment: MainAxisAlignment.start,
-                  // crossAxisAlignment: CrossAxisAlignment.start,
+              
                   children: [
                     
                    Obx(() => userController.friendsList.isEmpty?Center(child: Text("No Frds Yet",style:FontManager().getTextStyle(context,))):Column(
                           children: userController.friendsList.map((d) => d==null? Text(""):profileContainer(d)).toList(),
                       )),
                   
-                       
                           ],
                       ),
                     ),
