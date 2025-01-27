@@ -129,50 +129,35 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 
-void addBudget(context,name,amount,expenseCategory,budgetType,budgetPeriod)async{
+void addBudget(BuildContext context,String name,String amount,List expenseCategory,String budgetPeriod)async{
     final SharedPreferences _pref = await SharedPreferences.getInstance();
      var  accessToken=_pref.getString("accessToken");
-    
-     budgetLength.value++;
 
+    var body={
+            'name': name.toString(),
+            'amount':amount.toString(),
+            'categoryBudgets':expenseCategory,
+            'budgetPeriod':budgetPeriod.toString(),
+       };
+    print("body");
+    print(body);
     final response = await http.post(
     Uri.parse('${url}/budget/'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
-       "Authorization": "$accessToken",
+       "Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMwYWZiZmNiMTcxMDc2NWFiOGU5MCIsImlhdCI6MTczNzk1OTU3MSwiZXhwIjoxNzQzMTQzNTcxfQ.rH4Dns_o53Gc6QdwH-h7n0WXKerrGGDBzAW-Q_dm5q8",
     },
-    body: jsonEncode({
-            'name': name.toString(),
-            'amount':amount.toString(),
-            'expenseCategories':expenseCategory.toString(),
-            'budgetType':budgetType.toString(),
-            'budgetPeriod':budgetPeriod.toString(),
-       }),
+    body: jsonEncode(body),
   );
       //printData(response,context);
-      if(response.statusCode==200 || response.statusCode==201){
+      if(response.statusCode==200 || response.statusCode==201)
+      {
             final body = json.decode(response.body);
-
             snackBarCalled(context,'Added Budget!');
-            getBudget();
-              // Navigator.pushNamed(context, '/BudgetCheck'); 
-                 acceptReset.value=false;
-            Navigator.pop(context); 
-            // Navigator.pop(context); 
-            //  Navigator.pushReplacement(
-            //                         context,
-            //                         PageTransition(
-            //                           type: PageTransitionType.bottomToTop,
-            //                           alignment: Alignment.bottomRight,
-            //                           duration: Durations.long1,
-
-            //                           child:const BudgetCheck(),
-            //                           isIos: true,
-            //                         ),
-            // );
             
       }else{
-              snackBarCalled(context,"can't add bedget!",Colors.red);
+            printData(response,context);
+            snackBarCalled(context,"can't add bedget!",Colors.red);
       }
 
       acceptReset.value=false;

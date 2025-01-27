@@ -15,6 +15,43 @@ import 'package:get/get.dart';
 
 RxList categoriesSeleted=[].obs;
 RxBool getCategories=false.obs;
+Map<String, dynamic> categoryWeights = {
+  "Essentials": {
+    "percentage": 50.0,
+    "subcategories": {
+      "Food": 15.0,
+      "Health": 8.0,
+      "Bills": 10.0,
+      "Education": 7.0,
+      "Insurance": 5.0,
+      "PersonalCare": 3.0,
+      "PetCare": 2.0
+    }
+  },
+  "Lifestyle": {
+    "percentage": 30.0,
+    "subcategories": {
+      "Snacks": 3.0,
+      "Travel": 7.0,
+      "Entertainment": 5.0,
+      "Shopping": 5.0,
+      "Services": 2.0,
+      "Events": 2.0,
+      "Sports": 3.0,
+      "Alcohol": 3.0
+    }
+  },
+  "Savings": {
+    "percentage": 20.0,
+    "subcategories": {
+      "Investments": 10.0,
+      "EMI": 8.0,
+      "Hobbies": 2.0
+    }
+  }
+};
+
+
 
 class Budget extends StatefulWidget {
   const Budget({ Key? key }) : super(key: key);
@@ -48,6 +85,7 @@ class _BudgetState extends State<Budget> {
           {
               var  his=jsonDecode(responce.body);
               categoriesSeleted.clear();
+              print(his);
               categoriesSeleted.addAll(his['data']);
               getCategories.value=! getCategories.value;
           }
@@ -154,7 +192,7 @@ class _BudgetState extends State<Budget> {
                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                            children: [
                                 getPeriod("Weekly"),
-                                getPeriod("Montly"),
+                                getPeriod("Monthly"),
                                 getPeriod("Yearly"),
                          ],
     );
@@ -183,6 +221,7 @@ class _BudgetState extends State<Budget> {
  {
     if(nameController.text=="" || amountController.text=="" || period.value==""){
               snackBarCalled(context,"Pls Enter All Feilds...",Colorcodes.red);
+              return;
     }
     Navigator.push(
       context,

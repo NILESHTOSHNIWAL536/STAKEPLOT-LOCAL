@@ -185,23 +185,30 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                           ),
                         ),
                         SizedBox(height: 10),
-                        // Third Container for Log out
-                        Container(
-                          decoration: BoxDecoration(
-                              color: AppColors.mt,
-                              borderRadius: BorderRadius.circular(14),
-                              border: Border.all(color: AppColors.border)),
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 14, 14, 14),
-                            child: _buildOption(
-                                AvatarProfileImage(
-                                  url: ProfileIcons.logout,
-                                  height: 22,
-                                  width: 22,
-                                ),
-                                'Log out',
-                                'You can login and log out from your account',
-                                isLogout: true),
+                        // Third Container for Log ou
+                        // t
+                        logoutWidget(context),
+                        InkWell(
+                          onTap: (){
+                              logoutWidget(context);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: AppColors.mt,
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(color: AppColors.border)),
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 14, 14, 14),
+                              child: _buildOption(
+                                  AvatarProfileImage(
+                                    url: ProfileIcons.logout,
+                                    height: 22,
+                                    width: 22,
+                                  ),
+                                  'Log out',
+                                  'You can login and log out from your account',
+                                  isLogout: true),
+                            ),
                           ),
                         ),
                         SizedBox(height: 20),
