@@ -62,12 +62,12 @@ class _PlotFinanceState extends State<PlotFinance> {
                 children: [
                   _buildCard(
                     title: 'Budget',
-                    iconPath: 'assets/budget_icon.png',
+                    icon:Icon(Icons.monetization_on),
                     path: "/Budget",
                   ),
                   _buildCard(
                     title: 'Debt',
-                    iconPath: 'assets/debt_icon.png',
+                    icon:Icon(Icons.attach_money_sharp),
                     path: "/Debt"
                   ),
                 ],
@@ -112,7 +112,7 @@ class _PlotFinanceState extends State<PlotFinance> {
     );
   }
 
-  Widget _buildCard({required String title, required String iconPath,required String path}) {
+  Widget _buildCard({required String title,icon, required String path}) {
     return InkWell(
       onTap: (){
           Navigator.pushNamed(context, path);
@@ -127,7 +127,7 @@ class _PlotFinanceState extends State<PlotFinance> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(iconPath, height: 40, width: 40),
+            icon,
             SizedBox(height: 8),
             Text(
               title,
@@ -135,8 +135,7 @@ class _PlotFinanceState extends State<PlotFinance> {
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
-            ),
-          ],
+        )],
         ),
       ),
     );
@@ -144,12 +143,14 @@ class _PlotFinanceState extends State<PlotFinance> {
 
   Widget _buildCalculatorTile(String title, String subtitle, IconData icon) {
     return Container(
+      height: MediaQuery.sizeOf(context).height/2,
       decoration: BoxDecoration(
         color: AppColors.mt,
         borderRadius: BorderRadius.circular(20),
+        
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
