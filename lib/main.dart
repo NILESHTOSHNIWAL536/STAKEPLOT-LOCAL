@@ -8,6 +8,8 @@ import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/controller.dart/userController.dart';
 import 'package:flutter_application_code_stakeplot/customNoti.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budget.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/finvuAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
@@ -55,7 +57,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-       initialRoute: '/ShareAccountLogin', 
+       initialRoute: '/home', 
         routes:
     {  
       '/': (context) =>  Signin(),   
@@ -68,6 +70,8 @@ class _MyAppState extends State<MyApp> {
       '/FinvuAccount': (context) =>  FinvuAccount(),   
       '/discover': (context) =>  DiscoverAccount(),     
       '/ShareAccountLogin': (context) =>  ShareAccountLogin(),     
+      '/Budget': (context) =>  Budget(),     
+      '/PlotFinance': (context) =>  PlotFinance(),     
     });
   }
 }

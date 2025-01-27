@@ -13,7 +13,6 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/signup.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
-
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 class PlotFinance extends StatefulWidget {
   const PlotFinance({super.key});
