@@ -239,8 +239,7 @@ class _SigninState extends State<Signin> {
                             vertical: Colorcodes.paddingSize / 3),
                         child: InkWell(
                           onTap: () {
-                            // ForgotPassword
-                            // Navigator.pushNamed(context, '/ShareAccountLogin');
+                            
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(

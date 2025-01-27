@@ -262,26 +262,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                   InkWell(
                       onTap: ()async {
                        
-                      //   String urlPath = "${url}/transactionauto/userDetails";
-                      //   var data=await getDataApiCall(urlPath);
-                      //   printData(data);
-
-                      //   if(getFlagOfResponse(data))
-                      // {
-                      //     // print(data);
-                      //     var his = jsonDecode(data.body);
-                      //     // print(data);
-                      //     final SharedPreferences _pref = await SharedPreferences.getInstance();
-                      //     var res=(his['data']['Bank']);
-                      //     try{
-                      //     _pref.setString("consentId", res['consentId']);
-                      //     _pref.setString("consentHandleId", res['consentHandleId']);
-                      //     _pref.setString("sessionId", res['sessionId']);
-                      //     _pref.setString("from", res['from']);
-                      //     _pref.setString("to", res['to']);
-                      //     }catch(e){
-                      //       print(e);
-                      //     }
+                    
 
                            Navigator.pop(context);
                            directFetch.value=true;
