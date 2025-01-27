@@ -30,81 +30,83 @@ class _PlotFinanceState extends State<PlotFinance> {
     return Scaffold(
       bottomNavigationBar: BottomNavigations(data: 1),
       backgroundColor: AppColors.backgroundColor,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header Banner
-              Container(
-                width: double.infinity,
-                height: 150,
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Center(
-                  child: Text(
-                    'Plot your finances',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header Banner
+                Container(
+                  width: double.infinity,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Plot your finances',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: 24),
-
-              // Budget and Debt Buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildCard(
-                    title: 'Budget',
-                    icon:Icon(Icons.monetization_on),
-                  ),
-                  _buildCard(
-                    title: 'Debt',
-                    icon:Icon(Icons.attach_money_sharp)
-                  ),
-                ],
-              ),
-              SizedBox(height: 24),
-
-              // Calculators Section
-              Text(
-                'Calculators',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                SizedBox(height: 24),
+        
+                // Budget and Debt Buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildCard(
+                      title: 'Budget',
+                      icon:Icon(Icons.monetization_on),
+                    ),
+                    _buildCard(
+                      title: 'Debt',
+                      icon:Icon(Icons.attach_money_sharp)
+                    ),
+                  ],
                 ),
-              ),
-              SizedBox(height: 16),
-
-              // Calculator Grid
-              GridView.count(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                crossAxisCount: 2,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                childAspectRatio: 2.5,
-                children: [
-                  _buildCalculatorTile(
-                      'Credit Card Payoff', 'Calculator', Icons.credit_card),
-                  _buildCalculatorTile('EMI', 'Calculator', Icons.percent),
-                  _buildCalculatorTile('Rent vs Buy', 'Calculator', Icons.home),
-                  _buildCalculatorTile(
-                      'Savings goal', 'Calculator', Icons.savings),
-                  _buildCalculatorTile(
-                      'Auto loan', 'Calculator', Icons.car_rental),
-                  _buildCalculatorTile('Trip cost', 'Calculator', Icons.flight),
-                ],
-              ),
-            ],
+                SizedBox(height: 24),
+        
+                // Calculators Section
+                Text(
+                  'Calculators',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 16),
+        
+                // Calculator Grid
+                GridView.count(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  childAspectRatio: 2.5,
+                  children: [
+                    _buildCalculatorTile(
+                        'Credit Card Payoff', 'Calculator', Icons.credit_card),
+                    _buildCalculatorTile('EMI', 'Calculator', Icons.percent),
+                    _buildCalculatorTile('Rent vs Buy', 'Calculator', Icons.home),
+                    _buildCalculatorTile(
+                        'Savings goal', 'Calculator', Icons.savings),
+                    _buildCalculatorTile(
+                        'Auto loan', 'Calculator', Icons.car_rental),
+                    _buildCalculatorTile('Trip cost', 'Calculator', Icons.flight),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -138,48 +140,46 @@ class _PlotFinanceState extends State<PlotFinance> {
 
   Widget _buildCalculatorTile(String title, String subtitle, IconData icon) {
     return Container(
-      height: MediaQuery.sizeOf(context).height/2,
+      width: 160,
+      height: 300,
       decoration: BoxDecoration(
         color: AppColors.mt,
         borderRadius: BorderRadius.circular(20),
         
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(icon, color: Colors.black, size: 28),
-                SizedBox(height: 8),
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: Colors.black, size: 28),
+              SizedBox(height: 8),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
+              ),
+              Text(
+                subtitle,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
-              ],
-            ),
-            Container(
-                decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(30)),
-                child: Icon(Icons.arrow_forward, color: Colors.black)),
-          ],
-        ),
+              ),
+            ],
+          ),
+          Container(
+              decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(30)),
+              child: Icon(Icons.arrow_forward, color: Colors.black)),
+        ],
       ),
     );
   }
