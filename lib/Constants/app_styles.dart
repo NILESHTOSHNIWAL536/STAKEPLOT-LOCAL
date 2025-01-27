@@ -195,6 +195,10 @@ class Finance {
   static String location = "assets/icons/financeScreen/Location.svg";
   
   static String savings = "assets/icons/financeScreen/savings.svg";
+    static String user = "assets/icons/financeScreen/user.svg";
+      static String amt = "assets/icons/financeScreen/amt.svg";
+
+
 
 
 

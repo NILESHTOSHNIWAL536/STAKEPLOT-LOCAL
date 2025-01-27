@@ -13,204 +13,193 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:get/get.dart';
 
-RxList categoriesSeleted=[].obs;
-RxBool getCategories=false.obs;
+RxList categoriesSeleted = [].obs;
+RxBool getCategories = false.obs;
 
 class Budget extends StatefulWidget {
-  const Budget({ Key? key }) : super(key: key);
+  const Budget({Key? key}) : super(key: key);
 
   @override
   _BudgetState createState() => _BudgetState();
 }
 
 class _BudgetState extends State<Budget> {
-  TextEditingController nameController= TextEditingController(text: "");
-  TextEditingController amountController= TextEditingController(text: "");
-  RxString period="".obs;
-  RxBool boolFlag=false.obs;
+  TextEditingController nameController = TextEditingController(text: "");
+  TextEditingController amountController = TextEditingController(text: "");
+  RxString period = "".obs;
+  RxBool boolFlag = false.obs;
 
-
-  
   @override
   void initState() {
     super.initState();
     getTopFiveCater();
   }
 
-
-
-  void getTopFiveCater()async
-  {
-     String urlPath= "${url}/budget/top-five-categories/";
-      try{
-          var responce=await getDataApiCall(urlPath);
-          if(getFlagOfResponse(responce))
-          {
-              var  his=jsonDecode(responce.body);
-              categoriesSeleted.clear();
-              categoriesSeleted.addAll(his['data']);
-              getCategories.value=! getCategories.value;
-          }
-      }catch(e){
+  void getTopFiveCater() async {
+    String urlPath = "${url}/budget/top-five-categories/";
+    try {
+      var responce = await getDataApiCall(urlPath);
+      if (getFlagOfResponse(responce)) {
+        var his = jsonDecode(responce.body);
+        categoriesSeleted.clear();
+        categoriesSeleted.addAll(his['data']);
+        getCategories.value = !getCategories.value;
       }
-
+    } catch (e) {}
   }
 
   @override
-  Widget build(BuildContext context) 
-  {
-    double height =MediaQuery.of(context).size.height;
-    double width =MediaQuery.of(context).size.width;
+  Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
-        body: getBudgetUiScreen(height,width,context),
+        body: getBudgetUiScreen(height, width, context),
         bottomNavigationBar: BottomNavigations(data: 1),
       ),
     );
   }
 
-
-
- Widget getBudgetUiScreen(height,width,BuildContext context){
-     
-     return Container(
-      width:  width,
-      height: height/1.1,
-      padding: EdgeInsets.symmetric(horizontal: 20,),
-      decoration: BoxDecoration(
-         color: AppColors.backgroundColor
+  Widget getBudgetUiScreen(height, width, BuildContext context) {
+    return Container(
+      width: width,
+      height: height / 1.1,
+      padding: EdgeInsets.symmetric(
+        horizontal: 20,
       ),
-       child: Column(
-           mainAxisAlignment: MainAxisAlignment.start,
-           crossAxisAlignment: CrossAxisAlignment.start,
-           children: [
-              SizedBox(height: Colorcodes.paddingSize,),
-                 textStyle(
-                  context: context,
-                   text: "Budget Calculator",
-                   fontsize: 20,
-                  fontWeight: FontWeight.bold
-                                   ),
-                              
-               SizedBox(height: Colorcodes.paddingSize/2,),
-
-        
-             
-
-               SizedBox(height: Colorcodes.paddingSize/2,),
-
-                TextFeildWidgetCustom
-                (
-                    textEditingController: nameController,
-                    heading: "Name",
-                    keyBoard: TextInputType.emailAddress,
-                    lableText: "Enter the name",
-                    icon: ProfileIcons.friends,
-                ),
-                TextFeildWidgetCustom
-                (
-                    textEditingController: amountController,
-                    heading: "Amount",
-                    keyBoard: TextInputType.number,
-                    lableText: "Eg:₹ 101",
-                    icon: ProfileIcons.friends,
-                ),
-
-                Padding(
-                  padding:  EdgeInsets.symmetric(vertical: Colorcodes.paddingSize),
-                  child: textStyle(context: context,text: "Duration", fontsize: 20,fontWeight: FontWeight.bold),
-                ),
-
-              Container(
-                decoration: BoxDecoration(
-                   color: Colorcodes.white,
-                   borderRadius: BorderRadius.circular(10)
-                ),
-                 padding:  EdgeInsets.symmetric(vertical: Colorcodes.paddingSize),
-                    child: Center(
-                      child:  boolFlag.value? rowPer() :rowPer(),
-                    ),
-                ),
-
-                SizedBox(height: Colorcodes.paddingSize,),
-
-                InkWell(
-                  onTap: (){
-                         bedgetCalculator();
-                  },
-                  child: getButton(context, "Continue")
-                ),
-           ],
-       ),
-     );
- }
-
-
-
-
- Widget rowPer(){
-   return Row(
-                           mainAxisAlignment: MainAxisAlignment.spaceAround,
-                           children: [
-                                getPeriod("Weekly"),
-                                getPeriod("Montly"),
-                                getPeriod("Yearly"),
-                         ],
+      decoration: BoxDecoration(color: AppColors.backgroundColor),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: Colorcodes.paddingSize,
+          ),
+          textStyle(
+              context: context,
+              text: "Budget Calculator",
+              fontsize: 20,
+              fontWeight: FontWeight.bold),
+          SizedBox(
+            height: Colorcodes.paddingSize / 2,
+          ),
+          SizedBox(
+            height: Colorcodes.paddingSize / 2,
+          ),
+          TextFeildWidgetCustom(
+            textEditingController: nameController,
+            heading: "Name",
+            keyBoard: TextInputType.emailAddress,
+            lableText: "Enter the name",
+            icon: Finance.user,
+            
+          ),
+          TextFeildWidgetCustom(
+            textEditingController: amountController,
+            heading: "Amount",
+            keyBoard: TextInputType.number,
+            lableText: "Eg:₹ 101",
+            icon: Finance.amt,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: Colorcodes.paddingSize),
+            child: textStyle(
+                context: context,
+                text: "Duration",
+                fontsize: 20,
+                fontWeight: FontWeight.bold),
+          ),
+          Container(
+            decoration: BoxDecoration(
+                color: Colorcodes.white,
+                borderRadius: BorderRadius.circular(10)),
+            padding: EdgeInsets.symmetric(vertical: Colorcodes.paddingSize),
+            child: Center(
+              child: boolFlag.value ? rowPer() : rowPer(),
+            ),
+          ),
+          SizedBox(
+            height: Colorcodes.paddingSize,
+          ),
+          InkWell(
+              onTap: () {
+                bedgetCalculator();
+              },
+              child: getButton(context, "Continue")),
+        ],
+      ),
     );
- }
+  }
 
+  Widget rowPer() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        getPeriod("Weekly"),
+        getPeriod("Monthly"),
+        getPeriod("Yearly"),
+      ],
+    );
+  }
 
- Widget getPeriod(text){
+  Widget getPeriod(text) {
     return Container(
       decoration: BoxDecoration(
-          color: period.value==text? Colorcodes.red:Colorcodes.white
-      ),
+          color: period.value == text ? Colorcodes.red : Colorcodes.white),
       child: InkWell(
-         onTap: (){
-             period.value=text;
-             boolFlag.value=!boolFlag.value;
-             period.refresh();
-             print(period.value);
+          onTap: () {
+            period.value = text;
+            boolFlag.value = !boolFlag.value;
+            period.refresh();
 
-         },
-        child: textStyle(context: context,text: text,fontWeight: FontWeight.w300,fontsize: 20)
-      ),
+            //print(period.value);
+          },
+          child: textStyle(
+              context: context,
+              text: text,
+              fontWeight: FontWeight.w300,
+              fontsize: 14)),
     );
- }
+  }
 
- void bedgetCalculator()
- {
-    if(nameController.text=="" || amountController.text=="" || period.value==""){
-              snackBarCalled(context,"Pls Enter All Feilds...",Colorcodes.red);
+  void bedgetCalculator() {
+    if (nameController.text == "" ||
+        amountController.text == "" ||
+        period.value == "") {
+      snackBarCalled(context, "Pls Enter All Feilds...", Colorcodes.red);
     }
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => BudgetSearch(amount: amountController.text, name: nameController.text, period: period.value),
+        builder: (context) => BudgetSearch(
+            amount: amountController.text,
+            name: nameController.text,
+            period: period.value),
       ),
     );
- }
+  }
 }
 
-
- Widget textStyle({required BuildContext context,text,
-      double fontsize = 12,
-      Color c = AppColors.bg1,
-      FontWeight fontWeight = FontWeight.w500}) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(
-          width: 7,
-        ),
-        Text(
-          text.toString(),
-          style: FontManager().getTextStyle(context,
-              lWeight: fontWeight, fontSize: fontsize, color: c),
-          overflow: TextOverflow.ellipsis,
-        ),
-      ],
-    );
-  }
+Widget textStyle(
+    {required BuildContext context,
+    text,
+    double fontsize = 12,
+    Color c = AppColors.bg1,
+    FontWeight fontWeight = FontWeight.w500}) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const SizedBox(
+        width: 7,
+      ),
+      Text(
+        text.toString(),
+        style: FontManager().getTextStyle(context,
+            lWeight: fontWeight, fontSize: fontsize, color: c),
+        overflow: TextOverflow.ellipsis,
+      ),
+    ],
+  );
+}
