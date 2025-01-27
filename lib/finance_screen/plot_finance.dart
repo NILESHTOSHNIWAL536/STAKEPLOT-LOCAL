@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Profile/notifications.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
+import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/customNoti.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/finvuAccount.dart';
@@ -27,6 +28,7 @@ class _PlotFinanceState extends State<PlotFinance> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
+      bottomNavigationBar: BottomNavigations(data: 1),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -61,10 +63,12 @@ class _PlotFinanceState extends State<PlotFinance> {
                   _buildCard(
                     title: 'Budget',
                     iconPath: 'assets/budget_icon.png',
+                    path: "/Budget",
                   ),
                   _buildCard(
                     title: 'Debt',
                     iconPath: 'assets/debt_icon.png',
+                    path: "/Debt"
                   ),
                 ],
               ),
@@ -108,27 +112,32 @@ class _PlotFinanceState extends State<PlotFinance> {
     );
   }
 
-  Widget _buildCard({required String title, required String iconPath}) {
-    return Container(
-      width: 160,
-      height: 100,
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(iconPath, height: 40, width: 40),
-          SizedBox(height: 8),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+  Widget _buildCard({required String title, required String iconPath,required String path}) {
+    return InkWell(
+      onTap: (){
+          Navigator.pushNamed(context, path);
+      },
+      child: Container(
+        width: 160,
+        height: 100,
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(iconPath, height: 40, width: 40),
+            SizedBox(height: 8),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
