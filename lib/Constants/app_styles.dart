@@ -181,3 +181,21 @@ class Sign {
   static String comm = "assets/icons/Signup/Comm.svg";
   static String management = "assets/icons/Signup/Management.svg";
 }
+
+class Finance {
+  static String financeScreen = "assets/icons/financeScreen/";
+  static String budget = "assets/icons/financeScreen/budget.svg";
+  static String debt = "assets/icons/financeScreen/debt.svg";
+  static String plot = "assets/icons/financeScreen/plotUrFinance.svg";
+    static String auto = "assets/icons/financeScreen/Autoloan.svg";
+      static String cab = "assets/icons/financeScreen/Cabservice.svg";
+        static String credit = "assets/icons/financeScreen/Creditcard.svg";
+  static String emi = "assets/icons/financeScreen/emi.svg";
+  static String key = "assets/icons/financeScreen/Key.svg";
+  static String location = "assets/icons/financeScreen/Location.svg";
+  
+  static String savings = "assets/icons/financeScreen/savings.svg";
+
+
+
+}
