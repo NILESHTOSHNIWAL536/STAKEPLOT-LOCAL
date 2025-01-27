@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-       initialRoute: '/home', 
+       initialRoute: '/', 
         routes:
     {  
       '/': (context) =>  Signin(),   

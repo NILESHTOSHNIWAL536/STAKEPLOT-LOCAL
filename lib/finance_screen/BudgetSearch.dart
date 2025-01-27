@@ -1,0 +1,120 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budget.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/BudgetOverView.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
+import 'package:get/get.dart';
+// import 'package:getwidget/getwidget.dart';
+
+
+class BudgetSearch extends StatefulWidget {
+  String amount;
+  String name;
+  String period;
+ BudgetSearch({ Key? key,required this.amount,required this.name,required this.period }) : super(key: key);
+
+  @override
+  _BudgetSearchState createState() => _BudgetSearchState();
+}
+
+class _BudgetSearchState extends State<BudgetSearch> {
+  TextEditingController nameController= TextEditingController(text: "");
+  @override
+  Widget build(BuildContext context) {
+    double height =MediaQuery.of(context).size.height;
+    double width =MediaQuery.of(context).size.width;
+
+    return SafeArea(
+      child: Scaffold(
+       
+        body: getBudgetUiScreen(height,width),
+        bottomNavigationBar: BottomNavigations(data: 1),
+      ),
+    );
+
+  }
+
+
+ Widget getBudgetUiScreen(height,width){
+     
+     return Container(
+      width:  width,
+      height: height/1.1,
+      padding: EdgeInsets.symmetric(horizontal: 20,),
+      decoration: BoxDecoration(
+         color: AppColors.backgroundColor
+      ),
+       child: Column(
+           mainAxisAlignment: MainAxisAlignment.start,
+           crossAxisAlignment: CrossAxisAlignment.start,
+           children: [
+              SizedBox(height: Colorcodes.paddingSize,),
+                 textStyle(
+                  context: context,
+                   text: "Budget Categories",
+                   fontsize: 20,
+                  fontWeight: FontWeight.bold
+                                   ),
+               
+               SizedBox(height: Colorcodes.paddingSize/2,),
+               searchList(width,height),
+                SizedBox(height: Colorcodes.paddingSize,),
+          
+                 Obx(()=> getCategories.value? getListOfCat():getListOfCat()),
+
+                SizedBox(height: Colorcodes.paddingSize,),
+
+                InkWell(
+                  onTap: (){
+                         Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BudgetOverView(amount:widget.amount, name: widget.name, period: widget.period),
+                      ),
+                    );  
+                  },
+                  child: getButton(context, "Continue")
+                ),
+           ],
+       ),
+     );
+ }
+
+ Widget getListOfCat(){
+  return Column(
+                  children: categoriesSeleted.map((name){
+                      return   textStyle(context: context,text: name.toString(),fontsize: 16);
+                  }).toList(),
+               );
+ }
+
+
+ Widget searchList(double width,double height){
+    return Container(
+      width: width/1.1,
+      child: Column(
+          children: [
+                TextFeildWidgetCustom
+                (
+                    textEditingController: nameController,
+                    heading: "Name",
+                    keyBoard: TextInputType.emailAddress,
+                    lableText: "Enter the name",
+                    icon: ProfileIcons.friends,
+                    flag: false,
+                ),
+
+                
+          ],
+      ),
+    );
+}
+
+
+}

@@ -39,6 +39,13 @@ class Categories {
   static String subscription = "Subscription.svg";
   static String support = "Support.svg";
   static String travel = "Travel.svg";
+
+  static List<String> categoriesLsit=[
+         alcohal,bills,children,emi,entertainment,events,
+         food,health,hobbies,insurance,personalCare,petCare,
+         services,snacks,sports,subscription,support,travel
+  ];
+
 }
 
 //    Sub- categories

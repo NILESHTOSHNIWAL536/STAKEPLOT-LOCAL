@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:intl/intl.dart';
@@ -82,7 +84,7 @@ class TextFeildWidget extends StatelessWidget {
 
 TextStyle getStyle(context) {
   return FontManager().getTextStyle(context,
-      fontSize: 16, lWeight: FontWeight.w600, color: Colorcodes.black);
+      fontSize: 16, lWeight: FontWeight.w400, color: Colorcodes.black);
 }
 
 class TextFeildWidgetPassword extends StatelessWidget {
@@ -323,6 +325,82 @@ class TextFeildCalender extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    ));
+  }
+}
+
+
+
+
+class TextFeildWidgetCustom extends StatelessWidget {
+  TextEditingController textEditingController;
+  String lableText;
+  String heading;
+  String icon;
+  TextInputType keyBoard;
+  bool flag;
+  TextFeildWidgetCustom(
+      {Key? key,
+      required this.textEditingController,
+      required this.heading,
+      required this.keyBoard,
+      required this.lableText,
+      required this.icon,
+      this.flag = true
+     })
+      : super(key: key);
+
+  RxBool show = false.obs;
+
+  @override
+  Widget build(BuildContext context) {
+    //  return Text("data");
+    return Center(
+        child: Container(
+      padding: EdgeInsets.symmetric(vertical: 8),
+      width: MediaQuery.of(context).size.width / 1.1,
+      // color: Colorcodes.white,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 9.0),
+              child: Text(heading,
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 18, lWeight: FontWeight.w500)),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+              keyboardType: keyBoard,
+              controller: textEditingController,
+              obscureText: flag ? false : show.value,
+              
+              decoration: InputDecoration(
+                  // contentPadding: EdgeInsets.all(0),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                  filled: true,
+                  hintText: lableText,
+                  hintStyle: getStyle(context),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colorcodes.white)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colorcodes.white)),
+                  fillColor: Colorcodes.white,
+                  border: InputBorder.none,
+                  prefixIcon: flag? PrefixIcon(url: icon,height: 40,width: 40,):Icon(Icons.search),
+                  
+                  ),
+            ),
+          ],
         ),
       ),
     ));

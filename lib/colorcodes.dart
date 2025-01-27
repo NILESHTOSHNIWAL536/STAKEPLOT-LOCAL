@@ -26,6 +26,7 @@ class Colorcodes {
   static Color bedgetHeader = const Color.fromRGBO(180, 174, 145, 0.7);
   static Color bedgetBody = const Color.fromRGBO(180, 174, 145, 1);
   static Color textFeild = const Color.fromRGBO(223, 247, 226, 1);
+  static Color textFeildWhite =  Color.fromARGB(255, 255, 255, 255);
   // static Color textFeild=const Color.fromRGBO(231, 231, 231, 1);
   static Color moneyRed = const Color.fromRGBO(244, 123, 123, 1);
   static Color moneyOrange = const Color.fromRGBO(250, 210, 132, 1);

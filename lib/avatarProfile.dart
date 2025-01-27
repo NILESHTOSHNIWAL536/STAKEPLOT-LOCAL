@@ -73,3 +73,23 @@ IconImage({ Key? key,required this.url,required this.width,required this.height 
     );
   }
 }
+
+
+
+class PrefixIcon extends StatelessWidget {
+String url;
+double width;
+double height;
+PrefixIcon({ Key? key,required this.url,required this.width,required this.height }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context){
+    return  Padding(
+      padding: const EdgeInsets.all(3.0),
+      child: SvgPicture.asset(url.toString().trim(),
+            width: MediaQuery.of(context).size.width/ width,
+            height: MediaQuery.of(context).size.height/ height,
+      ),
+    );
+  }
+}
