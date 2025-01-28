@@ -13,7 +13,7 @@ class AutoLoan extends StatefulWidget {
 
 class _AutoLoanState extends State<AutoLoan> {
 
-   late List slidersList;
+  late List slidersList;
 
   @override
   void initState()
