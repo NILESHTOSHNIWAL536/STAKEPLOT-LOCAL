@@ -47,20 +47,25 @@ class _SliderPageState extends State<SliderPage> {
   }
 
 
-  Widget getListOfSliders(List slidersList){
-       return Column(
-           children: slidersList.map((e)=>sliderContainer(e)).toList(),
-       ); 
+ 
+  Widget getListOfSliders(List slidersList) {
+    return Column(
+      children: slidersList
+          .asMap()
+          .entries
+          .map((entry) => sliderContainer(entry.value, entry.key))
+          .toList(),
+    );
   }
 
-  Widget sliderContainer(data){
+  Widget sliderContainer(data,int index){
       return Container(
           margin: EdgeInsets.symmetric(vertical: 5),
            child: Column(
               children: [
                        topContainer(data),
                        SizedBox(height: Colorcodes.paddingSize/3,),
-                       buildSlider('label', data['value'], data['min'], data['max'], data['onChanged'])
+                       buildSlider('label', data['value'], data['min'], data['max'], data['onChanged'],index)
               ],
            ),
       );
@@ -88,21 +93,26 @@ class _SliderPageState extends State<SliderPage> {
   }
 
 
-}
 
 
 
-Widget  buildSlider(String label, double value, double min, double max,Function(double) onChanged) {
+Widget  buildSlider(String label, double value, double min, double max,Function(double) onChanged,int index) {
 
      return   Slider(
-          
           value: value,
           min: min,
           max: max,
           divisions: 100,
           label: value.toStringAsFixed(0),
-          onChanged: onChanged,
+          onChanged: (newValue){
+              setState(() {
+                    widget.slidersList[index]['value'] = newValue;
+                    widget.slidersList[index]['controller'].text = newValue.toStringAsFixed(0);
+            });
+          },
           activeColor: AppColors.primaryColor,
           inactiveColor: AppColors.uncoloredPie,
     );
+}
+
 }

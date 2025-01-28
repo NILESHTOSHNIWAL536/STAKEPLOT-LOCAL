@@ -28,10 +28,10 @@ class _CreditCardState extends State<CreditCard> {
    void getslidersList(){
       slidersList=[
          getJsonBodyObj("Car Price",4,3,12,(value){},TextEditingController(text: '2')),
-         getJsonBodyObj("Down Payment",4,1,12,(value){},TextEditingController(text: '332')),
-         getJsonBodyObj("Loan Interest Rate",4,1,12,(value){},TextEditingController(text: '2332')),
-         getJsonBodyObj("Loan Tenure",4,1,12,(value){},TextEditingController(text: '2332')),
-         getJsonBodyObj("Annual maintenance cost",4,1,12,(value){},TextEditingController(text: '2332')),
+         getJsonBodyObj("Down Payment",3000,1000,5000,(value){},TextEditingController(text: '332')),
+         getJsonBodyObj("Loan Interest Rate",4,1,100,(value){},TextEditingController(text: '2332')),
+         getJsonBodyObj("Loan Tenure",110,100,400,(value){},TextEditingController(text: '2332')),
+         getJsonBodyObj("Annual maintenance cost",12,10,120,(value){},TextEditingController(text: '2332')),
      ];
   }
   
