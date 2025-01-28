@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/expansionTile.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/creditCard.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
 
@@ -35,7 +39,38 @@ class _AutoLoanState extends State<AutoLoan> {
   Widget build(BuildContext context) {
     return Scaffold(
           appBar: appbarHeader("Auto loan calculator ", context),
-          body: Text("Auto loan calculator "),
+          body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    color: AppColors.mt,
+                    borderRadius: BorderRadius.circular(16)),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                        SliderPage(slidersList: slidersList),
+                        Container(
+                width: MediaQuery.of(context).size.width/1.1,
+                height:  MediaQuery.of(context).size.height/4,
+                child: PieChartGraph()
+              ),
+              CustomExpansionTile(
+                 howToUseContent: Expansioncalculator.creditcardTitle1,
+                howItWorksContent: Expansioncalculator.creditcardTitle2,
+              ),
+             
+            ],
+          ),
+      ))
+  ])
+  )
+  ),
     );
   }
 }

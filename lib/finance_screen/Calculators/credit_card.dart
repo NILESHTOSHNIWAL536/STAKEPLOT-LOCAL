@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/expansionTile.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/creditCard.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
 
@@ -36,30 +39,29 @@ class _CreditCardState extends State<CreditCard> {
   @override
   Widget build(BuildContext context) {
       return  Scaffold(
-          appBar: appbarHeader("Auto loan calculator ", context),
+          backgroundColor: AppColors.backgroundColor,
+          appBar: appbarHeader("Credit card pay off calculator ", context),
           body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+               SliderPage(slidersList: slidersList),
               Container(
-                decoration: BoxDecoration(
-                    color: AppColors.mt,
-                    borderRadius: BorderRadius.circular(16)),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                        SliderPage(slidersList: slidersList),
-             
-            ],
-          ),
-      ))
+                width: MediaQuery.of(context).size.width/1.1,
+                height:  MediaQuery.of(context).size.height/4,
+                child: PieChartGraph()
+              ),
+              CustomExpansionTile(
+                 howToUseContent: Expansioncalculator.creditcardTitle1,
+                howItWorksContent: Expansioncalculator.creditcardTitle2,
+              ),
   ])
   )
   ),
     );
   }
 }
+
+

@@ -1,17 +1,20 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
 
+  double cardBalance=300.0;
+  double totalInterestPaid=130.0;
 
-class PieChartgraph extends StatefulWidget {
-  const PieChartgraph({super.key});
+class PieChartGraph extends StatefulWidget {
+  const PieChartGraph({super.key});
 
   @override
-  State<PieChartgraph> createState() => _PieChartgraphState();
+  State<PieChartGraph> createState() => _PieChartGraphState();
 }
 
-class _PieChartgraphState extends State<PieChartgraph> {
+class _PieChartGraphState extends State<PieChartGraph> {
+
+
   @override
   Widget build(BuildContext context) {
     return buildPieChart();

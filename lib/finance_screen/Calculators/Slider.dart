@@ -20,20 +20,22 @@ class _SliderPageState extends State<SliderPage> {
   Widget build(BuildContext context) {
     return Container(
          margin: EdgeInsets.symmetric(horizontal: 4,vertical: 20),
-         padding: EdgeInsets.symmetric(horizontal: 4,vertical: 20),
+         padding: EdgeInsets.symmetric(horizontal: 10,vertical: 20),
          width: MediaQuery.of(context).size.width,
+         decoration: BoxDecoration(
+           color: AppColors.mt,
+           borderRadius: BorderRadius.circular(20)
+         ),
          child: Column(
            mainAxisAlignment: MainAxisAlignment.start,
            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-                     textStyle(context: context,text: "Start Calulations",fontWeight: FontWeight.w500,fontsize: 20),
+                     textStyle(context: context,text: "Start Calulations",fontWeight: FontWeight.bold,fontsize: 22),
                   
                       Padding(
-                        padding:  EdgeInsets.symmetric(vertical: Colorcodes.paddingSize/4),
+                        padding:  EdgeInsets.only(bottom: Colorcodes.paddingSize/4),
                         child: Divider(
                            color: Colorcodes.greyLight,
-                           endIndent: 20,
-                           indent: 20,
                         ),
                       ),
 
@@ -53,12 +55,12 @@ class _SliderPageState extends State<SliderPage> {
 
   Widget sliderContainer(data){
       return Container(
+          margin: EdgeInsets.symmetric(vertical: 5),
            child: Column(
               children: [
                        topContainer(data),
-                       SizedBox(height: Colorcodes.paddingSize,),
+                       SizedBox(height: Colorcodes.paddingSize/3,),
                        buildSlider('label', data['value'], data['min'], data['max'], data['onChanged'])
-                       
               ],
            ),
       );
@@ -70,14 +72,16 @@ class _SliderPageState extends State<SliderPage> {
                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                        crossAxisAlignment: CrossAxisAlignment.center,
                        children: [
-                              textStyle(context: context,text: data['name'],fontWeight: FontWeight.w500,fontsize: 20),
+                              Expanded(
+                                flex: 2,
+                                child: textStyle(context: context,text: data['name'],fontWeight: FontWeight.w500,fontsize: 17)),
                               Container(
-                                padding: EdgeInsets.symmetric(horizontal: 4,vertical: 4),
+                                padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
                                 decoration: BoxDecoration(
                                     color:Colorcodes.greyLight,
-                                    borderRadius: BorderRadius.circular(20)
+                                    borderRadius: BorderRadius.circular(8)
                                   ),
-                                child: textStyle(context: context,text: data['controller'].text,fontWeight: FontWeight.w500,fontsize: 20)
+                                child: textStyle(context: context,text: "₹"+data['controller'].text,fontWeight: FontWeight.w500,fontsize: 20)
                               ),
                        ],
                      );
@@ -91,6 +95,7 @@ class _SliderPageState extends State<SliderPage> {
 Widget  buildSlider(String label, double value, double min, double max,Function(double) onChanged) {
 
      return   Slider(
+          
           value: value,
           min: min,
           max: max,
