@@ -9,55 +9,53 @@ import 'package:flutter_application_code_stakeplot/finance_screen/creditCard.dar
 import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
 
 class Savings extends StatefulWidget {
-  const Savings({ Key? key }) : super(key: key);
+  const Savings({Key? key}) : super(key: key);
 
   @override
   _SavingsState createState() => _SavingsState();
 }
 
 class _SavingsState extends State<Savings> {
-
   late List slidersList;
 
   @override
-  void initState()
-  {
-      getslidersList();
+  void initState() {
+    getslidersList();
   }
 
-   void getslidersList(){
-      slidersList=[
-         getJsonBodyObj("Target amount",4,3,12,(value){},TextEditingController(text: '2')),
-         getJsonBodyObj("Current savings",4,1,12,(value){},TextEditingController(text: '332')),
-         getJsonBodyObj("Monthly contribution",4,1,12,(value){},TextEditingController(text: '2332')),
-         getJsonBodyObj("Timeframe(months)",4,1,12,(value){},TextEditingController(text: '2332')),
-         getJsonBodyObj("Interest rate (%)",4,1,12,(value){},TextEditingController(text: '2332')),
-     ];
+  void getslidersList() {
+    slidersList = [
+      getJsonBodyObj("Target amount", 4, 3, 12, (value) {},
+          TextEditingController(text: '2')),
+      getJsonBodyObj("Current savings", 4, 1, 12, (value) {},
+          TextEditingController(text: '332')),
+      getJsonBodyObj("Monthly contribution", 4, 1, 12, (value) {},
+          TextEditingController(text: '2332')),
+      getJsonBodyObj("Timeframe(months)", 4, 1, 12, (value) {},
+          TextEditingController(text: '2332')),
+      getJsonBodyObj("Interest rate (%)", 4, 1, 12, (value) {},
+          TextEditingController(text: '2332')),
+    ];
   }
-  
+
   @override
   Widget build(BuildContext context) {
- 
     return Scaffold(
-          appBar: appbarHeader("Savings goal calculator ", context),
-          body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-               SliderPage(slidersList: slidersList),
-              PieChartGraph(),
-              CustomExpansionTile(
-                 howToUseContent: Expansioncalculator.creditcardTitle1,
-                howItWorksContent: Expansioncalculator.creditcardTitle2,
+        appBar: appbarHeader("Savings goal calculator ", context),
+        body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SliderPage(slidersList: slidersList),
+                  PieChartGraph(),
+                  CustomExpansionTile(
+                    howToUseContent: Expansioncalculator.creditcardTitle1,
+                    howItWorksContent: Expansioncalculator.creditcardTitle2,
+                  ),
+                ],
               ),
-             
-            ],
-          ),
-      ))
-    );
-
-
+            )));
   }
 }
