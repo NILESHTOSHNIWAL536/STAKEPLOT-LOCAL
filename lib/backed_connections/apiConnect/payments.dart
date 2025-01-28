@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budget.dart';
 import 'package:http/http.dart' as http;
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,10 +44,25 @@ import 'package:shared_preferences/shared_preferences.dart';
       }
 }
 
+ void  getBudget()async{
+ String urlPath= "${url}/budget/";
+      try{
+          var responce=await getDataApiCall(urlPath);
+          printData(responce);
+          if(getFlagOfResponse(responce))
+          {
+            var  his=jsonDecode(responce.body);
+            var obj=his['data'];
+            print(obj);
+            budgetList.clear();
+            budgetList.addAll(obj);  
+            budgetLength.value=obj.length;
+          }
+      }catch(e){
+      }
+}
 
-
-
-     getBudget()async
+ void  getBudget2()async
 {
     
     final SharedPreferences _pref = await SharedPreferences.getInstance();
@@ -153,6 +169,8 @@ void addBudget(BuildContext context,String name,String amount,List expenseCatego
       if(response.statusCode==200 || response.statusCode==201)
       {
             final body = json.decode(response.body);
+            getBudget();
+            Navigator.pushNamed(context, "/BudgetDisplay");
             snackBarCalled(context,'Added Budget!');
             
       }else{
@@ -656,5 +674,21 @@ void sendNotificationsToDevice(id,context,msg)async
 
 
 
+void getTopFiveCater()async
+  {
+     String urlPath= "${url}/budget/top-five-categories/";
+      try{
+          var responce=await getDataApiCall(urlPath);
+          if(getFlagOfResponse(responce))
+          {
+              var  his=jsonDecode(responce.body);
+              categoriesSeleted.clear();
+              print(his);
+              categoriesSeleted.addAll(his['data']);
+              getCategories.value=! getCategories.value;
+          }
+      }catch(e){
+      }
+}
 
 

@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -14,6 +15,8 @@ import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:get/get.dart';
 
 RxList categoriesSeleted=[].obs;
+RxList categoriesDividedList=[].obs;
+RxList<String> cat=<String>[].obs;
 RxBool getCategories=false.obs;
 Map<String, dynamic> categoryWeights = {
   "Essentials": {
@@ -74,23 +77,23 @@ class _BudgetState extends State<Budget> {
 
 
 
-  void getTopFiveCater()async
-  {
-     String urlPath= "${url}/budget/top-five-categories/";
-      try{
-          var responce=await getDataApiCall(urlPath);
-          if(getFlagOfResponse(responce))
-          {
-              var  his=jsonDecode(responce.body);
-              categoriesSeleted.clear();
-              print(his);
-              categoriesSeleted.addAll(his['data']);
-              getCategories.value=! getCategories.value;
-          }
-      }catch(e){
-      }
+  // void getTopFiveCater()async
+  // {
+  //    String urlPath= "${url}/budget/top-five-categories/";
+  //     try{
+  //         var responce=await getDataApiCall(urlPath);
+  //         if(getFlagOfResponse(responce))
+  //         {
+  //             var  his=jsonDecode(responce.body);
+  //             categoriesSeleted.clear();
+  //             print(his);
+  //             categoriesSeleted.addAll(his['data']);
+  //             getCategories.value=! getCategories.value;
+  //         }
+  //     }catch(e){
+  //     }
     
-  }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +161,7 @@ class _BudgetState extends State<Budget> {
             decoration: BoxDecoration(
                 color: Colorcodes.white,
                 borderRadius: BorderRadius.circular(10)),
-            padding: EdgeInsets.symmetric(vertical: Colorcodes.paddingSize),
+            padding: EdgeInsets.symmetric(vertical: 3),
             child: Center(
               child: boolFlag.value ? rowPer() : rowPer(),
             ),
@@ -194,23 +197,25 @@ class _BudgetState extends State<Budget> {
 
 
   Widget getPeriod(text) {
-    return Container(
+    return Obx(()=> Container(
+      padding: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
       decoration: BoxDecoration(
-          color: period.value == text ? Colorcodes.red : Colorcodes.white),
+          color: period.value == text ? Colorcodes.greyLight : Colorcodes.white,
+          borderRadius: BorderRadius.circular(20)
+        ),
       child: InkWell(
           onTap: () {
-            period.value = text;
-            boolFlag.value = !boolFlag.value;
-            period.refresh();
-
-            //print(period.value);
+                period.value = text;
+                boolFlag.value = !boolFlag.value;
+                period.refresh();
           },
           child: textStyle(
               context: context,
               text: text,
               fontWeight: FontWeight.w300,
+              //  c: period.value != text ? Colorcodes.greyLight : Colorcodes.white,
               fontsize: 14)),
-    );
+    ));
   }
 
  void bedgetCalculator()

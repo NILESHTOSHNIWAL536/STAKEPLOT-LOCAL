@@ -209,7 +209,7 @@ class Finance {
 
 class BudgetCategories
 {
-    Map<String,dynamic> listofCategories={
+   static Map<String,dynamic> listofCategories={
         "Food": Categories.food,
         "Shopping":Categories.shopping,
         "Travel": Categories.travel,
@@ -235,6 +235,6 @@ class BudgetCategories
         // "Commerce": Categories.commerce
     };
 
-
+   static List<String> categories = listofCategories.keys.map((key) => key.toString()).toList();
 
 }
