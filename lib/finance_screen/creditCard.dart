@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 
 //import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
 
 class CreditCard extends StatefulWidget {
   @override
@@ -220,25 +221,7 @@ class _CreditCardState extends State<CreditCard> {
     );
   }
 
-  Widget buildSlider(String label, double value, double min, double max,
-      Function(double) onChanged) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('$label: ₹${value.toStringAsFixed(0)}'),
-        Slider(
-          value: value,
-          min: min,
-          max: max,
-          divisions: 100,
-          label: value.toStringAsFixed(0),
-          onChanged: onChanged,
-          activeColor: AppColors.primaryColor,
-          inactiveColor: AppColors.uncoloredPie,
-        ),
-      ],
-    );
-  }
+
 
   Widget buildPieChart() {
     return PieChart(
