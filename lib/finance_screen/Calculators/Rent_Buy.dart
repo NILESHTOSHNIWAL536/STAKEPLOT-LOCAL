@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
 
 class RentBuy extends StatefulWidget {
   const RentBuy({ Key? key }) : super(key: key);
@@ -12,8 +13,9 @@ class RentBuy extends StatefulWidget {
 class _RentBuyState extends State<RentBuy> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
+    return Scaffold(
+          appBar: appbarHeader("Rent vs Buy Calculator", context),
+          body: Text("Rent vs Buy Calculator"),
     );
   }
 }
