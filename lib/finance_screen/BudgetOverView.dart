@@ -29,15 +29,12 @@ class BudgetOverView extends StatefulWidget {
 
 class _BudgetOverViewState extends State<BudgetOverView> {
 
-    RxList<String> cat=<String>[].obs;
+  
 
     @override
   void initState() {
     super.initState();
-    widget.categoryList.forEach((e){
-          cat.add(e['category']);
-    });
-    
+
   }
 
   
@@ -50,7 +47,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
       child: Scaffold(
         backgroundColor: AppColors.backgroundColor,
         body: getBudgetUiScreen(height, width),
-        bottomNavigationBar: BottomNavigations(data: 1),
+        // bottomNavigationBar: BottomNavigations(data: 1),
       ),
     );
   }
@@ -58,116 +55,153 @@ class _BudgetOverViewState extends State<BudgetOverView> {
   Widget getBudgetUiScreen(double height, double width) {
     return Container(
       width: width,
-      height: height / 1.1,
+      height: height,
       padding: EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(color: AppColors.backgroundColor),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        //crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: Colorcodes.paddingSize),
-           textStyle(context: context,text:  "Budget Calculations",fontsize: 16,fontWeight: FontWeight.bold),
-          SizedBox(height: Colorcodes.paddingSize / 2),
-          Column(
+      child: SingleChildScrollView(
+        child: Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-             textStyle(context: context,text:  "Budget amount",fontsize: 16,fontWeight: FontWeight.bold),
-             Padding(
-               padding: EdgeInsets.symmetric(vertical:  Colorcodes.paddingSize),
-               child: textStyle(context: context,text:  widget.amount,fontsize: 16,fontWeight: FontWeight.bold),
-             ),
-             textStyle(context: context,text:  "Budget ${widget.period}",fontsize: 16,fontWeight: FontWeight.bold),
+              SizedBox(height: Colorcodes.paddingSize),
+               textStyle(context: context,text:  "Budget Calculations",fontsize: 20,fontWeight: FontWeight.bold),
+              SizedBox(height: Colorcodes.paddingSize),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                   Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10,vertical: 12),
+                    decoration: BoxDecoration(
+                        color: Colorcodes.graphColor3,
+                        borderRadius: BorderRadius.circular(10)
 
+                    ),
+                    child: textStyle(context: context,text:  "Budget amount",fontsize: 13,fontWeight: FontWeight.bold)
+                  ),
+                   Padding(
+                     padding: EdgeInsets.symmetric(vertical:  Colorcodes.paddingSize),
+                     child: textStyle(context: context,text: "₹"+ widget.amount,fontsize: 20,fontWeight: FontWeight.bold),
+                   ),
+                          
+                  ],
+                ),
+              ),
+
+              Row(
+                 children: [
+                  textStyle(context: context,text:  "Budget ",fontsize: 18,fontWeight: FontWeight.bold),
+                  textStyle(context: context,text:  "(${widget.period})",fontsize: 18,fontWeight: FontWeight.bold,c: AppColors.primaryColor),
+                   
+                 ],
+              ),
+
+          
+              SizedBox(height: Colorcodes.paddingCard/3,),
+               Obx(()=>categoryList()),
+              SizedBox(height: Colorcodes.paddingCard/2,),
+              InkWell(
+                onTap: (){
+                       addBudget(context, widget.name, widget.amount, categoriesDividedList, widget.period);
+                },
+                child: getButton(context, "Add Budget")
+              ),
+          
+          
             ],
           ),
-      
-          categoryList(),
-
-          InkWell(
-            onTap: (){
-                   addBudget(context, widget.name, widget.amount, widget.categoryList, widget.period);
-            },
-            child: getButton(context, "Add Budget")
-          ),
-
-
-        ],
+        ),
       ),
     );
   }
 
-  categoryList() {
-    return SingleChildScrollView(
-      child: Column(
-        children: List.generate( widget.categoryList.length, (index) {
-          return Container(
-            margin: EdgeInsets.symmetric(vertical: 5),
-            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Icon( widget.categoryList[index]['icon']),
+ Widget  categoryList()
+{
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height/1.55,
+      child: SingleChildScrollView(
+        child: Expanded(
+          child: Column(
+            children: List.generate( categoriesDividedList.length, (index) {
+              String urlAvatar="";
+              try{
+               urlAvatar= Categories.link+BudgetCategories.listofCategories[categoriesDividedList[index]['category']];
+              }catch(e){
+                    urlAvatar=Categories.link+BudgetCategories.listofCategories['Entertainment'];
+              }
+              return Container(
+                padding: EdgeInsets.symmetric(horizontal: 7),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          child: AvatarProfileImage(url:urlAvatar, width: 10, height: 14)),
+                      ),
+                       const SizedBox(width: 10,),
+                   Expanded(
+                        flex: 4,
+                      child: Text(
+                         categoriesDividedList[index]['category']!,
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                     const SizedBox(width: 10,),
                   Expanded(
-                    flex: 1,
-                    child: Container(
-                      color: Colors.cyan,
-                      child: AvatarProfileImage(url: Categories.link+widget.categoryList[index]['category']+".svg", width: 20, height: 20)),
-                  ),
-                   const SizedBox(width: 10,),
-               Expanded(
-                    flex: 5,
-                  child: Text(
-                     widget.categoryList[index]['category']!,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
-                ),
-                 const SizedBox(width: 10,),
-              Expanded(
-                    flex: 3,
-                  child:  TextField(
-                          controller: TextEditingController(
-                              text: widget.categoryList[index]['amount'].toString()),
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: "Enter amount",
-                          ),
-                          keyboardType: TextInputType.number,
-                          onSubmitted: (value)async {
-                              widget.categoryList[index]['amount'] = double.tryParse(value) ?? 0;
-                             var d=await  adjustBudget(double.parse(widget.amount),widget.categoryList[index]['category'],double.parse(value),cat);
-                              // {Bills: 1500.67, Insurance: 1791.39, Travel: 2507.94}
-                               List categoryList=[];
-
-                                 widget.categoryList.forEach((e){
-                                       String name = e['category'];
-                                       double amount = d[name]!;
-                                       print(name);
-                                       print(amount);
-                                       categoryList.add({'category':e['category'],'amount':amount.toString()});
-                                 });
-
-                                 widget.categoryList.clear();
-                                setState(() {
-                                  widget.categoryList = List.from(categoryList);
-                                });
-
-                          },
-                          
+                        flex: 4,
+                      child:  Container(
+                        child: Center(
+                          child: TextField(
+                                  controller: TextEditingController(
+                                      text:categoriesDividedList[index]['amount'].toString()),
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    hintText: "Enter amount",
+                                  ),
+                                  keyboardType: TextInputType.number,
+                                  onSubmitted: (value){
+                                       onsubmit(index,value);
+                                  },
+                                  
+                                ),
                         ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          );
-        }),
+              );
+            }),
+          ),
+        ),
       ),
     );
   }
 
-
+  void onsubmit(index,value)async{
+       categoriesDividedList[index]['amount'] = double.tryParse(value) ?? 0;
+                                     var d=await  adjustBudget(double.parse(widget.amount),categoriesDividedList[index]['category'],double.parse(value),cat);
+                                      // {Bills: 1500.67, Insurance: 1791.39, Travel: 2507.94}
+                                       List categoryList=[];
+                                        categoriesDividedList.forEach((e){
+                                               String name = e['category'];
+                                               double amount = d[name]!;
+                                               print(name);
+                                               print(amount);
+                                               categoryList.add({'category':e['category'],'amount':amount.toString()});
+                                         });
+                                          
+                                        categoriesDividedList.clear();
+                                        categoriesDividedList.addAll(List.from(categoryList));
+  }
 
 
   Future<Map<String, double>> adjustBudget(
-    double totalAmount, String updatedCategory, double updatedAmount, RxList<String> selectedCategories) async {
+    double totalAmount, String updatedCategory, double updatedAmount, List<String> selectedCategories) async {
   // Flatten the subcategories and calculate total weights
   Map<String, double> subcategoryWeights = {};
   categoryWeights.forEach((mainCategory, data) {

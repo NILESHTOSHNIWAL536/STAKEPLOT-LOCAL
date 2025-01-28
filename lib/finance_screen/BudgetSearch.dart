@@ -36,8 +36,8 @@ class _BudgetSearchState extends State<BudgetSearch> {
   void initState() {
     super.initState();
 
-    // Populate the initial filtered categories
-    filteredCategories.assignAll(Categories.categoriesList);
+    print(BudgetCategories.categories);
+    filteredCategories.assignAll(BudgetCategories.categories);
 
     // Listen for search input changes
     nameController.addListener(() {
@@ -48,9 +48,8 @@ class _BudgetSearchState extends State<BudgetSearch> {
   // Filter categories based on the search query
   void filterCategories() {
     String query = nameController.text.toLowerCase();
-    filteredCategories.value = Categories.categoriesList.where((category) {
-      String categoryName = category.substring(0, category.length - 4).toLowerCase();
-      return categoryName.contains(query);
+    filteredCategories.value =  BudgetCategories.categories.where((category) {
+      return category.contains(query);
     }).toList();
   }
 
@@ -207,11 +206,11 @@ class _BudgetSearchState extends State<BudgetSearch> {
   }
 
   Widget listViewOfcategorie(String categorie) {
-    String s = categorie.substring(0, categorie.length - 4);
-    if (categoriesSeleted.contains(s)) return SizedBox.shrink();
+    // String s = categorie.substring(0, categorie.length - 4);
+    if (categoriesSeleted.contains(categorie)) return SizedBox.shrink();
     return InkWell(
       onTap: () {
-        categoriesSeleted.add(s);
+        categoriesSeleted.add(categorie);
         getCategories.value = !getCategories.value;
         getCategories.refresh();
       },
@@ -220,11 +219,11 @@ class _BudgetSearchState extends State<BudgetSearch> {
         child: Row(
           children: [
             AvatarProfileImage(
-                url: Categories.link + categorie, width: 20, height: 20),
+                url: Categories.link + BudgetCategories.listofCategories[categorie], width: 25, height: 26),
             const SizedBox(
               width: 20,
             ),
-            textStyle(context: context, text: s)
+            textStyle(context: context, text: categorie,fontsize: 17,fontWeight: FontWeight.w400)
           ],
         ),
       ),
@@ -235,7 +234,13 @@ class _BudgetSearchState extends State<BudgetSearch> {
     try {
       var categoryList = await getBudgetForCategoriesList(
           double.parse(amount.toString()), categoriesSeleted);
-      print(categoryList);
+      cat.clear();
+      categoriesDividedList.clear();
+      categoriesDividedList.addAll(categoryList);
+      categoriesDividedList.forEach((e){
+            cat.add(e['category']);
+      });
+
       push(categoryList);
     } catch (e) {
       print(e);
@@ -246,7 +251,7 @@ class _BudgetSearchState extends State<BudgetSearch> {
       double amount, RxList expenseCategories) async {
     Set<String> activeMainCategories = {};
     Map<String, List<String>> categoriesMap = {};
-    print(1);
+   
     for (String subCategory in expenseCategories) {
       for (var entry in categoryWeights.entries) {
         String mainCategory = entry.key;
@@ -259,14 +264,14 @@ class _BudgetSearchState extends State<BudgetSearch> {
         }
       }
     }
-    print(2);
+    
     double totalOriginalPercentage = activeMainCategories.fold(
         0, (sum, category) => sum + categoryWeights[category]?["percentage"]);
 
-    print(3);
+   
     double percentageMultiplier = 100 / totalOriginalPercentage;
     List<Map<String, dynamic>> result = [];
-    print(4);
+  
     for (String mainCategory in activeMainCategories) {
       var mainCategoryData =
           categoryWeights[mainCategory] as Map<String, dynamic>;
@@ -275,13 +280,12 @@ class _BudgetSearchState extends State<BudgetSearch> {
       double adjustedMainPercentage =
           (mainCategoryData["percentage"]) * percentageMultiplier;
       double mainCategoryBudget = (amount * adjustedMainPercentage) / 100;
-      print(5);
       double totalSubWeight = subcategories.fold(
           0,
           (sum, sub) =>
               sum +
               (mainCategoryData["subcategories"] as Map<String, dynamic>)[sub]);
-      print(6);
+      
       for (String sub in subcategories) {
         double originalWeight = double.parse(
             (mainCategoryData["subcategories"] as Map<String, dynamic>)[sub]
