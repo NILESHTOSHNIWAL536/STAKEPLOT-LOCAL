@@ -10,7 +10,20 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 
 //import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
+
+  getJsonBodyObj(String name,double value,double min,double max,Function(double) onChanged ,TextEditingController controller){
+       return {
+          'controller':controller,
+          'name':name,
+          'value':value,
+          'min':min,
+          'max':max,
+          'onChanged':onChanged,
+       };
+   }
+
 
 class CreditCard extends StatefulWidget {
   @override
@@ -23,9 +36,16 @@ class _CreditCardState extends State<CreditCard> {
   double monthlyPayment = 1210;
   int monthsToPayOff = 0;
   double totalInterestPaid = 0;
-  TextEditingController cardBalanceController = TextEditingController();
-  TextEditingController interestRateController = TextEditingController();
-  TextEditingController monthlyPaymentController = TextEditingController();
+   TextEditingController cardBalanceController = TextEditingController();
+   TextEditingController interestRateController = TextEditingController();
+   TextEditingController monthlyPaymentController = TextEditingController();
+
+
+  late List slidersList;
+
+ 
+
+
 
   void calculatePayoff() {
     double balance = cardBalance;
@@ -54,20 +74,22 @@ class _CreditCardState extends State<CreditCard> {
     interestRateController.text = interestRate.toStringAsFixed(0);
     monthlyPaymentController.text = monthlyPayment.toStringAsFixed(0);
     calculatePayoff();
+    getslidersList();
+  }
+
+  void getslidersList(){
+      slidersList=[
+         getJsonBodyObj("Card Balance",4,3,12,(value){},TextEditingController(text: '2')),
+         getJsonBodyObj("Interest Rate (%)",4,1,12,(value){},TextEditingController(text: '332')),
+         getJsonBodyObj("Monthly Payment",4,1,12,(value){},TextEditingController(text: '2332')),
+     ];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: AppBar(
-        backgroundColor: AppColors.backgroundColor,
-        title: const Text('Credit Card Pay Off Calculator'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {},
-        ),
-      ),
+      appBar:appbarHeader("Credit Card Pay Off Calculator", context),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -83,7 +105,133 @@ class _CreditCardState extends State<CreditCard> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                        SliderPage(slidersList: slidersList),
+                        
+             
+            ],
+          ),
+      ))
+  ])
+  )
+  )
+  );
+  }
+
+
+  Widget  graph(){
+      return Column(
+          children: [
+                const Text(
+                'Fetch',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              Text('Monthly Payoff: $monthsToPayOff months'),
+              Text(
+                  'Total Interest Paid: ₹${totalInterestPaid.toStringAsFixed(2)}'),
+              const SizedBox(height: 20),
+              SizedBox(height: 150, child: buildPieChart()),
+              const SizedBox(height: 20),
+          ],
+      );
+  }
+
+
+  Widget buildTextField(String label, TextEditingController controller,
+      Function(String) onChanged) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextField(
+        controller: controller,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+        ),
+        onChanged: onChanged,
+      ),
+    );
+  }
+
+
+
+  Widget buildPieChart() {
+    return PieChart(
+      PieChartData(
+        sections: [
+          PieChartSectionData(
+            value: cardBalance,
+            title: 'Principal\n₹${cardBalance.toStringAsFixed(0)}',
+            color: AppColors.primaryColor,
+            radius: 50,
+          ),
+          PieChartSectionData(
+            value: totalInterestPaid,
+            title: 'Interest\n₹${totalInterestPaid.toStringAsFixed(0)}',
+            color: AppColors.uncoloredPie,
+            radius: 50,
+          ),
+        ],
+      ),
+    );
+  }
+
+   Widget expansion(){
+      return Column(
+         children: [
+             ExpansionTile(
+                title: const Text('How to use the calculator?'),
+                children: [
+                  Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Container(
+                        child: const Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("1.Credit Card Balance"),
+                            Text(
+                                "Input:Use the slider to set your current balance (eg..5000)"),
+                            Text("2.Credit Card Interest Rate"),
+                            Text(
+                                "Input:Use the slider to set your annual interest rate (eg..18%)"),
+                            Text("3.Monthly Payment"),
+                            Text(
+                                "Input:Use the slider to set your planned monthly payment (eg..200)"),
+                          ],
+                        ),
+                      ))
+                ],
+              ),
+              ExpansionTile(
+                title: const Text('How it works?'),
+                children: [
+                  Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Container(
+                        child: const Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Monthly Interest Rate:"),
+                            Text(
+                                "Converts the annual interest rate to a monthly rate"),
+                            Text("Months to pay off Debt:"),
+                            Text(
+                                "Calculates the number of months to pay off the debt using your balance, monthly payment and interest rate"),
+                            Text("Total Interest Paid:"),
+                            Text(
+                                "Computes the total interest paid over the repayment method"),
+                          ],
+                        ),
+                      ))
+                ],
+              ),
+         ],
+      );
+   }
+
+  Widget getList(){
+     return Column(
+      children: [
+             const Text(
                         'Start Calculation',
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
@@ -139,109 +287,8 @@ class _CreditCardState extends State<CreditCard> {
                       }),
                       const SizedBox(height: 20),
                     ],
-                  ),
-                ),
-              ),
-              const Text(
-                'Fetch',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              Text('Monthly Payoff: $monthsToPayOff months'),
-              Text(
-                  'Total Interest Paid: ₹${totalInterestPaid.toStringAsFixed(2)}'),
-              const SizedBox(height: 20),
-              SizedBox(height: 150, child: buildPieChart()),
-              const SizedBox(height: 20),
-              ExpansionTile(
-                title: const Text('How to use the calculator?'),
-                children: [
-                  Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Container(
-                        child: const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("1.Credit Card Balance"),
-                            Text(
-                                "Input:Use the slider to set your current balance (eg..5000)"),
-                            Text("2.Credit Card Interest Rate"),
-                            Text(
-                                "Input:Use the slider to set your annual interest rate (eg..18%)"),
-                            Text("3.Monthly Payment"),
-                            Text(
-                                "Input:Use the slider to set your planned monthly payment (eg..200)"),
-                          ],
-                        ),
-                      ))
-                ],
-              ),
-              ExpansionTile(
-                title: const Text('How it works?'),
-                children: [
-                  Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Container(
-                        child: const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Monthly Interest Rate:"),
-                            Text(
-                                "Converts the annual interest rate to a monthly rate"),
-                            Text("Months to pay off Debt:"),
-                            Text(
-                                "Calculates the number of months to pay off the debt using your balance, monthly payment and interest rate"),
-                            Text("Total Interest Paid:"),
-                            Text(
-                                "Computes the total interest paid over the repayment method"),
-                          ],
-                        ),
-                      ))
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildTextField(String label, TextEditingController controller,
-      Function(String) onChanged) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextField(
-        controller: controller,
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(),
-        ),
-        onChanged: onChanged,
-      ),
-    );
-  }
-
-
-
-  Widget buildPieChart() {
-    return PieChart(
-      PieChartData(
-        sections: [
-          PieChartSectionData(
-            value: cardBalance,
-            title: 'Principal\n₹${cardBalance.toStringAsFixed(0)}',
-            color: AppColors.primaryColor,
-            radius: 50,
-          ),
-          PieChartSectionData(
-            value: totalInterestPaid,
-            title: 'Interest\n₹${totalInterestPaid.toStringAsFixed(0)}',
-            color: AppColors.uncoloredPie,
-            radius: 50,
-          ),
-        ],
-      ),
-    );
+            
+     );
   }
 }
 
