@@ -18,6 +18,7 @@ class AppColors {
   static const Color tab = Color(0xFFD9D9D9);
     static const Color rbi1 = Color(0xFFEBEEF9);
       static const Color rbi2 = Color(0xFFEBFFEE);
+      static const Color uncoloredPie = Color(0xFFD1D6E0);
 
 
 

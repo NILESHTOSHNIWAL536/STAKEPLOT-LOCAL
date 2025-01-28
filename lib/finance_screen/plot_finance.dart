@@ -112,31 +112,37 @@ Widget budgetAndDebtCalulator(){
                         'Credit Card Payoff',
                         'Calculator',
                         url: Finance.credit,
+                        path: "/CreditCard",
                       ),
                       _buildCalculatorTile(
                         'EMI',
                         'Calculator',
                         url: Finance.emi,
+                          path: "/emi",
                       ),
                       _buildCalculatorTile(
                         'Rent vs Buy',
                         'Calculator',
                         url: Finance.key,
+                          path: "/rent_buy",
                       ),
                       _buildCalculatorTile(
                         'Savings goal',
                         'Calculator',
                         url: Finance.savings,
+                          path: "/Savings",
                       ),
                       _buildCalculatorTile(
                         'Auto loan',
                         'Calculator',
                         url: Finance.auto,
+                          path: "/autoLoan",
                       ),
                       _buildCalculatorTile(
                         'Trip cost',
                         'Calculator',
                         url: Finance.location,
+                          path: "/TripCost",
                       ),
           ],
        ),
@@ -153,7 +159,7 @@ Widget budgetAndDebtCalulator(){
   }
 
   Widget _buildCalculatorTile(String title, String subtitle,
-      {required String url}) {
+      {required String url,required String path}) {
     return Container(
       width: MediaQuery.of(context).size.width/2.3,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -235,31 +241,37 @@ Widget budgetAndDebtCalulator(){
                       'Credit Card Payoff',
                       'Calculator',
                       url: Finance.credit,
+                      path: "/CreditCard",
                     ),
                     _buildCalculatorTile(
                       'EMI',
                       'Calculator',
                       url: Finance.emi,
+                      path: "/EMI",
                     ),
                     _buildCalculatorTile(
                       'Rent vs Buy',
                       'Calculator',
                       url: Finance.key,
+                      path: "/Rent",
                     ),
                     _buildCalculatorTile(
                       'Savings goal',
                       'Calculator',
                       url: Finance.savings,
+                      path: "/Savings",
                     ),
                     _buildCalculatorTile(
                       'Auto loan',
                       'Calculator',
                       url: Finance.auto,
+                      path: "/Auto",
                     ),
                     _buildCalculatorTile(
                       'Trip cost',
                       'Calculator',
                       url: Finance.location,
+                      path: "/TripCost",
                     ),
                   ],
                 );

@@ -10,7 +10,13 @@ import 'package:flutter_application_code_stakeplot/controller.dart/userControlle
 import 'package:flutter_application_code_stakeplot/customNoti.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/BudgetDisplay.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Emi.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Rent_Buy.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Savings.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/TripCost.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debt.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/creditCard.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/finvuAccount.dart';
@@ -22,11 +28,10 @@ import 'package:get/get.dart';
 import 'Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 
-
 FinvuManager finvuManager = FinvuManager();
 
 void main() {
-   Get.put(UserController()); 
+  Get.put(UserController());
   runApp(const MyApp());
 }
 
@@ -38,11 +43,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-    @override
+  @override
   void initState() {
     super.initState();
     initPlatformState();
-     initFinvuManager();
+    initFinvuManager();
   }
 
   Future<void> initPlatformState() async {
@@ -75,7 +80,13 @@ class _MyAppState extends State<MyApp> {
       '/Budget': (context) =>  Budget(),     
       '/PlotFinance': (context) =>  PlotFinance(),     
       '/Debt': (context) =>  Debt(),     
-      '/BudgetDisplay': (context) =>  BudgetDisplay(),     
+      '/BudgetDisplay': (context) =>  BudgetDisplay(),  
+      '/CreditCard':(context) => CreditCard() ,
+      '/emi':(context) => Emi() ,
+      '/rent_buy':(context) => RentBuy() ,
+      '/Savings':(context) => Savings() ,
+      '/autoLoan':(context) => AutoLoan() ,
+      '/TripCost':(context) => TripCost() ,
     });
   }
 }
