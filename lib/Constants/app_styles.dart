@@ -238,3 +238,21 @@ class BudgetCategories
    static List<String> categories = listofCategories.keys.map((key) => key.toString()).toList();
 
 }
+
+
+class Expansioncalculator{
+   
+   static List<String>  creditcardTitle1=[
+        "Credit Card Balance: Use the slider to set your current balance (e.g., 5000).",
+                                  "Credit Card Interest Rate: Use the slider to set your annual interest rate (e.g., 18%).",
+                                  "Monthly Payment: Use the slider to set your planned monthly payment (e.g., 200).",
+                               
+   ];
+   static List<String>  creditcardTitle2=[
+        "Monthly Interest Rate: Converts the annual interest rate to a monthly rate.",
+                                  "Months to Pay off Debt: Calculates the number of months to pay off the debt using your balance, monthly payment, and interest rate.",
+                                  "Total Interest Paid: Computes the total interest paid over the repayment method.",
+                                
+   ];
+
+} 
