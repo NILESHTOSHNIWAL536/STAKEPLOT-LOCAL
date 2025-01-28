@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -11,345 +12,370 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:get/get.dart';
 
-
-
 class BudgetSearch extends StatefulWidget {
   String amount;
   String name;
   String period;
- BudgetSearch({ Key? key,required this.amount,required this.name,required this.period }) : super(key: key);
+  BudgetSearch(
+      {Key? key,
+      required this.amount,
+      required this.name,
+      required this.period})
+      : super(key: key);
 
   @override
   _BudgetSearchState createState() => _BudgetSearchState();
 }
 
 class _BudgetSearchState extends State<BudgetSearch> {
-  TextEditingController nameController= TextEditingController(text: "");
-  String selectedValue=categoriesSeleted[0]??"";
+  TextEditingController nameController = TextEditingController(text: "");
+  String selectedValue = categoriesSeleted[0] ?? "";
+   RxList<String> filteredCategories = <String>[].obs;
+  //RxList<String> categoriesSeleted = <String>[].obs;
+  RxBool isCategoriesUpdated = false.obs;
+  void initState() {
+    super.initState();
+
+    // Populate the initial filtered categories
+    filteredCategories.assignAll(Categories.categoriesList);
+
+    // Listen for search input changes
+    nameController.addListener(() {
+      filterCategories();
+    });
+  }
+
+  // Filter categories based on the search query
+  void filterCategories() {
+    String query = nameController.text.toLowerCase();
+    filteredCategories.value = Categories.categoriesList.where((category) {
+      String categoryName = category.substring(0, category.length - 4).toLowerCase();
+      return categoryName.contains(query);
+    }).toList();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    double height =MediaQuery.of(context).size.height;
-    double width =MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
-       
-        body: getBudgetUiScreen(height,width),
+        body: getBudgetUiScreen(height, width),
         // bottomNavigationBar: BottomNavigations(data: 1),
       ),
     );
+  }
 
+  Widget getBudgetUiScreen(height, width) {
+    return Container(
+      width: width,
+      height: height / 1.1,
+      padding: EdgeInsets.symmetric(
+        horizontal: 20,
+      ),
+      decoration: BoxDecoration(color: AppColors.backgroundColor),
+      child: SingleChildScrollView(
+        child: Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: Colorcodes.paddingSize,
+              ),
+              textStyle(
+                  context: context,
+                  text: "Budget Categories",
+                  fontsize: 20,
+                  fontWeight: FontWeight.bold),
+              SizedBox(
+                height: Colorcodes.paddingSize / 2,
+              ),
+              searchList(width, height),
+              SizedBox(
+                height: Colorcodes.paddingSize,
+              ),
+              Obx(() => getCategories.value ? getListOfCat() : getListOfCat()),
+              SizedBox(
+                height: Colorcodes.paddingSize,
+              ),
+              InkWell(
+                  onTap: () {
+                    calculateBudget(widget.amount, widget.name, widget.period);
+                  },
+                  child: getButton(context, "Continue")),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget getListOfCat() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      child: Wrap(
+        spacing: 8.0, // Adjust spacing between items
+        runSpacing: 8.0, // Adjust spacing between lines
+        children: categoriesSeleted.map((name) {
+          return getUipartOfCatero(context, name.toString());
+        }).toList(),
+      ),
+    );
   }
 
 
- Widget getBudgetUiScreen(height,width){
-     
-     return Container(
-      width:  width,
-      height: height/1.1,
-      padding: EdgeInsets.symmetric(horizontal: 20,),
-      decoration: BoxDecoration(
-         color: AppColors.backgroundColor
-      ),
-       child: SingleChildScrollView(
-         child: Expanded(
-           child: Column(
-               mainAxisAlignment: MainAxisAlignment.start,
-               crossAxisAlignment: CrossAxisAlignment.start,
-               children: [
-                  SizedBox(height: Colorcodes.paddingSize,),
-                     textStyle(
-                      context: context,
-                       text: "Budget Categories",
-                       fontsize: 20,
-                      fontWeight: FontWeight.bold
-                   ),
-                   
-                   SizedBox(height: Colorcodes.paddingSize/2,),
-                   searchList(width,height),
-                    SizedBox(height: Colorcodes.paddingSize,),
-              
-                     Obx(()=> getCategories.value? getListOfCat():getListOfCat()),
-           
-                    SizedBox(height: Colorcodes.paddingSize,),
-           
-                    InkWell(
-                      onTap: (){
-                             calculateBudget(widget.amount,widget.name,widget.period); 
-                      },
-                      child: getButton(context, "Continue")
-                    ),
-               ],
-           ),
-         ),
-       ),
-     );
- }
-
- Widget getListOfCat(){
-  return Container(
-    width: MediaQuery.of(context).size.width,
-    child:  Wrap(
-      spacing: 8.0, // Adjust spacing between items
-      runSpacing: 8.0, // Adjust spacing between lines
-                      children: categoriesSeleted.map((name){
-                        return   getUipartOfCatero(context,name.toString());
-                    }).toList(),
-             ),
-  );
- }
-
-
-//  Widget search(){
-//   return  Container(
-//           width: MediaQuery.of(context).size.width,
-//            child: SearchField<String>(
-          
-//                   suggestions: Categories.categoriesList
-//                       .map((e) => SearchFieldListItem<String>(e)) // Convert String list to SearchFieldListItem
-//                       .toList(),
-//                   onSuggestionTap: (SearchFieldListItem<String> x) {
-//                     setState(() {
-//                       selectedValue = x.searchKey; // Store selected category
-//                     });
-
-//                   },
-//                 ),
-//         );
-// }
-
-
-Widget getUipartOfCatero(BuildContext context,String name){
-  return Container(
-         padding: EdgeInsets.symmetric(horizontal: 5,vertical: 7),
-         decoration: BoxDecoration(
-           borderRadius: BorderRadius.circular(4),
-            color: Colorcodes.white,
-         ),
-         child: Row(
-           mainAxisSize: MainAxisSize.min,
-            children: [
-                   textStyle(context: context,text: toUpperCase(name.toString()),fontsize: 16),
-                   const SizedBox(width: 10,),
-                   InkWell(
-                      onTap: (){
-                             categoriesSeleted.remove(name);
-                             getCategories.value=!getCategories.value;
-                      },
-                      child: Icon(Icons.close,color: AppColors.primaryColor,size: 20,),
-                   ),
-  
-            ],
-         ),
-         
-    );
-}
-
- Widget searchList(double width,double height){
+  Widget getUipartOfCatero(BuildContext context, String name) {
     return Container(
-      width: width/1.1,
-      child: Column(
-          children: [
-                TextFeildWidgetCustom
-                (
-                    textEditingController: nameController,
-                    heading: "Search",
-                    keyBoard: TextInputType.emailAddress,
-                    lableText: "Enter the name",
-                    icon: ProfileIcons.friends,
-                    flag: false,
-                ),
-                
-                Container(
-                    width: width,
-                    height: height/3,
-                    decoration: BoxDecoration(
-                    color: Colorcodes.white,
-                    borderRadius: BorderRadius.circular(10)
-                  ),
-                    child: SingleChildScrollView(
-                      child: Expanded(
-                        child: Obx(()=>  getCategories.value?getSearchBox(): getSearchBox())
-                      ),
-                    ),
-                ),
-              
-          ],
+      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 7),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        color: Colorcodes.white,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          textStyle(
+              context: context,
+              text: toUpperCase(name.toString()),
+              fontsize: 16),
+          const SizedBox(
+            width: 10,
+          ),
+          InkWell(
+            onTap: () {
+              categoriesSeleted.remove(name);
+              getCategories.value = !getCategories.value;
+            },
+            child: Icon(
+              Icons.close,
+              color: AppColors.primaryColor,
+              size: 20,
+            ),
+          ),
+        ],
       ),
     );
-}
+  }
 
-Widget getSearchBox(){
-   return Column(
-                            children: Categories.categoriesList.map((categorie){
-                                return listViewOfcategorie(categorie);
-                            }).toList(),
-                        );
-}
+  Widget searchList(double width, double height) {
+    return Container(
+      width: width / 1.1,
+      child: Column(
+        children: [
+          TextFeildWidgetCustom(
+            textEditingController: nameController,
+            heading: "Search",
+            keyBoard: TextInputType.emailAddress,
+            lableText: "Search for catgeory",
+            icon: ProfileIcons.friends,
+            flag: false,
+          ),
+          Container(
+            width: width,
+            height: height / 3,
+            decoration: BoxDecoration(
+                color: Colorcodes.white,
+                borderRadius: BorderRadius.circular(10)),
+            child: SingleChildScrollView(
+              child: Expanded(
+                  child: Obx(() =>
+                      getCategories.value ? getSearchBox() : getSearchBox())),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-Widget listViewOfcategorie(String categorie){
-    String s=categorie.substring(0,categorie.length-4);
-    if(categoriesSeleted.contains(s))return SizedBox.shrink();
+  Widget getSearchBox() {
+    return filteredCategories.isNotEmpty
+        ? Column(
+            children: filteredCategories.map((categorie) {
+              return listViewOfcategorie(categorie);
+            }).toList(),
+          )
+        : Center(
+            child: Text("No categories found", style: TextStyle(color: Colors.grey)),
+          );
+  }
+
+  Widget listViewOfcategorie(String categorie) {
+    String s = categorie.substring(0, categorie.length - 4);
+    if (categoriesSeleted.contains(s)) return SizedBox.shrink();
     return InkWell(
-      onTap: (){
-            categoriesSeleted.add(s);
-            getCategories.value=!getCategories.value;
-            getCategories.refresh();
-
+      onTap: () {
+        categoriesSeleted.add(s);
+        getCategories.value = !getCategories.value;
+        getCategories.refresh();
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 5),
         child: Row(
-             children: [
-                    AvatarProfileImage(url: Categories.link+categorie, width: 20, height: 20),
-                    const SizedBox(width: 20,),
-                    textStyle(context: context,text: s)
-             ],
+          children: [
+            AvatarProfileImage(
+                url: Categories.link + categorie, width: 20, height: 20),
+            const SizedBox(
+              width: 20,
+            ),
+            textStyle(context: context, text: s)
+          ],
         ),
       ),
     );
-}
+  }
 
-  void calculateBudget(String amount,String name,String period)async
-  {
-      try{
-      var categoryList=await getBudgetForCategoriesList(double.parse(amount.toString()), categoriesSeleted); 
+  void calculateBudget(String amount, String name, String period) async {
+    try {
+      var categoryList = await getBudgetForCategoriesList(
+          double.parse(amount.toString()), categoriesSeleted);
       print(categoryList);
       push(categoryList);
-      }catch(e){
-          print(e);
-      }
-
+    } catch (e) {
+      print(e);
+    }
   }
-
 
   Future<List<Map<String, dynamic>>> getBudgetForCategoriesList(
-    double amount, RxList expenseCategories) async {
-  Set<String> activeMainCategories = {};
-  Map<String, List<String>> categoriesMap = {};
-  print(1);
-  for (String subCategory in expenseCategories) {
-    for (var entry in categoryWeights.entries) {
-      String mainCategory = entry.key;
-      var data = entry.value as Map<String, dynamic>;
+      double amount, RxList expenseCategories) async {
+    Set<String> activeMainCategories = {};
+    Map<String, List<String>> categoriesMap = {};
+    print(1);
+    for (String subCategory in expenseCategories) {
+      for (var entry in categoryWeights.entries) {
+        String mainCategory = entry.key;
+        var data = entry.value as Map<String, dynamic>;
 
-      if ((data["subcategories"] as Map<String, dynamic>)
-          .containsKey(subCategory)) {
-        activeMainCategories.add(mainCategory);
-        categoriesMap.putIfAbsent(mainCategory, () => []).add(subCategory);
+        if ((data["subcategories"] as Map<String, dynamic>)
+            .containsKey(subCategory)) {
+          activeMainCategories.add(mainCategory);
+          categoriesMap.putIfAbsent(mainCategory, () => []).add(subCategory);
+        }
       }
     }
-  }
-print(2);
-  double totalOriginalPercentage = activeMainCategories.fold(0,(sum, category) =>sum + categoryWeights[category]?["percentage"]);
+    print(2);
+    double totalOriginalPercentage = activeMainCategories.fold(
+        0, (sum, category) => sum + categoryWeights[category]?["percentage"]);
 
-print(3);
-  double percentageMultiplier = 100 / totalOriginalPercentage;
-  List<Map<String, dynamic>> result = [];
-  print(4);
-  for (String mainCategory in activeMainCategories) {
-    var mainCategoryData = categoryWeights[mainCategory] as Map<String, dynamic>;
-    List<String> subcategories = categoriesMap[mainCategory] ?? [];
+    print(3);
+    double percentageMultiplier = 100 / totalOriginalPercentage;
+    List<Map<String, dynamic>> result = [];
+    print(4);
+    for (String mainCategory in activeMainCategories) {
+      var mainCategoryData =
+          categoryWeights[mainCategory] as Map<String, dynamic>;
+      List<String> subcategories = categoriesMap[mainCategory] ?? [];
 
-    double adjustedMainPercentage =(mainCategoryData["percentage"]) * percentageMultiplier;
-    double mainCategoryBudget = (amount * adjustedMainPercentage) / 100;
-   print(5);
-    double totalSubWeight = subcategories.fold(
-        0,
-        (sum, sub) =>
-            sum + (mainCategoryData["subcategories"] as Map<String, dynamic>)[sub]);
+      double adjustedMainPercentage =
+          (mainCategoryData["percentage"]) * percentageMultiplier;
+      double mainCategoryBudget = (amount * adjustedMainPercentage) / 100;
+      print(5);
+      double totalSubWeight = subcategories.fold(
+          0,
+          (sum, sub) =>
+              sum +
+              (mainCategoryData["subcategories"] as Map<String, dynamic>)[sub]);
       print(6);
-    for (String sub in subcategories) {
+      for (String sub in subcategories) {
+        double originalWeight = double.parse(
+            (mainCategoryData["subcategories"] as Map<String, dynamic>)[sub]
+                .toString());
+        double adjustedWeight = (originalWeight / totalSubWeight) * 100.0;
+        double subBudget = (mainCategoryBudget * adjustedWeight) / 100.0;
 
-      double originalWeight = double.parse((mainCategoryData["subcategories"] as Map<String, dynamic>)[sub].toString());
-      double adjustedWeight = (originalWeight / totalSubWeight) * 100.0;
-      double subBudget = (mainCategoryBudget * adjustedWeight) / 100.0;
-      
-      result.add({
-        "category": sub,
-        "amount": (subBudget * 100).round() / 100.0,
-        "percentage": (adjustedWeight * 100).round() / 100.0
-      });
+        result.add({
+          "category": sub,
+          "amount": (subBudget * 100).round() / 100.0,
+          "percentage": (adjustedWeight * 100).round() / 100.0
+        });
+      }
     }
+
+    return result;
   }
-
-  return result;
-}
-
-
 
   Future<Map<String, Map<String, dynamic>>> getBudgetForCategories(
-    double amount, RxList expenseCategories) async {
-  // Identify active main categories and map them to subcategories
-  Set<String> activeMainCategories = {};
-  Map<String, List<String>> categoriesMap = {};
+      double amount, RxList expenseCategories) async {
+    // Identify active main categories and map them to subcategories
+    Set<String> activeMainCategories = {};
+    Map<String, List<String>> categoriesMap = {};
 
-  for (String subCategory in expenseCategories) {
-    for (var entry in categoryWeights.entries) {
-      String mainCategory = entry.key;
-      var data = entry.value as Map<String, dynamic>;
+    for (String subCategory in expenseCategories) {
+      for (var entry in categoryWeights.entries) {
+        String mainCategory = entry.key;
+        var data = entry.value as Map<String, dynamic>;
 
-      if ((data["subcategories"] as Map<String, dynamic>)
-          .containsKey(subCategory)) {
-        activeMainCategories.add(mainCategory);
-        categoriesMap.putIfAbsent(mainCategory, () => []).add(subCategory);
+        if ((data["subcategories"] as Map<String, dynamic>)
+            .containsKey(subCategory)) {
+          activeMainCategories.add(mainCategory);
+          categoriesMap.putIfAbsent(mainCategory, () => []).add(subCategory);
+        }
       }
     }
-  }
 
-  // Calculate total percentage of active main categories
-  double totalOriginalPercentage = activeMainCategories.fold(
-      0,
-      (sum, category) =>
-          sum + (categoryWeights[category]?["percentage"] as double));
-
-  double percentageMultiplier = 100 / totalOriginalPercentage;
-  Map<String, Map<String, dynamic>> result = {};
-
-  // Process each active main category
-  for (String mainCategory in activeMainCategories) {
-    var mainCategoryData = categoryWeights[mainCategory] as Map<String, dynamic>;
-    List<String> subcategories = categoriesMap[mainCategory] ?? [];
-
-    // Adjust main category percentage
-    double adjustedMainPercentage =
-        (mainCategoryData["percentage"] as double) * percentageMultiplier;
-    double mainCategoryBudget = (amount * adjustedMainPercentage) / 100;
-
-    // Calculate total weight of active subcategories
-    double totalSubWeight = subcategories.fold(
+    // Calculate total percentage of active main categories
+    double totalOriginalPercentage = activeMainCategories.fold(
         0,
-        (sum, sub) =>
-            sum + (mainCategoryData["subcategories"] as Map<String, dynamic>)[sub]);
+        (sum, category) =>
+            sum + (categoryWeights[category]?["percentage"] as double));
 
-    // Allocate budget for subcategories
-    result[mainCategory] = {};
-    for (String sub in subcategories) {
-      double originalWeight =
-          (mainCategoryData["subcategories"] as Map<String, dynamic>)[sub];
-      double adjustedWeight = (originalWeight / totalSubWeight) * 100;
-      double subBudget = (mainCategoryBudget * adjustedWeight) / 100;
+    double percentageMultiplier = 100 / totalOriginalPercentage;
+    Map<String, Map<String, dynamic>> result = {};
 
-      result[mainCategory]![sub] = {
-        "amount": (subBudget * 100).round() / 100, // Rounds to 2 decimal places
-        "percentage": (adjustedWeight * 100).round() / 100
-      };
+    // Process each active main category
+    for (String mainCategory in activeMainCategories) {
+      var mainCategoryData =
+          categoryWeights[mainCategory] as Map<String, dynamic>;
+      List<String> subcategories = categoriesMap[mainCategory] ?? [];
+
+      // Adjust main category percentage
+      double adjustedMainPercentage =
+          (mainCategoryData["percentage"] as double) * percentageMultiplier;
+      double mainCategoryBudget = (amount * adjustedMainPercentage) / 100;
+
+      // Calculate total weight of active subcategories
+      double totalSubWeight = subcategories.fold(
+          0,
+          (sum, sub) =>
+              sum +
+              (mainCategoryData["subcategories"] as Map<String, dynamic>)[sub]);
+
+      // Allocate budget for subcategories
+      result[mainCategory] = {};
+      for (String sub in subcategories) {
+        double originalWeight =
+            (mainCategoryData["subcategories"] as Map<String, dynamic>)[sub];
+        double adjustedWeight = (originalWeight / totalSubWeight) * 100;
+        double subBudget = (mainCategoryBudget * adjustedWeight) / 100;
+
+        result[mainCategory]![sub] = {
+          "amount":
+              (subBudget * 100).round() / 100, // Rounds to 2 decimal places
+          "percentage": (adjustedWeight * 100).round() / 100
+        };
+      }
     }
+
+    return result;
   }
 
-  return result;
-}
-
-
-
-  void push(data){
-       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BudgetOverView(amount:widget.amount, name: widget.name, period: widget.period,categoryList: data,),
-                          ),
-       ); 
+  void push(data) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BudgetOverView(
+          amount: widget.amount,
+          name: widget.name,
+          period: widget.period,
+          categoryList: data,
+        ),
+      ),
+    );
   }
-
-
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -86,7 +87,10 @@ TextStyle getStyle(context) {
   return FontManager().getTextStyle(context,
       fontSize: 16, lWeight: FontWeight.w400, color: Colorcodes.black);
 }
-
+TextStyle getStyle1(context) {
+  return FontManager().getTextStyle(context,
+      fontSize: 12, lWeight: FontWeight.w300, color: AppColors.bg3);
+}
 class TextFeildWidgetPassword extends StatelessWidget {
   TextEditingController textEditingController;
   String lableText;
@@ -337,10 +341,12 @@ class TextFeildCalender extends StatelessWidget {
 class TextFeildWidgetCustom extends StatelessWidget {
   TextEditingController textEditingController;
   String lableText;
+  //String lableStyle;
   String heading;
   String icon;
   TextInputType keyBoard;
   bool flag;
+
   TextFeildWidgetCustom(
       {Key? key,
       required this.textEditingController,
@@ -348,7 +354,8 @@ class TextFeildWidgetCustom extends StatelessWidget {
       required this.keyBoard,
       required this.lableText,
       required this.icon,
-      this.flag = true
+      this.flag = true,
+      //this.labelStyle
      })
       : super(key: key);
 
@@ -388,6 +395,10 @@ class TextFeildWidgetCustom extends StatelessWidget {
                   filled: true,
                   hintText: lableText,
                   hintStyle: getStyle(context),
+                  labelStyle: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: AppColors.bg3),
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide(color: Colorcodes.white)),
