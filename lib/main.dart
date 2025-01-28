@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/controller.dart/userControlle
 import 'package:flutter_application_code_stakeplot/customNoti.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debt.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/creditCard.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/finvuAccount.dart';
@@ -21,11 +22,10 @@ import 'package:get/get.dart';
 import 'Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 
-
 FinvuManager finvuManager = FinvuManager();
 
 void main() {
-   Get.put(UserController()); 
+  Get.put(UserController());
   runApp(const MyApp());
 }
 
@@ -37,11 +37,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-    @override
+  @override
   void initState() {
     super.initState();
     initPlatformState();
-     initFinvuManager();
+    initFinvuManager();
   }
 
   Future<void> initPlatformState() async {
@@ -52,28 +52,28 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        scaffoldBackgroundColor: AppColors.backgroundColor,
-        useMaterial3: true,
-      ),
-      debugShowCheckedModeBanner: false,
-       initialRoute: '/', 
-        routes:
-    {  
-      '/': (context) =>  Signin(),   
-      '/signup': (context) => SignUp(),  
-      '/home': (context) => HomePage(),  
-      '/Notifications': (context) => Notifications(),  
-      '/TribeSearch': (context) => TribeSearch(),  
-      '/Friends': (context) => Friends(),    
-      '/TribeChats': (context) => TribeChats(), 
-      '/FinvuAccount': (context) =>  FinvuAccount(),   
-      '/discover': (context) =>  DiscoverAccount(),     
-      '/ShareAccountLogin': (context) =>  ShareAccountLogin(),     
-      '/Budget': (context) =>  Budget(),     
-      '/PlotFinance': (context) =>  PlotFinance(),     
-      '/Debt': (context) =>  Debt(),     
-    });
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          scaffoldBackgroundColor: AppColors.backgroundColor,
+          useMaterial3: true,
+        ),
+        debugShowCheckedModeBanner: false,
+        initialRoute: '/',
+        routes: {
+          '/': (context) => Signin(),
+          '/signup': (context) => SignUp(),
+          '/home': (context) => HomePage(),
+          '/Notifications': (context) => Notifications(),
+          '/TribeSearch': (context) => TribeSearch(),
+          '/Friends': (context) => Friends(),
+          '/TribeChats': (context) => TribeChats(),
+          '/FinvuAccount': (context) => FinvuAccount(),
+          '/discover': (context) => DiscoverAccount(),
+          '/ShareAccountLogin': (context) => ShareAccountLogin(),
+          '/Budget': (context) => Budget(),
+          '/PlotFinance': (context) => PlotFinance(),
+          '/Debt': (context) => Debt(),
+          '/CreditCard':(context) => CreditCard()
+        });
   }
 }
