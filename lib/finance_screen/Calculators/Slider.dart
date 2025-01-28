@@ -19,7 +19,7 @@ class _SliderPageState extends State<SliderPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-         margin: EdgeInsets.symmetric(horizontal: 4,vertical: 20),
+         margin: EdgeInsets.only(left: 4,right: 4,top: 0,bottom: 15),
          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 20),
          width: MediaQuery.of(context).size.width,
          decoration: BoxDecoration(

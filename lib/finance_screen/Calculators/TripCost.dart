@@ -48,21 +48,8 @@ class _TripCostState extends State<TripCost> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                    color: AppColors.mt,
-                    borderRadius: BorderRadius.circular(16)),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                        SliderPage(slidersList: slidersList),
-                        Container(
-                width: MediaQuery.of(context).size.width/1.1,
-                height:  MediaQuery.of(context).size.height/4,
-                child: PieChartGraph()
-              ),
+              SliderPage(slidersList: slidersList),
+              PieChartGraph(),
               CustomExpansionTile(
                  howToUseContent: Expansioncalculator.creditcardTitle1,
                 howItWorksContent: Expansioncalculator.creditcardTitle2,
@@ -71,8 +58,6 @@ class _TripCostState extends State<TripCost> {
             ],
           ),
       ))
-  ])
-  )
-  ));
+     );
   }
 }
