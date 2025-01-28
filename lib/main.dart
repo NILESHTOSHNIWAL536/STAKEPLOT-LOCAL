@@ -15,6 +15,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Em
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Rent_Buy.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Savings.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/TripCost.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/credit_card.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debt.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/creditCard.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';

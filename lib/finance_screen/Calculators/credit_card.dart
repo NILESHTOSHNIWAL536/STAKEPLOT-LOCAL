@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/creditCard.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
 
 class CreditCard extends StatefulWidget {
   const CreditCard({ Key? key }) : super(key: key);

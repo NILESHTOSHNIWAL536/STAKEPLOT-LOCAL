@@ -286,3 +286,14 @@ Widget budgetAndDebtCalulator(){
 
 
 
+  getJsonBodyObj(String name,double value,double min,double max,Function(double) onChanged ,TextEditingController controller){
+       return {
+          'controller':controller,
+          'name':name,
+          'value':value,
+          'min':min,
+          'max':max,
+          'onChanged':onChanged,
+       };
+   }
+
