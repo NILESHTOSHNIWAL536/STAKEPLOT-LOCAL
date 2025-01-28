@@ -48,11 +48,7 @@ class _CreditCardState extends State<CreditCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
                SliderPage(slidersList: slidersList),
-              Container(
-                width: MediaQuery.of(context).size.width/1.1,
-                height:  MediaQuery.of(context).size.height/4,
-                child: PieChartGraph()
-              ),
+              PieChartGraph(),
               CustomExpansionTile(
                  howToUseContent: Expansioncalculator.creditcardTitle1,
                 howItWorksContent: Expansioncalculator.creditcardTitle2,

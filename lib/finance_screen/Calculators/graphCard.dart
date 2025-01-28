@@ -19,24 +19,31 @@ class _PieChartGraphState extends State<PieChartGraph> {
   Widget build(BuildContext context) {
     return buildPieChart();
   }
-}
+
 Widget buildPieChart() {
-    return PieChart(
-      PieChartData(
-        sections: [
-          PieChartSectionData(
-            value: cardBalance,
-            title: 'Principal\n₹${cardBalance.toStringAsFixed(0)}',
-            color: AppColors.primaryColor,
-            radius: 50,
-          ),
-          PieChartSectionData(
-            value: totalInterestPaid,
-            title: 'Interest\n₹${totalInterestPaid.toStringAsFixed(0)}',
-            color: AppColors.uncoloredPie,
-            radius: 50,
-          ),
-        ],
+    return Container(
+        width: MediaQuery.of(context).size.width/1.1,
+                height:  MediaQuery.of(context).size.height/4,
+      child: PieChart(
+        PieChartData(
+          sections: [
+            PieChartSectionData(
+              value: cardBalance,
+              title: 'Principal\n₹${cardBalance.toStringAsFixed(0)}',
+              color: AppColors.primaryColor,
+              radius: 50,
+            ),
+            PieChartSectionData(
+              value: totalInterestPaid,
+              title: 'Interest\n₹${totalInterestPaid.toStringAsFixed(0)}',
+              color: AppColors.uncoloredPie,
+              radius: 50,
+            ),
+          ],
+        ),
       ),
     );
   }
+
+  
+}
