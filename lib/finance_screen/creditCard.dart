@@ -11,6 +11,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 //import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/pie_chart.dart';
 
 class CreditCard extends StatefulWidget {
   @override
@@ -187,26 +188,26 @@ class _CreditCardState extends State<CreditCard> {
 
 
 
-  Widget buildPieChart() {
-    return PieChart(
-      PieChartData(
-        sections: [
-          PieChartSectionData(
-            value: cardBalance,
-            title: 'Principal\n₹${cardBalance.toStringAsFixed(0)}',
-            color: AppColors.primaryColor,
-            radius: 50,
-          ),
-          PieChartSectionData(
-            value: totalInterestPaid,
-            title: 'Interest\n₹${totalInterestPaid.toStringAsFixed(0)}',
-            color: AppColors.uncoloredPie,
-            radius: 50,
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget buildPieChart() {
+  //   return PieChart(
+  //     PieChartData(
+  //       sections: [
+  //         PieChartSectionData(
+  //           value: cardBalance,
+  //           title: 'Principal\n₹${cardBalance.toStringAsFixed(0)}',
+  //           color: AppColors.primaryColor,
+  //           radius: 50,
+  //         ),
+  //         PieChartSectionData(
+  //           value: totalInterestPaid,
+  //           title: 'Interest\n₹${totalInterestPaid.toStringAsFixed(0)}',
+  //           color: AppColors.uncoloredPie,
+  //           radius: 50,
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }
 
 
