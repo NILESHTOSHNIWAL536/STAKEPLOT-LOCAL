@@ -60,12 +60,9 @@ class _PieChartGraphState extends State<PieChartGraph> {
             height: Colorcodes.paddingSize,
           ),
           getGraph(),
-          SizedBox(
-            height: Colorcodes.paddingSize,
-          ),
-          SizedBox(
-            height: Colorcodes.paddingSize / 2,
-          ),
+          SizedBox(height: Colorcodes.paddingSize*2,),
+          
+
         ],
       ),
     );
@@ -98,21 +95,26 @@ class _PieChartGraphState extends State<PieChartGraph> {
     );
   }
 
-  Widget getGraph() {
-    return Container(
-      margin: EdgeInsets.only(top: 10),
-      width: MediaQuery.of(context).size.width / 1.1,
-      height: MediaQuery.of(context).size.height / 4,
-      child: PieChart(
-        PieChartData(
-            borderData: FlBorderData(
-              show: false,
-            ),
-            sections: widget.graphData
-                .asMap()
-                .entries
-                .map((entry) => getPieChartSectionData(entry.value, entry.key))
-                .toList()),
+
+Widget getGraph(){
+   return Container(
+         
+           margin: EdgeInsets.only(top: 10),
+            width: MediaQuery.of(context).size.width/1.1,
+                height:  MediaQuery.of(context).size.height/4,
+            child: PieChart(
+              
+                  PieChartData(
+                      borderData: FlBorderData(
+                                show: false,
+                         ),
+                 sections: widget.graphData
+                  .asMap()
+                  .entries
+                  .map((entry) => getPieChartSectionData(entry.value, entry.key))
+                  .toList()
+                  ),
+            
       ),
     );
   }
@@ -139,4 +141,8 @@ class _PieChartGraphState extends State<PieChartGraph> {
       badgePositionPercentageOffset: 1.7,
     );
   }
+
+
+
 }
+

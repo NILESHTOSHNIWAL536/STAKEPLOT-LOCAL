@@ -89,6 +89,15 @@ class _RentBuyState extends State<RentBuy> {
           "The results are displayed in a doughnut chart, visually representing the costs of both options."),
 ];
 
+   // Callback function to update the slider values
+  void updateSliderValue(int index, double newValue)
+  {
+    setState(() {
+      slidersList[index]['value'] = newValue;
+      slidersList[index]['controller'].text = newValue.toStringAsFixed(0);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -100,7 +109,7 @@ class _RentBuyState extends State<RentBuy> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-             SliderPage(slidersList: slidersList),
+             SliderPage(slidersList: slidersList,onSliderValueChanged: updateSliderValue),
               graph(),
               CustomExpansionTile(
                  howToUseContent: howToUseContent,
@@ -126,7 +135,7 @@ class _RentBuyState extends State<RentBuy> {
                       'title':'Interest\n₹39946' ,
                       'value':9946.0
                     },
-                    
+
                  ],  
                  graphDisc: const[
                     {

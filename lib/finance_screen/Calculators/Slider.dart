@@ -5,7 +5,8 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budget.dart';
 
 class SliderPage extends StatefulWidget {
   List slidersList;
-  SliderPage({Key? key, required this.slidersList}) : super(key: key);
+  final Function(int, double) onSliderValueChanged;
+  SliderPage({Key? key, required this.slidersList,required this.onSliderValueChanged}) : super(key: key);
 
   @override
   _SliderPageState createState() => _SliderPageState();
@@ -26,7 +27,7 @@ class _SliderPageState extends State<SliderPage> {
         children: [
           textStyle(
               context: context,
-              text: "Start Calulations",
+              text: "Start Calculation",
               fontWeight: FontWeight.bold,
               fontsize: 22),
           Padding(
@@ -43,11 +44,15 @@ class _SliderPageState extends State<SliderPage> {
 
   Widget getListOfSliders(List slidersList) {
     return Column(
-      children: slidersList.map((e) => sliderContainer(e)).toList(),
+      children: slidersList
+          .asMap()
+          .entries
+          .map((entry) => sliderContainer(entry.value, entry.key))
+          .toList(),
     );
   }
 
-  Widget sliderContainer(data) {
+  Widget sliderContainer(data, int index) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 5),
       child: Column(
@@ -57,7 +62,7 @@ class _SliderPageState extends State<SliderPage> {
             height: Colorcodes.paddingSize / 3,
           ),
           buildSlider('label', data['value'], data['min'], data['max'],
-              data['onChanged'])
+              data['onChanged'], index)
         ],
       ),
     );
@@ -76,7 +81,7 @@ class _SliderPageState extends State<SliderPage> {
                 fontWeight: FontWeight.w500,
                 fontsize: 17)),
         Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
                 color: Colorcodes.greyLight,
                 borderRadius: BorderRadius.circular(8)),
@@ -84,22 +89,50 @@ class _SliderPageState extends State<SliderPage> {
                 context: context,
                 text: "₹" + data['controller'].text,
                 fontWeight: FontWeight.w500,
-                fontsize: 20)),
+                fontsize: 14)),
       ],
     );
   }
-}
 
-Widget buildSlider(String label, double value, double min, double max,
-    Function(double) onChanged) {
-  return Slider(
-    value: value,
-    min: min,
-    max: max,
-    divisions: 100,
-    label: value.toStringAsFixed(0),
-    onChanged: onChanged,
-    activeColor: AppColors.primaryColor,
-    inactiveColor: AppColors.uncoloredPie,
+  Widget buildSlider(String label, double value, double min, double max,
+    Function(double) onChanged, int index) {
+  return SliderTheme(
+    data: SliderTheme.of(context).copyWith(
+      // Customize the thumb (overlay) color
+      thumbColor: AppColors.primaryColor, // Change to your desired color
+      overlayColor: AppColors.backgroundColor, // Change overlay color
+      activeTrackColor: AppColors.primaryColor, // Change active track color
+      inactiveTrackColor: AppColors.uncoloredPie, // Change inactive track color
+      // Customize the size of the thumb
+      thumbShape: RoundSliderThumbShape(
+        enabledThumbRadius: 12, // Increase or decrease thumb size
+      ),
+      overlayShape: RoundSliderOverlayShape(
+        overlayRadius: 15, // Increase or decrease overlay size
+      ),
+    ),
+    child: Slider(
+      value: value,
+      min: min,
+      max: max,
+      divisions: 100,
+      label: value.toStringAsFixed(0),
+      onChanged: (newValue) {
+        setState(() {
+          widget.slidersList[index]['value'] = newValue;
+          widget.slidersList[index]['controller'].text =
+              newValue.toStringAsFixed(0);
+        });
+          // Call parent callback to update page
+          widget.onSliderValueChanged(index, newValue);
+      },
+    ),
   );
 }
+}
+
+
+
+
+
+

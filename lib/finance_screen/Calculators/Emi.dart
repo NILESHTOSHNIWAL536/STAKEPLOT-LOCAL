@@ -44,8 +44,19 @@ final List<ListItemModel> howToUseContent = [
   // Example data for "How it works?"
   final List<ListItemModel> howItWorksContent = [
     ListItemModel(title: "Calculations:", description: "Monthly payment calculated using the loan amount, interest rate, and tenure.The total interest paid over the loan tenure, calculated as the difference between the total amount paid and the principal."),
-    
   ];
+
+
+    // Callback function to update the slider values
+  void updateSliderValue(int index, double newValue)
+  {
+    setState(() {
+      slidersList[index]['value'] = newValue;
+      slidersList[index]['controller'].text = newValue.toStringAsFixed(0);
+    });
+    
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +72,7 @@ final List<ListItemModel> howToUseContent = [
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-             SliderPage(slidersList: slidersList),
+             SliderPage(slidersList: slidersList,onSliderValueChanged: updateSliderValue),
                graph(),
               CustomExpansionTile(
                  howToUseContent: howToUseContent,
@@ -72,11 +83,13 @@ final List<ListItemModel> howToUseContent = [
           ),
       ))
     );
-
   }
 
 
+
+
    Widget graph(){
+    print(slidersList[0]['value']);
      return  PieChartGraph(
                 title: "EMI Details",  
                  graphData: [

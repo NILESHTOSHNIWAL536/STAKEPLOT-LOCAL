@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -16,6 +15,9 @@ class CreditCard extends StatefulWidget {
 
 class _CreditCardState extends State<CreditCard> {
   late List slidersList;
+  double cardBalance = 0;
+  double totalInterestPaid = 0;
+  double monthlyPayment = 0;
 
   @override
   void initState() {
@@ -25,12 +27,12 @@ class _CreditCardState extends State<CreditCard> {
 
   void getslidersList() {
     slidersList = [
-      getJsonBodyObj("Card balance", 4, 3, 12, (value) {},
-          TextEditingController(text: '2')),
-      getJsonBodyObj("Interest rate(%)", 4, 1, 12, (value) {},
-          TextEditingController(text: '332')),
-      getJsonBodyObj("Monthly payment", 4, 1, 12, (value) {},
-          TextEditingController(text: '2332')),
+      getJsonBodyObj("Card balance", 2000, 1000, 10000, (value) {},
+          TextEditingController(text: '2000')),
+      getJsonBodyObj("Interest rate(%)", 4, 1, 30, (value) {},
+          TextEditingController(text: '7')),
+      getJsonBodyObj("Monthly payment", 600, 500, 5000, (value) {},
+          TextEditingController(text: '600')),
     ];
   }
 
@@ -93,6 +95,61 @@ class _CreditCardState extends State<CreditCard> {
         description:
             "Shows the total interest you will pay over the repayment period."),
   ];
+
+  // Callback function to update the slider values
+  void updateSliderValue(int index, double newValue) {
+    setState(() {
+      slidersList[index]['value'] = newValue;
+      slidersList[index]['controller'].text = newValue.toStringAsFixed(0);
+    });
+
+    cardBalance = slidersList[0]['value'];
+    double interestRate = slidersList[1]['value'];
+    monthlyPayment = slidersList[2]['value'];
+
+    // Calculate number of months
+    int months =
+        calculateMonthsToPayOff(cardBalance, interestRate, monthlyPayment);
+
+    // Calculate total interest paid
+    totalInterestPaid =
+        calculateTotalInterest(cardBalance, interestRate, months);
+    setState(() {});
+  }
+
+  double calculateInterest(double interestRate) {
+    // Use a simple calculation to demonstrate
+    // In a real app, this would be a more complex formula
+    return cardBalance * (interestRate / 100);
+  }
+
+  int calculateMonthsToPayOff(
+      double balance, double annualRate, double monthlyPayment) {
+    double monthlyRate = annualRate / 12 / 100;
+    int months = 0;
+
+    while (balance > 0) {
+      balance = balance + balance * monthlyRate - monthlyPayment;
+      if (balance < 0) break;
+      months++;
+    }
+
+    return months;
+  }
+
+  double calculateTotalInterest(double balance, double annualRate, int months) {
+    double totalInterest = 0;
+    double monthlyRate = annualRate / 12 / 100;
+
+    for (int i = 0; i < months; i++) {
+      double interest = balance * monthlyRate;
+      totalInterest += interest;
+      balance -= (monthlyPayment - interest);
+    }
+
+    return totalInterest;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,7 +164,9 @@ class _CreditCardState extends State<CreditCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SliderPage(slidersList: slidersList),
+              SliderPage(
+                  slidersList: slidersList,
+                  onSliderValueChanged: updateSliderValue),
               graph(),
               CustomExpansionTile(
                 howToUseContent: howToUseContent,
@@ -120,32 +179,20 @@ class _CreditCardState extends State<CreditCard> {
     );
   }
 
-
-
- Widget graph(){
-     return  PieChartGraph(
-                 title: "Fetch",  
-                 graphData: [
-                    {
-                      'title':'Principal\n₹21500' ,
-                      'value':21500.0
-                    },
-                    {
-                      'title':'Interest\n₹39946' ,
-                      'value':39946.0
-                    },
-                 ],  
-                 graphDisc: const[
-                    {
-                      'title':'Monthly pay off:' ,
-                      'amount':"₹"+"22"
-                    },
-                    {
-                      'title':'Total interest paid:' ,
-                      'amount':"₹"+"3,946"
-                    }
-                 ],  
-          );
- }
-
+  Widget graph() {
+    return PieChartGraph(
+      title: "Fetch",
+      graphData: [
+        {'title': 'Principal\n₹21500', 'value': cardBalance},
+        {'title': 'Interest\n₹39946', 'value': totalInterestPaid},
+      ],
+      graphDisc: [
+        {
+          'title': 'Monthly pay off:',
+          'amount': "₹ ${(monthlyPayment).toString()}",
+        },
+        {'title': 'Total interest paid:', 'amount': "₹ ${(totalInterestPaid).toString()}"}
+      ],
+    );
+  }
 }
