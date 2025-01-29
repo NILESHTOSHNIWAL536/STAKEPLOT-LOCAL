@@ -130,3 +130,9 @@ class _SliderPageState extends State<SliderPage> {
   );
 }
 }
+
+
+
+
+
+

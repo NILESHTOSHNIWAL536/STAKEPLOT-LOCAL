@@ -20,6 +20,11 @@ class _EmiState extends State<Emi> {
 
   late List slidersList;
 
+  double loanAmount = 46000.0;
+  double annualInterestPaid = 9946.0;
+  double loanTenure = 0;
+
+
   @override
   void initState()
   {
@@ -54,7 +59,7 @@ final List<ListItemModel> howToUseContent = [
       slidersList[index]['value'] = newValue;
       slidersList[index]['controller'].text = newValue.toStringAsFixed(0);
     });
-    
+
   }
 
 
@@ -89,30 +94,31 @@ final List<ListItemModel> howToUseContent = [
 
 
    Widget graph(){
-    print(slidersList[0]['value']);
+    
      return  PieChartGraph(
                 title: "EMI Details",  
                  graphData: [
                      {
-                      'title':'Principal\n₹46000' ,
-                      'value':46000.0
+                      'title':"Principal\n₹${(loanAmount.toString())}",
+                      'value': loanAmount 
                     },
                     {
-                      'title':'Interest\n₹39946' ,
-                      'value':9946.0
+                      'title':'Interest\n₹${(annualInterestPaid.toString())}' ,
+                      'value':annualInterestPaid
                     },
 
                  ],  
-                 graphDisc: const[
-                    {
-                      'title':'EMI:' ,
-                      'amount':"₹"+"7,707"
+                 graphDisc: [
+                   {
+                      'title': 'EMI:',
+                      'amount': "₹ ${(loanAmount).toString()}",
+      
                     },
                     {
-                      'title':'Total interest paid:' ,
-                      'amount':"₹"+"2,05,271"
+                      'title': 'Total interest paid:',
+                      'amount': "₹ ${annualInterestPaid.toString()}"
                     }
-                 ]
+                ]
           );
  }
 

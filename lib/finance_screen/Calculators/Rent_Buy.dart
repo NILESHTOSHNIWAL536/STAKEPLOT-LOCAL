@@ -21,6 +21,11 @@ class _RentBuyState extends State<RentBuy> {
 
   late List slidersList;
 
+  double rentingCost = 46000.0;
+  double buying = 9946.0;
+  double interest = 0;
+  double principal = 0;
+
   @override
   void initState()
   {
@@ -128,23 +133,24 @@ class _RentBuyState extends State<RentBuy> {
                  title: "Rent vs Buy Details:",  
                  graphData: [
                   {
-                      'title':'Principal\n₹46000' ,
-                      'value':46000.0
+                      'title':'Principal\n₹${(principal).toString()}' ,
+                      'value':principal
                     },
                     {
-                      'title':'Interest\n₹39946' ,
-                      'value':9946.0
+                      'title':'Interest\n₹${(interest).toString()}' ,
+                      'value':interest
                     },
 
                  ],  
-                 graphDisc: const[
+                 graphDisc: 
+                [
                     {
-                      'title':'Total cost of renting:' ,
-                      'amount':"₹"+"79,35,829"
+                      'title':'Total cost of renting:',
+                      'amount':"₹ ${(rentingCost).toString()}",
                     },
                     {
                       'title':'Total cost of buying:' ,
-                      'amount':"₹"+"42,93,433"
+                      'amount':"₹ ${(buying).toString()}"
                     }
                  ]
           );

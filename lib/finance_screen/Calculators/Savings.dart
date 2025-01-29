@@ -18,6 +18,13 @@ class Savings extends StatefulWidget {
 class _SavingsState extends State<Savings> {
   late List slidersList;
 
+  
+  double endBalance = 46000.0;
+  double annualInterestEarned = 9094.0;
+  double progress = 221;
+  double remainingAmount= 4500;
+  double currentSavings= 500;
+
   @override
   void initState() {
     getslidersList();
@@ -112,12 +119,15 @@ class _SavingsState extends State<Savings> {
 
   Widget graph() {
     return PieChartGraph(title: "Savings goal progress:", graphData: [
-      {'title': 'Remaining amount\n₹4,500', 'value': 4500.0},
-      {'title': 'Current savings\n₹500', 'value': 500.0},
-    ], graphDisc: const [
-      {'title': 'End balance:', 'amount': "₹" + "5,390.94"},
-      {'title': 'Interest earned:', 'amount': "₹" + "90.94"},
-      {'title': 'Progress:', 'amount': "₹" + "10.00%"},
+      {'title': 'Remaining amount\n₹${remainingAmount.toString()}', 'value': remainingAmount},
+      {'title': 'Current savings\n₹${currentSavings.toString()}', 'value': currentSavings},
+    ], graphDisc:  [
+      {
+        'title': 'End balance:', 
+      'amount': "₹ ${endBalance.toString()}"
+     },
+      {'title': 'Interest earned:', 'amount': "₹ ${annualInterestEarned.toString()}"},
+      {'title': 'Progress:', 'amount': "₹ ${progress.toString()}%"},
     ]);
   }
 }
