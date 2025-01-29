@@ -62,7 +62,7 @@ final List<ListItemModel> howToUseContent = [
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
              SliderPage(slidersList: slidersList),
-              PieChartGraph(),
+               graph(),
               CustomExpansionTile(
                  howToUseContent: howToUseContent,
                 howItWorksContent: howItWorksContent,
@@ -74,4 +74,33 @@ final List<ListItemModel> howToUseContent = [
     );
 
   }
+
+
+   Widget graph(){
+     return  PieChartGraph(
+                title: "EMI Details",  
+                 graphData: [
+                     {
+                      'title':'Principal\n₹46000' ,
+                      'value':46000.0
+                    },
+                    {
+                      'title':'Interest\n₹39946' ,
+                      'value':9946.0
+                    },
+
+                 ],  
+                 graphDisc: const[
+                    {
+                      'title':'EMI:' ,
+                      'amount':"₹"+"7,707"
+                    },
+                    {
+                      'title':'Total interest paid:' ,
+                      'amount':"₹"+"2,05,271"
+                    }
+                 ]
+          );
+ }
+
 }

@@ -83,7 +83,7 @@ class _AutoLoanState extends State<AutoLoan> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
              SliderPage(slidersList: slidersList),
-             PieChartGraph(),
+             graph(),
               CustomExpansionTile(
                  howToUseContent: howToUseContent,
                 howItWorksContent: howItWorksContent,
@@ -95,6 +95,46 @@ class _AutoLoanState extends State<AutoLoan> {
   ),
     );
   }
+
+   Widget graph(){
+     return  PieChartGraph(
+                 title: "Auto loan Details:",  
+                 graphData: [
+                    {
+                      'title':'Total loan cost\n₹28,51,372.59' ,
+                      'value':4300.0
+                    },
+                    {
+                      'title':'Depreciation Value\n₹18,00,000' ,
+                      'value':3946.0
+                    },
+                    {
+                      'title':'Annual maintenance cost\n₹10,500' ,
+                      'value':1246.0
+                    },
+
+                 ],  
+                 graphDisc:const [
+                     {
+                      'title':'Monthly loan payment:' ,
+                      'amount':"₹"+"47,522.88"
+                    },
+                    {
+                      'title':'Total loan cost:' ,
+                      'amount':"₹"+"28,51,372.59"
+                    },
+                    {
+                      'title':'Annual maintenance cost:' ,
+                      'amount':"₹"+"10,500.00"
+                    },
+                    {
+                      'title':'Depreciation value after 4 years:' ,
+                      'amount':"₹"+"18,00,000.00"
+                    },
+                 ],  
+          );
+ }
+
 }
 
 
