@@ -78,7 +78,7 @@ Widget getGraph(){
          
            margin: EdgeInsets.only(top: 10),
             width: MediaQuery.of(context).size.width/1.1,
-                height:  MediaQuery.of(context).size.height/4.5,
+                height:  MediaQuery.of(context).size.height/4,
             child: PieChart(
               
                   PieChartData(
