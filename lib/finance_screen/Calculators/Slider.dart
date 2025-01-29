@@ -54,7 +54,8 @@ class _SliderPageState extends State<SliderPage> {
 
   Widget sliderContainer(data, int index) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 5),
+      margin: EdgeInsets.symmetric(vertical: 6),
+       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Column(
         children: [
           topContainer(data),
@@ -78,18 +79,18 @@ class _SliderPageState extends State<SliderPage> {
             child: textStyle(
                 context: context,
                 text: data['name'],
-                fontWeight: FontWeight.w500,
-                fontsize: 17)),
+                fontWeight: FontWeight.w400,
+                fontsize: 14)),
         Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
             decoration: BoxDecoration(
                 color: Colorcodes.greyLight,
                 borderRadius: BorderRadius.circular(8)),
             child: textStyle(
                 context: context,
-                text: "₹" + data['controller'].text,
+                text: data['flag'] ?  data['symbol'] +" "+ data['controller'].text : data['controller'].text +" "+ data['symbol'],
                 fontWeight: FontWeight.w500,
-                fontsize: 14)),
+                fontsize: 13)),
       ],
     );
   }
@@ -105,10 +106,10 @@ class _SliderPageState extends State<SliderPage> {
       inactiveTrackColor: AppColors.uncoloredPie, // Change inactive track color
       // Customize the size of the thumb
       thumbShape: RoundSliderThumbShape(
-        enabledThumbRadius: 12, // Increase or decrease thumb size
+        enabledThumbRadius: 11, // Increase or decrease thumb size
       ),
       overlayShape: RoundSliderOverlayShape(
-        overlayRadius: 15, // Increase or decrease overlay size
+        overlayRadius: 13, // Increase or decrease overlay size
       ),
     ),
     child: Slider(

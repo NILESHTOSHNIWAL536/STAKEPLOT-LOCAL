@@ -35,14 +35,14 @@ class _RentBuyState extends State<RentBuy> {
    void getslidersList(){
       slidersList=[
          getJsonBodyObj("Home price",4,3,12,(value){},TextEditingController(text: '2')),
-         getJsonBodyObj("Down payment(%)",4,1,12,(value){},TextEditingController(text: '332')),
-         getJsonBodyObj("Loan interest rate(%)",4,1,12,(value){},TextEditingController(text: '2332')),
-         getJsonBodyObj("Loan tenure(months)",4,1,12,(value){},TextEditingController(text: '2332')),
-         getJsonBodyObj("Property tax rate(%)",4,1,12,(value){},TextEditingController(text: '2332')),
-         getJsonBodyObj("Maintenance Cost (% per year)",4,1,12,(value){},TextEditingController(text: '2332')),
-         getJsonBodyObj("Home Appreciation Rate (% per year)",4,1,12,(value){},TextEditingController(text: '2332')),
+         getJsonBodyObj("Down payment(%)",4,1,12,(value){},TextEditingController(text: '332'),false,"%"),
+         getJsonBodyObj("Loan interest rate(%)",4,1,12,(value){},TextEditingController(text: '2332'),false,"%"),
+         getJsonBodyObj("Loan tenure(months)",4,1,12,(value){},TextEditingController(text: '2332'),false,"Months"),
+         getJsonBodyObj("Property tax rate(%)",4,1,12,(value){},TextEditingController(text: '2332'),false,"%"),
+         getJsonBodyObj("Maintenance Cost (% per year)",4,1,12,(value){},TextEditingController(text: '2332'),false,"%"),
+         getJsonBodyObj("Home Appreciation Rate (% per year)",4,1,12,(value){},TextEditingController(text: '2332'),false,"%"),
          getJsonBodyObj("Monthly Rent",4,1,12,(value){},TextEditingController(text: '2332')),
-         getJsonBodyObj("Rent Increase Rate (% per year)",4,1,12,(value){},TextEditingController(text: '2332')),
+         getJsonBodyObj("Rent Increase Rate (% per year)",4,1,12,(value){},TextEditingController(text: '2332'),false,"%"),
      ];
   }
   final List<ListItemModel> howToUseContent = [

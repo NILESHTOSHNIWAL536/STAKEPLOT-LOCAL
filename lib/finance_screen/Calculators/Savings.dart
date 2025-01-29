@@ -19,11 +19,24 @@ class _SavingsState extends State<Savings> {
   late List slidersList;
 
   
-  double endBalance = 46000.0;
-  double annualInterestEarned = 9094.0;
-  double progress = 221;
-  double remainingAmount= 4500;
-  double currentSavings= 500;
+  // double endBalance = 46000.0;
+  // double annualInterestEarned = 9094.0;
+  // double progress = 221;
+  // double remainingAmount= 4500;
+  // double currentSavings= 500;
+
+
+  double targetAmount = 5000;
+  double currentSavings = 500;
+  double monthlyContribution = 200;
+  int timeframe = 24;
+  double interestRate = 1.5;
+
+  double endBalance = 0;
+  double interestEarned = 0;
+  double goalProgress = 0;
+   double remainingAmount = 0;
+  List<double> savingsData = [];
 
   @override
   void initState() {
@@ -32,16 +45,16 @@ class _SavingsState extends State<Savings> {
 
   void getslidersList() {
     slidersList = [
-      getJsonBodyObj("Target amount", 4, 3, 12, (value) {},
+      getJsonBodyObj("Target amount", 2300, 1000, 100000, (value) {},
           TextEditingController(text: '2')),
-      getJsonBodyObj("Current savings", 4, 1, 12, (value) {},
+      getJsonBodyObj("Current savings", 4, 0, 100000, (value) {},
           TextEditingController(text: '332')),
-      getJsonBodyObj("Monthly contribution", 4, 1, 12, (value) {},
+      getJsonBodyObj("Monthly contribution", 400, 100, 100000, (value) {},
           TextEditingController(text: '2332')),
-      getJsonBodyObj("Timeframe(months)", 4, 1, 12, (value) {},
-          TextEditingController(text: '2332')),
-      getJsonBodyObj("Interest rate (%)", 4, 1, 12, (value) {},
-          TextEditingController(text: '2332')),
+      getJsonBodyObj("Timeframe(months)", 4, 1, 360, (value) {},
+          TextEditingController(text: '2332'),false,"Months"),
+      getJsonBodyObj("Interest rate (%)", 4, 0, 10, (value) {},
+          TextEditingController(text: '2332'),false,"%"),
     ];
   }
 
@@ -87,14 +100,7 @@ class _SavingsState extends State<Savings> {
             "The progress towards your savings goal is displayed as a percentage, indicating how close you are to reaching your target amount."),
   ];
 
-     // Callback function to update the slider values
-  void updateSliderValue(int index, double newValue)
-  {
-    setState(() {
-      slidersList[index]['value'] = newValue;
-      slidersList[index]['controller'].text = newValue.toStringAsFixed(0);
-    });
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -117,17 +123,71 @@ class _SavingsState extends State<Savings> {
             )));
   }
 
-  Widget graph() {
+ Widget graph() {
     return PieChartGraph(title: "Savings goal progress:", graphData: [
-      {'title': 'Remaining amount\n₹${remainingAmount.toString()}', 'value': remainingAmount},
-      {'title': 'Current savings\n₹${currentSavings.toString()}', 'value': currentSavings},
+      {'title': 'Remaining amount\n₹${remainingAmount.toStringAsFixed(2)}', 'value': remainingAmount},
+      {'title': 'Current savings\n₹${currentSavings.toStringAsFixed(2)}', 'value': currentSavings},
     ], graphDisc:  [
       {
         'title': 'End balance:', 
-      'amount': "₹ ${endBalance.toString()}"
-     },
-      {'title': 'Interest earned:', 'amount': "₹ ${annualInterestEarned.toString()}"},
-      {'title': 'Progress:', 'amount': "₹ ${progress.toString()}%"},
+        'amount': "₹ ${endBalance.toStringAsFixed(2)}"
+      },
+      {'title': 'Interest earned:', 'amount': "₹ ${interestEarned.toStringAsFixed(2)}"},
+      {'title': 'Progress:', 'amount': "${goalProgress.toStringAsFixed(2)}%"},
     ]);
   }
+
+
+
+
+
+     // Callback function to update the slider values
+  void updateSliderValue(int index, double newValue)
+  {
+    setState(() {
+      slidersList[index]['value'] = newValue;
+      slidersList[index]['controller'].text = newValue.toStringAsFixed(0);
+      switch (index) {
+        case 0:
+          targetAmount = newValue;
+          break;
+        case 1:
+          currentSavings = newValue;
+          break;
+        case 2:
+          monthlyContribution = newValue;
+          break;
+        case 3:
+          timeframe = newValue.toInt();
+          break;
+        case 4:
+          interestRate = newValue;
+          break;
+      }
+      calculateSavings();
+    });
+  }
+
+   void calculateSavings() {
+    double totalSavings = currentSavings;
+    double monthlyRate = interestRate / 100 / 12;
+    savingsData.clear();
+
+    for (int i = 0; i < timeframe; i++) {
+      totalSavings += monthlyContribution;
+      totalSavings += totalSavings * monthlyRate;
+      savingsData.add(totalSavings);
+    }
+
+    double totalInterest = totalSavings - (currentSavings + monthlyContribution * timeframe);
+    remainingAmount = targetAmount - totalSavings;
+    remainingAmount = remainingAmount < 0 ? 0 : remainingAmount;
+
+    setState(() {
+      endBalance = totalSavings;
+      interestEarned = totalInterest;
+      goalProgress = ((currentSavings / targetAmount) * 100).clamp(0, 100);
+    });
+  }
+
 }

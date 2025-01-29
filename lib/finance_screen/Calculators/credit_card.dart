@@ -204,6 +204,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/expansionTile.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
 
 class CreditCard extends StatefulWidget {
   const CreditCard({Key? key}) : super(key: key);
@@ -240,22 +241,7 @@ class _CreditCardState extends State<CreditCard> {
     ];
   }
 
-  Map<String, dynamic> getJsonBodyObj(
-      String name,
-      double value,
-      double min,
-      double max,
-      Function(double) onChanged,
-      TextEditingController controller) {
-    return {
-      'name': name,
-      'value': value,
-      'min': min,
-      'max': max,
-      'onChanged': onChanged,
-      'controller': controller,
-    };
-  }
+  
 
   // Callback function to update slider values and recalculate payoff details
   void updateSliderValue(int index, double newValue) {
