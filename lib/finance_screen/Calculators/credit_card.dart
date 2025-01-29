@@ -48,7 +48,7 @@ class _CreditCardState extends State<CreditCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
                SliderPage(slidersList: slidersList),
-              PieChartGraph(),
+               graph(),
               CustomExpansionTile(
                  howToUseContent: Expansioncalculator.creditcardTitle1,
                 howItWorksContent: Expansioncalculator.creditcardTitle2,
@@ -58,6 +58,35 @@ class _CreditCardState extends State<CreditCard> {
   ),
     );
   }
+
+
+
+ Widget graph(){
+     return  PieChartGraph(
+                 title: "Fetch",  
+                 graphData: [
+                    {
+                      'title':'Principal\n₹21500' ,
+                      'value':21500.0
+                    },
+                    {
+                      'title':'Interest\n₹39946' ,
+                      'value':39946.0
+                    },
+                 ],  
+                 graphDisc: const[
+                    {
+                      'title':'Monthly pay off:' ,
+                      'amount':"₹"+"22"
+                    },
+                    {
+                      'title':'Total interest paid:' ,
+                      'amount':"₹"+"3,946"
+                    }
+                 ],  
+          );
+ }
+
 }
 
 

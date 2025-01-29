@@ -49,7 +49,7 @@ class _TripCostState extends State<TripCost> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SliderPage(slidersList: slidersList),
-              PieChartGraph(),
+               graph(),
               CustomExpansionTile(
                  howToUseContent: Expansioncalculator.creditcardTitle1,
                 howItWorksContent: Expansioncalculator.creditcardTitle2,
@@ -60,4 +60,36 @@ class _TripCostState extends State<TripCost> {
       ))
      );
   }
+
+   Widget graph(){
+     return  PieChartGraph(
+                 title: "Trip cost details:",  
+                 graphData: [
+                    {
+                      'title':'Remaining amount\n₹4,500' ,
+                      'value':4500.0
+                    },
+                    {
+                      'title':'Current savings\n₹500' ,
+                      'value':500.0
+                    },
+                 ],  
+                 graphDisc:const [
+                     {
+                      'title':'Total trip cost:' ,
+                      'amount':"₹"+"5,390.94"
+                    },
+                    {
+                      'title':'Interest earned:' ,
+                      'amount':"₹"+"90.94"
+                    },
+                    {
+                      'title':'Progress:' ,
+                      'amount':"₹"+"10.00%"
+                    },
+                  
+                 ]
+          );
+ }
+
 }

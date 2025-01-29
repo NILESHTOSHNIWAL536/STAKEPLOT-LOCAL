@@ -65,7 +65,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-       initialRoute: '/', 
+       initialRoute: '/PlotFinance', 
         routes:
     {  
       '/': (context) =>  Signin(),   
@@ -88,6 +88,7 @@ class _MyAppState extends State<MyApp> {
       '/Savings':(context) => Savings() ,
       '/autoLoan':(context) => AutoLoan() ,
       '/TripCost':(context) => TripCost() ,
+     
     });
   }
 }

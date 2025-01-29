@@ -53,7 +53,7 @@ class _RentBuyState extends State<RentBuy> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
              SliderPage(slidersList: slidersList),
-              PieChartGraph(),
+              graph(),
               CustomExpansionTile(
                  howToUseContent: Expansioncalculator.creditcardTitle1,
                 howItWorksContent: Expansioncalculator.creditcardTitle2,
@@ -64,4 +64,33 @@ class _RentBuyState extends State<RentBuy> {
     );
 
   }
+
+
+   Widget graph(){
+     return  PieChartGraph(
+                 title: "Rent vs Buy Details:",  
+                 graphData: [
+                  {
+                      'title':'Principal\n₹46000' ,
+                      'value':46000.0
+                    },
+                    {
+                      'title':'Interest\n₹39946' ,
+                      'value':9946.0
+                    },
+                    
+                 ],  
+                 graphDisc: const[
+                    {
+                      'title':'Total cost of renting:' ,
+                      'amount':"₹"+"79,35,829"
+                    },
+                    {
+                      'title':'Total cost of buying:' ,
+                      'amount':"₹"+"42,93,433"
+                    }
+                 ]
+          );
+ }
+
 }

@@ -258,3 +258,18 @@ Widget textStyle(
     ],
   );
 }
+
+Widget textStyleOnly(
+    {required BuildContext context,
+    text,
+    double fontsize = 12,
+    Color c = AppColors.bg1,
+    FontWeight fontWeight = FontWeight.w500}) {
+  return
+      Text(
+        text.toString(),
+        style: FontManager().getTextStyle(context,
+            lWeight: fontWeight, fontSize: fontsize, color: c),
+        overflow: TextOverflow.ellipsis,
+      );
+}

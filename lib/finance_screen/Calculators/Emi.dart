@@ -51,7 +51,7 @@ class _EmiState extends State<Emi> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
              SliderPage(slidersList: slidersList),
-              PieChartGraph(),
+               graph(),
               CustomExpansionTile(
                  howToUseContent: Expansioncalculator.creditcardTitle1,
                 howItWorksContent: Expansioncalculator.creditcardTitle2,
@@ -63,4 +63,33 @@ class _EmiState extends State<Emi> {
     );
 
   }
+
+
+   Widget graph(){
+     return  PieChartGraph(
+                title: "EMI Details",  
+                 graphData: [
+                     {
+                      'title':'Principal\n₹46000' ,
+                      'value':46000.0
+                    },
+                    {
+                      'title':'Interest\n₹39946' ,
+                      'value':9946.0
+                    },
+
+                 ],  
+                 graphDisc: const[
+                    {
+                      'title':'EMI:' ,
+                      'amount':"₹"+"7,707"
+                    },
+                    {
+                      'title':'Total interest paid:' ,
+                      'amount':"₹"+"2,05,271"
+                    }
+                 ]
+          );
+ }
+
 }
