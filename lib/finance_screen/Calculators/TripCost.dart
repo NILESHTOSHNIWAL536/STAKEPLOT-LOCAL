@@ -21,6 +21,13 @@ class _TripCostState extends State<TripCost> {
 
   late List slidersList;
 
+    double currentBalance = 46000.0;
+  double annualInterestEarned = 9094.0;
+  double progress = 221;
+  double remainingAmount= 4500;
+  double currentSavings= 500;
+
+
   @override
   void initState()
   {
@@ -111,28 +118,16 @@ final List<ListItemModel> howToUseContent = [
      return  PieChartGraph(
                  title: "Trip cost details:",  
                  graphData: [
-                    {
-                      'title':'Remaining amount\n₹4,500' ,
-                      'value':4500.0
-                    },
-                    {
-                      'title':'Current savings\n₹500' ,
-                      'value':500.0
-                    },
+                     {'title': 'Remaining amount\n₹${remainingAmount.toString()}', 'value': remainingAmount},
+                      {'title': 'Current savings\n₹${currentSavings.toString()}', 'value': currentSavings},
                  ],  
-                 graphDisc:const [
+                 graphDisc: [
                      {
                       'title':'Total trip cost:' ,
-                      'amount':"₹"+"5,390.94"
+                      'amount': "₹ ${currentBalance.toString()}"
                     },
-                    {
-                      'title':'Interest earned:' ,
-                      'amount':"₹"+"90.94"
-                    },
-                    {
-                      'title':'Progress:' ,
-                      'amount':"₹"+"10.00%"
-                    },
+                    {'title': 'Interest earned:', 'amount': "₹ ${annualInterestEarned.toString()}"},
+                    {'title': 'Progress:', 'amount': "₹ ${progress.toString()}%"},
                   
                  ]
           );
