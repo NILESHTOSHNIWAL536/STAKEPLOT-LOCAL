@@ -19,6 +19,13 @@ class _AutoLoanState extends State<AutoLoan> {
 
   late List slidersList;
 
+  
+  double monthlyLoanAmount = 46000.0;
+  double totalLoanCost = 2851.0;
+  double annualCost = 10500.0;
+  double depreciationValue = 180000.0;
+
+
   @override
   void initState()
   {
@@ -110,35 +117,36 @@ class _AutoLoanState extends State<AutoLoan> {
                  title: "Auto loan Details:",  
                  graphData: [
                     {
-                      'title':'Total loan cost\n₹28,51,372.59' ,
-                      'value':4300.0
+                      'title':'Total loan cost\n₹${totalLoanCost.toString()}' ,
+                      'value':totalLoanCost,
                     },
                     {
-                      'title':'Depreciation Value\n₹18,00,000' ,
-                      'value':3946.0
+                      'title':'Depreciation Value\n₹${depreciationValue.toString()}' ,
+                      'value':depreciationValue
                     },
                     {
-                      'title':'Annual maintenance cost\n₹10,500' ,
-                      'value':1246.0
+                      'title':'Annual maintenance cost\n₹${annualCost.toString()}' ,
+                      'value': annualCost
                     },
 
                  ],  
-                 graphDisc:const [
+                 graphDisc: [
                      {
                       'title':'Monthly loan payment:' ,
-                      'amount':"₹"+"47,522.88"
+                      'amount':"₹ ${(monthlyLoanAmount).toString()}"
                     },
                     {
                       'title':'Total loan cost:' ,
-                      'amount':"₹"+"28,51,372.59"
+                      'amount':"₹ ${(totalLoanCost).toString()}"
+                      
                     },
                     {
                       'title':'Annual maintenance cost:' ,
-                      'amount':"₹"+"10,500.00"
+                      'amount':"₹ ${(annualCost).toString()}"
                     },
                     {
                       'title':'Depreciation value after 4 years:' ,
-                      'amount':"₹"+"18,00,000.00"
+                      'amount':"₹ ${(depreciationValue).toString()}"
                     },
                  ],  
           );
