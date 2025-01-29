@@ -25,7 +25,9 @@ class _PieChartGraphState extends State<PieChartGraph> {
   List pieChatColor = [
     AppColors.primaryColor,
     AppColors.uncoloredPie,
-    AppColors.bg6
+    AppColors.bg6,
+    AppColors.message,
+    AppColors.border,
   ];
 
   @override

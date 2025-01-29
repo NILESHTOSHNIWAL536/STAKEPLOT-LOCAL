@@ -88,7 +88,8 @@ class _SliderPageState extends State<SliderPage> {
                 borderRadius: BorderRadius.circular(8)),
             child: textStyle(
                 context: context,
-                text: data['flag'] ?  data['symbol'] +" "+ data['controller'].text : data['controller'].text +" "+ data['symbol'],
+                text: data['flag'] ?  data['symbol'] +" "+ data['value'].toStringAsFixed(2).toString() : data['value'].toStringAsFixed(2).toString() +" "+ data['symbol'],
+                // text: data['flag'] ?  data['symbol'] +" "+ data['controller'].text : data['controller'].text +" "+ data['symbol'],
                 fontWeight: FontWeight.w500,
                 fontsize: 13)),
       ],
