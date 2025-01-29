@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budget.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
 
 class SliderPage extends StatefulWidget {
   List slidersList;
+  String title="";
   final Function(int, double) onSliderValueChanged;
-  SliderPage({Key? key, required this.slidersList,required this.onSliderValueChanged}) : super(key: key);
+  SliderPage({Key? key, required this.slidersList,required this.onSliderValueChanged,this.title=""}) : super(key: key);
 
   @override
   _SliderPageState createState() => _SliderPageState();
@@ -37,6 +39,10 @@ class _SliderPageState extends State<SliderPage> {
             ),
           ),
           getListOfSliders(widget.slidersList),
+
+
+          widget.title=="Cars"?getBrandsOfCars():SizedBox.shrink(),
+
         ],
       ),
     );
@@ -131,6 +137,69 @@ class _SliderPageState extends State<SliderPage> {
     ),
   );
 }
+
+
+Widget getBrandsOfCars()
+{
+   List maintenanceCostMap = [
+      'Toyota',
+      'Honda',
+      'Hyundai',
+      'Mahindra',
+      'Tata',
+      'Jeep',
+   ];
+
+   return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+               textStyle(
+              context: context,
+              text: "Select car brand",
+              fontWeight: FontWeight.w400,
+              fontsize: 17),
+              SizedBox(
+                  height: Colorcodes.paddingSize,
+              ),
+
+              Wrap(
+                  spacing: 9,
+                  runSpacing: 9,
+                  children: maintenanceCostMap.map((element)=>getCard(element)).toList(),
+              ),
+
+      ],
+   );
+}
+
+
+Widget getCard(e){
+   return InkWell(
+     onTap: (){
+      setState(() {  
+         selectedBrand=e;
+      });
+      print(selectedBrand);
+        widget.onSliderValueChanged(5,12.0);
+     },
+     child: Container(
+      padding: EdgeInsets.symmetric(horizontal: 16,vertical: 10),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4),
+          color: AppColors.backgroundColor
+      ),
+        child:  textStyle(
+                c: selectedBrand==e?Colorcodes.black:Colorcodes.greyLight,
+                context: context,
+                text: e,
+                fontWeight: FontWeight.w500,
+                fontsize: 18),
+       ),
+   );
+}
+
+
 }
 
 

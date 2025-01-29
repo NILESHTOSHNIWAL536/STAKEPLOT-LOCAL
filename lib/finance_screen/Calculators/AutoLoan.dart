@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/ex
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/creditCard.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
+String selectedBrand = 'Toyota'; // Selected car brand
 
 class AutoLoan extends StatefulWidget {
   const AutoLoan({ Key? key }) : super(key: key);
@@ -27,7 +28,7 @@ double downPayment = 20; // Down payment as percentage
 double loanInterestRate = 7; // Annual loan interest rate
 int loanTenure = 60; // Loan tenure in months
 double maintenanceCost = 3; // Annual maintenance cost as percentage of car price
-String selectedBrand = 'Toyota'; // Selected car brand
+// String selectedBrand = 'Toyota'; // Selected car brand
 
 double monthlyLoanPayment = 0; // Monthly loan payment
 double totalLoanCost = 0; // Total cost of the loan
@@ -160,7 +161,7 @@ double depreciationValue = 0; // Depreciation value after 4 years
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-             SliderPage(slidersList: slidersList,onSliderValueChanged: updateSliderValue),
+             SliderPage(slidersList: slidersList,onSliderValueChanged: updateSliderValue,title: "Cars",),
              graph(),
               CustomExpansionTile(
                  howToUseContent: howToUseContent,
