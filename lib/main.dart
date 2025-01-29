@@ -65,7 +65,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-       initialRoute: '/PlotFinance', 
+       initialRoute: '/HomePage', 
         routes:
     {  
       '/': (context) =>  HomePage(),   

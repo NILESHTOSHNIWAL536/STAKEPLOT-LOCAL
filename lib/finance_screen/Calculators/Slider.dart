@@ -3,7 +3,8 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
-
+ String selectedDestination = "Paris";
+  String selectedAccommodation = "Hotel";
 class SliderPage extends StatefulWidget {
   List slidersList;
   String title="";
@@ -15,6 +16,10 @@ class SliderPage extends StatefulWidget {
 }
 
 class _SliderPageState extends State<SliderPage> {
+  
+
+  final List<String> destinations = ["Paris", "New York", "Tokyo", "Sydney", "London"];
+  final List<String> accommodations = ["Hotel", "Hostel", "Airbnb", "Resort", "Guesthouse"];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -39,7 +44,7 @@ class _SliderPageState extends State<SliderPage> {
             ),
           ),
 
-         widget.title=="Trip"?tripDrowDown():SizedBox.shrink(),
+         widget.title=="Trip"?tripDropDown():SizedBox.shrink(),
 
           getListOfSliders(widget.slidersList),
 
@@ -142,8 +147,44 @@ class _SliderPageState extends State<SliderPage> {
 }
 
 
-Widget tripDrowDown(){
-     return Text("Trip");
+Widget tripDropDown(){
+     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Select Travel Destination:"),
+        DropdownButton<String>(
+          value: selectedDestination,
+          items: destinations.map((String destination) {
+            return DropdownMenuItem<String>(
+              value: destination,
+              child: Text(destination),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              selectedDestination = newValue!;
+            });
+          },
+        ),
+        SizedBox(height: 20),
+        Text("Accommodation Type:"),
+        DropdownButton<String>(
+          value: selectedAccommodation,
+          items: accommodations.map((String accommodation) {
+            return DropdownMenuItem<String>(
+              value: accommodation,
+              child: Text(accommodation),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              selectedAccommodation = newValue!;
+              
+            });
+          },
+        ),
+      ],
+    );
 }
 
 
