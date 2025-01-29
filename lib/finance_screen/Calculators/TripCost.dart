@@ -21,11 +21,14 @@ class _TripCostState extends State<TripCost> {
 
   late List slidersList;
 
-  double currentBalance = 46000.0;
-  double annualInterestEarned = 9094.0;
-  double progress = 221;
-  double remainingAmount= 4500;
-  double currentSavings= 500;
+ double travelCost = 300;
+  double dailyExpenses = 100;
+  double entertainmentBudget = 500;
+  double numberOfDays = 7;
+  double numberOfMembers = 1;
+  double accommodationCost = 1500;
+  double totalCost = 0;
+  double costPerMember = 0;
 
 
   @override
@@ -35,13 +38,13 @@ class _TripCostState extends State<TripCost> {
   }
 
    void getslidersList(){
-      slidersList=[
-         getJsonBodyObj("Daily expenses",4,3,12,(value){},TextEditingController(text: '2')),
-         getJsonBodyObj("Entertainment budget",4,1,12,(value){},TextEditingController(text: '332')),
-         getJsonBodyObj("No. of days",4,1,12,(value){},TextEditingController(text: '2332'),false,"days"),
-         getJsonBodyObj("Travel cost",4,1,12,(value){},TextEditingController(text: '2332')),
-         getJsonBodyObj("Number of member",4,1,12,(value){},TextEditingController(text: '2332'),false,""),
-     ];
+      slidersList = [
+      getJsonBodyObj("Daily expenses", dailyExpenses, 50, 500, (v){}, TextEditingController(text: dailyExpenses.toString())),
+      getJsonBodyObj("Entertainment budget", entertainmentBudget, 100, 2000, (v){}, TextEditingController(text: entertainmentBudget.toString())),
+      getJsonBodyObj("Number of days", numberOfDays, 1, 30, (v){}, TextEditingController(text: numberOfDays.toString()), false, "days"),
+      getJsonBodyObj("Travel cost", travelCost, 100, 5000, (v){}, TextEditingController(text: travelCost.toString())),
+      getJsonBodyObj("Number of members", numberOfMembers, 1, 12, (v){}, TextEditingController(text: numberOfMembers.toString()), false, ""),
+    ];
   }
 final List<ListItemModel> howToUseContent = [
   ListItemModel(
@@ -81,13 +84,24 @@ final List<ListItemModel> howToUseContent = [
       description: "The cost breakdown is visualized using a doughnut chart, providing a clear breakdown of expenses into categories like travel cost, accommodation cost, daily expenses, and entertainment budget."),
 ];
 
-   // Callback function to update the slider values
-  void updateSliderValue(int index, double newValue)
-  {
+   void updateSliderValue(int index, double newValue) {
     setState(() {
       slidersList[index]['value'] = newValue;
       slidersList[index]['controller'].text = newValue.toStringAsFixed(0);
+      if (index == 0) dailyExpenses = newValue;
+      if (index == 1) entertainmentBudget = newValue;
+      if (index == 2) numberOfDays = newValue;
+      if (index == 3) travelCost = newValue;
+      if (index == 4) numberOfMembers = newValue;
+      calculateTripCost();
     });
+  }
+
+  void calculateTripCost() {
+    double totalAccommodationCost = accommodationCost * (numberOfMembers / 2).ceil() * numberOfDays;
+    double totalDailyExpenses = dailyExpenses * numberOfDays;
+    totalCost = travelCost + totalAccommodationCost + totalDailyExpenses + entertainmentBudget;
+    costPerMember = totalCost / numberOfMembers;
   }
 
   @override
@@ -114,23 +128,20 @@ final List<ListItemModel> howToUseContent = [
      );
   }
 
-   Widget graph(){
-     return  PieChartGraph(
-                 title: "Trip cost details:",  
-                 graphData: [
-                     {'title': 'Remaining amount\n₹${remainingAmount.toString()}', 'value': remainingAmount},
-                      {'title': 'Current savings\n₹${currentSavings.toString()}', 'value': currentSavings},
-                 ],  
-                 graphDisc: [
-                     {
-                      'title':'Total trip cost:' ,
-                      'amount': "₹ ${currentBalance.toString()}"
-                    },
-                    {'title': 'Interest earned:', 'amount': "₹ ${annualInterestEarned.toString()}"},
-                    {'title': 'Progress:', 'amount': "₹ ${progress.toString()}%"},
-                  
-                 ]
-          );
- }
+     Widget graph() {
+    return PieChartGraph(
+      title: "Trip Cost Breakdown:",
+      graphData: [
+        {'title': 'Travel Cost\n₹$travelCost', 'value': travelCost},
+        {'title': 'Accommodation Cost\n₹$accommodationCost', 'value': accommodationCost},
+        {'title': 'Daily Expenses\n₹$dailyExpenses', 'value': dailyExpenses},
+        {'title': 'Entertainment Budget\n₹$entertainmentBudget', 'value': entertainmentBudget},
+      ],
+      graphDisc: [
+        {'title': 'Total Trip Cost:', 'amount': "₹${totalCost.toStringAsFixed(0)}"},
+        {'title': 'Cost Per Member:', 'amount': "₹${costPerMember.toStringAsFixed(0)}"},
+      ],
+    );
+  }
 
 }

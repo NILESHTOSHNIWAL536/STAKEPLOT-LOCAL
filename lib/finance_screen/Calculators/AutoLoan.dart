@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -20,10 +22,17 @@ class _AutoLoanState extends State<AutoLoan> {
   late List slidersList;
 
   
-  double monthlyLoanAmount = 46000.0;
-  double totalLoanCost = 2851.0;
-  double annualCost = 10500.0;
-  double depreciationValue = 180000.0;
+ double carPrice = 3000000; // Car price
+double downPayment = 20; // Down payment as percentage
+double loanInterestRate = 7; // Annual loan interest rate
+int loanTenure = 60; // Loan tenure in months
+double maintenanceCost = 3; // Annual maintenance cost as percentage of car price
+String selectedBrand = 'Toyota'; // Selected car brand
+
+double monthlyLoanPayment = 0; // Monthly loan payment
+double totalLoanCost = 0; // Total cost of the loan
+double annualMaintenanceCost = 0; // Annual maintenance cost
+double depreciationValue = 0; // Depreciation value after 4 years
 
 
   @override
@@ -34,11 +43,11 @@ class _AutoLoanState extends State<AutoLoan> {
 
    void getslidersList(){
       slidersList=[
-         getJsonBodyObj("Car Price",4,3,12,(value){},TextEditingController(text: '2')),
-         getJsonBodyObj("Down Payment",4,1,12,(value){},TextEditingController(text: '332'),false,"%"),
-         getJsonBodyObj("Loan Interest Rate",4,1,12,(value){},TextEditingController(text: '2332'),false,"%"),
-         getJsonBodyObj("Loan Tenure",4,1,12,(value){},TextEditingController(text: '2332'),false,"Months"),
-         getJsonBodyObj("Annual maintenance cost",4,1,12,(value){},TextEditingController(text: '2332'),false,"%"),
+         getJsonBodyObj("Car Price",510000,500000,10000000,(value){},TextEditingController(text: '2')),
+         getJsonBodyObj("Down Payment",4,0,100,(value){},TextEditingController(text: '332'),false,"%"),
+         getJsonBodyObj("Loan Interest Rate",4,1,20,(value){},TextEditingController(text: '2332'),false,"%"),
+         getJsonBodyObj("Loan Tenure(Months)",12,12,120,(value){},TextEditingController(text: '2332'),false,"Months"),
+         getJsonBodyObj("Annual maintenance cost",4,1,10,(value){},TextEditingController(text: '2332'),false,"%"),
      ];
   }
   final List<ListItemModel> howToUseContent = [
@@ -79,12 +88,65 @@ class _AutoLoanState extends State<AutoLoan> {
       description: "The estimated depreciation value of the car after four years is calculated based on the selected car brand."),
 ];
 
-   // Callback function to update the slider values
-  void updateSliderValue(int index, double newValue)
-  {
+ void updateSliderValue(int index, double newValue) {
     setState(() {
-      slidersList[index]['value'] = newValue;
-      slidersList[index]['controller'].text = newValue.toStringAsFixed(0);
+      switch (index) {
+        case 0:
+          carPrice = newValue;
+          break;
+        case 1:
+          downPayment = newValue;
+          break;
+        case 2:
+          loanInterestRate = newValue;
+          break;
+        case 3:
+          loanTenure = newValue.toInt();
+          break;
+        case 4:
+          maintenanceCost = newValue;
+          break;
+      }
+      calculateLoanDetails();
+    });
+  }
+
+  void calculateLoanDetails() {
+    double monthlyInterestRate = loanInterestRate / 12 / 100;
+    double downPaymentAmount = (downPayment / 100) * carPrice;
+    double loanAmount = carPrice - downPaymentAmount;
+
+    double emi = (loanAmount * monthlyInterestRate *
+        pow(1 + monthlyInterestRate, loanTenure)) /
+        (pow(1 + monthlyInterestRate, loanTenure) - 1);
+    double totalCost = emi * loanTenure;
+
+    Map<String, double> maintenanceCostMap = {
+      'Toyota': 0.35,
+      'Honda': 0.65,
+      'Hyundai': 0.46,
+      'Mahindra': 0.30,
+      'Tata': 0.53,
+      'Jeep': 0.75,
+    };
+    double maintenancePercentage = maintenanceCostMap[selectedBrand] ?? 2.0;
+    double annualMaintenance = (maintenancePercentage / 100) * carPrice;
+
+    Map<String, double> depreciationMap = {
+      'Toyota': 0.60,
+      'Honda': 0.55,
+      'Hyundai': 0.50,
+      'Mahindra': 0.55,
+      'Tata': 0.50,
+      'Jeep': 0.50,
+    };
+    double depreciation = (depreciationMap[selectedBrand] ?? 0.50) * carPrice;
+
+    setState(() {
+      monthlyLoanPayment = emi;
+      totalLoanCost = totalCost;
+      annualMaintenanceCost = annualMaintenance;
+      depreciationValue = depreciation;
     });
   }
 
@@ -112,45 +174,23 @@ class _AutoLoanState extends State<AutoLoan> {
     );
   }
 
-   Widget graph(){
-     return  PieChartGraph(
-                 title: "Auto loan Details:",  
-                 graphData: [
-                    {
-                      'title':'Total loan cost\n₹${totalLoanCost.toString()}' ,
-                      'value':totalLoanCost,
-                    },
-                    {
-                      'title':'Depreciation Value\n₹${depreciationValue.toString()}' ,
-                      'value':depreciationValue
-                    },
-                    {
-                      'title':'Annual maintenance cost\n₹${annualCost.toString()}' ,
-                      'value': annualCost
-                    }
+ Widget graph() {
+    return PieChartGraph(
+      title: "Auto Loan Details:",
+      graphData: [
+        {'title': 'Total Loan Cost\n₹${totalLoanCost.toStringAsFixed(2)}', 'value': totalLoanCost},
+        {'title': 'Annual Maintenance\n₹${annualMaintenanceCost.toStringAsFixed(2)}', 'value': annualMaintenanceCost},
+        {'title': 'Depreciation Value\n₹${depreciationValue.toStringAsFixed(2)}', 'value': depreciationValue},
+      ],
+      graphDisc: [
+        {'title': 'Monthly Loan Payment:', 'amount': "₹ ${monthlyLoanPayment.toStringAsFixed(2)}"},
+        {'title': 'Total Loan Cost:', 'amount': "₹ ${totalLoanCost.toStringAsFixed(2)}"},
+        {'title': 'Annual Maintenance:', 'amount': "₹ ${annualMaintenanceCost.toStringAsFixed(2)}"},
+        {'title': 'Depreciation Value:', 'amount': "₹ ${depreciationValue.toStringAsFixed(2)}"},
+      ]
+    );
+  }
 
-                 ],  
-                 graphDisc: [
-                     {
-                      'title':'Monthly loan payment:' ,
-                      'amount':"₹ ${(monthlyLoanAmount).toString()}"
-                    },
-                    {
-                      'title':'Total loan cost:' ,
-                      'amount':"₹ ${(totalLoanCost).toString()}"
-                      
-                    },
-                    {
-                      'title':'Annual maintenance cost:' ,
-                      'amount':"₹ ${(annualCost).toString()}"
-                    },
-                    {
-                      'title':'Depreciation value after 4 years:' ,
-                      'amount':"₹ ${(depreciationValue).toString()}"
-                    },
-                 ],  
-          );
- }
 
 }
 

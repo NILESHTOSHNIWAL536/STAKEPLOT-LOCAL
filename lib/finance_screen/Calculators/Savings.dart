@@ -18,19 +18,12 @@ class Savings extends StatefulWidget {
 class _SavingsState extends State<Savings> {
   late List slidersList;
 
-  
-  // double endBalance = 46000.0;
-  // double annualInterestEarned = 9094.0;
-  // double progress = 221;
-  // double remainingAmount= 4500;
-  // double currentSavings= 500;
 
-
-  double targetAmount = 5000;
-  double currentSavings = 500;
-  double monthlyContribution = 200;
-  int timeframe = 24;
-  double interestRate = 1.5;
+  double targetAmount = 2300;
+  double currentSavings = 400;
+  double monthlyContribution = 400;
+  int timeframe = 4;
+  double interestRate = 4;
 
   double endBalance = 0;
   double interestEarned = 0;
@@ -49,7 +42,7 @@ class _SavingsState extends State<Savings> {
           TextEditingController(text: '2')),
       getJsonBodyObj("Current savings", 4, 0, 100000, (value) {},
           TextEditingController(text: '332')),
-      getJsonBodyObj("Monthly contribution", 400, 100, 100000, (value) {},
+      getJsonBodyObj("Monthly contribution", 400, 100, 10000, (value) {},
           TextEditingController(text: '2332')),
       getJsonBodyObj("Timeframe(months)", 4, 1, 360, (value) {},
           TextEditingController(text: '2332'),false,"Months"),
