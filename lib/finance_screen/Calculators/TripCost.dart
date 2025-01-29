@@ -115,7 +115,7 @@ final List<ListItemModel> howToUseContent = [
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SliderPage(slidersList: slidersList,onSliderValueChanged: updateSliderValue),
+              SliderPage(slidersList: slidersList,onSliderValueChanged: updateSliderValue,title: "Trip",),
                graph(),
               CustomExpansionTile(
                  howToUseContent: howToUseContent,

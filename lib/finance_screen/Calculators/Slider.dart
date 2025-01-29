@@ -38,6 +38,9 @@ class _SliderPageState extends State<SliderPage> {
               color: Colorcodes.greyLight,
             ),
           ),
+
+         widget.title=="Trip"?tripDrowDown():SizedBox.shrink(),
+
           getListOfSliders(widget.slidersList),
 
 
@@ -137,6 +140,12 @@ class _SliderPageState extends State<SliderPage> {
     ),
   );
 }
+
+
+Widget tripDrowDown(){
+     return Text("Trip");
+}
+
 
 
 Widget getBrandsOfCars()
