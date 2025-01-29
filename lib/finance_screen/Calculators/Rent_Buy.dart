@@ -40,7 +40,55 @@ class _RentBuyState extends State<RentBuy> {
          getJsonBodyObj("Rent Increase Rate (% per year)",4,1,12,(value){},TextEditingController(text: '2332')),
      ];
   }
-  
+  final List<ListItemModel> howToUseContent = [
+  ListItemModel(
+      title: "Home Price",
+      description: "Adjust the slider to set the price of the home you are considering to buy."),
+  ListItemModel(
+      title: "Down Payment (%)",
+      description: "Use the slider to set the percentage of the home price you plan to pay upfront as a down payment."),
+  ListItemModel(
+      title: "Loan Interest Rate (%)",
+      description: "Set the annual interest rate for the loan using the slider."),
+  ListItemModel(
+      title: "Loan Tenure (Months)",
+      description: "Adjust the slider to set the loan tenure in months (1-360 months)."),
+  ListItemModel(
+      title: "Property Tax Rate (%)",
+      description: "Use the slider to set the annual property tax rate as a percentage of the home price."),
+  ListItemModel(
+      title: "Maintenance Cost (% per year)",
+      description: "Set the annual maintenance cost as a percentage of the home price using the slider."),
+  ListItemModel(
+      title: "Home Appreciation Rate (% per year)",
+      description: "Adjust the slider to set the expected annual appreciation rate of the home’s value."),
+  ListItemModel(
+      title: "Monthly Rent",
+      description: "Use the slider to set the current monthly rent."),
+  ListItemModel(
+      title: "Rent Increase Rate (% per year)",
+      description: "Adjust the slider to set the annual rent increase rate."),
+];
+
+
+  // Example data for "How it works?"
+  final List<ListItemModel> howItWorksContent = [
+  ListItemModel(
+      title: "EMI Calculation",
+      description: "The calculator determines the Equated Monthly Installment (EMI) based on the home price, down payment, loan interest rate, and loan tenure."),
+  ListItemModel(
+      title: "Total Buy Cost Calculation",
+      description: "This includes the down payment, total loan cost (EMI x loan tenure), property tax, and maintenance cost over the loan tenure. "
+          "The appreciated value of the home over the loan tenure is subtracted from the total buy cost to account for the potential increase in home value."),
+  ListItemModel(
+      title: "Total Rent Cost Calculation",
+      description: "The total rent paid over the loan tenure is calculated by accounting for the initial rent and the annual rent increase rate."),
+  ListItemModel(
+      title: "Comparison",
+      description: "The calculator compares the total cost of buying and renting over the specified period. "
+          "The results are displayed in a doughnut chart, visually representing the costs of both options."),
+];
+
   @override
   Widget build(BuildContext context) {
 
@@ -55,8 +103,8 @@ class _RentBuyState extends State<RentBuy> {
              SliderPage(slidersList: slidersList),
               graph(),
               CustomExpansionTile(
-                 howToUseContent: Expansioncalculator.creditcardTitle1,
-                howItWorksContent: Expansioncalculator.creditcardTitle2,
+                 howToUseContent: howToUseContent,
+                howItWorksContent: howItWorksContent,
               ),
             ],
           ),

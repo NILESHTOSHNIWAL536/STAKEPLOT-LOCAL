@@ -36,6 +36,43 @@ class _TripCostState extends State<TripCost> {
          getJsonBodyObj("Number of member",4,1,12,(value){},TextEditingController(text: '2332')),
      ];
   }
+final List<ListItemModel> howToUseContent = [
+  ListItemModel(
+      title: "Travel Destination",
+      description: "Select the desired travel destination from the provided options (Beach, Mountains, City, Countryside)."),
+  ListItemModel(
+      title: "Accommodation Type",
+      description: "Choose the type of accommodation you prefer for your trip (Hotel, Hostel, Airbnb, Camping)."),
+  ListItemModel(
+      title: "Daily Expenses",
+      description: "Adjust the slider to set the estimated daily expenses per person during the trip."),
+  ListItemModel(
+      title: "Entertainment Budget",
+      description: "Set the budget allocated for entertainment activities during the trip."),
+  ListItemModel(
+      title: "Number of Days",
+      description: "Use the slider to specify the duration of your spring break trip in days."),
+  ListItemModel(
+      title: "Travel Cost",
+      description: "Adjust the slider to set the estimated travel cost for transportation to the destination."),
+  ListItemModel(
+      title: "Number of Members",
+      description: "Enter the total number of individuals participating in the trip."),
+];
+
+
+  // Example data for "How it works?"
+  final List<ListItemModel> howItWorksContent = [
+  ListItemModel(
+      title: "Total Trip Cost Calculation",
+      description: "The calculator computes the total cost of the trip, including travel expenses, accommodation costs, daily expenses, and entertainment budget."),
+  ListItemModel(
+      title: "Cost Per Member Calculation",
+      description: "It calculates the average cost per member by dividing the total trip cost by the number of members in the group."),
+  ListItemModel(
+      title: "Cost Breakdown Visualization",
+      description: "The cost breakdown is visualized using a doughnut chart, providing a clear breakdown of expenses into categories like travel cost, accommodation cost, daily expenses, and entertainment budget."),
+];
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +88,8 @@ class _TripCostState extends State<TripCost> {
               SliderPage(slidersList: slidersList),
                graph(),
               CustomExpansionTile(
-                 howToUseContent: Expansioncalculator.creditcardTitle1,
-                howItWorksContent: Expansioncalculator.creditcardTitle2,
+                 howToUseContent: howToUseContent,
+                howItWorksContent: howItWorksContent,
               ),
              
             ],

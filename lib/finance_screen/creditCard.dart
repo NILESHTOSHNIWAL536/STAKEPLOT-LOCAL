@@ -96,7 +96,6 @@
 //                     crossAxisAlignment: CrossAxisAlignment.start,
 //                     children: [
 //                         SliderPage(slidersList: slidersList),
-
              
 //             ],
 //           ),
@@ -141,7 +140,6 @@
 //       ),
 //     );
 //   }
-
 
 
 //   Widget buildPieChart() {

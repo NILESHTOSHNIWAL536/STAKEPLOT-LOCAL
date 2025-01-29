@@ -68,7 +68,7 @@ class _MyAppState extends State<MyApp> {
        initialRoute: '/PlotFinance', 
         routes:
     {  
-      '/': (context) =>  Signin(),   
+      '/': (context) =>  HomePage(),   
       '/signup': (context) => SignUp(),  
       '/home': (context) => HomePage(),  
       '/Notifications': (context) => Notifications(),  
