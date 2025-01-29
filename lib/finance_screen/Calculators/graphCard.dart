@@ -47,8 +47,8 @@ Widget buildPieChart() {
           ),
           SizedBox(height: Colorcodes.paddingSize,),
           getGraph(),
-          SizedBox(height: Colorcodes.paddingSize,),
-          SizedBox(height: Colorcodes.paddingSize/2,),
+          SizedBox(height: Colorcodes.paddingSize*2,),
+          
 
         ],
       ),
@@ -85,9 +85,7 @@ Widget getGraph(){
                       borderData: FlBorderData(
                                 show: false,
                          ),
-                             
-
-                    sections: widget.graphData
+                 sections: widget.graphData
                   .asMap()
                   .entries
                   .map((entry) => getPieChartSectionData(entry.value, entry.key))
@@ -103,20 +101,18 @@ PieChartSectionData getPieChartSectionData(data,index)
     return  PieChartSectionData(
                     value: data['value'],
                     showTitle: false,
-                    badgeWidget: Container(
+                    badgeWidget:  Container(
                         padding: EdgeInsets.all(10),
                         decoration: BoxDecoration(
                         color: pieChatColor[index],
                            borderRadius: BorderRadius.circular(4)
-                           
                         ),
                         child: textStyleOnly(context: context,text:  data['title'],fontWeight: FontWeight.bold,fontsize: 12,c: index-1==0?pieChatColor[0]:pieChatColor[1]),
                     ),
                     // title: data['title'],
                     color: pieChatColor[index] ?? AppColors.uncoloredPie,
                     radius: 50,
-                    // titlePositionPercentageOffset: 1.8,
-                    badgePositionPercentageOffset: 1.7,
+                    badgePositionPercentageOffset: 1.6,
 
           );
 } 

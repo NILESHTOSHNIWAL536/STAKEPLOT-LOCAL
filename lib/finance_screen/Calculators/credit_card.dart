@@ -153,6 +153,16 @@ class _CreditCardState extends State<CreditCard> {
         description:
             "Shows the total interest you will pay over the repayment period."),
   ];
+
+  // Callback function to update the slider values
+  void updateSliderValue(int index, double newValue)
+  {
+    setState(() {
+      slidersList[index]['value'] = newValue;
+      slidersList[index]['controller'].text = newValue.toStringAsFixed(0);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -167,7 +177,7 @@ class _CreditCardState extends State<CreditCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SliderPage(slidersList: slidersList),
+              SliderPage(slidersList: slidersList,onSliderValueChanged: updateSliderValue),
               graph(),
               CustomExpansionTile(
                 howToUseContent: howToUseContent,

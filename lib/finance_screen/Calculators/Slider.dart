@@ -110,7 +110,8 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budget.dart';
 
 class SliderPage extends StatefulWidget {
   List slidersList;
-  SliderPage({Key? key, required this.slidersList}) : super(key: key);
+  final Function(int, double) onSliderValueChanged;
+  SliderPage({Key? key, required this.slidersList,required this.onSliderValueChanged}) : super(key: key);
 
   @override
   _SliderPageState createState() => _SliderPageState();
@@ -227,6 +228,8 @@ class _SliderPageState extends State<SliderPage> {
           widget.slidersList[index]['controller'].text =
               newValue.toStringAsFixed(0);
         });
+          // Call parent callback to update page
+          widget.onSliderValueChanged(index, newValue);
       },
     ),
   );

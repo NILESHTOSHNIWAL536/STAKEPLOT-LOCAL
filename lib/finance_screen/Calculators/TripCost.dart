@@ -74,6 +74,15 @@ final List<ListItemModel> howToUseContent = [
       description: "The cost breakdown is visualized using a doughnut chart, providing a clear breakdown of expenses into categories like travel cost, accommodation cost, daily expenses, and entertainment budget."),
 ];
 
+   // Callback function to update the slider values
+  void updateSliderValue(int index, double newValue)
+  {
+    setState(() {
+      slidersList[index]['value'] = newValue;
+      slidersList[index]['controller'].text = newValue.toStringAsFixed(0);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
   
@@ -85,7 +94,7 @@ final List<ListItemModel> howToUseContent = [
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SliderPage(slidersList: slidersList),
+              SliderPage(slidersList: slidersList,onSliderValueChanged: updateSliderValue),
                graph(),
               CustomExpansionTile(
                  howToUseContent: howToUseContent,

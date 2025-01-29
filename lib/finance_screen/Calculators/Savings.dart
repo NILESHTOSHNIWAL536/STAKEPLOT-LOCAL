@@ -80,6 +80,15 @@ class _SavingsState extends State<Savings> {
             "The progress towards your savings goal is displayed as a percentage, indicating how close you are to reaching your target amount."),
   ];
 
+     // Callback function to update the slider values
+  void updateSliderValue(int index, double newValue)
+  {
+    setState(() {
+      slidersList[index]['value'] = newValue;
+      slidersList[index]['controller'].text = newValue.toStringAsFixed(0);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +99,7 @@ class _SavingsState extends State<Savings> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SliderPage(slidersList: slidersList),
+                  SliderPage(slidersList: slidersList,onSliderValueChanged: updateSliderValue),
                   graph(),
                   CustomExpansionTile(
                     howToUseContent: howToUseContent,
