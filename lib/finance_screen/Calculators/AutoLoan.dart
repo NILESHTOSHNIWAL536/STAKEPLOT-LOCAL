@@ -35,10 +35,10 @@ class _AutoLoanState extends State<AutoLoan> {
    void getslidersList(){
       slidersList=[
          getJsonBodyObj("Car Price",4,3,12,(value){},TextEditingController(text: '2')),
-         getJsonBodyObj("Down Payment",4,1,12,(value){},TextEditingController(text: '332')),
-         getJsonBodyObj("Loan Interest Rate",4,1,12,(value){},TextEditingController(text: '2332')),
-         getJsonBodyObj("Loan Tenure",4,1,12,(value){},TextEditingController(text: '2332')),
-         getJsonBodyObj("Annual maintenance cost",4,1,12,(value){},TextEditingController(text: '2332')),
+         getJsonBodyObj("Down Payment",4,1,12,(value){},TextEditingController(text: '332'),false,"%"),
+         getJsonBodyObj("Loan Interest Rate",4,1,12,(value){},TextEditingController(text: '2332'),false,"%"),
+         getJsonBodyObj("Loan Tenure",4,1,12,(value){},TextEditingController(text: '2332'),false,"Months"),
+         getJsonBodyObj("Annual maintenance cost",4,1,12,(value){},TextEditingController(text: '2332'),false,"%"),
      ];
   }
   final List<ListItemModel> howToUseContent = [
@@ -127,7 +127,7 @@ class _AutoLoanState extends State<AutoLoan> {
                     {
                       'title':'Annual maintenance cost\n₹${annualCost.toString()}' ,
                       'value': annualCost
-                    },
+                    }
 
                  ],  
                  graphDisc: [

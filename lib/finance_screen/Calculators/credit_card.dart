@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/expansionTile.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
 
 class CreditCard extends StatefulWidget {
   const CreditCard({Key? key}) : super(key: key);
@@ -29,29 +30,14 @@ class _CreditCardState extends State<CreditCard> {
     slidersList = [
       getJsonBodyObj("Card balance", 2000, 1000, 10000, (value) {},
           TextEditingController(text: '2000')),
-      getJsonBodyObj("Interest rate(%)", 4, 1, 30, (value) {},
-          TextEditingController(text: '7')),
+      getJsonBodyObj("Interest rate(%)", 5, 1, 100, (value) {},
+          TextEditingController(text: '7'),true,""),
       getJsonBodyObj("Monthly payment", 600, 500, 5000, (value) {},
           TextEditingController(text: '600')),
     ];
   }
 
-  Map<String, dynamic> getJsonBodyObj(
-      String name,
-      double value,
-      double min,
-      double max,
-      Function(double) onChanged,
-      TextEditingController controller) {
-    return {
-      'name': name,
-      'value': value,
-      'min': min,
-      'max': max,
-      'onChanged': onChanged,
-      'controller': controller,
-    };
-  }
+  
 
   final List<ListItemModel> howToUseContent = [
     ListItemModel(

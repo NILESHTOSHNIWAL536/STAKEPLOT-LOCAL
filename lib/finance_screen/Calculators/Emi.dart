@@ -34,8 +34,8 @@ class _EmiState extends State<Emi> {
    void getslidersList(){
       slidersList=[
          getJsonBodyObj("Loan amount",4,3,12,(value){},TextEditingController(text: '2')),
-         getJsonBodyObj("Annual interest rate(%)",4,1,12,(value){},TextEditingController(text: '332')),
-         getJsonBodyObj("Loan tenure(months)",4,1,12,(value){},TextEditingController(text: '2332')),
+         getJsonBodyObj("Annual interest rate(%)",4,1,12,(value){},TextEditingController(text: '332'),true,""),
+         getJsonBodyObj("Loan tenure(months)",4,1,12,(value){},TextEditingController(text: '2332'),false,"Months"),
         
      ];
   }

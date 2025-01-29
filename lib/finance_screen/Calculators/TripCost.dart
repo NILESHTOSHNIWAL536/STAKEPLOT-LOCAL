@@ -21,7 +21,7 @@ class _TripCostState extends State<TripCost> {
 
   late List slidersList;
 
-    double currentBalance = 46000.0;
+  double currentBalance = 46000.0;
   double annualInterestEarned = 9094.0;
   double progress = 221;
   double remainingAmount= 4500;
@@ -38,9 +38,9 @@ class _TripCostState extends State<TripCost> {
       slidersList=[
          getJsonBodyObj("Daily expenses",4,3,12,(value){},TextEditingController(text: '2')),
          getJsonBodyObj("Entertainment budget",4,1,12,(value){},TextEditingController(text: '332')),
-         getJsonBodyObj("No. of days",4,1,12,(value){},TextEditingController(text: '2332')),
+         getJsonBodyObj("No. of days",4,1,12,(value){},TextEditingController(text: '2332'),false,"days"),
          getJsonBodyObj("Travel cost",4,1,12,(value){},TextEditingController(text: '2332')),
-         getJsonBodyObj("Number of member",4,1,12,(value){},TextEditingController(text: '2332')),
+         getJsonBodyObj("Number of member",4,1,12,(value){},TextEditingController(text: '2332'),false,""),
      ];
   }
 final List<ListItemModel> howToUseContent = [
