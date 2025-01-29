@@ -98,7 +98,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
       url,
       width: 40,
       height: 40,
-      color: widget.data == index ? Colorcodes.debtBody : Colorcodes.black,
+      color: widget.data == index ? Colorcodes.debtBody : Colorcodes.white,
     );
   }
 
