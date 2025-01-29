@@ -34,7 +34,18 @@ class _EmiState extends State<Emi> {
         
      ];
   }
+  
+final List<ListItemModel> howToUseContent = [
+    ListItemModel(title: "Loan Amount:", description: "Input: Adjust the slider to set your loan amount (e.g., ₹500,000)."),
+    ListItemModel(title: "Annual Interest Rate:", description: "Input: Adjust the slider to set your annual interest rate (e.g., 10%)."),
+    ListItemModel(title: "Loan Tenure:", description: "Input: Adjust the slider to set your loan tenure in months (e.g., 12 months)."),
+  ];
 
+  // Example data for "How it works?"
+  final List<ListItemModel> howItWorksContent = [
+    ListItemModel(title: "Calculations:", description: "Monthly payment calculated using the loan amount, interest rate, and tenure.The total interest paid over the loan tenure, calculated as the difference between the total amount paid and the principal."),
+    
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +64,8 @@ class _EmiState extends State<Emi> {
              SliderPage(slidersList: slidersList),
               PieChartGraph(),
               CustomExpansionTile(
-                 howToUseContent: Expansioncalculator.creditcardTitle1,
-                howItWorksContent: Expansioncalculator.creditcardTitle2,
+                 howToUseContent: howToUseContent,
+                howItWorksContent: howItWorksContent,
               ),
              
             ],

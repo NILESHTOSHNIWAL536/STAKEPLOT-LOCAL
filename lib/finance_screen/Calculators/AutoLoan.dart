@@ -34,7 +34,44 @@ class _AutoLoanState extends State<AutoLoan> {
          getJsonBodyObj("Annual maintenance cost",4,1,12,(value){},TextEditingController(text: '2332')),
      ];
   }
-  
+  final List<ListItemModel> howToUseContent = [
+  ListItemModel(
+      title: "Car Price",
+      description: "Use the slider to set the price of the car you intend to purchase."),
+  ListItemModel(
+      title: "Down Payment (%)",
+      description: "Adjust the slider to set the percentage of the car price you plan to pay as a down payment."),
+  ListItemModel(
+      title: "Loan Interest Rate (%)",
+      description: "Set the annual interest rate for the loan using the slider."),
+  ListItemModel(
+      title: "Loan Tenure (Months)",
+      description: "Adjust the slider to set the loan tenure in months (1-120 months)."),
+  ListItemModel(
+      title: "Annual Maintenance Cost (% of car price)",
+      description: "Set the annual maintenance cost as a percentage of the car price using the slider."),
+  ListItemModel(
+      title: "Select Car Brand",
+      description: "Choose from various car brands to see estimates tailored to specific vehicles."),
+];
+
+
+  // Example data for "How it works?"
+  final List<ListItemModel> howItWorksContent = [
+  ListItemModel(
+      title: "Monthly Loan Payment Calculation",
+      description: "The calculator determines the Equated Monthly Installment (EMI) based on the car price, down payment, loan interest rate, and loan tenure."),
+  ListItemModel(
+      title: "Total Loan Cost Calculation",
+      description: "This includes the total amount paid towards the loan over the specified tenure, considering the EMI payments."),
+  ListItemModel(
+      title: "Annual Maintenance Cost Calculation",
+      description: "The calculator estimates the annual maintenance expenses based on the selected car brand and the specified maintenance cost percentage."),
+  ListItemModel(
+      title: "Depreciation Value Calculation",
+      description: "The estimated depreciation value of the car after four years is calculated based on the selected car brand."),
+];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,8 +85,8 @@ class _AutoLoanState extends State<AutoLoan> {
              SliderPage(slidersList: slidersList),
              PieChartGraph(),
               CustomExpansionTile(
-                 howToUseContent: Expansioncalculator.creditcardTitle1,
-                howItWorksContent: Expansioncalculator.creditcardTitle2,
+                 howToUseContent: howToUseContent,
+                howItWorksContent: howItWorksContent,
               ),
              
             ],
