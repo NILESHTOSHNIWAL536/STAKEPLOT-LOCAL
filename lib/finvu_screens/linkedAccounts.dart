@@ -60,8 +60,8 @@ void loginToAutoTractions(context) async {
     final body = json.decode(response.body);
     String token = "Bearer " + body['body']['token'];
     _pref.setString("token", token);
-    //  print("token-----------------------------------");
-    //  print(token);
+     print("token-----------------------------------");
+     print(token);
     ConsentRequestPlus(context, token, custId);
   } else {
     //  snackBarCalled(context,"can't Add Friend!",Colors.red);
@@ -102,6 +102,7 @@ void ConsentRequestPlus(context, accessToken, custId) async {
       String url = (body['body']['url']);
 
       login(ConsentHandleId);
+      print(ConsentHandleId);
       handleId.value = ConsentHandleId;
       ConsentStatus(context, accessToken, ConsentHandleId, custId);
     } else {}
@@ -281,7 +282,7 @@ void FetchData(context, accessToken, consentHandleId, custId, from, to,
   } else {}
 }
 
-void storeDataOfTransactions(context, data, consentHandleId, from, to,
+Future<void> storeDataOfTransactions(context, data, consentHandleId, from, to,
     accessToken, custId, consentId, sessionId) async {
   print(data);
   if (data == "Account data not found.") return;
@@ -371,3 +372,126 @@ try{
   } 
     debugPrint('getConsentHandleStatus');
   }
+
+
+
+
+// Fetch route
+// app.post('/fetch', async (req, res) => {
+//   const { custId, consentHandleId } = req.body;
+
+//   try {
+//     // Step 1: Get the token from shared preferences (or your storage)
+//     const token = userData.token; // Assuming token is stored in userData
+
+//     if (!token) {
+//       return res.status(400).json({ error: "Token not found. Please login first." });
+//     }
+
+//     // Step 2: Call ConsentStatus
+//     const consentStatusResponse = await axios.get(
+//       `${baseUrl}/ConsentStatus/${consentHandleId}/${custId}`,
+//       {
+//         headers: {
+//           'Content-Type': 'application/json',
+//           Authorization: token,
+//         },
+//       }
+//     );
+
+//     if (consentStatusResponse.status !== 200 && consentStatusResponse.status !== 201) {
+//       return res.status(400).json({ error: "Consent status check failed" });
+//     }
+
+//     const consentStatusBody = consentStatusResponse.data;
+//     if (consentStatusBody.body.consentStatus !== "ACCEPTED") {
+//       return res.status(400).json({ error: "Consent not accepted" });
+//     }
+
+//     const consentId = consentStatusBody.body.consentId;
+
+//     // Step 3: Call ConsentFromAndToRequest
+//     const consentDetailsResponse = await axios.get(
+//       `${baseUrl}/Consent/${consentId}`,
+//       {
+//         headers: {
+//           'Content-Type': 'application/json',
+//           Authorization: token,
+//         },
+//       }
+//     );
+
+//     if (consentDetailsResponse.status !== 200 && consentDetailsResponse.status !== 201) {
+//       return res.status(400).json({ error: "Failed to fetch consent details" });
+//     }
+
+//     const consentDetailsBody = consentDetailsResponse.data;
+//     const from = consentDetailsBody.body.ConsentDetail.FIDataRange.from;
+//     const to = consentDetailsBody.body.ConsentDetail.FIDataRange.to;
+
+//     // Step 4: Call FIRequest
+//     const fiRequestResponse = await axios.post(
+//       `${baseUrl}/FIRequest`,
+//       {
+//         header: headers,
+//         body: {
+//           custId,
+//           consentId,
+//           consentHandleId,
+//           dateTimeRangeFrom: from,
+//           dateTimeRangeTo: to,
+//         },
+//       },
+//       {
+//         headers: {
+//           'Content-Type': 'application/json',
+//           Authorization: token,
+//         },
+//       }
+//     );
+
+//     if (fiRequestResponse.status !== 200 && fiRequestResponse.status !== 201) {
+//       return res.status(400).json({ error: "FI request failed" });
+//     }
+
+//     const sessionId = fiRequestResponse.data.body.sessionId;
+
+//     // Step 5: Call FIRequestStatus
+//     const fiRequestStatusResponse = await axios.get(
+//       `${baseUrl}/FIStatus/${consentId}/${sessionId}/${consentHandleId}/${custId}`,
+//       {
+//         headers: {
+//           'Content-Type': 'application/json',
+//           Authorization: token,
+//         },
+//       }
+//     );
+
+//     if (fiRequestStatusResponse.status !== 200 && fiRequestStatusResponse.status !== 201) {
+//       return res.status(400).json({ error: "FI request status check failed" });
+//     }
+
+//     // Step 6: Call FetchData
+//     const fetchDataResponse = await axios.get(
+//       `${baseUrl}/FIFetch/${custId}/${consentId}/${sessionId}`,
+//       {
+//         headers: {
+//           'Content-Type': 'application/json',
+//           Authorization: token,
+//         },
+//       }
+//     );
+
+//     if (fetchDataResponse.status !== 200 && fetchDataResponse.status !== 201) {
+//       return res.status(400).json({ error: "Failed to fetch data" });
+//     }
+
+//     const fetchedData = fetchDataResponse.data.body;
+
+//     // Step 7: Return the fetched data
+//     res.status(200).json({ data: fetchedData });
+//   } catch (error) {
+//     console.error("Error in fetch:", error.message);
+//     res.status(500).json({ error: error.message });
+//   }
+// });

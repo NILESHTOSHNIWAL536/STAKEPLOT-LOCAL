@@ -1,19 +1,22 @@
 
 
 
+import 'dart:convert';
+
 import 'package:finvu_flutter_sdk/finvu_config.dart';
 import 'package:finvu_flutter_sdk_core/finvu_discovered_accounts.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_details.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/ApproveConsentRequest.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchData.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:http/http.dart' as http;
 
   void initFinvuManager() async {
      finvuManager.initialize(
@@ -33,263 +36,96 @@ import 'package:shared_preferences/shared_preferences.dart';
 
   }
 
+Future<void> loginWithServer() async {
+  final String apiUrl = "${url}/finvu/login"; // Change to your actual server URL
+  final String custId = "${number.value}@finvu"; // Replace with dynamic value if needed
 
-   void login() async {
-
-    var login = await finvuManager.loginWithUsernameOrMobileNumberAndConsentHandle(
-              custId,
-              number.value,
-              handleId.value,
-          );
-
-      
-    otpReference = login.reference;
-    debugPrint('LoggedIn');
-  }
-
-
-
-  void fetch(context) async { 
-
-       try{
-             final SharedPreferences _pref = await SharedPreferences.getInstance();
-             String? token=await _pref.getString("token");
-             ConsentStatus(context,token,handleId.value,custId);
-       }catch(e){
-           print(e);
-       }
-
-  }
-
-  void verify(String otp,context) async {
-
-    try{
-    var login = await finvuManager.verifyLoginOtp(
-      otp,
-      otpReference,
+  try {
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({"custId": custId}),
     );
-    
-     final SharedPreferences _pref = await SharedPreferences.getInstance();
-          String? token=await _pref.getString("token");
 
-           List<FinvuFIPInfo> data=await finvuManager.fipsAllFIPOptions(); 
-           data=[data[0]];
-          
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      String token = data["token"];
+      String consentHandleId = data["consentHandleId"];
 
+      // Store token and consentHandleId in SharedPreferences
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString("tokenFinvu", token);
+      await prefs.setString("consentHandleId", consentHandleId);
 
-          // FinvuFIPInfo  finvuFIPInfo=data.first;
+      print("Login successful!");
+      print("Token: $token");
+      print("Consent Handle ID: $consentHandleId");
 
-            // data.forEach((e)async{
-            //        print("e.fipId");
-            //        print(e.productName);
-            //        print(e.fipId);
-            //        print(e.fipFitypes);
-
-              //  var d=await finvuManager.fetchFIPDetails(e.fipId); 
-
-              //   print(d.fipId);
-              //   d.typeIdentifiers.forEach((e){
-              //         print("typeIdentifiers-------------------");
-              //         print(e.fiType);
-              //        e.identifiers.forEach((e){
-              //               print("identifiers-------------------");
-              //               print(e.category);
-              //               print(e.type);    
-              //        });
-              //   });
-
-
-                  
-            // });
-
-    //  Navigator.pushReplacement(
-    //                   context,
-    //                   MaterialPageRoute(
-    //                     builder: (context) => ApproveConsent(),
-    //         ));
-    // await approveConsentRequest();
-    //  ConsentStatus(context,token,handleId.value,custId);
-
+      // Proceed with next steps, e.g., calling another API
+      // ConsentStatus(context, token, consentHandleId, custId);
+    } else {
+      print("Login failed: ${response.body}");
     }
-    catch(e)
-    {
-        print(e);
-    }
+  } catch (error) {
+    print("Error logging in: $error");
   }
+}
 
-  void fetchLinkedAccounts() async {
-    try{
-    finvuLinkedAccountDetailsInfo =await  finvuManager.fetchLinkedAccounts();
-    finvuLinkedAccountDetailsInfo.forEach((e){
-          print("---------------------------");
-          print(e.userId);
-          print(e.consentIdList);
-          print(e.fiType);
-          print(e.fipName);
-          print(e.fipId);
-          print(e);
-          
-    });
-    }catch(e){
-         print(e);
+
+Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
+  try {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String apiUrl = "${url}/finvu/fetchData"; // Change to your actual server URL
+    final String custId = "${number.value}@finvu"; // Replace with dynamic value if needed
+
+    String? token = prefs.getString("tokenFinvu");
+    String? handleId = prefs.getString("handleId");
+    // String? custId = prefs.getString("custId");
+
+    if (token == null || handleId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Missing required credentials!")),
+      );
+      return;
     }
-     
-    debugPrint('fetchLinkedAccounts');
-  }
 
-  void getConsentHandleStatus() async {
-    
-    try{
-         var d=await finvuManager.getConsentHandleStatus(handleId.value);
-         print('getConsentHandleStatus = ');
-         print(d.status);
-        
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "token": token,
+        "handleId": handleId,
+        "custId": custId,
+      }),
+    );
 
-    }catch(e){
-         print(e);
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      print("Data Fetched: ${data}");
+
+      // Store values in SharedPreferences for later use
+      prefs.setString("sessionId", data["sessionId"]);
+      prefs.setString("from", data["from"]);
+      prefs.setString("to", data["to"]);
+      prefs.setString("custId", data["custId"]);
+      prefs.setString("consentId", data["consentId"]);
+
+      await  storeDataOfTransactions(context, data, handleId, data["from"], data["to"],
+       token, custId, data["custId"], data["sessionId"]);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Data fetched successfully!")),
+      );
+    } else {
+      print("Error fetching data: ${response.body}");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to fetch data")),
+      );
     }
-     
-    debugPrint('getConsentHandleStatus');
+  } catch (e) {
+    print("Error: $e");
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("An error occurred")),
+    );
   }
-  void  LOGOUT() async {
-    
-       final SharedPreferences _pref = await SharedPreferences.getInstance();
-    try{
-
- listOfAccountAdded.clear();
-
- FinvuFIPDetailsList.clear();
- accountAdded.clear();
- accountLinked.clear();
- accountLinked.clear();
- 
-        _pref.remove("token");
-        _pref.remove("from");
-        _pref.remove("to");
-        _pref.remove("sessionId");
-        _pref.remove("consentId");
-        _pref.remove("ConsentHandleId");
-
-        await finvuManager.logout(); 
-      
-        print("Logout user...");
-    }catch(e){
-         print(e);
-    }
-     
-    debugPrint('getConsentHandleStatus');
-  }
-  
-  void getConsentRequestDetails() async {
-    
-    try{
-         finvuConsentRequestDetailInfo=await finvuManager.getConsentRequestDetails(handleId.value);
-    }catch(e){
-         print(e);
-    }
-     
-    debugPrint('getConsentRequestDetails');
-  }
-  
-  void  discoverAccounts() async
-  {
-    try{
-        FinvuTypeIdentifierInfo finvuTypeIdentifierInfo=FinvuTypeIdentifierInfo(
-             category: "Personal Finance",
-             type: "DEPOSIT",
-             value: "3",
-        );
-        List<FinvuTypeIdentifierInfo> identifiers=[finvuTypeIdentifierInfo];
-
-         FinvuTypeIdentifier finvuTypeIdentifier=FinvuTypeIdentifier(
-            category: "Personal Finance",
-            type: "DEPOSIT",
-         );
-        List<FinvuTypeIdentifier> finvuTypeIdentifierList=[finvuTypeIdentifier];
-
-        FinvuFIPFiTypeIdentifier finvuFIPFiTypeIdentifier=FinvuFIPFiTypeIdentifier(
-          fiType: "DEPOSIT",identifiers: finvuTypeIdentifierList
-        );
-        List<FinvuFIPFiTypeIdentifier> typeIdentifiers=[finvuFIPFiTypeIdentifier];
-
-
-        FinvuFIPDetails fipDetails=FinvuFIPDetails(fipId: "BARB0KIMXXX", typeIdentifiers: typeIdentifiers);
-
-        List<String> fiTypes=[
-                "DEPOSIT",
-                 "RECURRING_DEPOSIT",
-                "TERM-DEPOSIT"
-              ];
-
-        List<FinvuDiscoveredAccountInfo> info=await finvuManager.discoverAccounts(fipDetails,fiTypes,identifiers);
-         info.forEach((e){
-            print('e.accountType');
-            print(e.accountType);
-            print(e.fiType);
-          
-         });
-
-    }catch(e){
-         print(e);
-    }
-     
-    debugPrint('getConsentRequestDetails');
-  }
-
-  void approveConsentRequest(context) async {
-    
-    try{
-         var d=await finvuManager.approveConsentRequest(finvuConsentRequestDetailInfo,finvuLinkedAccountDetailsInfo);
-          print("boolValue approveConsentRequest==========approveConsentRequest");
-          print('d.consentIntentId');
-          print(d.consentIntentId);
-          consentUserId.value=d.consentIntentId.toString();
-          print(finvuConsentRequestDetailInfo.consentHandle);
-          print(finvuConsentRequestDetailInfo.consentId);
-          Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FetchBankData(),
-                      ));
-
-          
-      }
-      catch(e){
-         print("d.consentIntentId error");
-         print(e);
-    }
-     
-    debugPrint('approveConsentRequest');
-  }
-
-
-//  void initFinvuManager() async {
-//      finvuManager.initialize(
-//         FinvuConfig(
-//           finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
-//           certificatePins: [
-//             // "3RbasfbYK4UP0GTgGKLV9ggrHbdiwzNDJ4s73Mx8AQM=",
-//             // "bdrBhpj38ffhxpubzkINl0rG+UyossdhcBYj+Zx2fcc="
-//           ],
-//         ),
-//       );
-
-//     await finvuManager.connect(); 
-//     var isConnected = await finvuManager.isConnected();
-//     print(isConnected);
-//     if (!isConnected) {
-//         isConnected = await finvuManager.isConnected();
-//         print(isConnected); 
-//     }
-//   }
-
-
-
-//     finvu_flutter_sdk_core:
-//     git:
-//       url: https://github.com/yashwantGehlot/finvu_flutter_sdk.git
-//       path: core
-//       ref: v2
-// Yashwant Gehlot
-// 17:17
-// url = uri("https://maven.pkg.github.com/yashwantGehlot/finvu_android_sdk")
+}

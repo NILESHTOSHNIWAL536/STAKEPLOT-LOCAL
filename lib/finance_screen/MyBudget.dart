@@ -55,12 +55,12 @@ int currentMonthIndex = DateTime.now().month - 1; // Month is 1-based, so subtra
             },
           ],
           monthlyBudgetData: [
-            FlSpot(0, 300),
+            FlSpot(0, 400),
             FlSpot(1, 400),
             FlSpot(2, 500),
-            FlSpot(3, 600),
+            FlSpot(3, 900),
             FlSpot(4, 650),
-            FlSpot(5, 700),
+            FlSpot(5, 500),
           ],
         );
 
@@ -272,7 +272,7 @@ int currentMonthIndex = DateTime.now().month - 1; // Month is 1-based, so subtra
 class LineChartSample extends StatelessWidget {
   final List<FlSpot> monthlyBudgetData; // Dynamic data for the LineChart
 int currentMonthIndex = DateTime.now().month - 1; // Month is 1-based, so subtract 1 for 0-based index
-double currentMonthSpending = 300.0; // Replace with actual data
+double currentMonthSpending = 400.0; // Replace with actual data
 
   LineChartSample({required this.monthlyBudgetData});
 
@@ -300,17 +300,17 @@ double currentMonthSpending = 300.0; // Replace with actual data
             getTitlesWidget: (value, titleMeta) {
               // Return the title for each point on the bottom axis based on value
               if (value == 0) {
-                return Text('Jan');
+                return Text('1');
               } else if (value == 1) {
-                return Text('Feb');
+                return Text('2');
               } else if (value == 2) {
-                return Text('Mar');
+                return Text('3');
               } else if (value == 3) {
-                return Text('Apr');
+                return Text('4');
               } else if (value == 4) {
-                return Text('May');
+                return Text('5');
               } else if (value == 5) {
-                return Text('Jun');
+                return Text('6');
               }
               return const Text('');
             },

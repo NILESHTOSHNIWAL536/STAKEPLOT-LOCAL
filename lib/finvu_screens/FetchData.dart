@@ -55,7 +55,7 @@ class _ShareAccountLoginState extends State<FetchBankData> {
                 InkWell(
                   onTap: (){
                     //  Otpscreen
-                      fetch(context);
+                      // fetch(context);
                      
                   },
                   child: getButton(context,"Fetch Data")
