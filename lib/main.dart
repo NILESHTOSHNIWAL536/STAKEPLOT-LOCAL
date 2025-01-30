@@ -65,10 +65,10 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-       initialRoute: '/HomePage', 
+       initialRoute: '/', 
         routes:
     {  
-      '/': (context) =>  HomePage(),   
+      '/': (context) =>  Signin(),   
       '/signup': (context) => SignUp(),  
       '/home': (context) => HomePage(),  
       '/Notifications': (context) => Notifications(),  

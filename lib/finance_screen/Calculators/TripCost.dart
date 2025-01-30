@@ -26,10 +26,11 @@ class _TripCostState extends State<TripCost> {
   double accommodationCost = 1500;
   double totalCost = 0;
   double costPerMember = 0;
-
+double accommodationCostPerDay = 0;
   @override
   void initState() {
     getslidersList();
+    calculateTripCost();
   }
 
   void getslidersList() {
@@ -77,8 +78,7 @@ class _TripCostState extends State<TripCost> {
         description:
             "Enter the total number of individuals participating in the trip."),
   ];
-  double accommodationCostPerDay = 0;
-
+  
   // Example data for "How it works?"
   final List<ListItemModel> howItWorksContent = [
     ListItemModel(
@@ -108,8 +108,28 @@ class _TripCostState extends State<TripCost> {
     });
   }
 
-  void calculateTripCost() {
-     accommodationCostPerDay = selectedAccommodation == 'Hotel'
+  // void calculateTripCost() {
+  //   accommodationCostPerDay = selectedAccommodation == 'Hotel'
+  //       ? 1500 * (numberOfMembers / 2).round().toDouble()
+  //       : selectedAccommodation == 'Airbnb'
+  //           ? 1000 * (numberOfMembers / 2).round().toDouble()
+  //           : selectedAccommodation == 'Hostel'
+  //               ? 400 * numberOfMembers.toDouble()
+  //               : selectedAccommodation == 'Camping'
+  //                   ? 450 * (numberOfMembers / 2).round().toDouble()
+  //                   : 0.0;
+
+  //   double totalAccommodationCost =
+  //       accommodationCost * (numberOfMembers / 2).ceil() * numberOfDays;
+  //   double totalDailyExpenses = dailyExpenses * numberOfDays;
+  //   totalCost = travelCost +
+  //       totalAccommodationCost +
+  //       totalDailyExpenses +
+  //       entertainmentBudget;
+  //   costPerMember = totalCost / numberOfMembers;
+  // }
+void calculateTripCost() {
+    accommodationCostPerDay = selectedAccommodation == 'Hotel'
         ? 1500 * (numberOfMembers / 2).round().toDouble()
         : selectedAccommodation == 'Airbnb'
             ? 1000 * (numberOfMembers / 2).round().toDouble()
@@ -119,8 +139,7 @@ class _TripCostState extends State<TripCost> {
                     ? 450 * (numberOfMembers / 2).round().toDouble()
                     : 0.0;
 
-    double totalAccommodationCost =
-        accommodationCost * (numberOfMembers / 2).ceil() * numberOfDays;
+    double totalAccommodationCost = accommodationCostPerDay * numberOfDays;
     double totalDailyExpenses = dailyExpenses * numberOfDays;
     totalCost = travelCost +
         totalAccommodationCost +
@@ -128,7 +147,6 @@ class _TripCostState extends State<TripCost> {
         entertainmentBudget;
     costPerMember = totalCost / numberOfMembers;
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -143,6 +161,12 @@ class _TripCostState extends State<TripCost> {
                     slidersList: slidersList,
                     onSliderValueChanged: updateSliderValue,
                     title: "Trip",
+                    onAccommodationChanged: (newAccommodation) {
+                      setState(() {
+                        selectedAccommodation = newAccommodation;
+                        calculateTripCost(); // Recalculate costs when accommodation changes
+                      });
+                    },
                   ),
                   graph(),
                   CustomExpansionTile(
@@ -160,10 +184,10 @@ class _TripCostState extends State<TripCost> {
       graphData: [
         {'title': 'Travel Cost\n₹$travelCost', 'value': travelCost},
         {
-          'title': 'Accommodation Cost\n₹$accommodationCost',
-          'value': accommodationCost
+          'title': 'Accommodation Cost\n₹${accommodationCostPerDay * numberOfDays}',
+          'value': accommodationCostPerDay * numberOfDays
         },
-        {'title': 'Daily Expenses\n₹$dailyExpenses', 'value': dailyExpenses},
+        {'title': 'Daily Expenses\n₹${dailyExpenses * numberOfDays}', 'value': dailyExpenses * numberOfDays},
         {
           'title': 'Entertainment Budget\n₹$entertainmentBudget',
           'value': entertainmentBudget

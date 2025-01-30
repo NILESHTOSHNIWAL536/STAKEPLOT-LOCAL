@@ -65,7 +65,7 @@ class CustomExpansionTile extends StatelessWidget {
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.w300,
-                  fontSize: 12,
+                  fontSize: 14,
                   color: AppColors.primaryColor,
                 ),
               ),
@@ -108,7 +108,7 @@ class CustomExpansionTile extends StatelessWidget {
             style: FontManager().getTextStyle(
               context,
               lWeight: FontWeight.w300,
-              fontSize: 12,
+              fontSize: 14,
               color: Colors.black54,
             ),
           ),
@@ -139,7 +139,7 @@ class CustomExpansionTile extends StatelessWidget {
             style: FontManager().getTextStyle(
               context,
               lWeight: FontWeight.w300,
-              fontSize: 12,
+              fontSize: 14,
               color: Colors.black54,
             ),
           ),
