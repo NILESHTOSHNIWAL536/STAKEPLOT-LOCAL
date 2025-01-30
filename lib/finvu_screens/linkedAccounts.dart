@@ -60,8 +60,8 @@ void loginToAutoTractions(context) async {
     final body = json.decode(response.body);
     String token = "Bearer " + body['body']['token'];
     _pref.setString("token", token);
-    //  print("token-----------------------------------");
-    //  print(token);
+     print("token-----------------------------------");
+     print(token);
     ConsentRequestPlus(context, token, custId);
   } else {
     //  snackBarCalled(context,"can't Add Friend!",Colors.red);
@@ -102,6 +102,7 @@ void ConsentRequestPlus(context, accessToken, custId) async {
       String url = (body['body']['url']);
 
       login(ConsentHandleId);
+      print(ConsentHandleId);
       handleId.value = ConsentHandleId;
       ConsentStatus(context, accessToken, ConsentHandleId, custId);
     } else {}
@@ -281,7 +282,7 @@ void FetchData(context, accessToken, consentHandleId, custId, from, to,
   } else {}
 }
 
-void storeDataOfTransactions(context, data, consentHandleId, from, to,
+Future<void> storeDataOfTransactions(context, data, consentHandleId, from, to,
     accessToken, custId, consentId, sessionId) async {
   print(data);
   if (data == "Account data not found.") return;

@@ -3,6 +3,7 @@ import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 // import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -107,7 +108,7 @@ class _MobileNumberState extends State<MobileNumber> {
             SizedBox(height: 60), // Add spacing between TextField and button
             // Button for "Get OTP"
             GestureDetector(
-              onTap: () {
+              onTap: ()async {
                 // Handle OTP logic here
                 if (_phoneController.text.length != 10) {
                   snackBarCalled(context, "Please enter valid mobile number",
@@ -117,8 +118,9 @@ class _MobileNumberState extends State<MobileNumber> {
                 ;
                 String phoneNumber = _phoneController.text;
                 number.value = phoneNumber;
-                LOGOUT();         
-                loginToAutoTractions(context);
+                LOGOUT();   
+                 await  loginWithServer();
+                // loginToAutoTractions(context);
                 otpController = TextEditingController();
 
                 showModalBottomSheet(
