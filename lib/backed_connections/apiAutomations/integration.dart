@@ -61,6 +61,11 @@ Future<void> loginWithServer() async {
       print("Token: $token");
       print("Consent Handle ID: $consentHandleId");
 
+      
+      login(consentHandleId);
+      handleId.value = consentHandleId;
+
+
       // Proceed with next steps, e.g., calling another API
       // ConsentStatus(context, token, consentHandleId, custId);
     } else {
