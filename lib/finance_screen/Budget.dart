@@ -129,6 +129,7 @@ class _BudgetState extends State<Budget> {
           TextFeildWidgetCustom(
             textEditingController: nameController,
             heading: "Name",
+            
             keyBoard: TextInputType.emailAddress,
             lableText: "Enter the name",
             icon: Finance.user,

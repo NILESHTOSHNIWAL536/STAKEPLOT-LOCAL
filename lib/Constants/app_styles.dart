@@ -223,13 +223,13 @@ class BudgetCategories {
     "Bills": Categories.bills,
     "Subscriptions": Categories.subscription,
     "Events": Categories.events,
-    "Personal Care": Categories.personalCare,
+    "PersonalCare": Categories.personalCare,
     "Services": Categories.services,
     "Emi": Categories.emi,
     "Insurance": Categories.insurance,
     "Support": Categories.support,
     "Children": Categories.children,
-    "Pet Care": Categories.petCare,
+    "PetCare": Categories.petCare,
     "Sports": Categories.sports,
     "Alcohol": Categories.alcohal,
     "Hobbies": Categories.hobbies,
@@ -237,7 +237,7 @@ class BudgetCategories {
     "Entertainment": Categories.entertainment,
     // "Investments": Categories.Investments,
     // "Current": Categories.current,
-    // "Education": Categories.education,
+    // "Education": Categories.,
     // "Commerce": Categories.commerce
   };
 

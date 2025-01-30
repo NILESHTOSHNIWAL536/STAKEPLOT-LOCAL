@@ -119,8 +119,8 @@ class _MobileNumberState extends State<MobileNumber> {
                 String phoneNumber = _phoneController.text;
                 number.value = phoneNumber;
                 LOGOUT();   
+                //  loginToAutoTractions(context);
                  await  loginWithServer();
-                // loginToAutoTractions(context);
                 otpController = TextEditingController();
 
                 showModalBottomSheet(

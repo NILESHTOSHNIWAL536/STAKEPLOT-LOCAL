@@ -37,10 +37,6 @@ void login(handleId) async {
   );
 
   otpReference = login.reference;
-  // print("otpReference");
-  // print(login);
-  // print(otpReference);
-
   debugPrint('LoggedIn');
 }
 

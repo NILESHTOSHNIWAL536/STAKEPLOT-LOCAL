@@ -1,6 +1,6 @@
-
 import 'dart:convert';
 
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -56,7 +56,7 @@ class _BudgetDisplayState extends State<BudgetDisplay> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                height: Colorcodes.paddingSize / 2,
+                height: Colorcodes.paddingSize / 1,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -121,12 +121,11 @@ class _BudgetDisplayState extends State<BudgetDisplay> {
   Widget containerCardBudget(data) {
     return GestureDetector(
       onTap: () {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => MyBudgetScreen.example()),
-  );
-},
-
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MyBudgetScreen.example()),
+        );
+      },
       child: Container(
         width: MediaQuery.of(context).size.width / 1.1,
         decoration: BoxDecoration(
@@ -147,11 +146,13 @@ class _BudgetDisplayState extends State<BudgetDisplay> {
                         vertical: Colorcodes.paddingSize / 2),
                     child: Row(
                       children: [
-                        textStyle(
-                            context: context,
-                            text: data['name'],
-                            fontWeight: FontWeight.w500,
-                            fontsize: 16),
+                        Expanded(
+                          child: textStyle(
+                              context: context,
+                              text: data['name'],
+                              fontWeight: FontWeight.w500,
+                              fontsize: 16),
+                        ),
                       ],
                     ),
                   ),
@@ -168,7 +169,7 @@ class _BudgetDisplayState extends State<BudgetDisplay> {
                     padding: EdgeInsets.only(top: Colorcodes.paddingSize / 2),
                     child: textStyle(
                         context: context,
-                        text: 'Amount spent',
+                        text: 'Amount',
                         fontWeight: FontWeight.w300,
                         fontsize: 14),
                   ),
