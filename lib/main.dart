@@ -17,7 +17,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Sa
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/TripCost.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/credit_card.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debt.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/creditCard.dart';
+// import 'package:flutter_application_code_stakeplot/finance_screen/creditCard.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/finvuAccount.dart';

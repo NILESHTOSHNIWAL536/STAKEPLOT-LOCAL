@@ -40,12 +40,26 @@ class Categories {
   static String support = "Support.svg";
   static String travel = "Travel.svg";
 
-  static List<String> categoriesList=[
-         alcohal,bills,children,emi,entertainment,events,
-         food,health,hobbies,insurance,personalCare,petCare,
-         services,snacks,sports,subscription,support,travel
+  static List<String> categoriesList = [
+    alcohal,
+    bills,
+    children,
+    emi,
+    entertainment,
+    events,
+    food,
+    health,
+    hobbies,
+    insurance,
+    personalCare,
+    petCare,
+    services,
+    snacks,
+    sports,
+    subscription,
+    support,
+    travel
   ];
-
 }
 
 //    Sub- categories
@@ -187,72 +201,59 @@ class Finance {
   static String budget = "assets/icons/financeScreen/budget.svg";
   static String debt = "assets/icons/financeScreen/debt.svg";
   static String plot = "assets/icons/financeScreen/plotUrFinance.svg";
-    static String auto = "assets/icons/financeScreen/Autoloan.svg";
-      static String cab = "assets/icons/financeScreen/Cabservice.svg";
-        static String credit = "assets/icons/financeScreen/Creditcard.svg";
+  static String auto = "assets/icons/financeScreen/Autoloan.svg";
+  static String cab = "assets/icons/financeScreen/Cabservice.svg";
+  static String credit = "assets/icons/financeScreen/Creditcard.svg";
   static String emi = "assets/icons/financeScreen/emi.svg";
   static String key = "assets/icons/financeScreen/Key.svg";
   static String location = "assets/icons/financeScreen/Location.svg";
-  
+
   static String savings = "assets/icons/financeScreen/savings.svg";
-    static String user = "assets/icons/financeScreen/user.svg";
-      static String amt = "assets/icons/financeScreen/amt.svg";
-
-
-
-
-
+  static String user = "assets/icons/financeScreen/user.svg";
+  static String amt = "assets/icons/financeScreen/amt.svg";
+  static String addBudget = "assets/icons/financeScreen/addBudget.svg";
 }
 
+class BudgetCategories {
+  static Map<String, dynamic> listofCategories = {
+    "Food": Categories.food,
+    "Shopping": Categories.shopping,
+    "Travel": Categories.travel,
+    "Health": Categories.health,
+    "Bills": Categories.bills,
+    "Subscriptions": Categories.subscription,
+    "Events": Categories.events,
+    "Personal Care": Categories.personalCare,
+    "Services": Categories.services,
+    "Emi": Categories.emi,
+    "Insurance": Categories.insurance,
+    "Support": Categories.support,
+    "Children": Categories.children,
+    "Pet Care": Categories.petCare,
+    "Sports": Categories.sports,
+    "Alcohol": Categories.alcohal,
+    "Hobbies": Categories.hobbies,
+    "snacks": Categories.snacks,
+    "Entertainment": Categories.entertainment,
+    // "Investments": Categories.Investments,
+    // "Current": Categories.current,
+    // "Education": Categories.education,
+    // "Commerce": Categories.commerce
+  };
 
-
-
-class BudgetCategories
-{
-   static Map<String,dynamic> listofCategories={
-        "Food": Categories.food,
-        "Shopping":Categories.shopping,
-        "Travel": Categories.travel,
-        "Health":Categories.health,
-        "Bills": Categories.bills,
-        "Subscriptions":Categories.subscription,
-        "Events":Categories.events,
-        "Personal Care": Categories.personalCare,
-        "Services": Categories.services,
-        "Emi": Categories.emi,
-        "Insurance": Categories.insurance,
-        "Support": Categories.support,
-        "Children":Categories.children,
-        "Pet Care": Categories.petCare,
-        "Sports": Categories.sports,
-        "Alcohol": Categories.alcohal,
-        "Hobbies": Categories.hobbies,
-        "snacks": Categories.snacks,
-        "Entertainment":Categories.entertainment,
-        // "Investments": Categories.Investments,
-        // "Current": Categories.current,
-        // "Education": Categories.education,
-        // "Commerce": Categories.commerce
-    };
-
-   static List<String> categories = listofCategories.keys.map((key) => key.toString()).toList();
-
+  static List<String> categories =
+      listofCategories.keys.map((key) => key.toString()).toList();
 }
 
-
-class Expansioncalculator{
-   
-   static List<String>  creditcardTitle1=[
-        "Credit Card Balance: Use the slider to set your current balance (e.g., 5000).",
-                                  "Credit Card Interest Rate: Use the slider to set your annual interest rate (e.g., 18%).",
-                                  "Monthly Payment: Use the slider to set your planned monthly payment (e.g., 200).",
-                               
-   ];
-   static List<String>  creditcardTitle2=[
-        "Monthly Interest Rate: Converts the annual interest rate to a monthly rate.",
-                                  "Months to Pay off Debt: Calculates the number of months to pay off the debt using your balance, monthly payment, and interest rate.",
-                                  "Total Interest Paid: Computes the total interest paid over the repayment method.",
-                                
-   ];
-
-} 
+class Expansioncalculator {
+  static List<String> creditcardTitle1 = [
+    "Credit Card Balance: Use the slider to set your current balance (e.g., 5000).",
+    "Credit Card Interest Rate: Use the slider to set your annual interest rate (e.g., 18%).",
+    "Monthly Payment: Use the slider to set your planned monthly payment (e.g., 200).",
+  ];
+  static List<String> creditcardTitle2 = [
+    "Monthly Interest Rate: Converts the annual interest rate to a monthly rate.",
+    "Months to Pay off Debt: Calculates the number of months to pay off the debt using your balance, monthly payment, and interest rate.",
+    "Total Interest Paid: Computes the total interest paid over the repayment method.",
+  ];
+}

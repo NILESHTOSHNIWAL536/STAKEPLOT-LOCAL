@@ -14,10 +14,10 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:get/get.dart';
 
-RxList categoriesSeleted=[].obs;
-RxList categoriesDividedList=[].obs;
-RxList<String> cat=<String>[].obs;
-RxBool getCategories=false.obs;
+RxList categoriesSeleted = [].obs;
+RxList categoriesDividedList = [].obs;
+RxList<String> cat = <String>[].obs;
+RxBool getCategories = false.obs;
 Map<String, dynamic> categoryWeights = {
   "Essentials": {
     "percentage": 50.0,
@@ -46,15 +46,9 @@ Map<String, dynamic> categoryWeights = {
   },
   "Savings": {
     "percentage": 20.0,
-    "subcategories": {
-      "Investments": 10.0,
-      "EMI": 8.0,
-      "Hobbies": 2.0
-    }
+    "subcategories": {"Investments": 10.0, "EMI": 8.0, "Hobbies": 2.0}
   }
 };
-
-
 
 class Budget extends StatefulWidget {
   const Budget({Key? key}) : super(key: key);
@@ -75,8 +69,6 @@ class _BudgetState extends State<Budget> {
     getTopFiveCater();
   }
 
-
-
   // void getTopFiveCater()async
   // {
   //    String urlPath= "${url}/budget/top-five-categories/";
@@ -92,7 +84,7 @@ class _BudgetState extends State<Budget> {
   //         }
   //     }catch(e){
   //     }
-    
+
   // }
 
   @override
@@ -140,7 +132,6 @@ class _BudgetState extends State<Budget> {
             keyBoard: TextInputType.emailAddress,
             lableText: "Enter the name",
             icon: Finance.user,
-            
           ),
           TextFeildWidgetCustom(
             textEditingController: amountController,
@@ -175,54 +166,50 @@ class _BudgetState extends State<Budget> {
               },
               child: getButton(context, "Continue")),
         ],
-
-       ),
-     );
- }
-
-
-
-
- Widget rowPer(){
-   return Row(
-                           mainAxisAlignment: MainAxisAlignment.spaceAround,
-                           children: [
-                                getPeriod("Weekly"),
-                                getPeriod("Monthly"),
-                                getPeriod("Yearly"),
-                         ],
+      ),
     );
   }
 
-
+  Widget rowPer() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        getPeriod("Weekly"),
+        getPeriod("Monthly"),
+        getPeriod("Yearly"),
+      ],
+    );
+  }
 
   Widget getPeriod(text) {
-    return Obx(()=> Container(
-      padding: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
-      decoration: BoxDecoration(
-          color: period.value == text ? Colorcodes.greyLight : Colorcodes.white,
-          borderRadius: BorderRadius.circular(20)
-        ),
-      child: InkWell(
-          onTap: () {
+    return Obx(() => Container(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          decoration: BoxDecoration(
+              color: period.value == text
+                  ? Colorcodes.greyLight
+                  : Colorcodes.white,
+              borderRadius: BorderRadius.circular(20)),
+          child: InkWell(
+              onTap: () {
                 period.value = text;
                 boolFlag.value = !boolFlag.value;
                 period.refresh();
-          },
-          child: textStyle(
-              context: context,
-              text: text,
-              fontWeight: FontWeight.w300,
-              //  c: period.value != text ? Colorcodes.greyLight : Colorcodes.white,
-              fontsize: 14)),
-    ));
+              },
+              child: textStyle(
+                  context: context,
+                  text: text,
+                  fontWeight: FontWeight.w300,
+                  //  c: period.value != text ? Colorcodes.greyLight : Colorcodes.white,
+                  fontsize: 14)),
+        ));
   }
 
- void bedgetCalculator()
- {
-    if(nameController.text=="" || amountController.text=="" || period.value==""){
-              snackBarCalled(context,"Pls Enter All Feilds...",Colorcodes.red);
-              return;
+  void bedgetCalculator() {
+    if (nameController.text == "" ||
+        amountController.text == "" ||
+        period.value == "") {
+      snackBarCalled(context, "Pls Enter All Feilds...", Colorcodes.red);
+      return;
     }
     Navigator.push(
       context,
@@ -240,6 +227,7 @@ Widget textStyle(
     {required BuildContext context,
     text,
     double fontsize = 12,
+    
     Color c = AppColors.bg1,
     FontWeight fontWeight = FontWeight.w500}) {
   return Column(
@@ -265,11 +253,10 @@ Widget textStyleOnly(
     double fontsize = 12,
     Color c = AppColors.bg1,
     FontWeight fontWeight = FontWeight.w500}) {
-  return
-      Text(
-        text.toString(),
-        style: FontManager().getTextStyle(context,
-            lWeight: fontWeight, fontSize: fontsize, color: c),
-        overflow: TextOverflow.ellipsis,
-      );
+  return Text(
+    text.toString(),
+    style: FontManager().getTextStyle(context,
+        lWeight: fontWeight, fontSize: fontsize, color: c),
+    overflow: TextOverflow.ellipsis,
+  );
 }

@@ -5,7 +5,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Au
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/expansionTile.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/creditCard.dart';
+// import 'package:flutter_application_code_stakeplot/finance_screen/creditCard.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
 
 class TripCost extends StatefulWidget {
@@ -108,26 +108,7 @@ double accommodationCostPerDay = 0;
     });
   }
 
-  // void calculateTripCost() {
-  //   accommodationCostPerDay = selectedAccommodation == 'Hotel'
-  //       ? 1500 * (numberOfMembers / 2).round().toDouble()
-  //       : selectedAccommodation == 'Airbnb'
-  //           ? 1000 * (numberOfMembers / 2).round().toDouble()
-  //           : selectedAccommodation == 'Hostel'
-  //               ? 400 * numberOfMembers.toDouble()
-  //               : selectedAccommodation == 'Camping'
-  //                   ? 450 * (numberOfMembers / 2).round().toDouble()
-  //                   : 0.0;
-
-  //   double totalAccommodationCost =
-  //       accommodationCost * (numberOfMembers / 2).ceil() * numberOfDays;
-  //   double totalDailyExpenses = dailyExpenses * numberOfDays;
-  //   totalCost = travelCost +
-  //       totalAccommodationCost +
-  //       totalDailyExpenses +
-  //       entertainmentBudget;
-  //   costPerMember = totalCost / numberOfMembers;
-  // }
+  
 void calculateTripCost() {
     accommodationCostPerDay = selectedAccommodation == 'Hotel'
         ? 1500 * (numberOfMembers / 2).round().toDouble()
