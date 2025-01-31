@@ -136,6 +136,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
         });
       },
       child: Container(
+       
         decoration: isSelected
             ? BoxDecoration(
                 color: AppColors.bg5, // White background for the selected item

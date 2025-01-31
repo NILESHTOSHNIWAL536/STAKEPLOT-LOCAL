@@ -34,7 +34,7 @@ class MyBudgetScreen extends StatelessWidget {
             'Bills': 10,
             'Alcohol & Smoking': 15,
           },
-          monthlyBudgetData: [
+          monthlyBudgetData: const [
             FlSpot(0, 400),
             FlSpot(1, 400),
             FlSpot(2, 500),
@@ -60,9 +60,9 @@ class MyBudgetScreen extends StatelessWidget {
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        
         elevation: 0,
-        title: Text('My Budget', style: TextStyle(color: Colors.black, fontSize: 20)),
+        title: Text('My Budget',
+            style: TextStyle(color: Colors.black, fontSize: 20)),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -93,7 +93,8 @@ class MyBudgetScreen extends StatelessWidget {
       children: [
         Icon(Icons.access_time, color: Colors.grey),
         SizedBox(width: 8),
-        Text('Days remaining: $daysRemaining days', style: TextStyle(color: Colors.grey)),
+        Text('Days remaining: $daysRemaining days',
+            style: TextStyle(color: Colors.grey)),
       ],
     );
   }
@@ -104,14 +105,14 @@ class MyBudgetScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.mt,
         borderRadius: BorderRadius.circular(12),
-        
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildText('Budget amount', Colors.grey),
           SizedBox(height: 8),
-          _buildText('₹ $budgetAmount', Colors.black, fontSize: 32, fontWeight: FontWeight.bold),
+          _buildText('₹ $budgetAmount', Colors.black,
+              fontSize: 32, fontWeight: FontWeight.bold),
           SizedBox(height: 16),
           _buildRow('Amount spent', '₹ $amountSpent', Colors.black),
           SizedBox(height: 8),
@@ -131,15 +132,19 @@ class MyBudgetScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildText(String text, Color color, {double fontSize = 16, FontWeight fontWeight = FontWeight.normal}) {
-    return Text(text, style: TextStyle(color: color, fontSize: fontSize, fontWeight: fontWeight));
+  Widget _buildText(String text, Color color,
+      {double fontSize = 16, FontWeight fontWeight = FontWeight.normal}) {
+    return Text(text,
+        style: TextStyle(
+            color: color, fontSize: fontSize, fontWeight: fontWeight));
   }
 
   Widget _buildMonthlyBudgetChart() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildText('Monthly budget', Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+        _buildText('Monthly budget', Colors.black,
+            fontSize: 18, fontWeight: FontWeight.bold),
         SizedBox(height: 8),
         LineChartSample(monthlyBudgetData: monthlyBudgetData),
       ],
@@ -149,10 +154,22 @@ class MyBudgetScreen extends StatelessWidget {
   Widget _buildInsights() {
     // Static insights content moved here instead of being passed as a parameter
     final insights = [
-      {'title': 'Unwanted purchases', 'description': 'Reduce shopping to maintain proper budget'},
-      {'title': 'Your essentials', 'description': 'Cut down on non-essentials to stay within budget'},
-      {'title': 'Upgrade budget', 'description': 'Review your expenses and set higher limits'},
-      {'title': 'Strict cutoffs', 'description': 'Limit unnecessary expenses to save more'},
+      {
+        'title': 'Unwanted purchases',
+        'description': 'Reduce shopping to maintain proper budget'
+      },
+      {
+        'title': 'Your essentials',
+        'description': 'Cut down on non-essentials to stay within budget'
+      },
+      {
+        'title': 'Upgrade budget',
+        'description': 'Review your expenses and set higher limits'
+      },
+      {
+        'title': 'Strict cutoffs',
+        'description': 'Limit unnecessary expenses to save more'
+      },
     ];
 
     return Container(
@@ -175,7 +192,8 @@ class MyBudgetScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildText('Insights', Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+              _buildText('Insights', Colors.black,
+                  fontSize: 18, fontWeight: FontWeight.bold),
               Chip(
                 label: Text('Budget hero'),
                 backgroundColor: Colors.grey[200],
@@ -183,13 +201,18 @@ class MyBudgetScreen extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16),
-          ...insights.map((insight) => _buildInsightCard(title: insight['title']!, description: insight['description']!)).toList(),
+          ...insights
+              .map((insight) => _buildInsightCard(
+                  title: insight['title']!,
+                  description: insight['description']!))
+              .toList(),
         ],
       ),
     );
   }
 
-  Widget _buildInsightCard({required String title, required String description}) {
+  Widget _buildInsightCard(
+      {required String title, required String description}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
       padding: EdgeInsets.all(12),
@@ -212,7 +235,8 @@ class MyBudgetScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildText('Categories', Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+        _buildText('Categories', Colors.black,
+            fontSize: 18, fontWeight: FontWeight.bold),
         SizedBox(height: 8),
         PieChartSample(categories: categories),
       ],
@@ -247,7 +271,18 @@ class LineChartSample extends StatelessWidget {
                   if (value >= 0 && value <= 11) {
                     // Get the month names (e.g., Jan, Feb, Mar)
                     const monthNames = [
-                      '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'
+                      '1',
+                      '2',
+                      '3',
+                      '4',
+                      '5',
+                      '6',
+                      '7',
+                      '8',
+                      '9',
+                      '10',
+                      '11',
+                      '12'
                     ];
 
                     // Display month names only once
@@ -288,8 +323,6 @@ class LineChartSample extends StatelessWidget {
   }
 }
 
-
-
 class PieChartSample extends StatelessWidget {
   final Map<String, double> categories;
 
@@ -307,7 +340,10 @@ class PieChartSample extends StatelessWidget {
               value: entry.value,
               title: '${entry.key}\n${entry.value}%',
               radius: 50,
-              titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.primaryColor),
+              titleStyle: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryColor),
             );
           }).toList(),
           centerSpaceRadius: 40,
