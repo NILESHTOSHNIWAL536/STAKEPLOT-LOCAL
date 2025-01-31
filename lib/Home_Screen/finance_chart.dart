@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_application_code_stakeplot/Constants/customButton.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import './colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -184,41 +186,46 @@ class _FinancePageState extends State<FinancePage> {
             Text('Weekly Spending and Cash flow',
                 //style: TextStyle(fontSize: fontSizeFactor * 3),
                 style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.normal,
-                    fontSize: fontSizeFactor * 4,
+                    lWeight: FontWeight.w600,
+                    fontSize: fontSizeFactor * 4.5,
                     color: AppColors.accentColor)),
+                    SizedBox(height: Colorcodes.paddingSize,),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  '₹${totalSpent.toStringAsFixed(2)}',
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.bold,
-                      fontSize: fontSizeFactor * 3,
-                      color: AppColors.accentColor),
-                ),
-                SizedBox(width: screenWidth * 0.02),
-                Text(
-                  'This week',
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.normal,
-                      fontSize: fontSizeFactor * 2,
-                      color: AppColors.accentColor),
-                ),
-                Spacer(),
-                DecoratedContainer(
-                  child: TextButton.icon(
-                    onPressed: () {},
-                    icon: AvatarProfileImage(
-                        url: HomePageIcons.history, width: 34, height: 34),
-                    label: Text(
-                      'History',
+                Row(
+                  children: [
+                    Text(
+                      '₹${totalSpent.toStringAsFixed(2)}',
                       style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.normal,
-                          fontSize: fontSizeFactor * 2.3,
+                          lWeight: FontWeight.bold,
+                          fontSize: fontSizeFactor * 4,
                           color: AppColors.accentColor),
                     ),
-                  ),
+                    SizedBox(width: screenWidth * 0.02),
+                    Text(
+                      'This week',
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.normal,
+                          fontSize: fontSizeFactor * 2.5,
+                          color: AppColors.accentColor),
+                    ),
+                  ],
                 ),
+                CustomButton(
+                  onTap: () {
+                    //TransactionHistory();
+                  },
+                  text: 'History',
+                  fontSize: fontSizeFactor * 2.8,
+                  height: 1.7,
+                  width: 5.0,
+                  icon: AvatarProfileImage(
+                      url: HomePageIcons.history,
+                      width: 36,
+                      height:
+                          36), // Optional; remove this line if you don't want an icon
+                )
               ],
             ),
             Row(
@@ -228,8 +235,8 @@ class _FinancePageState extends State<FinancePage> {
                   'My Spendings',
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.normal,
-                      fontSize: fontSizeFactor * 2.5,
-                      color: AppColors.accentColor),
+                      fontSize: fontSizeFactor * 3.4,
+                      color: AppColors.bg1),
                 ),
                 Row(
                   children: [
@@ -244,7 +251,7 @@ class _FinancePageState extends State<FinancePage> {
                         'Month',
                         style: FontManager().getTextStyle(context,
                             lWeight: FontWeight.normal,
-                            fontSize: fontSizeFactor * 2.5,
+                            fontSize: fontSizeFactor * 3.4,
                             color: AppColors.accentColor),
                       ),
                     ),
@@ -259,7 +266,7 @@ class _FinancePageState extends State<FinancePage> {
                         'Week',
                         style: FontManager().getTextStyle(context,
                             lWeight: FontWeight.normal,
-                            fontSize: fontSizeFactor * 2.5,
+                            fontSize: fontSizeFactor * 3.4,
                             color: AppColors.accentColor),
                       ),
                     ),
@@ -272,7 +279,7 @@ class _FinancePageState extends State<FinancePage> {
                         'Custom',
                         style: FontManager().getTextStyle(context,
                             lWeight: FontWeight.normal,
-                            fontSize: fontSizeFactor * 2.5,
+                            fontSize: fontSizeFactor * 3.4,
                             color: AppColors.accentColor),
                       ),
                     ),
@@ -280,7 +287,7 @@ class _FinancePageState extends State<FinancePage> {
                 ),
               ],
             ),
-            SizedBox(height: screenWidth * 0.05),
+            SizedBox(height: screenWidth * 0.04),
             Expanded(
               child: LineChartWidget(
                 chartData: chartData,
@@ -315,7 +322,7 @@ class LineChartWidget extends StatelessWidget {
       },
       child: Container(
         padding: EdgeInsets.symmetric(
-            horizontal: screenWidth * 0.04), // Responsive padding
+            horizontal: screenWidth * 0.04), 
         child: LineChart(
           LineChartData(
             gridData: const FlGridData(show: false),
@@ -323,14 +330,14 @@ class LineChartWidget extends StatelessWidget {
               leftTitles: AxisTitles(
                 sideTitles: SideTitles(
                   showTitles: true,
-                  reservedSize: screenWidth * 0.1, // Dynamic reserved size
+                  reservedSize: screenWidth * 0.1, 
                   interval: 500,
                   getTitlesWidget: (value, meta) {
                     return Text(
                       '₹${value.toInt()}',
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.normal,
-                          fontSize: fontSizeFactor * 1.2,
+                          fontSize: fontSizeFactor * 2,
                           color: AppColors.accentColor), // Adjusted font size
                     );
                   },
@@ -346,7 +353,7 @@ class LineChartWidget extends StatelessWidget {
                         days[value.toInt()],
                         style: FontManager().getTextStyle(context,
                             lWeight: FontWeight.normal,
-                            fontSize: fontSizeFactor * 1.2,
+                            fontSize: fontSizeFactor * 1.5,
                             color: AppColors.accentColor), // Adjusted font size
                       );
                     }
@@ -402,7 +409,7 @@ class LineChartWidget extends StatelessWidget {
                         'Credited: ₹${touchedSpot.y.toStringAsFixed(2)}',
                         FontManager().getTextStyle(context,
                             lWeight: FontWeight.normal,
-                            fontSize: fontSizeFactor * 1.3,
+                            fontSize: fontSizeFactor * 2.5,
                             color: AppColors.accentColor),
                       );
                     } else if (touchedSpot.bar.color == AppColors.accentColor) {
@@ -410,7 +417,7 @@ class LineChartWidget extends StatelessWidget {
                         'Debited: ₹${touchedSpot.y.toStringAsFixed(2)}',
                         FontManager().getTextStyle(context,
                             lWeight: FontWeight.normal,
-                            fontSize: fontSizeFactor * 1.2,
+                            fontSize: fontSizeFactor * 2.5,
                             color: AppColors.accentColor),
                       );
                     }

@@ -156,7 +156,7 @@ class MyBudgetScreen extends StatelessWidget {
     ];
 
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.mt,
         borderRadius: BorderRadius.circular(12),
@@ -307,7 +307,7 @@ class PieChartSample extends StatelessWidget {
               value: entry.value,
               title: '${entry.key}\n${entry.value}%',
               radius: 50,
-              titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent),
+              titleStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.primaryColor),
             );
           }).toList(),
           centerSpaceRadius: 40,

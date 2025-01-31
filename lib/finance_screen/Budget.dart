@@ -69,23 +69,7 @@ class _BudgetState extends State<Budget> {
     getTopFiveCater();
   }
 
-  // void getTopFiveCater()async
-  // {
-  //    String urlPath= "${url}/budget/top-five-categories/";
-  //     try{
-  //         var responce=await getDataApiCall(urlPath);
-  //         if(getFlagOfResponse(responce))
-  //         {
-  //             var  his=jsonDecode(responce.body);
-  //             categoriesSeleted.clear();
-  //             print(his);
-  //             categoriesSeleted.addAll(his['data']);
-  //             getCategories.value=! getCategories.value;
-  //         }
-  //     }catch(e){
-  //     }
-
-  // }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -131,22 +115,26 @@ class _BudgetState extends State<Budget> {
             heading: "Name",
             
             keyBoard: TextInputType.emailAddress,
-            lableText: "Enter the name",
+            lableText: "Enter budget name",
             icon: Finance.user,
           ),
           TextFeildWidgetCustom(
             textEditingController: amountController,
             heading: "Amount",
             keyBoard: TextInputType.number,
-            lableText: "Eg:₹ 101",
+            lableText: "Enter amount",
+            
+            
             icon: Finance.amt,
           ),
+          
           Padding(
             padding: EdgeInsets.symmetric(vertical: Colorcodes.paddingSize),
             child: textStyle(
                 context: context,
                 text: "Duration",
                 fontsize: 20,
+                
                 fontWeight: FontWeight.bold),
           ),
           Container(
@@ -209,7 +197,7 @@ class _BudgetState extends State<Budget> {
     if (nameController.text == "" ||
         amountController.text == "" ||
         period.value == "") {
-      snackBarCalled(context, "Pls Enter All Feilds...", Colorcodes.red);
+      snackBarCalled(context, "Please Enter All Fields...", Colorcodes.red);
       return;
     }
     Navigator.push(

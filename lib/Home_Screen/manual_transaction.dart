@@ -15,6 +15,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -40,7 +41,7 @@ class _ManualtransactionState extends State<Manualtransaction> {
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -49,8 +50,8 @@ class _ManualtransactionState extends State<Manualtransaction> {
                   onPressed: () {},
                   icon: AvatarProfileImage(
                     url: HomePageIcons.manualTransaction,
-                    height: 20,
-                    width: 20,
+                    height: 24,
+                    width: 24,
                   )),
               SizedBox(width: MediaQuery.of(context).size.width / 28),
               Column(
@@ -63,23 +64,25 @@ class _ManualtransactionState extends State<Manualtransaction> {
                           fontSize: MediaQuery.of(context).size.width * 0.04,
                           color: AppColors.accentColor)),
                   const SizedBox(height: 8),
-                  DecoratedContainer(
-                      borderRadius: 24,
-                      //height: MediaQuery.of(context).size.height * 0.04,
-                      child: TextButton(
-                          onPressed: () {
-                            showCustomModal(context);
-                          },
-                          child: Text('Start now',
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.normal,
-                                  fontSize: 12,
-                                  color: AppColors.primaryColor)))),
+                  InkWell(
+                    onTap: () => showCustomModal(context),
+                    child: Container(
+                      height: Colorcodes.paddingSize * 1.7,
+                      width: Colorcodes.paddingSize * 5,
+                      decoration: BoxDecoration(
+                          color: AppColors.button,
+                          borderRadius: BorderRadius.circular(16)),
+                      child: Center(
+                        child: Text('Start now',
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.normal,
+                                fontSize: 14,
+                                color: AppColors.primaryColor)),
+                      ),
+                    ),
+                  )
                 ],
               ),
-              //const Spacer(),
-              // Placeholder for an manual transaction image
-
               AvatarProfileImage(
                 url: Pictures.manualTransactionImage,
                 height: 9,
@@ -369,6 +372,7 @@ class _ModalContentState extends State<ModalContent>
   Widget build(BuildContext context) {
     return Directionality(
         // Added Directionality widget
+
         textDirection: TextDirection.ltr,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -395,263 +399,280 @@ class _ModalContentState extends State<ModalContent>
                       parent: _iconAnimationController,
                       curve: Curves.elasticOut,
                     ),
-                    child: Column(
-                      key: const ValueKey('celebration'),
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.check_circle,
-                          color: Colors.green,
-                          size: 100,
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Successfully Added',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.green[700],
+                    child: Container(
+                      width: MediaQuery.sizeOf(context).width * 1.1,
+                      height: Colorcodes.paddingSize * 10,
+                      color: AppColors.backgroundColor,
+                      child: Column(
+                        key: const ValueKey('celebration'),
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                            size: 100,
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 16),
+                          Text(
+                            'Successfully Added',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green[700],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ])
-              : Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Title
-                    Text(
-                      selectedSubCategory == null
-                          ? selectedCategory == null
-                              ? 'Manual Transactions'
-                              : ''
-                          : 'Manual Transactions',
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: AppColors.accentColor),
-                    ),
-                    const SizedBox(height: 16),
+              : AnimatedPadding(
+                  padding: MediaQuery.of(context)
+                      .viewInsets, // Adjusts padding when keyboard appears
+                  duration: const Duration(milliseconds: 100),
 
-                    // Enter Amount Field (Only shown if no category is selected)
-                    if (selectedCategory == null &&
-                        selectedSubCategory == null) ...[
-                      TextField(
-                        controller: _amountController,
-                        // Link TextField to the controller
-
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.currency_rupee),
-                          hintText: 'Enter the amount',
-                          hintStyle: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.normal,
-                              fontSize: 16,
-                              color: AppColors.accentColor),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-
-                        onChanged: (value) {
-                          // Update the amount variable whenever the input changes
-                          setState(() {
-                            amount = double.tryParse(
-                                value); // Convert string to double
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-
-                    if (amount != null) ...[
-                      GestureDetector(
-                        onTap: toggleCategoryField,
-                        child: TextField(
-                          controller: categoryFieldController,
-                          readOnly: false,
-                          decoration: InputDecoration(
-                            hintText: 'Categories',
-                            hintStyle: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.normal,
-                                fontSize: 16,
-                                color: AppColors.accentColor),
-                            prefixIcon: const Icon(Icons.search),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          onTap: () {
-                            if (!isCategoryFieldExpanded) {
-                              toggleCategoryField();
-                            }
-                          },
-                          onChanged: (value) {
-                            filterCategories(
-                                value); // Filter categories as the user types
-                          },
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: 8),
-                    if (isCategoryFieldExpanded) ...[
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: filteredCategories.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            String category = filteredCategories[index];
-                            return ListTile(
-                              leading: const Icon(Icons.category),
-                              title: Text(category,
-                                  style: FontManager().getTextStyle(context,
-                                      lWeight: FontWeight.normal,
-                                      fontSize: 16,
-                                      color: AppColors.accentColor)),
-                              onTap: () {
-                                setState(() {
-                                  selectedCategory = category;
-                                  categoryFieldController.text =
-                                      category; // Update text field
-                                  isCategoryFieldExpanded =
-                                      false; // Collapse the list
-                                });
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-
-                    // Subcategories List (Visible after category is selected)
-                    if (selectedCategory != null &&
-                        selectedSubCategory == null) ...[
-                      Text('$selectedCategory',
+                  curve: Curves.easeOut,
+                  child: Container(
+                    color: AppColors.backgroundColor,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Title
+                        Text(
+                          selectedSubCategory == null
+                              ? selectedCategory == null
+                                  ? 'Manual Transactions'
+                                  : ''
+                              : 'Manual Transactions',
                           style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.normal,
-                              fontSize: 16,
-                              color: AppColors.accentColor)),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Wrap(
-                        spacing: 8.0, // Horizontal spacing between chips
-                        runSpacing: 8.0, // Vertical spacing between rows
-                        children:
-                            categories[selectedCategory]!.map((subCategory) {
-                          return GestureDetector(
-                            onTap: () {
+                              lWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: AppColors.accentColor),
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Enter Amount Field (Only shown if no category is selected)
+                        if (selectedCategory == null &&
+                            selectedSubCategory == null) ...[
+                          TextField(
+                            controller: _amountController,
+                            // Link TextField to the controller
+
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(Icons.currency_rupee),
+                              hintText: 'Enter the amount',
+                              hintStyle: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                  color: AppColors.accentColor),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+
+                            onChanged: (value) {
+                              // Update the amount variable whenever the input changes
                               setState(() {
-                                selectedSubCategory = subCategory;
-                                selectedSubCategory2 = subCategory;
-                                categoryFieldController.text =
-                                    '$selectedCategory ($selectedSubCategory)';
-                                //isSplitbill = true;
-                                fin =
-                                    '$selectedCategory ($selectedSubCategory)';
-                                selectedCategory2 = selectedCategory;
-                                resetToInitialScreen();
+                                amount = double.tryParse(
+                                    value); // Convert string to double
                               });
                             },
-                            child: Chip(
-                              avatar: Icon(
-                                Icons.category, // Replace with a relevant icon
-                                color: Colors.blue, // Icon color
-                                size: 18, // Adjust size to fit within the chip
-                              ),
-                              label: Text(
-                                subCategory,
-                                style: FontManager().getTextStyle(context,
+                          ),
+                          const SizedBox(height: 16),
+                        ],
+
+                        if (amount != null) ...[
+                          GestureDetector(
+                            onTap: toggleCategoryField,
+                            child: TextField(
+                              controller: categoryFieldController,
+                              readOnly: false,
+                              decoration: InputDecoration(
+                                hintText: 'Categories',
+                                hintStyle: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.normal,
-                                    fontSize: 14,
+                                    fontSize: 16,
                                     color: AppColors.accentColor),
+                                prefixIcon: const Icon(Icons.search),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                               ),
-                              backgroundColor: AppColors.button,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ],
-
-                    if (fin != null) ...[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              // Action for Split Bill button
-                              //isSplit = true;
-                              // splitBill();
-                              isSplit.value = true;
-                              isLend.value = false;
-
-                              showCustomFriendsModal(context);
-                            },
-                            child: Text('Bill Split',
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.normal,
-                                    fontSize: 16,
-                                    color: AppColors.primaryColor)),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              // Action for Continue button
-                              isSplit.value = false;
-                              isLend.value = true;
-                              showCustomFriendsModal(context);
-                            },
-                            child: Text('Lend money',
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.normal,
-                                    fontSize: 16,
-                                    color: AppColors.primaryColor)),
-                          ),
-                        ],
-                      ),
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          // Button to trigger celebration
-                          Center(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                if (isSplit.value) {
-                                  splitBill(
-                                      selectedCategory2.toString(),
-                                      amount.toString(),
-                                      selectedSubCategory2.toString(),
-                                      true);
-                                } else if (isLend.value) {
-                                  splitBill(
-                                      selectedCategory2.toString(),
-                                      amount.toString(),
-                                      selectedSubCategory2.toString(),
-                                      false);
-                                } else {
-                                  addTransaction(
-                                      amount.toString(),
-                                      selectedSubCategory2.toString(),
-                                      selectedCategory2.toString(),
-                                      context,
-                                      "cash");
+                              onTap: () {
+                                if (!isCategoryFieldExpanded) {
+                                  toggleCategoryField();
                                 }
-                                _showCelebration();
                               },
-                              child: Text('Continue',
-                                  style: FontManager().getTextStyle(context,
-                                      lWeight: FontWeight.normal,
-                                      fontSize: 16,
-                                      color: AppColors.accentColor)),
+                              onChanged: (value) {
+                                filterCategories(
+                                    value); // Filter categories as the user types
+                              },
                             ),
                           ),
                         ],
-                      ),
-                    ],
-                  ],
+                        const SizedBox(height: 8),
+                        if (isCategoryFieldExpanded) ...[
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: filteredCategories.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                String category = filteredCategories[index];
+                                return ListTile(
+                                  leading: const Icon(Icons.category),
+                                  title: Text(category,
+                                      style: FontManager().getTextStyle(context,
+                                          lWeight: FontWeight.normal,
+                                          fontSize: 16,
+                                          color: AppColors.accentColor)),
+                                  onTap: () {
+                                    setState(() {
+                                      selectedCategory = category;
+                                      categoryFieldController.text =
+                                          category; // Update text field
+                                      isCategoryFieldExpanded =
+                                          false; // Collapse the list
+                                    });
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+
+                        // Subcategories List (Visible after category is selected)
+                        if (selectedCategory != null &&
+                            selectedSubCategory == null) ...[
+                          Text('$selectedCategory',
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                  color: AppColors.accentColor)),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Wrap(
+                            spacing: 8.0, // Horizontal spacing between chips
+                            runSpacing: 8.0, // Vertical spacing between rows
+                            children: categories[selectedCategory]!
+                                .map((subCategory) {
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedSubCategory = subCategory;
+                                    selectedSubCategory2 = subCategory;
+                                    categoryFieldController.text =
+                                        '$selectedCategory ($selectedSubCategory)';
+                                    //isSplitbill = true;
+                                    fin =
+                                        '$selectedCategory ($selectedSubCategory)';
+                                    selectedCategory2 = selectedCategory;
+                                    resetToInitialScreen();
+                                  });
+                                },
+                                child: Chip(
+                                  avatar: Icon(
+                                    Icons
+                                        .category, // Replace with a relevant icon
+                                    color: Colors.blue, // Icon color
+                                    size:
+                                        18, // Adjust size to fit within the chip
+                                  ),
+                                  label: Text(
+                                    subCategory,
+                                    style: FontManager().getTextStyle(context,
+                                        lWeight: FontWeight.normal,
+                                        fontSize: 14,
+                                        color: AppColors.accentColor),
+                                  ),
+                                  backgroundColor: AppColors.button,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+
+                        if (fin != null) ...[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  // Action for Split Bill button
+                                  //isSplit = true;
+                                  // splitBill();
+                                  isSplit.value = true;
+                                  isLend.value = false;
+
+                                  showCustomFriendsModal(context);
+                                },
+                                child: Text('Bill Split',
+                                    style: FontManager().getTextStyle(context,
+                                        lWeight: FontWeight.normal,
+                                        fontSize: 16,
+                                        color: AppColors.primaryColor)),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  // Action for Continue button
+                                  isSplit.value = false;
+                                  isLend.value = true;
+                                  showCustomFriendsModal(context);
+                                },
+                                child: Text('Lend money',
+                                    style: FontManager().getTextStyle(context,
+                                        lWeight: FontWeight.normal,
+                                        fontSize: 16,
+                                        color: AppColors.primaryColor)),
+                              ),
+                            ],
+                          ),
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              // Button to trigger celebration
+                              Center(
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    if (isSplit.value) {
+                                      splitBill(
+                                          selectedCategory2.toString(),
+                                          amount.toString(),
+                                          selectedSubCategory2.toString(),
+                                          true);
+                                    } else if (isLend.value) {
+                                      splitBill(
+                                          selectedCategory2.toString(),
+                                          amount.toString(),
+                                          selectedSubCategory2.toString(),
+                                          false);
+                                    } else {
+                                      addTransaction(
+                                          amount.toString(),
+                                          selectedSubCategory2.toString(),
+                                          selectedCategory2.toString(),
+                                          context,
+                                          "cash");
+                                    }
+                                    _showCelebration();
+                                  },
+                                  child: Text('Continue',
+                                      style: FontManager().getTextStyle(context,
+                                          lWeight: FontWeight.normal,
+                                          fontSize: 16,
+                                          color: AppColors.accentColor)),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
                 ),
         ));
   }

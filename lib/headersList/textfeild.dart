@@ -87,10 +87,12 @@ TextStyle getStyle(context) {
   return FontManager().getTextStyle(context,
       fontSize: 16, lWeight: FontWeight.w400, color: Colorcodes.black);
 }
+
 TextStyle getStyle1(context) {
   return FontManager().getTextStyle(context,
-      fontSize: 12, lWeight: FontWeight.w300, color: AppColors.bg3);
+      fontSize: 14, lWeight: FontWeight.w300, color: AppColors.bg6);
 }
+
 class TextFeildWidgetPassword extends StatelessWidget {
   TextEditingController textEditingController;
   String lableText;
@@ -133,8 +135,8 @@ class TextFeildWidgetPassword extends StatelessWidget {
                   keyboardType: keyBoard,
                   controller: textEditingController,
                   obscureText: show.value,
-                  onChanged: (s){
-                    acceptReset.value=false;
+                  onChanged: (s) {
+                    acceptReset.value = false;
                   },
                   decoration: InputDecoration(
                       // contentPadding: EdgeInsets.all(0),
@@ -200,9 +202,9 @@ class TextFeildWidget2 extends StatelessWidget {
               initialValue: lableText,
               readOnly: true,
               // controller: textEditingController,
-              onChanged: (s){
-                    acceptReset.value=false;
-                  },
+              onChanged: (s) {
+                acceptReset.value = false;
+              },
 
               decoration: InputDecoration(
                 // contentPadding: EdgeInsets.all(0),
@@ -280,16 +282,15 @@ class TextFeildCalender extends StatelessWidget {
                 keyboardType: keyBoard,
                 controller: textEditingController,
                 obscureText: flag ? false : show.value,
-                onChanged: (s){
-                    acceptReset.value=false;
-                  },
+                onChanged: (s) {
+                  acceptReset.value = false;
+                },
                 decoration: InputDecoration(
                     // contentPadding: EdgeInsets.all(0),
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                     filled: true,
                     hintText: lableText,
-                    
                     hintStyle: getStyle(context),
                     enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(40),
@@ -299,7 +300,6 @@ class TextFeildCalender extends StatelessWidget {
                         borderSide: BorderSide(color: Colorcodes.textFeild)),
                     fillColor: Colorcodes.textFeild,
                     border: InputBorder.none,
-                    
                     suffixIcon: GestureDetector(
                       onTap: () async {
                         DateTime? dateTime = await showDatePicker(
@@ -335,9 +335,6 @@ class TextFeildCalender extends StatelessWidget {
   }
 }
 
-
-
-
 class TextFeildWidgetCustom extends StatelessWidget {
   TextEditingController textEditingController;
   String lableText;
@@ -346,18 +343,19 @@ class TextFeildWidgetCustom extends StatelessWidget {
   String icon;
   TextInputType keyBoard;
   bool flag;
-
-  TextFeildWidgetCustom(
-      {Key? key,
-      required this.textEditingController,
-      required this.heading,
-      required this.keyBoard,
-      required this.lableText,
-      required this.icon,
-      this.flag = true,
-      //this.labelStyle
-     })
-      : super(key: key);
+  
+  final FocusNode? focusNode;
+  TextFeildWidgetCustom({
+    Key? key,
+    required this.textEditingController,
+    required this.heading,
+    required this.keyBoard,
+    required this.lableText,
+    required this.icon,
+    this.flag = true,
+    this.focusNode,
+    
+  }) : super(key: key);
 
   RxBool show = false.obs;
 
@@ -387,29 +385,36 @@ class TextFeildWidgetCustom extends StatelessWidget {
               keyboardType: keyBoard,
               controller: textEditingController,
               obscureText: flag ? false : show.value,
+              //added focus node for expansion budget search
+              focusNode: focusNode,
               
               decoration: InputDecoration(
-                  // contentPadding: EdgeInsets.all(0),
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                  filled: true,
-                  hintText: lableText,
-                  hintStyle: getStyle(context),
-                  labelStyle: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.w500,
-                              fontSize: 14,
-                              color: AppColors.bg3),
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colorcodes.white)),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colorcodes.white)),
-                  fillColor: Colorcodes.white,
-                  border: InputBorder.none,
-                  prefixIcon: flag? PrefixIcon(url: icon,height: 40,width: 40,):Icon(Icons.search),
-                  
-                  ),
+                // contentPadding: EdgeInsets.all(0),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                filled: true,
+                hintText: lableText,
+                hintStyle: getStyle1(context),
+                labelStyle: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: AppColors.bg3),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Colorcodes.white)),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Colorcodes.white)),
+                fillColor: Colorcodes.white,
+                border: InputBorder.none,
+                prefixIcon: flag
+                    ? PrefixIcon(
+                        url: icon,
+                        height: 40,
+                        width: 40,
+                      )
+                    : Icon(Icons.search),
+              ),
             ),
           ],
         ),

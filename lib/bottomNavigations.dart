@@ -59,12 +59,13 @@ class _BottomNavigationsState extends State<BottomNavigations> {
     //int selectedIndex = 0;
     return Container(
       //color: Colorcodes.white,
-      padding: const EdgeInsets.only(left: 5.0, right: 5.0, bottom: 1.5),
+      height: Colorcodes.paddingSize*4,
+      padding: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 12),
       child: Card(
         elevation: Colorcodes.elevation,
         color: AppColors.accentColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24), // Rounded corners
+          borderRadius: BorderRadius.circular(30), // Rounded corners
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 3),
@@ -96,9 +97,9 @@ class _BottomNavigationsState extends State<BottomNavigations> {
   Widget imageurl(url, int index) {
     return SvgPicture.asset(
       url,
-      width: 40,
-      height: 40,
-      color: widget.data == index ? Colorcodes.debtBody : Colorcodes.white,
+      width: Colorcodes.paddingSize*1.6,
+      height: Colorcodes.paddingSize*1.6,
+      color: widget.data == index ? AppColors.primaryColor : AppColors.backgroundColor,
     );
   }
 
@@ -138,7 +139,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
         decoration: isSelected
             ? BoxDecoration(
                 color: AppColors.bg5, // White background for the selected item
-                borderRadius: BorderRadius.circular(24), // Rounded corners
+                borderRadius: BorderRadius.circular(30), // Rounded corners
               )
             : null, // No special decoration for unselected items
         padding: EdgeInsets.symmetric(
