@@ -28,6 +28,9 @@ class _PieChartGraphState extends State<PieChartGraph> {
     AppColors.bg6,
     AppColors.message,
     AppColors.border,
+     AppColors.bg6,
+    AppColors.message,
+    AppColors.border,
   ];
 
   @override
