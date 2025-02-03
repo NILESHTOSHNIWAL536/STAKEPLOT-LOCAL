@@ -28,15 +28,14 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
   void getmonthlyBudgetData(){
         
         List list= widget.data['categoryBudgets'];
-        print(list);
+       
         for(double i=0;i<list.length;i++){
                 int j=int.parse(i.toString());
-                monthlyBudgetData.add(FlSpot(i, list[j]['amount']));
+                monthlyBudgetData.add(FlSpot(i, double.parse(list[j]['amount'].toString())));
         };
         for(double i=0;i<list.length;i++){
                 int j=int.parse(i.toString());
-                //  print(list[j]);
-                  categories[list[j]['category']]=list[j]['amount']!;
+                  categories[list[j]['category']]=double.parse(list[j]['amount'].toString());
         };
         setState(() {
           
