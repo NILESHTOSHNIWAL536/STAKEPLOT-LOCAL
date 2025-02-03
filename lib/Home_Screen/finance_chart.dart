@@ -132,11 +132,15 @@ class _FinancePageState extends State<FinancePage> {
       labels = currentWeek.keys.toList();
     } else if (selectedButton == 'Month') {
       chartData = {
-        "credited": List.generate(
-            30, (index) => creditedData[index + 1]!.reduce((a, b) => a + b)),
-        "debited": List.generate(
-            30, (index) => debitedData[index + 1]!.reduce((a, b) => a + b)),
-      };
+      "credited": List.generate(
+        30,
+        (index) => creditedData[index + 1]?.reduce((a, b) => a + b) ?? 0.0,
+      ),
+      "debited": List.generate(
+        30,
+        (index) => debitedData[index + 1]?.reduce((a, b) => a + b) ?? 0.0,
+      ),
+    };
       labels = List.generate(30, (index) => (index + 1).toString());
     } else if (selectedButton == 'Custom' && selectedDateRange != null) {
       final startDate = selectedDateRange!.start;
@@ -170,7 +174,10 @@ class _FinancePageState extends State<FinancePage> {
       labels = [];
     }
 
-    double totalSpent = calculateTotal(chartData);
+    //double totalSpent = calculateTotal(chartData);
+    double totalSpent = chartData["credited"]!.isNotEmpty && chartData["debited"]!.isNotEmpty
+      ? calculateTotal(chartData)
+      : 0.0;
 
     // Get screen width to make the UI responsive
     double screenWidth = MediaQuery.of(context).size.width;

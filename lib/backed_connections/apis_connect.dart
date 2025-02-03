@@ -44,6 +44,7 @@ RxList trasactionsData = [].obs;
 RxList listOfRecentTrasactionsData = [].obs;
 RxList trasactionsHideData = [].obs;
 RxList trasactionsHistory = [].obs;
+RxBool getHistory=false.obs;
 RxList lendAmountRemainders = [].obs;
 List<double> trasactionsDataMonthlyCredit = [];
 List<double> trasactionsDataMonthlyDebit = [];

@@ -229,8 +229,8 @@ void updateTheTagOfTarnsactions(
       var his = jsonDecode(response.body);
       var obj = his['data'];
 
-      trasactionsHistory.clear();
-      trasactionsHistory.addAll(obj);
+      // trasactionsHistory.clear();
+      // trasactionsHistory.addAll(obj);
     } else {}
   }
 

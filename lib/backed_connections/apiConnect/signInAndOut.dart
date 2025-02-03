@@ -54,6 +54,7 @@ Future<void> loginUser(TextEditingController emailController,
 
     String accessToken = body['data']['accessToken'];
     _pref.setString("accessToken", "Bearer " + accessToken);
+    // _pref.setString("accessToken","Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMwYWZiZmNiMTcxMDc2NWFiOGU5MCIsImlhdCI6MTczNzcwMzU3NCwiZXhwIjoxNzQyODg3NTc0fQ.zYUUmoy_xlaZwdvM8r4KDOZNADlLyxPirqDm0avEUXg");
     storeinmap(body, _pref, passwordController.text);
 
     currentId.value = body['data']['_id'];

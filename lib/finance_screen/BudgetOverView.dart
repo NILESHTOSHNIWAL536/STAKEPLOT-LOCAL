@@ -28,6 +28,7 @@ class BudgetOverView extends StatefulWidget {
 }
 
 class _BudgetOverViewState extends State<BudgetOverView> {
+  Map<String, double> updatedAmounts = {};
   @override
   void initState() {
     super.initState();
@@ -225,6 +226,7 @@ bool _isAmountExceeded(int index) {
 
   void onsubmit(index, value) async {
     categoriesDividedList[index]['amount'] = double.tryParse(value) ?? 0;
+    
     var d = await adjustBudget(double.parse(widget.amount),
         categoriesDividedList[index]['category'], double.parse(value), cat);
     // {Bills: 1500.67, Insurance: 1791.39, Travel: 2507.94}
@@ -232,8 +234,6 @@ bool _isAmountExceeded(int index) {
     categoriesDividedList.forEach((e) {
       String name = e['category'];
       double amount = d[name]!;
-      print(name);
-      print(amount);
       categoryList
           .add({'category': e['category'], 'amount': amount.toString()});
     });
@@ -247,6 +247,10 @@ bool _isAmountExceeded(int index) {
       String updatedCategory,
       double updatedAmount,
       List<String> selectedCategories) async {
+
+    updatedAmounts['updatedCategory'] = updatedAmount;
+
+
     // Flatten the subcategories and calculate total weights
     Map<String, double> subcategoryWeights = {};
     categoryWeights.forEach((mainCategory, data) {
@@ -296,4 +300,6 @@ bool _isAmountExceeded(int index) {
 
     return initialBudgets;
   }
+
+
 }

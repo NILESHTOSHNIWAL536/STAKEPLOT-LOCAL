@@ -161,7 +161,7 @@ void addBudget(BuildContext context,String name,String amount,List expenseCatego
     Uri.parse('${url}/budget/'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
-       "Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMwYWZiZmNiMTcxMDc2NWFiOGU5MCIsImlhdCI6MTczNzk1OTU3MSwiZXhwIjoxNzQzMTQzNTcxfQ.rH4Dns_o53Gc6QdwH-h7n0WXKerrGGDBzAW-Q_dm5q8",
+       "Authorization":accessToken.toString(),
     },
     body: jsonEncode(body),
   );
