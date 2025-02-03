@@ -84,7 +84,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
     final String custId = "${number.value}@finvu"; // Replace with dynamic value if needed
 
     String? token = prefs.getString("tokenFinvu");
-    String? handleId = prefs.getString("handleId");
+    String? handleId = prefs.getString("consentHandleId");
     // String? custId = prefs.getString("custId");
 
     if (token == null || handleId == null) {
