@@ -16,8 +16,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
-String portNo = "192.168.1.15";
-// String portNo = "192.168.1.11";
+// String portNo = "35.154.92.49";
+String portNo = "192.168.1.11";
 // String urlWithLocallHost="https://stakeplot.in";
 String urlWithLocallHost = "http://${portNo}:5000/";
 String url = "http://${portNo}:5000/api/v1";
@@ -144,15 +144,6 @@ RxList getTrendingData = [].obs;
 RxBool hasGetNewNotifications = false.obs;
 
 class Message {
-  String? text;
-  File? url;
-  String type; //["image","text","Poll",'post']
-  final bool isMe;
-  var question;
-  String image;
-  var poll;
-  var post;
-  var split;
   Message(
       {this.text,
       required this.isMe,
@@ -163,6 +154,16 @@ class Message {
       this.poll = "",
       this.post = "",
       this.split = ""});
+
+  String image;
+  final bool isMe;
+  var poll;
+  var post;
+  var question;
+  var split;
+  String? text;
+  String type; //["image","text","Poll",'post']
+  File? url;
 }
 
 String currentPage(context) {
