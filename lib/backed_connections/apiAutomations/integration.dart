@@ -38,6 +38,9 @@ Future<void> loginWithServer() async {
   final String custId =
       "${number.value}@finvu"; // Replace with dynamic value if needed
 
+  print(apiUrl);
+  print(custId);
+
   try {
     final response = await http.post(
       Uri.parse(apiUrl),

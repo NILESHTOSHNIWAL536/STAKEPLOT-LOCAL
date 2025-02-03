@@ -46,6 +46,7 @@ class _HomePageState extends State<HomePage> {
     getPost();
     getTransaction(context);
     getAck();
+    getBudget();
     getUserInfomations();
     getUserLend(context);
     getBudget();

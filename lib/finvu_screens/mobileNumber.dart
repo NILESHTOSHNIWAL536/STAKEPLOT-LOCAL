@@ -100,7 +100,7 @@ class _MobileNumberState extends State<MobileNumber> {
                   borderRadius: BorderRadius.circular(16),
                   borderSide: BorderSide.none,
                 ),
-              
+
                 //prefixIcon: Icon(Icons.phone),
                 //hintText: 'Mobile Number',
               ),
@@ -108,7 +108,7 @@ class _MobileNumberState extends State<MobileNumber> {
             SizedBox(height: 60), // Add spacing between TextField and button
             // Button for "Get OTP"
             GestureDetector(
-              onTap: ()async {
+              onTap: () async {
                 // Handle OTP logic here
                 if (_phoneController.text.length != 10) {
                   snackBarCalled(context, "Please enter valid mobile number",
@@ -118,9 +118,9 @@ class _MobileNumberState extends State<MobileNumber> {
                 ;
                 String phoneNumber = _phoneController.text;
                 number.value = phoneNumber;
-                LOGOUT();   
                 // loginToAutoTractions(context);
-                 await  loginWithServer();
+                 LOGOUT();
+                await loginWithServer();
                 otpController = TextEditingController();
 
                 showModalBottomSheet(
@@ -141,135 +141,129 @@ class _MobileNumberState extends State<MobileNumber> {
     );
   }
 
-
-   
   Widget verifyaotp(context) {
     return AnimatedPadding(
-      padding: MediaQuery.of(context).viewInsets,// Adjusts padding when keyboard appears
+      padding: MediaQuery.of(context)
+          .viewInsets, // Adjusts padding when keyboard appears
       duration: const Duration(milliseconds: 100),
       curve: Curves.easeOut,
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 2.7,
-              decoration: const BoxDecoration(
-                  color: AppColors.mt,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  )),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(vertical: 10),
-                  //   child: Center(
-                  //       child: textStyle("Securely authorize each selected account", 14,
-                  //           Colorcodes.black, FontWeight.bold)),
-                  // ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 25, horizontal: 20),
-                    child: textStyle(
-                        "OTP Verification", 20, AppColors.bg1, FontWeight.bold),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 20),
-                    child: textStyle("Enter the OTP sent to ${number.value}",
-                        15, AppColors.bg1, FontWeight.w400),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: PinCodeTextField(
-                      appContext: context,
-                      length: _otpCodeLength,
-                      controller: otpController,
-                      keyboardType: TextInputType.number,
-                      autoFocus: true,
-                      animationType: AnimationType.fade,
-                      pinTheme: PinTheme(
-                        shape: PinCodeFieldShape.box,
-                        borderRadius: BorderRadius.circular(10),
-                        fieldHeight: MediaQuery.of(context).size.width * 0.12,
-                        fieldWidth: MediaQuery.of(context).size.width * 0.12,
-                        activeFillColor: Colors.white,
-                        activeColor: Colors.blue,
-                        selectedFillColor: Colors.white,
-                        selectedColor: Colors.blue,
-                        inactiveFillColor: Colors.grey[200],
-                        inactiveColor: Colors.grey,
-                      ),
-                      enableActiveFill: true,
-                      textStyle: TextStyle(fontSize: 20, color: Colors.black),
-                      onChanged: (value) {
-                        _otpCode.value = value;
-                        _isOtpValid.value = value.length == _otpCodeLength;
-                      },
-                    ),
-                  ),
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height / 2.7,
+        decoration: const BoxDecoration(
+            color: AppColors.mt,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            )),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(vertical: 10),
+            //   child: Center(
+            //       child: textStyle("Securely authorize each selected account", 14,
+            //           Colorcodes.black, FontWeight.bold)),
+            // ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 20),
+              child: textStyle(
+                  "OTP Verification", 20, AppColors.bg1, FontWeight.bold),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: textStyle("Enter the OTP sent to ${number.value}", 15,
+                  AppColors.bg1, FontWeight.w400),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: PinCodeTextField(
+                appContext: context,
+                length: _otpCodeLength,
+                controller: otpController,
+                keyboardType: TextInputType.number,
+                autoFocus: true,
+                animationType: AnimationType.fade,
+                pinTheme: PinTheme(
+                  shape: PinCodeFieldShape.box,
+                  borderRadius: BorderRadius.circular(10),
+                  fieldHeight: MediaQuery.of(context).size.width * 0.12,
+                  fieldWidth: MediaQuery.of(context).size.width * 0.12,
+                  activeFillColor: Colors.white,
+                  activeColor: Colors.blue,
+                  selectedFillColor: Colors.white,
+                  selectedColor: Colors.blue,
+                  inactiveFillColor: Colors.grey[200],
+                  inactiveColor: Colors.grey,
+                ),
+                enableActiveFill: true,
+                textStyle: TextStyle(fontSize: 20, color: Colors.black),
+                onChanged: (value) {
+                  _otpCode.value = value;
+                  _isOtpValid.value = value.length == _otpCodeLength;
+                },
+              ),
+            ),
 
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 5),
-                          child: Text(
-                            "Didn't you receive the OTP?  ",
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: FontWeight.w200,
-                              fontSize: 12,
-                              color: AppColors.bg3,
-                            ),
-                          ),
-                        ),
-                        
-                        GestureDetector(
-                          onTap: () {
-                            verifyaotp(context);
-                          },
-                          child: Text(
-                            "Resend OTP",
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: FontWeight.w400,
-                              fontSize: 12,
-                              color: AppColors.primaryColor,
-                            ),
-                          ),
-                        ),
-                      ],
+                    padding: const EdgeInsets.only(right: 5),
+                    child: Text(
+                      "Didn't you receive the OTP?  ",
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w200,
+                        fontSize: 12,
+                        color: AppColors.bg3,
+                      ),
                     ),
                   ),
-                  Center(
-                    child: GestureDetector(
-                        onTap: _isOtpValid.value
-                            ? () {
-                                if (_isOtpValid.value) {
-                                  verify(_otpCode.value, context);
-                                } else {
-                                  snackBarCalled(
-                                      context, "please enter otp of length 6");
-                                }
-                              }
-                            : null,
-                        child: Obx(
-                          () => _isOtpValid.value
-                              ? getColorVerify()
-                              : getColorVerify(),
-                        )),
+                  GestureDetector(
+                    onTap: () {
+                      verifyaotp(context);
+                    },
+                    child: Text(
+                      "Resend OTP",
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w400,
+                        fontSize: 12,
+                        color: AppColors.primaryColor,
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
-          );
-        
+            Center(
+              child: GestureDetector(
+                  onTap: _isOtpValid.value
+                      ? () {
+                          if (_isOtpValid.value) {
+                            verify(_otpCode.value, context);
+                          } else {
+                            snackBarCalled(
+                                context, "please enter otp of length 6");
+                          }
+                        }
+                      : null,
+                  child: Obx(
+                    () =>
+                        _isOtpValid.value ? getColorVerify() : getColorVerify(),
+                  )),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget textStyle(text,

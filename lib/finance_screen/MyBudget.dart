@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
 import './BudgetDisplay.dart';
 
 class MyBudgetScreen extends StatefulWidget {
-   final  data;
-
+  final data;
 
   // Constructor updated to remove the 'insights' parameter
   MyBudgetScreen({
@@ -17,29 +17,49 @@ class MyBudgetScreen extends StatefulWidget {
 }
 
 class _MyBudgetScreenState extends State<MyBudgetScreen> {
+  List<FlSpot> monthlyBudgetData = [];
+  Map<String, double> categories = {};
+  List graphObj = [];
 
- List<FlSpot> monthlyBudgetData=[];
- Map<String,double> categories={};
-   @override
+  @override
   void initState() {
-     getmonthlyBudgetData();
+    getmonthlyBudgetData();
   }
 
-  void getmonthlyBudgetData(){
-        
-        List list= widget.data['categoryBudgets'];
-       
-        for(double i=0;i<list.length;i++){
-                int j=int.parse(i.toString());
-                monthlyBudgetData.add(FlSpot(i, double.parse(list[j]['amount'].toString())));
-        };
-        for(double i=0;i<list.length;i++){
-                int j=int.parse(i.toString());
-                  categories[list[j]['category']]=double.parse(list[j]['amount'].toString());
-        };
-        setState(() {
-          
-        });
+  void getmonthlyBudgetData() {
+    List list = widget.data['categoryBudgets'];
+    print(list);
+    // for(double i=0;i<list.length;i++){
+    //         int j=int.parse(i.toString());
+    //         monthlyBudgetData.add(FlSpot(i, double.parse(list[j]['amount'].toString())));
+    // };
+    // for(double i=0;i<list.length;i++){
+    //         int j=int.parse(i.toString());
+    //         //  print(list[j]);
+    //           categories[list[j]['category']]=double.parse(list[j]['amount'].toString())!;
+    // };
+    for (int i = 0; i < list.length; i++) {
+      double amount = double.parse(list[i]['amount'].toString());
+      monthlyBudgetData.add(FlSpot(i.toDouble(), amount));
+    }
+    double totalAmount = list.fold(
+        0, (sum, item) => sum + double.parse(item['amount'].toString()));
+    for (int i = 0; i < list.length; i++) {
+      double amount = double.parse(list[i]['amount'].toString());
+      double percentage = (amount / totalAmount) * 100;
+      // categories[list[i]['category']] = amount;
+      // graphObj.add({
+      //   'title': list[i]['category'] + "\n" + amount.toString(),
+      //   'value': amount,
+      // });
+      categories[list[i]['category']] = percentage;
+      graphObj.add({
+        'title':
+            list[i]['category'] + "\n" + percentage.toStringAsFixed(1) + "%",
+        'value': percentage,
+      });
+    }
+    setState(() {});
   }
 
   @override
@@ -85,8 +105,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
       children: [
         Icon(Icons.access_time, color: Colors.grey),
         SizedBox(width: 8),
-        Text('Days remaining: 12 days',
-            style: TextStyle(color: Colors.grey)),
+        Text('Days remaining: 12 days', style: TextStyle(color: Colors.grey)),
       ],
     );
   }
@@ -223,6 +242,11 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     );
   }
 
+  Widget graph() {
+    return PieChartGraph(
+        title: "Categories", graphData: graphObj, graphDisc: []);
+  }
+
   Widget _buildCategoriesChart() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -230,7 +254,8 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
         _buildText('Categories', Colors.black,
             fontSize: 18, fontWeight: FontWeight.bold),
         SizedBox(height: 8),
-        PieChartSample(categories: categories),
+        // PieChartSample(categories: categories),
+        graph(),
       ],
     );
   }
@@ -322,16 +347,21 @@ class PieChartSample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double totalAmount =
+        categories.values.fold(0.0, (sum, amount) => sum + amount);
     return AspectRatio(
       aspectRatio: 1.4,
       child: PieChart(
         PieChartData(
           sections: categories.entries.map((entry) {
+            double percentage = (entry.value / totalAmount) * 100;
             return PieChartSectionData(
               color: _getColor(entry.key),
               value: entry.value,
-              title: '${entry.key}\n${entry.value}%',
+              //title: '${entry.key}\n${entry.value}%',
+              title: '${entry.key}\n${percentage.toStringAsFixed(1)}%',
               radius: 50,
+              badgePositionPercentageOffset: 1.7,
               titleStyle: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -348,14 +378,44 @@ class PieChartSample extends StatelessWidget {
 
   Color _getColor(String category) {
     switch (category) {
+      case 'Food':
+        return Colors.red;
       case 'Shopping':
         return Colors.teal;
-      case 'Children':
-        return Colors.grey;
+      case 'Travel':
+        return Colors.blue;
+      case 'Health':
+        return Colors.green;
       case 'Bills':
         return Colors.black;
-      case 'Alcohol & Smoking':
+      case 'Subscriptions':
+        return Colors.purple;
+      case 'Events':
+        return Colors.orange;
+      case 'PersonalCare':
+        return Colors.pink;
+      case 'Services':
+        return Colors.brown;
+      case 'Emi':
+        return Colors.deepPurple;
+      case 'Insurance':
+        return Colors.indigo;
+      case 'Support':
+        return Colors.cyan;
+      case 'Children':
+        return Colors.grey;
+      case 'PetCare':
+        return Colors.lightGreen;
+      case 'Sports':
+        return Colors.lime;
+      case 'Alcohol':
         return Colors.blueGrey;
+      case 'Hobbies':
+        return Colors.amber;
+      case 'Snacks':
+        return Colors.deepOrange;
+      case 'Entertainment':
+        return Colors.yellow;
       default:
         return Colors.blue;
     }

@@ -226,6 +226,7 @@ bool _isAmountExceeded(int index) {
 
   void onsubmit(index, value) async {
     categoriesDividedList[index]['amount'] = double.tryParse(value) ?? 0;
+    
     var d = await adjustBudget(double.parse(widget.amount),
         categoriesDividedList[index]['category'], double.parse(value), cat);
     // {Bills: 1500.67, Insurance: 1791.39, Travel: 2507.94}
@@ -241,7 +242,7 @@ bool _isAmountExceeded(int index) {
     categoriesDividedList.addAll(List.from(categoryList));
   }
 
-  Future<Map<String, double>> adjustBudget2(
+  Future<Map<String, double>> adjustBudget(
       double totalAmount,
       String updatedCategory,
       double updatedAmount,
@@ -300,61 +301,5 @@ bool _isAmountExceeded(int index) {
     return initialBudgets;
   }
 
-
-
-  Future<Map<String, double>> adjustBudget(
-    double totalAmount,
-    String updatedCategory,
-    double updatedAmount,
-    List<String> selectedCategories) async {
-  
-  // Store the updated category amount separately
-  updatedAmounts[updatedCategory] = updatedAmount;
-
-  // Flatten subcategories and calculate total weights
-  Map<String, double> subcategoryWeights = {};
-  categoryWeights.forEach((mainCategory, data) {
-    (data["subcategories"] as Map<String, dynamic>).forEach((subCategory, weight) {
-      subcategoryWeights[subCategory] = weight.toDouble();
-    });
-  });
-
-  // Filter selected categories
-  Map<String, double> selectedWeights = {
-    for (var category in selectedCategories)
-      if (subcategoryWeights.containsKey(category))
-        category: subcategoryWeights[category]!
-  };
-
-  double totalSelectedWeight = selectedWeights.values.fold(0, (a, b) => a + b);
-
-  // Initial budget calculation
-  Map<String, double> initialBudgets = {};
-  selectedWeights.forEach((subCategory, weight) {
-    initialBudgets[subCategory] = (totalAmount * weight) / totalSelectedWeight;
-  });
-
-  // Ensure the updated category remains unchanged
-  double previousAmount = initialBudgets[updatedCategory] ?? 0;
-  double difference = updatedAmount - previousAmount;
-  initialBudgets[updatedCategory] = updatedAmount;
-
-  // Redistribute the remaining amount among other selected categories
-  double remainingWeight = totalSelectedWeight - (selectedWeights[updatedCategory] ?? 0);
-
-  if (remainingWeight > 0) {
-    selectedWeights.forEach((subCategory, weight) {
-      if (subCategory != updatedCategory) {
-        double adjustment = (weight / remainingWeight) * difference;
-        initialBudgets[subCategory] = ((initialBudgets[subCategory] ?? 0) - adjustment).clamp(0, double.infinity);
-      }
-    });
-  }
-
-  // Round to 2 decimal places
-  initialBudgets.updateAll((key, value) => (value * 100).roundToDouble() / 100);
-
-  return initialBudgets;
-}
 
 }
