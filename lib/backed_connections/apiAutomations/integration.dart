@@ -1,6 +1,3 @@
-
-
-
 import 'dart:convert';
 
 import 'package:finvu_flutter_sdk/finvu_config.dart';
@@ -18,27 +15,28 @@ import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-  void initFinvuManager() async {
-     finvuManager.initialize(
-        FinvuConfig(
-          finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
-          certificatePins: [],
-        ),
-    );
+void initFinvuManager() async {
+  finvuManager.initialize(
+    FinvuConfig(
+      finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
+      certificatePins: [],
+    ),
+  );
 
-    await finvuManager.connect(); 
-    var isConnected = await finvuManager.isConnected();
+  await finvuManager.connect();
+  var isConnected = await finvuManager.isConnected();
+  print(isConnected);
+  if (!isConnected) {
+    isConnected = await finvuManager.isConnected();
     print(isConnected);
-    if (!isConnected) {
-        isConnected = await finvuManager.isConnected();
-        print(isConnected); 
-    }
-
   }
+}
 
 Future<void> loginWithServer() async {
-  final String apiUrl = "${url}/finvu/login"; // Change to your actual server URL
-  final String custId = "${number.value}@finvu"; // Replace with dynamic value if needed
+  final String apiUrl =
+      "${url}/finvu/login"; // Change to your actual server URL
+  final String custId =
+      "${number.value}@finvu"; // Replace with dynamic value if needed
 
   try {
     final response = await http.post(
@@ -61,10 +59,8 @@ Future<void> loginWithServer() async {
       print("Token: $token");
       print("Consent Handle ID: $consentHandleId");
 
-      
       login(consentHandleId);
       handleId.value = consentHandleId;
-
 
       // Proceed with next steps, e.g., calling another API
       // ConsentStatus(context, token, consentHandleId, custId);
@@ -76,12 +72,13 @@ Future<void> loginWithServer() async {
   }
 }
 
-
 Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String apiUrl = "${url}/finvu/fetchData"; // Change to your actual server URL
-    final String custId = "${number.value}@finvu"; // Replace with dynamic value if needed
+    final String apiUrl =
+        "${url}/finvu/fetchData"; // Change to your actual server URL
+    final String custId =
+        "${number.value}@finvu"; // Replace with dynamic value if needed
 
     String? token = prefs.getString("tokenFinvu");
     String? handleId = prefs.getString("consentHandleId");
@@ -115,8 +112,8 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
       prefs.setString("custId", data["custId"]);
       prefs.setString("consentId", data["consentId"]);
 
-      await  storeDataOfTransactions(context, data, handleId, data["from"], data["to"],
-       token, custId, data["custId"], data["sessionId"]);
+      await storeDataOfTransactions(context, data, handleId, data["from"],
+          data["to"], token, custId, data["custId"], data["sessionId"]);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Data fetched successfully!")),

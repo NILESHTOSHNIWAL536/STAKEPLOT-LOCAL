@@ -7,7 +7,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/expansionTile.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/creditCard.dart';
+// import 'package:flutter_application_code_stakeplot/finance_screen/creditCard.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
 String selectedBrand = 'Toyota'; // Selected car brand
 

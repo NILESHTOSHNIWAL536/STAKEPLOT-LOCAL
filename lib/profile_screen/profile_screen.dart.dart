@@ -3,10 +3,13 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/communityProfileScreen.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/edit_Details.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreenDart extends StatefulWidget {
   const ProfileScreenDart({super.key});
@@ -82,7 +85,14 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                         height: 28,
                         width: 28,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            EditDetails()),
+                                  );
+                      },
                       label: Text('Edit details',
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.w500,
@@ -187,10 +197,27 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                         SizedBox(height: 10),
                         // Third Container for Log ou
                         // t
-                        logoutWidget(context),
+                        //logoutWidget(context),
                         InkWell(
-                          onTap: (){
-                              logoutWidget(context);
+                          onTap: () async {
+                            final SharedPreferences _pref =
+                                await SharedPreferences.getInstance();
+
+                            // Remove tokens and other session data
+                            await _pref.remove("accessToken");
+                            await _pref.remove("token");
+                            await _pref.remove("ConsentHandleId");
+                            await _pref.remove("consentId");
+                            await _pref.remove("from");
+                            await _pref.remove("to");
+                            await _pref.remove("sessionId");
+
+                            // Navigate back to home screen
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                '/', (Route<dynamic> route) => false);
+                            Navigator.pushReplacementNamed(context, '/');
+
+                            clearGetX();
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -198,7 +225,8 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                 borderRadius: BorderRadius.circular(14),
                                 border: Border.all(color: AppColors.border)),
                             child: Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 14, 14, 14),
+                              padding:
+                                  const EdgeInsets.fromLTRB(10, 14, 14, 14),
                               child: _buildOption(
                                   AvatarProfileImage(
                                     url: ProfileIcons.logout,
@@ -270,4 +298,6 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
       onTap: onTap,
     );
   }
+
+  
 }
