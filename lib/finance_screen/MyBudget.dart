@@ -3,52 +3,45 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import './BudgetDisplay.dart';
 
-class MyBudgetScreen extends StatelessWidget {
-  final int daysRemaining;
-  final double budgetAmount;
-  final double amountSpent;
-  final double overSpent;
-  final Map<String, double> categories;
-  final List<FlSpot> monthlyBudgetData;
+class MyBudgetScreen extends StatefulWidget {
+   final  data;
+
 
   // Constructor updated to remove the 'insights' parameter
   MyBudgetScreen({
-    required this.daysRemaining,
-    required this.budgetAmount,
-    required this.amountSpent,
-    required this.overSpent,
-    required this.categories,
-    required this.monthlyBudgetData,
+    required this.data,
   });
 
-  // Named constructor for example usage
-  MyBudgetScreen.example()
-      : this(
-          daysRemaining: 12,
-          budgetAmount: 1500,
-          amountSpent: 2000,
-          overSpent: 500,
-          categories: {
-            'Shopping': 40,
-            'Children': 35,
-            'Bills': 10,
-            'Alcohol & Smoking': 15,
-          },
-          monthlyBudgetData: const [
-            FlSpot(0, 400),
-            FlSpot(1, 400),
-            FlSpot(2, 500),
-            FlSpot(3, 900),
-            FlSpot(4, 650),
-            FlSpot(5, 500),
-            FlSpot(6, 400),
-            FlSpot(7, 400),
-            FlSpot(8, 500),
-            FlSpot(9, 900),
-            FlSpot(10, 650),
-            FlSpot(11, 500),
-          ],
-        );
+  @override
+  State<MyBudgetScreen> createState() => _MyBudgetScreenState();
+}
+
+class _MyBudgetScreenState extends State<MyBudgetScreen> {
+
+ List<FlSpot> monthlyBudgetData=[];
+ Map<String,double> categories={};
+   @override
+  void initState() {
+     getmonthlyBudgetData();
+  }
+
+  void getmonthlyBudgetData(){
+        
+        List list= widget.data['categoryBudgets'];
+        print(list);
+        for(double i=0;i<list.length;i++){
+                int j=int.parse(i.toString());
+                monthlyBudgetData.add(FlSpot(i, list[j]['amount']));
+        };
+        for(double i=0;i<list.length;i++){
+                int j=int.parse(i.toString());
+                //  print(list[j]);
+                  categories[list[j]['category']]=list[j]['amount']!;
+        };
+        setState(() {
+          
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +86,7 @@ class MyBudgetScreen extends StatelessWidget {
       children: [
         Icon(Icons.access_time, color: Colors.grey),
         SizedBox(width: 8),
-        Text('Days remaining: $daysRemaining days',
+        Text('Days remaining: 12 days',
             style: TextStyle(color: Colors.grey)),
       ],
     );
@@ -111,12 +104,12 @@ class MyBudgetScreen extends StatelessWidget {
         children: [
           _buildText('Budget amount', Colors.grey),
           SizedBox(height: 8),
-          _buildText('₹ $budgetAmount', Colors.black,
+          _buildText('₹ ${widget.data['amount'].toString()}', Colors.black,
               fontSize: 32, fontWeight: FontWeight.bold),
           SizedBox(height: 16),
-          _buildRow('Amount spent', '₹ $amountSpent', Colors.black),
+          _buildRow('Amount spent', '₹ ${8000.toString()}', Colors.black),
           SizedBox(height: 8),
-          _buildRow('Over spent', '₹ $overSpent', Colors.red),
+          _buildRow('Over spent', '₹ ${2000.toString()}', Colors.red),
         ],
       ),
     );

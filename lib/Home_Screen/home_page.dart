@@ -48,6 +48,7 @@ class _HomePageState extends State<HomePage> {
     getAck();
     getUserInfomations();
     getUserLend(context);
+    getBudget();
     userController.fetchUserInfo();
     // getUserInfo();
   }
