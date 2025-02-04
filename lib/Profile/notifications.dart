@@ -74,30 +74,32 @@ class _NotificationsState extends State<Notifications> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: AppColors.backgroundColor,
-        body: Column(children: [
-          UserProfileHeader(name: "Notifications"),
-          Expanded(
-            child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height / 1.165,
-                //margin:  EdgeInsets.only(top: Colorcodes.paddingTopDesign),
-                padding:
-                    EdgeInsets.symmetric(vertical: Colorcodes.paddingTopScroll),
-                //  decoration: BoxDecoration(
-                //     color: Colorcodes.white,
-                //       borderRadius: BorderRadius.only(
-                //           topLeft: Radius.circular(Colorcodes.borderCut),
-                //           topRight: Radius.circular(Colorcodes.borderCut),
-                //          )
-
-                //  ),
-                child: Obx(() => myNotificationBool.value
-                    ? notifiableElement()
-                    : notifiableElement())),
-          )
-        ]));
+    return SafeArea(
+      child: Scaffold(
+          backgroundColor: AppColors.backgroundColor,
+          body: Column(children: [
+            UserProfileHeader(name: "Notifications"),
+            Expanded(
+              child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height / 1.165,
+                  //margin:  EdgeInsets.only(top: Colorcodes.paddingTopDesign),
+                  padding:
+                      EdgeInsets.symmetric(vertical: Colorcodes.paddingTopScroll),
+                  //  decoration: BoxDecoration(
+                  //     color: Colorcodes.white,
+                  //       borderRadius: BorderRadius.only(
+                  //           topLeft: Radius.circular(Colorcodes.borderCut),
+                  //           topRight: Radius.circular(Colorcodes.borderCut),
+                  //          )
+      
+                  //  ),
+                  child: Obx(() => myNotificationBool.value
+                      ? notifiableElement()
+                      : notifiableElement())),
+            )
+          ])),
+    );
   }
   //   return Scaffold(
 
@@ -228,7 +230,7 @@ class _NotificationsState extends State<Notifications> {
                       Text(
                         ("${name} has lent you ₹${e['amount'] ?? '500'} for ${itemName}"),
                         style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w700,
+                            lWeight: FontWeight.w500,
                             fontSize: 16,
                             color: AppColors.bg1),
                         //  maxLines: 1,

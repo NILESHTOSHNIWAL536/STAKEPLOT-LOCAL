@@ -17,9 +17,9 @@ import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
 // String portNo = "35.154.92.49";
-String portNo = "192.168.1.15";
+String portNo = "192.168.1.11";
 bool flag=true;
-String urlWithLocallHost = flag? "https://stakeplot.in/": "http://${portNo}:5000/";
+String urlWithLocallHost = !flag? "https://stakeplot.in/": "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 
 String valid = "Please Enter All Feilds";
@@ -45,6 +45,7 @@ RxList trasactionsHideData = [].obs;
 RxList trasactionsHistory = [].obs;
 RxBool getHistory=false.obs;
 RxList lendAmountRemainders = [].obs;
+RxBool getlendUsers=false.obs;
 List<double> trasactionsDataMonthlyCredit = [];
 List<double> trasactionsDataMonthlyDebit = [];
 List<double> trasactionsDataCustomCredit = [];
