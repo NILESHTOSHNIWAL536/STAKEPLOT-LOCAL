@@ -149,15 +149,14 @@ void getAutoMationsTransactionsCustom(date, context) async {
 
 Future<http.Response> getDataApiCall(urlPath) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
-  // pref.setString("accessToken","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMwYWZiZmNiMTcxMDc2NWFiOGU5MCIsImlhdCI6MTczNzcwMzU3NCwiZXhwIjoxNzQyODg3NTc0fQ.zYUUmoy_xlaZwdvM8r4KDOZNADlLyxPirqDm0avEUXg");
+  pref.setString("accessToken",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMwYWZiZmNiMTcxMDc2NWFiOGU5MCIsImlhdCI6MTczNzcwMzU3NCwiZXhwIjoxNzQyODg3NTc0fQ.zYUUmoy_xlaZwdvM8r4KDOZNADlLyxPirqDm0avEUXg");
   var accessToken = pref.getString("accessToken");
-  print("accessToken"+accessToken.toString());
-  print(accessToken);
   final response = await http.get(
     Uri.parse(urlPath),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
+      "Authorization": "Bearer $accessToken",
     },
   );
   return response;
@@ -215,7 +214,7 @@ void updateTheTagOfTarnsactions(
 
   var responce = await getDataApiCall(urlPath);
 
-   void getTransaction(context) async {
+  void getTransaction(context) async {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
     final response = await http.get(
@@ -229,11 +228,12 @@ void updateTheTagOfTarnsactions(
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
       var obj = his['data'];
-    
-        trasactionsHistory.clear();
-        trasactionsHistory.addAll(obj);
+
+      // trasactionsHistory.clear();
+      // trasactionsHistory.addAll(obj);
     } else {}
   }
+
   if (getFlagOfResponse(responce)) {
     getAutoMationsTransactions();
     Navigator.pop(context);
@@ -290,6 +290,7 @@ void addTransaction(String amount, String subCategory, String categories,
     'isSplit': isSplit,
   };
   print(body);
+  print("${url}/transaction/add");
   final response = await http.post(
     Uri.parse('${url}/transaction/add'),
     headers: <String, String>{
@@ -298,7 +299,7 @@ void addTransaction(String amount, String subCategory, String categories,
     },
     body: jsonEncode(body),
   );
-
+  printData(response);
   if (response.statusCode == 200) {
     final body = json.decode(response.body);
     if (!isSplit) snackBarCalled(context, "Added Trasactions!", Colors.black);
@@ -324,6 +325,5 @@ void getTransaction(context) async {
     var obj = his['data'];
     trasactionsHistory.clear();
     trasactionsHistory.addAll(obj);
-   
   } else {}
 }

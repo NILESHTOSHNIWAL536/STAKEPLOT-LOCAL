@@ -37,14 +37,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-   final UserController userController = Get.find<UserController>();
+  final UserController userController = Get.find<UserController>();
 
   @override
   void initState() {
     check(context, "homeScreen");
+    getAllTransaction(context);
     getTrending();
     getPost();
-    getTransaction(context);
+    // getTransaction(context);
     getAck();
     getBudget();
     getUserInfomations();
@@ -53,8 +54,6 @@ class _HomePageState extends State<HomePage> {
     userController.fetchUserInfo();
     // getUserInfo();
   }
-
-
 
   final List<Widget> _pages = [
     HomeScreen(), // The content previously in the ListView
