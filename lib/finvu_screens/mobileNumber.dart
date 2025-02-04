@@ -118,8 +118,10 @@ class _MobileNumberState extends State<MobileNumber> {
                 ;
                 String phoneNumber = _phoneController.text;
                 number.value = phoneNumber;
+                print(number.value);
                 // loginToAutoTractions(context);
                  LOGOUT();
+                print(number.value);
                 await loginWithServer();
                 otpController = TextEditingController();
 

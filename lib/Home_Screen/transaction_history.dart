@@ -243,9 +243,8 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                       ),
                     ),
                     TextSpan(
-                      text: " ( " +
-                          EachTransactions['category'] +
-                          " )", // Name text
+                      text:
+                          " ( " + EachTransactions['subcategory'] + " )", // Name text
                       style: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight

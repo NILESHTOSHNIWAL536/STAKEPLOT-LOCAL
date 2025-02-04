@@ -129,43 +129,5 @@ void getAllTransaction(context) async {
     getHistory.value = !getHistory.value;
   } else {}
 }
-// Future<List<dynamic>> getAllTransaction(BuildContext context) async {
-//   try {
-//     // Call your API to fetch data
-//     var response = await getDataApiCall("${url}/transaction/all");
-    
-//     print("obj------------------------------------------------------------");
-//     printData(response, context);
-    
-//     // Check if the API call was successful
-//     if (response.statusCode == 200) {
-//       // Parse the response if it's successful
-//       var data = jsonDecode(response.body);
-//       var transactions = data['data']; // This contains the transaction list
-      
-//       print("obj------------------------------------------------------------");
-//       print(transactions[0]); // Print the first transaction (or any item you want to inspect)
-      
-//       // Optionally, update your global state or list
-//       trasactionsHistory.clear();
-//       trasactionsHistory.addAll(transactions);
-      
-//       print('transactionsHistory');
-//       print(trasactionsHistory);
-      
-//       // Trigger any necessary UI updates or state changes
-//       getHistory.value = !getHistory.value;
 
-//       // Return the transactions list
-//       return transactions;
-//     } else {
-//       // If API response isn't successful, return an empty list
-//       print("Failed to load transactions");
-//       return [];
-//     }
-//   } catch (e) {
-//     // Handle any error (e.g., network issues) and return an empty list
-//     print("Error occurred while fetching transactions: $e");
-//     return [];
-//   }
-// }
+
