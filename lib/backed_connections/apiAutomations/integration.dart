@@ -37,7 +37,8 @@ Future<void> loginWithServer() async {
       "${url}/finvu/login"; // Change to your actual server URL
   final String custId =
       "${number.value}@finvu"; // Replace with dynamic value if needed
-   
+    print("apiUrl-------------------------------------");
+    print(apiUrl);
 
   try {
     final response = await http.post(

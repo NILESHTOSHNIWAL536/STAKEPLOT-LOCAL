@@ -18,9 +18,8 @@ import 'package:path/path.dart' as p;
 
 // String portNo = "35.154.92.49";
 String portNo = "192.168.1.15";
-// String urlWithLocallHost="https://stakeplot.in";
-// String urlWithLocallHost = "https://stakeplot.in/";
-String urlWithLocallHost = "http://${portNo}:5000/";
+bool flag=true;
+String urlWithLocallHost = flag? "https://stakeplot.in/": "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 
 String valid = "Please Enter All Feilds";
