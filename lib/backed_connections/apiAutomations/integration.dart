@@ -37,9 +37,7 @@ Future<void> loginWithServer() async {
       "${url}/finvu/login"; // Change to your actual server URL
   final String custId =
       "${number.value}@finvu"; // Replace with dynamic value if needed
-
-  print(apiUrl);
-  print(custId);
+   
 
   try {
     final response = await http.post(
@@ -47,10 +45,10 @@ Future<void> loginWithServer() async {
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({"custId": custId}),
     );
-
+    printData(response);
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      String token = data["token"];
+      String token = "";//data["token"];
       String consentHandleId = data["consentHandleId"];
 
       // Store token and consentHandleId in SharedPreferences
@@ -83,11 +81,10 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
     final String custId =
         "${number.value}@finvu"; // Replace with dynamic value if needed
 
-    String? token = prefs.getString("tokenFinvu");
     String? handleId = prefs.getString("consentHandleId");
     // String? custId = prefs.getString("custId");
 
-    if (token == null || handleId == null) {
+    if (handleId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Missing required credentials!")),
       );
@@ -98,7 +95,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
       Uri.parse(apiUrl),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({
-        "token": token,
+        "token": "",
         "handleId": handleId,
         "custId": custId,
       }),
@@ -116,7 +113,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
       prefs.setString("consentId", data["consentId"]);
 
       await storeDataOfTransactions(context, data, handleId, data["from"],
-          data["to"], token, custId, data["custId"], data["sessionId"]);
+          data["to"], "", custId, data["custId"], data["sessionId"]);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Data fetched successfully!")),

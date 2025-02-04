@@ -260,7 +260,7 @@ final transactionsHistory = <dynamic>[].obs;
                     ),
                     TextSpan(
                       text:
-                          " ( " + EachTransactions['category'] + " )", // Name text
+                          " ( " + EachTransactions['subcategory'] + " )", // Name text
                       style: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight
