@@ -78,7 +78,7 @@ class _NotificationsState extends State<Notifications> {
       child: Scaffold(
           backgroundColor: AppColors.backgroundColor,
           body: Column(children: [
-            UserProfileHeader(name: "Notifications"),
+            UserProfileHeader(name: "Notifications",),
             Expanded(
               child: Container(
                   width: MediaQuery.of(context).size.width,
@@ -142,7 +142,10 @@ class _NotificationsState extends State<Notifications> {
                 child: Container(
                     height: MediaQuery.of(context).size.height / 1.1,
                     child: Text("No Notifications",
-                        style: FontManager().getTextStyle(context))))
+                        style:  FontManager().getTextStyle(context,
+                  lWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: AppColors.accentColor))))
             : ListView(
                 children: notificationList.map((e) => getContainer(e)).toList(),
               );
@@ -157,7 +160,7 @@ class _NotificationsState extends State<Notifications> {
         e['status'] != null &&
         e['status'] == 'accepted') {
       return messageChannelProfile(
-          "${e['from_name']} accepted your friend Request..",
+          "${e['from_name']} accepted your friend request",
           e['from_id'].toString(),
           e['avatarType'] ?? "");
     }

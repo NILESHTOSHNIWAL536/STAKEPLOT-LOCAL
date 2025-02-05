@@ -144,6 +144,12 @@ Widget budgetAndDebtCalulator(){
                         url: Finance.location,
                           path: "/TripCost",
                       ),
+                      _buildCalculatorTile(
+                        'Veg and non veg',
+                        'Calculator',
+                        url: Finance.location,
+                          path: "/VegNonveg",
+                      ),
           ],
        ),
      );

@@ -1,0 +1,734 @@
+// import 'package:flutter/material.dart';
+// import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+// import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
+// import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+// import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+// import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+// import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+// import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+
+// class VegNonVegCalculator extends StatefulWidget {
+//   @override
+//   _VegNonVegCalculatorState createState() => _VegNonVegCalculatorState();
+// }
+
+// class _VegNonVegCalculatorState extends State {
+//   final TextEditingController vegController = TextEditingController();
+//   final TextEditingController nonVegController = TextEditingController();
+//   final TextEditingController alcoholController = TextEditingController();
+
+//   Map<String, List<String>> selectedOptions = {};
+//   List friends = ['Thor', 'Stanlee', 'Stark', 'Chris'];
+//   List options = ['Veg', 'Non veg', 'Alcohol'];
+//   Map<String, Map<String, double>> friendShares =
+//       {}; // Added this to keep track of shares
+
+//   void _calculateShares() {
+//     setState(() {
+//       double totalVeg = double.tryParse(vegController.text) ?? 0.0;
+//       double totalNonVeg = double.tryParse(nonVegController.text) ?? 0.0;
+//       double totalAlcohol = double.tryParse(alcoholController.text) ?? 0.0;
+
+//       friendShares = {};
+
+//       for (String friend in friends) {
+//         friendShares[friend] = {
+//           'Veg': 0.0,
+//           'Non veg': 0.0,
+//           'Alcohol': 0.0,
+//           'Total': 0.0
+//         };
+//       }
+
+//       // Calculate shares for each friend based on their selections
+//       for (var friend in friends) {
+//         List choices = selectedOptions[friend] ?? [];
+
+//         if (choices.contains('Veg')) {
+//           friendShares[friend]!['Veg'] = totalVeg /
+//               (selectedOptions.keys
+//                   .where((f) => selectedOptions[f]?.contains('Veg') ?? false)
+//                   .length);
+//         }
+//         if (choices.contains('Non veg')) {
+//           friendShares[friend]!['Non veg'] = totalNonVeg /
+//               (selectedOptions.keys
+//                   .where(
+//                       (f) => selectedOptions[f]?.contains('Non veg') ?? false)
+//                   .length);
+//         }
+//         if (choices.contains('Alcohol')) {
+//           friendShares[friend]!['Alcohol'] = totalAlcohol /
+//               (selectedOptions.keys
+//                   .where(
+//                       (f) => selectedOptions[f]?.contains('Alcohol') ?? false)
+//                   .length);
+//         }
+
+//         // Calculate the total for the friend
+//         friendShares[friend]!['Total'] = friendShares[friend]!['Veg']! +
+//             friendShares[friend]!['Non veg']! +
+//             friendShares[friend]!['Alcohol']!;
+//       }
+//     });
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: AppColors.backgroundColor,
+//       appBar: AppBar(
+//         backgroundColor: AppColors.backgroundColor,
+//         title: Text('Veg and Non veg Calculator',
+//             style: FontManager().getTextStyle(context,
+//                 lWeight: FontWeight.w700, fontSize: 18, color: AppColors.bg1)),
+//         leading: IconButton(
+//           icon: Icon(Icons.arrow_back),
+//           onPressed: () {},
+//         ),
+//       ),
+//       body: SingleChildScrollView(
+//         child: Padding(
+//           padding: const EdgeInsets.all(16.0),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+
+//               Padding(
+//                 padding: const EdgeInsets.all(16.0),
+//                 child: Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+//                   children: [
+//                     _buildInputColumn('Veg', vegController),
+//                     _buildInputColumn('Non-veg', nonVegController),
+//                     _buildInputColumn('Alcohol', alcoholController),
+//                   ],
+//                 ),
+//               ),
+//               SizedBox(height: 20),
+//               Text('My Friends',
+//                   style: FontManager().getTextStyle(context,
+//                       lWeight: FontWeight.w600,
+//                       fontSize: 16,
+//                       color: AppColors.bg1)),
+//               //  const FriendsUi(),
+//               addedMembers.length > 0
+//                     ?Container(
+//                         width: MediaQuery.of(context).size.width,
+//                         height: MediaQuery.of(context).size.width / 7,
+//                         child: ListView(
+//                           scrollDirection: Axis.horizontal,
+//                           children: addedMembers.map((element) {
+//                             return Container(
+//                               width: MediaQuery.of(context).size.width / 6,
+//                               height: MediaQuery.of(context).size.width / 7,
+//                               child: Column(
+//                                 mainAxisAlignment: MainAxisAlignment.start,
+//                                 crossAxisAlignment: CrossAxisAlignment.center,
+//                                 children: [
+//                                   Stack(
+//                                     children: [
+//                                       Padding(
+//                                         padding: EdgeInsets.all(0.0),
+//                                         child: Center(
+//                                             child: AvatarProfileImage(
+//                                                 url: element['avatar'] ??
+//                                                     userAvatar,
+//                                                 width: 10,
+//                                                 height: 20)),
+//                                       ),
+//                                       Positioned(
+//                                         right: 0,
+//                                         top: 0,
+//                                         child: InkWell(
+//                                           onTap: () {
+//                                             List me = [];
+//                                             addedMembers.forEach((ele) {
+//                                               if (element['id'] != ele['id']) {
+//                                                 me.add(ele);
+//                                               }
+//                                             });
+
+//                                             setState(() {
+//                                               addedMembers.clear();
+//                                               addedMembers.addAll(me);
+//                                               //  addedMembers=me;
+//                                               addedUser.remove(element['id']);
+//                                             });
+//                                           },
+//                                           child: const Icon(
+//                                             Icons.close,
+//                                           ),
+//                                         ),
+//                                       ),
+//                                     ],
+//                                   ),
+//                                   Center(
+//                                       child: Text(element['name'],
+//                                           style: FontManager().getTextStyle(
+//                                               context,
+//                                               fontSize: 12,
+//                                               overflow: TextOverflow.fade)))
+//                                 ],
+//                               ),
+//                             );
+//                           }).toList(),
+//                         ),
+//                       ) : SizedBox.shrink(),
+
+//               SizedBox(
+//                 height: 500,
+//                 child: ListView.builder(
+//                   itemCount: friends.length,
+//                   itemBuilder: (context, index) {
+//                     String friend = friends[index];
+//                     return ListTile(
+//                       title: Row(
+//                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                         children: [
+//                           Text('$friend ',
+//                               style: FontManager().getTextStyle(context,
+//                                   lWeight: FontWeight.w500,
+//                                   fontSize: 16,
+//                                   color: AppColors.bg1)),
+//                           Text(
+//                               'Total: ₹${friendShares[friend]?['Total']?.toStringAsFixed(2) ?? "0.00"}', style: FontManager().getTextStyle(context,
+//                                       lWeight: FontWeight.w500,
+//                                       fontSize: 16,
+//                                       color: AppColors.bg3))
+//                         ],
+//                       ),
+
+//                       subtitle: Wrap(
+//                         children: options.map((option) {
+//                           bool isSelected =
+//                               selectedOptions[friend]?.contains(option) ??
+//                                   false;
+//                           return Padding(
+//                             padding:
+//                                 const EdgeInsets.symmetric(horizontal: 8.0),
+//                             child: ChoiceChip(
+//                               label: Text(option,
+//                                   style: FontManager().getTextStyle(context,
+//                                       lWeight: FontWeight.w700,
+//                                       fontSize: 14,
+//                                       color: AppColors.primaryColor)),
+//                               selected: isSelected,
+//                               showCheckmark: false,
+//                               selectedColor: AppColors.button,
+//                               onSelected: (selected) {
+//                                 setState(() {
+//                                   if (selected) {
+//                                     selectedOptions
+//                                         .putIfAbsent(friend, () => [])
+//                                         .add(option);
+//                                   } else {
+//                                     selectedOptions[friend]?.remove(option);
+//                                     if (selectedOptions[friend]?.isEmpty ??
+//                                         false) {
+//                                       selectedOptions.remove(friend);
+//                                     }
+//                                   }
+//                                   _calculateShares(); // Recalculate shares when options change
+//                                 });
+//                               },
+//                             ),
+//                           );
+//                         }).toList(),
+//                       ),
+//                     );
+//                   },
+//                 ),
+//               ),
+
+//               GestureDetector(
+//                 onTap:  _calculateShares,
+
+//                 child: getButton(context, "Calculate"),
+//               ),
+
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget _buildInputColumn(String label, TextEditingController controller) {
+//     return Column(
+//       children: [
+//         Text(label,
+//             style: FontManager().getTextStyle(context,
+//                 lWeight: FontWeight.w600,
+//                 fontSize: 14,
+//                 color: AppColors.primaryColor)),
+//         SizedBox(height: Colorcodes.paddingSize),
+//         SizedBox(
+//           width:
+//               MediaQuery.of(context).size.width / 3 - 33, // Account for padding
+//           child: TextField(
+//             controller: controller,
+//             keyboardType: TextInputType.number,
+//             decoration: InputDecoration(
+//               contentPadding:
+//                   EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+//               border: OutlineInputBorder(
+//                 borderRadius: BorderRadius.circular(12.0),
+//               ),
+//             ),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }
+
+import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+import 'package:get/get.dart';
+
+class VegNonVegCalculator extends StatefulWidget {
+  @override
+  _VegNonVegCalculatorState createState() => _VegNonVegCalculatorState();
+}
+
+class _VegNonVegCalculatorState extends State {
+  final TextEditingController vegController = TextEditingController();
+  final TextEditingController nonVegController = TextEditingController();
+  final TextEditingController alcoholController = TextEditingController();
+
+  Map<String, List<String>> selectedOptions = {};
+  TextEditingController Textcontroller = TextEditingController();
+  // Use 'frdsList' from ApisConnect for dynamic friends
+  List<Map<dynamic, dynamic>> get friends =>
+      frdsList.map((e) => e as Map<dynamic, dynamic>).toList();
+
+  // Assuming frdsList is from ApisConnect
+  List<String> options = ['Veg', 'Non veg', 'Alcohol'];
+  Map<String, Map<String, double>> friendShares = {};
+
+  RxList addedUser = [].obs;
+  RxList addedMembers = [].obs;
+
+  @override
+  @override
+  void initState() {
+    super.initState();
+    // Initialize selected options for each existing friend in friends list
+    for (var friend in friends) {
+      String friendId = friend['_id'];
+      if (!selectedOptions.containsKey(friendId)) {
+        selectedOptions[friendId] = [];
+      }
+    }
+  }
+
+  void _calculateShares() {
+    setState(() {
+      double totalVeg = double.tryParse(vegController.text) ?? 0.0;
+      double totalNonVeg = double.tryParse(nonVegController.text) ?? 0.0;
+      double totalAlcohol = double.tryParse(alcoholController.text) ?? 0.0;
+      print(
+          'Total Veg: $totalVeg, Total Non-Veg: $totalNonVeg, Total Alcohol: $totalAlcohol');
+
+      friendShares = {};
+      print(
+          'kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk');
+
+      // Initialize the friendShares for each friend
+      for (var friend in addedMembers) {
+        String? friendId = friend['id'];
+        if (friendId != null) {
+          friendShares[friendId] = {
+            'Veg': 0.0,
+            'Non veg': 0.0,
+            'Alcohol': 0.0,
+            'Total': 0.0
+          };
+        }
+      }
+
+      // Calculate shares for each friend based on their selections
+      for (var friend in addedMembers) {
+        String? friendId = friend['id'];
+        if (friendId != null) {
+          List choices = selectedOptions[friendId] ?? [];
+
+          // Debugging: Check the selected options for each friend
+          print('Friend ID: $friendId, Choices: $choices');
+
+          // Veg share calculation
+          if (choices.contains('Veg')) {
+            int vegFriends = addedMembers
+                .where(
+                    (f) => selectedOptions[f['id']]?.contains('Veg') ?? false)
+                .length;
+            print('Veg Friends: $vegFriends');
+            friendShares[friendId]!['Veg'] =
+                vegFriends > 0 ? totalVeg / vegFriends : 0.0;
+          }
+          // Non-veg share calculation
+          if (choices.contains('Non veg')) {
+            int nonVegFriends = addedMembers
+                .where((f) =>
+                    selectedOptions[f['id']]?.contains('Non veg') ?? false)
+                .length;
+            print('Non-Veg Friends: $nonVegFriends');
+            friendShares[friendId]!['Non veg'] =
+                nonVegFriends > 0 ? totalNonVeg / nonVegFriends : 0.0;
+          }
+          // Alcohol share calculation
+          if (choices.contains('Alcohol')) {
+            int alcoholFriends = addedMembers
+                .where((f) =>
+                    selectedOptions[f['id']]?.contains('Alcohol') ?? false)
+                .length;
+            print('Alcohol Friends: $alcoholFriends');
+            friendShares[friendId]!['Alcohol'] =
+                alcoholFriends > 0 ? totalAlcohol / alcoholFriends : 0.0;
+          }
+
+          // Calculate the total for the friend
+          friendShares[friendId]!['Total'] = friendShares[friendId]!['Veg']! +
+              friendShares[friendId]!['Non veg']! +
+              friendShares[friendId]!['Alcohol']!;
+        }
+      }
+
+      // Debugging: Print the final friendShares
+      print('Final Friend Shares: $friendShares');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // print('friends: $friends'); // Print friends list
+    // print('addedMembers: ${addedMembers.toList()}');
+    return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
+      appBar: AppBar(
+        backgroundColor: AppColors.backgroundColor,
+        title: Text('Veg and Non veg Calculator',
+            style: FontManager().getTextStyle(context,
+                lWeight: FontWeight.w700, fontSize: 18, color: AppColors.bg1)),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {},
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildInputColumn('Veg', vegController),
+                    _buildInputColumn('Non-veg', nonVegController),
+                    _buildInputColumn('Alcohol', alcoholController),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+              Text('My Friends',
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: AppColors.bg1)),
+              SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: InputDat('Search', TextInputType.name, Textcontroller),
+              ),
+              commentedData(),
+              SizedBox(
+                height: 300,
+                child: ListView.builder(
+                  itemCount: addedMembers.length,
+                  itemBuilder: (context, index) {
+                    var friend = addedMembers[index];
+
+                    // print('..........................................');
+                    // print(friend);
+
+                    String? friendId = friend['id']; // Cast to nullable string
+
+                    return ListTile(
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AvatarProfileImage(
+                            url: friend['avatar'] ??
+                                userAvatar, // Default to userAvatar if null
+                            width: 8,
+                            height: 18,
+                          ),
+                          Text(
+                              friend['name'] ??
+                                  'Unknown', // Default to 'Unknown' if name is null
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.w500,
+                                  fontSize: 16,
+                                  color: AppColors.bg1)),
+                          Text(
+                              'Total: ₹${friendShares[friendId]?['Total']?.toStringAsFixed(2) ?? "0.00"}',
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.w500,
+                                  fontSize: 16,
+                                  color: AppColors.bg3))
+                        ],
+                      ),
+                      subtitle: Wrap(
+                          children: options.map((option) {
+                        bool isSelected =
+                            selectedOptions[friendId]?.contains(option) == true;
+                        // print('friendId: $friendId');
+                        // print('friendId: $friend');
+                        // print('selectedOptions: $selectedOptions');
+                        // print('isSelected: $isSelected');
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: ChoiceChip(
+                            label: Text(option,
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.w700,
+                                    fontSize: 14,
+                                    color: AppColors.primaryColor)),
+                            selected: isSelected,
+                            showCheckmark: false,
+                            selectedColor: AppColors.button,
+                            onSelected: (selected) {
+                              setState(() {
+                                if (friendId != null) {
+                                  if (selected) {
+                                    selectedOptions
+                                        .putIfAbsent(friendId, () => [])
+                                        .add(option);
+                                  } else {
+                                    selectedOptions[friendId]?.remove(option);
+                                    if (selectedOptions[friendId]?.isEmpty ??
+                                        false) {
+                                      selectedOptions.remove(friendId);
+                                    }
+                                  }
+                                  _calculateShares(); // Recalculate shares when options change
+                                }
+                              });
+                            },
+                          ),
+                        );
+                      }).toList()),
+                    );
+                  },
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  print(
+                      'Calculate button tapped......................................................');
+                  _calculateShares();
+                },
+                child: getButton(context, "Calculate"),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget commentedData() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
+      child: Container(
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+            // color: const Color.fromRGBO(249, 246, 238, 1),
+            //  color: Colorcodes.textFeild,
+            borderRadius: BorderRadius.circular(4)),
+        child: Column(
+          children: [
+            // InputDat('Search',TextInputType.name,Textcontroller),
+
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+              child: SizedBox(
+                height: 70,
+                width: MediaQuery.of(context).size.width,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: frdsList.length, // +1 for loading more indicator
+                  itemBuilder: (context, index) {
+                    String values = frdsList[index]['_id'];
+                    return InkWell(
+                      onTap: () {},
+                      child: Column(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                addedUser.contains(values)
+                                    ? addedUser.remove(values)
+                                    : addedUser.add(values);
+                                if (addedUser.contains(values)) {
+                                  addedMembers.add(
+                                    {
+                                      "name": frdsList[index]['name'],
+                                      "id": values,
+                                      'avatar': frdsList[index]['avatar'],
+                                      "balance": 200
+                                    },
+                                  );
+                                } else {
+                                  List f = [];
+                                  addedMembers.forEach((element) {
+                                    if (element['id'] != values) {
+                                      f.add(element);
+                                    }
+                                  });
+
+                                  setState(() {
+                                    addedMembers.clear();
+                                    addedMembers.addAll(f);
+                                  });
+                                }
+                              });
+                            },
+                            child: Container(
+                              // color:Colors.deepOrangeAccent,
+                              width: MediaQuery.of(context).size.width / 5,
+                              height: 50,
+                              // backgroundColor:const Color.fromRGBO(249, 246, 238, 1),
+                              child: Stack(
+                                children: [
+                                  Center(
+                                      child: AvatarProfileImage(
+                                          url: frdsList[index]['avatar'] ??
+                                              userAvatar,
+                                          width: 8,
+                                          height: 18)),
+                                  addedUser.contains(values)
+                                      ? const Positioned(
+                                          right: 0,
+                                          top: 0,
+                                          child: Icon(
+                                            Icons.check,
+                                            size: 30,
+                                            color: Colors.green,
+                                          ),
+                                        )
+                                      : const SizedBox.shrink(),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Text((frdsList[index]['name']),
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                  color: Colors.black))
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget InputDat(lableText, keyBoard, Textcontroller) {
+    return Center(
+      child: Container(
+        // padding: EdgeInsets.symmetric(vertical: 5),
+        color: Color.fromRGBO(246, 246, 246, 1),
+        width: MediaQuery.of(context).size.width / 1.1,
+        // height: 50,
+        child: Center(
+          child: TextFormField(
+            keyboardType: keyBoard,
+            controller: Textcontroller,
+            onChanged: (v) {
+              var frdsList2 = [];
+
+              if (v == "") {
+                frdsList.clear();
+                frdsList.addAll(frdsListOrigin);
+              }
+
+              frdsListOrigin.forEach((element) {
+                if (element['name'].toString().contains(v)) {
+                  frdsList2.add(element);
+                }
+              });
+
+              setState(() {
+                frdsList.clear();
+                frdsList.addAll(frdsList2);
+              });
+            },
+            decoration: InputDecoration(
+              filled: true,
+              hintText: lableText,
+              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(24),
+                  borderSide: const BorderSide(
+                      // color:Colors.white
+                      color: Color.fromRGBO(249, 246, 238, 1))),
+              focusedBorder: OutlineInputBorder(
+                  // borderRadius: BorderRadius.circular(40),
+                  borderRadius: BorderRadius.circular(24),
+                  borderSide:
+                      BorderSide(color: Color.fromRGBO(246, 246, 246, 1))),
+              fillColor: AppColors.button,
+              border: InputBorder.none,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInputColumn(String label, TextEditingController controller) {
+    return Column(
+      children: [
+        Text(label,
+            style: FontManager().getTextStyle(context,
+                lWeight: FontWeight.w600,
+                fontSize: 14,
+                color: AppColors.primaryColor)),
+        SizedBox(height: Colorcodes.paddingSize),
+        SizedBox(
+          width:
+              MediaQuery.of(context).size.width / 3 - 33, // Account for padding
+          child: TextField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

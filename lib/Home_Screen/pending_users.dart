@@ -80,7 +80,10 @@ class _UserListScreenState extends State<UserListScreen> {
                 backgroundColor: Colorcodes.budgetLightGreen,
                 child: ProfileImage(
                     url: data['Avatar'] ?? 'assets/avatar/menp4.svg')),
-            title: Text(data["userName"] ?? "Unknown User"),
+            title: Text(data["userName"] ?? "Unknown User",style:  FontManager().getTextStyle(context,
+                  lWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: AppColors.accentColor),),
             trailing: InkWell(
               onTap: () {
                 print(data);
@@ -92,7 +95,10 @@ class _UserListScreenState extends State<UserListScreen> {
                 (data["billApproved"] ?? true)
                     ? "Remind now"
                     : "Didn't approve",
-                style: TextStyle(color: AppColors.primaryColor, fontSize: 15),
+                style:  FontManager().getTextStyle(context,
+                  lWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: AppColors.primaryColor),
               ),
             ),
           );
@@ -128,7 +134,10 @@ class ShowAllUsersScreen extends StatelessWidget {
                     backgroundColor: Colorcodes.budgetLightGreen,
                     child: ProfileImage(
                         url: data['Avatar'] ?? 'assets/avatar/menp4.svg')),
-                title: Text(data["userName"] ?? "Unknown User"),
+                title: Text(data["userName"] ?? "Unknown User", style:  FontManager().getTextStyle(context,
+                  lWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: AppColors.accentColor),),
                 trailing: InkWell(
                   onTap: () {
                     sendNotificationsToDevice(data['_id'], context,
@@ -140,7 +149,10 @@ class ShowAllUsersScreen extends StatelessWidget {
                         ? "Remind now"
                         : "Didn't approve",
                     style:
-                        TextStyle(color: AppColors.primaryColor, fontSize: 15),
+                         FontManager().getTextStyle(context,
+                  lWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: AppColors.primaryColor),
                   ),
                 ),
               );
