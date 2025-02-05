@@ -5,6 +5,7 @@ import 'package:finvu_flutter_sdk_core/finvu_discovered_accounts.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_details.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/ApproveConsentRequest.dart';
@@ -25,7 +26,10 @@ void initFinvuManager() async {
 
   await finvuManager.connect();
   var isConnected = await finvuManager.isConnected();
+
+  print("websocket connected : ");
   print(isConnected);
+
   if (!isConnected) {
     isConnected = await finvuManager.isConnected();
     print(isConnected);
@@ -101,7 +105,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
         "custId": custId,
       }),
     );
-
+     printData(response);
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       print("Data Fetched: ${data}");
@@ -119,6 +123,40 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Data fetched successfully!")),
       );
+    } else {
+      print("Error fetching data: ${response.body}");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to fetch data")),
+      );
+    }
+  } catch (e) {
+    print("Error: $e");
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("An error occurred")),
+    );
+  }
+}
+
+Future<void> FetchTransactionBysessionId(BuildContext context,String sessionId) async {
+  try {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String apiUrl ="${url}/finvu/session/${sessionId}"; 
+   
+    var response=await getDataApiCall(apiUrl);
+   
+   
+    if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        
+      print("storeDataOfTransactions 1");
+      await storeDataOfTransactions(context, data['data'], data['handleId'], data["from"],
+          data["to"], "",  data["custId"],data['consentId'], data["sessionId"]);
+      print("storeDataOfTransactions 2");
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Data fetched successfully!")),
+      );
+
     } else {
       print("Error fetching data: ${response.body}");
       ScaffoldMessenger.of(context).showSnackBar(

@@ -11,12 +11,24 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
   // fetch(context);
 
-class FetchTransaction extends StatelessWidget {
+RxBool sessionId=true.obs;
+
+class FetchTransaction extends StatefulWidget {
 const FetchTransaction({ Key? key }) : super(key: key);
 
+  @override
+  State<FetchTransaction> createState() => _FetchTransactionState();
+}
 
+class _FetchTransactionState extends State<FetchTransaction> {
+  @override
+  void initState() {
+    super.initState();
+    getSess();
+  }
 
   @override
   Widget build(BuildContext context){
@@ -73,6 +85,7 @@ const FetchTransaction({ Key? key }) : super(key: key);
             InkWell(
                 onTap: ()async {
                   //  Otpscreen
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
                   // loginToAutoTractions(context);
                  if(directFetch.value){
                        String urlPath = "${url}/transactionauto/";
@@ -87,20 +100,28 @@ const FetchTransaction({ Key? key }) : super(key: key);
                           } else {}
 
                  }else {
-                     FetchTransactionFromFinvuApi(context);
+                    
+                      if(prefs.containsKey("sessionId"))
+                      {
+                            sessionId.value=true;
+                             FetchTransactionBysessionId(context,prefs.getString("sessionId")!);
+
+                      }else{
+                         FetchTransactionFromFinvuApi(context);
+
+                      }
                  }
 
                 },
-             child: getButton(context,"Fetch Trasactions")),
+             child: Obx(()=>   sessionId.value ?getButton(context,"Fetch Trasactions BY sessionId") :  getButton(context,"Fetch Trasactions")) 
+            ),
           ],
         ),
       ),
     );
 
-  }  // fetch(context);
-
-
-
+  }  
+  // fetch(context);
  Widget getTranSactions(context){
       return Container(
         width: MediaQuery.of(context).size.width,
@@ -119,4 +140,9 @@ const FetchTransaction({ Key? key }) : super(key: key);
         ),
       );
   }
+  
+  void getSess() async{
+       SharedPreferences prefs = await SharedPreferences.getInstance();  
+       prefs.setString("sessionId", "99ec4687-3542-4bf6-b8f1-628c170a9290");   
+  } 
 }

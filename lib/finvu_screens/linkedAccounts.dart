@@ -241,8 +241,7 @@ void FIRequestStatus(context, accessToken, consentHandleId, custId, from, to,
     consentId, sessionId) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   final response = await http.get(
-    Uri.parse(
-        '${baseUrl}/FIStatus/${consentId}/${sessionId}/${consentHandleId}/${custId}'),
+    Uri.parse('${baseUrl}/FIStatus/${consentId}/${sessionId}/${consentHandleId}/${custId}'),
     // headers: headers,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
@@ -280,34 +279,42 @@ void FetchData(context, accessToken, consentHandleId, custId, from, to,
 
 Future<void> storeDataOfTransactions(context, data, consentHandleId, from, to,
     accessToken, custId, consentId, sessionId) async {
+  // print(data);
+  // if (data == "Account data not found.") return;
+  // fetchedTrsacntionList.clear();
+  // fetchedTrsacntionList.add([data.toString()]);
+  // fetchedTrsacntionList.refresh();
+  print("storeDataOfTransactions.....");
   print(data);
-  if (data == "Account data not found.") return;
-  fetchedTrsacntionList.clear();
-  fetchedTrsacntionList.add([data.toString()]);
-  fetchedTrsacntionList.refresh();
 
-  //  Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-  String url = "http://${portNo}:5000/api/v1";
+ String accessToken="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UxMjBhNzVhYWZiYWMyNTQ2NGFkNCIsImlhdCI6MTczODc1Nzc3OSwiZXhwIjoxNzQzOTQxNzc5fQ.5XeQtIM2CmFdyrfXiCcA5neACgSRuYScFa5ArcYhe34";
 
+  try{
   final response = await http.post(Uri.parse('${url}/transactionauto/'),
       // headers: headers,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        'userId': "6760142f3101cfcd3e58d46f",
+        'userId': "677e120a75aafbac25464ad4", 
         'consenthandleid': consentHandleId,
         'from': from,
         'to': to,
+        "Authorization": "$accessToken",
       },
       body: jsonEncode(data));
 
-  //  printData(response, context);
+   printData(response, context);
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    // isBankAccountLink.value=true;
-    print(body);
-    // Navigator.of(context)
-    //     .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+   
+    print("body added--------------------");
+    // print(body);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
   } else {}
+  }catch(e){
+       print("Error : ");
+       print(e);
+  }
 }
 
 Future<void> _redirectToURL(String url) async {

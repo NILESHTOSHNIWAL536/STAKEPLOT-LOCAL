@@ -19,6 +19,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/cr
 import 'package:flutter_application_code_stakeplot/finance_screen/Debt.dart';
 // import 'package:flutter_application_code_stakeplot/finance_screen/creditCard.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/finvuAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
@@ -65,7 +66,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-       initialRoute: '/', 
+       initialRoute: '/FetchTransaction', 
         routes:
     {  
       '/': (context) =>  Signin(),   
@@ -88,6 +89,7 @@ class _MyAppState extends State<MyApp> {
       '/Savings':(context) => Savings() ,
       '/autoLoan':(context) => AutoLoan() ,
       '/TripCost':(context) => TripCost() ,
+      '/FetchTransaction':(context) => FetchTransaction() ,
      
     });
   }
