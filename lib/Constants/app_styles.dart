@@ -170,7 +170,8 @@ class LikeComment {
   static String share = "assets/icons/likeComment/Send.svg";
   static String plus = "assets/icons/likeComment/Plus.svg";
   static String message = "assets/icons/likeComment/Messagecircle.svg";
- // static String manualTransactionImage = "assets/Images/manualTransaction.svg";
+  
+ static String manualTransaction = "assets/icons/likeComment/manualTransaction.svg";
 }
 
 class ProfileIcons {

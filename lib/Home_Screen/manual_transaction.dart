@@ -18,6 +18,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budget.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -86,7 +87,7 @@ class _ManualtransactionState extends State<Manualtransaction> {
                 ],
               ),
               AvatarProfileImage(
-                url: Pictures.manualTransactionImage,
+                url: LikeComment.manualTransaction,
                 height: 9,
                 width: 20,
               ),
@@ -658,8 +659,10 @@ class _ModalContentState extends State<ModalContent>
 
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
+                              
                               prefixIcon: const Icon(Icons.currency_rupee),
                               hintText: 'Enter the amount',
+                              
                               hintStyle: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.normal,
                                   fontSize: 16,
@@ -800,8 +803,8 @@ class _ModalContentState extends State<ModalContent>
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              ElevatedButton(
-                                onPressed: () {
+                              GestureDetector(
+                                onTap: () {
                                   // Action for Split Bill button
                                   //isSplit = true;
                                   // splitBill();
@@ -810,24 +813,50 @@ class _ModalContentState extends State<ModalContent>
 
                                   showCustomFriendsModal(context);
                                 },
-                                child: Text('Bill Split',
-                                    style: FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.normal,
-                                        fontSize: 16,
-                                        color: AppColors.primaryColor)),
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width / 2.4,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 14),
+                                  decoration: BoxDecoration(
+                                      color: AppColors.button,
+                                      borderRadius: BorderRadius.circular(24)),
+                                  child: Center(
+                                    child: Text(
+                                      'Bill Split',
+                                      style: FontManager().getTextStyle(context,
+                                          lWeight: FontWeight.bold,
+                                          fontSize: 15,
+                                          color: AppColors.primaryColor),
+                                    ),
+                                  ),
+                                ),
                               ),
-                              ElevatedButton(
-                                onPressed: () {
+                              GestureDetector(
+                                onTap: () {
                                   // Action for Continue button
                                   isSplit.value = false;
                                   isLend.value = true;
                                   showCustomFriendsModal(context);
                                 },
-                                child: Text('Lend money',
-                                    style: FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.normal,
-                                        fontSize: 16,
-                                        color: AppColors.primaryColor)),
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width / 2.4,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 14),
+                                  decoration: BoxDecoration(
+                                      color: AppColors.button,
+                                      borderRadius: BorderRadius.circular(24)),
+                                  child: Center(
+                                    child: Text(
+                                      'Lend money',
+                                      style: FontManager().getTextStyle(context,
+                                          lWeight: FontWeight.bold,
+                                          fontSize: 15,
+                                          color: AppColors.primaryColor),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -836,35 +865,64 @@ class _ModalContentState extends State<ModalContent>
                             children: [
                               // Button to trigger celebration
                               Center(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    if (isSplit.value) {
-                                      splitBill(
-                                          selectedCategory2.toString(),
-                                          amount.toString(),
-                                          selectedSubCategory2.toString(),
-                                          true);
-                                    } else if (isLend.value) {
-                                      splitBill(
-                                          selectedCategory2.toString(),
-                                          amount.toString(),
-                                          selectedSubCategory2.toString(),
-                                          false);
-                                    } else {
-                                      addTransaction(
-                                          amount.toString(),
-                                          selectedSubCategory2.toString(),
-                                          selectedCategory2.toString(),
-                                          context,
-                                          "cash");
-                                    }
-                                    // _showCelebration();
-                                  },
-                                  child: Text('Continue',
-                                      style: FontManager().getTextStyle(context,
-                                          lWeight: FontWeight.normal,
-                                          fontSize: 16,
-                                          color: AppColors.accentColor)),
+                                // child: ElevatedButton(
+                                //   onPressed: () {
+                                //     if (isSplit.value) {
+                                //       splitBill(
+                                //           selectedCategory2.toString(),
+                                //           amount.toString(),
+                                //           selectedSubCategory2.toString(),
+                                //           true);
+                                //     } else if (isLend.value) {
+                                //       splitBill(
+                                //           selectedCategory2.toString(),
+                                //           amount.toString(),
+                                //           selectedSubCategory2.toString(),
+                                //           false);
+                                //     } else {
+                                //       addTransaction(
+                                //           amount.toString(),
+                                //           selectedSubCategory2.toString(),
+                                //           selectedCategory2.toString(),
+                                //           context,
+                                //           "cash");
+                                //     }
+                                //     // _showCelebration();
+                                //   },
+                                //   child: Text('Continue',
+                                //       style: FontManager().getTextStyle(context,
+                                //           lWeight: FontWeight.normal,
+                                //           fontSize: 16,
+                                //           color: AppColors.accentColor)),
+                                // ),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 10),
+                                  child: InkWell(
+                                    onTap: () {
+                                      if (isSplit.value) {
+                                        splitBill(
+                                            selectedCategory2.toString(),
+                                            amount.toString(),
+                                            selectedSubCategory2.toString(),
+                                            true);
+                                      } else if (isLend.value) {
+                                        splitBill(
+                                            selectedCategory2.toString(),
+                                            amount.toString(),
+                                            selectedSubCategory2.toString(),
+                                            false);
+                                      } else {
+                                        addTransaction(
+                                            amount.toString(),
+                                            selectedSubCategory2.toString(),
+                                            selectedCategory2.toString(),
+                                            context,
+                                            "cash");
+                                      }
+                                      // _showCelebration();
+                                    },
+                                    child: getButton(context, "Continue"),
+                                  ),
                                 ),
                               ),
                             ],
@@ -956,19 +1014,15 @@ class _ModalContentState extends State<ModalContent>
   }
 
   void showCustomFriendsModal(BuildContext context) {
-    
     showModalBottomSheet(
       context: context,
-      
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(18),
         ),
       ),
       builder: (BuildContext context) {
-        
         return FriendsUi(); // Use the modal widget here
       },
     );
