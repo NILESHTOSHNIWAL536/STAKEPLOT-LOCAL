@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/ApproveConsentRequest.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchData.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
@@ -109,7 +110,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       print("Data Fetched: ${data}");
-
+     sessionId.value=true;
       // Store values in SharedPreferences for later use
       prefs.setString("sessionId", data["sessionId"]);
       prefs.setString("from", data["from"]);

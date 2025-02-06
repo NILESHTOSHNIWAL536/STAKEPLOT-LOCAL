@@ -14,7 +14,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
   // fetch(context);
 
-RxBool sessionId=true.obs;
+RxBool sessionId=false.obs;
 
 class FetchTransaction extends StatefulWidget {
 const FetchTransaction({ Key? key }) : super(key: key);
@@ -103,7 +103,7 @@ class _FetchTransactionState extends State<FetchTransaction> {
                     
                       if(prefs.containsKey("sessionId"))
                       {
-                            sessionId.value=true;
+                            
                              FetchTransactionBysessionId(context,prefs.getString("sessionId")!);
 
                       }else{
