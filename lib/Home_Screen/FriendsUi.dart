@@ -191,7 +191,8 @@ class _FriendsUiState extends State<FriendsUi> {
                                       "name": frdsList[index]['name'],
                                       "id": values,
                                       'avatar': frdsList[index]['avatar'],
-                                      "balance": 200
+                                      "balance": 200,
+                                      
                                     },
                                   );
                                 } else {

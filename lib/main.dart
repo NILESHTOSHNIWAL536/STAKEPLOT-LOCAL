@@ -67,7 +67,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-       initialRoute: '/FetchTransaction', 
+       initialRoute: '/', 
         routes:
     {  
       '/': (context) =>  Signin(),   

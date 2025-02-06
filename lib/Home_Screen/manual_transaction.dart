@@ -658,7 +658,8 @@ class _ModalContentState extends State<ModalContent>
                                           context,
                                           "cash");
                                     }
-                                    _showCelebration();
+                                    // _showCelebration();
+                                    
                                   },
                                   child: Text('Continue',
                                       style: FontManager().getTextStyle(context,
@@ -788,6 +789,8 @@ class _ModalContentState extends State<ModalContent>
       },
       body: jsonEncode({
         "name": name,
+        "subcategory": subCategories,
+        "category:": name,
         "amount": amount,
         "paymentStatus": nameList,
         "image": ''
@@ -796,12 +799,10 @@ class _ModalContentState extends State<ModalContent>
     //printData(response,context);
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
-      print("Lend Bill ----------------------- ");
-      print(body);
+     
 
       splitID.value = body['id']['_id'];
-      print("splitID.value");
-      print(splitID.value);
+     
 
       members.forEach((e) {
         sendNotificationsToDevice(e['id'], context,
@@ -811,8 +812,8 @@ class _ModalContentState extends State<ModalContent>
           selectedCategory2.toString(), splitID.value);
 
       snackBarCalled(context, "Split amount sent to users!", Colors.black);
-      addTransaction(
-          amount, "Split Bill (${subCategories})", name, context, 'cash', true);
+      // addTransaction(amount, "Split Bill (${subCategories})", name, context, 'cash', true);
+       Navigator.pop(context);
     } else {
       snackBarCalled(context, "can't split error!", Colors.red);
     }
@@ -855,15 +856,16 @@ class _ModalContentState extends State<ModalContent>
           amount, "Lend Bill (${subCategories})", name, context, 'cash', true);
       // addSocketMessage(addedMembers,amount.toString(),selectedCategory2.toString()+"Lend Bill (${subCategories})", splitID.value);
       getUserLend(context);
-      Navigator.push(
-        context,
-        PageTransition(
-          type: PageTransitionType.fade,
-          duration: Durations.long1,
-          child: HomePage(),
-          isIos: true,
-        ),
-      );
+       Navigator.pop(context);
+      // Navigator.push(
+      //   context,
+      //   PageTransition(
+      //     type: PageTransitionType.fade,
+      //     duration: Durations.long1,
+      //     child: HomePage(),
+      //     isIos: true,
+      //   ),
+      // );
       // }
     } else {
       snackBarCalled(context, "can't split ,error!", Colors.red);
