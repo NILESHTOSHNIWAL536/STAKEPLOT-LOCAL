@@ -186,6 +186,22 @@ class _LinkingAccountState extends State<LinkingAccount> {
                   const SizedBox(
                     height: 20,
                   ),
+                  InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                         directFetch.value=false;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Access(),
+                          ),
+                        );
+
+                      },
+                      child: getButton(context, "Skip")),
+                  const SizedBox(
+                    height: 20,
+                  ),
                 ],
               )
             : Column(

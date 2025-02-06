@@ -16,7 +16,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
-// String portNo = "35.154.92.49";
 bool flag=true;
 String portNo = flag? "192.168.1.11":"localhost";
 String urlWithLocallHost = !flag? "https://stakeplot.in/": "http://${portNo}:5000/";

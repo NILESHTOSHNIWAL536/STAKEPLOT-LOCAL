@@ -213,6 +213,8 @@ class Finance {
   static String user = "assets/icons/financeScreen/user.svg";
   static String amt = "assets/icons/financeScreen/amt.svg";
   static String addBudget = "assets/icons/financeScreen/addBudget.svg";
+    static String vegNonveg = "assets/icons/financeScreen/vegnonveg.svg";
+
 }
 
 class BudgetCategories {
@@ -224,13 +226,13 @@ class BudgetCategories {
     "Bills": Categories.bills,
     "Subscriptions": Categories.subscription,
     "Events": Categories.events,
-    "PersonalCare": Categories.personalCare,
+    "Personal Care": Categories.personalCare,
     "Services": Categories.services,
     "Emi": Categories.emi,
     "Insurance": Categories.insurance,
     "Support": Categories.support,
     "Children": Categories.children,
-    "PetCare": Categories.petCare,
+    "Pet Care": Categories.petCare,
     "Sports": Categories.sports,
     "Alcohol": Categories.alcohal,
     "Hobbies": Categories.hobbies,

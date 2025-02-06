@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 RxList addedUser = [].obs;
@@ -33,7 +34,7 @@ class _FriendsUiState extends State<FriendsUi> {
             topRight: Radius.circular(16),
           )),
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 2.1,
+      height: MediaQuery.of(context).size.height / 1.9,
       child: Expanded(
         child: Padding(
           padding: const EdgeInsets.only(top: 24, left: 18, right: 18),
@@ -66,7 +67,7 @@ class _FriendsUiState extends State<FriendsUi> {
                 addedMembers.length > 0
                     ? Container(
                         width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.width / 7,
+                        height: MediaQuery.of(context).size.width / 5,
                         child: ListView(
                           scrollDirection: Axis.horizontal,
                           children: addedMembers.map((element) {
@@ -119,7 +120,8 @@ class _FriendsUiState extends State<FriendsUi> {
                                           style: FontManager().getTextStyle(
                                               context,
                                               fontSize: 12,
-                                              overflow: TextOverflow.fade)))
+                                              maxLines: 1,
+                                              ),overflow: TextOverflow.ellipsis,))
                                 ],
                               ),
                             );
@@ -133,17 +135,17 @@ class _FriendsUiState extends State<FriendsUi> {
                 commentedData(),
 
                 Center(
-                  child: ElevatedButton(
-                    onPressed: () {
+                  child: InkWell(
+                    onTap: () {
                       Navigator.pop(context);
                     },
-                    child: Text('Continue',
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.normal,
-                            fontSize: 16,
-                            color: AppColors.accentColor)),
+                    child: getButton(context, "Continue"),
                   ),
                 ),
+
+                // InkWell(
+                //   onTap: Navigator.pop(context),
+                //   child: getButton(context, "Continue"))
               ],
             ),
           ),
@@ -154,7 +156,7 @@ class _FriendsUiState extends State<FriendsUi> {
 
   Widget commentedData() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
+      padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 0),
       child: Container(
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(

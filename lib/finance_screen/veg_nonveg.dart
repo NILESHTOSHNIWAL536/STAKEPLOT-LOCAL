@@ -1,294 +1,10 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-// import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
-// import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-// import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-// import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-// import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-// import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
-
-// class VegNonVegCalculator extends StatefulWidget {
-//   @override
-//   _VegNonVegCalculatorState createState() => _VegNonVegCalculatorState();
-// }
-
-// class _VegNonVegCalculatorState extends State {
-//   final TextEditingController vegController = TextEditingController();
-//   final TextEditingController nonVegController = TextEditingController();
-//   final TextEditingController alcoholController = TextEditingController();
-
-//   Map<String, List<String>> selectedOptions = {};
-//   List friends = ['Thor', 'Stanlee', 'Stark', 'Chris'];
-//   List options = ['Veg', 'Non veg', 'Alcohol'];
-//   Map<String, Map<String, double>> friendShares =
-//       {}; // Added this to keep track of shares
-
-//   void _calculateShares() {
-//     setState(() {
-//       double totalVeg = double.tryParse(vegController.text) ?? 0.0;
-//       double totalNonVeg = double.tryParse(nonVegController.text) ?? 0.0;
-//       double totalAlcohol = double.tryParse(alcoholController.text) ?? 0.0;
-
-//       friendShares = {};
-
-//       for (String friend in friends) {
-//         friendShares[friend] = {
-//           'Veg': 0.0,
-//           'Non veg': 0.0,
-//           'Alcohol': 0.0,
-//           'Total': 0.0
-//         };
-//       }
-
-//       // Calculate shares for each friend based on their selections
-//       for (var friend in friends) {
-//         List choices = selectedOptions[friend] ?? [];
-
-//         if (choices.contains('Veg')) {
-//           friendShares[friend]!['Veg'] = totalVeg /
-//               (selectedOptions.keys
-//                   .where((f) => selectedOptions[f]?.contains('Veg') ?? false)
-//                   .length);
-//         }
-//         if (choices.contains('Non veg')) {
-//           friendShares[friend]!['Non veg'] = totalNonVeg /
-//               (selectedOptions.keys
-//                   .where(
-//                       (f) => selectedOptions[f]?.contains('Non veg') ?? false)
-//                   .length);
-//         }
-//         if (choices.contains('Alcohol')) {
-//           friendShares[friend]!['Alcohol'] = totalAlcohol /
-//               (selectedOptions.keys
-//                   .where(
-//                       (f) => selectedOptions[f]?.contains('Alcohol') ?? false)
-//                   .length);
-//         }
-
-//         // Calculate the total for the friend
-//         friendShares[friend]!['Total'] = friendShares[friend]!['Veg']! +
-//             friendShares[friend]!['Non veg']! +
-//             friendShares[friend]!['Alcohol']!;
-//       }
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: AppColors.backgroundColor,
-//       appBar: AppBar(
-//         backgroundColor: AppColors.backgroundColor,
-//         title: Text('Veg and Non veg Calculator',
-//             style: FontManager().getTextStyle(context,
-//                 lWeight: FontWeight.w700, fontSize: 18, color: AppColors.bg1)),
-//         leading: IconButton(
-//           icon: Icon(Icons.arrow_back),
-//           onPressed: () {},
-//         ),
-//       ),
-//       body: SingleChildScrollView(
-//         child: Padding(
-//           padding: const EdgeInsets.all(16.0),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-
-//               Padding(
-//                 padding: const EdgeInsets.all(16.0),
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-//                   children: [
-//                     _buildInputColumn('Veg', vegController),
-//                     _buildInputColumn('Non-veg', nonVegController),
-//                     _buildInputColumn('Alcohol', alcoholController),
-//                   ],
-//                 ),
-//               ),
-//               SizedBox(height: 20),
-//               Text('My Friends',
-//                   style: FontManager().getTextStyle(context,
-//                       lWeight: FontWeight.w600,
-//                       fontSize: 16,
-//                       color: AppColors.bg1)),
-//               //  const FriendsUi(),
-//               addedMembers.length > 0
-//                     ?Container(
-//                         width: MediaQuery.of(context).size.width,
-//                         height: MediaQuery.of(context).size.width / 7,
-//                         child: ListView(
-//                           scrollDirection: Axis.horizontal,
-//                           children: addedMembers.map((element) {
-//                             return Container(
-//                               width: MediaQuery.of(context).size.width / 6,
-//                               height: MediaQuery.of(context).size.width / 7,
-//                               child: Column(
-//                                 mainAxisAlignment: MainAxisAlignment.start,
-//                                 crossAxisAlignment: CrossAxisAlignment.center,
-//                                 children: [
-//                                   Stack(
-//                                     children: [
-//                                       Padding(
-//                                         padding: EdgeInsets.all(0.0),
-//                                         child: Center(
-//                                             child: AvatarProfileImage(
-//                                                 url: element['avatar'] ??
-//                                                     userAvatar,
-//                                                 width: 10,
-//                                                 height: 20)),
-//                                       ),
-//                                       Positioned(
-//                                         right: 0,
-//                                         top: 0,
-//                                         child: InkWell(
-//                                           onTap: () {
-//                                             List me = [];
-//                                             addedMembers.forEach((ele) {
-//                                               if (element['id'] != ele['id']) {
-//                                                 me.add(ele);
-//                                               }
-//                                             });
-
-//                                             setState(() {
-//                                               addedMembers.clear();
-//                                               addedMembers.addAll(me);
-//                                               //  addedMembers=me;
-//                                               addedUser.remove(element['id']);
-//                                             });
-//                                           },
-//                                           child: const Icon(
-//                                             Icons.close,
-//                                           ),
-//                                         ),
-//                                       ),
-//                                     ],
-//                                   ),
-//                                   Center(
-//                                       child: Text(element['name'],
-//                                           style: FontManager().getTextStyle(
-//                                               context,
-//                                               fontSize: 12,
-//                                               overflow: TextOverflow.fade)))
-//                                 ],
-//                               ),
-//                             );
-//                           }).toList(),
-//                         ),
-//                       ) : SizedBox.shrink(),
-
-//               SizedBox(
-//                 height: 500,
-//                 child: ListView.builder(
-//                   itemCount: friends.length,
-//                   itemBuilder: (context, index) {
-//                     String friend = friends[index];
-//                     return ListTile(
-//                       title: Row(
-//                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                         children: [
-//                           Text('$friend ',
-//                               style: FontManager().getTextStyle(context,
-//                                   lWeight: FontWeight.w500,
-//                                   fontSize: 16,
-//                                   color: AppColors.bg1)),
-//                           Text(
-//                               'Total: ₹${friendShares[friend]?['Total']?.toStringAsFixed(2) ?? "0.00"}', style: FontManager().getTextStyle(context,
-//                                       lWeight: FontWeight.w500,
-//                                       fontSize: 16,
-//                                       color: AppColors.bg3))
-//                         ],
-//                       ),
-
-//                       subtitle: Wrap(
-//                         children: options.map((option) {
-//                           bool isSelected =
-//                               selectedOptions[friend]?.contains(option) ??
-//                                   false;
-//                           return Padding(
-//                             padding:
-//                                 const EdgeInsets.symmetric(horizontal: 8.0),
-//                             child: ChoiceChip(
-//                               label: Text(option,
-//                                   style: FontManager().getTextStyle(context,
-//                                       lWeight: FontWeight.w700,
-//                                       fontSize: 14,
-//                                       color: AppColors.primaryColor)),
-//                               selected: isSelected,
-//                               showCheckmark: false,
-//                               selectedColor: AppColors.button,
-//                               onSelected: (selected) {
-//                                 setState(() {
-//                                   if (selected) {
-//                                     selectedOptions
-//                                         .putIfAbsent(friend, () => [])
-//                                         .add(option);
-//                                   } else {
-//                                     selectedOptions[friend]?.remove(option);
-//                                     if (selectedOptions[friend]?.isEmpty ??
-//                                         false) {
-//                                       selectedOptions.remove(friend);
-//                                     }
-//                                   }
-//                                   _calculateShares(); // Recalculate shares when options change
-//                                 });
-//                               },
-//                             ),
-//                           );
-//                         }).toList(),
-//                       ),
-//                     );
-//                   },
-//                 ),
-//               ),
-
-//               GestureDetector(
-//                 onTap:  _calculateShares,
-
-//                 child: getButton(context, "Calculate"),
-//               ),
-
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget _buildInputColumn(String label, TextEditingController controller) {
-//     return Column(
-//       children: [
-//         Text(label,
-//             style: FontManager().getTextStyle(context,
-//                 lWeight: FontWeight.w600,
-//                 fontSize: 14,
-//                 color: AppColors.primaryColor)),
-//         SizedBox(height: Colorcodes.paddingSize),
-//         SizedBox(
-//           width:
-//               MediaQuery.of(context).size.width / 3 - 33, // Account for padding
-//           child: TextField(
-//             controller: controller,
-//             keyboardType: TextInputType.number,
-//             decoration: InputDecoration(
-//               contentPadding:
-//                   EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-//               border: OutlineInputBorder(
-//                 borderRadius: BorderRadius.circular(12.0),
-//               ),
-//             ),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/bill.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
@@ -303,7 +19,7 @@ class _VegNonVegCalculatorState extends State {
   final TextEditingController vegController = TextEditingController();
   final TextEditingController nonVegController = TextEditingController();
   final TextEditingController alcoholController = TextEditingController();
-
+  
   Map<String, List<String>> selectedOptions = {};
   TextEditingController Textcontroller = TextEditingController();
   // Use 'frdsList' from ApisConnect for dynamic friends
@@ -409,6 +125,8 @@ class _VegNonVegCalculatorState extends State {
 
   @override
   Widget build(BuildContext context) {
+    double h = MediaQuery.sizeOf(context).height;
+    double w = MediaQuery.sizeOf(context).width;
     // print('friends: $friends'); // Print friends list
     // print('addedMembers: ${addedMembers.toList()}');
     return Scaffold(
@@ -430,7 +148,7 @@ class _VegNonVegCalculatorState extends State {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.all(6.0),
+                padding: const EdgeInsets.all(5.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -440,7 +158,7 @@ class _VegNonVegCalculatorState extends State {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: h/60),
               Padding(
                 padding: const EdgeInsets.only(left: 20.0),
                 child: Text('My Friends',
@@ -449,104 +167,14 @@ class _VegNonVegCalculatorState extends State {
                         fontSize: 16,
                         color: AppColors.bg1)),
               ),
-              SizedBox(height: 20),
+               SizedBox(height: h/60),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 6),
                 child: InputDat('Search', TextInputType.name, Textcontroller),
               ),
               commentedData(),
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 2.4,
-                child: ListView.builder(
-                  itemCount: addedMembers.length,
-                  itemBuilder: (context, index) {
-                    var friend = addedMembers[index];
-              
-                    // print('..........................................');
-                    // print(friend);
-              
-                    String? friendId = friend['id']; // Cast to nullable string
-              
-                    return ListTile(
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          AvatarProfileImage(
-                            url: friend['avatar'] ??
-                                userAvatar, // Default to userAvatar if null
-                            width: 8,
-                            height: 18,
-                          ),
-                          Text(
-                              friend['name'] ??
-                                  'Unknown', // Default to 'Unknown' if name is null
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.w500,
-                                  fontSize: 16,
-                                  color: AppColors.bg1)),
-                          Text(
-                              'Total: ₹${friendShares[friendId]?['Total']?.toStringAsFixed(2) ?? "0.00"}',
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.w500,
-                                  fontSize: 16,
-                                  color: AppColors.bg3))
-                        ],
-                      ),
-                      subtitle: Wrap(
-                          children: options.map((option) {
-                        bool isSelected =
-                            selectedOptions[friendId]?.contains(option) == true;
-                        // print('friendId: $friendId');
-                        // print('friendId: $friend');
-                        // print('selectedOptions: $selectedOptions');
-                        // print('isSelected: $isSelected');
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: ChoiceChip(
-                            label: Text(option,
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w700,
-                                    fontSize: 14,
-                                    color: AppColors.primaryColor)),
-                            selected: isSelected,
-                            showCheckmark: false,
-                            selectedColor: AppColors.button,
-                            onSelected: (selected) {
-                              setState(() {
-                                if (friendId != null) {
-                                  if (selected) {
-                                    selectedOptions
-                                        .putIfAbsent(friendId, () => [])
-                                        .add(option);
-                                  } else {
-                                    selectedOptions[friendId]?.remove(option);
-                                    if (selectedOptions[friendId]?.isEmpty ??
-                                        false) {
-                                      selectedOptions.remove(friendId);
-                                    }
-                                  }
-                                  _calculateShares(); // Recalculate shares when options change
-                                }
-                              });
-                            },
-                          ),
-                        );
-                      }).toList()),
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                child: GestureDetector(
-                  onTap: () {
-                    print(
-                        'Calculate button tapped......................................................');
-                    _calculateShares();
-                  },
-                  child: getButton(context, "Calculate"),
-                ),
-              ),
+              vegNonvegdata(),
+              calculation(),
             ],
           ),
         ),
@@ -554,11 +182,182 @@ class _VegNonVegCalculatorState extends State {
     );
   }
 
+  Widget calculation() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 8, right: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                    onTap: () {
+                     
+                       splitUserAmount(
+                            context,
+                            "Nilesh Toshniwal",
+                            addedMembers,
+                            friendShares
+                          );
+
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width / 2.2,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                      decoration: BoxDecoration(
+                          color: AppColors.button,
+                          borderRadius: BorderRadius.circular(24)),
+                      child: Center(
+                        child: Text(
+                          'Bill split',
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: AppColors.primaryColor),
+                        ),
+                      ),
+                    )),
+                GestureDetector(
+                  onTap: () {
+                    print(
+                        'Notify button tapped......................................................');
+                    friendShares.forEach((key, value) {
+                      sendNotificationsToDevice(key, context,
+                          "You need to pay lend To ${userName.value} of ${value!['Total'] ?? "0000"}");
+                    });
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 2.2,
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                    decoration: BoxDecoration(
+                        color: AppColors.button,
+                        borderRadius: BorderRadius.circular(24)),
+                    child: Center(
+                      child: Text(
+                        'Notify',
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: AppColors.primaryColor),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          GestureDetector(
+            onTap: () {
+              print(
+                  'Calculate button tapped......................................................');
+              _calculateShares();
+            },
+            child: getButton(context, "Calculate"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget vegNonvegdata() {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height / 2.4,
+      child: ListView.builder(
+        itemCount: addedMembers.length,
+        itemBuilder: (context, index) {
+          var friend = addedMembers[index];
+
+          // print('..........................................');
+          // print(friend);
+
+          String? friendId = friend['id']; // Cast to nullable string
+
+          return ListTile(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    AvatarProfileImage(
+                      url: friend['avatar'] ??
+                          userAvatar, // Default to userAvatar if null
+                      width: 8,
+                      height: 18,
+                    ),
+                    Text(
+                        friend['name'] ??
+                            'Unknown', // Default to 'Unknown' if name is null
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.w500,
+                            fontSize: 16,
+                            color: AppColors.bg1)),
+                  ],
+                ),
+                Text(
+                    'Total: ₹${friendShares[friendId]?['Total']?.toStringAsFixed(2) ?? "0.00"}',
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: AppColors.bg3))
+              ],
+            ),
+            subtitle: Wrap(
+                children: options.map((option) {
+              bool isSelected =
+                  selectedOptions[friendId]?.contains(option) == true;
+              // print('friendId: $friendId');
+              // print('friendId: $friend');
+              // print('selectedOptions: $selectedOptions');
+              // print('isSelected: $isSelected');
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: ChoiceChip(
+                  label: Text(option,
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w700,
+                          fontSize: 14,
+                          color: AppColors.primaryColor)),
+                  selected: isSelected,
+                  showCheckmark: false,
+                  selectedColor: AppColors.button,
+                  onSelected: (selected) {
+                    setState(() {
+                      if (friendId != null) {
+                        if (selected) {
+                          selectedOptions
+                              .putIfAbsent(friendId, () => [])
+                              .add(option);
+                        } else {
+                          selectedOptions[friendId]?.remove(option);
+                          if (selectedOptions[friendId]?.isEmpty ?? false) {
+                            selectedOptions.remove(friendId);
+                          }
+                        }
+                        _calculateShares(); // Recalculate shares when options change
+                      }
+                    });
+                  },
+                ),
+              );
+            }).toList()),
+          );
+        },
+      ),
+    );
+  }
+
   Widget commentedData() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
+      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 0),
       child: Container(
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.fromLTRB(14, 1, 14, 1),
         decoration: BoxDecoration(
             // color: const Color.fromRGBO(249, 246, 238, 1),
             //  color: Colorcodes.textFeild,
@@ -568,9 +367,10 @@ class _VegNonVegCalculatorState extends State {
             // InputDat('Search',TextInputType.name,Textcontroller),
 
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+              padding: EdgeInsets.symmetric(vertical: 3, horizontal: 5),
               child: SizedBox(
-                height: 70,
+                height: MediaQuery.sizeOf(context).height/12,
+               // height:70,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
@@ -711,30 +511,33 @@ class _VegNonVegCalculatorState extends State {
   }
 
   Widget _buildInputColumn(String label, TextEditingController controller) {
-    return Column(
-      children: [
-        Text(label,
-            style: FontManager().getTextStyle(context,
-                lWeight: FontWeight.w600,
-                fontSize: 14,
-                color: AppColors.primaryColor)),
-        SizedBox(height: Colorcodes.paddingSize),
-        SizedBox(
-          width:
-              MediaQuery.of(context).size.width / 3 - 33, // Account for padding
-          child: TextField(
-            controller: controller,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.0),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Text(label,
+              style: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.w600,
+                  fontSize: 14,
+                  color: AppColors.primaryColor)),
+          SizedBox(height: Colorcodes.paddingSize),
+          SizedBox(
+            width:
+                MediaQuery.of(context).size.width / 3 - 33, // Account for padding
+            child: TextField(
+              controller: controller,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
