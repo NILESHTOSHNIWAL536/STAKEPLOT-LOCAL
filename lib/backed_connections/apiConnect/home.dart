@@ -115,17 +115,11 @@ void PinPasswordVerify(
 
 void getAllTransaction(context) async {
   var response = await getDataApiCall("${url}/transaction/all");
-  print("obj------------------------------------------------------------");
-  printData(response, context);
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-    print("obj------------------------------------------------------------");
-    print(obj[0]);
     trasactionsHistory.clear();
     trasactionsHistory.addAll(obj);
-    print('trasactionsHistory');
-    print(trasactionsHistory);
     getHistory.value = !getHistory.value;
   } else {}
 }

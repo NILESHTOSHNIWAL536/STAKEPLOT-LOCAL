@@ -147,7 +147,7 @@ Widget budgetAndDebtCalulator(){
                       _buildCalculatorTile(
                         'Veg and non veg',
                         'Calculator',
-                        url: Finance.location,
+                        url: Finance.vegNonveg,
                           path: "/VegNonveg",
                       ),
           ],

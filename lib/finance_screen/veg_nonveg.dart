@@ -18,7 +18,7 @@ class _VegNonVegCalculatorState extends State {
   final TextEditingController vegController = TextEditingController();
   final TextEditingController nonVegController = TextEditingController();
   final TextEditingController alcoholController = TextEditingController();
-
+  
   Map<String, List<String>> selectedOptions = {};
   TextEditingController Textcontroller = TextEditingController();
   // Use 'frdsList' from ApisConnect for dynamic friends
@@ -124,6 +124,8 @@ class _VegNonVegCalculatorState extends State {
 
   @override
   Widget build(BuildContext context) {
+    double h = MediaQuery.sizeOf(context).height;
+    double w = MediaQuery.sizeOf(context).width;
     // print('friends: $friends'); // Print friends list
     // print('addedMembers: ${addedMembers.toList()}');
     return Scaffold(
@@ -145,7 +147,7 @@ class _VegNonVegCalculatorState extends State {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.all(6.0),
+                padding: const EdgeInsets.all(5.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -155,7 +157,7 @@ class _VegNonVegCalculatorState extends State {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: h/60),
               Padding(
                 padding: const EdgeInsets.only(left: 20.0),
                 child: Text('My Friends',
@@ -164,7 +166,7 @@ class _VegNonVegCalculatorState extends State {
                         fontSize: 16,
                         color: AppColors.bg1)),
               ),
-              SizedBox(height: 20),
+               SizedBox(height: h/60),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 6),
                 child: InputDat('Search', TextInputType.name, Textcontroller),
@@ -193,7 +195,11 @@ class _VegNonVegCalculatorState extends State {
                     onTap: () {
                       print(
                           'Bill split button tapped......................................................');
-                     
+                      //  splitBill(
+                      //                // selectedCategory2.toString(),
+                      //                 //amount.toString(),
+                      //                 Total.toString(),
+                      //                 true);
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width / 2.2,
@@ -216,10 +222,9 @@ class _VegNonVegCalculatorState extends State {
                   onTap: () {
                     print(
                         'Notify button tapped......................................................');
-                    friendShares.forEach((key,value) {
-
-                    sendNotificationsToDevice(key, context,
-                        "You need to pay lend To ${userName.value} of ${value!['Total'] ?? "0000"}");
+                    friendShares.forEach((key, value) {
+                      sendNotificationsToDevice(key, context,
+                          "You need to pay lend To ${userName.value} of ${value!['Total'] ?? "0000"}");
                     });
                   },
                   child: Container(
@@ -260,7 +265,7 @@ class _VegNonVegCalculatorState extends State {
 
   Widget vegNonvegdata() {
     return SizedBox(
-      height: MediaQuery.of(context).size.height / 2.8,
+      height: MediaQuery.of(context).size.height / 2.4,
       child: ListView.builder(
         itemCount: addedMembers.length,
         itemBuilder: (context, index) {
@@ -275,19 +280,24 @@ class _VegNonVegCalculatorState extends State {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                AvatarProfileImage(
-                  url: friend['avatar'] ??
-                      userAvatar, // Default to userAvatar if null
-                  width: 8,
-                  height: 18,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    AvatarProfileImage(
+                      url: friend['avatar'] ??
+                          userAvatar, // Default to userAvatar if null
+                      width: 8,
+                      height: 18,
+                    ),
+                    Text(
+                        friend['name'] ??
+                            'Unknown', // Default to 'Unknown' if name is null
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.w500,
+                            fontSize: 16,
+                            color: AppColors.bg1)),
+                  ],
                 ),
-                Text(
-                    friend['name'] ??
-                        'Unknown', // Default to 'Unknown' if name is null
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.w500,
-                        fontSize: 16,
-                        color: AppColors.bg1)),
                 Text(
                     'Total: ₹${friendShares[friendId]?['Total']?.toStringAsFixed(2) ?? "0.00"}',
                     style: FontManager().getTextStyle(context,
@@ -343,9 +353,9 @@ class _VegNonVegCalculatorState extends State {
 
   Widget commentedData() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
+      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 0),
       child: Container(
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.fromLTRB(14, 1, 14, 1),
         decoration: BoxDecoration(
             // color: const Color.fromRGBO(249, 246, 238, 1),
             //  color: Colorcodes.textFeild,
@@ -355,9 +365,10 @@ class _VegNonVegCalculatorState extends State {
             // InputDat('Search',TextInputType.name,Textcontroller),
 
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+              padding: EdgeInsets.symmetric(vertical: 3, horizontal: 5),
               child: SizedBox(
-                height: 70,
+                height: MediaQuery.sizeOf(context).height/12,
+               // height:70,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
@@ -498,30 +509,33 @@ class _VegNonVegCalculatorState extends State {
   }
 
   Widget _buildInputColumn(String label, TextEditingController controller) {
-    return Column(
-      children: [
-        Text(label,
-            style: FontManager().getTextStyle(context,
-                lWeight: FontWeight.w600,
-                fontSize: 14,
-                color: AppColors.primaryColor)),
-        SizedBox(height: Colorcodes.paddingSize),
-        SizedBox(
-          width:
-              MediaQuery.of(context).size.width / 3 - 33, // Account for padding
-          child: TextField(
-            controller: controller,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.0),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Text(label,
+              style: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.w600,
+                  fontSize: 14,
+                  color: AppColors.primaryColor)),
+          SizedBox(height: Colorcodes.paddingSize),
+          SizedBox(
+            width:
+                MediaQuery.of(context).size.width / 3 - 33, // Account for padding
+            child: TextField(
+              controller: controller,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

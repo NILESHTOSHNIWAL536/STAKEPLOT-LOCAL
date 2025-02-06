@@ -12,10 +12,12 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budget.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -273,86 +275,198 @@ class _ModalContentState extends State<ModalContent>
     // 'Investments': ['Mutual Funds', 'Stocks', 'Real Estate', 'Bonds'],
 
     "Food": [
-            "Swiggy", "Zomato", "Restaurant", "Cafe", "Pizza", "Dairy", "Tea", "Chai",
-            "canteen", "Bistro", "Mcdonalds", "kfc", "subway", "dominos", "Dhaba",
-            "Chicken", "Italia", "bawarchi", "cafe", "Tiffin", "mea", "Vegetables",
-            "udupi", "coffee", "eats", "Frankie", "kirana", "Store", "General Store",
-            "rasoi", "fish", "milk"
-        ],
-        "Shopping": [
-            "Shoppers", "Mart", "WestSide", "Electronics", "Supermarket", "Amazon", "Flipkart",
-            "Fashion", "Fabrics", "kart", "Electronics",
-            "shopping", "ratnadeep", "Mobiles", "lifestyle",
-            "market", "more", "supermarket", "shop",
-            "max", "zudio", "centro"
-        ],
-        "Travel": [
-            "Fuel", "Petrol", "Ola", "Uber", "Metro",
-            "Traffic polic", "puncture", "Mobility",
-            "Travels", "Transport", "Filling",
-            "Rapido", "Tsrtc", "irctc"
-        ],
-        "Health": ["Medical", "Pharmacy", "Hospital", "Medplus"],
-        "Bills": [
-            "Electricity", "Water", "Gas", "Internet", "Mobile Recharge", "Rent",
-            "DTH", "AIRTEL", "JIO",
-            "ELECTRICITY", "Solutions", "godaddy",
-            "hostinger", "bpcl"
-        ],
-        "Subscriptions": [
-            "Netflix", "PrimeVideo", "Spotify", "Hotstar",
-            "appleServices", "disney"
-        ],
-        "Events": [
-            "Weddings", "Birthday", "Festival", "Anniversary",
-            "Flowers", "pubs", "Gift"
-        ],
-        "Personal Care": ["Salon", "Spa", "Haircare", "Skincare"],
-        "Services": [
-            "Housemaid", "Carpenter", "Electrician", "Plumber",
-            "Bike/Car Service", "Hardware/sanitary Workshop", "Events",
-            "Service", "Bike", "Auto",
-            "hardware", "sanitary", "communications",
-            "traders", "Enterprises", "solutions"
-        ],
-        "Emi": ["Eazypay", "slice", "postpaid"],
-        "Investments": ["MutualFund", "Stocks", "Gold"],
-        "Insurance": ["Life Insurance", "Vehicle Insurance", "POLICYBAZAAR"],
-        "Support": ["Charity"],
-        "Current": ["TDS"],
-        "Children": [
-            "School Fees", "Tuitions",
-            "Baby store", "miniklub", "uniforms",
-            "baby care", "children"
-        ],
-        "Pet Care": [
-            "Pet"
-        ],
-        "Sports": [
-            "Gym Membership", "Sports Equipment",
-            "Snooker", "cricket", "box"
-        ],
-        "Alcohol": ["Liquor", "Wine", "Cigarettes"],
-        "Hobbies": ["Photography", "Gardening"],
-        "Education": [
-            "Stationary", "Fees",
-            "institute", "college"
-        ],
-        "Commerce": [
-            "Amazon", "Flipkart", "Myntra", "Nykaa",
-            "Blinkit", "zepto", "Grofers", "Bluedart", "ekart"
-        ],
-        "snacks": [
-            "juice", "Sweets", "Chai", "Biscuit", "Thickshake",
-            "chocolate", "Ice cream", "chat", "mithai",
-            "Bakes", "Bakery", "Cakes", "Tea", "chips",
-            "confectioners", "cool drink"
-        ],
-        "Entertainment": [
-            "Bookmyshow", "district", "gokarting", "gaming",
-            "Entertainment", "pvr", "cinepolis", "imax",
-            "Escape", "Adventures"
-        ]
+      "Swiggy",
+      "Zomato",
+      "Restaurant",
+      "Cafe",
+      "Pizza",
+      "Dairy",
+      "Tea",
+      "Chai",
+      "canteen",
+      "Bistro",
+      "Mcdonalds",
+      "kfc",
+      "subway",
+      "dominos",
+      "Dhaba",
+      "Chicken",
+      "Italia",
+      "bawarchi",
+      "cafe",
+      "Tiffin",
+      "mea",
+      "Vegetables",
+      "udupi",
+      "coffee",
+      "eats",
+      "Frankie",
+      "kirana",
+      "Store",
+      "General Store",
+      "rasoi",
+      "fish",
+      "milk"
+    ],
+    "Shopping": [
+      "Shoppers",
+      "Mart",
+      "WestSide",
+      "Electronics",
+      "Supermarket",
+      "Amazon",
+      "Flipkart",
+      "Fashion",
+      "Fabrics",
+      "kart",
+      "Electronics",
+      "shopping",
+      "ratnadeep",
+      "Mobiles",
+      "lifestyle",
+      "market",
+      "more",
+      "supermarket",
+      "shop",
+      "max",
+      "zudio",
+      "centro"
+    ],
+    "Travel": [
+      "Fuel",
+      "Petrol",
+      "Ola",
+      "Uber",
+      "Metro",
+      "Traffic polic",
+      "puncture",
+      "Mobility",
+      "Travels",
+      "Transport",
+      "Filling",
+      "Rapido",
+      "Tsrtc",
+      "irctc"
+    ],
+    "Health": ["Medical", "Pharmacy", "Hospital", "Medplus"],
+    "Bills": [
+      "Electricity",
+      "Water",
+      "Gas",
+      "Internet",
+      "Mobile Recharge",
+      "Rent",
+      "DTH",
+      "AIRTEL",
+      "JIO",
+      "ELECTRICITY",
+      "Solutions",
+      "godaddy",
+      "hostinger",
+      "bpcl"
+    ],
+    "Subscriptions": [
+      "Netflix",
+      "PrimeVideo",
+      "Spotify",
+      "Hotstar",
+      "appleServices",
+      "disney"
+    ],
+    "Events": [
+      "Weddings",
+      "Birthday",
+      "Festival",
+      "Anniversary",
+      "Flowers",
+      "pubs",
+      "Gift"
+    ],
+    "Personal Care": ["Salon", "Spa", "Haircare", "Skincare"],
+    "Services": [
+      "Housemaid",
+      "Carpenter",
+      "Electrician",
+      "Plumber",
+      "Bike/Car Service",
+      "Hardware/sanitary Workshop",
+      "Events",
+      "Service",
+      "Bike",
+      "Auto",
+      "hardware",
+      "sanitary",
+      "communications",
+      "traders",
+      "Enterprises",
+      "solutions"
+    ],
+    "Emi": ["Eazypay", "slice", "postpaid"],
+    "Investments": ["MutualFund", "Stocks", "Gold"],
+    "Insurance": ["Life Insurance", "Vehicle Insurance", "POLICYBAZAAR"],
+    "Support": ["Charity"],
+    "Current": ["TDS"],
+    "Children": [
+      "School Fees",
+      "Tuitions",
+      "Baby store",
+      "miniklub",
+      "uniforms",
+      "baby care",
+      "children"
+    ],
+    "Pet Care": ["Pet"],
+    "Sports": [
+      "Gym Membership",
+      "Sports Equipment",
+      "Snooker",
+      "cricket",
+      "box"
+    ],
+    "Alcohol": ["Liquor", "Wine", "Cigarettes"],
+    "Hobbies": ["Photography", "Gardening"],
+    "Education": ["Stationary", "Fees", "institute", "college"],
+    "Commerce": [
+      "Amazon",
+      "Flipkart",
+      "Myntra",
+      "Nykaa",
+      "Blinkit",
+      "zepto",
+      "Grofers",
+      "Bluedart",
+      "ekart"
+    ],
+    "snacks": [
+      "juice",
+      "Sweets",
+      "Chai",
+      "Biscuit",
+      "Thickshake",
+      "chocolate",
+      "Ice cream",
+      "chat",
+      "mithai",
+      "Bakes",
+      "Bakery",
+      "Cakes",
+      "Tea",
+      "chips",
+      "confectioners",
+      "cool drink"
+    ],
+    "Entertainment": [
+      "Bookmyshow",
+      "district",
+      "gokarting",
+      "gaming",
+      "Entertainment",
+      "pvr",
+      "cinepolis",
+      "imax",
+      "Escape",
+      "Adventures"
+    ]
   };
 
   String? selectedCategory;
@@ -377,6 +491,7 @@ class _ModalContentState extends State<ModalContent>
 
   void initState() {
     super.initState();
+    getAllTransaction(context);
     filteredCategories = categories.keys.toList();
     _confettiController =
         ConfettiController(duration: const Duration(seconds: 2));
@@ -603,6 +718,9 @@ class _ModalContentState extends State<ModalContent>
                                 String category = filteredCategories[index];
                                 return ListTile(
                                   leading: const Icon(Icons.category),
+//                                 leading: Text(
+//   Categories.link + BudgetCategories.listofCategories[BudgetCategories.listofCategories.keys.elementAt(index)],
+// ),
                                   title: Text(category,
                                       style: FontManager().getTextStyle(context,
                                           lWeight: FontWeight.normal,
@@ -740,7 +858,7 @@ class _ModalContentState extends State<ModalContent>
                                           context,
                                           "cash");
                                     }
-                                    _showCelebration();
+                                    // _showCelebration();
                                   },
                                   child: Text('Continue',
                                       style: FontManager().getTextStyle(context,
@@ -838,15 +956,19 @@ class _ModalContentState extends State<ModalContent>
   }
 
   void showCustomFriendsModal(BuildContext context) {
+    
     showModalBottomSheet(
       context: context,
+      
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
+        
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(18),
         ),
       ),
       builder: (BuildContext context) {
+        
         return FriendsUi(); // Use the modal widget here
       },
     );
@@ -870,6 +992,8 @@ class _ModalContentState extends State<ModalContent>
       },
       body: jsonEncode({
         "name": name,
+        "subcategory": subCategories,
+        "category:": name,
         "amount": amount,
         "paymentStatus": nameList,
         "image": ''
@@ -878,12 +1002,8 @@ class _ModalContentState extends State<ModalContent>
     //printData(response,context);
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
-      print("Lend Bill ----------------------- ");
-      print(body);
 
       splitID.value = body['id']['_id'];
-      print("splitID.value");
-      print(splitID.value);
 
       members.forEach((e) {
         sendNotificationsToDevice(e['id'], context,
@@ -893,8 +1013,8 @@ class _ModalContentState extends State<ModalContent>
           selectedCategory2.toString(), splitID.value);
 
       snackBarCalled(context, "Split amount sent to users!", Colors.black);
-      addTransaction(
-          amount, "Split Bill (${subCategories})", name, context, 'cash', true);
+      // addTransaction(amount, "Split Bill (${subCategories})", name, context, 'cash', true);
+      Navigator.pop(context);
     } else {
       snackBarCalled(context, "can't split error!", Colors.red);
     }
@@ -937,15 +1057,16 @@ class _ModalContentState extends State<ModalContent>
           amount, "Lend Bill (${subCategories})", name, context, 'cash', true);
       // addSocketMessage(addedMembers,amount.toString(),selectedCategory2.toString()+"Lend Bill (${subCategories})", splitID.value);
       getUserLend(context);
-      Navigator.push(
-        context,
-        PageTransition(
-          type: PageTransitionType.fade,
-          duration: Durations.long1,
-          child: HomePage(),
-          isIos: true,
-        ),
-      );
+      Navigator.pop(context);
+      // Navigator.push(
+      //   context,
+      //   PageTransition(
+      //     type: PageTransitionType.fade,
+      //     duration: Durations.long1,
+      //     child: HomePage(),
+      //     isIos: true,
+      //   ),
+      // );
       // }
     } else {
       snackBarCalled(context, "can't split ,error!", Colors.red);
