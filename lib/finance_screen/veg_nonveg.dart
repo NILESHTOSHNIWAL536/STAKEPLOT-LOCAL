@@ -425,12 +425,12 @@ class _VegNonVegCalculatorState extends State {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(6.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(6.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -441,29 +441,32 @@ class _VegNonVegCalculatorState extends State {
                 ),
               ),
               SizedBox(height: 20),
-              Text('My Friends',
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.w600,
-                      fontSize: 16,
-                      color: AppColors.bg1)),
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: Text('My Friends',
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.w600,
+                        fontSize: 16,
+                        color: AppColors.bg1)),
+              ),
               SizedBox(height: 20),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 6),
                 child: InputDat('Search', TextInputType.name, Textcontroller),
               ),
               commentedData(),
               SizedBox(
-                height: 300,
+                height: MediaQuery.of(context).size.height / 2.4,
                 child: ListView.builder(
                   itemCount: addedMembers.length,
                   itemBuilder: (context, index) {
                     var friend = addedMembers[index];
-
+              
                     // print('..........................................');
                     // print(friend);
-
+              
                     String? friendId = friend['id']; // Cast to nullable string
-
+              
                     return ListTile(
                       title: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -533,13 +536,16 @@ class _VegNonVegCalculatorState extends State {
                   },
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  print(
-                      'Calculate button tapped......................................................');
-                  _calculateShares();
-                },
-                child: getButton(context, "Calculate"),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: GestureDetector(
+                  onTap: () {
+                    print(
+                        'Calculate button tapped......................................................');
+                    _calculateShares();
+                  },
+                  child: getButton(context, "Calculate"),
+                ),
               ),
             ],
           ),
