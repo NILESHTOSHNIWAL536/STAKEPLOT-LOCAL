@@ -57,7 +57,7 @@ class _FriendsUiState extends State<FriendsUi> {
 
                 Text('My friends',
                     style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
+                        lWeight: FontWeight.w600,
                         fontSize: 16,
                         color: AppColors.bg1)),
                 SizedBox(
@@ -109,7 +109,8 @@ class _FriendsUiState extends State<FriendsUi> {
                                             });
                                           },
                                           child: const Icon(
-                                            Icons.close,
+                                            Icons.remove_circle,
+                                            color: Colors.black,
                                           ),
                                         ),
                                       ),
@@ -158,7 +159,7 @@ class _FriendsUiState extends State<FriendsUi> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 0),
       child: Container(
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
             // color: const Color.fromRGBO(249, 246, 238, 1),
             //  color: Colorcodes.textFeild,
@@ -168,7 +169,7 @@ class _FriendsUiState extends State<FriendsUi> {
             // InputDat('Search',TextInputType.name,Textcontroller),
 
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 2),
               child: SizedBox(
                 height: 70,
                 width: MediaQuery.of(context).size.width,
@@ -240,7 +241,7 @@ class _FriendsUiState extends State<FriendsUi> {
                                           child: Icon(
                                             Icons.check,
                                             size: 30,
-                                            color: Colors.green,
+                                            color: Colors.green
                                           ),
                                         )
                                       : const SizedBox.shrink(),
@@ -252,7 +253,7 @@ class _FriendsUiState extends State<FriendsUi> {
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.w400,
                                   fontSize: 14,
-                                  color: Colors.black))
+                                  color: AppColors.bg1))
                         ],
                       ),
                     );

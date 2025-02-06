@@ -54,55 +54,96 @@ class _UserListScreenState extends State<UserListScreen> {
             ],
           ),
         ),
-        SizedBox(
-          height: 10,
-        ),
+        
         Obx(() => getlendUsers.value ? getUser() : getUser()),
       ],
     );
   }
 
-  Widget getUser() {
-    return Container(
-      width: MediaQuery.of(context).size.width / 1.1,
-      height: MediaQuery.of(context).size.height / 5.0,
-
-      // color: Colorcodes.billHeader,
-      child: ListView.builder(
+  
+//    Widget getUser() {
+//   return Container(
+//     width: MediaQuery.of(context).size.width / 1.1,
+//     height: MediaQuery.of(context).size.height / 4.5,
+//     child: Column(
+//       children: List.generate(
+//         lendAmountRemainders.length <= 3 ? lendAmountRemainders.length : 3,
+//         (index) {
+//           var data = lendAmountRemainders[index];
+//           return ListTile(
+//             leading: CircleAvatar(
+//                 backgroundColor: Colorcodes.budgetLightGreen,
+//                 child: ProfileImage(
+//                     url: data['Avatar'] ?? 'assets/avatar/menp4.svg')),
+//             title: Text(
+//               data["userName"] ?? "Unknown User",
+//               style: FontManager().getTextStyle(context,
+//                   lWeight: FontWeight.bold,
+//                   fontSize: 16,
+//                   color: AppColors.accentColor),
+//             ),
+//             trailing: InkWell(
+//               onTap: () {
+//                 print(data);
+//                 sendNotificationsToDevice(data['_id'], context,
+//                     "You need to pay lend To ${userName.value} of ${data['amount'] ?? "0000"}");
+//               },
+//               child: Text(
+//                 (data["billApproved"] ?? true)
+//                     ? "Remind now"
+//                     : "Didn't approve",
+//                 style: FontManager().getTextStyle(context,
+//                     lWeight: FontWeight.bold,
+//                     fontSize: 16,
+//                     color: AppColors.primaryColor),
+//               ),
+//             ),
+//           );
+//         },
+//       ),
+//     ),
+//   );
+// }
+Widget getUser() {
+    return Visibility(
+      visible: lendAmountRemainders.isNotEmpty, // Show only if there are pending dues
+      child: Container(
+        width: MediaQuery.of(context).size.width / 1.1,
+        padding: EdgeInsets.symmetric(vertical: 6),
         
-        itemCount:
-            lendAmountRemainders.length <= 3 ? lendAmountRemainders.length : 3,
-        itemBuilder: (context, index) {
-          var data = lendAmountRemainders[index];
-
-          return ListTile(
-            leading: CircleAvatar(
-                backgroundColor: Colorcodes.budgetLightGreen,
-                child: ProfileImage(
-                    url: data['Avatar'] ?? 'assets/avatar/menp4.svg')),
-            title: Text(data["userName"] ?? "Unknown User",style:  FontManager().getTextStyle(context,
-                  lWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: AppColors.accentColor),),
-            trailing: InkWell(
-              onTap: () {
-                print(data);
-                sendNotificationsToDevice(data['_id'], context,
-                    "You need to pay lend To ${userName.value} of ${data['amount'] ?? "0000"}");
-                // print(currentId.value);
-              },
-              child: Text(
-                (data["billApproved"] ?? true)
-                    ? "Remind now"
-                    : "Didn't approve",
-                style:  FontManager().getTextStyle(context,
-                  lWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: AppColors.primaryColor),
-              ),
-            ),
-          );
-        },
+        child: Column(
+          children: lendAmountRemainders
+              .take(3) // Show up to 3 users
+              .map((data) => ListTile(
+                    leading: CircleAvatar(
+                        backgroundColor: Colorcodes.budgetLightGreen,
+                        child: ProfileImage(
+                            url: data['Avatar'] ?? 'assets/avatar/menp4.svg')),
+                    title: Text(
+                      data["userName"] ?? "Unknown User",
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: AppColors.accentColor),
+                    ),
+                    trailing: InkWell(
+                      onTap: () {
+                        sendNotificationsToDevice(data['_id'], context,
+                            "You need to pay lend To ${userName.value} of ${data['amount'] ?? "0000"}");
+                      },
+                      child: Text(
+                        (data["billApproved"] ?? true)
+                            ? "Remind now"
+                            : "Didn't approve",
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: AppColors.primaryColor),
+                      ),
+                    ),
+                  ))
+              .toList(),
+        ),
       ),
     );
   }
