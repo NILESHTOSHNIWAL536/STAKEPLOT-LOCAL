@@ -281,9 +281,9 @@ Future<void> storeDataOfTransactions(context, data, consentHandleId, from, to,
     accessToken, custId, consentId, sessionId) async {
   // print(data);
   // if (data == "Account data not found.") return;
-  // fetchedTrsacntionList.clear();
-  // fetchedTrsacntionList.add([data.toString()]);
-  // fetchedTrsacntionList.refresh();
+  fetchedTrsacntionList.clear();
+  fetchedTrsacntionList.add([data.toString()]);
+  fetchedTrsacntionList.refresh();
   print("storeDataOfTransactions.....");
   print(data);
 
