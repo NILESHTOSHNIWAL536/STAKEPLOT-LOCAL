@@ -88,8 +88,8 @@ class _ManualtransactionState extends State<Manualtransaction> {
               ),
               AvatarProfileImage(
                 url: LikeComment.manualTransaction,
-                height: 9,
-                width: 20,
+                height: 13,
+                width: 10,
               ),
             ],
           )
