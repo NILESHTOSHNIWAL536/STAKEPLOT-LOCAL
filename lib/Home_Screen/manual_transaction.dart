@@ -130,147 +130,229 @@ class ModalContent extends StatefulWidget {
 class _ModalContentState extends State<ModalContent>
     with SingleTickerProviderStateMixin {
   final Map<String, List<String>> categories = {
-    'Food': [
-      'Groceries',
-      'Dining Out',
-      'Snacks',
-      'Beverages',
-      'Bakery',
-      'Takeaway'
-    ],
-    'Transport': [
-      'Taxi',
-      'Bus',
-      'Fuel',
-      'Car Rental',
-      'Train Tickets',
-      'Flight'
-    ],
-    'Shopping': [
-      'Clothing',
-      'Electronics',
-      'Accessories',
-      'Books',
-      'Gifts',
-      'Groceries',
-      'Jewelry',
-      'Watches',
-      'Handbags',
-      'Belts'
-    ],
-    'Entertainment': [
-      'Movies',
-      'Concerts',
-      'Games',
-      'Streaming',
-      'Events',
-      'Theatre Tickets',
-      'Concessions'
-    ],
-    'Health': [
-      'Pharmacy',
-      'Doctor Visits',
-      'Gym',
-      'Supplements',
-      'Therapy',
-      'Medication',
-      'Surgery',
-      'Diagnostics'
-    ],
-    'Education': [
-      'Books',
-      'Online Courses',
-      'School Fees',
-      'Workshops',
-      'Tutoring',
-      'Tuition'
-    ],
-    'Travel': [
-      'Flights',
-      'Hotels',
-      'Tours',
-      'Travel Insurance',
-      'Cruises',
-      'Tickets',
-      'Accommodation',
-      'Activities'
-    ],
-    'Utilities': [
-      'Electricity',
-      'Water',
-      'Internet',
-      'Gas',
-      'Mobile Recharge',
-      'Prepaid Recharge'
-    ],
-    'Home': ['Rent', 'Furniture', 'Repairs', 'Cleaning Services', 'Gardening'],
-    'Personal Care': [
-      'Salon',
-      'Spa',
-      'Skincare',
-      'Makeup',
-      'Haircare',
-      'Lotions',
-      'Face Masks',
-      'Treatments'
-    ],
-    'Technology': [
-      'Software Subscriptions',
-      'Hardware',
-      'Cloud Storage',
-      'Apps',
-      'Web Hosting',
-      'Gadgets',
-      'Home Appliances'
-    ],
-    'Kids': ['Toys', 'Clothing', 'Education', 'Games', 'Daycare'],
-    'Pets': ['Food', 'Veterinarian', 'Toys', 'Grooming', 'Training'],
-    'Gifts & Charity': [
-      'Birthdays',
-      'Weddings',
-      'Donations',
-      'Festivals',
-      'Fundraisers'
-    ],
-    'Drinks': ['Alcohol', 'Soft Drinks', 'Juices', 'Cocktails'],
-    'Bills': [
-      'Electricity',
-      'Water',
-      'Gas',
-      'Phone',
-      'Monthly Bill',
-      'Cable TV',
-      'Streaming Subscription'
-    ],
-    'Snacks': ['Chips', 'Cookies', 'Sweets', 'Popcorn'],
-    'Others': [
-      'Miscellaneous Expenses',
-      'Uncategorized',
-      'One-off Purchases',
-      'Random Expenses'
-    ],
-    'Rent': ['House Rent', 'Office Rent', 'Garage Rent'],
-    'Clothing-Shoes': ['Casual Wear', 'Formal Wear', 'Footwear', 'Sportswear'],
-    'EMIs': ['Car Loan', 'Home Loan', 'Personal Loan'],
-    'Credit Bills': [
-      'Credit Card Payments',
-      'Late Fees',
-      'Outstanding Amount',
-      'Minimum Payment Due'
-    ],
-    'Sports': ['Equipment', 'Gym Membership', 'Outdoor Activities'],
-    'Theatre': ['Play Tickets', 'Drama Shows', 'Opera'],
-    'Repairs': ['Home Repairs', 'Car Repairs', 'Electronics'],
-    'Beauty': ['Salon', 'Spa', 'Cosmetics'],
-    'Subscriptions': ['Magazines', 'Apps', 'Streaming Services'],
-    'Restaurants': [
-      'Casual Dining',
-      'Buffet',
-      'Fine Dining',
-      'Fast Food',
-      'Family Restaurants'
-    ],
-    'Investments': ['Mutual Funds', 'Stocks', 'Real Estate', 'Bonds'],
+    // 'Food': [
+    //   'Groceries',
+    //   'Dining Out',
+    //   'Snacks',
+    //   'Beverages',
+    //   'Bakery',
+    //   'Takeaway'
+    // ],
+    // 'Transport': [
+    //   'Taxi',
+    //   'Bus',
+    //   'Fuel',
+    //   'Car Rental',
+    //   'Train Tickets',
+    //   'Flight'
+    // ],
+    // 'Shopping': [
+    //   'Clothing',
+    //   'Electronics',
+    //   'Accessories',
+    //   'Books',
+    //   'Gifts',
+    //   'Groceries',
+    //   'Jewelry',
+    //   'Watches',
+    //   'Handbags',
+    //   'Belts'
+    // ],
+    // 'Entertainment': [
+    //   'Movies',
+    //   'Concerts',
+    //   'Games',
+    //   'Streaming',
+    //   'Events',
+    //   'Theatre Tickets',
+    //   'Concessions'
+    // ],
+    // 'Health': [
+    //   'Pharmacy',
+    //   'Doctor Visits',
+    //   'Gym',
+    //   'Supplements',
+    //   'Therapy',
+    //   'Medication',
+    //   'Surgery',
+    //   'Diagnostics'
+    // ],
+    // 'Education': [
+    //   'Books',
+    //   'Online Courses',
+    //   'School Fees',
+    //   'Workshops',
+    //   'Tutoring',
+    //   'Tuition'
+    // ],
+    // 'Travel': [
+    //   'Flights',
+    //   'Hotels',
+    //   'Tours',
+    //   'Travel Insurance',
+    //   'Cruises',
+    //   'Tickets',
+    //   'Accommodation',
+    //   'Activities'
+    // ],
+    // 'Utilities': [
+    //   'Electricity',
+    //   'Water',
+    //   'Internet',
+    //   'Gas',
+    //   'Mobile Recharge',
+    //   'Prepaid Recharge'
+    // ],
+    // 'Home': ['Rent', 'Furniture', 'Repairs', 'Cleaning Services', 'Gardening'],
+    // 'Personal Care': [
+    //   'Salon',
+    //   'Spa',
+    //   'Skincare',
+    //   'Makeup',
+    //   'Haircare',
+    //   'Lotions',
+    //   'Face Masks',
+    //   'Treatments'
+    // ],
+    // 'Technology': [
+    //   'Software Subscriptions',
+    //   'Hardware',
+    //   'Cloud Storage',
+    //   'Apps',
+    //   'Web Hosting',
+    //   'Gadgets',
+    //   'Home Appliances'
+    // ],
+    // 'Kids': ['Toys', 'Clothing', 'Education', 'Games', 'Daycare'],
+    // 'Pets': ['Food', 'Veterinarian', 'Toys', 'Grooming', 'Training'],
+    // 'Gifts & Charity': [
+    //   'Birthdays',
+    //   'Weddings',
+    //   'Donations',
+    //   'Festivals',
+    //   'Fundraisers'
+    // ],
+    // 'Drinks': ['Alcohol', 'Soft Drinks', 'Juices', 'Cocktails'],
+    // 'Bills': [
+    //   'Electricity',
+    //   'Water',
+    //   'Gas',
+    //   'Phone',
+    //   'Monthly Bill',
+    //   'Cable TV',
+    //   'Streaming Subscription'
+    // ],
+    // 'Snacks': ['Chips', 'Cookies', 'Sweets', 'Popcorn'],
+    // 'Others': [
+    //   'Miscellaneous Expenses',
+    //   'Uncategorized',
+    //   'One-off Purchases',
+    //   'Random Expenses'
+    // ],
+    // 'Rent': ['House Rent', 'Office Rent', 'Garage Rent'],
+    // 'Clothing-Shoes': ['Casual Wear', 'Formal Wear', 'Footwear', 'Sportswear'],
+    // 'EMIs': ['Car Loan', 'Home Loan', 'Personal Loan'],
+    // 'Credit Bills': [
+    //   'Credit Card Payments',
+    //   'Late Fees',
+    //   'Outstanding Amount',
+    //   'Minimum Payment Due'
+    // ],
+    // 'Sports': ['Equipment', 'Gym Membership', 'Outdoor Activities'],
+    // 'Theatre': ['Play Tickets', 'Drama Shows', 'Opera'],
+    // 'Repairs': ['Home Repairs', 'Car Repairs', 'Electronics'],
+    // 'Beauty': ['Salon', 'Spa', 'Cosmetics'],
+    // 'Subscriptions': ['Magazines', 'Apps', 'Streaming Services'],
+    // 'Restaurants': [
+    //   'Casual Dining',
+    //   'Buffet',
+    //   'Fine Dining',
+    //   'Fast Food',
+    //   'Family Restaurants'
+    // ],
+    // 'Investments': ['Mutual Funds', 'Stocks', 'Real Estate', 'Bonds'],
+
+    "Food": [
+            "Swiggy", "Zomato", "Restaurant", "Cafe", "Pizza", "Dairy", "Tea", "Chai",
+            "canteen", "Bistro", "Mcdonalds", "kfc", "subway", "dominos", "Dhaba",
+            "Chicken", "Italia", "bawarchi", "cafe", "Tiffin", "mea", "Vegetables",
+            "udupi", "coffee", "eats", "Frankie", "kirana", "Store", "General Store",
+            "rasoi", "fish", "milk"
+        ],
+        "Shopping": [
+            "Shoppers", "Mart", "WestSide", "Electronics", "Supermarket", "Amazon", "Flipkart",
+            "Fashion", "Fabrics", "kart", "Electronics",
+            "shopping", "ratnadeep", "Mobiles", "lifestyle",
+            "market", "more", "supermarket", "shop",
+            "max", "zudio", "centro"
+        ],
+        "Travel": [
+            "Fuel", "Petrol", "Ola", "Uber", "Metro",
+            "Traffic polic", "puncture", "Mobility",
+            "Travels", "Transport", "Filling",
+            "Rapido", "Tsrtc", "irctc"
+        ],
+        "Health": ["Medical", "Pharmacy", "Hospital", "Medplus"],
+        "Bills": [
+            "Electricity", "Water", "Gas", "Internet", "Mobile Recharge", "Rent",
+            "DTH", "AIRTEL", "JIO",
+            "ELECTRICITY", "Solutions", "godaddy",
+            "hostinger", "bpcl"
+        ],
+        "Subscriptions": [
+            "Netflix", "PrimeVideo", "Spotify", "Hotstar",
+            "appleServices", "disney"
+        ],
+        "Events": [
+            "Weddings", "Birthday", "Festival", "Anniversary",
+            "Flowers", "pubs", "Gift"
+        ],
+        "Personal Care": ["Salon", "Spa", "Haircare", "Skincare"],
+        "Services": [
+            "Housemaid", "Carpenter", "Electrician", "Plumber",
+            "Bike/Car Service", "Hardware/sanitary Workshop", "Events",
+            "Service", "Bike", "Auto",
+            "hardware", "sanitary", "communications",
+            "traders", "Enterprises", "solutions"
+        ],
+        "Emi": ["Eazypay", "slice", "postpaid"],
+        "Investments": ["MutualFund", "Stocks", "Gold"],
+        "Insurance": ["Life Insurance", "Vehicle Insurance", "POLICYBAZAAR"],
+        "Support": ["Charity"],
+        "Current": ["TDS"],
+        "Children": [
+            "School Fees", "Tuitions",
+            "Baby store", "miniklub", "uniforms",
+            "baby care", "children"
+        ],
+        "Pet Care": [
+            "Pet"
+        ],
+        "Sports": [
+            "Gym Membership", "Sports Equipment",
+            "Snooker", "cricket", "box"
+        ],
+        "Alcohol": ["Liquor", "Wine", "Cigarettes"],
+        "Hobbies": ["Photography", "Gardening"],
+        "Education": [
+            "Stationary", "Fees",
+            "institute", "college"
+        ],
+        "Commerce": [
+            "Amazon", "Flipkart", "Myntra", "Nykaa",
+            "Blinkit", "zepto", "Grofers", "Bluedart", "ekart"
+        ],
+        "snacks": [
+            "juice", "Sweets", "Chai", "Biscuit", "Thickshake",
+            "chocolate", "Ice cream", "chat", "mithai",
+            "Bakes", "Bakery", "Cakes", "Tea", "chips",
+            "confectioners", "cool drink"
+        ],
+        "Entertainment": [
+            "Bookmyshow", "district", "gokarting", "gaming",
+            "Entertainment", "pvr", "cinepolis", "imax",
+            "Escape", "Adventures"
+        ]
   };
 
   String? selectedCategory;

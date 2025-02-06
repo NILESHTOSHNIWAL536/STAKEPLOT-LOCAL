@@ -135,10 +135,10 @@ class _LinkingAccountState extends State<LinkingAccount> {
   Widget accountLinkedUi() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: accountLinked.isEmpty
+        height:! accountLinked.isEmpty
             ? MediaQuery.of(context).size.height / 3.5
             : MediaQuery.of(context).size.height / 3,
-        child: accountLinked.isEmpty
+        child: !accountLinked.isEmpty
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
