@@ -32,6 +32,7 @@ class _DiscoverAccountState extends State<FetchLinkedAccounts> {
 
   void getData()async
   {
+    // FinvuLinkedAccountDetailsInfo
      fetchAccountData=await finvuManager.fetchLinkedAccounts();
      getBanks.value=!getBanks.value;
   }
@@ -86,7 +87,21 @@ class _DiscoverAccountState extends State<FetchLinkedAccounts> {
         
          FinvuConsentRequestDetailInfo finvuConsentRequestDetailInfo=await finvuManager.getConsentRequestDetails(handleId.value);
         //  print('handleId.value');
-         FinvuProcessConsentRequestResponse response=await finvuManager.approveConsentRequest(finvuConsentRequestDetailInfo,fetchAccountData);
+        // seletedAccountInfomations
+        if(seletedAccountIds.isEmpty){
+           snackBarCalled(context, "Account did not seleted.. pls add account");
+           
+        }
+        fetchAccountData.forEach((FinvuLinkedAccountDetailsInfo finvuInfo){
+                  if(seletedAccountIds.contains(finvuInfo.fipId)){
+                      seletedAccountInfomations.add(finvuInfo);
+                  }
+        });
+        
+
+        
+         FinvuProcessConsentRequestResponse response=await finvuManager.approveConsentRequest(finvuConsentRequestDetailInfo,seletedAccountInfomations);
+        //  FinvuProcessConsentRequestResponse response=await finvuManager.approveConsentRequest(finvuConsentRequestDetailInfo,fetchAccountData);
         //  print(handleId.value);
         //  print(response.consentIntentId);
          response.consentInfo!.forEach((e){
@@ -95,7 +110,7 @@ class _DiscoverAccountState extends State<FetchLinkedAccounts> {
               // print(e.fipId);
          });
        
-          snackBarCalled(context, "approved ConsentRequest");
+          snackBarCalled(context, "approved ConsentRequest for ${seletedAccountInfomations.length} Accounts");
              Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -128,13 +143,14 @@ class _DiscoverAccountState extends State<FetchLinkedAccounts> {
                   Text(bankData.fipName.toString(),style: TextStyle(fontSize: 15,),),
                   Text(bankData.accountType.toString(),style: TextStyle(fontSize: 15,),),
                   Text(bankData.accountReferenceNumber.toString(),style: TextStyle(fontSize: 15,),),
+                  // Obx(()=>  addAccount.value? getcheckBox(bankData) :getcheckBox(bankData))
             ],
            ) ,
        ),
      );
   }
 
-
+ 
   
 
 }

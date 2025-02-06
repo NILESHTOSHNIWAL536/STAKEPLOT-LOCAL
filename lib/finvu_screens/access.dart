@@ -1,5 +1,6 @@
 import 'package:finvu_flutter_sdk_core/finvu_consent_info.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_details.dart';
+import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -469,7 +470,7 @@ class _AccessState extends State<Access> {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
@@ -492,6 +493,7 @@ class _AccessState extends State<Access> {
                           width: 5,
                         ),
                         textStyle(e.maskedAccountNumber),
+                        Obx(()=>  addAccount.value? getcheckBox(e.linkReferenceNumber) :getcheckBox(e.linkReferenceNumber))
                       ],
                     ),
                   );
@@ -503,6 +505,33 @@ class _AccessState extends State<Access> {
       ),
     );
   }
+
+
+  Widget getcheckBox(String fipId)
+ {
+      return Padding(
+        padding: const EdgeInsets.only(left: 10.0),
+        child: Container(
+          width: 50,
+          height: 50,
+          child: Expanded(
+            flex: 1,
+            child: Checkbox(value: seletedAccountIds.contains(fipId), onChanged: (value)
+                   {
+                          
+                           if(seletedAccountIds.contains(fipId))
+                           {
+                               seletedAccountIds.remove(fipId); 
+                           }else{
+                               seletedAccountIds.add(fipId); 
+                           }
+                           print(seletedAccountIds);
+                           addAccount.value= !addAccount.value;
+                   }),
+          ),
+        ),
+      );
+ }
 
   Widget textStyle(text,
       [double fontsize = 12,
@@ -609,10 +638,27 @@ class _AccessState extends State<Access> {
     try {
       FinvuConsentRequestDetailInfo finvuConsentRequestDetailInfo =
           await finvuManager.getConsentRequestDetails(handleId.value);
-      //  print('handleId.value');
+     
+      if(seletedAccountIds.isEmpty){
+           snackBarCalled(context, "Account did not seleted..pls add account to approve consent..");
+            return;
+        }
+        fetchAccountData.forEach((FinvuLinkedAccountDetailsInfo finvuInfo){
+                 try{
+                  if(seletedAccountIds.contains(finvuInfo.linkReferenceNumber)){
+                      seletedAccountInfomations.add(finvuInfo);
+                  }
+                }
+                  catch(e){}
+        });
+       
+        
       FinvuProcessConsentRequestResponse response =
           await finvuManager.approveConsentRequest(
-              finvuConsentRequestDetailInfo, fetchAccountData);
+              finvuConsentRequestDetailInfo, seletedAccountInfomations);
+      // FinvuProcessConsentRequestResponse response =
+      //     await finvuManager.approveConsentRequest(
+      //         finvuConsentRequestDetailInfo, fetchAccountData);
 
       snackBarCalled(context, "approved ConsentRequest");
       Navigator.push(
@@ -621,7 +667,7 @@ class _AccessState extends State<Access> {
           builder: (context) => FetchTransaction(),
         ),
       );
-    } catch (e) {
+    } catch (e) {   
       snackBarCalled(context, "Error while approving ConsentRequest");
       print("d.consentIntentId error");
     }

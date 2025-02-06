@@ -35,7 +35,10 @@ RxList<FinvuFIPInfo> listOfBankAccount = <FinvuFIPInfo>[].obs;
 // RxBool getBanks=false.obs;
 RxBool addBank = false.obs;
 List<FinvuLinkedAccountDetailsInfo> fetchAccountData=[];
+List<FinvuLinkedAccountDetailsInfo> seletedAccountInfomations=[];
+List<String> seletedAccountIds=[];
 RxBool getBanks=false.obs;
+RxBool addAccount = false.obs;
 RxBool getFetch=false.obs;
 RxBool directFetch=false.obs;
 
@@ -135,10 +138,10 @@ class _LinkingAccountState extends State<LinkingAccount> {
   Widget accountLinkedUi() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: accountLinked.isEmpty
+        height: !accountLinked.isEmpty
             ? MediaQuery.of(context).size.height / 3.5
             : MediaQuery.of(context).size.height / 3,
-        child: accountLinked.isEmpty
+        child: !accountLinked.isEmpty
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
