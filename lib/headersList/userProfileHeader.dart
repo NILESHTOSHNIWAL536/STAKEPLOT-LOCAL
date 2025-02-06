@@ -53,7 +53,7 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.w500,
                           fontSize: 22,
-                          color: Colors.black)),
+                          color: AppColors.accentColor)),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

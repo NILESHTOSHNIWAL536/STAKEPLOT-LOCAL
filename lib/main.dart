@@ -19,6 +19,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/cr
 import 'package:flutter_application_code_stakeplot/finance_screen/Debt.dart';
 // import 'package:flutter_application_code_stakeplot/finance_screen/creditCard.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/veg_nonveg.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/finvuAccount.dart';
@@ -81,7 +82,7 @@ class _MyAppState extends State<MyApp> {
       '/ShareAccountLogin': (context) =>  ShareAccountLogin(),     
       '/Budget': (context) =>  Budget(),     
       '/PlotFinance': (context) =>  PlotFinance(),     
-      '/Debt': (context) =>  Debt(),     
+      '/Debt': (context) =>  DebtCalculatorApp(),     
       '/BudgetDisplay': (context) =>  BudgetDisplay(),  
       '/CreditCard':(context) => CreditCard() ,
       '/emi':(context) => Emi() ,
@@ -89,6 +90,7 @@ class _MyAppState extends State<MyApp> {
       '/Savings':(context) => Savings() ,
       '/autoLoan':(context) => AutoLoan() ,
       '/TripCost':(context) => TripCost() ,
+      '/VegNonveg':(context) => VegNonVegCalculator(),
       '/FetchTransaction':(context) => FetchTransaction() ,
      
     });

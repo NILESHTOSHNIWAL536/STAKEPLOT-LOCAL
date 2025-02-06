@@ -17,35 +17,7 @@ class _UserListScreenState extends State<UserListScreen> {
   @override
   void initState() {
     getUserLend(context);
-    print("lendAmountRemainders[index]");
-    print(lendAmountRemainders);
   }
-
-  final List<Map<String, String>> users = [
-    {"name": "John Doe", "profilePic": "https://via.placeholder.com/150"},
-    {"name": "Jane Smith", "profilePic": "https://via.placeholder.com/150"},
-    {"name": "Alice Johnson", "profilePic": "https://via.placeholder.com/150"},
-    {"name": "Bob Brown", "profilePic": "https://via.placeholder.com/150"},
-    {"name": "Charlie Wilson", "profilePic": "https://via.placeholder.com/150"},
-    {"name": "Emma Watson", "profilePic": "https://via.placeholder.com/150"},
-    {"name": "John Doe", "profilePic": "https://via.placeholder.com/150"},
-    {"name": "Jane Smith", "profilePic": "https://via.placeholder.com/150"},
-    {"name": "Alice Johnson", "profilePic": "https://via.placeholder.com/150"},
-    {"name": "Bob Brown", "profilePic": "https://via.placeholder.com/150"},
-    {"name": "Charlie Wilson", "profilePic": "https://via.placeholder.com/150"},
-    {"name": "Emma Watson", "profilePic": "https://via.placeholder.com/150"},
-    {"name": "John Doe", "profilePic": "https://via.placeholder.com/150"},
-    {"name": "Jane Smith", "profilePic": "https://via.placeholder.com/150"},
-    {"name": "Alice Johnson", "profilePic": "https://via.placeholder.com/150"},
-    {"name": "Bob Brown", "profilePic": "https://via.placeholder.com/150"},
-    {"name": "Charlie Wilson", "profilePic": "https://via.placeholder.com/150"},
-    {"name": "Emma Watson", "profilePic": "https://via.placeholder.com/150"},
-    {"name": "Alice Johnson", "profilePic": "https://via.placeholder.com/150"},
-    {"name": "Bob Brown", "profilePic": "https://via.placeholder.com/150"},
-    {"name": "Charlie Wilson", "profilePic": "https://via.placeholder.com/150"},
-    {"name": "Emma Watson", "profilePic": "https://via.placeholder.com/150"},
-    {"name": "John Doe", "profilePic": "https://via.placeholder.com/150"},
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +41,7 @@ class _UserListScreenState extends State<UserListScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ShowAllUsersScreen(users: users),
+                      builder: (context) => ShowAllUsersScreen(),
                     ),
                   );
                 },
@@ -85,7 +57,7 @@ class _UserListScreenState extends State<UserListScreen> {
         SizedBox(
           height: 10,
         ),
-        Obx(() => lendAmountRemainders.length >= 0 ? getUser() : getUser()),
+        Obx(() => getlendUsers.value ? getUser() : getUser()),
       ],
     );
   }
@@ -93,10 +65,11 @@ class _UserListScreenState extends State<UserListScreen> {
   Widget getUser() {
     return Container(
       width: MediaQuery.of(context).size.width / 1.1,
-      height: MediaQuery.of(context).size.height / 3.5,
+      height: MediaQuery.of(context).size.height / 5.0,
 
       // color: Colorcodes.billHeader,
       child: ListView.builder(
+        
         itemCount:
             lendAmountRemainders.length <= 3 ? lendAmountRemainders.length : 3,
         itemBuilder: (context, index) {
@@ -107,9 +80,13 @@ class _UserListScreenState extends State<UserListScreen> {
                 backgroundColor: Colorcodes.budgetLightGreen,
                 child: ProfileImage(
                     url: data['Avatar'] ?? 'assets/avatar/menp4.svg')),
-            title: Text(data["userName"] ?? "Unknown User"),
+            title: Text(data["userName"] ?? "Unknown User",style:  FontManager().getTextStyle(context,
+                  lWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: AppColors.accentColor),),
             trailing: InkWell(
               onTap: () {
+                print(data);
                 sendNotificationsToDevice(data['_id'], context,
                     "You need to pay lend To ${userName.value} of ${data['amount'] ?? "0000"}");
                 // print(currentId.value);
@@ -118,7 +95,10 @@ class _UserListScreenState extends State<UserListScreen> {
                 (data["billApproved"] ?? true)
                     ? "Remind now"
                     : "Didn't approve",
-                style: TextStyle(color: AppColors.primaryColor, fontSize: 15),
+                style:  FontManager().getTextStyle(context,
+                  lWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: AppColors.primaryColor),
               ),
             ),
           );
@@ -130,9 +110,9 @@ class _UserListScreenState extends State<UserListScreen> {
 
 // Screen showing all users
 class ShowAllUsersScreen extends StatelessWidget {
-  final List<Map<String, String>> users;
-
-  const ShowAllUsersScreen({Key? key, required this.users}) : super(key: key);
+  const ShowAllUsersScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +134,10 @@ class ShowAllUsersScreen extends StatelessWidget {
                     backgroundColor: Colorcodes.budgetLightGreen,
                     child: ProfileImage(
                         url: data['Avatar'] ?? 'assets/avatar/menp4.svg')),
-                title: Text(data["userName"] ?? "Unknown User"),
+                title: Text(data["userName"] ?? "Unknown User", style:  FontManager().getTextStyle(context,
+                  lWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: AppColors.accentColor),),
                 trailing: InkWell(
                   onTap: () {
                     sendNotificationsToDevice(data['_id'], context,
@@ -166,7 +149,10 @@ class ShowAllUsersScreen extends StatelessWidget {
                         ? "Remind now"
                         : "Didn't approve",
                     style:
-                        TextStyle(color: AppColors.primaryColor, fontSize: 15),
+                         FontManager().getTextStyle(context,
+                  lWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: AppColors.primaryColor),
                   ),
                 ),
               );
