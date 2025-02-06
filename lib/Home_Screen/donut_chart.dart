@@ -97,7 +97,6 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                         flex: isLargeScreen ? 2 : 3,
                         child: Container(
                           padding: const EdgeInsets.all(12.0),
-                          
                           child: selectedIndex != null
                               ? Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -177,7 +176,14 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                     selectedIndex == null ||
                                             selectedIndex == index
                                         ? data.color
-                                        : data.color.withOpacity(0.0),
+                                        : Color.fromRGBO(
+                                            data.color.r
+                                                .toInt(), // Convert to int
+                                            data.color.g
+                                                .toInt(), // Convert to int
+                                            data.color.b
+                                                .toInt(), // Convert to int
+                                            0.0),
                                 explode: true,
                                 explodeIndex: selectedIndex,
                                 dataLabelSettings:
