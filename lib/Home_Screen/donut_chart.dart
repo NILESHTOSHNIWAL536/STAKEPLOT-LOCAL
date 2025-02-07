@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'colors.dart';
 
@@ -91,23 +90,13 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                 const SizedBox(height: 16),
                 Expanded(
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         flex: isLargeScreen ? 2 : 3,
                         child: Container(
-                          padding: const EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                            //color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            // boxShadow: [
-                            //   BoxShadow(
-                            //     color: Colors.grey.withOpacity(0.2),
-                            //     spreadRadius: 2,
-                            //     blurRadius: 5,
-                            //   ),
-                            // ],
-                          ),
+                          padding: const EdgeInsets.all(12.0),
                           child: selectedIndex != null
                               ? Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -146,7 +135,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                           style: FontManager().getTextStyle(
                                               context,
                                               lWeight: FontWeight.bold,
-                                              fontSize: 18,
+                                              fontSize: 16,
                                               color: AppColors.accentColor)),
                                       const SizedBox(height: 8),
                                       Text(
@@ -173,7 +162,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                       ),
                       const SizedBox(width: 16),
                       Expanded(
-                        flex: 3,
+                        flex: 5,
                         child: Container(
                           alignment: Alignment.center,
                           child: SfCircularChart(
@@ -186,8 +175,15 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                 pointColorMapper: (ChartData data, int index) =>
                                     selectedIndex == null ||
                                             selectedIndex == index
-                                        ? data.color
-                                        : data.color.withOpacity(0.0),
+                                        ? data.color:data.color,
+                                        // : Color.fromRGBO(
+                                        //     data.color.r
+                                        //         .toInt(), // Convert to int
+                                        //     data.color.g
+                                        //         .toInt(), // Convert to int
+                                        //     data.color.b
+                                        //         .toInt(), // Convert to int
+                                        //     0.0),
                                 explode: true,
                                 explodeIndex: selectedIndex,
                                 dataLabelSettings:

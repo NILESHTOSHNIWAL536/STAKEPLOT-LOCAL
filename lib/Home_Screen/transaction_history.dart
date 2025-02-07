@@ -176,50 +176,69 @@ class _TransactionHistoryState extends State<TransactionHistory> {
 
    return Container(
       width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.symmetric(vertical: 7),
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: Colorcodes.greyLight,
+            width: .3
+          )
+      ),
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              AvatarProfileImage(
-                url: ImageUrl,
-                height: 10,
-                width: 20,
-              ),
-              RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: " " + EachTransactions['category'], // Category text
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight
-                            .w600, // Correct weight enum for semi-bold
-                        fontSize: 16,
-                        lineHeight: 2.14,
-
-                        color: AppColors.accentColor, // Style for category
-                      ),
-                    ),
-                    TextSpan(
-                      text:
-                          " ( " + EachTransactions['subcategory'] + " )", // Name text
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight
-                            .w400, // Correct weight enum for semi-bold
-                        fontSize: 12,
-                        lineHeight: 1.14,
-                        color: AppColors.accentColor, // Style for name
-                      ),
-                    ),
-                  ],
+          Expanded(
+            flex: 3,
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: AvatarProfileImage(
+                    url: ImageUrl,
+                    height: 10,
+                    width: 20,
+                  ),
                 ),
-              ),
-            ],
+                Expanded(
+                  flex: 2,
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: " " + EachTransactions['category'], // Category text
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight
+                                .w600, // Correct weight enum for semi-bold
+                            fontSize: 16,
+                            lineHeight: 2.14,
+                            
+                            color: AppColors.accentColor, // Style for category
+                          ),
+                        ),
+                        TextSpan(
+                          text:
+                              " ( " + EachTransactions['subcategory'] + " )", // Name text
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight
+                                .w400, // Correct weight enum for semi-bold
+                            fontSize: 12,
+                            lineHeight: 1.14,
+                            color: AppColors.accentColor, // Style for name
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-          Text('₹${EachTransactions['amount'].toString()}'),
+           
+            Expanded(
+            flex: 1,
+            child: Text('₹${EachTransactions['amount'].toString()}')),
         ],
       ),
     );
