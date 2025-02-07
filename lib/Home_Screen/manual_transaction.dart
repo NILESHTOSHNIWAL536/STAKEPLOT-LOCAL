@@ -38,7 +38,7 @@ class _ManualtransactionState extends State<Manualtransaction> {
   Widget build(BuildContext context) {
     return Container(
       //height: 300,
-      padding: const EdgeInsets.all(12.0),
+      // padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
         color: AppColors.mt,
         borderRadius: BorderRadius.circular(16),
@@ -88,7 +88,7 @@ class _ManualtransactionState extends State<Manualtransaction> {
               ),
               AvatarProfileImage(
                 url: LikeComment.manualTransaction,
-                height: 13,
+                height: 9.5,
                 width: 10,
               ),
             ],
