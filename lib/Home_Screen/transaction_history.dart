@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budget.dart';
 import 'package:flutter_application_code_stakeplot/model/transactions.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
@@ -78,32 +79,30 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                   onHorizontalDragUpdate: (details) {
                       scrollLeft(details,transactionList,groupIndex,index);
                   },
-                  child: Stack(
+                  child: Column(
                     children: [
-                      Container(
-                         height: 50,
-                        color: AppColors.primaryColor,
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.only(right: 16),
-                        child: GestureDetector(
-                          onTap: () {
-                             hideTransaction(transactionList,index,groupIndex);      
-                          },
-                          child: const Icon(
-                            Icons.visibility_off,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                        ),
-                      ),
-                      Transform.translate(
-                        offset: Offset(swipeOffsets[groupIndex * transactionList.length +index] ??0.0,0),
-                        child: Container(
-                          height: 50,
-                          decoration: getBoxDecoration(groupIndex,transactionList,index),
-                          child: historyTransactions(transactionList[index]),
-                        ),
-                      ),
+                      // Container(
+                      //    height: 50,
+                      //   color: AppColors.primaryColor,
+                      //   alignment: Alignment.centerRight,
+                      //   padding: const EdgeInsets.only(right: 16),
+                      //   child: GestureDetector(
+                      //     onTap: () {
+                      //        hideTransaction(transactionList,index,groupIndex);      
+                      //     },
+                      //     child: const Icon(
+                      //       Icons.visibility_off,
+                      //       color: Colors.white,
+                      //       size: 30,
+                      //     ),
+                      //   ),
+                      // ),
+                      // Transform.translate(
+                        // offset: Offset(swipeOffsets[groupIndex * transactionList.length +index] ??0.0,0),
+                       Container(                 
+                         decoration: getBoxDecoration(groupIndex,transactionList,index),
+                         child: historyTransactions(transactionList[index],date),
+                       ),
                     ],
                   ),
                 );
@@ -169,36 +168,47 @@ class _TransactionHistoryState extends State<TransactionHistory> {
   return DateFormat("dd MMM yyyy").format(date);
 }
 
-  Widget historyTransactions(EachTransactions) {
+  Widget historyTransactions(EachTransactions,date) {
   
     String? s=  imageMapForHistory[EachTransactions['category'].toString().toLowerCase()];
     String ImageUrl= Categories.link + s.toString();
 
    return Container(
       width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.symmetric(vertical: 7),
+      margin: EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
           border: Border.all(
             color: Colorcodes.greyLight,
             width: .3
           )
       ),
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      // padding: EdgeInsets.symmetric(horizontal: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        // crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
             flex: 3,
             child: Row(
+               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
                   flex: 1,
-                  child: AvatarProfileImage(
-                    url: ImageUrl,
-                    height: 10,
-                    width: 20,
+                  child: Container(
+                    margin: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                       color: Colorcodes.greyLight,
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+                    child: AvatarProfileImage(
+                      url: ImageUrl,
+                      height: 16,
+                      width: 20,
+                    ),
                   ),
                 ),
+                const SizedBox(width: 5,),
                 Expanded(
                   flex: 2,
                   child: RichText(
@@ -210,7 +220,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                             context,
                             lWeight: FontWeight
                                 .w600, // Correct weight enum for semi-bold
-                            fontSize: 16,
+                            fontSize: 14,
                             lineHeight: 2.14,
                             
                             color: AppColors.accentColor, // Style for category
@@ -235,10 +245,18 @@ class _TransactionHistoryState extends State<TransactionHistory> {
               ],
             ),
           ),
-           
+            
             Expanded(
             flex: 1,
-            child: Text('₹${EachTransactions['amount'].toString()}')),
+              child: Column(
+                 children: [
+                      textStyle(text: '₹${EachTransactions['amount'].toString()}',context: context,fontWeight: FontWeight.bold,fontsize: 15),
+                      const SizedBox(height: 6,),
+                      textStyle(text: formatDate(date.toString()),context: context,fontWeight: FontWeight.w300,fontsize: 11),
+                 ],
+              ),
+            ),
+          
         ],
       ),
     );
