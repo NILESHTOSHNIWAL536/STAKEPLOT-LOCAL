@@ -170,12 +170,11 @@ class _TransactionHistoryState extends State<TransactionHistory> {
 }
 
   Widget historyTransactions(EachTransactions) {
-   
-    String? s=imageMapForHistory[EachTransactions['category'].toString().toLowerCase()];
-    print(s);
-    String ImageUrl= Categories.link + s.toString().toLowerCase().toString();
-    print(ImageUrl);
-    return Container(
+  
+    String? s=  imageMapForHistory[EachTransactions['category'].toString().toLowerCase()];
+    String ImageUrl= Categories.link + s.toString();
+
+   return Container(
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Row(

@@ -36,7 +36,7 @@ class Categories {
   static String shopping = "Shopping.svg";
   static String snacks = "Snacks.svg";
   static String sports = "Sports.svg";
-  static String subscription = "Subscription.svg";
+  static String subscription = "Subscripition.svg";
   static String support = "Support.svg";
   static String travel = "Travel.svg";
 

@@ -119,6 +119,9 @@ class _MobileNumberState extends State<MobileNumber> {
                 String phoneNumber = _phoneController.text;
                 number.value = phoneNumber;
                 print(number.value);
+                print("url-----------------------");
+                print(url);
+                print(urlWithLocallHost);
                 // loginToAutoTractions(context);
                  LOGOUT();
                 print(number.value);

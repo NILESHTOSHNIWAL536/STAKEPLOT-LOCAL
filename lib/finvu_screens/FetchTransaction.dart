@@ -101,15 +101,15 @@ class _FetchTransactionState extends State<FetchTransaction> {
 
                  }else {
                     
-                      if(prefs.containsKey("sessionId"))
-                      {
+                      // if(prefs.containsKey("sessionId"))
+                      // {
                             
-                             FetchTransactionBysessionId(context,prefs.getString("sessionId")!);
+                            //  FetchTransactionBysessionId(context,prefs.getString("sessionId")!);
 
-                      }else{
+                      // }else{
                          FetchTransactionFromFinvuApi(context);
 
-                      }
+                      // }
                  }
 
                 },

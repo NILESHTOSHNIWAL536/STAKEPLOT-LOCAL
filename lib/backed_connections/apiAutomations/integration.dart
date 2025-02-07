@@ -82,13 +82,14 @@ Future<void> loginWithServer() async {
 Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String apiUrl =
-        "${url}/finvu/fetchData"; // Change to your actual server URL
-    final String custId =
-        "${number.value}@finvu"; // Replace with dynamic value if needed
-
+    final String apiUrl ="${url}/finvu/fetchData"; // Change to your actual server URL
+    final String custId ="${number.value}@finvu"; // Replace with dynamic value if needed
+    
     String? handleId = prefs.getString("consentHandleId");
     // String? custId = prefs.getString("custId");
+
+      print(apiUrl);
+      print(custId);
 
     if (handleId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
