@@ -87,7 +87,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
                 Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -106,7 +106,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                       'Expenses: ${data[selectedIndex!].category}',
                                       style: FontManager().getTextStyle(context,
                                           lWeight: FontWeight.bold,
-                                          fontSize: 18,
+                                          fontSize: 16,
                                           color: AppColors.accentColor),
                                     ),
                                     const SizedBox(height: 8),
@@ -175,15 +175,8 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                 pointColorMapper: (ChartData data, int index) =>
                                     selectedIndex == null ||
                                             selectedIndex == index
-                                        ? data.color:data.color,
-                                        // : Color.fromRGBO(
-                                        //     data.color.r
-                                        //         .toInt(), // Convert to int
-                                        //     data.color.g
-                                        //         .toInt(), // Convert to int
-                                        //     data.color.b
-                                        //         .toInt(), // Convert to int
-                                        //     0.0),
+                                        ? data.color:data.color.withValues(alpha: 0.1),
+                                        
                                 explode: true,
                                 explodeIndex: selectedIndex,
                                 dataLabelSettings:

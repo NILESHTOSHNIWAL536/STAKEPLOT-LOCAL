@@ -158,7 +158,9 @@ class ShowAllUsersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
         appBar: AppBar(
+          backgroundColor: AppColors.backgroundColor,
           title: Text('Dues to receive',
               style: FontManager().getTextStyle(context,
                   lWeight: FontWeight.bold,

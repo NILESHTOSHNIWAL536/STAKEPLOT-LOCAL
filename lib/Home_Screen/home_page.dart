@@ -121,7 +121,7 @@ class HomeScreen extends StatelessWidget {
 
               // Manual Transaction Container
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.2,
+                height: MediaQuery.of(context).size.height * 0.15,
                 child: Manualtransaction(),
               ),
               //const SizedBox(height: 20),
@@ -132,7 +132,7 @@ class HomeScreen extends StatelessWidget {
 
               // Doughnut Chart
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.3,
+                height: MediaQuery.of(context).size.height * 0.35,
                 child: DoughnutChartExample(),
               ),
               //const SizedBox(height: 20),
