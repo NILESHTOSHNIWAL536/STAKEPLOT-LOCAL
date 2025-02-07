@@ -117,11 +117,11 @@ class _TransactionHistoryState extends State<TransactionHistory> {
   Widget getTransactionListUi(
       transactions, date, total, List listTransactions) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 7.0, vertical: 2),
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.symmetric(vertical: 3),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -130,11 +130,9 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                  formatDate(date.toString()),
                   style: FontManager().getTextStyle(
                     context,
-                    lWeight:
-                        FontWeight.w600, // Correct weight enum for semi-bold
+                    lWeight:FontWeight.w600, // Correct weight enum for semi-bold
                     fontSize: 16,
                     lineHeight: 2.14,
-
                     color: AppColors.accentColor, // Style for category
                   ),
                 ),
@@ -154,9 +152,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
             ),
           ),
           Divider(
-              // thickness: 1,
-              // indent: 10,
-              // endIndent: 10,
+              thickness: 1,
               ),
         ],
       ),
