@@ -308,6 +308,8 @@ Future<void> storeDataOfTransactions(context, data, consentHandleId, from, to,
    
     print("body added--------------------");
     // print(body);
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove("sessionId");
     Navigator.of(context)
         .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
   } else {}
