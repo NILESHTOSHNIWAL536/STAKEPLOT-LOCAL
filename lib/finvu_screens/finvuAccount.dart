@@ -12,7 +12,6 @@ import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void verify(String otp, context) async {
-  print(otp);
 
   try {
     var login = await finvuManager.verifyLoginOtp(
@@ -22,7 +21,7 @@ void verify(String otp, context) async {
 
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     String? token = await _pref.getString("token");
-
+    clearStackLocalInfo();
     Navigator.push(
       context,
       MaterialPageRoute(

@@ -159,6 +159,7 @@ Map<String, String> imageMapForHistory = {
   "pet": Categories.petCare,
   "emi": Categories.emi,
   "food": Categories.food,
+  "health": Categories.health,
   "trips": "b-trips.svg",
   "miscellaneous": "b-miscellaneous.svg",
   "untagged": "b-miscellaneous.svg",

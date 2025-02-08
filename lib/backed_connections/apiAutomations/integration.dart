@@ -66,8 +66,8 @@ Future<void> loginWithServer() async {
       print("Token: $token");
       print("Consent Handle ID: $consentHandleId");
 
-      login(consentHandleId);
       handleId.value = consentHandleId;
+      login(handleId.value);
 
       // Proceed with next steps, e.g., calling another API
       // ConsentStatus(context, token, consentHandleId, custId);
@@ -123,18 +123,18 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
           data["to"], "", custId, data["custId"], data["sessionId"]);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Data fetched successfully!")),
+        SnackBar(content: Text("Data fetched successfully....!")),
       );
     } else {
       print("Error fetching data: ${response.body}");
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to fetch data")),
+        SnackBar(content: Text("Failed to fetch data. We will notify you once we retrieve it.")),
       );
     }
   } catch (e) {
     print("Error: $e");
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("An error occurred")),
+      SnackBar(content: Text("Bank server issue detected. We'll notify you once your data is retrieved")),
     );
   }
 }

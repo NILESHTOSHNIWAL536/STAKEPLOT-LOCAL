@@ -139,7 +139,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
     return Container(
         width: MediaQuery.of(context).size.width,
         height: !accountLinked.isEmpty
-            ? MediaQuery.of(context).size.height / 3.5
+            ? MediaQuery.of(context).size.height / 3
             : MediaQuery.of(context).size.height / 3,
         child: !accountLinked.isEmpty
             ? Column(
@@ -429,14 +429,12 @@ class _LinkingAccountState extends State<LinkingAccount> {
           );
   }
 
-  void LinkingBank(
-      FinvuFIPDetails fipDetails, String fipId, FinvuFIPInfo info) async {
+  void LinkingBank(FinvuFIPDetails fipDetails, String fipId, FinvuFIPInfo info) async {
     try {
       List<FinvuDiscoveredAccountInfo> bankData =
           listOfAccountAdded[fipId] ?? [];
       if (bankData.isEmpty) {
-        snackBarCalled(
-            context, "Added Account For Linking....", Colorcodes.red);
+        snackBarCalled(context, "Added Account For Linking....", Colorcodes.red);
         return;
       }
       FinvuAccountLinkingRequestReference linkingReference =
