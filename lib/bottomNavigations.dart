@@ -74,6 +74,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
             children: [
               getContainer(NavBarIcons.home, 0),
               getContainer(NavBarIcons.screen2, 1),
+              
               if (sizeRoom)
                 getContainer(
                   'assets/images/room.svg',
