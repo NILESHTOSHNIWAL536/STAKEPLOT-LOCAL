@@ -196,6 +196,7 @@ class Sign {
   static String growth = "assets/icons/Signup/growth.svg";
   static String comm = "assets/icons/Signup/Comm.svg";
   static String management = "assets/icons/Signup/Management.svg";
+  static String finvu = "assets/icons/Signup/finvu.svg";
 }
 
 class Finance {

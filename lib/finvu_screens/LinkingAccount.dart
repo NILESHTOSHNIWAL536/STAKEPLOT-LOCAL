@@ -14,6 +14,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/access.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/verifyOTP.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
@@ -72,6 +73,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        bottomNavigationBar: BottomBar(),
         body: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
@@ -384,7 +386,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
       //padding: const EdgeInsets.fromLTRB(14, 5, 16, 5),
       //here we can change height
       width: MediaQuery.of(context).size.width / 1.1,
-      height: listofLinkedAccount.isNotEmpty ? height / 1.55 : height / 1.45,
+      height: listofLinkedAccount.isNotEmpty ? height / 1.6 : height / 1.5,
       child: SingleChildScrollView(
         child: Expanded(
           child: Column(

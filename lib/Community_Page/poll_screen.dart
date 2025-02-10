@@ -204,27 +204,47 @@ class _PollScreenState extends State<PollScreen> {
                         : const SizedBox.shrink(),
                   ),
                   const SizedBox(height: 20),
-                  DecoratedContainer(
-                      borderRadius: 24,
-                      backgroundColor: _questionController.text.isNotEmpty &&
-                              _optionControllers.every(
-                                  (controller) => controller.text.isNotEmpty)
-                          ? AppColors.primaryColor
-                          : AppColors.button,
-                      child: TextButton(
-                        onPressed: _createPoll,
-                        child: Text('Continue',
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: FontWeight.normal,
-                              fontSize: 18,
-                              color: _questionController.text.isNotEmpty &&
-                                      _optionControllers.every((controller) =>
-                                          controller.text.isNotEmpty)
-                                  ? Colors.white
-                                  : Colors.black,
-                            )),
-                      )),
+                  GestureDetector(
+                    onTap: _createPoll,
+                    // child: Text('Continue',
+                    //     style: FontManager().getTextStyle(
+                    //       context,
+                    //       lWeight: FontWeight.normal,
+                    //       fontSize: 18,
+                    //       color: _questionController.text.isNotEmpty &&
+                    //               _optionControllers.every((controller) =>
+                    //                   controller.text.isNotEmpty)
+                    //           ? Colors.white
+                    //           : Colors.black,
+                    //     )),
+                    child:Container(
+                          width: MediaQuery.of(context).size.width / 1.1,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 14),
+                          decoration: BoxDecoration(
+                              color:  _questionController.text.isNotEmpty &&
+                          _optionControllers.every(
+                              (controller) => controller.text.isNotEmpty)
+                      ? AppColors.primaryColor
+                      : AppColors.button,
+                              borderRadius: BorderRadius.circular(24)),
+                          child: Center(
+                            child: Text(
+                              'Continue',
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: _questionController.text.isNotEmpty &&
+                                       _optionControllers.every((controller) =>
+                                      controller.text.isNotEmpty)
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+                            ),
+                          ),
+                        )
+                  ),
                 ] else ...[
                   Card(
                     elevation: 4,

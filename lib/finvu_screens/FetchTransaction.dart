@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
@@ -35,6 +36,8 @@ class _FetchTransactionState extends State<FetchTransaction> {
     return Scaffold(
       // bottomNavigationBar: BottomNavigations(data: sizeRoom?3:2),
       extendBody: true,
+      bottomNavigationBar: BottomBar(),
+      
       //bottomSheet: bottomSheet(context),
       appBar: AppBar(
           centerTitle: true,
@@ -84,42 +87,45 @@ class _FetchTransactionState extends State<FetchTransaction> {
                     child: getTranSactions(context),
                   )),
 
-            SizedBox(
-              height: 20,
+            SizedBox(height: 20,),
+          
+            InkWell(
+                onTap: ()async {
+                  //  Otpscreen
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  // loginToAutoTractions(context);
+                 if(directFetch.value){
+                       String urlPath = "${url}/transactionauto/";
+                        var response=await getDataApiCall(urlPath);
+                        printData(response);
+                         if (getFlagOfResponse(response)) {
+                            trasactionsData.clear();
+                            var his = jsonDecode(response.body);
+                            fetchedTrsacntionList.clear();
+                            fetchedTrsacntionList.addAll(his['data']);
+                            // changeTrasactiondata();
+                          } else {}
+
+                 }else {
+                    
+                      if(prefs.containsKey("sessionId"))
+                      {
+                             //sessionId
+                        FetchTransactionBysessionId(context,prefs.getString("sessionId")!);
+
+                      }else{
+                        FetchTransactionFromFinvuApi(context);
+                      }
+
+                 }
+
+               
+
+                },
+             child: Obx(()=>   sessionId.value ?getButton(context,"Fetch Trasactions BY sessionId") :  getButton(context,"Fetch Trasactions")) 
             ),
 
-            InkWell(
-                onTap: () async {
-                  //  Otpscreen
-                  SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-                  // loginToAutoTractions(context);
-                  if (directFetch.value) {
-                    String urlPath = "${url}/transactionauto/";
-                    var response = await getDataApiCall(urlPath);
-                    printData(response);
-                    if (getFlagOfResponse(response)) {
-                      trasactionsData.clear();
-                      var his = jsonDecode(response.body);
-                      fetchedTrsacntionList.clear();
-                      fetchedTrsacntionList.addAll(his['data']);
-                      // changeTrasactiondata();
-                    } else {}
-                  } else {
-                    if (prefs.containsKey("sessionId")) {
-                      //sessionId
-                      FetchTransactionBysessionId(
-                          context, prefs.getString("sessionId")!);
-                    } else {
-                      FetchTransactionFromFinvuApi(context);
-                    }
-                  }
-
-                 
-                },
-                child: Obx(() => sessionId.value
-                    ? getButton(context, "Fetch Trasactions BY sessionId")
-                    : getButton(context, "Fetch Trasactions"))),
+            
           ],
         ),
       ),

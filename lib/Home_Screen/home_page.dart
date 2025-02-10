@@ -145,7 +145,7 @@ class HomeScreen extends StatelessWidget {
 
               // Doughnut Chart
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.35,
+                height: MediaQuery.of(context).size.height * 0.5,
                 child: DoughnutChartExample(),
               ),
               //const SizedBox(height: 20),
