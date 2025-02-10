@@ -541,9 +541,10 @@ class _FinancePageState extends State<FinancePage> {
             borderRadius: BorderRadius.circular(12),
           ),
           child: Container(
+            color: AppColors.mt,
             width: MediaQuery.of(context).size.width * 0.8,
             height: MediaQuery.of(context).size.height *
-                0.6, // Adjust height (60% of screen height)
+                0.5, // Adjust height (60% of screen height)
             child: child!,
           ),
         );
@@ -679,6 +680,9 @@ class _FinancePageState extends State<FinancePage> {
                 )
               ],
             ),
+            SizedBox(
+              height: 10,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -691,54 +695,90 @@ class _FinancePageState extends State<FinancePage> {
                 ),
                 Row(
                   children: [
-                    TextButton(
-                      onPressed: () {
+                    GestureDetector(
+                      onTap: () {
                         setState(() {
                           selectedButton = 'Month';
                           selectedDay = 1;
                         });
                       },
-                      child: Text(
-                        'Month',
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.normal,
-                            fontSize: fontSizeFactor * 3.4,
-                            color: AppColors.accentColor),
+                      child: Container(
+                        height: 35,
+                        width: screenWidth * 0.15,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          color: selectedButton == 'Month'
+                              ? AppColors.button
+                              : AppColors.backgroundColor,
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Month',
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.normal,
+                                fontSize: fontSizeFactor * 3.4,
+                                color: AppColors.accentColor),
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(width: screenWidth * 0.02),
-                    TextButton(
-                      onPressed: () {
+                    GestureDetector(
+                      onTap: () {
                         setState(() {
                           selectedButton = 'Week';
                         });
                       },
-                      child: Text(
-                        'Week',
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.normal,
-                            fontSize: fontSizeFactor * 3.4,
-                            color: AppColors.accentColor),
+                      child: Container(
+                        height: 35,
+                        width: screenWidth * 0.15,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          color: selectedButton == 'Week'
+                              ? AppColors.button
+                              : AppColors.backgroundColor,
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Week',
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.normal,
+                                fontSize: fontSizeFactor * 3.4,
+                                color: AppColors.accentColor),
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(width: screenWidth * 0.02),
-                    TextButton(
-                      onPressed: () {
+                    GestureDetector(
+                      onTap: () {
                         _pickCustomDateRange(context);
                       },
-                      child: Text(
-                        'Custom',
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.normal,
-                            fontSize: fontSizeFactor * 3.4,
-                            color: AppColors.accentColor),
+                      child: Container(
+                        height: 35,
+                        width: screenWidth * 0.15,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          color: selectedButton == 'Custom'
+                              ? AppColors.button
+                              : AppColors.backgroundColor,
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Custom',
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.normal,
+                                fontSize: fontSizeFactor * 3.4,
+                                color: AppColors.accentColor),
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
               ],
             ),
-            //SizedBox(height: screenWidth * 0.04),
+            SizedBox(height: screenWidth * 0.04),
             Expanded(
               child: LineChartWidget(
                 chartData: chartData,
@@ -821,139 +861,144 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     // Example: 50% of screen height
 
     if (widget.selectedButton == 'Month') {
-      return Row(
-        children: [
-          // Fixed left titles
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Container(
-              width: screenWidth * 0.1,
-              height: chartHeight,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: yAxisLabels.reversed.map((label) {
-                  return Text(
-                    '₹${label.toInt()}',
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
-                        fontSize: fontSizeFactor * 3,
-                        color: AppColors.accentColor),
-                  );
-                }).toList(),
+      return Container(
+        child: Row(
+          children: [
+            // Fixed left titles
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Container(
+                width: screenWidth * 0.1,
+                height: chartHeight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: yAxisLabels.reversed.map((label) {
+                    return Text(
+                      '₹${label.toInt()}',
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.normal,
+                          fontSize: fontSizeFactor * 3,
+                          color: AppColors.accentColor),
+                    );
+                  }).toList(),
+                ),
               ),
             ),
-          ),
-          SizedBox(width: 20,),
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: SizedBox(
-                width: screenWidth * 3,
-                height: chartHeight,
-                child: GestureDetector(
-                  onPanUpdate: (details) {
-                    // Detect hover over points if required for further enhancements.
-                  },
-                  child: LineChart(
-                    LineChartData(
-                      gridData: FlGridData(
-                        show: false,
-                      ),
-                      titlesData: FlTitlesData(
-                        bottomTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            interval: 1,
-                            getTitlesWidget: (value, meta) {
-                              if (value.toInt() < widget.days.length) {
+            SizedBox(
+              width: 20,
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: SizedBox(
+                  width: screenWidth * 2,
+                  height: chartHeight,
+                  child: GestureDetector(
+                    onPanUpdate: (details) {
+                      // Detect hover over points if required for further enhancements.
+                    },
+                    child: LineChart(
+                      LineChartData(
+                        gridData: FlGridData(
+                          show: false,
+                        ),
+                        titlesData: FlTitlesData(
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              interval: 1,
+                              getTitlesWidget: (value, meta) {
+                                if (value.toInt() < widget.days.length) {
+                                  return Text(
+                                    widget.days[value.toInt()],
+                                    style: FontManager().getTextStyle(context,
+                                        lWeight: FontWeight.normal,
+                                        fontSize: fontSizeFactor * 3.5,
+                                        color: AppColors.accentColor),
+                                  );
+                                }
+                                return SizedBox.shrink();
+                              },
+                            ),
+                          ),
+                          rightTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false)),
+                          topTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false)),
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: false,
+
+                              reservedSize: screenWidth * 0.1,
+                              interval:
+                                  500, // For 5 labels (4 intervals + 0 at the bottom)
+                              getTitlesWidget: (value, meta) {
                                 return Text(
-                                  widget.days[value.toInt()],
+                                  '₹${value.toInt()}',
                                   style: FontManager().getTextStyle(context,
                                       lWeight: FontWeight.normal,
-                                      fontSize: fontSizeFactor * 3.5,
+                                      fontSize: fontSizeFactor * 3,
                                       color: AppColors.accentColor),
                                 );
-                              }
-                              return SizedBox.shrink();
+                              },
+                            ),
+                          ),
+                        ),
+                        borderData: FlBorderData(
+                          show: false,
+                        ),
+                        minY: 0,
+                        maxY: maxYValue,
+                        lineBarsData: [
+                          LineChartBarData(
+                            isCurved: true,
+                            color: AppColors.primaryColor,
+                            barWidth: 1,
+                            dotData: FlDotData(show: false),
+                            belowBarData: BarAreaData(
+                                show: false,
+                                color: Colors.green.withOpacity(0.2)),
+                            spots: List.generate(
+                              widget.chartData["credited"]!.length,
+                              (index) => FlSpot(index.toDouble(),
+                                  widget.chartData["credited"]![index]),
+                            ),
+                          ),
+                          LineChartBarData(
+                            isCurved: true,
+                            color: AppColors.accentColor,
+                            barWidth: 1,
+                            dotData: FlDotData(show: false),
+                            belowBarData: BarAreaData(
+                                show: false,
+                                color: Colors.red.withOpacity(0.2)),
+                            spots: List.generate(
+                              widget.chartData["debited"]!.length,
+                              (index) => FlSpot(index.toDouble(),
+                                  widget.chartData["debited"]![index]),
+                            ),
+                          ),
+                        ],
+                        lineTouchData: LineTouchData(
+                          touchTooltipData: LineTouchTooltipData(
+                            tooltipRoundedRadius: 1,
+                            tooltipPadding: const EdgeInsets.all(8),
+                            getTooltipItems: (touchedSpots) {
+                              return touchedSpots.map((touchedSpot) {
+                                String label = touchedSpot.bar.color ==
+                                        AppColors.primaryColor
+                                    ? 'Credited'
+                                    : 'Debited';
+                                return LineTooltipItem(
+                                  '$label: ₹${touchedSpot.y.toStringAsFixed(2)}',
+                                  FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.normal,
+                                      fontSize: fontSizeFactor * 2.5,
+                                      color: AppColors.accentColor),
+                                );
+                              }).toList();
                             },
                           ),
-                        ),
-                        rightTitles: const AxisTitles(
-                            sideTitles: SideTitles(showTitles: false)),
-                        topTitles: const AxisTitles(
-                            sideTitles: SideTitles(showTitles: false)),
-                        leftTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: false,
-
-                            reservedSize: screenWidth * 0.1,
-                            interval:
-                                500, // For 5 labels (4 intervals + 0 at the bottom)
-                            getTitlesWidget: (value, meta) {
-                              return Text(
-                                '₹${value.toInt()}',
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.normal,
-                                    fontSize: fontSizeFactor * 3,
-                                    color: AppColors.accentColor),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                      borderData: FlBorderData(
-                        show: false,
-                      ),
-                      minY: 0,
-                      maxY: maxYValue,
-                      lineBarsData: [
-                        LineChartBarData(
-                          isCurved: true,
-                          color: AppColors.primaryColor,
-                          barWidth: 1,
-                          dotData: FlDotData(show: false),
-                          belowBarData: BarAreaData(
-                              show: false,
-                              color: Colors.green.withOpacity(0.2)),
-                          spots: List.generate(
-                            widget.chartData["credited"]!.length,
-                            (index) => FlSpot(index.toDouble(),
-                                widget.chartData["credited"]![index]),
-                          ),
-                        ),
-                        LineChartBarData(
-                          isCurved: true,
-                          color: AppColors.accentColor,
-                          barWidth: 1,
-                          dotData: FlDotData(show: false),
-                          belowBarData: BarAreaData(
-                              show: false, color: Colors.red.withOpacity(0.2)),
-                          spots: List.generate(
-                            widget.chartData["debited"]!.length,
-                            (index) => FlSpot(index.toDouble(),
-                                widget.chartData["debited"]![index]),
-                          ),
-                        ),
-                      ],
-                      lineTouchData: LineTouchData(
-                        touchTooltipData: LineTouchTooltipData(
-                          tooltipRoundedRadius: 1,
-                          tooltipPadding: const EdgeInsets.all(8),
-                          getTooltipItems: (touchedSpots) {
-                            return touchedSpots.map((touchedSpot) {
-                              String label = touchedSpot.bar.color ==
-                                      AppColors.primaryColor
-                                  ? 'Credited'
-                                  : 'Debited';
-                              return LineTooltipItem(
-                                '$label: ₹${touchedSpot.y.toStringAsFixed(2)}',
-                                FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.normal,
-                                    fontSize: fontSizeFactor * 2.5,
-                                    color: AppColors.accentColor),
-                              );
-                            }).toList();
-                          },
                         ),
                       ),
                     ),
@@ -961,8 +1006,8 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
     } else {
       return LineChart(

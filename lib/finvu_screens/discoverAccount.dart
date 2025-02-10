@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchLinkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
@@ -43,6 +44,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.backgroundColor,
+        bottomNavigationBar: BottomBar(),
        
         body: Padding(
           padding: const EdgeInsets.fromLTRB(12, 20, 12, 10),
@@ -94,7 +96,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   Widget getListOfFinvuBanks() {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 1.4,
+      height: MediaQuery.of(context).size.height / 1.43,
       child: ListView.builder(
         itemCount: fipDis.length,
         itemBuilder: (context, index) {

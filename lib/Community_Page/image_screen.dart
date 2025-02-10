@@ -30,6 +30,7 @@ class _ImageScreenState extends State<ImageScreen> {
   final ImagePicker _picker = ImagePicker();
   bool imageSubmitted = false;
   File? selectedImage;
+  
 
   Future<void> _pickImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -47,96 +48,96 @@ class _ImageScreenState extends State<ImageScreen> {
         : Container(
           height: MediaQuery.of(context).size.height/2 ,
           child: Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              // CircleAvatar(
-                              //   backgroundImage: NetworkImage(widget.userInfo['profilePic'].toString()),
-                              //   radius: 24,
-                              // ),
-                               AvatarProfileImage(url:  avatar.value, width: 5, height: 10),
-                              const SizedBox(width: 8),
-                              Column(
-                                children: [
-                                  Text(userName.value.toString(),
-                                      style: FontManager().getTextStyle(context,
-                                          lWeight: FontWeight.w600,
-                                          fontSize: 18,
-                                          color: AppColors.bg1)),
-                                  Text('New post',
-                                      style: FontManager().getTextStyle(context,
-                                          lWeight: FontWeight.w400,
-                                          fontSize: 12,
-                                          color: AppColors.bg1)),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      GestureDetector(
-                        onTap: _pickImage,
-                        child: Container(
-                          height: MediaQuery.of(context).size.height/3,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: selectedImage != null
-                              ? Image.file(
-                                  selectedImage!,
-                                  fit: BoxFit.cover,
-                                )
-                              : const Icon(
-                                  Icons.add_photo_alternate,
-                                  size: 50,
-                                  color: Colors.grey,
+            child: AnimatedPadding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context)
+                      .viewInsets
+                      .bottom), // Adjusts padding when keyboard appears
+              duration: const Duration(milliseconds: 100),
+              child: SingleChildScrollView(
+                child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                // CircleAvatar(
+                                //   backgroundImage: NetworkImage(widget.userInfo['profilePic'].toString()),
+                                //   radius: 24,
+                                // ),
+                                 AvatarProfileImage(url:  avatar.value, width: 5, height: 10),
+                                const SizedBox(width: 8),
+                                Column(
+                                  children: [
+                                    Text(userName.value.toString(),
+                                        style: FontManager().getTextStyle(context,
+                                            lWeight: FontWeight.w600,
+                                            fontSize: 18,
+                                            color: AppColors.bg1)),
+                                    Text('New post',
+                                        style: FontManager().getTextStyle(context,
+                                            lWeight: FontWeight.w400,
+                                            fontSize: 12,
+                                            color: AppColors.bg1)),
+                                  ],
                                 ),
+                              ],
+                            ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      TextField(
-                        controller: titleController,
-                        decoration: InputDecoration(
-                            hintText: 'Enter title',
-                            hintStyle: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.w600,
-                                fontSize: 18,
-                                color: AppColors.bg1),
-                            border: InputBorder.none),
-                      ),
-                      const SizedBox(height: 10),
-                      TextField(
-                        controller: textController,
-                        decoration: InputDecoration(
-                            hintText: 'Add your thoughts',
-                            hintStyle: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.normal,
-                                fontSize: 14,
-                                color: AppColors.bg1),
-                            border: InputBorder.none),
-                      ),
-                      DecoratedContainer(
-                        borderRadius: 24,
-                        backgroundColor: titleController.text.isNotEmpty &&
-                                textController.text.isNotEmpty
-                            ? AppColors.primaryColor
-                          : AppColors.button,
-                        child: TextButton(
-                          onPressed: () {
+                        const SizedBox(height: 10),
+                        GestureDetector(
+                          onTap: _pickImage,
+                          child: Container(
+                            height: MediaQuery.of(context).size.height/3.5,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: selectedImage != null
+                                ? Image.file(
+                                    selectedImage!,
+                                    fit: BoxFit.cover,
+                                  )
+                                : const Icon(
+                                    Icons.add_photo_alternate,
+                                    size:50,
+                                    color: Colors.grey,
+                                  ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        TextField(
+                          controller: titleController,
+                          decoration: InputDecoration(
+                              hintText: 'Enter title',
+                              hintStyle: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.w600,
+                                  fontSize: 18,
+                                  color: AppColors.bg1),
+                              border: InputBorder.none),
+                        ),
+                        const SizedBox(height: 10),
+                        TextField(
+                          controller: textController,
+                          decoration: InputDecoration(
+                              hintText: 'Add your thoughts',
+                              hintStyle: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.normal,
+                                  fontSize: 14,
+                                  color: AppColors.bg1),
+                              border: InputBorder.none),
+                        ),
+                        GestureDetector(
+                          onTap: () {
                               if(selectedImage==null)
                               {
-                                   snackBarAllFeilds2(context,"Please Upload Image...");
+                                   snackBarAllFeilds2(context,"Please Upload Image");
                                    return;
                                } 
                            
@@ -144,7 +145,7 @@ class _ImageScreenState extends State<ImageScreen> {
                                   snackBarAllFeilds(context);
                                   return ;
                             }
-
+                        
                               if(selectedImage!=null)
                             {
                               // createPost(context,titleController.text,descriptionsController.text,url!);
@@ -154,21 +155,46 @@ class _ImageScreenState extends State<ImageScreen> {
                                createPostWithOutImage(context,titleController.text,textController.text);
                             }
                           },
-                          child: Text('Continue',
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: FontWeight.w600,
-                              fontSize: 18,
-                              color: titleController.text.isNotEmpty &&
-                                      textController.text.isNotEmpty
-                                  ? Colors.white
-                                  : Colors.black,
-                            )),
-                        ),
-                      )
-                    ],
+                          // child: Text('Continue',
+                          //   style: FontManager().getTextStyle(
+                          //     context,
+                          //     lWeight: FontWeight.w600,
+                          //     fontSize: 18,
+                          //     color: titleController.text.isNotEmpty &&
+                          //             textController.text.isNotEmpty
+                          //         ? Colors.white
+                          //         : Colors.black,
+                          //   )),
+                          child:Container(
+                              width: MediaQuery.of(context).size.width / 1.1,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 14),
+                              decoration: BoxDecoration(
+                                  color: titleController.text.isNotEmpty &&
+                                          textController.text.isNotEmpty
+                                      ? AppColors.primaryColor
+                                      : AppColors.button,
+                                  borderRadius: BorderRadius.circular(24)),
+                              child: Center(
+                                child: Text(
+                                  'Continue',
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    color: titleController.text.isNotEmpty &&
+                                            textController.text.isNotEmpty
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
+                                ),
+                              ),
+                            )
+                        )
+                      ],
+                    ),
                   ),
-                ),
+              ),
             ),
           ),
         );

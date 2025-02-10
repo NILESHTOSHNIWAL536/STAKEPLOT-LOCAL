@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:http/http.dart' as http;
@@ -44,14 +45,14 @@ class NumberPickerScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    "Account Name",
+                    accountName.value,
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.normal,
                         fontSize: 16,
                         color: AppColors.backgroundColor),
                   ),
                   const SizedBox(height: 10),
-                  Text('Available Balance',
+                  Text('\u{20B9}${ balance.value}',
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.normal,
                           fontSize: 16,

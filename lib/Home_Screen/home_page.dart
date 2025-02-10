@@ -17,6 +17,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/controller.dart/userController.dart';
@@ -58,6 +59,7 @@ class _HomePageState extends State<HomePage> {
     getUserInfomations();
     getUserLend(context);
     getBudget();
+     getSummary(); 
     userController.fetchUserInfo();
     // getUserInfo();
     //  _scrollController.addListener(_handleScroll);
@@ -147,7 +149,7 @@ class HomeScreen extends StatelessWidget {
 
               // Doughnut Chart
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.3,
+                height: MediaQuery.of(context).size.height * 0.5,
                 child: DoughnutChartExample(),
               ),
               //const SizedBox(height: 20),

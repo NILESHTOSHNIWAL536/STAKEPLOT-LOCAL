@@ -130,7 +130,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
     } else {
       print("Error fetching data: ${response.body}");
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to fetch data. We will notify you once we retrieve it.")),
+        SnackBar(content: Text("Data is not ready to fetch yet. We will notify you once it's available.")),
       );
     }
   } catch (e) {

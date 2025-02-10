@@ -133,148 +133,6 @@ class ModalContent extends StatefulWidget {
 class _ModalContentState extends State<ModalContent>
     with SingleTickerProviderStateMixin {
   final Map<String, List<String>> categories = {
-    // 'Food': [
-    //   'Groceries',
-    //   'Dining Out',
-    //   'Snacks',
-    //   'Beverages',
-    //   'Bakery',
-    //   'Takeaway'
-    // ],
-    // 'Transport': [
-    //   'Taxi',
-    //   'Bus',
-    //   'Fuel',
-    //   'Car Rental',
-    //   'Train Tickets',
-    //   'Flight'
-    // ],
-    // 'Shopping': [
-    //   'Clothing',
-    //   'Electronics',
-    //   'Accessories',
-    //   'Books',
-    //   'Gifts',
-    //   'Groceries',
-    //   'Jewelry',
-    //   'Watches',
-    //   'Handbags',
-    //   'Belts'
-    // ],
-    // 'Entertainment': [
-    //   'Movies',
-    //   'Concerts',
-    //   'Games',
-    //   'Streaming',
-    //   'Events',
-    //   'Theatre Tickets',
-    //   'Concessions'
-    // ],
-    // 'Health': [
-    //   'Pharmacy',
-    //   'Doctor Visits',
-    //   'Gym',
-    //   'Supplements',
-    //   'Therapy',
-    //   'Medication',
-    //   'Surgery',
-    //   'Diagnostics'
-    // ],
-    // 'Education': [
-    //   'Books',
-    //   'Online Courses',
-    //   'School Fees',
-    //   'Workshops',
-    //   'Tutoring',
-    //   'Tuition'
-    // ],
-    // 'Travel': [
-    //   'Flights',
-    //   'Hotels',
-    //   'Tours',
-    //   'Travel Insurance',
-    //   'Cruises',
-    //   'Tickets',
-    //   'Accommodation',
-    //   'Activities'
-    // ],
-    // 'Utilities': [
-    //   'Electricity',
-    //   'Water',
-    //   'Internet',
-    //   'Gas',
-    //   'Mobile Recharge',
-    //   'Prepaid Recharge'
-    // ],
-    // 'Home': ['Rent', 'Furniture', 'Repairs', 'Cleaning Services', 'Gardening'],
-    // 'Personal Care': [
-    //   'Salon',
-    //   'Spa',
-    //   'Skincare',
-    //   'Makeup',
-    //   'Haircare',
-    //   'Lotions',
-    //   'Face Masks',
-    //   'Treatments'
-    // ],
-    // 'Technology': [
-    //   'Software Subscriptions',
-    //   'Hardware',
-    //   'Cloud Storage',
-    //   'Apps',
-    //   'Web Hosting',
-    //   'Gadgets',
-    //   'Home Appliances'
-    // ],
-    // 'Kids': ['Toys', 'Clothing', 'Education', 'Games', 'Daycare'],
-    // 'Pets': ['Food', 'Veterinarian', 'Toys', 'Grooming', 'Training'],
-    // 'Gifts & Charity': [
-    //   'Birthdays',
-    //   'Weddings',
-    //   'Donations',
-    //   'Festivals',
-    //   'Fundraisers'
-    // ],
-    // 'Drinks': ['Alcohol', 'Soft Drinks', 'Juices', 'Cocktails'],
-    // 'Bills': [
-    //   'Electricity',
-    //   'Water',
-    //   'Gas',
-    //   'Phone',
-    //   'Monthly Bill',
-    //   'Cable TV',
-    //   'Streaming Subscription'
-    // ],
-    // 'Snacks': ['Chips', 'Cookies', 'Sweets', 'Popcorn'],
-    // 'Others': [
-    //   'Miscellaneous Expenses',
-    //   'Uncategorized',
-    //   'One-off Purchases',
-    //   'Random Expenses'
-    // ],
-    // 'Rent': ['House Rent', 'Office Rent', 'Garage Rent'],
-    // 'Clothing-Shoes': ['Casual Wear', 'Formal Wear', 'Footwear', 'Sportswear'],
-    // 'EMIs': ['Car Loan', 'Home Loan', 'Personal Loan'],
-    // 'Credit Bills': [
-    //   'Credit Card Payments',
-    //   'Late Fees',
-    //   'Outstanding Amount',
-    //   'Minimum Payment Due'
-    // ],
-    // 'Sports': ['Equipment', 'Gym Membership', 'Outdoor Activities'],
-    // 'Theatre': ['Play Tickets', 'Drama Shows', 'Opera'],
-    // 'Repairs': ['Home Repairs', 'Car Repairs', 'Electronics'],
-    // 'Beauty': ['Salon', 'Spa', 'Cosmetics'],
-    // 'Subscriptions': ['Magazines', 'Apps', 'Streaming Services'],
-    // 'Restaurants': [
-    //   'Casual Dining',
-    //   'Buffet',
-    //   'Fine Dining',
-    //   'Fast Food',
-    //   'Family Restaurants'
-    // ],
-    // 'Investments': ['Mutual Funds', 'Stocks', 'Real Estate', 'Bonds'],
-
     "Food": [
       "Swiggy",
       "Zomato",
@@ -655,26 +513,44 @@ class _ModalContentState extends State<ModalContent>
                             selectedSubCategory == null) ...[
                           TextField(
                             controller: _amountController,
-                            // Link TextField to the controller
-
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
-                              
                               prefixIcon: const Icon(Icons.currency_rupee),
                               hintText: 'Enter the amount',
-                              
+                              fillColor: AppColors.button,
+                              filled: true,
                               hintStyle: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.normal,
                                   fontSize: 16,
                                   color: AppColors.accentColor),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: AppColors.accentColor
+                                      , // Default border color
+                                  
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: AppColors.accentColor
+                                       // When not focused
+                                  
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: AppColors
+                                      .accentColor, // Color when focused
+                                  // Slightly thicker when focused for emphasis
+                                ),
                               ),
                             ),
-
                             onChanged: (value) {
-                              // Update the amount variable whenever the input changes
                               setState(() {
+                                // Update the amount variable whenever the input changes
                                 amount = double.tryParse(
                                     value); // Convert string to double
                               });
@@ -691,6 +567,8 @@ class _ModalContentState extends State<ModalContent>
                               readOnly: false,
                               decoration: InputDecoration(
                                 hintText: 'Categories',
+                                fillColor: AppColors.button,
+                              filled: true,
                                 hintStyle: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.normal,
                                     fontSize: 16,
@@ -699,6 +577,22 @@ class _ModalContentState extends State<ModalContent>
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
+                                enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: AppColors.accentColor
+                                      , // When not focused
+                                  
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: AppColors
+                                      .accentColor, // Color when focused
+                                   // Slightly thicker when focused for emphasis
+                                ),
+                              ),
                               ),
                               onTap: () {
                                 if (!isCategoryFieldExpanded) {
@@ -791,7 +685,7 @@ class _ModalContentState extends State<ModalContent>
                                   ),
                                   backgroundColor: AppColors.button,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
                               );

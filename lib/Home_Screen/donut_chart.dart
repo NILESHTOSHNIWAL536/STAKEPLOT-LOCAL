@@ -87,46 +87,82 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
                 Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
+                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                       Expanded(
+                        flex: 8,
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: SfCircularChart(
+                            series: <CircularSeries>[
+                              DoughnutSeries<ChartData, String>(
+                                dataSource: data,
+                                xValueMapper: (ChartData data, _) =>
+                                    data.category,
+                                yValueMapper: (ChartData data, _) => data.value,
+                                pointColorMapper: (ChartData data, int index) =>
+                                    selectedIndex == null ||
+                                            selectedIndex == index
+                                        ? data.color:data.color,                                        
+                                explode: true,
+                                explodeIndex: selectedIndex,
+                                dataLabelSettings:
+                                    const DataLabelSettings(isVisible: false),
+                                enableTooltip: true,
+                                onPointTap: (ChartPointDetails details) {
+                                  setState(() {
+                                    if (selectedIndex == details.pointIndex) {
+                                      selectedIndex = null;
+                                    } else {
+                                      selectedIndex = details.pointIndex;
+                                    }
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                       Expanded(
                         flex: isLargeScreen ? 2 : 3,
                         child: Container(
                           padding: const EdgeInsets.all(12.0),
                           child: selectedIndex != null
-                              ? Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Expenses: ${data[selectedIndex!].category}',
-                                      style: FontManager().getTextStyle(context,
-                                          lWeight: FontWeight.bold,
-                                          fontSize: 18,
-                                          color: AppColors.accentColor),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      '${_getMonthlyRange()}',
-                                      style: FontManager().getTextStyle(context,
-                                          lWeight: FontWeight.normal,
-                                          fontSize: 12,
-                                          color: AppColors.bg3),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      'Amount: \₹${data[selectedIndex!].value.toStringAsFixed(2)}',
-                                      style: FontManager().getTextStyle(context,
-                                          lWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                          color: AppColors.accentColor),
-                                    ),
-                                  ],
-                                )
+                              ? Center(
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Expenses: ${data[selectedIndex!].category}',
+                                        style: FontManager().getTextStyle(context,
+                                            lWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                            color: AppColors.accentColor),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        '${_getMonthlyRange()}',
+                                        style: FontManager().getTextStyle(context,
+                                            lWeight: FontWeight.normal,
+                                            fontSize: 12,
+                                            color: AppColors.bg3),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        'Amount: \₹${data[selectedIndex!].value.toStringAsFixed(2)}',
+                                        style: FontManager().getTextStyle(context,
+                                            lWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                            color: AppColors.accentColor),
+                                      ),
+                                    ],
+                                  ),
+                              )
                               : Center(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -160,49 +196,8 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                 ),
                         ),
                       ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        flex: 5,
-                        child: Container(
-                          alignment: Alignment.center,
-                          child: SfCircularChart(
-                            series: <CircularSeries>[
-                              DoughnutSeries<ChartData, String>(
-                                dataSource: data,
-                                xValueMapper: (ChartData data, _) =>
-                                    data.category,
-                                yValueMapper: (ChartData data, _) => data.value,
-                                pointColorMapper: (ChartData data, int index) =>
-                                    selectedIndex == null ||
-                                            selectedIndex == index
-                                        ? data.color:data.color,
-                                        // : Color.fromRGBO(
-                                        //     data.color.r
-                                        //         .toInt(), // Convert to int
-                                        //     data.color.g
-                                        //         .toInt(), // Convert to int
-                                        //     data.color.b
-                                        //         .toInt(), // Convert to int
-                                        //     0.0),
-                                explode: true,
-                                explodeIndex: selectedIndex,
-                                dataLabelSettings:
-                                    const DataLabelSettings(isVisible: false),
-                                enableTooltip: true,
-                                onPointTap: (ChartPointDetails details) {
-                                  setState(() {
-                                    if (selectedIndex == details.pointIndex) {
-                                      selectedIndex = null;
-                                    } else {
-                                      selectedIndex = details.pointIndex;
-                                    }
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      
+                     
                     ],
                   ),
                 ),
