@@ -12,12 +12,12 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-  // fetch(context);
+// fetch(context);
 
-RxBool sessionId=false.obs;
+RxBool sessionId = false.obs;
 
 class FetchTransaction extends StatefulWidget {
-const FetchTransaction({ Key? key }) : super(key: key);
+  const FetchTransaction({Key? key}) : super(key: key);
 
   @override
   State<FetchTransaction> createState() => _FetchTransactionState();
@@ -28,11 +28,10 @@ class _FetchTransactionState extends State<FetchTransaction> {
   void initState() {
     super.initState();
     getSess();
-    
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       // bottomNavigationBar: BottomNavigations(data: sizeRoom?3:2),
       extendBody: true,
@@ -68,83 +67,87 @@ class _FetchTransactionState extends State<FetchTransaction> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-             Container(
+            Container(
               height: MediaQuery.of(context).size.height / 3,
               width: MediaQuery.of(context).size.width / 1.2,
               // color: Colorcodes.barGraphOrange,
               child: Image.network(bankImage),
             ),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             // fetchedTrsacntionList
 
-           Obx(()=> fetchedTrsacntionList.isEmpty?Text("Data is Not Yet Fetched"):Container(
-                child: getTranSactions(context),
-           )),
+            Obx(() => fetchedTrsacntionList.isEmpty
+                ? Text("Data is Not Yet Fetched")
+                : Container(
+                    child: getTranSactions(context),
+                  )),
 
-            SizedBox(height: 20,),
-          
-            InkWell(
-                onTap: ()async {
-                  //  Otpscreen
-                  SharedPreferences prefs = await SharedPreferences.getInstance();
-                  // loginToAutoTractions(context);
-                 if(directFetch.value){
-                       String urlPath = "${url}/transactionauto/";
-                        var response=await getDataApiCall(urlPath);
-                        printData(response);
-                         if (getFlagOfResponse(response)) {
-                            trasactionsData.clear();
-                            var his = jsonDecode(response.body);
-                            fetchedTrsacntionList.clear();
-                            fetchedTrsacntionList.addAll(his['data']);
-                            // changeTrasactiondata();
-                          } else {}
-
-                 }else {
-                    
-                      if(prefs.containsKey("sessionId"))
-                      {
-                             //sessionId
-                        FetchTransactionBysessionId(context,prefs.getString("sessionId")!);
-
-                      }else{
-                        FetchTransactionFromFinvuApi(context);
-                      }
-                 }
-
-                },
-             child: Obx(()=>   sessionId.value ?getButton(context,"Fetch Trasactions BY sessionId") :  getButton(context,"Fetch Trasactions")) 
+            SizedBox(
+              height: 20,
             ),
+
+            InkWell(
+                onTap: () async {
+                  //  Otpscreen
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  // loginToAutoTractions(context);
+                  if (directFetch.value) {
+                    String urlPath = "${url}/transactionauto/";
+                    var response = await getDataApiCall(urlPath);
+                    printData(response);
+                    if (getFlagOfResponse(response)) {
+                      trasactionsData.clear();
+                      var his = jsonDecode(response.body);
+                      fetchedTrsacntionList.clear();
+                      fetchedTrsacntionList.addAll(his['data']);
+                      // changeTrasactiondata();
+                    } else {}
+                  } else {
+                    if (prefs.containsKey("sessionId")) {
+                      //sessionId
+                      FetchTransactionBysessionId(
+                          context, prefs.getString("sessionId")!);
+                    } else {
+                      FetchTransactionFromFinvuApi(context);
+                    }
+                  }
+
+                 
+                },
+                child: Obx(() => sessionId.value
+                    ? getButton(context, "Fetch Trasactions BY sessionId")
+                    : getButton(context, "Fetch Trasactions"))),
           ],
         ),
       ),
     );
+  }
 
-  }  
   // fetch(context);
- Widget getTranSactions(context){
-      return Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height/5,
-        child: SingleChildScrollView(
-          child: Expanded(
-            child: Column(
-                children: fetchedTrsacntionList.map((e){
-                  print(e);
-                    return Container(
-                         child: Text(e.toString()),
-                    );
-                }).toList(),
-            ),
+  Widget getTranSactions(context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height / 5,
+      child: SingleChildScrollView(
+        child: Expanded(
+          child: Column(
+            children: fetchedTrsacntionList.map((e) {
+              print(e);
+              return Container(
+                child: Text(e.toString()),
+              );
+            }).toList(),
           ),
         ),
-      );
+      ),
+    );
   }
-  
-  void getSess() async{
-       SharedPreferences prefs = await SharedPreferences.getInstance();  
-      sessionId.value = prefs.containsKey("sessionId");
-  } 
 
-  
+  void getSess() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    sessionId.value = prefs.containsKey("sessionId");
+  }
 }
