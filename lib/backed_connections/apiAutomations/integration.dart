@@ -97,7 +97,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
       );
       return;
     }
-
+     
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {"Content-Type": "application/json"},
@@ -105,6 +105,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
         "token": "",
         "handleId": handleId,
         "custId": custId,
+        "userId":currentId.value
       }),
     );
      printData(response);
