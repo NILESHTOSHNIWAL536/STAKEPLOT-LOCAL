@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'colors.dart';
@@ -46,6 +47,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
   @override
   void initState() {
     super.initState();
+    getCategoryData();
     totalValue = data.fold(0, (sum, item) => sum + item.value);
   }
 
@@ -93,7 +95,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                     //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                       Expanded(
+                      Expanded(
                         flex: 8,
                         child: Container(
                           alignment: Alignment.center,
@@ -107,7 +109,8 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                 pointColorMapper: (ChartData data, int index) =>
                                     selectedIndex == null ||
                                             selectedIndex == index
-                                        ? data.color:data.color,                                        
+                                        ? data.color
+                                        : data.color,
                                 explode: true,
                                 explodeIndex: selectedIndex,
                                 dataLabelSettings:
@@ -133,13 +136,15 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                           padding: const EdgeInsets.all(12.0),
                           child: selectedIndex != null
                               ? Center(
-                                child: Column(
+                                  child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Text(
                                         'Expenses: ${data[selectedIndex!].category}',
-                                        style: FontManager().getTextStyle(context,
+                                        style: FontManager().getTextStyle(
+                                            context,
                                             lWeight: FontWeight.bold,
                                             fontSize: 16,
                                             color: AppColors.accentColor),
@@ -147,7 +152,8 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                       const SizedBox(height: 8),
                                       Text(
                                         '${_getMonthlyRange()}',
-                                        style: FontManager().getTextStyle(context,
+                                        style: FontManager().getTextStyle(
+                                            context,
                                             lWeight: FontWeight.normal,
                                             fontSize: 12,
                                             color: AppColors.bg3),
@@ -155,14 +161,15 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                       const SizedBox(height: 8),
                                       Text(
                                         'Amount: \₹${data[selectedIndex!].value.toStringAsFixed(2)}',
-                                        style: FontManager().getTextStyle(context,
+                                        style: FontManager().getTextStyle(
+                                            context,
                                             lWeight: FontWeight.bold,
                                             fontSize: 14,
                                             color: AppColors.accentColor),
                                       ),
                                     ],
                                   ),
-                              )
+                                )
                               : Center(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -196,8 +203,6 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                 ),
                         ),
                       ),
-                      
-                     
                     ],
                   ),
                 ),

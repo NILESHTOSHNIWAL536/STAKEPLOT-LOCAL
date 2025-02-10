@@ -42,10 +42,8 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final UserController userController = Get.find<UserController>();
 
-
-   final ScrollController _scrollController = ScrollController();
-    bool _newPageShown = false; // Track if the new page is already shown
-
+  final ScrollController _scrollController = ScrollController();
+  bool _newPageShown = false; // Track if the new page is already shown
 
   @override
   void initState() {
@@ -54,20 +52,18 @@ class _HomePageState extends State<HomePage> {
     getTrending();
     getPost();
     // getTransaction(context);
-    
+
     getAck();
     getBudget();
     getUserInfomations();
     getUserLend(context);
     getBudget();
-     getSummary(); 
+    getSummary();
+    getCategoryData();
     userController.fetchUserInfo();
     // getUserInfo();
     //  _scrollController.addListener(_handleScroll);
   }
-
-
-
 
   final List<Widget> _pages = [
     HomeScreen(), // The content previously in the ListView
@@ -103,11 +99,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-
-
 class HomeScreen extends StatelessWidget {
- 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -166,63 +158,72 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-  
- Widget setPinForAccountHide(context) {
-      return Container(
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-           mainAxisAlignment: MainAxisAlignment.end,
-           crossAxisAlignment: CrossAxisAlignment.center,
-           children: [
-                const SizedBox(height: 10),
-               Obx(()=> cupertinoPin.value=="0"? InkWell(
-                  onTap: (){
-                      showModalBottomSheet(context: context, 
-                                              backgroundColor: Colorcodes.appBarColor,
-                                            builder: (context) {
-                                                  return setPassword(context);
-                          },);
+
+  Widget setPinForAccountHide(context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 10),
+          Obx(() => cupertinoPin.value == "0"
+              ? InkWell(
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colorcodes.appBarColor,
+                      builder: (context) {
+                        return setPassword(context);
+                      },
+                    );
                   },
-                child: Container(
-                  color: Colorcodes.textFeild,
-                  padding: const EdgeInsets.all(8.0),
-                  child: textStyle(text: "Set pin",context: context,fontsize: 10,fontWeight: FontWeight.bold),
-                )):SizedBox.shrink()),
-                const SizedBox(height: 10),
-           ],
-        ),
-      );
+                  child: Container(
+                    color: Colorcodes.textFeild,
+                    padding: const EdgeInsets.all(8.0),
+                    child: textStyle(
+                        text: "Set pin",
+                        context: context,
+                        fontsize: 10,
+                        fontWeight: FontWeight.bold),
+                  ))
+              : SizedBox.shrink()),
+          const SizedBox(height: 10),
+        ],
+      ),
+    );
   }
 
+  Widget setPassword(context) {
+    TextEditingController controller = TextEditingController();
 
-Widget setPassword(context){
-        TextEditingController controller=TextEditingController();
-
-       return Container(
-          width: MediaQuery.of(context).size.width,
-          height:  MediaQuery.of(context).size.height/1.2,
-          padding: EdgeInsets.symmetric(horizontal: 30,vertical: 10),
-          child: Column(
-               children: [
-                      TextFeildWidget(textEditingController: controller, heading: "Set Pin", keyBoard: TextInputType.visiblePassword, lableText: "Set Pin"),
-                      SizedBox(height: 10,),
-                      InkWell(
-                           onTap: (){
-                                  setPasswordApiCalled(context,controller.text);
-                           },
-                          child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 30,vertical: 10),
-                                decoration: BoxDecoration(
-                                    border: Border.all(),
-                                ),
-                               child: Text("Set Password click me")
-                            ),
-                      ),
-               ],
-          ), 
-       );
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height / 1.2,
+      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      child: Column(
+        children: [
+          TextFeildWidget(
+              textEditingController: controller,
+              heading: "Set Pin",
+              keyBoard: TextInputType.visiblePassword,
+              lableText: "Set Pin"),
+          SizedBox(
+            height: 10,
+          ),
+          InkWell(
+            onTap: () {
+              setPasswordApiCalled(context, controller.text);
+            },
+            child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                decoration: BoxDecoration(
+                  border: Border.all(),
+                ),
+                child: Text("Set Password click me")),
+          ),
+        ],
+      ),
+    );
   }
-
-
-
 }
