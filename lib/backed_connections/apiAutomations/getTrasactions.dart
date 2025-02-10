@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -153,7 +154,7 @@ Future<http.Response> getDataApiCall(urlPath) async {
   // pref.setString("accessToken",
   //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMwYWZiZmNiMTcxMDc2NWFiOGU5MCIsImlhdCI6MTczNzcwMzU3NCwiZXhwIjoxNzQyODg3NTc0fQ.zYUUmoy_xlaZwdvM8r4KDOZNADlLyxPirqDm0avEUXg");
   var accessToken = pref.getString("accessToken");
-   print(accessToken);
+ 
   final response = await http.get(
     Uri.parse(urlPath),
     headers: <String, String>{
@@ -291,8 +292,7 @@ void addTransaction(String amount, String subCategory, String categories,
     'room': {},
     'isSplit': isSplit,
   };
-  print(body);
-  print("${url}/transaction/add");
+ 
   final response = await http.post(
     Uri.parse('${url}/transaction/add'),
     headers: <String, String>{
@@ -306,6 +306,7 @@ void addTransaction(String amount, String subCategory, String categories,
     final body = json.decode(response.body);
     if (!isSplit) snackBarCalled(context, "Added Trasactions!", Colors.black);
     getAllTransaction(context);
+    getCategoryData();
     Navigator.pop(context);
   } else {
     snackBarCalled(context, "can't Add Trasactions!", Colors.red);

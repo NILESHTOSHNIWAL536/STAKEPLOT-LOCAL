@@ -200,7 +200,7 @@ class _OtpscreenState extends State<Otpscreen> {
                                       });
                                     
                                       // acceptReset.value=true;
-                                      print(opt);
+                                    
                                        verify(opt,context);
                                       //  storeData(context,widget.data, opt, widget.url);
                                   },

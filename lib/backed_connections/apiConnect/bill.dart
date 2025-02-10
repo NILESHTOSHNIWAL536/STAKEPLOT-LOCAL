@@ -14,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 void splitUserAmount(context, String name, List members,Map<String, Map<String, double>> friendShares) async
    {
     List nameList = [];
-    print(friendShares);
+   
     members.forEach((element) 
     {
       nameList.add({'member': (element['id']), 'markAsComplete': false,'isVegNonVeg':true,'priorities':{

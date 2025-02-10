@@ -81,8 +81,7 @@ class _UserDetailsState extends State<UserDetails> {
         postCount[element["_id"]] =
             element['upvotes'] < 0 ? 0 : element['upvotes'];
       });
-      print("getTrendingData");
-      print(getTrendingData);
+   
     } else {}
   }
 

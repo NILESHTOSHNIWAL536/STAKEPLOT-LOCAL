@@ -509,9 +509,7 @@ void updateRoom(context,List expenses,List user,String name,String id,admin)asyn
   );
     
     //  printData(response);
-    print(userId);
-    print(currentId.value);
-    print(friendsListDetails);
+  
       if(response.statusCode==200 || response.statusCode==201)
       {
                   var  his=jsonDecode(response.body);
@@ -545,8 +543,7 @@ void updateRoom(context,List expenses,List user,String name,String id,admin)asyn
                   
                     
                    }catch(e){
-                      print("error............in charts");
-                      print(e);
+                     
                    }
 
                 });

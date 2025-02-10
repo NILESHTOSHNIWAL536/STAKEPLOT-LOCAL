@@ -16,6 +16,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
@@ -351,6 +352,7 @@ class _ModalContentState extends State<ModalContent>
   void initState() {
     super.initState();
     getAllTransaction(context);
+    getCategoryData();
     filteredCategories = categories.keys.toList();
     _confettiController =
         ConfettiController(duration: const Duration(seconds: 2));
@@ -526,18 +528,17 @@ class _ModalContentState extends State<ModalContent>
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(
-                                  color: AppColors.accentColor
-                                      , // Default border color
-                                  
+                                  color: AppColors
+                                      .accentColor, // Default border color
                                 ),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: AppColors.accentColor
-                                       // When not focused
-                                  
-                                ),
+                                borderSide:
+                                    BorderSide(color: AppColors.accentColor
+                                        // When not focused
+
+                                        ),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -568,7 +569,7 @@ class _ModalContentState extends State<ModalContent>
                               decoration: InputDecoration(
                                 hintText: 'Categories',
                                 fillColor: AppColors.button,
-                              filled: true,
+                                filled: true,
                                 hintStyle: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.normal,
                                     fontSize: 16,
@@ -578,21 +579,20 @@ class _ModalContentState extends State<ModalContent>
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: AppColors.accentColor
-                                      , // When not focused
-                                  
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: AppColors
+                                        .accentColor, // When not focused
+                                  ),
                                 ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: AppColors
-                                      .accentColor, // Color when focused
-                                   // Slightly thicker when focused for emphasis
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: AppColors
+                                        .accentColor, // Color when focused
+                                    // Slightly thicker when focused for emphasis
+                                  ),
                                 ),
-                              ),
                               ),
                               onTap: () {
                                 if (!isCategoryFieldExpanded) {

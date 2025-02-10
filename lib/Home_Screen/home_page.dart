@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
     getUserInfomations();
     getUserLend(context);
     getBudget();
-    getSummary();
+    getSummary(); 
     getCategoryData();
     userController.fetchUserInfo();
     // getUserInfo();
@@ -143,7 +143,7 @@ class HomeScreen extends StatelessWidget {
               // Doughnut Chart
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.5,
-                child: DoughnutChartExample(),
+                child: Obx(()=> setDonectChat.value? DoughnutChartExample() : DoughnutChartExample() ),
               ),
               //const SizedBox(height: 20),
 

@@ -44,19 +44,19 @@ class NumberPickerScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Text(
+                 Obx(()=> Text(
                     accountName.value,
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.normal,
                         fontSize: 16,
                         color: AppColors.backgroundColor),
-                  ),
+                  )),
                   const SizedBox(height: 10),
-                  Text('\u{20B9}${ balance.value}',
+                 Obx(()=> Text('\u{20B9}${ balance.value}',
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.normal,
                           fontSize: 16,
-                          color: AppColors.backgroundColor)),
+                          color: AppColors.backgroundColor))),
                   //const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

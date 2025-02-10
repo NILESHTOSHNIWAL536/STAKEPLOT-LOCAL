@@ -262,13 +262,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
 
   Widget _buildOption(Widget icon, String title, String subtitle,
       {Function()? onTap, bool isLogout = false}) {
-    print('--- _buildOption Debug Info ---');
-    print('Icon: $icon');
-    print('Title: $title');
-    print('Subtitle: ${subtitle ?? "No subtitle"}');
-    print('isLogout: $isLogout');
-    print(
-        'onTap: ${onTap != null ? "Function Provided" : "No Function Provided"}');
+ 
     return ListTile(
       leading: Container(
         padding: EdgeInsets.all(16),

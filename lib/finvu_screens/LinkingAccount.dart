@@ -64,9 +64,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
   void initState() {
     super.initState();
     count.value = 0;
-     print(number.value);
-     print(consentUserId.value);
-     print(handleId.value);
+  
   }
 
   @override

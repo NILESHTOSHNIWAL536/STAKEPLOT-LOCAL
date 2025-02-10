@@ -200,7 +200,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
       fipDis.clear();
 
       fipDisOrginal.forEach((fipAccount) {
-        print(fipDis);
+      
         if (fipAccount.productName
             .toString()
             .toLowerCase()

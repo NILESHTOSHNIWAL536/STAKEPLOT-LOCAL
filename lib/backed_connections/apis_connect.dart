@@ -18,9 +18,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
-bool flag=true;
-String portNo = flag? "192.168.1.4":"localhost";
-String urlWithLocallHost = !flag? "https://stakeplot.in/": "http://${portNo}:5000/";
+bool flag = true;
+String portNo = flag ? "192.168.1.4" : "localhost";
+String urlWithLocallHost =
+    !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 
 String valid = "Please Enter All Feilds";
@@ -44,9 +45,9 @@ RxList trasactionsData = [].obs;
 RxList listOfRecentTrasactionsData = [].obs;
 RxList trasactionsHideData = [].obs;
 RxList trasactionsHistory = [].obs;
-RxBool getHistory=false.obs;
+RxBool getHistory = false.obs;
 RxList lendAmountRemainders = [].obs;
-RxBool getlendUsers=false.obs;
+RxBool getlendUsers = false.obs;
 List<double> trasactionsDataMonthlyCredit = [];
 List<double> trasactionsDataMonthlyDebit = [];
 List<double> trasactionsDataCustomCredit = [];
@@ -101,6 +102,7 @@ RxString splitID = "".obs;
 RxString openTrasactions = "Bills".obs;
 RxString targetString = "".obs;
 RxString cupertinoPin = "".obs;
+RxList categoriesList = [].obs;
 Map<String, dynamic> loginUsersList = Map<String, dynamic>();
 
 List<String> month = [
@@ -128,6 +130,7 @@ String tabAmount = "";
 RxInt listIndex = 0.obs;
 RxBool reRender = false.obs;
 RxBool reGraph = false.obs;
+RxBool setDonectChat = false.obs;
 RxList likedList = [].obs;
 RxList likedCommentList = [].obs;
 RxList likedProducts = [].obs;
@@ -146,7 +149,7 @@ RxList historyListData = [].obs;
 RxList getTrendingData = [].obs;
 RxBool hasGetNewNotifications = false.obs;
 final ScrollController scrollController = ScrollController();
-  final GlobalKey targetKey = GlobalKey(); // Key to identify the target widget
+final GlobalKey targetKey = GlobalKey(); // Key to identify the target widget
 
 class Message {
   Message(
@@ -279,29 +282,28 @@ RxList getSearchDataRx(String val, List data) {
   return findOne;
 }
 
- void clearStackLocalInfo(){
-        fetchedData.value=false;
-        listOfAccountAdded.clear();
-        FinvuFIPDetailsList.clear();
-        accountCountList.clear();
-        accountAdded.clear();
-        accountLinked.clear();
-        fipDis.clear();
-        fipDisOrginal.clear();
-        isSeletedBankAccout.clear();
-        bankImageAndid.clear();
-        listOfBankAccount.clear();
-        fetchAccountData.clear();
-        seletedAccountInfomations.clear();
-        fipDis.clear();
-        seletedAccountIds.clear();
-        fiTypes.clear();
-        getBanks.value=false;
-        addAccount.value=false;
-        getFetch.value=false;
-        addBank.value=false;
-        directFetch.value=false;
-        fetchedData.value=false;
-        count.value=0;
-
+void clearStackLocalInfo() {
+  fetchedData.value = false;
+  listOfAccountAdded.clear();
+  FinvuFIPDetailsList.clear();
+  accountCountList.clear();
+  accountAdded.clear();
+  accountLinked.clear();
+  fipDis.clear();
+  fipDisOrginal.clear();
+  isSeletedBankAccout.clear();
+  bankImageAndid.clear();
+  listOfBankAccount.clear();
+  fetchAccountData.clear();
+  seletedAccountInfomations.clear();
+  fipDis.clear();
+  seletedAccountIds.clear();
+  fiTypes.clear();
+  getBanks.value = false;
+  addAccount.value = false;
+  getFetch.value = false;
+  addBank.value = false;
+  directFetch.value = false;
+  fetchedData.value = false;
+  count.value = 0;
 }

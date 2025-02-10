@@ -123,8 +123,7 @@ void addBudget(BuildContext context, String name, String amount,
     'categoryBudgets': expenseCategory,
     'budgetPeriod': budgetPeriod.toString(),
   };
-  print("body");
-  print(body);
+ 
   final response = await http.post(
     Uri.parse('${url}/budget/'),
     headers: <String, String>{
@@ -555,8 +554,6 @@ void getUserLend(context) async {
   if (getFlagOfResponse(responce)) {
     var his = jsonDecode(responce.body);
     var userLend = his['data'];
-    print("userLend");
-    print(userLend);
     lendAmountRemainders.clear();
     lendAmountRemainders.addAll(userLend);
     getlendUsers.value = !getlendUsers.value;
@@ -589,7 +586,7 @@ void getTopFiveCater() async {
     if (getFlagOfResponse(responce)) {
       var his = jsonDecode(responce.body);
       categoriesSeleted.clear();
-      print(his);
+    
       categoriesSeleted.addAll(his['data']);
       getCategories.value = !getCategories.value;
     }

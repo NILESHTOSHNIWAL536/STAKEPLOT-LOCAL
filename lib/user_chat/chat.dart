@@ -754,7 +754,7 @@ class _ChatState extends State<Chat> {
                         icon: Icon(Icons.emoji_emotions),
                         onPressed: () {
                           // Implement emoji picker or logic here
-                          print("Emoji button pressed");
+                         
                         },
                       ),
                       fillColor: AppColors.button,
@@ -889,12 +889,7 @@ class _ChatState extends State<Chat> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: options.map((op) {
-                  // var obj = jsonDecode(op);
-                  print(op);
-                  print(op['options'] ?? "");
-                  // List ll = obj['votes'] ?? [];
-                  // String cal=((ll.length/len)* 100).toStringAsFixed(2);
-                  // len += ll.length ;
+                 
                   s++;
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4.0),
