@@ -216,7 +216,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                             Navigator.of(context).pushNamedAndRemoveUntil(
                                 '/', (Route<dynamic> route) => false);
                             Navigator.pushReplacementNamed(context, '/');
-
+                        
                             clearGetX();
                           },
                           child: Container(

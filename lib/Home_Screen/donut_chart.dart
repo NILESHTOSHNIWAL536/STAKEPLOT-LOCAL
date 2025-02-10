@@ -107,8 +107,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                 pointColorMapper: (ChartData data, int index) =>
                                     selectedIndex == null ||
                                             selectedIndex == index
-                                        ? data.color:data.color.withValues(alpha: 0.1),
-                                        
+                                        ? data.color:data.color,                                        
                                 explode: true,
                                 explodeIndex: selectedIndex,
                                 dataLabelSettings:

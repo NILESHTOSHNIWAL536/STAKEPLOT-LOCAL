@@ -677,4 +677,33 @@ class _AccessState extends State<Access> {
     }
     debugPrint('approveConsentRequest');
   }
+
+
+   Widget getcheckBox2(String fipId)
+ {
+      return Padding(
+        padding: const EdgeInsets.only(left: 10.0),
+        child: Container(
+          width: 50,
+          height: 50,
+          child: Expanded(
+            flex: 1,
+            child: Checkbox(value: seletedAccountIds.contains(fipId), onChanged: (value)
+                   {
+                          
+                           if(seletedAccountIds.contains(fipId))
+                           {
+                               seletedAccountIds.remove(fipId); 
+                           }else{
+                               seletedAccountIds.add(fipId); 
+                           }
+                           print(seletedAccountIds);
+                           addAccount.value= !addAccount.value;
+                   }),
+          ),
+        ),
+      );
+ }
+
+
 }

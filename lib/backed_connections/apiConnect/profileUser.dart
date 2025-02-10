@@ -199,7 +199,8 @@ void  getuserPost(id)async
                     coin=data['coins'].toString();
                     expenses.value=data['expense'].toString();
                     isBankAccountLink.value=data['isBankAccountLinked'] ?? false;
-           
+                    cupertinoPin.value=data['cupertino_pin'] ;//?? '0';
+                   
                     // savedList.clear();
                     // savedList.addAll(data['saved'] );
                     

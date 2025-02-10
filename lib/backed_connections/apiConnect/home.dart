@@ -76,7 +76,7 @@ void addTargets(context, String aim, String amount, String targetDate) async {
 void setPasswordApiCalled(context, String password) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
-
+ 
   final response = await http.post(
     Uri.parse('${url}/user/cupertino/'),
     headers: <String, String>{
@@ -87,18 +87,20 @@ void setPasswordApiCalled(context, String password) async {
       'pin': password.toString(),
     }),
   );
-  printData(response, context);
+ 
+   printData(response, context);
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     snackBarCalled(context, " Set Pin success!", Colors.black);
-    Navigator.pop(context);
   } else {
     snackBarCalled(context, "can't Set pin!", Colors.red);
   }
+    Navigator.pop(context);
 }
 
 void PinPasswordVerify(
     NumberPickerController controller, password, context) async {
+      print(password);
   var response = await getDataApiCall("${url}/user/cupertino/${password}");
   printData(response, context);
   if (response.statusCode == 200 || response.statusCode == 200) {

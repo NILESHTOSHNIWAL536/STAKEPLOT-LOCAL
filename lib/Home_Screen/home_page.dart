@@ -17,6 +17,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/controller.dart/userController.dart';
@@ -24,6 +25,8 @@ import 'package:flutter_application_code_stakeplot/customNoti.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budget.dart';
+import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:get/get.dart';
@@ -57,6 +60,7 @@ class _HomePageState extends State<HomePage> {
     getUserInfomations();
     getUserLend(context);
     getBudget();
+     getSummary(); 
     userController.fetchUserInfo();
     // getUserInfo();
     //  _scrollController.addListener(_handleScroll);
@@ -117,11 +121,11 @@ class HomeScreen extends StatelessWidget {
                 child: Text(""),
               ),
 
-              const SizedBox(height: 10),
+              setPinForAccountHide(context),
 
               // Bank Account Container
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.25,
+                height: MediaQuery.of(context).size.height * 0.24,
                 child: NumberPickerScreen(),
               ),
               //const SizedBox(height: 10),
@@ -162,4 +166,63 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+  
+ Widget setPinForAccountHide(context) {
+      return Container(
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+           mainAxisAlignment: MainAxisAlignment.end,
+           crossAxisAlignment: CrossAxisAlignment.center,
+           children: [
+                const SizedBox(height: 10),
+               Obx(()=> cupertinoPin.value=="0"? InkWell(
+                  onTap: (){
+                      showModalBottomSheet(context: context, 
+                                              backgroundColor: Colorcodes.appBarColor,
+                                            builder: (context) {
+                                                  return setPassword(context);
+                          },);
+                  },
+                child: Container(
+                  color: Colorcodes.textFeild,
+                  padding: const EdgeInsets.all(8.0),
+                  child: textStyle(text: "Set pin",context: context,fontsize: 10,fontWeight: FontWeight.bold),
+                )):SizedBox.shrink()),
+                const SizedBox(height: 10),
+           ],
+        ),
+      );
+  }
+
+
+Widget setPassword(context){
+        TextEditingController controller=TextEditingController();
+
+       return Container(
+          width: MediaQuery.of(context).size.width,
+          height:  MediaQuery.of(context).size.height/1.2,
+          padding: EdgeInsets.symmetric(horizontal: 30,vertical: 10),
+          child: Column(
+               children: [
+                      TextFeildWidget(textEditingController: controller, heading: "Set Pin", keyBoard: TextInputType.visiblePassword, lableText: "Set Pin"),
+                      SizedBox(height: 10,),
+                      InkWell(
+                           onTap: (){
+                                  setPasswordApiCalled(context,controller.text);
+                           },
+                          child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 30,vertical: 10),
+                                decoration: BoxDecoration(
+                                    border: Border.all(),
+                                ),
+                               child: Text("Set Password click me")
+                            ),
+                      ),
+               ],
+          ), 
+       );
+  }
+
+
+
 }

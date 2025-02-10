@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:http/http.dart' as http;
@@ -15,24 +18,6 @@ class NumberPickerController extends GetxController {
 class NumberPickerScreen extends StatelessWidget {
   final NumberPickerController controller = Get.put(NumberPickerController());
 
-  Future<Map<String, dynamic>> fetchBankAccountData() async {
-    try {
-      final response = await http
-          .get(Uri.parse('https://your-api-url.com/api/bank_account'));
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        return {
-          'accountName': data['accountName'],
-          'availableBalance': data['availableBalance']
-        };
-      } else {
-        throw Exception('Failed to load data');
-      }
-    } catch (e) {
-      return {'accountName': 'Bank name', 'availableBalance': 0.0};
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,18 +32,7 @@ class NumberPickerScreen extends StatelessWidget {
             color: AppColors.accentColor,
             borderRadius: BorderRadius.circular(16),
           ),
-          child: FutureBuilder<Map<String, dynamic>>(
-            future: fetchBankAccountData(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else if (!snapshot.hasData) {
-                return const Center(child: Text('No data available'));
-              }
-              final data = snapshot.data!;
-              return Column(
+          child:  Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 //mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -71,14 +45,14 @@ class NumberPickerScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    data['accountName'],
+                    accountName.value,
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.normal,
                         fontSize: 16,
                         color: AppColors.backgroundColor),
                   ),
                   const SizedBox(height: 10),
-                  Text('Available Balance',
+                  Text('\u{20B9}${ balance.value}',
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.normal,
                           fontSize: 16,
@@ -87,13 +61,13 @@ class NumberPickerScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '\u{20B9}${data['availableBalance'].toStringAsFixed(2)}',
+                     Obx(()=> Text(
+                        '\u{20B9}${ hideBackAccountPassword.value? "1200.0":"******"}',
                         style: FontManager().getTextStyle(context,
                             lWeight: FontWeight.normal,
                             fontSize: 16,
                             color: AppColors.backgroundColor),
-                      ),
+                      )),
                       Row(
                         children: [
                           Column(
@@ -114,22 +88,18 @@ class NumberPickerScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Obx(
-                    () => Text(
-                      "Selected: ${controller.firstDigit.value}${controller.secondDigit.value}",
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.normal,
-                          fontSize: 14,
-                          color: AppColors.backgroundColor),
-                    ),
-                  ),
+                  // Obx(
+                  //   () => Text(
+                  //     "Selected: ${controller.firstDigit.value}${controller.secondDigit.value}",
+                  //     style: FontManager().getTextStyle(context,
+                  //         lWeight: FontWeight.normal,
+                  //         fontSize: 14,
+                  //         color: AppColors.backgroundColor),
+                  //   ),
+                  // ),
                 ],
-              );
-            },
-          ),
-        ),
-      ),
-    );
+            
+         ))));
   }
 
   Widget _buildPicker(RxInt controllerValue, BuildContext context) {
@@ -139,7 +109,9 @@ class NumberPickerScreen extends StatelessWidget {
       child: CupertinoPicker(
         itemExtent: 30,
         onSelectedItemChanged: (index) {
-          controllerValue.value = index;
+            controllerValue.value=index;
+          //  controller.secondDigit.value =index; // Update using GetX
+           PinPasswordVerify(controller,controller.firstDigit.value.toString()+""+controller.secondDigit.value.toString(),context);
         },
         children: List<Widget>.generate(
           10,

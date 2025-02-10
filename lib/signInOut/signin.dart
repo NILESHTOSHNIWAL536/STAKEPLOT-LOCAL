@@ -30,6 +30,12 @@ class _SigninState extends State<Signin> {
   TextEditingController emailController= TextEditingController(text: "roshanchenna1@gmail.com");
   TextEditingController passwordController= TextEditingController(text: "nilesh123");
 
+  
+  @override
+  void initState() {
+    check(context, "loginuser");
+  }
+
   Widget InputDate(lableText, keyBoard, Textcontroller) {
     return Center(
       child: Container(
