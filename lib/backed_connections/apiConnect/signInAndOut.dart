@@ -29,10 +29,12 @@ void expire(responce, BuildContext context) {
 
 void check(context, String flag) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
-
-  if (!_pref.containsKey("accessToken")) {
+ 
+  if (!_pref.containsKey("accessToken")) 
+  {
     if (flag != "loginuser") Navigator.pushReplacementNamed(context, '/');
   }
+
 }
 
 Future<void> loginUser(TextEditingController emailController,
@@ -398,6 +400,7 @@ void clearGetX() {
   isBankAccountLink.value = true;
   trasactionsData.clear();
   isBankAccountLink.value = false;
+  cupertinoPin.value='0';
 }
 
 void oneSignalApis(context) async {

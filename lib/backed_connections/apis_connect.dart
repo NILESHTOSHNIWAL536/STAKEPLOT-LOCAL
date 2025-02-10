@@ -19,7 +19,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
 bool flag=true;
-String portNo = flag? "192.168.1.11":"localhost";
+String portNo = !flag? "192.168.1.11":"localhost";
 String urlWithLocallHost = !flag? "https://stakeplot.in/": "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 
@@ -100,6 +100,7 @@ String userId = "";
 RxString splitID = "".obs;
 RxString openTrasactions = "Bills".obs;
 RxString targetString = "".obs;
+RxString cupertinoPin = "".obs;
 Map<String, dynamic> loginUsersList = Map<String, dynamic>();
 
 List<String> month = [

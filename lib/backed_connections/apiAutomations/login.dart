@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:finvu_flutter_sdk_core/finvu_consent_info.dart';
 import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/otpScreen.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
@@ -25,6 +26,7 @@ import 'package:shared_preferences/shared_preferences.dart';
   late List<FinvuLinkedAccountDetailsInfo> finvuLinkedAccountDetailsInfo;
   List<String> fiTypes=[];
  
+
 
   // var baseUrl="https://dhanaprayoga.fiu.finfactor.in/finsense/API/V2";
 
