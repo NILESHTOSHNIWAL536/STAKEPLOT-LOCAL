@@ -28,6 +28,7 @@ class _FetchTransactionState extends State<FetchTransaction> {
   void initState() {
     super.initState();
     getSess();
+    
   }
 
   @override
@@ -101,15 +102,14 @@ class _FetchTransactionState extends State<FetchTransaction> {
 
                  }else {
                     
-                      // if(prefs.containsKey("sessionId"))
-                      // {
-                            
-                            //  FetchTransactionBysessionId(context,prefs.getString("sessionId")!);
+                      if(prefs.containsKey("sessionId"))
+                      {
+                             //sessionId
+                        FetchTransactionBysessionId(context,prefs.getString("sessionId")!);
 
-                      // }else{
-                         FetchTransactionFromFinvuApi(context);
-
-                      // }
+                      }else{
+                        FetchTransactionFromFinvuApi(context);
+                      }
                  }
 
                 },
@@ -143,6 +143,8 @@ class _FetchTransactionState extends State<FetchTransaction> {
   
   void getSess() async{
        SharedPreferences prefs = await SharedPreferences.getInstance();  
-       prefs.setString("sessionId", "99ec4687-3542-4bf6-b8f1-628c170a9290");   
+      sessionId.value = prefs.containsKey("sessionId");
   } 
+
+  
 }

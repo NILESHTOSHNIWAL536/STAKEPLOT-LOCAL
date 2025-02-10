@@ -348,32 +348,40 @@ class _TransactionHistoryState extends State<TransactionHistory> {
   void initState() {
     super.initState();
     getAllTransaction(context);
+    
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    
+    return SingleChildScrollView(
+      controller: scrollController,
+      child: Container(
+         key: targetKey,
+        child: Column(
           children: [
-            Text(
-              'Transaction History',
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.bold,
-                  fontSize: 18,
-                  color: AppColors.accentColor),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Transaction History',
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: AppColors.accentColor),
+                ),
+              ],
             ),
+            const SizedBox(height: 20),
+            getHistory.value ? getlist() : getlist(),
           ],
         ),
-        const SizedBox(height: 20),
-        getHistory.value ? getlist() : getlist(),
-      ],
+      ),
     );
   }
 
   Widget getlist() {
-    return ListView.builder(
+    return  ListView.builder(
       itemCount: trasactionsHistory.length, // Ensure correct item count
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -382,7 +390,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
         var transactionList = transaction['transactions'];
         final date = transaction['date'];
         final total = transaction['total'];
-
+    
         return Column(
           children: [
             getTransactionListUi(transaction, date, total, transactionList),
@@ -444,11 +452,11 @@ class _TransactionHistoryState extends State<TransactionHistory> {
   Widget getTransactionListUi(
       transactions, date, total, List listTransactions) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 7.0, vertical: 2),
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.symmetric(vertical: 3),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -457,11 +465,9 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                   formatDate(date.toString()),
                   style: FontManager().getTextStyle(
                     context,
-                    lWeight:
-                        FontWeight.w600, // Correct weight enum for semi-bold
+                    lWeight:FontWeight.w600, // Correct weight enum for semi-bold
                     fontSize: 16,
                     lineHeight: 2.14,
-
                     color: AppColors.accentColor, // Style for category
                   ),
                 ),
@@ -481,9 +487,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
             ),
           ),
           Divider(
-              // thickness: 1,
-              // indent: 10,
-              // endIndent: 10,
+              thickness: 1,
               ),
         ],
       ),

@@ -445,6 +445,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_application_code_stakeplot/Constants/customButton.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import './colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
@@ -628,7 +629,7 @@ class _FinancePageState extends State<FinancePage> {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       body: Padding(
-        padding: EdgeInsets.all(screenWidth * 0.04), // Responsive padding
+         padding: EdgeInsets.all(screenWidth * 0.04), // Responsive padding
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -664,7 +665,8 @@ class _FinancePageState extends State<FinancePage> {
                 ),
                 CustomButton(
                   onTap: () {
-                    //TransactionHistory();
+                    
+                     scrollToTarget(context);
                   },
                   text: 'History',
                   fontSize: fontSizeFactor * 2.8,
@@ -789,6 +791,12 @@ class _FinancePageState extends State<FinancePage> {
       ),
     );
   }
+
+
+  void scrollToTarget(contexted) {
+     
+  
+    }  
 }
 
 class LineChartWidget extends StatefulWidget {

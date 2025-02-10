@@ -668,6 +668,8 @@ class _AccessState extends State<Access> {
         ),
       );
     } catch (e) {   
+      print("Error while approving ConsentRequest");
+      print(e);
       snackBarCalled(context, "Error while approving ConsentRequest");
       print("d.consentIntentId error");
     }

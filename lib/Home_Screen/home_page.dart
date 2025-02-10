@@ -39,6 +39,11 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final UserController userController = Get.find<UserController>();
 
+
+   final ScrollController _scrollController = ScrollController();
+    bool _newPageShown = false; // Track if the new page is already shown
+
+
   @override
   void initState() {
     check(context, "homeScreen");
@@ -53,7 +58,11 @@ class _HomePageState extends State<HomePage> {
     getBudget();
     userController.fetchUserInfo();
     // getUserInfo();
+    //  _scrollController.addListener(_handleScroll);
   }
+
+
+
 
   final List<Widget> _pages = [
     HomeScreen(), // The content previously in the ListView
@@ -89,7 +98,11 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+
+
 class HomeScreen extends StatelessWidget {
+ 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,7 +134,7 @@ class HomeScreen extends StatelessWidget {
 
               // Manual Transaction Container
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.15,
+                height: MediaQuery.of(context).size.height * 0.16,
                 child: Manualtransaction(),
               ),
               //const SizedBox(height: 20),

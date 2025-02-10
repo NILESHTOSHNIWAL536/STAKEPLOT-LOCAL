@@ -5,6 +5,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -18,7 +20,7 @@ import 'package:path/path.dart' as p;
 
 bool flag=true;
 String portNo = flag? "192.168.1.11":"localhost";
-String urlWithLocallHost = !flag? "https://stakeplot.in/": "http://${portNo}:5000/";
+String urlWithLocallHost = flag? "https://stakeplot.in/": "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 
 String valid = "Please Enter All Feilds";
@@ -142,6 +144,8 @@ RxList debtsList = [].obs;
 RxList historyListData = [].obs;
 RxList getTrendingData = [].obs;
 RxBool hasGetNewNotifications = false.obs;
+final ScrollController scrollController = ScrollController();
+  final GlobalKey targetKey = GlobalKey(); // Key to identify the target widget
 
 class Message {
   Message(
@@ -272,4 +276,31 @@ RxList getSearchDataRx(String val, List data) {
     }
   });
   return findOne;
+}
+
+ void clearStackLocalInfo(){
+        fetchedData.value=false;
+        listOfAccountAdded.clear();
+        FinvuFIPDetailsList.clear();
+        accountCountList.clear();
+        accountAdded.clear();
+        accountLinked.clear();
+        fipDis.clear();
+        fipDisOrginal.clear();
+        isSeletedBankAccout.clear();
+        bankImageAndid.clear();
+        listOfBankAccount.clear();
+        fetchAccountData.clear();
+        seletedAccountInfomations.clear();
+        fipDis.clear();
+        seletedAccountIds.clear();
+        fiTypes.clear();
+        getBanks.value=false;
+        addAccount.value=false;
+        getFetch.value=false;
+        addBank.value=false;
+        directFetch.value=false;
+        fetchedData.value=false;
+        count.value=0;
+
 }
