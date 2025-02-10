@@ -14,11 +14,13 @@ void getSummary() async
     
     var res=await getDataApiCall("${url}/transactionauto/user-details");
          print("data transactionauto :");
-    printData(res);
-    print(url);
+    
     if(getFlagOfResponse(res)){
          var data=jsonDecode(res.body);
+         data=data['data'];
+         print(data['Bank']['fipName']);
+         print(data['summaries'][0]['data']['currentBalance']);
          accountName.value=data['Bank']['fipName'];
-         balance.value=data['summaries']['data']['currentBalance'];
+         balance.value=data['summaries'][0]['data']['currentBalance'].toString();
     }
 }

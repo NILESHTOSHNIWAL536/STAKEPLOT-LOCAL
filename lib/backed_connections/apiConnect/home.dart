@@ -100,7 +100,7 @@ void setPasswordApiCalled(context, String password) async {
 
 void PinPasswordVerify(
     NumberPickerController controller, password, context) async {
-      print(password);
+    
   var response = await getDataApiCall("${url}/user/cupertino/${password}");
   printData(response, context);
   if (response.statusCode == 200 || response.statusCode == 200) {

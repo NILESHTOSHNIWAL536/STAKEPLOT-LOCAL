@@ -121,7 +121,7 @@ class _BudgetDisplayState extends State<BudgetDisplay> {
   Widget containerCardBudget(data) {
     return GestureDetector(
       onTap: () {
-        print(data);
+        
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => MyBudgetScreen(data: data)),

@@ -39,7 +39,7 @@ final FocusNode _searchFocusNode = FocusNode(); // FocusNode for search field
     super.initState();
     getTopFiveCater();
 
-    print(BudgetCategories.categories);
+  
     filteredCategories.assignAll(BudgetCategories.categories);
 
     // Listen for search input changes
@@ -262,7 +262,7 @@ final FocusNode _searchFocusNode = FocusNode(); // FocusNode for search field
 
       push(categoryList);
     } catch (e) {
-      print(e);
+    
     }
   }
 

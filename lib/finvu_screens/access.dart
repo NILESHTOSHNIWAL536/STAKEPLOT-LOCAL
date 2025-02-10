@@ -41,13 +41,13 @@ class _AccessState extends State<Access> {
   void getInfomationsAboutUser() async {
     try {
       fetchAccountData = await finvuManager.fetchLinkedAccounts();
-      print("qwerty");
+    
       finvuConsentRequestDetailInfo =
           await finvuManager.getConsentRequestDetails(handleId.value);
       flag.value = true;
     } catch (e) {
-      print(handleId.value);
-      print(e);
+      // print(handleId.value);
+      // print(e);
     }
   }
 

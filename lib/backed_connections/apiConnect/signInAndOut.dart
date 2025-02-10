@@ -4,6 +4,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -401,6 +402,8 @@ void clearGetX() {
   trasactionsData.clear();
   isBankAccountLink.value = false;
   cupertinoPin.value='0';
+  balance.value="";
+  accountName.value="";
 }
 
 void oneSignalApis(context) async {

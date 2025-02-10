@@ -51,12 +51,9 @@ class _VegNonVegCalculatorState extends State {
       double totalVeg = double.tryParse(vegController.text) ?? 0.0;
       double totalNonVeg = double.tryParse(nonVegController.text) ?? 0.0;
       double totalAlcohol = double.tryParse(alcoholController.text) ?? 0.0;
-      print(
-          'Total Veg: $totalVeg, Total Non-Veg: $totalNonVeg, Total Alcohol: $totalAlcohol');
-
+    
       friendShares = {};
-      print(
-          'kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk');
+    
 
       // Initialize the friendShares for each friend
       for (var friend in addedMembers) {
@@ -78,7 +75,7 @@ class _VegNonVegCalculatorState extends State {
           List choices = selectedOptions[friendId] ?? [];
 
           // Debugging: Check the selected options for each friend
-          print('Friend ID: $friendId, Choices: $choices');
+          // print('Friend ID: $friendId, Choices: $choices');
 
           // Veg share calculation
           if (choices.contains('Veg')) {
@@ -86,7 +83,7 @@ class _VegNonVegCalculatorState extends State {
                 .where(
                     (f) => selectedOptions[f['id']]?.contains('Veg') ?? false)
                 .length;
-            print('Veg Friends: $vegFriends');
+            // print('Veg Friends: $vegFriends');
             friendShares[friendId]!['Veg'] =
                 vegFriends > 0 ? totalVeg / vegFriends : 0.0;
           }
@@ -96,7 +93,7 @@ class _VegNonVegCalculatorState extends State {
                 .where((f) =>
                     selectedOptions[f['id']]?.contains('Non veg') ?? false)
                 .length;
-            print('Non-Veg Friends: $nonVegFriends');
+            // print('Non-Veg Friends: $nonVegFriends');
             friendShares[friendId]!['Non veg'] =
                 nonVegFriends > 0 ? totalNonVeg / nonVegFriends : 0.0;
           }
@@ -106,7 +103,7 @@ class _VegNonVegCalculatorState extends State {
                 .where((f) =>
                     selectedOptions[f['id']]?.contains('Alcohol') ?? false)
                 .length;
-            print('Alcohol Friends: $alcoholFriends');
+            // print('Alcohol Friends: $alcoholFriends');
             friendShares[friendId]!['Alcohol'] =
                 alcoholFriends > 0 ? totalAlcohol / alcoholFriends : 0.0;
           }
@@ -119,7 +116,7 @@ class _VegNonVegCalculatorState extends State {
       }
 
       // Debugging: Print the final friendShares
-      print('Final Friend Shares: $friendShares');
+      // print('Final Friend Shares: $friendShares');
     });
   }
 

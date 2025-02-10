@@ -252,8 +252,7 @@ class _PostCardState extends State<PostCard> {
   }
 
   Widget imageget(imageUrl) {
-    print("imageUrl");
-    print(imageUrl);
+   
     return FutureBuilder<ui.Image>(
       future: _loadImage(imageUrl),
       builder: (context, snapshot) {

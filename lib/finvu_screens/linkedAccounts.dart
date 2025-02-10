@@ -122,8 +122,7 @@ void ConsentStatus(context, accessToken, ConsentHandleId, custId) async {
       },
     );
     // printData(response, context);
-    print(response.body);
-    print(response.statusCode);
+  
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
       if (body['body']['consentStatus'] == "ACCEPTED") {
