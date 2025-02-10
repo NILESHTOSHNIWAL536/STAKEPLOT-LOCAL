@@ -110,7 +110,10 @@ class _FetchTransactionState extends State<FetchTransaction> {
                       }else{
                         FetchTransactionFromFinvuApi(context);
                       }
+
                  }
+
+               
 
                 },
              child: Obx(()=>   sessionId.value ?getButton(context,"Fetch Trasactions BY sessionId") :  getButton(context,"Fetch Trasactions")) 

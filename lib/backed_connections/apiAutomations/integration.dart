@@ -7,6 +7,7 @@ import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/ApproveConsentRequest.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchData.dart';
@@ -105,7 +106,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
         "token": "",
         "handleId": handleId,
         "custId": custId,
-        "userId":currentId.value
+        "userId":"675c0afbfcb1710765ab8e90"
       }),
     );
      printData(response);
@@ -138,6 +139,9 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
       SnackBar(content: Text("Bank server issue detected. We'll notify you once your data is retrieved")),
     );
   }
+    clearStack(context);
+    clearStackLocalInfo();
+    Navigator.pushNamed(context, "/");
 }
 
 Future<void> FetchTransactionBysessionId(BuildContext context,String sessionId) async {
