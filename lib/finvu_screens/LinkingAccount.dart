@@ -64,7 +64,16 @@ class _LinkingAccountState extends State<LinkingAccount> {
   void initState() {
     super.initState();
     count.value = 0;
+    getData();
+    getFetch.value = false;
   
+  }
+
+   void getData() async {
+    fipDis = await finvuManager.fipsAllFIPOptions();
+    fipDisOrginal.clear();
+    fipDisOrginal.addAll(fipDis);
+    getBanks.value = !getBanks.value;
   }
 
   @override
@@ -109,25 +118,25 @@ class _LinkingAccountState extends State<LinkingAccount> {
                     );
                   },
                   child: getButton(context, "Authorise")),
-              listofLinkedAccount.isNotEmpty
-                  ? Column(
-                      children: [
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        InkWell(
-                            onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                builder: (context) {
-                                  return fetchDataOfLinkedAccount();
-                                },
-                              );
-                            },
-                            child: getButton(context, "Fetch Now")),
-                      ],
-                    )
-                  : SizedBox.shrink(),
+              // listofLinkedAccount.isNotEmpty
+              //     ? Column(
+              //         children: [
+              //           const SizedBox(
+              //             height: 5,
+              //           ),
+              //           InkWell(
+              //               onTap: () {
+              //                 showModalBottomSheet(
+              //                   context: context,
+              //                   builder: (context) {
+              //                     return fetchDataOfLinkedAccount();
+              //                   },
+              //                 );
+              //               },
+              //               child: getButton(context, "Fetch Now")),
+              //         ],
+              //       )
+              //     : SizedBox.shrink(),
             ],
           ),
         ),
@@ -138,10 +147,8 @@ class _LinkingAccountState extends State<LinkingAccount> {
   Widget accountLinkedUi() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: !accountLinked.isEmpty
-            ? MediaQuery.of(context).size.height / 3
-            : MediaQuery.of(context).size.height / 3,
-        child: !accountLinked.isEmpty
+        height:  MediaQuery.of(context).size.height / 3,
+        child: seletedAccountIds.length==0
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -186,29 +193,13 @@ class _LinkingAccountState extends State<LinkingAccount> {
                   const SizedBox(
                     height: 20,
                   ),
-                  InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                         directFetch.value=false;
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Access(),
-                          ),
-                        );
-
-                      },
-                      child: getButton(context, "Skip")),
-                  const SizedBox(
-                    height: 20,
-                  ),
                 ],
               )
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text("${accountLinked.length} Banks Linked",
+                  Text("${seletedAccountIds.length} Banks Account are Shared...",
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.bold,
                           fontSize: 14,
@@ -217,8 +208,9 @@ class _LinkingAccountState extends State<LinkingAccount> {
                     height: 20,
                   ),
                   InkWell(
-                      onTap: () {
+                      onTap: ()async {
                          directFetch.value=false;
+                        await  getAccountShared();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -230,6 +222,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                   const SizedBox(
                     height: 20,
                   ),
+                  textStyle("We will fetch this account transactions..",8),
                 ],
               ));
   }
@@ -237,10 +230,10 @@ class _LinkingAccountState extends State<LinkingAccount> {
   Widget fetchDataOfLinkedAccount() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: accountLinked.isEmpty
+        height: seletedAccountIds.length==0
             ? MediaQuery.of(context).size.height / 3.5
             : MediaQuery.of(context).size.height / 3,
-        child: accountLinked.isEmpty
+        child: seletedAccountIds.length==0
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -306,7 +299,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text("${accountLinked.length} Banks Linked..",
+                  Text("${seletedAccountIds.length} Banks Linked..",
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.bold,
                           fontSize: 14,
@@ -384,7 +377,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
       //padding: const EdgeInsets.fromLTRB(14, 5, 16, 5),
       //here we can change height
       width: MediaQuery.of(context).size.width / 1.1,
-      height: listofLinkedAccount.isNotEmpty ? height / 1.6 : height / 1.5,
+      height: height / 1.5,
       child: SingleChildScrollView(
         child: Expanded(
           child: Column(
@@ -621,6 +614,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
          data.linkedAccounts.forEach((finvu) {
            listofLinkedAccount.add(finvu.accountReferenceNumber.toString());
          });
+        //  listOfAccountAdded.containsKey(bankData.fipId)
          listOfAccountAdded.remove(fid);
          listofLinkedAccount.refresh();
        
@@ -678,7 +672,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
   Widget checkBoxForAccountLink(bankData, fipDetails, id) {
     return Obx(() => listofLinkedAccount.contains(id)
-        ? SizedBox.shrink()
+        ? Obx(()=>  addAccount.value? getcheckBox(id) :getcheckBox(id))
         : Checkbox(
             value: accountAdded.contains(bankData.accountReferenceNumber),
             onChanged: (b) {
@@ -690,13 +684,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
               borderRadius: BorderRadius.circular(4), // Apply border radius
             ),
           ));
-    // return  Obx(() => !listofLinkedAccount.contains(id)? Checkbox(
-    //               value: accountAdded.contains(bankData.accountReferenceNumber),
-    //               onChanged: (b) {
-    //                 addAccountToMap(fipDetails.fipId,
-    //                     bankData.accountReferenceNumber, bankData);
-    //            }):Text("Linked.. ")
-    //       );
+
   }
 
   Widget textStyle(text,
@@ -785,7 +773,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                       AppColors.bg1, FontWeight.bold)),
             ],
           ),
-          !flag
+        Obx(()=> ( !listOfAccountAdded.containsKey(bankData.fipId) || !flag)
               ? SizedBox.shrink()
               : InkWell(
                   onTap: () {
@@ -804,7 +792,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                     ),
                   )
                   // ),
-                  ),
+                  )),
         ],
       ),
     );
@@ -841,4 +829,54 @@ class _LinkingAccountState extends State<LinkingAccount> {
     listOfAccountAdded.refresh();
     accountAdded.refresh();
   }
+
+
+   Widget getcheckBox(String fipId)
+ {
+      return Padding(
+        padding: const EdgeInsets.only(left: 10.0),
+        child: Container(
+          width: 50,
+          height: 50,
+          
+          child: Expanded(
+            flex: 1,
+            child: Checkbox(value: seletedAccountIds.contains(fipId), 
+                    // checkColor: AppColors.primaryColor,
+                    activeColor: AppColors.primaryColor,
+                    shape: RoundedRectangleBorder(
+                           borderRadius: BorderRadius.circular(4), // Apply border radius
+                      ),
+                    onChanged: (value)
+                   {
+                          
+                           if(seletedAccountIds.contains(fipId))
+                           {
+                               seletedAccountIds.remove(fipId); 
+                           }else{
+                               seletedAccountIds.add(fipId); 
+                           }
+                           print(seletedAccountIds);
+                           addAccount.value= !addAccount.value;
+                   }),
+          ),
+        ),
+      );
+ }
+
+
+
+  Future<void> getAccountShared() async
+  {
+       finvuConsentRequestDetailInfo = await finvuManager.getConsentRequestDetails(handleId.value);
+       fetchAccountData.forEach((FinvuLinkedAccountDetailsInfo finvuInfo){
+                 try{
+                  if(seletedAccountIds.contains(finvuInfo.accountReferenceNumber)){
+                      seletedAccountInfomations.add(finvuInfo);
+                  }
+                }
+                  catch(e){}
+        });
+  }
+
 }

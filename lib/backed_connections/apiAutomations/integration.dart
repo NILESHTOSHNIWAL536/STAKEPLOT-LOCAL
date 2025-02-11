@@ -4,6 +4,7 @@ import 'package:finvu_flutter_sdk/finvu_config.dart';
 import 'package:finvu_flutter_sdk_core/finvu_discovered_accounts.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_details.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
+import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
@@ -177,3 +178,20 @@ Future<void> FetchTransactionBysessionId(BuildContext context,String sessionId) 
     );
   }
 }
+
+
+
+ void getLinkedAccountInfo() async {
+    fipDis = await finvuManager.fipsAllFIPOptions();
+    List<FinvuLinkedAccountDetailsInfo> data =
+        await finvuManager.fetchLinkedAccounts();
+    listofLinkedAccount.clear();
+    if (data.isNotEmpty) {
+      data.forEach((finvu) {
+        listofLinkedAccount.add(finvu.accountReferenceNumber.toString());
+      });
+    }
+    fipDisOrginal.clear();
+    fipDisOrginal.addAll(fipDis);
+    getBanks.value = !getBanks.value;
+  }

@@ -3,8 +3,10 @@ import 'package:finvu_flutter_sdk_core/finvu_discovered_accounts.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_details.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 // import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
@@ -22,14 +24,24 @@ void verify(String otp, context) async {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     String? token = await _pref.getString("token");
     clearStackLocalInfo();
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ShareAccountLogin(
-          flag: true,
-        ),
-      ),
-    );
+
+    getLinkedAccountInfo();
+
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DiscoverAccount(),
+                      ),
+                  );
+                  
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => ShareAccountLogin(
+    //       flag: true,
+    //     ),
+    //   ),
+    // );
   } catch (e) {
     snackBarCalled(context, "Invalid Otp/Number...");
   }

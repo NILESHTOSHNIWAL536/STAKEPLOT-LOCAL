@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchLinkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
@@ -28,28 +29,38 @@ class Access extends StatefulWidget {
 }
 
 class _AccessState extends State<Access> {
-  late FinvuConsentRequestDetailInfo finvuConsentRequestDetailInfo;
+  // late FinvuConsentRequestDetailInfo finvuConsentRequestDetailInfo;
 
-  RxBool flag = false.obs;
+  RxBool flag = true.obs;
   @override
   void initState() {
     super.initState();
-    flag.value = false;
-    getInfomationsAboutUser();
+    // flag.value = false;
+    // getInfomationsAboutUser();
   }
 
   void getInfomationsAboutUser() async {
     try {
-      fetchAccountData = await finvuManager.fetchLinkedAccounts();
-    
-      finvuConsentRequestDetailInfo =
-          await finvuManager.getConsentRequestDetails(handleId.value);
-      flag.value = true;
+      // fetchAccountData = await finvuManager.fetchLinkedAccounts();
+      // finvuConsentRequestDetailInfo = await finvuManager.getConsentRequestDetails(handleId.value);
     } catch (e) {
-      // print(handleId.value);
-      // print(e);
     }
+
   }
+
+  // void getAccountShared() async
+  // {
+
+  //      fetchAccountData.forEach((FinvuLinkedAccountDetailsInfo finvuInfo){
+  //                try{
+  //                 if(seletedAccountIds.contains(finvuInfo.accountReferenceNumber)){
+  //                     seletedAccountInfomations.add(finvuInfo);
+  //                 }
+  //               }
+  //                 catch(e){}
+  //       });
+  //    flag.value = true;
+  // }
 
   String formatDate(String dateString) {
     DateTime date = DateTime.parse(dateString);
@@ -145,17 +156,38 @@ class _AccessState extends State<Access> {
       children: [
         accounts(
             "Accounts Shared",
-            "${fetchAccountData.length} Account(s) are linked",
+            "${seletedAccountIds.length} Account(s) are linked",
             Icons.account_balance_wallet_outlined),
         accounts("Permission Validity", range, Icons.date_range_rounded),
         accounts("Frequency of Access",
             "We can access your information one-time.", Icons.access_time),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: viewMore(),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(vertical: 10),
+        //   child: viewMore(),
+        // ),
+        accountLikedInfo(),
       ],
     );
+  }
+
+
+  Widget accountLikedInfo(){
+    return Column(
+         children: fetchAccountData.map((data)=>accountInfoDetailsUi(data)).toList(),
+    );
+  }
+
+  Widget accountInfoDetailsUi(FinvuLinkedAccountDetailsInfo data){
+     return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+                textStyle(data.fipName),
+                const SizedBox(width: 5,),  
+                textStyle(data.accountType),
+                const SizedBox(width: 5,),  
+                textStyle(data.maskedAccountNumber),
+        ],
+     ); 
   }
 
   Widget viewMore() {
@@ -495,7 +527,7 @@ class _AccessState extends State<Access> {
                           width: 5,
                         ),
                         textStyle(e.maskedAccountNumber),
-                        Obx(()=>  addAccount.value? getcheckBox(e.linkReferenceNumber) :getcheckBox(e.linkReferenceNumber))
+                        Obx(()=>  addAccount.value? getcheckBox(e.accountReferenceNumber) :getcheckBox(e.accountReferenceNumber))
                       ],
                     ),
                   );
@@ -645,14 +677,14 @@ class _AccessState extends State<Access> {
            snackBarCalled(context, "Account did not seleted..pls add account to approve consent..");
             return;
         }
-        fetchAccountData.forEach((FinvuLinkedAccountDetailsInfo finvuInfo){
-                 try{
-                  if(seletedAccountIds.contains(finvuInfo.linkReferenceNumber)){
-                      seletedAccountInfomations.add(finvuInfo);
-                  }
-                }
-                  catch(e){}
-        });
+        // fetchAccountData.forEach((FinvuLinkedAccountDetailsInfo finvuInfo){
+        //          try{
+        //           if(seletedAccountIds.contains(finvuInfo.accountReferenceNumber)){
+        //               seletedAccountInfomations.add(finvuInfo);
+        //           }
+        //         }
+        //           catch(e){}
+        // });
        
         
       FinvuProcessConsentRequestResponse response =
