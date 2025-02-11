@@ -32,8 +32,8 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
   late ScrollController _scrollController;
   Timer? _timer;
   bool _isExpanded = false;
-  double h = 30;
-  double w = 30;
+  double h = 28;
+  double w = 28;
 
   final List<Map<String, dynamic>> autoScrollItems = [
     {'icon': Icons.account_balance_wallet, 'text': 'Budgeting'},
@@ -237,10 +237,10 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
     curve: Curves.easeInOut,
     width: MediaQuery.of(context).size.width,
     constraints: BoxConstraints(
-      minHeight: MediaQuery.of(context).size.height / 11.4,
+      minHeight: MediaQuery.of(context).size.height / 14,
       maxHeight: _isExpanded
           ? MediaQuery.of(context).size.height / 2 // Expanded height
-          : MediaQuery.of(context).size.height / 11.4, // Collapsed height
+          : MediaQuery.of(context).size.height / 14, // Collapsed height
     ),
     decoration: const BoxDecoration(
       color: AppColors.rbi1,
@@ -258,24 +258,27 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
               children: [
                 Row(
                   children: [
-                    AvatarProfileImage(url: Sign.india, width: w, height: h),
+                    //AvatarProfileImage(url: Sign.india, width: w, height: h),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Used by millions of customers across",
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.w500,
-                              fontSize: 14,
-                              color: AppColors.bg1),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(
+                            "Connect your bank accounts using AA",
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.w500,
+                                fontSize: 12,
+                                color: AppColors.bg1),
+                          ),
                         ),
-                        Text(
-                          "India",
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.w500,
-                              fontSize: 14,
-                              color: AppColors.bg1),
-                        ),
+                        // Text(
+                        //   "India",
+                        //   style: FontManager().getTextStyle(context,
+                        //       lWeight: FontWeight.w500,
+                        //       fontSize: 14,
+                        //       color: AppColors.bg1),
+                        // ),
                       ],
                     ),
                   ],
@@ -288,8 +291,8 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                   },
                   child: AvatarProfileImage(
                     url: _isExpanded ? Sign.minimise : Sign.maximise,
-                    width: w,
-                    height: h,
+                    width: 40,
+                    height: 40,
                   ),
                 ),
               ],
@@ -299,7 +302,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
             Container(
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
-                color: AppColors.mt,
+                color: AppColors.rbi1,
               ),
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -308,11 +311,11 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                   Text(
                     "What are Account Aggregators?",
                     style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.w500,
-                              fontSize: 14,
+                              lWeight: FontWeight.w600,
+                              fontSize: 12,
                               color: AppColors.bg1),
                   ),
-                  const SizedBox(height: 8.0),
+                  const SizedBox(height: 4.0),
                   Text(
                     'Account Aggregators are RBI-authorized institutions that securely collect and share your financial information with us.',
                     style: FontManager().getTextStyle(context,
@@ -335,7 +338,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
             ),
             child: Row(
               children: [
-                AvatarProfileImage(url: Sign.protection, width: w, height: h),
+                AvatarProfileImage(url: Sign.protection, width: 40, height: 40),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -344,7 +347,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                       style: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.bold,
-                        fontSize: 14,
+                        fontSize: 12,
                         color: Colors.green,
                       ),
                     ),

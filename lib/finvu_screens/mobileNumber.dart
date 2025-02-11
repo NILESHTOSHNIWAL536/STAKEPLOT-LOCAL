@@ -1,5 +1,6 @@
 import 'package:finvu_flutter_sdk_core/finvu_fip_details.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -20,6 +21,7 @@ import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MobileNumber extends StatefulWidget {
   const MobileNumber({super.key});
@@ -37,7 +39,16 @@ class _MobileNumberState extends State<MobileNumber> {
   RxString _otpCode = "".obs; // Captured OTP code
   RxBool _isOtpValid = false.obs; // Validate OTP length
   TextEditingController otpController = TextEditingController();
+final String termsUrl = "https://pub.dev/packages/url_launcher/install"; // Replace with actual URL
 
+  Future<void> _launchURL() async {
+    final Uri url = Uri.parse(termsUrl);
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication); // Opens in browser
+    } else {
+      throw 'Could not launch $termsUrl';
+    }
+  }
   @override
   void dispose() {
     _phoneController.dispose();
@@ -71,7 +82,7 @@ class _MobileNumberState extends State<MobileNumber> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Text(
-                "We will send you one-time OTP to your mobile number",
+                "Finvu will send you one-time OTP to your mobile number",
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.w400,
@@ -138,7 +149,27 @@ class _MobileNumberState extends State<MobileNumber> {
                 // Add your logic for sending OTP
               },
               child: getButton(context, "Get OTP"),
+
             ),
+            Center(
+        child: RichText(
+          text: TextSpan(
+            text: "By clicking Continue, you agree to our ",
+            style: TextStyle(color: Colors.black, fontSize: 16),
+            children: [
+              TextSpan(
+                text: "Terms & Conditions",
+                style: TextStyle(
+                  color: Colors.blue,
+                  decoration: TextDecoration.underline,
+                ),
+                // Make it clickable
+                recognizer: TapGestureRecognizer()..onTap = _launchURL,
+              ),
+            ],
+          ),
+        ),
+      ),
           ],
         ),
       ),

@@ -12,8 +12,8 @@ void getCategoryData() async {
 
   if (getFlagOfResponse(res)) {
     var data = jsonDecode(res.body);
-    print("data getCategoryData()");
-    print(data["data"]);
+    // print("data getCategoryData()");
+    // print(data["data"]);
     categoriesList.clear();
     categoriesList.addAll(data["data"]);
     setDonectChat.value = !setDonectChat.value;
@@ -24,14 +24,29 @@ void getCategoryData() async {
 
 void getSummary() async {
   var res = await getDataApiCall("${url}/transactionauto/user-details");
-  print("data transactionauto :");
+  // print("data transactionauto :");
 
   if (getFlagOfResponse(res)) {
     var data = jsonDecode(res.body);
     data = data['data'];
-    print(data['Bank']['fipName']);
-    print(data['summaries'][0]['data']['currentBalance']);
+    //print("data debt ..............................transactionauto....................... :");
+    // print(data['Bank']['fipName']);
+    // print(data['summaries'][0]['data']['currentBalance']);
     accountName.value = data['Bank']['fipName'];
     balance.value = data['summaries'][0]['data']['currentBalance'].toString();
+  }
+}
+
+void getdebts() async {
+  Map<String, dynamic> body = {};
+  print("data debt ..............................transactionauto....................... :");
+  var res = await postDataApiCall("${url}/debt",body);
+  print("data debt ..............................transactionauto....................... :");
+
+  if (getFlagOfResponse(res)) {
+    var data = jsonDecode(res.body);
+    print(data);
+    data = data['data'];
+
   }
 }

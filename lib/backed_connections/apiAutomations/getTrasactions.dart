@@ -331,3 +331,17 @@ void getTransaction(context) async {
     trasactionsHistory.addAll(obj);
   } else {}
 }
+Future postDataApiCall(String urlPath, Map body) async {
+  final SharedPreferences pref = await SharedPreferences.getInstance();
+  var accessToken = pref.getString("accessToken");
+  
+  final response = await http.post(
+    Uri.parse(urlPath),
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+      "Authorization": "$accessToken",
+    },
+    body: jsonEncode(body),
+  );
+  return response;
+}

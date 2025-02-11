@@ -253,7 +253,7 @@ class _SigninState extends State<Signin> {
                               ),
                           );
                           },
-                          child: Text(("Link Finvu"),
+                          child: Text(("Connect your bank account "),
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.bold,
                                   fontSize: 15,
