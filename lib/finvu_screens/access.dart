@@ -156,24 +156,26 @@ class _AccessState extends State<Access> {
       children: [
         accounts(
             "Accounts Shared",
-            "${seletedAccountIds.length} Account(s) are linked",
+            "${seletedAccountIds.length} Account(s) are shared",
             Icons.account_balance_wallet_outlined),
         accounts("Permission Validity", range, Icons.date_range_rounded),
         accounts("Frequency of Access",
             "We can access your information one-time.", Icons.access_time),
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(vertical: 10),
-        //   child: viewMore(),
-        // ),
-        accountLikedInfo(),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: viewMore(),
+        ),
+       
+        
       ],
     );
   }
 
 
   Widget accountLikedInfo(){
+    print(seletedAccountInfomations.length);
     return Column(
-         children: fetchAccountData.map((data)=>accountInfoDetailsUi(data)).toList(),
+         children: seletedAccountInfomations.map((data)=>accountInfoDetailsUi(data)).toList(),
     );
   }
 
@@ -432,7 +434,7 @@ class _AccessState extends State<Access> {
                   overflow: TextOverflow.clip,
                 ),
               ),
-              title == "Accounts Shared" ? viewInfo() : SizedBox.shrink()
+              title == "Accounts Shared" ?  accountLikedInfo() : SizedBox.shrink()
             ],
           ),
         ],
@@ -443,13 +445,13 @@ class _AccessState extends State<Access> {
   Widget viewInfo() {
     return InkWell(
       onTap: () {
-        showModalBottomSheet(
-            context: context,
-            builder: (context) {
-              return Container(
-                child: accountInfo(),
-              );
-            });
+        // showModalBottomSheet(
+        //     context: context,
+        //     builder: (context) {
+        //       return Container(
+        //         child: accountInfo(),
+        //       );
+        //     });
       },
       child: Padding(
         padding: const EdgeInsets.only(left: 3, top: 5),

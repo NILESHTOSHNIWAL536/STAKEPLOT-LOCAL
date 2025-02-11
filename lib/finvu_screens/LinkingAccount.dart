@@ -868,7 +868,10 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
   Future<void> getAccountShared() async
   {
+      
+       fetchAccountData = await finvuManager.fetchLinkedAccounts();
        finvuConsentRequestDetailInfo = await finvuManager.getConsentRequestDetails(handleId.value);
+       seletedAccountInfomations.clear();
        fetchAccountData.forEach((FinvuLinkedAccountDetailsInfo finvuInfo){
                  try{
                   if(seletedAccountIds.contains(finvuInfo.accountReferenceNumber)){
