@@ -105,7 +105,8 @@ void getAutoMationsTransactionsWeekly() async {
 
 void getAutoMationsTransactionsCustom(date, context) async {
   var response = await getDataApiCall(
-      "${url}/transactionauto/getAllCustomTransactions/month/${date}");
+      "${url}/transactionauto/getAllCustomTransactions/month/${'2024-09'}");
+      // "${url}/transactionauto/getAllCustomTransactions/month/${date}");
   trasactionsDataCreditWeekly.clear();
   trasactionsDataDebitWeekly.clear();
   if (getFlagOfResponse(response)) {

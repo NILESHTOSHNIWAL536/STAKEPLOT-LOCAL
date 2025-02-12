@@ -6,9 +6,11 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/communityProfileScreen.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_Details.dart';
+import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreenDart extends StatefulWidget {
@@ -20,7 +22,9 @@ class ProfileScreenDart extends StatefulWidget {
 
 class _ProfileScreenDartState extends State<ProfileScreenDart> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+    BuildContext context,
+  ) {
     return Scaffold(
       bottomNavigationBar: BottomNavigations(data: 4),
       backgroundColor: AppColors.backgroundColor,
@@ -50,9 +54,8 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                 Row(
                   children: [
                     CircleAvatar(
-                      radius: 25,
-                      backgroundImage: NetworkImage(
-                          'https://example.com/profile.jpg'), // Replace with actual image URL
+                      // backgroundImage: NetworkImage(post['profilePic']),
+                      radius: 24,
                     ),
                     const SizedBox(width: 10),
                     Expanded(
@@ -79,27 +82,32 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                         ],
                       ),
                     ),
-                    TextButton.icon(
-                      icon: AvatarProfileImage(
-                        url: ProfileIcons.edit,
-                        height: 35,
-                        width: 35,
-                      ),
-                      onPressed: () {
+                    GestureDetector(
+                      onTap: () {
                         Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            EditDetails()),
-                                  );
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EditDetails()),
+                        );
                       },
-                      label: Text('Edit details',
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.w500,
-                              //fontSize: MediaQuery.of(context).size.width * 0.04,
-                              fontSize: 12,
-                              color: AppColors.bg1)),
-                    )
+                      child: Container(
+                        child: Row(
+                          children: [
+                            AvatarProfileImage(
+                              url: ProfileIcons.edit,
+                              height: 60,
+                              width: 60,
+                            ),
+                            Text('Edit details',
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.w500,
+                                    //fontSize: MediaQuery.of(context).size.width * 0.04,
+                                    fontSize: 12,
+                                    color: AppColors.bg1))
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -216,7 +224,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                             Navigator.of(context).pushNamedAndRemoveUntil(
                                 '/', (Route<dynamic> route) => false);
                             Navigator.pushReplacementNamed(context, '/');
-                        
+
                             clearGetX();
                           },
                           child: Container(
@@ -262,7 +270,6 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
 
   Widget _buildOption(Widget icon, String title, String subtitle,
       {Function()? onTap, bool isLogout = false}) {
- 
     return ListTile(
       leading: Container(
         padding: EdgeInsets.all(16),
@@ -292,6 +299,4 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
       onTap: onTap,
     );
   }
-
-  
 }
