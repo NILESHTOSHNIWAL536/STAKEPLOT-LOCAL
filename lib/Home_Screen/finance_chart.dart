@@ -291,11 +291,11 @@ Widget getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth){
                               interval: 1,
                               // reservedSize: /,
                               getTitlesWidget: (value, meta) {
-                                if (value.toInt() < widget.days.length) {
+                                if (value.toInt() <labels.length) {
                                   return Text(
-                                    widget.days[value.toInt()],
+                                    labels[value.toInt()],
                                     style: FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.w500,
+                                        lWeight: FontWeight.bold,
                                         fontSize: fontSizeFactor * 3.5,
                                         color: AppColors.accentColor),
                                   );
@@ -317,7 +317,7 @@ Widget getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth){
                               // interval: maxYValue.value, // For 5 labels (4 intervals + 0 at the bottom)
                               getTitlesWidget: (value, meta) {
                                 return Text(
-                                  '₹${value.toString()}',
+                                  '₹${formatNumberString(value.toString())}',
                                   style: FontManager().getTextStyle(context,
                                       lWeight: FontWeight.normal,
                                       fontSize: fontSizeFactor * 3.3,
@@ -364,6 +364,22 @@ Widget getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth){
                 ),
               ),
             );
+}
+
+
+String formatNumberString(String value) {
+  // Convert string to double
+  double numValue = double.tryParse(value) ?? 0;
+
+  if (numValue >= 10000000) {
+    return '${(numValue / 10000000).toStringAsFixed(2)} Cr'; // Crores
+  } else if (numValue >= 100000) {
+    return '${(numValue / 100000).toStringAsFixed(2)} L'; // Lakhs
+  } else if (numValue >= 1000) {
+    return '${(numValue / 1000).toStringAsFixed(2)} K'; // Thousands
+  } else {
+    return value; // Return original string if less than 1000
+  }
 }
 
 
