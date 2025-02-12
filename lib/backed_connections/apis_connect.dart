@@ -151,6 +151,21 @@ RxBool hasGetNewNotifications = false.obs;
 final ScrollController scrollController = ScrollController();
 final GlobalKey targetKey = GlobalKey(); // Key to identify the target widget
 
+
+String selectedButton = 'Month'; // Default view is "Month"
+  DateTimeRange? selectedDateRange; // Default view is "Month"
+  int selectedDay = 1;
+  int year = DateTime.now().year; // Current year
+  // int month =DateTime.now().month; // Default selected day for "Month" button (Day 1)
+  Map<int, List<double>> creditedData = {};
+  Map<int, List<double>> debitedData = {};
+ double totalSpent=0.0;
+   RxMap<String, List<double>> transactionChatGraph=new RxMap();
+   RxBool graphTransaction=false.obs;
+     List<String> labels=[];
+    RxDouble maxYValue = 0.0.obs;
+
+
 class Message {
   Message(
       {this.text,

@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/donut_chart.dart';
+// import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
@@ -103,50 +105,66 @@ void getAutoMationsTransactionsWeekly() async {
 
 void getAutoMationsTransactionsCustom(date, context) async {
   var response = await getDataApiCall(
-      "${url}/transactionauto/getalltransactionsbycustom/${date}");
+      "${url}/transactionauto/getAllCustomTransactions/month/${date}");
   trasactionsDataCreditWeekly.clear();
   trasactionsDataDebitWeekly.clear();
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
 
-    Map data = his['data']['transactions'];
-    if (his['data']['transactions'].isEmpty) return;
-    his['data']['transactions'].forEach((key, value) {
-      //data[key]=value;
-    });
-
-    List<String> labels = [];
+     Map data = his['data']['transactions'];
+      List<String> labelsLocal = [];
     List<double> debitList = [];
     List<double> creditList = [];
-    List<String> l1 = date.toString().split("/");
-    DateTime startDate = DateTime.parse(l1[0]);
-    DateTime endDate = DateTime.parse(l1[1]);
 
+    if (his['data']['transactions'].isEmpty) return;
+    maxYValue.value=his['data']['maxAmount'];
+    his['data']['transactions'].forEach((key, value) {
+               labelsLocal.add(key.toString().substring(key.toString().length-2));
+               debitList.add(value['debit']);
+               creditList.add(value['credit']);
+    });
+
+     print(labelsLocal);
+     print(debitList);
+    //credited  debited
+    transactionChatGraph.clear();
+    labels.clear();
+    transactionChatGraph['credited']=debitList;
+    transactionChatGraph['debited']=creditList;
+    graphTransaction.value=!graphTransaction.value;
+    print(transactionChatGraph);
+    labels.addAll(labelsLocal);
+
+    print("----------------------------------------------");
+    print(labelsLocal);
+
+
+ 
     // Loop through the date range
 
-    for (DateTime currentDate = startDate;
-        currentDate.isBefore(endDate.add(Duration(days: 1)));
-        currentDate = currentDate.add(Duration(days: 1))) {
-      String dateString = currentDate.toIso8601String().split('T')[0];
+    // for (DateTime currentDate = startDate;
+    //     currentDate.isBefore(endDate.add(Duration(days: 1)));
+    //     currentDate = currentDate.add(Duration(days: 1))) {
+    //   String dateString = currentDate.toIso8601String().split('T')[0];
 
-      if (data.containsKey(dateString)) {
-        double b1 = double.parse(data[dateString]?['debit'].toString() ?? "0");
-        double b2 = double.parse(data[dateString]?['credit'].toString() ?? "0");
-        debitList.add(b1);
-        creditList.add(b2);
-        maxDC = max(max(b1, b2), maxDC);
-      } else {
-        debitList.add(0);
-        creditList.add(0);
-      }
-    }
+    //   if (data.containsKey(dateString)) {
+    //     double b1 = double.parse(data[dateString]?['debit'].toString() ?? "0");
+    //     double b2 = double.parse(data[dateString]?['credit'].toString() ?? "0");
+    //     debitList.add(b1);
+    //     creditList.add(b2);
+    //     maxDC = max(max(b1, b2), maxDC);
+    //   } else {
+    //     debitList.add(0);
+    //     creditList.add(0);
+    //   }
+    // }
 
-    trasactionsDataCustomCredit.clear();
-    trasactionsDataCustomDebit.clear();
-    trasactionsDataCustomLabel.clear();
-    trasactionsDataCustomCredit.addAll(debitList);
-    trasactionsDataCustomDebit.addAll(creditList);
-    trasactionsDataCustomLabel.addAll(labels);
+    // trasactionsDataCustomCredit.clear();
+    // trasactionsDataCustomDebit.clear();
+    // trasactionsDataCustomLabel.clear();
+    // trasactionsDataCustomCredit.addAll(debitList);
+    // trasactionsDataCustomDebit.addAll(creditList);
+    // trasactionsDataCustomLabel.addAll(labels);
   }
 }
 
@@ -381,3 +399,102 @@ Future postDataApiCall(String urlPath, Map body) async {
   );
   return response;
 }
+
+
+
+
+  Future<void> pickCustomDateRange(BuildContext context) async {
+    final DateTimeRange? picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2025),
+      // initialDateRange: selectedDateRange,
+      builder: (context, child) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Container(
+            color: AppColors.mt,
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.height *
+                0.5, // Adjust height (60% of screen height)
+            child: child!,
+          ),
+        );
+      },
+    );
+    // if (picked != null && picked != selectedDateRange) {
+      
+        // selectedDateRange = picked;
+        // selectedButton = 'Custom';
+    
+    // }
+  }
+
+void getWeekDate()
+{
+    //   if (selectedButton == 'Week') {
+    //   final currentWeek = weekData[0]!;
+    //   chartData = {
+    //     "credited": currentWeek.values.toList(),
+    //     "debited": currentWeek.values
+    //         .map((e) => e * 0.8)
+    //         .toList(), // Debited is 80% of credited
+    //   };
+    //   labels = currentWeek.keys.toList();
+    // } else if (selectedButton == 'Month') {
+    //   chartData = {
+    //     "credited": List.generate(
+    //       30,
+    //       (index) => creditedData[index + 1]?.reduce((a, b) => a + b) ?? 0.0,
+    //     ),
+    //     "debited": List.generate(
+    //       30,
+    //       (index) => debitedData[index + 1]?.reduce((a, b) => a + b) ?? 0.0,
+    //     ),
+    //   };
+    //   labels = List.generate(30, (index) => (index + 1).toString());
+    // } else if (selectedButton == 'Custom' && selectedDateRange != null) {
+    //   final startDate = selectedDateRange!.start;
+    //   final endDate = selectedDateRange!.end;
+
+    //   // Filter data for the selected range
+    //   chartData = {
+    //     "credited": List.generate(
+    //       endDate.difference(startDate).inDays + 1,
+    //       (index) => creditedData[startDate.add(Duration(days: index)).day]!
+    //           .reduce((a, b) => a + b),
+    //     ),
+    //     "debited": List.generate(
+    //       endDate.difference(startDate).inDays + 1,
+    //       (index) => debitedData[startDate.add(Duration(days: index)).day]!
+    //           .reduce((a, b) => a + b),
+    //     ),
+    //   };
+
+    //   // Generate labels for the selected date range
+    //   labels = List.generate(
+    //     endDate.difference(startDate).inDays + 1,
+    //     (index) => (startDate.add(Duration(days: index))).day.toString(),
+    //   );
+    // } else {
+    //   // Default case
+    //   chartData = {
+    //     "credited": [],
+    //     "debited": [],
+    //   };
+    //   labels = [];
+    // }
+    
+}
+
+
+ //double totalSpent = calculateTotal(chartData);
+  //  totalSpent =chartData["credited"]!.isNotEmpty && chartData["debited"]!.isNotEmpty? calculateTotal(chartData): 0.0;
+
+
+ double calculateTotal(Map<String, List<double>> data) {
+    return data["credited"]!.reduce((a, b) => a + b) -
+        data["debited"]!.reduce((a, b) => a + b);
+  }
