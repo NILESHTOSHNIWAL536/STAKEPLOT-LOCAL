@@ -24,28 +24,7 @@ class DoughnutChartExample extends StatefulWidget {
 }
 
 class _DoughnutChartExampleState extends State<DoughnutChartExample> {
-  // final List<ChartData> data = [
-  //   ChartData('Food', 20, Color(0xFFB39DDB)), // Light Purple
-  //   ChartData('Shopping', 15, Color(0xFF455A64)), // Dark Blue Grey
-  //   ChartData('Travel', 10, Color(0xFF607D8B)), // Light Blue Grey
-  //   ChartData('Health', 10, Color(0xFF263238)), // Dark Charcoal
-  //   ChartData('Bills', 18, Color(0xFF81C784)), // Light Green
-  //   ChartData('Subscriptions', 8, Color(0xFFB0BEC5)), // Light Grey
-  //   ChartData('Events', 6, Color(0xFFD32F2F)), // Dark Red
-  //   ChartData('Personal Care', 7, Color(0xFF7B1FA2)), // Dark Purple
-  //   ChartData('Services', 5, Color(0xFF004D40)), // Dark Teal
-  //   ChartData('Emi', 4, Color(0xFFFFC107)), // Amber
-  //   ChartData('Insurance', 6, Color(0xFF0288D1)), // Dark Blue
-  //   ChartData('Support', 4, Color(0xFFFF5722)), // Deep Orange
-  //   ChartData('Children', 3, Color(0xFF8E24AA)), // Purple
-  //   ChartData('Pet Care', 2, Color(0xFFFF80AB)), // Light Pink
-  //   ChartData('Sports', 3, Color(0xFF1976D2)), // Dark Blue
-  //   ChartData('Alcohol', 2, Color(0xFF5C6BC0)), // Indigo
-  //   ChartData('Hobbies', 2, Color(0xFF795548)), // Brown
-  //   ChartData('Education', 3, Color(0xFF78909C)), // Blue Grey
-  //   ChartData('snacks', 4, Color(0xFFF06292)), // Pink
-  //   ChartData('Entertainment', 5, Color(0xFF4CAF50)), // Green
-  // ];
+ 
 
   int? selectedIndex;
   List<ChartData> data = [];
