@@ -644,20 +644,24 @@ class _ModalContentState extends State<ModalContent>
         itemBuilder: (BuildContext context, int index) {
           String category = filteredCategories[index];
           String urlPath = "";
-          // try {
-          //   urlPath = Categories.link +
-          //       BudgetCategories.listofCategories[
-          //           BudgetCategories.listofCategories.keys
-          //               .elementAt(index)];
-          // } catch (e) {}
+          try {
+            urlPath = Categories.link +
+                BudgetCategories.listofCategories[
+                    BudgetCategories.listofCategories.keys
+                        .elementAt(index)];
+          } catch (e) {}
 
           return ListTile(
             //leading: const Icon(Icons.category),
 
-            leading: AvatarProfileImage(
-              url: urlPath,
-              width: 50,
-              height: 36,
+            leading: Container(
+              height: 40,
+              width: 40,
+              child: AvatarProfileImage(
+                url: urlPath,
+                width: 4,
+                height: 4,
+              ),
             ),
             title: Text(category,
                 style: FontManager().getTextStyle(context,
