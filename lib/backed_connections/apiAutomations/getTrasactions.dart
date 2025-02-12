@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/donut_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
@@ -307,11 +308,46 @@ void addTransaction(String amount, String subCategory, String categories,
     if (!isSplit) snackBarCalled(context, "Added Trasactions!", Colors.black);
     getAllTransaction(context);
     getCategoryData();
+     setDonectChat.value = !setDonectChat.value;
+      processChartData();
     Navigator.pop(context);
   } else {
     snackBarCalled(context, "can't Add Trasactions!", Colors.red);
   }
 }
+
+ void processChartData() {
+    List<ChartData> newData = [];
+    double newTotalValue = 0.0;
+
+    Map<String, Color> categoryColors = {
+      "Food": Color.fromARGB(255, 198, 172, 245),
+      "Shopping": Color.fromARGB(255, 103, 133, 146),
+      "Travel": Color.fromARGB(255, 206, 231, 243),
+      "Health": Color.fromARGB(255, 130, 175, 167),
+      "Subscriptions": Color.fromARGB(255, 132, 203, 119),
+      "Entertainment": Color.fromARGB(255, 193, 118, 175),
+      "Insurance": Color(0xFF0288D1),
+      "Emi": Color(0xFFFFC107),
+      "Investments": Color.fromARGB(255, 247, 114, 114),
+      "Untagged": Color.fromARGB(255, 74, 117, 139),
+    };
+
+    
+   for (var item in categoriesList) {
+      String category = item["category"];
+      double value = item["total_debit"].toDouble();
+      Color color = categoryColors[category] ?? Colors.grey; // Default color
+
+      newData.add(ChartData(category, value, color));
+      newTotalValue += value;
+    }
+
+
+      chartData.value= newData;
+      totalValue.value = newTotalValue;
+  
+  }
 
 void getTransaction(context) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();

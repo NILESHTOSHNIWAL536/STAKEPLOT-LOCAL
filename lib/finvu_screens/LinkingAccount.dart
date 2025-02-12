@@ -66,19 +66,12 @@ class _LinkingAccountState extends State<LinkingAccount> {
     count.value = 0;
     getData();
     getinfo();
-    getFetch.value = false;
+    getFetch.value = false; 
   
   }
 
   void getinfo()async{
-       print("init called....");
        finvuConsentRequestDetailInfo = await finvuManager.getConsentRequestDetails(handleId.value);
-       print("responce from the backend finvu....");
-       print(finvuConsentRequestDetailInfo);
-       print(finvuConsentRequestDetailInfo.consentId);
-       print("handleId.value");
-       print(handleId.value);
-       print(finvuConsentRequestDetailInfo.consentHandle);
   }
 
    void getData() async {

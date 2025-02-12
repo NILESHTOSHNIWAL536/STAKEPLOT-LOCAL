@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/CreateDebtScreen.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/debt_display.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/debt_service.dart';
 
 class DebtCalculatorApp extends StatelessWidget {
@@ -53,7 +54,12 @@ class _DebtListScreenState extends State<DebtListScreen> {
       });
     }
   }
-
+ void _navigateToDebtDetailsScreen(Debt debt) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => DebtDetailsScreen(debt: debt)),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,51 +100,57 @@ class _DebtListScreenState extends State<DebtListScreen> {
               itemCount: debts.length,
               itemBuilder: (context, index) {
                 final debt = debts[index];
-                return Container(
-                  width: MediaQuery.of(context).size.width / 1.1,
-                  decoration: BoxDecoration(
-                    color: AppColors.mt,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                  
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(debt.name),SizedBox(
-                              height: Colorcodes.paddingSize / 2,
-                            ),
-                            Text(
-                              'Amount',
-                              style: FontManager().getTextStyle(context,
-                                  fontSize: 14,
-                                  color: AppColors.bg1,
-                                  lWeight: FontWeight.normal),
-                            ),
-                            SizedBox(
-                              height: Colorcodes.paddingSize / 3,
-                            ),
-                            Text(
-                              '\₹${debt.amount.toStringAsFixed(2)}',
-                              style: FontManager().getTextStyle(context,
-                                  fontSize: 20,
-                                  color: AppColors.bg1,
-                                  lWeight: FontWeight.bold),
-                            ),
-                            
-                      
-                        ],
-                      ),
-                      AvatarProfileImage(
-                url: Finance.addBudget,
-                height: 10,
-                width: 12,
-              ),
-                    ],
+                return GestureDetector(
+                  onTap: () {
+                    // Navigate to the debt details screen when a debt item is tapped
+                    _navigateToDebtDetailsScreen(debt);
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 1.1,
+                    decoration: BoxDecoration(
+                      color: AppColors.mt,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+                    
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(debt.name),SizedBox(
+                                height: Colorcodes.paddingSize / 2,
+                              ),
+                              Text(
+                                'Amount',
+                                style: FontManager().getTextStyle(context,
+                                    fontSize: 14,
+                                    color: AppColors.bg1,
+                                    lWeight: FontWeight.normal),
+                              ),
+                              SizedBox(
+                                height: Colorcodes.paddingSize / 3,
+                              ),
+                              Text(
+                                '\₹${debt.amount.toStringAsFixed(2)}',
+                                style: FontManager().getTextStyle(context,
+                                    fontSize: 20,
+                                    color: AppColors.bg1,
+                                    lWeight: FontWeight.bold),
+                              ),
+                              
+                        
+                          ],
+                        ),
+                        AvatarProfileImage(
+                  url: Finance.addBudget,
+                  height: 10,
+                  width: 12,
+                                ),
+                      ],
+                    ),
                   ),
                 );
               },

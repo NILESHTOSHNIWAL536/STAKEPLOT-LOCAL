@@ -39,11 +39,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
-  final UserController userController = Get.find<UserController>();
 
-  final ScrollController _scrollController = ScrollController();
-  bool _newPageShown = false; // Track if the new page is already shown
+  final UserController userController = Get.find<UserController>();
 
   @override
   void initState() {
@@ -51,8 +48,6 @@ class _HomePageState extends State<HomePage> {
     getAllTransaction(context);
     getTrending();
     getPost();
-    // getTransaction(context);
-
     getAck();
     getBudget();
     getUserInfomations();
@@ -61,48 +56,22 @@ class _HomePageState extends State<HomePage> {
     getSummary(); 
     getCategoryData();
     userController.fetchUserInfo();
-    // getUserInfo();
-    //  _scrollController.addListener(_handleScroll);
   }
 
-  final List<Widget> _pages = [
-    HomeScreen(), // The content previously in the ListView
-    Center(child: Text('Search Page', style: TextStyle(fontSize: 24))),
-    Community(), // Tabbed page for Community
-    Center(
-        child: Image.network(
-      Uri.parse(
-              'https://stakeplot-post-images.s3.ap-south-1.amazonaws.com/67627477ee987038319c05fd/2024-12-30T07-14-52.484Z-New_Profile_Picture.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAQ3EGT5P3GPNYX6UQ%2F20241230%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20241230T071615Z&X-Amz-Expires=3600&X-Amz-Signature=369491e92a46caa61605d0f9b34856db97996fbf43ad74cd324aa7ab8d85ac55&X-Amz-SignedHeaders=host&x-id=GetObject')
-          .toString(),
-      errorBuilder: (context, error, stackTrace) {
-        return Text('Failed to load image');
-      },
-      loadingBuilder: (context, child, progress) {
-        if (progress == null) return child;
-        return CircularProgressIndicator();
-      },
-    ))
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigations(data: 0),
-    );
-  }
+    return HomeScreen();
 }
+
+}
+
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomNavigations(data: 0,),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -123,8 +92,8 @@ class HomeScreen extends StatelessWidget {
               //const SizedBox(height: 10),
 
               // Finance Chart
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.4,
+                SizedBox(
+               height: MediaQuery.of(context).size.height * 0.4,
                 child: const FinanceChartApp(),
               ),
               //const SizedBox(height: 20),
@@ -150,7 +119,7 @@ class HomeScreen extends StatelessWidget {
               // Transaction History
               SizedBox(
                 // height: MediaQuery.of(context).size.height * 0.8,
-                child: TransactionHistory(),
+                child: Obx(()=>  getHistory.value? TransactionHistory():TransactionHistory()),
               ),
             ],
           ),

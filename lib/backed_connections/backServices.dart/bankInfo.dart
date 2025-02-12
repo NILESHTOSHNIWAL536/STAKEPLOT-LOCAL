@@ -12,13 +12,12 @@ void getCategoryData() async {
 
   if (getFlagOfResponse(res)) {
     var data = jsonDecode(res.body);
-    // print("data getCategoryData()");
-    // print(data["data"]);
+
     categoriesList.clear();
     categoriesList.addAll(data["data"]);
-    setDonectChat.value = !setDonectChat.value;
     categoriesList.refresh();
-    //processChartData();
+    setDonectChat.value = !setDonectChat.value;
+    processChartData();
   }
 }
 
