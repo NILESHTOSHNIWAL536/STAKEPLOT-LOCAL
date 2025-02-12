@@ -10,7 +10,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'colors.dart';
 
-  RxInt selectedIndex=0.obs;
+  RxInt selectedIndex=(-1).obs;
   RxList<ChartData> chartData=<ChartData>[].obs;
   RxDouble totalValue = 0.0.obs;
 
@@ -133,7 +133,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                 onPointTap: (ChartPointDetails details) {
                                   setState(() {
                                     if (selectedIndex.value == details.pointIndex) {
-                                      selectedIndex.value = 0;
+                                      selectedIndex.value = -1;
                                     } else {
                                       selectedIndex.value = details.pointIndex!;
                                     }
@@ -148,7 +148,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                         flex: isLargeScreen ? 2 : 3,
                         child: Container(
                           padding: const EdgeInsets.all(12.0),
-                          child: selectedIndex != null
+                          child: selectedIndex != -1
                               ? Center(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
