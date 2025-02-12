@@ -1,8 +1,13 @@
+import 'dart:convert';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/debt_service.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateDebtScreen extends StatefulWidget {
   @override
@@ -16,13 +21,13 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
   DateTime _date = DateTime.now();
   double _interest = 0.0;
   String _name = '';
+  int _durationMonths = 0; // New field for duration in months
 
   // ... [Keep the existing methods like _showLoanTypeModal, _showDatePicker, _saveDebt]
   void _showLoanTypeModal() async {
     final selectedLoanType = await showModalBottomSheet<String>(
       context: context,
-      backgroundColor: AppColors.mt, 
-      
+      backgroundColor: AppColors.mt,
       builder: (context) {
         return SingleChildScrollView(
           child: Padding(
@@ -30,15 +35,15 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                'Personal Loan',
-                'Home Loan',
+                'Personal',
+                'Home',
                 'Loan Against Property (LAP)',
-                'Vehicle Loan',
-                'Credit Card Loan',
-                'Gold Loan',
+                'Vehicle',
+                'Credit-Card',
+                'Gold',
                 'Mortgage',
-                'Education Loan',
-                'Business Loan',
+                'Education',
+                'Business',
                 'Student Loan',
                 'Other'
               ].map((loan) {
@@ -75,16 +80,56 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
     }
   }
 
-  void _saveDebt() {
+  // void _saveDebt() {
+  //   if (_formKey.currentState!.validate()) {
+  //     final newDebt = Debt(
+  //       loanType: _loanType,
+  //       amount: _amount,
+  //       date: _date,
+  //       interest: _interest,
+  //       name: _name,
+  //     );
+  //     Navigator.pop(context, newDebt);
+  //   }
+  // }
+
+  void _saveDebt() async {
     if (_formKey.currentState!.validate()) {
-      final newDebt = Debt(
-        loanType: _loanType,
-        amount: _amount,
-        date: _date,
-        interest: _interest,
-        name: _name,
-      );
-      Navigator.pop(context, newDebt);
+      Map<String, dynamic> debtData = {
+        'name': _name,
+        'type': _loanType.toLowerCase(),
+        'principalAmount': _amount,
+        'interestRate': _interest,
+        'durationMonths': _durationMonths,
+        'startDate': _date.toIso8601String(),
+      };
+
+      try {
+        Map<String, dynamic>? response = await DebtService.createDebt(debtData);
+
+        if (response != null) {
+          print('Debt created successfully: $response');
+
+          if (context.mounted) {
+            // Ensure the widget is still in the tree
+            Navigator.pop(
+              context,
+              Debt(
+                name: _name,
+                type: _loanType,
+                amount: _amount,
+                interest: _interest,
+                durationMonths: _durationMonths,
+                date: _date,
+              ),
+            );
+          }
+        } else {
+          print('Failed to create debt. No valid response received.');
+        }
+      } catch (e) {
+        print('Error creating debt: $e');
+      }
     }
   }
 
@@ -162,6 +207,24 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                 ),
                 SizedBox(height: Colorcodes.paddingSize),
                 CustomFormField(
+                  hintText: 'Enter Duration (months)',
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) => setState(() {
+                    _durationMonths = int.tryParse(value) ?? 0;
+                  }),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter duration';
+                    }
+                    if (int.tryParse(value) == null) {
+                      return 'Please enter a valid number for duration';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: Colorcodes.paddingSize),
+                
+                CustomFormField(
                   hintText: 'Select Date',
                   readOnly: true,
                   onTap: _showDatePicker,
@@ -175,13 +238,13 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                     return null;
                   },
                 ),
-                SizedBox(height: Colorcodes.paddingSize*2),
+                SizedBox(height: Colorcodes.paddingSize * 2),
                 // ElevatedButton(
                 //   onPressed: _saveDebt,
                 //   child: Text('Continue'),
                 // ),
                 GestureDetector(
-                  onTap:_saveDebt,
+                  onTap: _saveDebt,
                   child: Container(
                     width: MediaQuery.of(context).size.width / 1.1,
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
@@ -209,20 +272,38 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
 }
 
 class Debt {
-  final String loanType;
+  final String type;
   final double amount;
   final DateTime date;
   final double interest;
   final String name;
+  final int durationMonths;
 
   Debt({
-    required this.loanType,
+    required this.type,
     required this.amount,
     required this.date,
     required this.interest,
     required this.name,
+    required this.durationMonths,
   });
+  factory Debt.fromJson(Map<String, dynamic> json) {
+    return Debt(
+      name: json['name'],
+      type: json['type'],
+      amount: (json['principalAmount'] as num).toDouble(),
+      interest: (json['interestRate'] as num).toDouble(),
+      durationMonths: json['durationMonths'] as int,
+      date: DateTime.parse(json['startDate']),
+    );
+  }
+
+  @override
+  String toString() {
+    return 'Debt(name: $name, principal: $amount)';
+  }
 }
+
 class CustomFormField extends StatelessWidget {
   static Color fillColor = AppColors.mt;
 
@@ -280,7 +361,6 @@ class CustomFormField extends StatelessWidget {
           borderRadius: BorderRadius.circular(30.0),
           borderSide: BorderSide(color: AppColors.primaryColor, width: 2),
         ),
-        
       ),
       onChanged: onChanged,
       validator: validator,

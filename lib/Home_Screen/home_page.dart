@@ -54,6 +54,7 @@ class _HomePageState extends State<HomePage> {
     getUserLend(context);
     getBudget();
     getSummary(); 
+    getCategoryData();
     userController.fetchUserInfo();
   }
 
@@ -67,12 +68,10 @@ class _HomePageState extends State<HomePage> {
 
 
 class HomeScreen extends StatelessWidget {
- 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar:  BottomNavigations(data: 0),
+      bottomNavigationBar: BottomNavigations(data: 0,),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -93,8 +92,8 @@ class HomeScreen extends StatelessWidget {
               //const SizedBox(height: 10),
 
               // Finance Chart
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.4,
+                SizedBox(
+               height: MediaQuery.of(context).size.height * 0.4,
                 child: const FinanceChartApp(),
               ),
               //const SizedBox(height: 20),
@@ -113,14 +112,14 @@ class HomeScreen extends StatelessWidget {
               // Doughnut Chart
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.5,
-                child: DoughnutChartExample(),
+                child: Obx(()=> setDonectChat.value? DoughnutChartExample() : DoughnutChartExample() ),
               ),
               //const SizedBox(height: 20),
 
               // Transaction History
               SizedBox(
                 // height: MediaQuery.of(context).size.height * 0.8,
-                child: TransactionHistory(),
+                child: Obx(()=>  getHistory.value? TransactionHistory():TransactionHistory()),
               ),
             ],
           ),
@@ -128,63 +127,72 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-  
- Widget setPinForAccountHide(context) {
-      return Container(
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-           mainAxisAlignment: MainAxisAlignment.end,
-           crossAxisAlignment: CrossAxisAlignment.center,
-           children: [
-                const SizedBox(height: 10),
-               Obx(()=> cupertinoPin.value=="0"? InkWell(
-                  onTap: (){
-                      showModalBottomSheet(context: context, 
-                                              backgroundColor: Colorcodes.appBarColor,
-                                            builder: (context) {
-                                                  return setPassword(context);
-                          },);
+
+  Widget setPinForAccountHide(context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 10),
+          Obx(() => cupertinoPin.value == "0"
+              ? InkWell(
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colorcodes.appBarColor,
+                      builder: (context) {
+                        return setPassword(context);
+                      },
+                    );
                   },
-                child: Container(
-                  color: Colorcodes.textFeild,
-                  padding: const EdgeInsets.all(8.0),
-                  child: textStyle(text: "Set pin",context: context,fontsize: 10,fontWeight: FontWeight.bold),
-                )):SizedBox.shrink()),
-                const SizedBox(height: 10),
-           ],
-        ),
-      );
+                  child: Container(
+                    color: Colorcodes.textFeild,
+                    padding: const EdgeInsets.all(8.0),
+                    child: textStyle(
+                        text: "Set pin",
+                        context: context,
+                        fontsize: 10,
+                        fontWeight: FontWeight.bold),
+                  ))
+              : SizedBox.shrink()),
+          const SizedBox(height: 10),
+        ],
+      ),
+    );
   }
 
+  Widget setPassword(context) {
+    TextEditingController controller = TextEditingController();
 
-Widget setPassword(context){
-        TextEditingController controller=TextEditingController();
-
-       return Container(
-          width: MediaQuery.of(context).size.width,
-          height:  MediaQuery.of(context).size.height/1.2,
-          padding: EdgeInsets.symmetric(horizontal: 30,vertical: 10),
-          child: Column(
-               children: [
-                      TextFeildWidget(textEditingController: controller, heading: "Set Pin", keyBoard: TextInputType.visiblePassword, lableText: "Set Pin"),
-                      SizedBox(height: 10,),
-                      InkWell(
-                           onTap: (){
-                                  setPasswordApiCalled(context,controller.text);
-                           },
-                          child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 30,vertical: 10),
-                                decoration: BoxDecoration(
-                                    border: Border.all(),
-                                ),
-                               child: Text("Set Password click me")
-                            ),
-                      ),
-               ],
-          ), 
-       );
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height / 1.2,
+      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      child: Column(
+        children: [
+          TextFeildWidget(
+              textEditingController: controller,
+              heading: "Set Pin",
+              keyBoard: TextInputType.visiblePassword,
+              lableText: "Set Pin"),
+          SizedBox(
+            height: 10,
+          ),
+          InkWell(
+            onTap: () {
+              setPasswordApiCalled(context, controller.text);
+            },
+            child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                decoration: BoxDecoration(
+                  border: Border.all(),
+                ),
+                child: Text("Set Password click me")),
+          ),
+        ],
+      ),
+    );
   }
-
-
-
 }

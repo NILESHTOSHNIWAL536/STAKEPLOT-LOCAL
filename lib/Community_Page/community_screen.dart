@@ -43,6 +43,7 @@ class _CommunityState extends State<Community> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
+      
       backgroundColor: AppColors.backgroundColor,
       bottomNavigationBar: BottomNavigations(data: 2),
       body: Padding(
@@ -53,9 +54,9 @@ class _CommunityState extends State<Community> {
             children: [
               // Welcome Section
               _buildWelcomeRow(),
-
+      
               const SizedBox(height: 16),
-
+      
               Obx(() => getTrendingData.length == 0 && findTranding
                   ? Loader()
                   : !findTranding && getTrendingData.length == 0
@@ -73,7 +74,7 @@ class _CommunityState extends State<Community> {
                             ),
                           ],
                         ))
-
+      
               // Posts List
               // ListView.builder(
               //   shrinkWrap:
@@ -127,16 +128,19 @@ class _CommunityState extends State<Community> {
               alignment: Alignment.topRight,
               child: Column(
                 children: [
-                  DecoratedContainer(
-                      // width: MediaQuery.sizeOf(context).width / 6,
-                      // height: MediaQuery.sizeOf(context).width / 6,
-                      borderRadius: 18,
-                      child: IconButton(
-                        onPressed: () async {
+                  Container(
+                       width: MediaQuery.sizeOf(context).width / 6,
+                       height: MediaQuery.sizeOf(context).width / 6,
+                      decoration: BoxDecoration(
+                        color:AppColors.button,
+                        borderRadius: BorderRadius.circular(18)
+                      ),
+                      child: GestureDetector(
+                        onTap: () async {
                           await showModal({});
                           //await CommunityShowModalScreen();
                         },
-                        icon: AvatarProfileImage(
+                        child: AvatarProfileImage(
                           url: LikeComment.plus,
                           height: 22,
                           width: 22,
@@ -244,8 +248,8 @@ class _CommunityState extends State<Community> {
                       'Create Post',
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.bold,
-                          fontSize: 22,
-                          color: Colors.black),
+                          fontSize: 18,
+                          color: AppColors.accentColor),
                     ),
                   ),
                 ),

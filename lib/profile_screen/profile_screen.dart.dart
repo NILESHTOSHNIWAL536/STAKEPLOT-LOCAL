@@ -50,7 +50,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                 Row(
                   children: [
                     CircleAvatar(
-                      radius: 30,
+                      radius: 25,
                       backgroundImage: NetworkImage(
                           'https://example.com/profile.jpg'), // Replace with actual image URL
                     ),
@@ -82,8 +82,8 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                     TextButton.icon(
                       icon: AvatarProfileImage(
                         url: ProfileIcons.edit,
-                        height: 28,
-                        width: 28,
+                        height: 35,
+                        width: 35,
                       ),
                       onPressed: () {
                         Navigator.push(

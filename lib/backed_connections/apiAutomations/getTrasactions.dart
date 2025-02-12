@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -305,6 +306,7 @@ void addTransaction(String amount, String subCategory, String categories,
     final body = json.decode(response.body);
     if (!isSplit) snackBarCalled(context, "Added Trasactions!", Colors.black);
     getAllTransaction(context);
+    getCategoryData();
     Navigator.pop(context);
   } else {
     snackBarCalled(context, "can't Add Trasactions!", Colors.red);
@@ -328,4 +330,18 @@ void getTransaction(context) async {
     trasactionsHistory.clear();
     trasactionsHistory.addAll(obj);
   } else {}
+}
+Future postDataApiCall(String urlPath, Map body) async {
+  final SharedPreferences pref = await SharedPreferences.getInstance();
+  var accessToken = pref.getString("accessToken");
+  
+  final response = await http.post(
+    Uri.parse(urlPath),
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+      "Authorization": "$accessToken",
+    },
+    body: jsonEncode(body),
+  );
+  return response;
 }
