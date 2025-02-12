@@ -283,16 +283,19 @@ Widget getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth){
                           show: false,
                         ),
                         titlesData: FlTitlesData(
+
                           bottomTitles: AxisTitles(
+
                             sideTitles: SideTitles(
                               showTitles: true,
                               interval: 1,
+                              // reservedSize: /,
                               getTitlesWidget: (value, meta) {
                                 if (value.toInt() < widget.days.length) {
                                   return Text(
                                     widget.days[value.toInt()],
                                     style: FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.normal,
+                                        lWeight: FontWeight.w500,
                                         fontSize: fontSizeFactor * 3.5,
                                         color: AppColors.accentColor),
                                   );
@@ -306,6 +309,7 @@ Widget getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth){
                           topTitles: const AxisTitles(
                               sideTitles: SideTitles(showTitles: false)),
                           leftTitles: AxisTitles(
+
                             sideTitles: SideTitles(
                               showTitles: true,
                               
@@ -316,7 +320,7 @@ Widget getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth){
                                   '₹${value.toString()}',
                                   style: FontManager().getTextStyle(context,
                                       lWeight: FontWeight.normal,
-                                      fontSize: fontSizeFactor * 3.6,
+                                      fontSize: fontSizeFactor * 3.3,
                                       color: AppColors.accentColor),
                                 );
                               },
@@ -329,34 +333,9 @@ Widget getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth){
                         minY: 0,
                         maxY: maxYValue.value,
                         lineBarsData: [
-                          LineChartBarData(
-                            isCurved: true,
-                            color: AppColors.primaryColor,
-                            barWidth: 1,
-                            dotData: FlDotData(show: false),
-                            belowBarData: BarAreaData(
-                                show: false,
-                                color: Colors.green.withOpacity(0.2)),
-                            spots: List.generate(
-                              transactionChatGraph["credited"]!.length,
-                              (index) => FlSpot(index.toDouble(),
-                                  transactionChatGraph["credited"]![index]),
-                            ),
-                          ),
-                          LineChartBarData(
-                            isCurved: true,
-                            color: AppColors.accentColor,
-                            barWidth: 1,
-                            dotData: FlDotData(show: false),
-                            belowBarData: BarAreaData(
-                                show: false,
-                                color: Colors.red.withOpacity(0.2)),
-                            spots: List.generate(
-                              transactionChatGraph["debited"]!.length,
-                              (index) => FlSpot(index.toDouble(),
-                                transactionChatGraph["debited"]![index]),
-                            ),
-                          ),
+                           linechart(transactionChatGraph["credited"]!),
+                           linechart(transactionChatGraph["debited"]!),
+                        
                         ],
                         lineTouchData: LineTouchData(
                           touchTooltipData: LineTouchTooltipData(
@@ -387,4 +366,54 @@ Widget getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth){
             );
 }
 
+
+
+LineChartBarData linechart(List<double> list){
+   return LineChartBarData(
+                            isCurved: true,
+                            color: AppColors.accentColor,
+                            barWidth: 1,
+                            dotData: FlDotData(show: false),
+                            belowBarData: BarAreaData(
+                                show: false,
+                                color: Colors.red.withOpacity(0.2)),
+                            spots: List.generate(
+                              list.length,
+                              (index) => FlSpot(index.toDouble(),
+                                list[index]),
+                            ),
+                          );
 }
+
+}
+
+
+
+  // LineChartBarData(
+  //                           isCurved: true,
+  //                           color: AppColors.primaryColor,
+  //                           barWidth: 1,
+  //                           dotData: FlDotData(show: false),
+  //                           belowBarData: BarAreaData(
+  //                               show: false,
+  //                               color: Colors.green.withOpacity(0.2)),
+  //                           spots: List.generate(
+  //                             transactionChatGraph["credited"]!.length,
+  //                             (index) => FlSpot(index.toDouble(),
+  //                                 transactionChatGraph["credited"]![index]),
+  //                           ),
+  //                         ),
+  //                         LineChartBarData(
+  //                           isCurved: true,
+  //                           color: AppColors.accentColor,
+  //                           barWidth: 1,
+  //                           dotData: FlDotData(show: false),
+  //                           belowBarData: BarAreaData(
+  //                               show: false,
+  //                               color: Colors.red.withOpacity(0.2)),
+  //                           spots: List.generate(
+  //                             transactionChatGraph["debited"]!.length,
+  //                             (index) => FlSpot(index.toDouble(),
+  //                               transactionChatGraph["debited"]![index]),
+  //                           ),
+  //                         ),
