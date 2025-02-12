@@ -436,54 +436,7 @@ class _ModalContentState extends State<ModalContent>
           padding: const EdgeInsets.all(16.0),
           child: _isCelebrationVisible
               // Show Celebration if Continue button is tapped
-              ? Stack(alignment: Alignment.center, children: [
-                  // Confetti blast effect
-                  ConfettiWidget(
-                    confettiController: _confettiController,
-                    blastDirectionality: BlastDirectionality
-                        .explosive, // Blast in all directions
-                    numberOfParticles: 50, // Number of confetti pieces
-                    colors: const [
-                      Colors.green,
-                      Colors.blue,
-                      Colors.orange,
-                      Colors.pink
-                    ],
-                    gravity: 0.3, // Confetti falls slowly
-                  ),
-                  // Animated tick mark
-                  ScaleTransition(
-                    scale: CurvedAnimation(
-                      parent: _iconAnimationController,
-                      curve: Curves.elasticOut,
-                    ),
-                    child: Container(
-                      width: MediaQuery.sizeOf(context).width * 1.1,
-                      height: Colorcodes.paddingSize * 10,
-                      color: AppColors.backgroundColor,
-                      child: Column(
-                        key: const ValueKey('celebration'),
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.check_circle,
-                            color: Colors.green,
-                            size: 100,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            'Successfully Added',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.green[700],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ])
+              ? celebration()
               : AnimatedPadding(
                   padding: MediaQuery.of(context)
                       .viewInsets, // Adjusts padding when keyboard appears
@@ -511,147 +464,19 @@ class _ModalContentState extends State<ModalContent>
                         const SizedBox(height: 16),
 
                         // Enter Amount Field (Only shown if no category is selected)
-                        //AmountWidget(),
+
                         if (selectedCategory == null &&
                             selectedSubCategory == null) ...[
-                          TextField(
-                            controller: _amountController,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.currency_rupee),
-                              hintText: 'Enter the amount',
-                              fillColor: AppColors.button,
-                              filled: true,
-                              hintStyle: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.normal,
-                                  fontSize: 16,
-                                  color: AppColors.accentColor),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: AppColors
-                                      .accentColor, // Default border color
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide:
-                                    BorderSide(color: AppColors.accentColor
-                                        // When not focused
-
-                                        ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: AppColors
-                                      .accentColor, // Color when focused
-                                  // Slightly thicker when focused for emphasis
-                                ),
-                              ),
-                            ),
-                            onChanged: (value) {
-                              setState(() {
-                                // Update the amount variable whenever the input changes
-                                amount = double.tryParse(
-                                    value); // Convert string to double
-                              });
-                            },
-                          ),
+                          AmountWidget(),
                           const SizedBox(height: 16),
                         ],
 
                         if (amount != null) ...[
-                          GestureDetector(
-                            onTap: toggleCategoryField,
-                            child: TextField(
-                              controller: categoryFieldController,
-                              readOnly: false,
-                              decoration: InputDecoration(
-                                hintText: 'Categories',
-                                fillColor: AppColors.button,
-                                filled: true,
-                                hintStyle: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.normal,
-                                    fontSize: 16,
-                                    color: AppColors.accentColor),
-                                prefixIcon: const Icon(Icons.search),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(
-                                    color: AppColors
-                                        .accentColor, // When not focused
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(
-                                    color: AppColors
-                                        .accentColor, // Color when focused
-                                    // Slightly thicker when focused for emphasis
-                                  ),
-                                ),
-                              ),
-                              onTap: () {
-                                if (!isCategoryFieldExpanded) {
-                                  toggleCategoryField();
-                                }
-                              },
-                              onChanged: (value) {
-                                filterCategories(
-                                    value); // Filter categories as the user types
-                              },
-                            ),
-                          ),
+                          categoryWidget(),
                         ],
                         const SizedBox(height: 8),
                         if (isCategoryFieldExpanded) ...[
-                          Expanded(
-                            child: ListView.builder(
-                              itemCount: filteredCategories.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                String category = filteredCategories[index];
-                                String urlPath = "";
-                                // try {
-                                //   urlPath = Categories.link +
-                                //       BudgetCategories.listofCategories[
-                                //           BudgetCategories.listofCategories.keys
-                                //               .elementAt(index)];
-                                // } catch (e) {}
-
-                                return ListTile(
-                                  // leading: const Icon(Icons.category),
-                                  // leading: AvatarProfileImage(
-                                  //   url: ImageUrl,
-                                  //   height: 16,
-                                  //   width: 20,
-                                  // ),
-                                  leading: AvatarProfileImage(
-                                    url: urlPath,
-                                    width: 20,
-                                    height: 16,
-                                  ),
-                                  title: Text(category,
-                                      style: FontManager().getTextStyle(context,
-                                          lWeight: FontWeight.normal,
-                                          fontSize: 16,
-                                          color: AppColors.accentColor)),
-                                  onTap: () {
-                                    setState(() {
-                                      selectedCategory = category;
-                                      categoryFieldController.text =
-                                          category; // Update text field
-                                      isCategoryFieldExpanded =
-                                          false; // Collapse the list
-                                    });
-                                  },
-                                );
-                              },
-                            ),
-                          ),
+                          categoryExpandedWidget(),
                         ],
 
                         // Subcategories List (Visible after category is selected)
@@ -665,155 +490,325 @@ class _ModalContentState extends State<ModalContent>
                           SizedBox(
                             height: 5,
                           ),
-                          Wrap(
-                            spacing: 8.0, // Horizontal spacing between chips
-                            runSpacing: 8.0, // Vertical spacing between rows
-                            children: categories[selectedCategory]!
-                                .map((subCategory) {
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    selectedSubCategory = subCategory;
-                                    selectedSubCategory2 = subCategory;
-                                    categoryFieldController.text =
-                                        '$selectedCategory ($selectedSubCategory)';
-                                    //isSplitbill = true;
-                                    fin =
-                                        '$selectedCategory ($selectedSubCategory)';
-                                    selectedCategory2 = selectedCategory;
-                                    resetToInitialScreen();
-                                  });
-                                },
-                                child: Chip(
-                                  avatar: Icon(
-                                    Icons
-                                        .category, // Replace with a relevant icon
-                                    color: Colors.blue, // Icon color
-                                    size:
-                                        18, // Adjust size to fit within the chip
-                                  ),
-                                  label: Text(
-                                    subCategory,
-                                    style: FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.normal,
-                                        fontSize: 14,
-                                        color: AppColors.accentColor),
-                                  ),
-                                  backgroundColor: AppColors.button,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                          ),
+                          subcategoryWidget(),
                         ],
 
                         if (fin != null) ...[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  // Action for Split Bill button
-                                  //isSplit = true;
-                                  // splitBill();
-                                  isSplit.value = true;
-                                  isLend.value = false;
-
-                                  showCustomFriendsModal(context);
-                                },
-                                child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width / 2.4,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 14),
-                                  decoration: BoxDecoration(
-                                      color: AppColors.button,
-                                      borderRadius: BorderRadius.circular(24)),
-                                  child: Center(
-                                    child: Text(
-                                      'Bill Split',
-                                      style: FontManager().getTextStyle(context,
-                                          lWeight: FontWeight.bold,
-                                          fontSize: 15,
-                                          color: AppColors.primaryColor),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  // Action for Continue button
-                                  isSplit.value = false;
-                                  isLend.value = true;
-                                  showCustomFriendsModal(context);
-                                },
-                                child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width / 2.4,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 14),
-                                  decoration: BoxDecoration(
-                                      color: AppColors.button,
-                                      borderRadius: BorderRadius.circular(24)),
-                                  child: Center(
-                                    child: Text(
-                                      'Lend money',
-                                      style: FontManager().getTextStyle(context,
-                                          lWeight: FontWeight.bold,
-                                          fontSize: 15,
-                                          color: AppColors.primaryColor),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              // Button to trigger celebration
-                              Center(
-                                
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: 10),
-                                  child: InkWell(
-                                    onTap: () {
-                                      if (isSplit.value) {
-                                        splitBill(
-                                            selectedCategory2.toString(),
-                                            amount.toString(),
-                                            selectedSubCategory2.toString(),
-                                            true);
-                                      } else if (isLend.value) {
-                                        splitBill(
-                                            selectedCategory2.toString(),
-                                            amount.toString(),
-                                            selectedSubCategory2.toString(),
-                                            false);
-                                      } else {
-                                        addTransaction(
-                                            amount.toString(),
-                                            selectedSubCategory2.toString(),
-                                            selectedCategory2.toString(),
-                                            context,
-                                            "cash");
-                                      }
-                                      // _showCelebration();
-                                    },
-                                    child: getButton(context, "Continue"),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                          buttonsWidget(),
+                          continueButton(),
                         ],
                       ],
                     ),
                   ),
                 ),
         ));
+  }
+
+  Widget celebration() {
+    return Stack(alignment: Alignment.center, children: [
+      // Confetti blast effect
+      ConfettiWidget(
+        confettiController: _confettiController,
+        blastDirectionality:
+            BlastDirectionality.explosive, // Blast in all directions
+        numberOfParticles: 50, // Number of confetti pieces
+        colors: const [Colors.green, Colors.blue, Colors.orange, Colors.pink],
+        gravity: 0.3, // Confetti falls slowly
+      ),
+      // Animated tick mark
+      ScaleTransition(
+        scale: CurvedAnimation(
+          parent: _iconAnimationController,
+          curve: Curves.elasticOut,
+        ),
+        child: Container(
+          width: MediaQuery.sizeOf(context).width * 1.1,
+          height: Colorcodes.paddingSize * 10,
+          color: AppColors.backgroundColor,
+          child: Column(
+            key: const ValueKey('celebration'),
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.check_circle,
+                color: Colors.green,
+                size: 100,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Successfully Added',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green[700],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ]);
+  }
+
+  Widget AmountWidget() {
+    return TextField(
+      controller: _amountController,
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+        prefixIcon: const Icon(Icons.currency_rupee),
+        hintText: 'Enter the amount',
+        fillColor: AppColors.button,
+        filled: true,
+        hintStyle: FontManager().getTextStyle(context,
+            lWeight: FontWeight.normal,
+            fontSize: 16,
+            color: AppColors.accentColor),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: AppColors.accentColor, // Default border color
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: AppColors.accentColor
+              // When not focused
+
+              ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: AppColors.accentColor, // Color when focused
+            // Slightly thicker when focused for emphasis
+          ),
+        ),
+      ),
+      onChanged: (value) {
+        setState(() {
+          // Update the amount variable whenever the input changes
+          amount = double.tryParse(value); // Convert string to double
+        });
+      },
+    );
+  }
+
+  Widget categoryWidget() {
+    return GestureDetector(
+      onTap: toggleCategoryField,
+      child: TextField(
+        controller: categoryFieldController,
+        readOnly: false,
+        decoration: InputDecoration(
+          hintText: 'Categories',
+          fillColor: AppColors.button,
+          filled: true,
+          hintStyle: FontManager().getTextStyle(context,
+              lWeight: FontWeight.normal,
+              fontSize: 16,
+              color: AppColors.accentColor),
+          prefixIcon: const Icon(Icons.search),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: AppColors.accentColor, // When not focused
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: AppColors.accentColor, // Color when focused
+              // Slightly thicker when focused for emphasis
+            ),
+          ),
+        ),
+        onTap: () {
+          if (!isCategoryFieldExpanded) {
+            toggleCategoryField();
+          }
+        },
+        onChanged: (value) {
+          filterCategories(value); // Filter categories as the user types
+        },
+      ),
+    );
+  }
+
+  Widget categoryExpandedWidget() {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: filteredCategories.length,
+        itemBuilder: (BuildContext context, int index) {
+          String category = filteredCategories[index];
+          String urlPath = "";
+          // try {
+          //   urlPath = Categories.link +
+          //       BudgetCategories.listofCategories[
+          //           BudgetCategories.listofCategories.keys
+          //               .elementAt(index)];
+          // } catch (e) {}
+
+          return ListTile(
+            //leading: const Icon(Icons.category),
+
+            leading: AvatarProfileImage(
+              url: urlPath,
+              width: 50,
+              height: 36,
+            ),
+            title: Text(category,
+                style: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.normal,
+                    fontSize: 16,
+                    color: AppColors.accentColor)),
+            onTap: () {
+              setState(() {
+                selectedCategory = category;
+                categoryFieldController.text = category; // Update text field
+                isCategoryFieldExpanded = false; // Collapse the list
+              });
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget subcategoryWidget() {
+    return Wrap(
+      spacing: 8.0, // Horizontal spacing between chips
+      runSpacing: 8.0, // Vertical spacing between rows
+      children: categories[selectedCategory]!.map((subCategory) {
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              selectedSubCategory = subCategory;
+              selectedSubCategory2 = subCategory;
+              categoryFieldController.text =
+                  '$selectedCategory ($selectedSubCategory)';
+              //isSplitbill = true;
+              fin = '$selectedCategory ($selectedSubCategory)';
+              selectedCategory2 = selectedCategory;
+              resetToInitialScreen();
+            });
+          },
+          child: Chip(
+            avatar: Icon(
+              Icons.category, // Replace with a relevant icon
+              color: Colors.blue, // Icon color
+              size: 18, // Adjust size to fit within the chip
+            ),
+            label: Text(
+              subCategory,
+              style: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.normal,
+                  fontSize: 14,
+                  color: AppColors.accentColor),
+            ),
+            backgroundColor: AppColors.button,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget buttonsWidget() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        GestureDetector(
+          onTap: () {
+            // Action for Split Bill button
+            //isSplit = true;
+            // splitBill();
+            isSplit.value = true;
+            isLend.value = false;
+
+            showCustomFriendsModal(context);
+          },
+          child: Container(
+            width: MediaQuery.of(context).size.width / 2.4,
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+            decoration: BoxDecoration(
+                color: AppColors.button,
+                borderRadius: BorderRadius.circular(24)),
+            child: Center(
+              child: Text(
+                'Bill Split',
+                style: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: AppColors.primaryColor),
+              ),
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            // Action for Continue button
+            isSplit.value = false;
+            isLend.value = true;
+            showCustomFriendsModal(context);
+          },
+          child: Container(
+            width: MediaQuery.of(context).size.width / 2.4,
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+            decoration: BoxDecoration(
+                color: AppColors.button,
+                borderRadius: BorderRadius.circular(24)),
+            child: Center(
+              child: Text(
+                'Lend money',
+                style: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: AppColors.primaryColor),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget continueButton() {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        // Button to trigger celebration
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: InkWell(
+              onTap: () {
+                if (isSplit.value) {
+                  splitBill(selectedCategory2.toString(), amount.toString(),
+                      selectedSubCategory2.toString(), true);
+                } else if (isLend.value) {
+                  splitBill(selectedCategory2.toString(), amount.toString(),
+                      selectedSubCategory2.toString(), false);
+                } else {
+                  addTransaction(
+                      amount.toString(),
+                      selectedSubCategory2.toString(),
+                      selectedCategory2.toString(),
+                      context,
+                      "cash");
+                }
+                // _showCelebration();
+              },
+              child: getButton(context, "Continue"),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   void splitBill(categories, amount, subCategories, bool isSplit) {
