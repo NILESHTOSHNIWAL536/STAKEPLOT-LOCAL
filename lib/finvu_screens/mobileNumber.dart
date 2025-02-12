@@ -151,25 +151,36 @@ final String termsUrl = "https://pub.dev/packages/url_launcher/install"; // Repl
               child: getButton(context, "Get OTP"),
 
             ),
-            Center(
-        child: RichText(
-          text: TextSpan(
-            text: "By clicking Continue, you agree to our ",
-            style: TextStyle(color: Colors.black, fontSize: 16),
-            children: [
-              TextSpan(
-                text: "Terms & Conditions",
-                style: TextStyle(
-                  color: Colors.blue,
-                  decoration: TextDecoration.underline,
+            Padding(
+              padding: const EdgeInsets.only(top: 40),
+              child: Center(
+                      child: RichText(
+                        text: TextSpan(
+              text: "By clicking Continue, you agree to our ",
+              style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w500,
+                  fontSize: 18,
+                  color: AppColors.bg1,
                 ),
-                // Make it clickable
-                recognizer: TapGestureRecognizer()..onTap = _launchURL,
-              ),
-            ],
-          ),
-        ),
-      ),
+              children: [
+                TextSpan(
+                  text: "Terms & Conditions",
+                  style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w500,
+                  fontSize: 18,
+                  //decoration: UnderlineInputBorder(),
+                  color: Colors.blue,
+                ),
+                  // Make it clickable
+                  recognizer: TapGestureRecognizer()..onTap = _launchURL,
+                ),
+              ],
+                        ),
+                      ),
+                    ),
+            ),
           ],
         ),
       ),

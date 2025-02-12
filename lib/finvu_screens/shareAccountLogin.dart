@@ -47,7 +47,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
   @override
   void initState() {
     super.initState();
-    if (widget.flag) getData();
+    if (widget.flag) getLinkedAccountInfo();
     _scrollController = ScrollController();
     _startAutoScroll();
     
@@ -73,20 +73,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
     });
   }
 
-  void getData() async {
-    fipDis = await finvuManager.fipsAllFIPOptions();
-    List<FinvuLinkedAccountDetailsInfo> data =
-        await finvuManager.fetchLinkedAccounts();
-    listofLinkedAccount.clear();
-    if (data.isNotEmpty) {
-      data.forEach((finvu) {
-        listofLinkedAccount.add(finvu.accountReferenceNumber.toString());
-      });
-    }
-    fipDisOrginal.clear();
-    fipDisOrginal.addAll(fipDis);
-    getBanks.value = !getBanks.value;
-  }
+ 
 
   @override
   void dispose() {

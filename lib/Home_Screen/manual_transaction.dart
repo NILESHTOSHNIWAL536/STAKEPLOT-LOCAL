@@ -511,6 +511,7 @@ class _ModalContentState extends State<ModalContent>
                         const SizedBox(height: 16),
 
                         // Enter Amount Field (Only shown if no category is selected)
+                        //AmountWidget(),
                         if (selectedCategory == null &&
                             selectedSubCategory == null) ...[
                           TextField(
@@ -613,11 +614,26 @@ class _ModalContentState extends State<ModalContent>
                               itemCount: filteredCategories.length,
                               itemBuilder: (BuildContext context, int index) {
                                 String category = filteredCategories[index];
+                                String urlPath = "";
+                                // try {
+                                //   urlPath = Categories.link +
+                                //       BudgetCategories.listofCategories[
+                                //           BudgetCategories.listofCategories.keys
+                                //               .elementAt(index)];
+                                // } catch (e) {}
+
                                 return ListTile(
-                                  leading: const Icon(Icons.category),
-//                                 leading: Text(
-//   Categories.link + BudgetCategories.listofCategories[BudgetCategories.listofCategories.keys.elementAt(index)],
-// ),
+                                  // leading: const Icon(Icons.category),
+                                  // leading: AvatarProfileImage(
+                                  //   url: ImageUrl,
+                                  //   height: 16,
+                                  //   width: 20,
+                                  // ),
+                                  leading: AvatarProfileImage(
+                                    url: urlPath,
+                                    width: 20,
+                                    height: 16,
+                                  ),
                                   title: Text(category,
                                       style: FontManager().getTextStyle(context,
                                           lWeight: FontWeight.normal,
@@ -759,36 +775,7 @@ class _ModalContentState extends State<ModalContent>
                             children: [
                               // Button to trigger celebration
                               Center(
-                                // child: ElevatedButton(
-                                //   onPressed: () {
-                                //     if (isSplit.value) {
-                                //       splitBill(
-                                //           selectedCategory2.toString(),
-                                //           amount.toString(),
-                                //           selectedSubCategory2.toString(),
-                                //           true);
-                                //     } else if (isLend.value) {
-                                //       splitBill(
-                                //           selectedCategory2.toString(),
-                                //           amount.toString(),
-                                //           selectedSubCategory2.toString(),
-                                //           false);
-                                //     } else {
-                                //       addTransaction(
-                                //           amount.toString(),
-                                //           selectedSubCategory2.toString(),
-                                //           selectedCategory2.toString(),
-                                //           context,
-                                //           "cash");
-                                //     }
-                                //     // _showCelebration();
-                                //   },
-                                //   child: Text('Continue',
-                                //       style: FontManager().getTextStyle(context,
-                                //           lWeight: FontWeight.normal,
-                                //           fontSize: 16,
-                                //           color: AppColors.accentColor)),
-                                // ),
+                                
                                 child: Padding(
                                   padding: const EdgeInsets.only(top: 10),
                                   child: InkWell(
