@@ -102,35 +102,43 @@ class _DebtListScreenState extends State<DebtListScreen> {
                   ),
                   margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                   padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                  child: ListTile(
-                    // title: Text(debt.loanType),
-                    title: Text(debt.name),
-
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: Colorcodes.paddingSize / 2,
-                        ),
-                        Text(
-                          'Amount',
-                          style: FontManager().getTextStyle(context,
-                              fontSize: 14,
-                              color: AppColors.bg1,
-                              lWeight: FontWeight.normal),
-                        ),
-                        SizedBox(
-                          height: Colorcodes.paddingSize / 3,
-                        ),
-                        Text(
-                          '\₹${debt.amount.toStringAsFixed(2)}',
-                          style: FontManager().getTextStyle(context,
-                              fontSize: 20,
-                              color: AppColors.bg1,
-                              lWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
+                  
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(debt.name),SizedBox(
+                              height: Colorcodes.paddingSize / 2,
+                            ),
+                            Text(
+                              'Amount',
+                              style: FontManager().getTextStyle(context,
+                                  fontSize: 14,
+                                  color: AppColors.bg1,
+                                  lWeight: FontWeight.normal),
+                            ),
+                            SizedBox(
+                              height: Colorcodes.paddingSize / 3,
+                            ),
+                            Text(
+                              '\₹${debt.amount.toStringAsFixed(2)}',
+                              style: FontManager().getTextStyle(context,
+                                  fontSize: 20,
+                                  color: AppColors.bg1,
+                                  lWeight: FontWeight.bold),
+                            ),
+                            
+                      
+                        ],
+                      ),
+                      AvatarProfileImage(
+                url: Finance.addBudget,
+                height: 10,
+                width: 12,
+              ),
+                    ],
                   ),
                 );
               },

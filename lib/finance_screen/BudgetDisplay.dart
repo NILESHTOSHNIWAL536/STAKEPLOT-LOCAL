@@ -129,70 +129,54 @@ class _BudgetDisplayState extends State<BudgetDisplay> {
       },
       child: Container(
         width: MediaQuery.of(context).size.width / 1.1,
+        height: MediaQuery.of(context).size.height / 6.6,
         decoration: BoxDecoration(
           color: AppColors.mt,
           borderRadius: BorderRadius.circular(10),
         ),
         margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+        padding: const EdgeInsets.fromLTRB(10, 7, 0, 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: Colorcodes.paddingSize / 2),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: textStyle(
-                              context: context,
-                              text: data['name'],
-                              fontWeight: FontWeight.w500,
-                              fontsize: 16),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: Colorcodes.paddingSize / 2),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only( bottom: Colorcodes.paddingSize / 2),
+                  child: Expanded(
                     child: textStyle(
                         context: context,
-                        text: data['budgetPeriod'],
+                        text: data['name'],
                         fontWeight: FontWeight.w500,
                         fontsize: 16),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: Colorcodes.paddingSize / 2),
-                    child: textStyle(
-                        context: context,
-                        text: 'Amount',
-                        fontWeight: FontWeight.w300,
-                        fontsize: 14),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: Colorcodes.paddingSize / 2),
-                    child: textStyle(
-                        context: context,
-                        text: "₹${data['amount']}",
-                        fontWeight: FontWeight.w500,
-                        fontsize: 18),
-                  ),
-                ],
-              ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: Colorcodes.paddingSize / 2),
+                  child: textStyle(
+                      context: context,
+                      text: data['budgetPeriod'],
+                      fontWeight: FontWeight.w500,
+                      fontsize: 16),
+                ),
+                textStyle(
+                    context: context,
+                    text: 'Amount',
+                    fontWeight: FontWeight.w300,
+                    fontsize: 14),
+                textStyle(
+                    context: context,
+                    text: "₹${data['amount']}",
+                    fontWeight: FontWeight.w600,
+                    fontsize: 20),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 60),
-              child: AvatarProfileImage(
-                url: Finance.addBudget,
-                height: 10,
-                width: 12,
-              ),
+            AvatarProfileImage(
+              url: Finance.addBudget,
+              height: 10,
+              width: 12,
             ),
           ],
         ),
