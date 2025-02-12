@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
     getUserInfomations();
     getUserLend(context);
     getBudget();
-     getSummary(); 
+    getSummary(); 
     userController.fetchUserInfo();
     // getUserInfo();
     //  _scrollController.addListener(_handleScroll);

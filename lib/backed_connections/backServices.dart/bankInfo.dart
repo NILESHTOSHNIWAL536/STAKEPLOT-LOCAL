@@ -14,7 +14,7 @@ void getSummary() async
     
     var res=await getDataApiCall("${url}/transactionauto/user-details");
          print("data transactionauto :");
-    
+    printData(res);
     if(getFlagOfResponse(res)){
          var data=jsonDecode(res.body);
          data=data['data'];
