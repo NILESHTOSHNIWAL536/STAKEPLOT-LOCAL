@@ -17,19 +17,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 
 
-
-class FinanceChartApp extends StatelessWidget {
-  const FinanceChartApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const FinancePage(),
-    );
-  }
-}
-
 class FinancePage extends StatefulWidget {
   const FinancePage({super.key});
 
@@ -48,7 +35,6 @@ class _FinancePageState extends State<FinancePage> {
 
   @override
   Widget build(BuildContext context) {
-   
    
    
     // Get screen width to make the UI responsive
@@ -274,151 +260,19 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     // Find the maximum Y value to set chart's maxY dynamically
     // Example: 50% of screen height
 
-    if (widget.selectedButton == 'Month') {
-      return Container(
-        child: Row(
-          children: [
-            // Fixed left titles
-            // Padding(
-            //   padding: const EdgeInsets.only(bottom: 12),
-            //   child: Container(
-            //     width: screenWidth * 0.1,
-            //     height: chartHeight,
-            //     child: Column(
-            //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //       children: yAxisLabels.reversed.map((label) {
-            //         return Text(
-            //           '₹${label.toString()}',
-            //           style: FontManager().getTextStyle(context,
-            //               lWeight: FontWeight.normal,
-            //               fontSize: fontSizeFactor * 3,
-            //               color: AppColors.accentColor),
-            //         );
-            //       }).toList(),
-            //     ),
-            //   ),
-            // ),
-            SizedBox(
-              width: 20,
-            ),
-            graphTransaction.value? getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth): getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth)
-          ],
-        ),
-      );
-    } else {
-      return LineChart(
-        LineChartData(
-          gridData: FlGridData(
-            show: false,
-          ),
-          titlesData: FlTitlesData(
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                interval: 1,
-                getTitlesWidget: (value, meta) {
-                  if (value.toInt() < widget.days.length) {
-                    return Text(
-                      widget.days[value.toInt()],
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.normal,
-                          fontSize: fontSizeFactor * 3.5,
-                          color: AppColors.accentColor),
-                    );
-                  }
-                  return SizedBox.shrink();
-                },
-              ),
-            ),
-            rightTitles:
-                const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles:
-                const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: screenWidth * 0.1,
-                interval: maxYValue / 6, // Dynamic based on maxYValue
-                getTitlesWidget: (value, meta) {
-                  return Text(
-                    '₹${value.toInt()}',
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
-                        fontSize: fontSizeFactor * 3,
-                        color: AppColors.accentColor),
-                  );
-                },
-              ),
-            ),
-          ),
-          borderData: FlBorderData(
-            show: false,
-          ),
-          minY: 0,
-          maxY: maxYValue.value,
-          lineBarsData: [
-            LineChartBarData(
-              isCurved: true,
-              color: AppColors.primaryColor,
-              barWidth: 1,
-              dotData: FlDotData(show: false),
-              belowBarData: BarAreaData(
-                  show: false, color: Colors.green.withOpacity(0.2)),
-              spots: List.generate(
-                widget.chartData["credited"]!.length,
-                (index) => FlSpot(
-                    index.toDouble(), widget.chartData["credited"]![index]),
-              ),
-            ),
-            LineChartBarData(
-              isCurved: true,
-              color: AppColors.accentColor,
-              barWidth: 1,
-              dotData: FlDotData(show: false),
-              belowBarData:
-                  BarAreaData(show: false, color: Colors.red.withOpacity(0.2)),
-              spots: List.generate(
-                widget.chartData["debited"]!.length,
-                (index) => FlSpot(
-                    index.toDouble(), widget.chartData["debited"]![index]),
-              ),
-            ),
-          ],
-          lineTouchData: LineTouchData(
-            touchTooltipData: LineTouchTooltipData(
-              tooltipRoundedRadius: 1,
-              tooltipPadding: const EdgeInsets.all(8),
-              getTooltipItems: (touchedSpots) {
-                return touchedSpots.map((touchedSpot) {
-                  String label = touchedSpot.bar.color == AppColors.primaryColor
-                      ? 'Credited'
-                      : 'Debited';
-                  return LineTooltipItem(
-                    '$label: ₹${touchedSpot.y.toStringAsFixed(2)}',
-                    FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
-                        fontSize: fontSizeFactor * 2.5,
-                        color: AppColors.accentColor),
-                  );
-                }).toList();
-              },
-            ),
-          ),
-        ),
-      );
-    
-    }
+       return graphTransaction.value? getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth): getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth);
+      
   }
 
 
 Widget getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth){
-    print( maxYValue.value/7);
+   
   return Expanded(
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: SizedBox(
                   width: screenWidth * 2,
-                  height: MediaQuery.of(context).size.height/3,
+                  height: MediaQuery.of(context).size.height/2.4,
                   child: GestureDetector(
                     onPanUpdate: (details) {
                       // Detect hover over points if required for further enhancements.
@@ -454,14 +308,15 @@ Widget getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth){
                           leftTitles: AxisTitles(
                             sideTitles: SideTitles(
                               showTitles: true,
-                              reservedSize: screenWidth * 0.4,
-                              interval: maxYValue.value/5, // For 5 labels (4 intervals + 0 at the bottom)
+                              
+                              reservedSize: screenWidth * 0.2,
+                              // interval: maxYValue.value, // For 5 labels (4 intervals + 0 at the bottom)
                               getTitlesWidget: (value, meta) {
                                 return Text(
-                                  '₹${value.toInt()}',
+                                  '₹${value.toString()}',
                                   style: FontManager().getTextStyle(context,
                                       lWeight: FontWeight.normal,
-                                      fontSize: fontSizeFactor * 3,
+                                      fontSize: fontSizeFactor * 3.6,
                                       color: AppColors.accentColor),
                                 );
                               },

@@ -103,12 +103,17 @@ void getAutoMationsTransactionsWeekly() async {
   }
 }
 
+double getDouble(data){
+   return double.parse(data.toString());
+}
+
 void getAutoMationsTransactionsCustom(date, context) async {
   var response = await getDataApiCall(
       "${url}/transactionauto/getAllCustomTransactions/month/${'2024-09'}");
       // "${url}/transactionauto/getAllCustomTransactions/month/${date}");
   trasactionsDataCreditWeekly.clear();
   trasactionsDataDebitWeekly.clear();
+
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
 
@@ -118,54 +123,22 @@ void getAutoMationsTransactionsCustom(date, context) async {
     List<double> creditList = [];
 
     if (his['data']['transactions'].isEmpty) return;
-    maxYValue.value=his['data']['maxAmount'];
+    maxYValue.value=double.parse(his['data']['maxAmount'].toString());
     his['data']['transactions'].forEach((key, value) {
                labelsLocal.add(key.toString().substring(key.toString().length-2));
-               debitList.add(value['debit']);
-               creditList.add(value['credit']);
+               debitList.add( getDouble(value['debit']));
+               creditList.add( getDouble(value['credit']));
     });
 
-     print(labelsLocal);
-     print(debitList);
-    //credited  debited
+    
     transactionChatGraph.clear();
     labels.clear();
     transactionChatGraph['credited']=debitList;
     transactionChatGraph['debited']=creditList;
     graphTransaction.value=!graphTransaction.value;
-    print(transactionChatGraph);
+  
     labels.addAll(labelsLocal);
 
-    print("----------------------------------------------");
-    print(labelsLocal);
-
-
- 
-    // Loop through the date range
-
-    // for (DateTime currentDate = startDate;
-    //     currentDate.isBefore(endDate.add(Duration(days: 1)));
-    //     currentDate = currentDate.add(Duration(days: 1))) {
-    //   String dateString = currentDate.toIso8601String().split('T')[0];
-
-    //   if (data.containsKey(dateString)) {
-    //     double b1 = double.parse(data[dateString]?['debit'].toString() ?? "0");
-    //     double b2 = double.parse(data[dateString]?['credit'].toString() ?? "0");
-    //     debitList.add(b1);
-    //     creditList.add(b2);
-    //     maxDC = max(max(b1, b2), maxDC);
-    //   } else {
-    //     debitList.add(0);
-    //     creditList.add(0);
-    //   }
-    // }
-
-    // trasactionsDataCustomCredit.clear();
-    // trasactionsDataCustomDebit.clear();
-    // trasactionsDataCustomLabel.clear();
-    // trasactionsDataCustomCredit.addAll(debitList);
-    // trasactionsDataCustomDebit.addAll(creditList);
-    // trasactionsDataCustomLabel.addAll(labels);
   }
 }
 

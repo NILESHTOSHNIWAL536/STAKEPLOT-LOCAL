@@ -55,6 +55,7 @@ class _HomePageState extends State<HomePage> {
     getBudget();
     getSummary(); 
     getCategoryData();
+    getAutoMationsTransactionsCustom("date", context);
     userController.fetchUserInfo();
   }
 
@@ -93,8 +94,8 @@ class HomeScreen extends StatelessWidget {
 
               // Finance Chart
                 SizedBox(
-               height: MediaQuery.of(context).size.height * 0.7,
-                child: const FinanceChartApp(),
+               height: MediaQuery.of(context).size.height * 0.5,
+                child: const FinancePage(),
               ),
               //const SizedBox(height: 20),
 
