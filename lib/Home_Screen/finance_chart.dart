@@ -412,7 +412,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
 
 
 Widget getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth){
-  
+    print( maxYValue.value/7);
   return Expanded(
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -454,9 +454,8 @@ Widget getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth){
                           leftTitles: AxisTitles(
                             sideTitles: SideTitles(
                               showTitles: true,
-
-                              reservedSize: screenWidth * 0.2,
-                              interval:  maxYValue.value/5, // For 5 labels (4 intervals + 0 at the bottom)
+                              reservedSize: screenWidth * 0.4,
+                              interval: maxYValue.value/5, // For 5 labels (4 intervals + 0 at the bottom)
                               getTitlesWidget: (value, meta) {
                                 return Text(
                                   '₹${value.toInt()}',
