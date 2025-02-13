@@ -267,9 +267,11 @@ class _TribeHomeState extends State<TribeUnique> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       bottomNavigationBar: BottomNavigations(data: sizeRoom ? 3 : 2),
       extendBody: true,
       appBar: AppBar(
+        backgroundColor: AppColors.backgroundColor,
           centerTitle: true,
           automaticallyImplyLeading: false,
           title: Container(
@@ -830,7 +832,7 @@ class _TribeHomeState extends State<TribeUnique> {
                   // borderRadius: BorderRadius.circular(40),
                   borderSide:
                       BorderSide(color: Color.fromRGBO(246, 246, 246, 1))),
-              fillColor: Colorcodes.textFeild,
+              fillColor: AppColors.button,
               border: InputBorder.none,
               contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             ),

@@ -35,6 +35,13 @@ class Manualtransaction extends StatefulWidget {
 }
 
 class _ManualtransactionState extends State<Manualtransaction> {
+
+  
+
+  
+
+
+
   Widget build(BuildContext context) {
     return Container(
       //height: 300,
@@ -836,24 +843,8 @@ class _ModalContentState extends State<ModalContent>
 
   void addSocketMessage(
       addedUser, String amount, String splitName, String splitID) {
-    //  home
-    //     //  Navigator.pushNamed(context, '/home');
-    //  if(frdsList.isEmpty){
-    //       //   Navigator.pop(context);
-    //       // Navigator.pushNamed(context, '/TribeSearch');
-    //       return;
-    //  }
-    // {
-    //                   "name": frdsList[index]['name'],
-    //                   "id": values,
-    //                   'avatar':frdsList[index]['avatar'],
-    //                   "balance": 200
-    // },
-    // print('splitID');
-    // print(splitID);
-    // print(addedUser);
+   
     if (addedUser.isEmpty) {
-      // snackBarCalled(context, "No Friend Added");
       return;
     }
 
@@ -940,7 +931,7 @@ class _ModalContentState extends State<ModalContent>
 
       members.forEach((e) {
         sendNotificationsToDevice(e['id'], context,
-            "${userName.value} has send u a Split Bill..Of ${name} Of ${amount}");
+            "${userName.value} has send u a Split Bill..Of ${name} Of ${doubleToFixed((getDouble(amount)/members.length+1).toString())}");
       });
       addSocketMessage(addedMembers, amount.toString(),
           selectedCategory2.toString(), splitID.value);

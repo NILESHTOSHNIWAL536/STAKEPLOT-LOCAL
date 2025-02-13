@@ -19,8 +19,8 @@ import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
 bool flag = true;
-String portNo = flag ? "192.168.1.4" : "localhost";
-String urlWithLocallHost =!flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String portNo = flag ? "192.168.1.11" : "localhost";
+String urlWithLocallHost = flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 
 String valid = "Please Enter All Feilds";
@@ -147,11 +147,12 @@ RxList debtsList = [].obs;
 RxList historyListData = [].obs;
 RxList getTrendingData = [].obs;
 RxBool hasGetNewNotifications = false.obs;
+RxBool getGraphData=false.obs;
 final ScrollController scrollController = ScrollController();
 final GlobalKey targetKey = GlobalKey(); // Key to identify the target widget
 
 
-String selectedButton = 'Month'; // Default view is "Month"
+ RxString selectedButton = 'Month'.obs; // Default view is "Month"
   DateTimeRange? selectedDateRange; // Default view is "Month"
   int selectedDay = 1;
   int year = DateTime.now().year; // Current year
