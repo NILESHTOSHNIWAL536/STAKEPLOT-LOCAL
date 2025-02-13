@@ -133,7 +133,7 @@ void getAutoMationsTransactionsCustom(date, context,[weekORmonth='month']) async
         }
         if(maxYValue.value==0 || maxYValue.value==0.0)maxYValue.value=500.0;
         his['data']['transactions'].forEach((key, value) {
-                  labelsLocal.add(key.toString().substring(key.toString().length-2));
+             selectedButton.value=="Custom"? labelsLocal.add(key.toString())   :  labelsLocal.add(key.toString().substring(key.toString().length-2));
                   debitList.add( getDouble(value['debit']));
                   creditList.add( getDouble(value['credit']));
     });
@@ -440,6 +440,11 @@ Future postDataApiCall(String urlPath, Map body) async {
         );
       },
     );
+    String s= picked!.start.toString().substring(0,10)+","+ picked.end.toString().substring(0,10);
+    getAutoMationsTransactionsCustom(s, context,'custom');
+    print(s);
+    selectedButton.value='Custom';
+    getGraphData.value=false;
     // if (picked != null && picked != selectedDateRange) {
       
         // selectedDateRange = picked;

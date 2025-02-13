@@ -283,7 +283,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
 Widget getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth){
    
   return  Expanded(
-              child: selectedButton.value=='Month'? SingleChildScrollView(
+              child: selectedButton.value!='Week'? SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: getContainerOfGraph(screenWidth,fontSizeFactor,)
               ):Container(
