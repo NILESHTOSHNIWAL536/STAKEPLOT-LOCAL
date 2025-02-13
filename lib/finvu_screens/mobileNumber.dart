@@ -133,7 +133,7 @@ final String termsUrl = "https://pub.dev/packages/url_launcher/install"; // Repl
                 number.value = phoneNumber;
               
                 // loginToAutoTractions(context);
-                 LOGOUT();
+                //  LOGOUT();
                 
                 await loginWithServer();
                 otpController = TextEditingController();
