@@ -249,6 +249,36 @@ class BudgetCategories {
   static List<String> categories =
       listofCategories.keys.map((key) => key.toString()).toList();
 }
+class BudgetCategories2 {
+  static Map<String, dynamic> listofCategories = {
+    "Food": Categories.food,
+    "Shopping": Categories.shopping,
+    "Travel": Categories.travel,
+    "Health": Categories.health,
+    "Bills": Categories.bills,
+    //"Subscriptions": Categories.subscription,
+    "Events": Categories.events,
+    "Personal Care": Categories.personalCare,
+    "Services": Categories.services,
+    "EMi": Categories.emi,
+    "Insurance": Categories.insurance,
+    //"Support": Categories.support,
+   // "Children": Categories.children,
+    "Pet Care": Categories.petCare,
+    "Sports": Categories.sports,
+    "Alcohol": Categories.alcohal,
+    "Hobbies": Categories.hobbies,
+    "Snacks": Categories.snacks,
+    "Entertainment": Categories.entertainment,
+    // "Investments": Categories.Investments,
+    // "Current": Categories.current,
+    // "Education": Categories.,
+    // "Commerce": Categories.commerce
+  };
+
+  static List<String> categories =
+      listofCategories.keys.map((key) => key.toString()).toList();
+}
 
 class Expansioncalculator {
   static List<String> creditcardTitle1 = [

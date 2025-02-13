@@ -823,7 +823,7 @@ class _CommunityState extends State<Community> {
       case 'image':
         return Image.network(
           post['content'],
-          fit: BoxFit.cover,
+          fit: BoxFit.contain,
         );
       case 'textImage':
         return Column(

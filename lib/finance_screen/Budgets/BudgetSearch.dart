@@ -41,7 +41,7 @@ final FocusNode _searchFocusNode = FocusNode(); // FocusNode for search field
     getTopFiveCater();
 
   
-    filteredCategories.assignAll(BudgetCategories.categories);
+    filteredCategories.assignAll(BudgetCategories2.categories);
 
     // Listen for search input changes
     nameController.addListener(() {
@@ -57,7 +57,7 @@ final FocusNode _searchFocusNode = FocusNode(); // FocusNode for search field
   // Filter categories based on the search query
   void filterCategories() {
     String query = nameController.text.toLowerCase();
-    filteredCategories.value = BudgetCategories.categories.where((category) {
+    filteredCategories.value = BudgetCategories2.categories.where((category) {
       return category.toLowerCase().contains(query);
     }).toList();
   }
@@ -230,7 +230,7 @@ final FocusNode _searchFocusNode = FocusNode(); // FocusNode for search field
         child: Row(
           children: [
             AvatarProfileImage(
-                url: Categories.link + BudgetCategories.listofCategories[categorie], width: 25, height: 26),
+                url: Categories.link + BudgetCategories2.listofCategories[categorie], width: 25, height: 26),
             const SizedBox(
               width: 20,
             ),

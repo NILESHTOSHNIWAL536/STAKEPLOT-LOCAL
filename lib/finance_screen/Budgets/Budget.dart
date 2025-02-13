@@ -16,6 +16,7 @@ import 'package:get/get.dart';
 
 RxList categoriesSeleted = [].obs;
 RxList categoriesDividedList = [].obs;
+
 RxList<String> cat = <String>[].obs;
 RxBool getCategories = false.obs;
 Map<String, dynamic> categoryWeights = {

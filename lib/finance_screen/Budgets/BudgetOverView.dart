@@ -47,18 +47,22 @@ class _BudgetOverViewState extends State<BudgetOverView> {
       ),
     );
   }
-bool _validateAmount(String value, String totalBudget) {
-  double enteredAmount = double.tryParse(value) ?? 0;
-  double budgetAmount = double.tryParse(totalBudget) ?? 0;
-  return enteredAmount <= budgetAmount;
-}
 
-bool _isAmountExceeded(int index) {
-  double enteredAmount = double.tryParse(categoriesDividedList[index]['amount'].toString()) ?? 0;
-  double budgetAmount = double.tryParse(widget.amount) ?? 0;
-  return enteredAmount > budgetAmount;
-}
+  bool _validateAmount(String value, String totalBudget) {
+    double enteredAmount = double.tryParse(value) ?? 0;
+    double budgetAmount = double.tryParse(totalBudget) ?? 0;
+    return enteredAmount <= budgetAmount;
+  }
+
+  bool _isAmountExceeded(int index) {
+    double enteredAmount =
+        double.tryParse(categoriesDividedList[index]['amount'].toString()) ?? 0;
+    double budgetAmount = double.tryParse(widget.amount) ?? 0;
+    return enteredAmount > budgetAmount;
+  }
+
   Widget getBudgetUiScreen(double height, double width) {
+    print('Categories to display: $categoriesDividedList');
     return Container(
       width: width,
       height: height,
@@ -152,11 +156,11 @@ bool _isAmountExceeded(int index) {
               String urlAvatar = "";
               try {
                 urlAvatar = Categories.link +
-                    BudgetCategories.listofCategories[
+                    BudgetCategories2.listofCategories[
                         categoriesDividedList[index]['category']];
               } catch (e) {
                 urlAvatar = Categories.link +
-                    BudgetCategories.listofCategories['Entertainment'];
+                    BudgetCategories2.listofCategories['Entertainment'];
               }
               return Container(
                 padding: EdgeInsets.symmetric(horizontal: 7),
@@ -194,7 +198,9 @@ bool _isAmountExceeded(int index) {
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
                                 hintText: "Enter amount",
-                                errorText: _isAmountExceeded(index) ? "Amount exceeds budget" : null,
+                                errorText: _isAmountExceeded(index)
+                                    ? "Amount exceeds budget"
+                                    : null,
                               ),
                               keyboardType: TextInputType.number,
                               onSubmitted: (value) {
@@ -225,8 +231,9 @@ bool _isAmountExceeded(int index) {
   }
 
   void onsubmit(index, value) async {
+  
     categoriesDividedList[index]['amount'] = double.tryParse(value) ?? 0;
-    
+
     var d = await adjustBudget(double.parse(widget.amount),
         categoriesDividedList[index]['category'], double.parse(value), cat);
     // {Bills: 1500.67, Insurance: 1791.39, Travel: 2507.94}
@@ -240,6 +247,7 @@ bool _isAmountExceeded(int index) {
 
     categoriesDividedList.clear();
     categoriesDividedList.addAll(List.from(categoryList));
+    print('Categorieslisttttttttttt to display: $categoryList');
   }
 
   Future<Map<String, double>> adjustBudget(
@@ -247,9 +255,7 @@ bool _isAmountExceeded(int index) {
       String updatedCategory,
       double updatedAmount,
       List<String> selectedCategories) async {
-
     updatedAmounts['updatedCategory'] = updatedAmount;
-
 
     // Flatten the subcategories and calculate total weights
     Map<String, double> subcategoryWeights = {};
@@ -300,6 +306,4 @@ bool _isAmountExceeded(int index) {
 
     return initialBudgets;
   }
-
-
 }
