@@ -107,39 +107,81 @@ double getDouble(data){
    return double.parse(data.toString());
 }
 
-void getAutoMationsTransactionsCustom(date, context) async {
-  var response = await getDataApiCall(
-    "${url}/transactionauto/getAllCustomTransactions/month/${'2024-09'}");
-      // "${url}/transactionauto/getAllCustomTransactions/month/${date}");
+void getAutoMationsTransactionsCustom(date, context,[weekORmonth='month']) async {
+  String urlPath="${url}/transactionauto/getAllCustomTransactions/${weekORmonth}/${date}";
+  print(urlPath);
+  var response = await getDataApiCall(urlPath);
+   printData(response);
   trasactionsDataCreditWeekly.clear();
   trasactionsDataDebitWeekly.clear();
 
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
-
-     Map data = his['data']['transactions'];
-      List<String> labelsLocal = [];
+     List<String> labelsLocal = [];
     List<double> debitList = [];
     List<double> creditList = [];
 
-    if (his['data']['transactions'].isEmpty) return;
-    maxYValue.value=double.parse(his['data']['maxAmount'].toString());
-    his['data']['transactions'].forEach((key, value) {
-               labelsLocal.add(key.toString().substring(key.toString().length-2));
-               debitList.add( getDouble(value['debit']));
-               creditList.add( getDouble(value['credit']));
-    });
-
-    
-    transactionChatGraph.clear();
+     transactionChatGraph.clear();
     labels.clear();
+
+      try{
+        Map data = his['data']['transactions'];
+        try{
+        maxYValue.value=double.parse(his['data']['maxAmount'].toString()) ?? 0.0;
+        }catch(e){
+             maxYValue.value=500.0;
+        }
+        if(maxYValue.value==0 || maxYValue.value==0.0)maxYValue.value=500.0;
+        his['data']['transactions'].forEach((key, value) {
+                  labelsLocal.add(key.toString().substring(key.toString().length-2));
+                  debitList.add( getDouble(value['debit']));
+                  creditList.add( getDouble(value['credit']));
+    });
+    }catch(e)
+    {
+          maxYValue.value= 500;
+          debitList=[];
+          creditList=[];
+          labelsLocal=weekORmonth=='Week'?getWeekDays():getDaysInMonth(date);
+          debitList=  List.filled(labelsLocal.length, 0);
+          creditList=  List.filled(labelsLocal.length, 0);
+    }
+    
+    if(selectedButton.value=='Week')
+    {
+         labelsLocal=getWeekDays();
+    }
+     print(selectedButton.value);
     transactionChatGraph['credited']=debitList;
     transactionChatGraph['debited']=creditList;
     graphTransaction.value=!graphTransaction.value;
   
     labels.addAll(labelsLocal);
+    getGraphData.value=true;
 
   }
+}
+
+List<String> getWeekDays() {
+  return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+}
+
+List<String> getDaysInMonth(String yearMonth) {
+  List<String> days = [];
+  List<String> parts = yearMonth.split('-');
+  if (parts.length != 2) return days;
+
+  int year = int.tryParse(parts[0]) ?? 0;
+  int month = int.tryParse(parts[1]) ?? 0;
+  if (year == 0 || month == 0) return days;
+
+  int daysInMonth = DateTime(year, month + 1, 0).day;
+
+  for (int i = 1; i <= daysInMonth; i++) {
+    days.add('${i.toString().padLeft(2, '0')}');
+  }
+   print(days);
+  return days;
 }
 
 Future<http.Response> getDataApiCall(urlPath) async {

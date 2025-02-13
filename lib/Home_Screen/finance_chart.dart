@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
 import './colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
@@ -29,7 +30,20 @@ class _FinancePageState extends State<FinancePage> {
   @override
   void initState() {
     super.initState();
-    getAutoMationsTransactionsCustom(getFormattedDate(),context);
+    getGraphData.value=false;
+    calledFunctionToFetchData();
+  }
+
+
+  void calledFunctionToFetchData(){
+      if(selectedButton.value ==""){
+                getAutoMationsTransactionsCustom(getFormattedDate(),context);
+      }else if(selectedButton.value==""){
+               getAutoMationsTransactionsCustom('2024-W37',context,'week');
+      }else{
+                getAutoMationsTransactionsCustom(getFormattedDate(),context);
+
+      }
   }
 
 
@@ -43,7 +57,7 @@ class _FinancePageState extends State<FinancePage> {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      body: Padding(
+      body:Obx(()=> !getGraphData.value? Center(child: Loader()):Padding(
          padding: EdgeInsets.all(screenWidth * 0.04), // Responsive padding
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,7 +77,7 @@ class _FinancePageState extends State<FinancePage> {
             ),
           ],
         ),
-      ),
+      )),
     );
   }
  
@@ -136,17 +150,17 @@ class _FinancePageState extends State<FinancePage> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        setState(() {
-                          selectedButton = 'Month';
-                          selectedDay = 1;
-                        });
+                            getGraphData.value=false;
+                           selectedButton.value = 'Month';
+                           getAutoMationsTransactionsCustom(getFormattedDate(),context);
+                        
                       },
                       child: Container(
                         height: 35,
                         width: screenWidth * 0.15,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
-                          color: selectedButton == 'Month'
+                          color: selectedButton.value == 'Month'
                               ? AppColors.button
                               : AppColors.backgroundColor,
                         ),
@@ -164,16 +178,21 @@ class _FinancePageState extends State<FinancePage> {
                     SizedBox(width: screenWidth * 0.02),
                     GestureDetector(
                       onTap: () {
-                        setState(() {
-                          selectedButton = 'Week';
-                        });
+                       
+                        getGraphData.value=false;
+
+                        getAutoMationsTransactionsCustom('2024-W37',context,'week');
+                        // getAutoMationsTransactionsCustom(getCurrentWeekNumber(),context,'week');
+                       
+                          selectedButton.value = 'Week';
+                        
                       },
                       child: Container(
                         height: 35,
                         width: screenWidth * 0.15,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
-                          color: selectedButton == 'Week'
+                          color: selectedButton.value == 'Week'
                               ? AppColors.button
                               : AppColors.backgroundColor,
                         ),
@@ -198,7 +217,7 @@ class _FinancePageState extends State<FinancePage> {
                         width: screenWidth * 0.15,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
-                          color: selectedButton == 'Custom'
+                          color: selectedButton.value == 'Custom'
                               ? AppColors.button
                               : AppColors.backgroundColor,
                         ),
@@ -232,7 +251,7 @@ class LineChartWidget extends StatefulWidget {
 
   final Map<String, List<double>> chartData;
   final List days;
-  final String selectedButton;
+  final RxString selectedButton;
   @override
   State<LineChartWidget> createState() => _LineChartWidgetState();
 }
@@ -244,8 +263,6 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   @override
   void initState() {
     super.initState();
-    getAutoMationsTransactionsCustom(getFormattedDate(),context);
-    
   }
 
  
@@ -257,20 +274,27 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     double screenHeight = MediaQuery.of(context).size.height;
     double fontSizeFactor = screenWidth * 0.01;
     double chartHeight = screenHeight * 0.1;
-    // Find the maximum Y value to set chart's maxY dynamically
-    // Example: 50% of screen height
-
-       return graphTransaction.value? getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth): getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth);
+   
+   return graphTransaction.value? getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth): getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth);
       
   }
 
 
 Widget getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth){
    
-  return Expanded(
-              child: SingleChildScrollView(
+  return  Expanded(
+              child: selectedButton.value=='Month'? SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: SizedBox(
+                child: getContainerOfGraph(screenWidth,fontSizeFactor,)
+              ):Container(
+                  child: getContainerOfGraph(screenWidth,fontSizeFactor,),
+              ),
+          );
+}
+
+
+Widget getContainerOfGraph(screenWidth,fontSizeFactor,){
+  return SizedBox(
                   width: screenWidth * 2,
                   height: MediaQuery.of(context).size.height/2.4,
                   child: GestureDetector(
@@ -361,9 +385,7 @@ Widget getGraphLineScroll(fontSizeFactor,chartHeight,screenWidth){
                       ),
                     ),
                   ),
-                ),
-              ),
-            );
+                );
 }
 
 

@@ -1,4 +1,6 @@
  import 'dart:math';
+import 'package:intl/intl.dart';
+
 
 final Map<int, Map<String, double>> weekData = {
     for (int i = 0; i < 5; i++)
@@ -26,4 +28,11 @@ final Map<int, Map<String, double>> weekData = {
 String getFormattedDate() {
   DateTime now = DateTime.now();
   return "${now.year}-${now.month.toString().padLeft(2, '0')}";
+}
+
+String getCurrentWeekNumber() {
+  DateTime now = DateTime.now();
+  int weekNumber = int.parse(DateFormat('w').format(now));
+  int year = now.year;
+  return '$year-W${weekNumber.toString().padLeft(2, '0')}';
 }

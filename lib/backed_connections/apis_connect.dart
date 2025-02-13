@@ -147,11 +147,12 @@ RxList debtsList = [].obs;
 RxList historyListData = [].obs;
 RxList getTrendingData = [].obs;
 RxBool hasGetNewNotifications = false.obs;
+RxBool getGraphData=false.obs;
 final ScrollController scrollController = ScrollController();
 final GlobalKey targetKey = GlobalKey(); // Key to identify the target widget
 
 
-String selectedButton = 'Month'; // Default view is "Month"
+ RxString selectedButton = 'Month'.obs; // Default view is "Month"
   DateTimeRange? selectedDateRange; // Default view is "Month"
   int selectedDay = 1;
   int year = DateTime.now().year; // Current year

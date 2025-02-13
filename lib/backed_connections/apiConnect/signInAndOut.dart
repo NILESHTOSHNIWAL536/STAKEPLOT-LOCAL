@@ -403,7 +403,10 @@ void clearGetX() {
   isBankAccountLink.value = false;
   cupertinoPin.value='0';
   balance.value="";
-  accountName.value="";
+   accountName.value="";
+   transactionChatGraph.clear();
+    labels.clear();
+    graphTransaction.value=false;
 }
 
 void oneSignalApis(context) async {

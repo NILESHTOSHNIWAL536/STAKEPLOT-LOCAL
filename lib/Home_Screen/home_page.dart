@@ -29,7 +29,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budget.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart';  
 
 //import 'dart:io';
 
