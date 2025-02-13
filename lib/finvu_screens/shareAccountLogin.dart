@@ -252,7 +252,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                         Padding(
                           padding: const EdgeInsets.only(left: 10),
                           child: Text(
-                            "Connect your bank accounts using AA",
+                            "Connect your bank accounts using AA services",
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.w500,
                                 fontSize: 12,

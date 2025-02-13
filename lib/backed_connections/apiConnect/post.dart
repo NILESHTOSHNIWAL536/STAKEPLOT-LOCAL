@@ -184,7 +184,7 @@ void reportPost(context, String id, String spam) async {
     snackBarCalled(
         context,
         spam == "hide post"
-            ? "Post is hide From You"
+            ? "Post is hidden From You"
             : "Reported Successfully...!",
         Colors.green);
     // Navigator.pop(context);

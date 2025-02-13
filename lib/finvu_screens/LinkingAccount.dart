@@ -161,7 +161,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                   const SizedBox(
                     height: 20,
                   ),
-                  textStyle("Please tap on 'Link Now' to link your bank", 14),
+                  textStyle("Please tap on 'Link Now' to link your bank account", 14),
                   const SizedBox(
                     height: 20,
                   ),
@@ -204,7 +204,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text("${seletedAccountIds.length} Banks Account are Shared...",
+                  Text("${seletedAccountIds.length} Bank Accounts are shared",
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.bold,
                           fontSize: 14,
@@ -223,11 +223,11 @@ class _LinkingAccountState extends State<LinkingAccount> {
                           ),
                         );
                       },
-                      child: getButton(context, "continue")),
+                      child: getButton(context, "Continue")),
                   const SizedBox(
                     height: 20,
                   ),
-                  textStyle("We will fetch this account transactions..",8),
+                  textStyle("We will fetch this account transactions",8),
                 ],
               ));
   }
@@ -419,7 +419,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
   Widget getListOfFinvuBanksAccounts(
       List<FinvuDiscoveredAccountInfo> account, FinvuFIPDetails fipDetails) {
     return account.isEmpty
-        ? Text("No Accounts Found..")
+        ? Text("No Accounts Found")
         : Column(
             children: account
                 .map((bankData) => getBackUi(bankData, fipDetails))
@@ -432,7 +432,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
       List<FinvuDiscoveredAccountInfo> bankData =
           listOfAccountAdded[fipId] ?? [];
       if (bankData.isEmpty) {
-        snackBarCalled(context, "Added Account For Linking....", Colorcodes.red);
+        snackBarCalled(context, "Account has been added for linking.", Colorcodes.red);
         return;
       }
       FinvuAccountLinkingRequestReference linkingReference =

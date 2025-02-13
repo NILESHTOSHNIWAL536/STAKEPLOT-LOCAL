@@ -148,7 +148,7 @@ final String termsUrl = "https://pub.dev/packages/url_launcher/install"; // Repl
                 //print("Phone Number: $phoneNumber");
                 // Add your logic for sending OTP
               },
-              child: getButton(context, "Get OTP"),
+              child: getButton(context, "Continue"),
 
             ),
             Padding(
@@ -156,11 +156,11 @@ final String termsUrl = "https://pub.dev/packages/url_launcher/install"; // Repl
               child: Center(
                       child: RichText(
                         text: TextSpan(
-              text: "By clicking Continue, you agree to our ",
+              text: "By clicking continue, you agree to Finvu's ",
               style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.w500,
-                  fontSize: 18,
+                  fontSize: 16,
                   color: AppColors.bg1,
                 ),
               children: [
@@ -169,7 +169,7 @@ final String termsUrl = "https://pub.dev/packages/url_launcher/install"; // Repl
                   style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.w500,
-                  fontSize: 18,
+                  fontSize: 16,
                   //decoration: UnderlineInputBorder(),
                   color: Colors.blue,
                 ),
@@ -195,7 +195,7 @@ final String termsUrl = "https://pub.dev/packages/url_launcher/install"; // Repl
       curve: Curves.easeOut,
       child: Container(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height / 2.7,
+        height: MediaQuery.of(context).size.height / 3.3,
         decoration: const BoxDecoration(
             color: AppColors.mt,
             borderRadius: BorderRadius.only(
@@ -212,11 +212,21 @@ final String termsUrl = "https://pub.dev/packages/url_launcher/install"; // Repl
             //       child: textStyle("Securely authorize each selected account", 14,
             //           Colorcodes.black, FontWeight.bold)),
             // ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 20),
+            //   child: textStyle(
+            //       "OTP Verification", 20, AppColors.bg1, FontWeight.bold),
+            // ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 20),
+              padding: const EdgeInsets.only(top:25,left: 20,right: 20),
               child: textStyle(
-                  "OTP Verification", 20, AppColors.bg1, FontWeight.bold),
+                  "Register with Finvu to start sharing", 16, AppColors.bg1, FontWeight.bold),
             ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
+            //   child: textStyle(
+            //       "We recommend using the mobile number linked to the accounts you want to share", 16, AppColors.bg1, FontWeight.bold),
+            // ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               child: textStyle("Enter the OTP sent to ${number.value}", 15,
