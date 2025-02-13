@@ -145,11 +145,11 @@ class _ImageScreenState extends State<ImageScreen> {
                                   snackBarAllFeilds(context);
                                   return ;
                             }
-                        
+                             print(selectedImage);
                               if(selectedImage!=null)
                             {
-                              // createPost(context,titleController.text,descriptionsController.text,url!);
-                               onUploadImage(selectedImage!,context,titleController.text,textController.text);
+                               createPost(context,titleController.text,textController.text,selectedImage!);
+                              //  onUploadImage(selectedImage!,context,titleController.text,textController.text);
                             }
                             else{ 
                                createPostWithOutImage(context,titleController.text,textController.text);

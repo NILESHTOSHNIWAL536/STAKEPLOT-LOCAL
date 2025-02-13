@@ -81,10 +81,10 @@ class _PostCardState extends State<PostCard> {
 
   Widget uploadData(dataObj, bool flag) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 7),
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
       //padding: const EdgeInsets.all(16),
       child: Card(
-        elevation: Colorcodes.elevation5,
+        elevation: Colorcodes.elevation3,
         color: AppColors.mt,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
@@ -109,7 +109,7 @@ class _PostCardState extends State<PostCard> {
                       );
                     },
               child: Container(
-                padding: const EdgeInsets.fromLTRB(15, 3, 15, 15),
+                padding: const EdgeInsets.fromLTRB(0, 3, 0, 7),
                 decoration: BoxDecoration(
                     // color: const Color.fromRGBO(249, 246, 238, 1),
                     color: AppColors.mt,
@@ -165,7 +165,7 @@ class _PostCardState extends State<PostCard> {
                                     color: AppColors.bg1)),
                           )
                         : Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
                             child: Text((dataObj['title']),
                                 style: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.bold,
@@ -187,6 +187,7 @@ class _PostCardState extends State<PostCard> {
                         ? getQuestionsAndOptions(
                             dataObj['pollData'], context, true, dataObj['_id'])
                         : Container(
+                           padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
                             child: !dataObj['isItenary']
                                 ? text(dataObj)
                                 : dataObj['chartType'] == "bargraph"
@@ -213,7 +214,17 @@ class _PostCardState extends State<PostCard> {
                         ? Center(
                             // child: imageget(
                             //     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLjPJGXPue6XcmdBqKKIYLEb1VUmExkIr0zA&s"),
-                            child: imageget(dataObj['image']),
+                            // child: imageget(dataObj['image']),
+                             child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height/2.5,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10)
+                              ),
+                               child: Image.network(dataObj['image'],fit: BoxFit.cover,
+                                              
+                               ),
+                             ),
                             //  child: GFImageOverlay(
                             //           width: MediaQuery.of(context).size.width / 1.3,
                             //           height: MediaQuery.of(context).size.height/3,
