@@ -3,7 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 // import 'package:stakeplot/fontmanager.dart';
 
 import 'Constants/font_manager.dart';
-
+//  password = "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"
 List<Color> color = [
   Colors.blue,
   Colors.redAccent,
