@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
@@ -9,6 +11,9 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class VegNonVegCalculator extends StatefulWidget {
   @override
@@ -32,19 +37,33 @@ class _VegNonVegCalculatorState extends State {
 
   RxList addedUser = [].obs;
   RxList addedMembers = [].obs;
+  late IO.Socket socket;
 
-  @override
-  @override
-  void initState() {
+
+ void initState() {
     super.initState();
-    // Initialize selected options for each existing friend in friends list
-    for (var friend in friends) {
+      for (var friend in friends) {
       String friendId = friend['_id'];
       if (!selectedOptions.containsKey(friendId)) {
         selectedOptions[friendId] = [];
       }
     }
+
+    socket = IO.io(urlWithLocallHost,
+        IO.OptionBuilder().setTransports(['websocket']).build());
+    setUpSocketListener();
+    // Initialize with all categories
   }
+
+  setUpSocketListener() {
+    socket.on(
+        "disconnect",
+        (data) => {
+              socket.close(),
+            });
+  }
+
+ 
 
   void _calculateShares() {
     setState(() {
@@ -194,10 +213,14 @@ class _VegNonVegCalculatorState extends State {
                      
                        splitUserAmount(
                             context,
-                            "Nilesh Toshniwal",
+                            '3000',
                             addedMembers,
+                            "cater",
+                            "sub cater",
                             friendShares
                           );
+                      // print(friendShares);
+                      // print(addedMembers);
 
                     },
                     child: Container(
@@ -219,8 +242,7 @@ class _VegNonVegCalculatorState extends State {
                     )),
                 GestureDetector(
                   onTap: () {
-                    print(
-                        'Notify button tapped......................................................');
+                  
                     friendShares.forEach((key, value) {
                       sendNotificationsToDevice(key, context,
                           "You need to pay lend To ${userName.value} of ${value!['Total'] ?? "0000"}");
@@ -537,4 +559,107 @@ class _VegNonVegCalculatorState extends State {
       ),
     );
   }
+
+
+void addSocketMessage(
+      addedUser, String amount, String splitName, String splitID,double totalAmount) {
+   
+    if (addedUser.isEmpty) {
+      return;
+    }
+
+    // int index=0;
+
+    addedUser.forEach((rec) {
+      String room1 = rec['name'] + userName.value;
+      String room2 = userName.value + rec['name'];
+      // index++;
+      String roomId = (room1.compareTo(room2) <= 0) ? room1 : room2;
+
+      var jsonData = {
+        "messageType": "split",
+        "receiver": rec['id'],
+        "sender": currentId.value,
+        "message": null,
+        "image": null,
+        "poll": null,
+        "post": null,
+        "split": {
+          "BillName": splitName,
+          "Amount": totalAmount.toString(),
+          "Share": rec['amount'],
+          "isPaid": false,
+          "splitId": splitID,
+        },
+        "roomId": roomId,
+      };
+
+      socket.emit("joinRoom", roomId);
+      socket.emit("message", jsonData);
+      String userToSend = rec['name'] + "" + rec['name'];
+      socket.emit("LoadCharts", {
+        "roomId": userToSend,
+      });
+    });
+  }
+
+
+  void splitUserAmount(context, String amount, List members, String name,String subCategories,dynamic shareFriends) async {
+    List nameList = [];
+    double totalAmount=0.0;
+     print(members);
+     print(shareFriends);
+    members.forEach((element) {
+      String id=element['id'];
+      var   data = shareFriends[id];
+      totalAmount += data['Total'];
+      print(data);
+      nameList.add({'id':id,'name':element['name'],'member': id, 'markAsComplete': false, 'amount':doubleToFixed(data['Total'].toString()) ,'isVegNonVeg':true ,'priorities':data});
+    });
+     
+    final SharedPreferences _pref = await SharedPreferences.getInstance();
+    var accessToken = _pref.getString("accessToken");
+
+    final response = await http.post(
+      Uri.parse('${url}/split'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Authorization": "$accessToken",
+      },
+      body: jsonEncode({
+        "name": name,
+        "subcategory": subCategories,
+        "category:": name,
+        "amount": totalAmount,
+        "paymentStatus": nameList,
+        "image": '',
+        'isVegNonVeg':true,
+      }),
+    );
+    //printData(response,context);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final body = json.decode(response.body);
+
+      splitID.value = body['id']['_id'];
+
+      nameList.forEach((e)
+       {
+        sendNotificationsToDevice(e['id'], context,
+            "${userName.value} has send u a Split Bill..Of ${name} Of ${e['amount']}");
+      });
+
+      addSocketMessage(nameList, amount.toString(),"selectedCategory2".toString(), splitID.value,totalAmount);
+     
+
+      snackBarCalled(context, "Split amount sent to users!", Colors.black);
+      // addTransaction(amount, "Split Bill (${subCategories})", name, context, 'cash', true);
+      Navigator.pop(context);
+    } else {
+      snackBarCalled(context, "can't split error!", Colors.red);
+    }
+    acceptReset.value = false;
+  }
+
+
+
 }

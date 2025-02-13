@@ -32,14 +32,14 @@ dependencies:
     sdk: flutter
   finvu_flutter_sdk:
     git:
-      url: https://github.com/yashwantGehlot/finvu_flutter_sdk.git
+      url: https://github.com/Cookiejar-technologies/finvu_flutter_sdk.git
       path: client
-      ref: v2
+      ref:  ^1.0.1
   finvu_flutter_sdk_core:
     git:
-      url: https://github.com/yashwantGehlot/finvu_flutter_sdk.git
+      url: https://github.com/Cookiejar-technologies/finvu_flutter_sdk.git
       path: core
-      ref: v2
+      ref:  ^1.0.1
   fl_chart: ^0.65.0
   syncfusion_flutter_charts: ^22.2.9
   get: ^4.6.6
