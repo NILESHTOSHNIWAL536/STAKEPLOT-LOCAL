@@ -1170,112 +1170,115 @@ Widget vote(context, dataObj, data) {
   String idData = dataObj["_id"];
   String likeKey = "liked" + dataObj["_id"];
   bool isLiked = likedList.contains(likeKey);
-  return Obx(() => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            //color: Colorcodes.iconBackGround,
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-            child: Row(
-              children: [
-                Container(
-                  height: 25,
-                  child: GestureDetector(
-                    onTap: () {
-                      String likeKey = "liked" + dataObj["_id"];
-                      bool isLiked = likedList.contains(likeKey);
-
-                      // Toggle like status
-                      if (isLiked) {
-                        likedList.remove(likeKey);
-                        postCount[idData] = postCount[idData]! - 1;
-                        if (postCount[idData]! < 0) {
-                          postCount[idData] = 0;
+  return Obx(() => Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 4),
+    child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              //color: Colorcodes.iconBackGround,
+              padding: EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+              child: Row(
+                children: [
+                  Container(
+                    height: 25,
+                    child: GestureDetector(
+                      onTap: () {
+                        String likeKey = "liked" + dataObj["_id"];
+                        bool isLiked = likedList.contains(likeKey);
+    
+                        // Toggle like status
+                        if (isLiked) {
+                          likedList.remove(likeKey);
+                          postCount[idData] = postCount[idData]! - 1;
+                          if (postCount[idData]! < 0) {
+                            postCount[idData] = 0;
+                          }
+                        } else {
+                          likedList.add(likeKey);
+                          postCount[idData] = postCount[idData]! + 1;
                         }
-                      } else {
-                        likedList.add(likeKey);
-                        postCount[idData] = postCount[idData]! + 1;
-                      }
-
-                      // Update the server with new vote status
-                      upvoteGlobal(context, "Post", dataObj["_id"], dataObj);
-                      reRender.value = !reRender.value;
-                    },
-                    child: likeIcon(
-                        context, likedList.contains("liked" + dataObj["_id"])),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                  child: Text(
-                    reRender.value
-                        ? postCount[dataObj['_id']]! < 0
-                            ? '0'
-                            : (postCount[dataObj['_id']].toString())
-                        : (postCount[dataObj['_id']].toString()),
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.w400,
-                        fontSize: 15,
-                        color: AppColors.bg1),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                  child: Row(
-                    children: [
-                      Container(
-                          height: 25,
-                          child: SvgPicture.asset(
-                            LikeComment.comments,
-                            height: 25,
-                          )),
-                      const SizedBox(
-                        width: 6,
-                      ),
-                      Text(
-                        postCommentCount[idData].toString() == 'null'
-                            ? dataObj["comments"].toString()
-                            : postCommentCount[idData].toString(),
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w400,
-                            fontSize: 12,
-                            color: AppColors.likesharecommentCount),
-                      ),
-                      const SizedBox(width: 7),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 15),
-                Container(
-                  child: InkWell(
-                    onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        backgroundColor: AppColors.backgroundColor,
-                        builder: (context) {
-                          return TribeShare(data: data, dataObj: dataObj);
-                        },
-                      );
-                    },
-                    child: SvgPicture.asset(
-                      LikeComment.share,
-                      height: 25,
+    
+                        // Update the server with new vote status
+                        upvoteGlobal(context, "Post", dataObj["_id"], dataObj);
+                        reRender.value = !reRender.value;
+                      },
+                      child: likeIcon(
+                          context, likedList.contains("liked" + dataObj["_id"])),
                     ),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child: Text(
+                      reRender.value
+                          ? postCount[dataObj['_id']]! < 0
+                              ? '0'
+                              : (postCount[dataObj['_id']].toString())
+                          : (postCount[dataObj['_id']].toString()),
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w400,
+                          fontSize: 15,
+                          color: AppColors.bg1),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          )
-        ],
-      ));
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                    child: Row(
+                      children: [
+                        Container(
+                            height: 25,
+                            child: SvgPicture.asset(
+                              LikeComment.comments,
+                              height: 25,
+                            )),
+                        const SizedBox(
+                          width: 6,
+                        ),
+                        Text(
+                          postCommentCount[idData].toString() == 'null'
+                              ? dataObj["comments"].toString()
+                              : postCommentCount[idData].toString(),
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.w400,
+                              fontSize: 12,
+                              color: AppColors.likesharecommentCount),
+                        ),
+                        const SizedBox(width: 7),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 15),
+                  Container(
+                    child: InkWell(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          backgroundColor: AppColors.backgroundColor,
+                          builder: (context) {
+                            return TribeShare(data: data, dataObj: dataObj);
+                          },
+                        );
+                      },
+                      child: SvgPicture.asset(
+                        LikeComment.share,
+                        height: 25,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+  ));
 }
 
 // Helper function to get the appropriate icon based on like status
