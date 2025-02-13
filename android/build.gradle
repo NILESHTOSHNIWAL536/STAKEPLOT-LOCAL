@@ -6,7 +6,7 @@ allprojects {
             url 'https://maven.pkg.github.com/Cookiejar-technologies/finvu_android_sdk'
             credentials {
                 username = "NILESHTOSHNIWAL536"
-                password = "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"
+                password = "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"
             }
         }
     }
