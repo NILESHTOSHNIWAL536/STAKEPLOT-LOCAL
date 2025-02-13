@@ -1,5 +1,6 @@
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/CreateDebtScreen.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 

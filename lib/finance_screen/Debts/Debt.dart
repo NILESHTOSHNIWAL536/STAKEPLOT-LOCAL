@@ -4,10 +4,11 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budget.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/CreateDebtScreen.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/debt_display.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/debt_service.dart';
+
+import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_display.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_service.dart';
+
 
 class DebtCalculatorApp extends StatelessWidget {
   @override

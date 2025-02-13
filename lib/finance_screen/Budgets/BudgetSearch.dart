@@ -6,8 +6,9 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budget.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/BudgetOverView.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/BudgetOverView.dart';
+
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:get/get.dart';
@@ -198,16 +199,7 @@ final FocusNode _searchFocusNode = FocusNode(); // FocusNode for search field
               child: Obx(() => getSearchBox()),
             ),
           ),
-          // Container(
-          //   width: width,
-          //   height: height / 3,
-          //   decoration: BoxDecoration(
-          //       color: Colorcodes.white,
-          //       borderRadius: BorderRadius.circular(10)),
-          //   child: SingleChildScrollView(
-          //     child: Obx(() => getSearchBox()),
-          //   ),
-          // ),
+          
         ],
       ),
     );

@@ -9,7 +9,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/BudgetSearch.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/BudgetSearch.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:get/get.dart';
@@ -27,8 +27,8 @@ Map<String, dynamic> categoryWeights = {
       "Bills": 10.0,
       "Education": 7.0,
       "Insurance": 5.0,
-      "PersonalCare": 3.0,
-      "PetCare": 2.0
+      "Personal Care": 3.0,
+      "Pet Care": 2.0
     }
   },
   "Lifestyle": {
@@ -46,7 +46,7 @@ Map<String, dynamic> categoryWeights = {
   },
   "Savings": {
     "percentage": 20.0,
-    "subcategories": {"Investments": 10.0, "EMI": 8.0, "Hobbies": 2.0}
+    "subcategories": {"Investments": 10.0, "EMi": 8.0, "Hobbies": 2.0}
   }
 };
 

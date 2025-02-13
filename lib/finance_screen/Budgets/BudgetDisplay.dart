@@ -10,8 +10,10 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budget.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/MyBudget.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/MyBudget.dart';
+
+
 import 'package:get/get.dart';
 
 class BudgetDisplay extends StatefulWidget {

@@ -8,18 +8,21 @@ import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/controller.dart/userController.dart';
 import 'package:flutter_application_code_stakeplot/customNoti.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budget.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/BudgetDisplay.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/BudgetDisplay.dart';
+
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Emi.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Rent_Buy.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Savings.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/TripCost.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/credit_card.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Debt.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/veg_nonveg.dart';
+
+import 'package:flutter_application_code_stakeplot/finance_screen/Debts/Debt.dart';
 // import 'package:flutter_application_code_stakeplot/finance_screen/creditCard.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/veg_nonveg.dart';
+
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/finvuAccount.dart';
