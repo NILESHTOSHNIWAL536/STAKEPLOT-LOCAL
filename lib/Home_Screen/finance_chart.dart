@@ -57,7 +57,7 @@ class _FinancePageState extends State<FinancePage> {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      body:Obx(()=> !getGraphData.value? Center(child: Loader()):Padding(
+      body:Obx(()=> !getGraphData.value? Center(child: Spinner()):Padding(
          padding: EdgeInsets.all(screenWidth * 0.04), // Responsive padding
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

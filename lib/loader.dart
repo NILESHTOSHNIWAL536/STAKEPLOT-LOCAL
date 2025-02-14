@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Loader extends StatelessWidget {
 const Loader({ Key? key }) : super(key: key);
@@ -17,6 +19,21 @@ const Loader({ Key? key }) : super(key: key);
         )
       ],
     );
+  }
+}
+class Spinner extends StatelessWidget {
+const Spinner({ Key? key }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context){
+    return 
+           SpinKitPouringHourGlass(
+              color: AppColors.primaryColor, // Use a single color
+                size: 50.0,
+                duration: Durations.short1,
+            );
+            
+      
   }
 }
 

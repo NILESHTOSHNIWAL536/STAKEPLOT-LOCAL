@@ -20,7 +20,7 @@ import 'package:path/path.dart' as p;
 
 bool flag = true;
 String portNo = flag ? "192.168.1.4" : "localhost";
-String urlWithLocallHost = flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 
 String valid = "Please Enter All Feilds";
