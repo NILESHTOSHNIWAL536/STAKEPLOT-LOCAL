@@ -74,6 +74,7 @@ dependencies:
   searchfield: ^1.2.1
   url_launcher: ^6.3.1
   flutter_spinkit: ^5.2.1
+  week_of_year: ^2.2.0
   
   # sms_otp_auto_verify: ^2.2.0
 

@@ -31,6 +31,5 @@ String getCurrentWeekNumber() {
   DateTime now = DateTime.now();
   int weekNumber = int.parse(DateFormat('w').format(now));
   int year = now.year;
-
   return '$year-W${weekNumber.toString().padLeft(2, '0')}';
 }

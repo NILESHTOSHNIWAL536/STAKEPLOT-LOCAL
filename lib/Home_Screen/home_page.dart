@@ -94,7 +94,7 @@ class HomeScreen extends StatelessWidget {
 
               // Finance Chart
                 SizedBox(
-               height: MediaQuery.of(context).size.height * 0.5,
+               height: MediaQuery.of(context).size.height * 0.55,
                 child: const FinancePage(),
               ),
               //const SizedBox(height: 20),

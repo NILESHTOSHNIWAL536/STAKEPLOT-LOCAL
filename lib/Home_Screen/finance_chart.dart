@@ -35,7 +35,7 @@ class _FinancePageState extends State<FinancePage> {
     if (selectedButton.value == "Month") {
       getAutoMationsTransactionsCustom(getFormattedDate(), context);
     } else if (selectedButton.value == "Week") {
-      getAutoMationsTransactionsCustom(getCurrentWeek(), context, 'week');
+      getAutoMationsTransactionsCustom(getCurrentWeek(), context, 'Week');
     } else {
       getAutoMationsTransactionsCustom(getFormattedDate(), context);
     }
@@ -50,7 +50,7 @@ class _FinancePageState extends State<FinancePage> {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       body:Obx(()=> !getGraphData.value? Center(child: Spinner()):Padding(
-         padding: EdgeInsets.all(screenWidth * 0.04), // Responsive padding
+         padding: EdgeInsets.all(0), // Responsive padding
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -84,7 +84,9 @@ class _FinancePageState extends State<FinancePage> {
                   width: 36,
                   height:
                       36), // Optional; remove this line if you don't want an icon
-            )
+            ),
+            getMonthWeekCustom(fontSizeFactor, screenWidth),
+            LineChartWidget(chartData: transactionChatGraph, days: labels, selectedButton: selectedButton)
           ],
         ),
       )
@@ -135,13 +137,10 @@ class _FinancePageState extends State<FinancePage> {
             GestureDetector(
               onTap: () {
                  
-                //getAutoMationsTransactionsCustom('2024-W37', context, 'week');
-                print("csllrf...........");
-                String d = getCurrentWeekNumber();
-                 print(d);
+                 selectedButton.value='Week';
                  getGraphData.value = false;
                 getAutoMationsTransactionsCustom(
-                    getCurrentWeekNumber(), context, 'week');
+                    getCurrentWeek(), context, 'Week');
 
                 // selectedButton.value = 'Week';
               },

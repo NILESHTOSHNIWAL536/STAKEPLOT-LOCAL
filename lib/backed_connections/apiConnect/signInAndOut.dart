@@ -406,6 +406,7 @@ void clearGetX() {
    accountName.value="";
    transactionChatGraph.clear();
     labels.clear();
+    selectedButton.value="Month";
     graphTransaction.value=false;
 }
 

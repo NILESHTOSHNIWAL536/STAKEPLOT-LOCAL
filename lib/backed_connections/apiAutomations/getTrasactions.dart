@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
+import 'package:week_of_year/week_of_year.dart';
 
 bool getFlagOfResponse(response) {
   if (response.statusCode == 200 || response.statusCode == 201) return true;
@@ -108,10 +109,11 @@ double getDouble(data){
 }
 
 void getAutoMationsTransactionsCustom(date, context,[weekORmonth='month']) async {
-  String urlPath="${url}/transactionauto/getAllCustomTransactions/${weekORmonth}/${date}";
+  String urlPath="${url}/transactionauto/getAllCustomTransactions/${weekORmonth.toString().toLowerCase()}/${date}";
+  print('urlPath');
   print(urlPath);
   var response = await getDataApiCall(urlPath);
-   printData(response);
+  
   trasactionsDataCreditWeekly.clear();
   trasactionsDataDebitWeekly.clear();
 
@@ -142,7 +144,7 @@ void getAutoMationsTransactionsCustom(date, context,[weekORmonth='month']) async
           maxYValue.value= 500;
           debitList=[];
           creditList=[];
-          labelsLocal=weekORmonth=='Week'?getWeekDays():getDaysInMonth(date);
+          labelsLocal=weekORmonth.toString()=='Week'?getWeekDays():getDaysInMonth(date);
           debitList=  List.filled(labelsLocal.length, 0);
           creditList=  List.filled(labelsLocal.length, 0);
     }
@@ -151,7 +153,7 @@ void getAutoMationsTransactionsCustom(date, context,[weekORmonth='month']) async
     {
          labelsLocal=getWeekDays();
     }
-     print(selectedButton.value);
+
     transactionChatGraph['credited']=debitList;
     transactionChatGraph['debited']=creditList;
     graphTransaction.value=!graphTransaction.value;
@@ -221,10 +223,11 @@ String getCurrentMonth() {
 }
 
 String getCurrentWeek() {
+  
   final now = DateTime.now();
   final year = now.year;
-  final weekNumber = _getWeekNumber(now);
-  return '$year-W${weekNumber.toString().padLeft(2, '0')}';
+  String s='$year-W${now.weekOfYear.toString().padLeft(2, '0')}';
+  return s;
 }
 
 // Function to calculate the week number
@@ -422,8 +425,8 @@ Future postDataApiCall(String urlPath, Map body) async {
   Future<void> pickCustomDateRange(BuildContext context) async {
     final DateTimeRange? picked = await showDateRangePicker(
       context: context,
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2025),
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2027),
       // initialDateRange: selectedDateRange,
       builder: (context, child) {
         return Dialog(
