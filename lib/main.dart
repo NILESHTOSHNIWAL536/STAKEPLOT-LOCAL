@@ -27,6 +27,8 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransactio
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/finvuAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/forgot.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/signup.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
@@ -70,7 +72,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-       initialRoute: '/home', 
+       initialRoute: '/ShareAccountLogin', 
         routes:
     {  
       '/': (context) =>  Signin(),   
@@ -95,6 +97,8 @@ class _MyAppState extends State<MyApp> {
       '/TripCost':(context) => TripCost() ,
       '/VegNonveg':(context) => VegNonVegCalculator(),
       '/FetchTransaction':(context) => FetchTransaction() ,
+      '/ForgotPassword':(context) => ForgotPassword() ,
+
      
     });
   }

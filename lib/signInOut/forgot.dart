@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -20,14 +21,8 @@ class ForgotPassword extends StatefulWidget {
 
 class _SigninState extends State<ForgotPassword> {
   
-
-      // TextEditingController emailController= TextEditingController();
-    //  TextEditingController passwordController= TextEditingController();
     TextEditingController emailController= TextEditingController();
     TextEditingController nameController= TextEditingController();
-      // TextEditingController passwordController= TextEditingController(text: "user2password");
-    // TextEditingController emailController= TextEditingController(text: "nileshtoshniwal743@gmail.com");
-    //  TextEditingController passwordController= TextEditingController(text: "nilesh9849");
 
     Widget InputDate(lableText,keyBoard,Textcontroller){
 
@@ -38,7 +33,6 @@ class _SigninState extends State<ForgotPassword> {
           child: TextField(
                keyboardType: keyBoard,
                 controller: Textcontroller,
-                 
                  decoration: InputDecoration(
                       filled: true,
                       hintText: lableText,
@@ -95,7 +89,7 @@ class _SigninState extends State<ForgotPassword> {
                             borderRadius: BorderRadius.circular(100),
                             borderSide: const BorderSide(
                                 color:Colors.white
-                                // color: Color.fromRGBO(249, 246, 238, 1)
+                             
                             )
                           ),
                            focusedBorder: OutlineInputBorder(
@@ -124,137 +118,95 @@ class _SigninState extends State<ForgotPassword> {
   Widget build(BuildContext context) {
 
 
-  return   Scaffold(
-      backgroundColor: Colorcodes.budgetDarkGreen,
-      body: Column(
-        children: [
-
-
-          Padding(
-            padding:  EdgeInsets.symmetric(vertical: Colorcodes.paddingTopDesign/1.4),
-            child: Text(("Forgot Password"),
+  return   SafeArea(
+    child: Scaffold(
+        backgroundColor: Colorcodes.white,
+        body: Column(
+          children: [
+              const SizedBox(height: 20,),
+                  Text(("Reset Password"),
                                 style: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.bold,
                                     fontSize: 22,
                                     color: Colors.black)),
-          ),
-          
-          Expanded(
-            child: Container(
-                 width: MediaQuery.of(context).size.width,
-                   height: MediaQuery.of(context).size.height/1.16,
-                    // margin:  EdgeInsets.only(top: Colorcodes.paddingTopDesign/2),
-                    padding:  EdgeInsets.symmetric(vertical: Colorcodes.paddingTopScroll),
-                   decoration: BoxDecoration(
-                      color: Colorcodes.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(Colorcodes.borderCut),
-                            topRight: Radius.circular(Colorcodes.borderCut),
-                           )
             
-                   ),
-                    child: ListView(
-                          
-                          children: [
-            
-                         const SizedBox(height: 30,),
-                         Center(
-                           child: Container(
-                            width: MediaQuery.of(context).size.width/1.15,
-                            padding:  EdgeInsets.symmetric(vertical: Colorcodes.paddingSize/3),
-                            child: Text(("Reset password?"),
-                                                style: FontManager().getTextStyle(context,
-                                                    lWeight: FontWeight.bold,
-                                                    fontSize: 15,
-                                                    color: Colorcodes.iconBackGround)),
-                                                 ),
-                         ),
-                        // Center(
-                        //   child: Container(
-                        //     width: MediaQuery.of(context).size.width/1.15,
-                        //     padding:  EdgeInsets.symmetric(vertical: Colorcodes.paddingSize/3),
-                        //     child: Text((StringConstant.resetpassword),
-                        //                         style: FontManager().getTextStyle(context,
-                        //                             lWeight: FontWeight.w400,
-                        //                             fontSize: 12,
-                        //                             color: Colors.black)),
-                        //   ),
-                        // ),
-                       
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: TextFeildWidget(textEditingController: nameController, heading: "Name", keyBoard: TextInputType.name, lableText: "Enter UserName"),
-                          ),
-            
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: TextFeildWidget(textEditingController: emailController, heading: "Email", keyBoard: TextInputType.name, lableText: "example@example.com"),
-                          ),
-                  
-                           SizedBox(height: Colorcodes.paddingSize*2,),
-                              
-                              
-                           Center(
-                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                               children: [
-                                 Container(
-                                  //  width: MediaQuery.of(context).size.width/2.2,
-                                   margin:const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-                                   padding:const EdgeInsets.symmetric(vertical: 10,horizontal: 30),
-                                   decoration: BoxDecoration(
-                                                color: Colorcodes.budgetDarkGreen,
-                                                     borderRadius: BorderRadius.circular(Colorcodes.borderRadius30)
-                                                ),
-                                   child: InkWell(
-                                                              onTap: (){
-  //  Navigator.pushReplacement(
-  //                     context,
-  //                     MaterialPageRoute(
-  //                       builder: (context) => ResetOtp(email: "email",name: "name",),
-  //                     ),
-  //             );
-                                        
-                                              if(nameController.text=="" || emailController.text==""){
-                                                      snackBarAllFeilds(context,Colors.red);
-                                                      return;
-                                                }
-                                             
-                                               getforgotPassword(context,nameController.text,emailController.text);
-                                                  // Navigator.pushNamed(context,'/ResetPassword'); 
-                                      },
-                                     child: Center(
-                                                    child: Text(("Next step"),
-                                                    style: FontManager().getTextStyle(context,
-                                                                                lWeight: FontWeight.bold,
-                                                                                fontSize: 20,
-                                                                                color: Colorcodes.iconBackGround)),
-                                                  ),
-                                   ),
-                                 ),
-                               ],
-                             ),
-                           ),
-            
-            
+            const SizedBox(height: 30,),
+            // Center(
+            //   child: Container(
+            //    width: MediaQuery.of(context).size.width/1.15,
+            //    padding:  EdgeInsets.symmetric(vertical: Colorcodes.paddingSize/3),
+            //    child: Text(("Reset password?"),
+            //                        style: FontManager().getTextStyle(context,
+            //                            lWeight: FontWeight.bold,
+            //                            fontSize: 15,
+            //                            color: Colorcodes.iconBackGround)),
+            //                         ),
+            // ),
+                          // Center(
+                          //   child: Container(
+                          //     width: MediaQuery.of(context).size.width/1.15,
+                          //     padding:  EdgeInsets.symmetric(vertical: Colorcodes.paddingSize/3),
+                          //     child: Text((StringConstant.resetpassword),
+                          //                         style: FontManager().getTextStyle(context,
+                          //                             lWeight: FontWeight.w400,
+                          //                             fontSize: 12,
+                          //                             color: Colors.black)),
+                          //   ),
+                          // ),
                          
+             Padding(
+               padding: const EdgeInsets.symmetric(vertical: 10),
+               child: TextFeildWidget(textEditingController: nameController, heading: "Name", keyBoard: TextInputType.name, lableText: "Enter UserName",icon: Icons.person_3_outlined,),
+             ),
+                 
+             Padding(
+               padding: const EdgeInsets.symmetric(vertical: 10),
+               child: TextFeildWidget(textEditingController: emailController, heading: "Email", keyBoard: TextInputType.name, lableText: "example@example.com"),
+             ),
+                       
+              SizedBox(height: Colorcodes.paddingSize*2,),
+                 
+                 
+              Center(
+                child: Row(
+                 mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width/1.3,
+                      margin:const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+                      padding:const EdgeInsets.symmetric(vertical: 10,horizontal: 30),
+                      decoration: BoxDecoration(
+                                   color: AppColors.primaryColor,
+                                        borderRadius: BorderRadius.circular(Colorcodes.borderRadius10)
+                                   ),
+                      child: InkWell(
+                                                 onTap: (){
+               
                            
-                          
-                              
-                              
-                              
-                              
-                              
-                              
-                      
-                              
-                          ],
+                                 if(nameController.text=="" || emailController.text==""){
+                                         snackBarAllFeilds(context,Colors.red);
+                                         return;
+                                   }
+                                
+                                  getforgotPassword(context,nameController.text,emailController.text);
+                                     // Navigator.pushNamed(context,'/ResetPassword'); 
+                         },
+                        child: Center(
+                                       child: Text(("Next step"),
+                                       style: FontManager().getTextStyle(context,
+                                                                   lWeight: FontWeight.bold,
+                                                                   fontSize: 20,
+                                                                   color: Colorcodes.white)),
+                                     ),
+                      ),
                     ),
-            ),
-          ),
-        ],
+                  ],
+                ),
+              ),
+          ],
+        ),
       ),
-    );
+  );
   
   }
   

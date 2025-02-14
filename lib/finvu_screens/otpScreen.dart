@@ -80,6 +80,7 @@ class _OtpscreenState extends State<Otpscreen> {
    final int _otpLength = 6;
   late List<TextEditingController> _controllers= List.generate(_otpLength, (_) => TextEditingController());
   late List<FocusNode> _focusNodes=List.generate(_otpLength, (_) => FocusNode());
+  
 
 
   

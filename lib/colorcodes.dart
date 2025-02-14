@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 // import 'package:stakeplot/fontmanager.dart';
 
 import 'Constants/font_manager.dart';
@@ -25,7 +26,7 @@ class Colorcodes {
   static Color debtBody = const Color.fromRGBO(17, 106, 123, 1);
   static Color bedgetHeader = const Color.fromRGBO(180, 174, 145, 0.7);
   static Color bedgetBody = const Color.fromRGBO(180, 174, 145, 1);
-  static Color textFeild = const Color.fromRGBO(223, 247, 226, 1);
+  static Color textFeild = AppColors.button;
   static Color textFeildWhite =  Color.fromARGB(255, 255, 255, 255);
   // static Color textFeild=const Color.fromRGBO(231, 231, 231, 1);
   static Color moneyRed = const Color.fromRGBO(244, 123, 123, 1);
@@ -80,6 +81,7 @@ class Colorcodes {
   static double elevation4 = 4;
   static double elevation5 = 5;
   static double borderRadius = 15;
+  static double borderRadius10 = 10;
   static double borderRadius30 = 30;
   static double borderRadiusCard = 100;
   static double paddingSize = 20;
@@ -195,7 +197,7 @@ class StringConstant {
       "Its pretty much lonely over here… Try adding your friends and stay connected..!!";
   static String tribeText =
       "Connect with your friends to see whats cooking..!!";
-  static String otpText = "Enter Otp Pin Send on EmailID...";
+  static String otpText = "Enter Otp Pin Send on Email_id : ";
   static String onboading_1 = "Welcome to Expense Manager !";
   static String onboading_2 =
       "Are You to Ready To take control of your finance?";
