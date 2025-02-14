@@ -27,10 +27,9 @@ const Spinner({ Key? key }) : super(key: key);
   @override
   Widget build(BuildContext context){
     return 
-           SpinKitPouringHourGlass(
+           SpinKitCircle(
               color: AppColors.primaryColor, // Use a single color
                 size: 50.0,
-                duration: Durations.medium2,
             );
             
       
