@@ -30,7 +30,7 @@ const Spinner({ Key? key }) : super(key: key);
            SpinKitPouringHourGlass(
               color: AppColors.primaryColor, // Use a single color
                 size: 50.0,
-                duration: Durations.short1,
+                duration: Durations.medium2,
             );
             
       
