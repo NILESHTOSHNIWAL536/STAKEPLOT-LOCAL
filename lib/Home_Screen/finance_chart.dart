@@ -391,8 +391,10 @@
 
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_application_code_stakeplot/Constants/customButton.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/expanded_finance.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
@@ -408,13 +410,21 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class FinancePage extends StatefulWidget {
-  const FinancePage({super.key});
+  final bool isExpandedView;
+
+  final bool showMonthYearFilter;
+  const FinancePage(
+      {super.key,
+      this.isExpandedView = false,
+      this.showMonthYearFilter = false});
 
   @override
   State<FinancePage> createState() => _FinancePageState();
 }
 
 class _FinancePageState extends State<FinancePage> {
+  int selectedYear = DateTime.now().year;
+  int selectedMonth = DateTime.now().month;
   @override
   void initState() {
     super.initState();
@@ -422,13 +432,134 @@ class _FinancePageState extends State<FinancePage> {
     calledFunctionToFetchData();
   }
 
+  void _showYearPicker(BuildContext context) {
+    final currentYear = DateTime.now().year;
+    final yearsCount = currentYear - 2000 + 1;
+
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 300.0, // Adjust this height as needed
+          padding: EdgeInsets.all(8.0), // Add some padding around the grid
+          child: GridView.count(
+            crossAxisCount: 3, // Number of columns
+            crossAxisSpacing: 4.0, // Horizontal spacing between items
+            mainAxisSpacing: 4.0, // Vertical spacing between items
+            childAspectRatio:
+                2.5, // Adjusted to make buttons narrower and taller
+            children: List.generate(yearsCount, (index) {
+              final year = 2000 + index;
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedYear = year;
+                    print(
+                        "month offffffffffffff......................................................");
+                    print(month);
+                    // Here, you would call a function to update your data based on the new year
+                    calledFunctionToFetchData();
+                  });
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.button, // Background color of the button
+                    borderRadius: BorderRadius.circular(
+                        12), // Rounded corners, adjusted for smaller size
+                  ),
+                  child: Center(
+                    child: Text(
+                      year.toString(),
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.normal,
+                          fontSize: 14, // Reduced font size
+                          color: AppColors.accentColor),
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showMonthPicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 220.0, // Adjust this height as needed
+          padding: EdgeInsets.all(8.0), // Add some padding around the grid
+          child: GridView.count(
+            crossAxisCount: 3, // Number of columns
+            crossAxisSpacing: 2.0, // Horizontal spacing between items
+            mainAxisSpacing: 2.0,
+            childAspectRatio: 2.5, // Vertical spacing between items
+            children: List.generate(12, (index) {
+              final month = index + 1;
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedMonth = month;
+                    // Here, you would call a function to update your data based on the new month
+                    calledFunctionToFetchData();
+                  });
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  height: 20,
+                  width: 40,
+                  decoration: BoxDecoration(
+                    color: AppColors.button, // Background color of the button
+                    borderRadius: BorderRadius.circular(16), // Rounded corners
+                  ),
+                  child: Center(
+                    child: Text(
+                      DateFormat('MMMM').format(DateTime(2023, month, 1)),
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.normal,
+                          fontSize: 16,
+                          color: AppColors.accentColor),
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ),
+        );
+      },
+    );
+  }
+
   void calledFunctionToFetchData() {
-    if (selectedButton.value == "Month") {
-      getAutoMationsTransactionsCustom(getFormattedDate(), context);
-    } else if (selectedButton.value == "Week") {
-      getAutoMationsTransactionsCustom(getCurrentWeek(), context, 'Week');
+    if (widget.showMonthYearFilter) {
+      // When in expanded view with month/year filter
+      if (selectedButton.value == "Month") {
+        // Fetch data for the selected month and year
+        String formattedDate = DateFormat('yyyy-MM-dd')
+            .format(DateTime(selectedYear, selectedMonth, 1));
+        getAutoMationsTransactionsCustom(formattedDate, context, 'Month');
+        print(formattedDate);
+      } else {
+        // Fetch data for the selected year
+        String formattedDate =
+            DateFormat('yyyy-01-01').format(DateTime(selectedYear));
+        getAutoMationsTransactionsCustom(formattedDate, context, 'Year');
+        print(formattedDate);
+      }
     } else {
-      getAutoMationsTransactionsCustom(getFormattedDate(), context);
+      // For week/month/custom views when not in expanded view
+      if (selectedButton.value == "Month") {
+        getAutoMationsTransactionsCustom(getFormattedDate(), context, 'Month');
+      } else if (selectedButton.value == "Week") {
+        getAutoMationsTransactionsCustom(getCurrentWeek(), context, 'Week');
+      } else {
+        // Assuming 'Custom' or default case
+        getAutoMationsTransactionsCustom(getFormattedDate(), context, 'Custom');
+      }
     }
   }
 
@@ -490,17 +621,112 @@ class _FinancePageState extends State<FinancePage> {
                         ),
                       ],
                     ),
-                    getMonthWeekCustom(fontSizeFactor, screenWidth),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    //getMonthWeekCustom(fontSizeFactor, screenWidth),
+                    widget.showMonthYearFilter
+                        ? getMonthYearCustom(fontSizeFactor, screenWidth)
+                        : getMonthWeekCustom(fontSizeFactor, screenWidth),
                     //SizedBox(height: screenWidth * 0.04),
-                    Expanded(
-                      child: LineChartWidget(
+                    GestureDetector(
+                      onTap: () {
+                        if (!widget.isExpandedView) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ExpandedFinance(),
+                            ),
+                          );
+                        }
+                      },
+                      child: Expanded(
+                        child: LineChartWidget(
                           chartData: transactionChatGraph,
                           days: labels,
-                          selectedButton: selectedButton),
+                          selectedButton: selectedButton,
+                          isExpandedView: widget.isExpandedView,
+                          isMonthSelected: selectedButton.value == "Month" &&
+                              widget.showMonthYearFilter,
+                          isYearSelected: selectedButton.value != "Month" &&
+                              widget.showMonthYearFilter,
+                          selectedYear: selectedYear, // Pass selectedYear
+                          selectedMonth: selectedMonth,
+                        ),
+                      ),
                     )
                   ],
                 ),
               )));
+  }
+
+  Widget getMonthYearCustom(fontSizeFactor, screenWidth) {
+    // Here you would implement the logic for selecting month and year
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          'My Spendings',
+          style: FontManager().getTextStyle(context,
+              lWeight: FontWeight.normal,
+              fontSize: fontSizeFactor * 3.4,
+              color: AppColors.bg1),
+        ),
+        Row(
+          children: [
+            // Placeholder for month selection
+            GestureDetector(
+              onTap: () {
+                _showMonthPicker(context);
+              },
+              child: Container(
+                height: 35,
+                width: screenWidth * 0.2,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: AppColors.button,
+                ),
+                child: Center(
+                  child: Text(
+                    'Month',
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.normal,
+                        fontSize: fontSizeFactor * 3.4,
+                        color: AppColors.accentColor),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: screenWidth * 0.02),
+            // Placeholder for year selection
+            GestureDetector(
+              onTap: () {
+                _showYearPicker(context);
+
+                // Implement year selection logic here
+              },
+              child: Container(
+                height: 35,
+                width: screenWidth * 0.2,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: AppColors.button,
+                ),
+                child: Center(
+                  child: Text(
+                    'Year',
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.normal,
+                        fontSize: fontSizeFactor * 3.4,
+                        color: AppColors.accentColor),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   Widget getMonthWeekCustom(fontSizeFactor, screenWidth) {
@@ -610,18 +836,29 @@ class LineChartWidget extends StatefulWidget {
     required this.chartData,
     required this.days,
     required this.selectedButton,
+    this.isExpandedView = false,
+    this.isMonthSelected = false,
+    this.isYearSelected = false,
+    this.selectedYear = 2025,
+    this.selectedMonth = 2,
   });
 
   final Map<String, List<double>> chartData;
   final List days;
   final RxString selectedButton;
+  final bool isExpandedView;
+  final bool isMonthSelected;
+  final bool isYearSelected;
+  final int selectedYear;
+  final int selectedMonth;
+
   @override
   State<LineChartWidget> createState() => _LineChartWidgetState();
 }
 
 class _LineChartWidgetState extends State<LineChartWidget> {
- // List<double> yAxisLabels = [];
-   double maxYValue = 0.0;
+  // List<double> yAxisLabels = [];
+  double maxYValue = 0.0;
   List<double> yAxisLabels = [];
 
   @override
@@ -629,16 +866,21 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     super.initState();
     _calculateMaxYValueAndLabels();
   }
-   void didUpdateWidget(LineChartWidget oldWidget) {
+
+  @override
+  void didUpdateWidget(LineChartWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.chartData != widget.chartData) {
+    if (oldWidget.chartData != widget.chartData ||
+        oldWidget.selectedYear != widget.selectedYear ||
+        oldWidget.selectedMonth != widget.selectedMonth) {
       _calculateMaxYValueAndLabels();
     }
   }
 
   void _calculateMaxYValueAndLabels() {
     setState(() {
-      if (widget.chartData["credited"]!.isNotEmpty || widget.chartData["debited"]!.isNotEmpty) {
+      if (widget.chartData["credited"]!.isNotEmpty ||
+          widget.chartData["debited"]!.isNotEmpty) {
         maxYValue = [
           widget.chartData["credited"]!,
           widget.chartData["debited"]!
@@ -684,6 +926,25 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     );
   }
 
+  int daysInMonth(int year, int month) {
+    if (month == DateTime.february) {
+      var isLeapYear = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+      return isLeapYear ? 29 : 28;
+    }
+    if ([
+      DateTime.january,
+      DateTime.march,
+      DateTime.may,
+      DateTime.july,
+      DateTime.august,
+      DateTime.october,
+      DateTime.december
+    ].contains(month)) {
+      return 31;
+    }
+    return 30;
+  }
+
   Widget getContainerOfGraph(
     screenWidth,
     fontSizeFactor,
@@ -712,93 +973,227 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         //   ),
         // ),
         SizedBox(
-          width: selectedButton.value == 'Week'?screenWidth * 0.88:screenWidth * 2,
+          width:
+              selectedButton == 'Week' ? screenWidth * 0.88 : screenWidth * 2,
           height: MediaQuery.of(context).size.height / 2.06,
-          child: GestureDetector(
-            onPanUpdate: (details) {
-              // Detect hover over points if required for further enhancements.
-            },
-            child: LineChart(
-              LineChartData(
-                gridData: FlGridData(
-                  show: false,
-                ),
-                titlesData: FlTitlesData(
-                  bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        interval: 1,
-                        
-                        getTitlesWidget: (value, meta) {
-                          if (value.toInt() < widget.days.length) {
+          child: widget.isExpandedView
+              ? LineChart(
+                  LineChartData(
+                    gridData: FlGridData(
+                      show: false,
+                    ),
+                    titlesData: FlTitlesData(
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          interval: 1,
+                          getTitlesWidget: (value, meta) {
+                            if (widget.isMonthSelected) {
+                              final daysCount = daysInMonth(
+                                  widget.selectedYear, widget.selectedMonth);
+                              // if (value.toInt() < daysCount) {
+                              //   return Text(
+                              //     (value.toInt() + 1).toString(),
+                              //     style: FontManager().getTextStyle(context,
+                              //         lWeight: FontWeight.normal,
+                              //         fontSize: fontSizeFactor * 1,
+                              //         color: AppColors.accentColor),
+                              //   );
+                              // }
+                              return SizedBox.shrink();
+                            } else if (widget.isYearSelected) {
+                              final month = DateFormat('MMM').format(DateTime(
+                                  widget.selectedYear, value.toInt() + 1, 1));
+                              return Text(
+                                month,
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.normal,
+                                    fontSize: fontSizeFactor * 1,
+                                    color: AppColors.accentColor),
+                              );
+                            } else {
+                              if (value.toInt() < widget.days.length) {
+                                return Text(
+                                  widget.days[value.toInt()],
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.normal,
+                                      fontSize: fontSizeFactor * 3,
+                                      color: AppColors.accentColor),
+                                );
+                              }
+                              return SizedBox.shrink();
+                            }
+                          },
+                        ),
+                      ),
+                      rightTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false)),
+                      topTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false)),
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: false,
+
+                          reservedSize: screenWidth * 0.14,
+                          interval: maxYValue /
+                              4, // For 5 labels (4 intervals + 0 at the bottom)
+                          getTitlesWidget: (value, meta) {
                             return Text(
-                              widget.days[value.toInt()],
+                              '₹${formatNumberString(value.toString())}',
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.normal,
-                                  fontSize: fontSizeFactor * 3,
+                                  fontSize: fontSizeFactor * 3.0,
                                   color: AppColors.accentColor),
                             );
-                          }
-                          return SizedBox.shrink();
+                          },
+                        ),
+                      ),
+                    ),
+                    borderData: FlBorderData(
+                      show: false,
+                    ),
+                    minY: 0,
+                    maxY: maxYValue * 1.2,
+                    lineBarsData: [
+                      linechart(transactionChatGraph["credited"]!,
+                          AppColors.primaryColor),
+                      linechart(transactionChatGraph["debited"]!,
+                          AppColors.accentColor),
+                    ],
+                    lineTouchData: LineTouchData(
+                      touchTooltipData: LineTouchTooltipData(
+                        tooltipRoundedRadius: 1,
+                        tooltipPadding: const EdgeInsets.all(8),
+                        getTooltipItems: (touchedSpots) {
+                          return touchedSpots.map((touchedSpot) {
+                            String label =
+                                touchedSpot.bar.color == AppColors.primaryColor
+                                    ? 'Credited'
+                                    : 'Debited';
+                            return LineTooltipItem(
+                              '$label: ₹${touchedSpot.y.toStringAsFixed(2)}',
+                              FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.normal,
+                                  fontSize: fontSizeFactor * 2.5,
+                                  color: AppColors.accentColor),
+                            );
+                          }).toList();
                         },
                       ),
                     ),
-                  rightTitles:
-                      const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  topTitles:
-                      const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  leftTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-        
-                      reservedSize: screenWidth * 0.14,
-                      interval: maxYValue /
-                          4, // For 5 labels (4 intervals + 0 at the bottom)
-                      getTitlesWidget: (value, meta) {
-                        return Text(
-                          '₹${formatNumberString(value.toString())}',
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.normal,
-                              fontSize: fontSizeFactor * 3.0,
-                              color: AppColors.accentColor),
-                        );
-                      },
+                  ),
+                )
+              : GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ExpandedFinance(),
+                      ),
+                    );
+                  },
+                  child: LineChart(
+                    LineChartData(
+                      gridData: FlGridData(
+                        show: false,
+                      ),
+                      titlesData: FlTitlesData(
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            interval: 1,
+                            getTitlesWidget: (value, meta) {
+                              if (value.toInt() < widget.days.length) {
+                                return Text(
+                                  widget.days[value.toInt()],
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.normal,
+                                      fontSize: fontSizeFactor * 3,
+                                      color: AppColors.accentColor),
+                                );
+                              }
+                              return SizedBox.shrink();
+                            },
+                          ),
+                        ),
+                        rightTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false)),
+                        topTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false)),
+                        leftTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+
+                            reservedSize: screenWidth * 0.14,
+                            interval: maxYValue /
+                                4, // For 5 labels (4 intervals + 0 at the bottom)
+                            getTitlesWidget: (value, meta) {
+                              return Text(
+                                '₹${formatNumberString(value.toString())}',
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.normal,
+                                    fontSize: fontSizeFactor * 3.0,
+                                    color: AppColors.accentColor),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      borderData: FlBorderData(
+                        show: false,
+                      ),
+                      minY: 0,
+                      maxY: maxYValue * 1.2,
+                      lineBarsData: [
+                        linechart(transactionChatGraph["credited"]!,
+                            AppColors.primaryColor),
+                        linechart(transactionChatGraph["debited"]!,
+                            AppColors.accentColor),
+                      ],
+                      lineTouchData: LineTouchData(
+                        handleBuiltInTouches:
+                            false, // Disable built-in touch handling
+                        touchCallback: (event, response) {
+                          // Check if there's a touch response
+                          if (event is FlTapUpEvent &&
+                              response != null &&
+                              response.lineBarSpots != null &&
+                              response.lineBarSpots!.isNotEmpty) {
+                            // If there's a response, it means the user tapped on the line
+                            // Do nothing or handle line tap if needed
+                          } else {
+                            // If no response, it means the user tapped outside the line
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ExpandedFinance(),
+                              ),
+                            );
+                          }
+                        },
+                        touchTooltipData: LineTouchTooltipData(
+                          tooltipRoundedRadius: 1,
+                          tooltipPadding: const EdgeInsets.all(8),
+                          getTooltipItems: (touchedSpots) {
+                            return touchedSpots.map((touchedSpot) {
+                              String label = touchedSpot.bar.color ==
+                                      AppColors.primaryColor
+                                  ? 'Credited'
+                                  : 'Debited';
+                              return LineTooltipItem(
+                                '$label: ₹${touchedSpot.y.toStringAsFixed(2)}',
+                                FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.normal,
+                                    fontSize: fontSizeFactor * 2.5,
+                                    color: AppColors.accentColor),
+                              );
+                            }).toList();
+                          },
+                        ),
+                      ),
                     ),
                   ),
                 ),
-                borderData: FlBorderData(
-                  show: false,
-                ),
-                minY: 0,
-                 maxY: maxYValue * 1.2,
-                lineBarsData: [
-                  linechart(transactionChatGraph["credited"]!, AppColors.primaryColor),
-              linechart(transactionChatGraph["debited"]!, AppColors.accentColor),
-                ],
-                lineTouchData: LineTouchData(
-                  touchTooltipData: LineTouchTooltipData(
-                    tooltipRoundedRadius: 1,
-                    tooltipPadding: const EdgeInsets.all(8),
-                    getTooltipItems: (touchedSpots) {
-                      return touchedSpots.map((touchedSpot) {
-                        String label =
-                            touchedSpot.bar.color == AppColors.primaryColor
-                                ? 'Credited'
-                                : 'Debited';
-                        return LineTooltipItem(
-                          '$label: ₹${touchedSpot.y.toStringAsFixed(2)}',
-                          FontManager().getTextStyle(context,
-                              lWeight: FontWeight.normal,
-                              fontSize: fontSizeFactor * 2.5,
-                              color: AppColors.accentColor),
-                        );
-                      }).toList();
-                    },
-                  ),
-                ),
-              ),
-            ),
-          ),
         ),
       ],
     );
@@ -825,11 +1220,13 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       color: color,
       barWidth: 1,
       dotData: FlDotData(show: false),
-      belowBarData: BarAreaData(show: false, color: Colors.red.withOpacity(0.2)),
+      belowBarData:
+          BarAreaData(show: false, color: Colors.red.withOpacity(0.2)),
       // Ensure the first and last points are within the chart area
       spots: List.generate(
         list.length,
-        (index) => FlSpot(index.toDouble(), list[index].clamp(0, maxYValue * 1.2)),
+        (index) =>
+            FlSpot(index.toDouble(), list[index].clamp(0, maxYValue * 1.2)),
       ),
     );
   }
