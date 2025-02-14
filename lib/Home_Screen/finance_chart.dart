@@ -49,49 +49,10 @@ class _FinancePageState extends State<FinancePage> {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      body: Obx(() => !getGraphData.value
-          ? Center(child: Loader())
-          : Padding(
-              padding: EdgeInsets.all(screenWidth * 0.04), // Responsive padding
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  getTopChat(fontSizeFactor, screenWidth),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  getMonthWeekCustom(fontSizeFactor, screenWidth),
-                  SizedBox(height: screenWidth * 0.04),
-                  Expanded(
-                    child: LineChartWidget(
-                      chartData: transactionChatGraph,
-                      days: labels,
-                      selectedButton:
-                          selectedButton, // Pass selectedButton here
-                    ),
-                  ),
-                ],
-              ),
-            )),
-    );
-  }
-
-  Widget getTopChat(fontSizeFactor, screenWidth) {
-    return Column(
-      children: [
-        Align(
-          alignment: Alignment.topLeft,
-          child: Text('Weekly Spending and Cash flow',
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.w600,
-                  fontSize: fontSizeFactor * 4.5,
-                  color: AppColors.accentColor)),
-        ),
-        SizedBox(
-          height: Colorcodes.paddingSize,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body:Obx(()=> !getGraphData.value? Center(child: Spinner()):Padding(
+         padding: EdgeInsets.all(screenWidth * 0.04), // Responsive padding
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
@@ -126,8 +87,9 @@ class _FinancePageState extends State<FinancePage> {
             )
           ],
         ),
-      ],
-    );
+      )
+      )
+      );
   }
 
   Widget getMonthWeekCustom(fontSizeFactor, screenWidth) {
