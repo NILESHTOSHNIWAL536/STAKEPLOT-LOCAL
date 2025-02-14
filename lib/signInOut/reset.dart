@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -126,13 +127,14 @@ class _SigninState extends State<ResetPassword> {
   Widget build(BuildContext context) {
 
 
-  return   Scaffold(
-      backgroundColor: Colorcodes.budgetDarkGreen,
-      body: Column(
-        children: [
-
-
-          Padding(
+  return   SafeArea(
+    child: Scaffold(
+        backgroundColor: Colorcodes.white,
+        body: Column(
+          children: [
+    
+    
+            Padding(
             padding:  EdgeInsets.symmetric(vertical: Colorcodes.paddingTopDesign/1.4),
             child: Text(("Security Pin"),
                                 style: FontManager().getTextStyle(context,
@@ -140,104 +142,70 @@ class _SigninState extends State<ResetPassword> {
                                     fontSize: 22,
                                     color: Colors.black)),
           ),
-          
-          Expanded(
-            child: Container(
-                 width: MediaQuery.of(context).size.width,
-                   height: MediaQuery.of(context).size.height/1.16,
-                    // margin:  EdgeInsets.only(top: Colorcodes.paddingTopDesign/2),
-                    padding:  EdgeInsets.symmetric(vertical: Colorcodes.paddingTopScroll),
-                   decoration: BoxDecoration(
-                      color: Colorcodes.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(Colorcodes.borderCut),
-                            topRight: Radius.circular(Colorcodes.borderCut),
-                           )
             
-                   ),
-                    child: ListView(
-                          
-                          children: [
-            
-                         const SizedBox(height: 30,),
-                       
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: TextFeildWidget(textEditingController: passwordController, heading: "New Password", keyBoard: TextInputType.visiblePassword, lableText: "Password"),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child : TextFeildWidget(textEditingController: conformController, heading: "Confirm New Password", keyBoard: TextInputType.visiblePassword, lableText: "Confirm Password"),
-            
-                          ),
-                  
-                        
-                                SizedBox(height: Colorcodes.paddingSize*4,),
-                              
-                           Center(
-                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                               children: [
-                                 Container(
-                                  //  width: MediaQuery.of(context).size.width/2,
-                                   margin:const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-                                   padding:const EdgeInsets.symmetric(vertical: 10,horizontal: 30),
-                                   decoration: BoxDecoration(
-                                                color: Colorcodes.budgetDarkGreen,
-                                                     borderRadius: BorderRadius.circular(Colorcodes.borderRadius30)
-                                                ),
-                                   child: InkWell(
-                                                              onTap: (){
-                                 
-                                                String password=passwordController.text;
-                                                  String conform=conformController.text;
-                                 
-                                                                                    if(password.length<6)
-                                                    {
-                                                        snackBarCalled(context, "Password must be atleast 6 characters",Colors.red);
-                                                        return;
-                                                    }
-                                 
-                                                    if(password!=conform)
-                                                    {
-                                                        snackBarCalled(context, "Password and Conform password doesn't match",Colors.red);
-                                                        return;
-                                                    }    
-                                                                                  
-                                           changePassword(context,widget.email,passwordController.text,conformController.text,);
-                                      },
-                                     child: Center(
-                                                    child: Text(("Change Password"),
-                                                    style: FontManager().getTextStyle(context,
-                                                                                lWeight: FontWeight.bold,
-                                                                                fontSize: 20,
-                                                                                color: Colorcodes.iconBackGround)),
-                                                  ),
-                                   ),
-                                 ),
-                               ],
-                             ),
-                           ),
-            
-            
+            const SizedBox(height: 30,),
                          
-                           
+             Padding(
+               padding: const EdgeInsets.symmetric(vertical: 10),
+               child: TextFeildWidget(textEditingController: passwordController, heading: "New Password", keyBoard: TextInputType.visiblePassword, lableText: "Password" ,icon: Icons.lock_clock_outlined,),
+             ),
+             Padding(
+               padding: const EdgeInsets.symmetric(vertical: 10),
+               child : TextFeildWidget(textEditingController: conformController, heading: "Confirm New Password", keyBoard: TextInputType.visiblePassword, lableText: "Confirm Password",icon: Icons.lock_clock_outlined,),
+                 
+             ),
+                       
                           
-                              
-                              
-                              
-                              
-                              
-                              
-                      
-                              
-                          ],
+                   SizedBox(height: Colorcodes.paddingSize*4,),
+                 
+              Center(
+                child: Row(
+                 mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width/1.1,
+                      margin:const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+                      padding:const EdgeInsets.symmetric(vertical: 10,horizontal: 30),
+                      decoration: BoxDecoration(
+                                   color: AppColors.primaryColor,
+                                        borderRadius: BorderRadius.circular(Colorcodes.borderRadius10)
+                                   ),
+                      child: InkWell(
+                                                 onTap: (){
+                    
+                                   String password=passwordController.text;
+                                     String conform=conformController.text;
+                    
+                                                                       if(password.length<6)
+                                       {
+                                           snackBarCalled(context, "Password must be atleast 6 characters",Colors.red);
+                                           return;
+                                       }
+                    
+                                       if(password!=conform)
+                                       {
+                                           snackBarCalled(context, "Password and Conform password doesn't match",Colors.red);
+                                           return;
+                                       }    
+                                                                     
+                              changePassword(context,widget.email,passwordController.text,conformController.text,);
+                         },
+                        child: Center(
+                                       child: Text(("Change Password"),
+                                       style: FontManager().getTextStyle(context,
+                                                                   lWeight: FontWeight.bold,
+                                                                   fontSize: 20,
+                                                                   color: Colorcodes.white)),
+                                     ),
+                      ),
                     ),
-            ),
-          ),
-        ],
+                  ],
+                ),
+              ),
+          ],
+        ),
       ),
-    );
+  );
   
   }
   

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:get/get.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 
 
 class conform extends StatefulWidget {
@@ -39,8 +42,7 @@ class _SigninState extends State<conform> {
                     controller: _controllers[index],
                     focusNode: _focusNodes[index],
                     // controller: Textcontroller,
-           
-                    
+          
                       decoration: InputDecoration(
                   counterText: '',  // Hide the counter
                   enabledBorder: OutlineInputBorder(
@@ -77,7 +79,10 @@ class _SigninState extends State<conform> {
    final int _otpLength = 6;
   late List<TextEditingController> _controllers= List.generate(_otpLength, (_) => TextEditingController());
   late List<FocusNode> _focusNodes=List.generate(_otpLength, (_) => FocusNode());
-
+  final int _otpCodeLength = 6; // OTP length
+  RxString _otpCode = "".obs; // Captured OTP code
+  RxBool _isOtpValid = false.obs; // Validate OTP length
+  TextEditingController otpController = TextEditingController();
 
   
   @override
@@ -105,252 +110,65 @@ class _SigninState extends State<conform> {
      TextEditingController emailController= TextEditingController();
      TextEditingController passwordController= TextEditingController();
 
+       return   SafeArea(
+         child: Scaffold(
+               backgroundColor: Colorcodes.white,
+               body: Container(
+                 padding: const EdgeInsets.symmetric(horizontal: 20),
+                 height: MediaQuery.of(context).size.height/1.3,
+                 width: MediaQuery.of(context).size.width,
+                 child: Expanded(
+                   child: Column(
+                             mainAxisAlignment: MainAxisAlignment.start,
+                             crossAxisAlignment: CrossAxisAlignment.start,
+                             children: [
+                               const SizedBox(height: 20,),
+                               topHeader(),
+                               textStyle(context: context,text:StringConstant.otpText,fontWeight: FontWeight.w400,fontsize: 10 ),
+    
+                              const SizedBox(height: 40,),
+                   
+                  
+                            verifyOpt(),
+                     
+                     
+                    
+                            acceptButton(),  
+                           
+                              
+                              SizedBox(height: Colorcodes.paddingSize*2,),
+                     
+                   
+                   
+                   
+                                 InkWell(
+                                   onTap: (){
+                   
+                    //  resendOptUser(context,widget.data['email'],widget.data['name']);
+                   
+                                   },
+                                   child: resendOtp()
+                                 ),
+                     
+                     
+                                   
+                             ],
+                   ),
+                 ),
+               ),
+             ),
+       );
+  }
 
-       return   Scaffold(
-      backgroundColor: Colorcodes.budgetDarkGreen,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-
-
-
-          Padding(
-            padding:  EdgeInsets.symmetric(vertical: Colorcodes.paddingTopDesign/1.4),
+  Widget topHeader(){
+      return   Padding(
+            padding:  EdgeInsets.symmetric(vertical: 20),
             child: Text(("Security Pin"),
                                 style: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.bold,
                                     fontSize: 22,
                                     color: Colors.black)),
-          ),
-          
-          Expanded(
-            child: Container(
-                 width: MediaQuery.of(context).size.width,
-                   height: MediaQuery.of(context).size.height,
-                    // margin:  EdgeInsets.only(top: Colorcodes.paddingTopDesign/2),
-                    padding:  EdgeInsets.symmetric(vertical: Colorcodes.paddingTopScroll),
-                   decoration: BoxDecoration(
-                      color: Colorcodes.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(Colorcodes.borderCut),
-                            topRight: Radius.circular(Colorcodes.borderCut),
-                           )
-            
-                   ),
-                    child: ListView(
-                          
-                          children: [
-            
-                         const SizedBox(height: 30,),
-                         Center(
-                           child: Text((StringConstant.otpText),
-                                                  style: FontManager().getTextStyle(context,
-                                                                              lWeight: FontWeight.bold,
-                                                                              fontSize: 20,
-                                                                              color: Colorcodes.iconBackGround)),
-                         ),
-            
-                         const SizedBox(height: 30,),
-            
-            
-                           Row(
-                                 mainAxisAlignment: MainAxisAlignment.center,
-                                 children: [
-            
-                                       InputDate("email/phone number",TextInputType.number,emailController,0),
-                                       InputDate("username",TextInputType.number,passwordController,1),
-                                       InputDate("Date of birth",TextInputType.number,passwordController,2),
-                                       InputDate("password",TextInputType.number,passwordController,3),
-                                       InputDate("password",TextInputType.number,passwordController,4),
-                                       InputDate("password",TextInputType.number,passwordController,5),
-                                 ],
-                             ),
-                       
-                  
-                        
-                        SizedBox(height: Colorcodes.paddingSize*2,),
-                              
-                           Center(
-                             child: Container(
-                               width: MediaQuery.of(context).size.width/2,
-                               margin:const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-                               padding:const EdgeInsets.symmetric(vertical: 10),
-                               decoration: BoxDecoration(
-                                            color: Colorcodes.budgetDarkGreen,
-                                                 borderRadius: BorderRadius.circular(Colorcodes.borderRadius30)
-                                            ),
-                               child: InkWell(
-                                                          onTap: (){
-                                   String opt="";
-
-                                     for(int i=0;i< _controllers.length;i++)
-                                          { 
-                                                if(_controllers[i].text==""){
-                                                  snackBarAllFeilds(context,Colors.red);
-                                                  return;
-                                                }
-                                          }
-            
-                                      _controllers.forEach((element) { 
-                                           opt += element.text;
-                                      });
-                                    
-                                      acceptReset.value=true;
-                                       storeData(context,widget.data, opt, widget.url);
-                                  },
-                                 child:Obx(() =>  Center(
-                                                child:  acceptReset.value? Verify(): 
-                                              Text(("Accept"),
-                                                style: FontManager().getTextStyle(context,
-                                                                            lWeight: FontWeight.bold,
-                                                                            fontSize: 20,
-                                                                            color: Colorcodes.iconBackGround)),
-                                 )),
-                               ),
-                             ),
-                           ),
-            
-            
-                            Center(
-                             child: Container(
-                               width: MediaQuery.of(context).size.width/2,
-                               margin:const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-                               padding:const EdgeInsets.symmetric(vertical: 10),
-                               decoration: BoxDecoration(
-                                            color: Colorcodes.budgetLightGreen,
-                                                 borderRadius: BorderRadius.circular(Colorcodes.borderRadius30)
-                                            ),
-                               child: InkWell(
-                                                          onTap: (){
-                                                            //  Navigator.pushNamed(context,'/signup'); 
-                                                            resendOptUser(context,widget.data['email'],widget.data['name']);
-
-                                                          },
-                                 child: Center(
-                                                child: Text(("Send Again"),
-                                                style: FontManager().getTextStyle(context,
-                                                                            lWeight: FontWeight.bold,
-                                                                            fontSize: 20,
-                                                                            color: Colorcodes.iconBackGround)),
-                                              ),
-                               ),
-                             ),
-                           ),
-                              
-                          ],
-                    ),
-            ),
-          ),
-        ],
-      ),
-    );
-
-   
-    // return SafeArea(
-    //   child: Scaffold(
-    //     body: Container(
-    //            height: MediaQuery.of(context).size.height,
-    //           //  padding:const EdgeInsets.only(bottom: 20),
-    //            child:   SingleChildScrollView(
-    //              child: Column(
-    //                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //                  crossAxisAlignment: CrossAxisAlignment.center,
-    //                  children: [
-    //                      ClipRRect(
-    //                          borderRadius: BorderRadius.only(
-    //                              bottomLeft: Radius.circular(100)
-    //                          ),
-    //                          child: Container( 
-    //                             padding:const EdgeInsets.all(25),
-    //                              color: Colorcodes.debtBody,
-    //                             // color:  Color.fromRGBO(97, 143, 214, 1),  //rgba(97, 143, 214, 1)
-    //                             child: Center(child: Text(("signup"),
-    //                             style: FontManager().getTextStyle(context,
-    //                           lWeight: FontWeight.w400,
-    //                           fontSize: 25,
-    //                           color: Colors.white))),
-    //                          ),
-    //                        ),
-      
-    //                        const SizedBox(height: 100,),
-      
-      
-    //                        Container(
-    //                          padding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20),
-    //                          decoration: BoxDecoration(
-    //                           color: Color.fromRGBO(249, 246, 238, 1),
-    //                           borderRadius: BorderRadius.circular(50)
-                                 
-    //                          ),
-    //                          child: Column(
-    //                             mainAxisAlignment: MainAxisAlignment.center,
-    //                             children: [
-    //                               Text(("confirmation code"),
-    //                               style: FontManager().getTextStyle(context,
-    //                                                         fontSize: 17,
-    //                                                         color: Colors.black)),
-    //                             ],
-    //                           ),
-    //                        ),
-      
-    //                          const SizedBox(height: 40,),
-                        
-                          //  Row(
-                          //      mainAxisAlignment: MainAxisAlignment.center,
-                          //      children: [
-                          //            InputDate("email/phone number",TextInputType.number,emailController,0),
-                          //            InputDate("username",TextInputType.number,passwordController,1),
-                          //            InputDate("Date of birth",TextInputType.number,passwordController,2),
-                          //            InputDate("password",TextInputType.number,passwordController,3),
-                          //            InputDate("password",TextInputType.number,passwordController,4),
-                          //            InputDate("password",TextInputType.number,passwordController,5),
-                          //      ],
-                          //  ),
-                                        
-                                        
-    //                             const SizedBox(height:100,),                       
-                                              
-                                              
-    //                         Row(
-    //                           mainAxisAlignment: MainAxisAlignment.center,
-    //                           children: [
-    //                             GestureDetector(
-    //                               onTap: () {
-                                    // String opt="";
-
-                                    // _controllers.forEach((element) { 
-                                    //      opt += element.text;
-                                    // });
-                                   
-                                    //  storeData(context,widget.data, opt, widget.url);
-    //                               },
-    //                               child: Container( 
-    //                                 padding:const EdgeInsets.symmetric(horizontal:35,vertical: 10),
-    //                                 decoration: BoxDecoration(
-    //                                 // color:const Color.fromRGBO(97, 143, 214, 1),
-    //                                 color: Colorcodes.debtBody,
-    //                                      borderRadius: BorderRadius.circular(5)
-    //                                 ),
-    //                                 child: Text(("Sign Up"),
-    //                                 style: FontManager().getTextStyle(context,
-    //                                                             lWeight: FontWeight.w400,
-    //                                                             fontSize: 20,
-    //                                                             color: Colors.white)),
-    //                                                    ),
-    //                             ),
-    //                           ],
-    //                         )
-                           
-                            
-                       
-                       
-    //                  ],
-    //              ),
-    //            ),
-    //      ),
-    //   ),
-    // );
+          );
   }
 
 
@@ -363,8 +181,116 @@ class _SigninState extends State<conform> {
   }
 
 
+Widget acceptButton(){
+    return 
+                               Center(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width/1.1,
+                    margin:const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+                    padding:const EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                                 color: AppColors.primaryColor,
+                                      borderRadius: BorderRadius.circular(Colorcodes.borderRadius10)
+                                 ),
+                    child: InkWell(
+                                               onTap: (){
+                       
+                        //  Navigator.pushReplacementNamed(context, '/ShareAccountLogin'); 
+                           acceptReset.value=true;
+                            storeData(context,widget.data, _otpCode.value, widget.url);
+                       },
+                      child:Obx(() =>  Center(
+                                     child:  acceptReset.value? Verify(): 
+                                   Text(("Accept"),
+                                     style: FontManager().getTextStyle(context,
+                                                                 lWeight: FontWeight.bold,
+                                                                 fontSize: 20,
+                                                                 color: Colorcodes.white)),
+                      )),
+                    ),
+                  ),
+              );
+}
 
+
+
+Widget resendOtp(){
+  return Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: Colorcodes.paddingSize / 3),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(("Didn’t you receive the OTP ? "),
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w400,
+                                fontSize: 13,
+                                color: Colorcodes.iconBackGround,
+                                // decoration: TextDecoration.underline
+                              )),
+                          InkWell(
+                            onTap: () {
+                               resendOptUser(context,widget.data['email'],widget.data['name']);
+                            },
+                            child: Text(("Resend OTP"),
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colorcodes.cardShade5,
+                                  // decoration: TextDecoration.underline
+                                )),
+                          ),
+                        ],
+                      ),
+                    ),
+      
+                  );
+}
+
+
+
+
+Widget verifyOpt(){
+    return  Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: PinCodeTextField(
+                appContext: context,
+                length: _otpCodeLength,
+                controller: otpController,
+                keyboardType: TextInputType.number,
+                autoFocus: true,
+                animationType: AnimationType.fade,
+                pinTheme: PinTheme(
+                  shape: PinCodeFieldShape.box,
+                  borderRadius: BorderRadius.circular(10),
+                  fieldHeight: MediaQuery.of(context).size.width * 0.13,
+                  fieldWidth: MediaQuery.of(context).size.width * 0.13,
+                  activeFillColor: Colors.white,
+                  activeColor: Colors.blue,
+                  selectedFillColor: Colors.white,
+                  selectedColor: Colors.blue,
+                  inactiveFillColor: Colors.grey[200],
+                  inactiveColor: Colors.grey,
+                ),
+                enableActiveFill: true,
+                textStyle: TextStyle(fontSize: 20, color: Colors.black),
+                onChanged: (value) {
+                  _otpCode.value = value;
+                  _isOtpValid.value = value.length == _otpCodeLength;
+                  if(_isOtpValid.value){
+                       acceptReset.value=true;
+                      storeData(context,widget.data, _otpCode.value, widget.url);
+                  }
+                },
+              ),
+          );
+}
 
 }
+
 
 

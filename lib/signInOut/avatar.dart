@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_application_code_stakeplot/signInOut/confirm.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_svg/flutter_svg.dart';
+
 
 
 
@@ -31,9 +33,12 @@ class _SigninState extends State<Avatar> {
 
  int index = 0;
   
-  PageController _pageController = PageController(
-  initialPage: 0,
-);
+//   PageController _pageController = PageController(
+//   initialPage: 0,
+// );
+
+ final PageController _pageController = PageController(viewportFraction: 0.7);
+  int _currentPage = 0;
 
 
  List<String> images=[
@@ -48,103 +53,159 @@ class _SigninState extends State<Avatar> {
   ];
 
   int activePage = 3;
+
+    @override
+  void initState() {
+    super.initState();
+    _pageController.addListener(() {
+      setState(() {
+        _currentPage = _pageController.page!.round();
+      });
+    });
+  }
+
  
+ Widget slider(){
+   return SizedBox(
+          height: MediaQuery.of(context).size.height/4, // Adjust height as needed
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: images.length,
+            onPageChanged: (position) {
+              setState(() {
+                activePage=position;
+              });
+            },
+            itemBuilder: (context, index) {
+              double scale = (_currentPage == index) ? 1.0 : 0.8;
+              return AnimatedContainer(
+        
+                duration: const Duration(milliseconds: 300),
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+
+                transform: Matrix4.identity()..scale(scale),
+                child: Container(
+                  height: 20,
+                  width: 100,
+                  child: SvgPicture.asset(
+                    images[index],
+                    fit: BoxFit.cover,
+                    width: 20,
+                    height: 20,
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+ }
 
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      backgroundColor: Colorcodes.budgetDarkGreen,
-      body: Container(
-             height: MediaQuery.of(context).size.height*2,
-            //  padding:const EdgeInsets.only(bottom: 20),
-             child: SingleChildScrollView(
-               child: Column(
-                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                   crossAxisAlignment: CrossAxisAlignment.center,
-                   children: [
-                      
-                       
-                          const SizedBox(height: 20,),
-                           Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Center(
-                                  child: Text(("Choose Avatar...!"), // email already exists..! or other errors
-                                      style: FontManager().getTextStyle(context,
-                                                                 fontSize: 18,
-                                                                 letterSpacing: 1.2,
-                                                                lWeight: FontWeight.bold,
-                                                                color: Colors.black)),
-                                ),
-                          ),
-               
-                         Container(
-                            height: MediaQuery.of(context).size.height/4,
-                            // width: 200,
-                            child: SvgPicture.asset(
-                                   images[activePage],
-                                                     ),
-                          ),
-                          const SizedBox(height: 10,),
-                           Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Center(
-                                  child: Text((!widget.data['name'].toString().isEmpty?widget.data['name']:"Nilesh Toshniwal"), // email already exists..! or other errors
-                                      style: FontManager().getTextStyle(context,
-                                                                fontSize: 18,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colorcodes.white,
+        body: Container(
+               height: MediaQuery.of(context).size.height*2,
+              //  padding:const EdgeInsets.only(bottom: 20),
+               child: SingleChildScrollView(
+                 child: Column(
+                     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                     crossAxisAlignment: CrossAxisAlignment.center,
+                     children: [
+                        
+                         
+                            const SizedBox(height: 20,),
+                             Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Center(
+                                    child: Text(("Choose Avatar...!"), // email already exists..! or other errors
+                                        style: FontManager().getTextStyle(context,
+                                                                   fontSize: 18,
                                                                    letterSpacing: 1.2,
-                                                                lWeight: FontWeight.w400,
-                                                                color: Colors.black)),
-                                ),
-                          ),
-               
-                          avatarSlider(),
-                          // avatarSlider2(),
-
-                          const SizedBox(height: 20,),
-               
-                          GestureDetector(
-                            onTap: () {
-                                //  storeData(context);
-                                snackBarCalled(context,"Sended Otp To Email Id...!",Colors.green);
-                                getOTP(context, widget.data['name'], widget.data['email']);
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => conform(data: widget.data,url: images[activePage],),
+                                                                  lWeight: FontWeight.bold,
+                                                                  color: Colors.black)),
                                   ),
-                              );
-                            },
-                            child: Container( 
-                                      width: MediaQuery.of(context).size.width/2,
-                                        padding:const EdgeInsets.symmetric(vertical: 10),
-                                        decoration: BoxDecoration(
-                                        color:Colorcodes.budgetLightGreen,
-                                             borderRadius: BorderRadius.circular(5),
-                                             border: Border.all(
-                                              color: Colorcodes.budgetLightGreen,
-                                              width: .5
-
-                                             )
+                            ),
+                 
+                           Container(
+                              height: MediaQuery.of(context).size.height/4,
+                              // width: 200,
+                              child: SvgPicture.asset(
+                                     images[activePage],
+                                                       ),
+                            ),
+                            const SizedBox(height: 10,),
+                             Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Center(
+                                    child: Text((!widget.data['name'].toString().isEmpty?widget.data['name']:"Nilesh Toshniwal"), // email already exists..! or other errors
+                                        style: FontManager().getTextStyle(context,
+                                                                  fontSize: 18,
+                                                                     letterSpacing: 1.2,
+                                                                  lWeight: FontWeight.w400,
+                                                                  color: Colors.black)),
+                                  ),
+                            ),
+                 
+                            // avatarSlider(),
+                            // avatarSlider2(),
+                            slider(),
+      
+                            const SizedBox(height: 20,),
+                 
+                            InkWell(
+                              onTap: () {
+                                  //  storeData(context);
+                                  snackBarCalled(context,"Sended Otp To Email Id...!",Colors.green);
+                                  getOTP(context, widget.data['name'], widget.data['email']);
+                                  // openShowModal();
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => conform(data: widget.data,url: images[activePage],),
+                                    ),
+                                );
+                              },
+                              child: Container( 
+                                        width: MediaQuery.of(context).size.width/1.3,
+                                          padding:const EdgeInsets.symmetric(vertical: 10),
+                                          decoration: BoxDecoration(
+                                          color:AppColors.primaryColor,
+                                               borderRadius: BorderRadius.circular(10),
+                                               border: Border.all(
+                                                color: Colorcodes.budgetLightGreen,
+                                                width: .5
+      
+                                               )
+                                          ),
+                                          child: Center(
+                                            child: Text(("Continue"),
+                                            style: FontManager().getTextStyle(context,
+                                                                        lWeight: FontWeight.w500,
+                                                                        fontSize: 20,
+                                                                        color: Colorcodes.white)),
                                         ),
-                                        child: Center(
-                                          child: Text(("Sign Up"),
-                                          style: FontManager().getTextStyle(context,
-                                                                      lWeight: FontWeight.w400,
-                                                                      fontSize: 20,
-                                                                      color: Colorcodes.iconBackGround)),
-                                      ),
-                                                   ),
-                          ),
-               
-               
-                            
-                     
-                   ],
+                                                     ),
+                            ),
+                 
+                 
+                              
+                       
+                     ],
+                 ),
                ),
-             ),
-       ),
+         ),
+      ),
     );
+  }
+  
+  void openShowModal() {
+      showModalBottomSheet(context: context, builder: (context){
+          return  conform(data: widget.data,url: images[activePage]);
+      });
   }
   
 
@@ -278,7 +339,7 @@ Widget avatarSlider(){
       'Content-Type': 'application/json; charset=UTF-8',
     },
     body: jsonEncode({
-           'name':name,
+            'name':name,
             'email': email,
             'userpassword':password,
             'confirmPassword':conform,
@@ -305,9 +366,11 @@ try{
                 snackBarCalled(context, data2['error']['explanation'],Colors.red);
                 return;
   } 
-    
+     print("----------------------------- data2 Registered");
+     print(data2);
    snackBarCalled(context,"User Registered Successfully...!",Colors.green);
-  //  Navigator.pushReplacementNamed(context, '/LinkedBackAccount'); 
+   clearStack(context);
+   Navigator.pushReplacementNamed(context, '/ShareAccountLogin'); 
 
     
 

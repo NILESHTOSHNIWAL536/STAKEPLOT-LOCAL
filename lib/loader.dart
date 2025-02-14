@@ -22,14 +22,16 @@ const Loader({ Key? key }) : super(key: key);
   }
 }
 class Spinner extends StatelessWidget {
-const Spinner({ Key? key }) : super(key: key);
+double size;
+Color color;
+ Spinner({ Key? key ,this.size=50.0,this.color=AppColors.primaryColor}) : super(key: key);
 
   @override
   Widget build(BuildContext context){
     return 
            SpinKitCircle(
-              color: AppColors.primaryColor, // Use a single color
-                size: 50.0,
+              color: color, // Use a single color
+                size: size,
             );
             
       

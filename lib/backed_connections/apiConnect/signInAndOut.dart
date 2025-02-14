@@ -6,15 +6,23 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/reset.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/resetPas.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 
 void clearStack(BuildContext context) {
+  try{
   Navigator.of(context)
       .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+  }catch(e){   
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+  }
 }
 
 void expire(responce, BuildContext context) {
@@ -159,15 +167,15 @@ void getforgotPassword(context, String name, String email) async {
     final body = json.decode(response.body);
 
     snackBarCalled(context, "Sended Otp To Email Id...!", Colors.black);
-    // Navigator.pushReplacement(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => ResetOtp(
-    //       email: email,
-    //       name: name,
-    //     ),
-    //   ),
-    // );
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ResetOtp(
+          email: email,
+          name: name,
+        ),
+      ),
+    );
   } else {
     snackBarCalled(context, "Email Id Not Valid!", Colors.red);
   }
@@ -194,18 +202,18 @@ void checkEmail(context, email, otp, name) async {
     // Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
     // Navigator.pushNamed(context, "/");
     acceptReset.value = false;
-    // Navigator.pushReplacement(
-    //     context,
-    //     PageTransition(
-    //       type: PageTransitionType.fade,
-    //       alignment: Alignment.bottomRight,
-    //       duration: Durations.long1,
-    //       child: ResetPassword(
-    //         email: email,
-    //         name: name,
-    //       ),
-    //       isIos: true,
-    //     ));
+    Navigator.pushReplacement(
+        context,
+        PageTransition(
+          type: PageTransitionType.fade,
+          alignment: Alignment.bottomRight,
+          duration: Durations.long1,
+          child: ResetPassword(
+            email: email,
+            name: name,
+          ),
+          isIos: true,
+        ));
   } else {
     acceptReset.value = false;
     snackBarCalled(context, "Invalid Opt...!", Colors.red);
@@ -252,6 +260,7 @@ void resendOpt(context, email, name) async {
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
+    acceptReset.value=false;
     snackBarCalled(context, "ReSended Otp To Email Id...!", Colors.black);
   } else {
     snackBarCalled(context, "can't send opt!", Colors.red);

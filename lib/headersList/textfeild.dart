@@ -15,12 +15,14 @@ class TextFeildWidget extends StatelessWidget {
   String heading;
   TextInputType keyBoard;
   bool flag;
+   IconData icon;
   TextFeildWidget(
       {Key? key,
       required this.textEditingController,
       required this.heading,
       required this.keyBoard,
       required this.lableText,
+        this.icon=Icons.email_outlined,
       this.flag = true})
       : super(key: key);
 
@@ -59,13 +61,14 @@ class TextFeildWidget extends StatelessWidget {
                   hintText: lableText,
                   hintStyle: getStyle(context),
                   enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(40),
+                      borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide(color: Colorcodes.textFeild)),
                   focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(40),
+                      borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide(color: Colorcodes.textFeild)),
                   fillColor: Colorcodes.textFeild,
                   border: InputBorder.none,
+                   prefixIcon: Icon(icon,size: 30,color: AppColors.primaryColor,) ,
                   suffixIcon: flag
                       ? null
                       : Obx(() => InkWell(
@@ -74,7 +77,7 @@ class TextFeildWidget extends StatelessWidget {
                           },
                           child: Icon(show.value
                               ? Icons.remove_red_eye_outlined
-                              : Icons.do_disturb_off_outlined)))),
+                              : Icons.do_disturb_off_outlined,color: AppColors.primaryColor)))),
             ),
           ],
         ),
@@ -99,12 +102,14 @@ class TextFeildWidgetPassword extends StatelessWidget {
   String heading;
   TextInputType keyBoard;
   bool flag;
+  IconData icon;
   TextFeildWidgetPassword(
       {Key? key,
       required this.textEditingController,
       required this.heading,
       required this.keyBoard,
       required this.lableText,
+       this.icon=Icons.email_outlined,
       this.flag = true})
       : super(key: key);
 
@@ -131,37 +136,39 @@ class TextFeildWidgetPassword extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                TextFormField(
-                  keyboardType: keyBoard,
-                  controller: textEditingController,
-                  obscureText: show.value,
-                  onChanged: (s) {
-                    acceptReset.value = false;
-                  },
-                  decoration: InputDecoration(
-                      // contentPadding: EdgeInsets.all(0),
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                      filled: true,
-                      hintText: lableText,
-                      hintStyle: getStyle(context),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(40),
-                          borderSide: BorderSide(color: Colorcodes.textFeild)),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(40),
-                          borderSide: BorderSide(color: Colorcodes.textFeild)),
-                      fillColor: Colorcodes.textFeild,
-                      border: InputBorder.none,
-                      suffixIcon: flag
-                          ? null
-                          : Obx(() => InkWell(
-                              onTap: () {
-                                show.value = !show.value;
-                              },
-                              child: Icon(!show.value
-                                  ? Icons.visibility_outlined
-                                  : Icons.visibility_off_outlined)))),
+                Center(
+                  child: TextFormField(
+                    keyboardType: keyBoard,
+                    controller: textEditingController,
+                    obscureText: show.value,
+                    onChanged: (s) {
+                      acceptReset.value = false;
+                    },
+                    decoration: InputDecoration(
+                        // contentPadding: EdgeInsets.all(0),
+                        contentPadding:EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                        filled: true,
+                        hintText: lableText,
+                        hintStyle: getStyle(context),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: Colorcodes.textFeild)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: Colorcodes.textFeild)),
+                        fillColor: Colorcodes.textFeild,
+                        border: InputBorder.none,
+                        prefixIcon: Icon(icon,size: 30,color: AppColors.primaryColor,) ,
+                        suffixIcon: flag
+                            ? null
+                            : Obx(() => InkWell(
+                                onTap: () {
+                                  show.value = !show.value;
+                                },
+                                child: Icon(!show.value
+                                    ? Icons.visibility_outlined
+                                    : Icons.visibility_off_outlined ,color: AppColors.primaryColor,),))),
+                  ),
                 ),
               ],
             ),
