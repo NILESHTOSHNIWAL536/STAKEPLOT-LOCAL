@@ -44,14 +44,18 @@ Future<void> loginWithServer() async {
       "${url}/finvu/login"; // Change to your actual server URL
   final String custId =
       "${number.value}@finvu"; // Replace with dynamic value if needed
-    print("apiUrl-------------------------------------");
-    print(apiUrl);
-
+  
+   final SharedPreferences _pref = await SharedPreferences.getInstance();
+   var accessToken = _pref.getString("accessToken");
+   print(accessToken);
   try {
     final response = await http.post(
       Uri.parse(apiUrl),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"custId": custId}),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "$accessToken",
+      },
+      body: jsonEncode({"custId": custId,'number':number.value}),
     );
     printData(response);
     if (response.statusCode == 200) {
@@ -64,9 +68,7 @@ Future<void> loginWithServer() async {
       await prefs.setString("tokenFinvu", token);
       await prefs.setString("consentHandleId", consentHandleId);
 
-      print("Login successful!");
-      print("Token: $token");
-      print("Consent Handle ID: $consentHandleId");
+    
 
       handleId.value = consentHandleId;
       login(handleId.value);

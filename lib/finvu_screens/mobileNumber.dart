@@ -39,7 +39,7 @@ class _MobileNumberState extends State<MobileNumber> {
   RxString _otpCode = "".obs; // Captured OTP code
   RxBool _isOtpValid = false.obs; // Validate OTP length
   TextEditingController otpController = TextEditingController();
-final String termsUrl = "https://pub.dev/packages/url_launcher/install"; // Replace with actual URL
+final String termsUrl = "https://finvu.in/terms"; // Replace with actual URL
 
   Future<void> _launchURL() async {
     final Uri url = Uri.parse(termsUrl);

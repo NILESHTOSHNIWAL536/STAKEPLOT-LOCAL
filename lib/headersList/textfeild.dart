@@ -52,6 +52,7 @@ class TextFeildWidget extends StatelessWidget {
             TextFormField(
               keyboardType: keyBoard,
               controller: textEditingController,
+              maxLength: heading=="PhoneNo"?10:null,
               obscureText: flag ? false : show.value,
               decoration: InputDecoration(
                   // contentPadding: EdgeInsets.all(0),

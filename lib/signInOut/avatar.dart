@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_application_code_stakeplot/signInOut/confirm.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 
@@ -343,7 +345,7 @@ Widget avatarSlider(){
             'email': email,
             'userpassword':password,
             'confirmPassword':conform,
-            'phone':phone,
+            // 'phone':"9000902345",
             'dob':dob,
             'avatarType':Avatarurl,
             'otp':opt
@@ -366,10 +368,14 @@ try{
                 snackBarCalled(context, data2['error']['explanation'],Colors.red);
                 return;
   } 
-     print("----------------------------- data2 Registered");
-     print(data2);
+      final body = json.decode(response.body);
+    printData(response);
+    String accessToken = body['data'];
+      final SharedPreferences _pref = await SharedPreferences.getInstance();
+    _pref.setString("accessToken", "Bearer " + accessToken);
    snackBarCalled(context,"User Registered Successfully...!",Colors.green);
    clearStack(context);
+   mobileNo.value=phone;
    Navigator.pushReplacementNamed(context, '/ShareAccountLogin'); 
 
     

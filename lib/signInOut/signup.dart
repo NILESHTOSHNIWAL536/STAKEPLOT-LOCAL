@@ -286,7 +286,6 @@ Widget getTextFeilds(){
         'name': usernameController.text,
         'email': emailController.text,
         'userpassword': passwordController.text,
-        'phone': phoneController.text,
         'confirmPassword': conformController.text,
         'dob': dobController.text.substring(0, 10),
         'avatarType': url,
