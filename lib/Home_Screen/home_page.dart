@@ -90,11 +90,11 @@ class HomeScreen extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.24,
                 child: NumberPickerScreen(),
               ),
-              //const SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               // Finance Chart
                 SizedBox(
-               height: MediaQuery.of(context).size.height * 0.55,
+               height: MediaQuery.of(context).size.height * 0.62,
                 child: const FinancePage(),
               ),
               //const SizedBox(height: 20),
