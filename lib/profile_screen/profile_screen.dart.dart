@@ -45,7 +45,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
       // ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
+          padding: const EdgeInsets.only(top: 5, left: 16, right: 16),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,9 +53,10 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                 // Profile section
                 Row(
                   children: [
-                    CircleAvatar(
+                    Container(
+                      child: chatAvatartImage( url: avatar.value, width:15, height:17),
                       // backgroundImage: NetworkImage(post['profilePic']),
-                      radius: 24,
+                      // radius: 24,
                     ),
                     const SizedBox(width: 10),
                     Expanded(
