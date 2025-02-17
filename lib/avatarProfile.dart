@@ -16,9 +16,6 @@ AvatarProfileImage({ Key? key,required this.url,required this.width,required thi
     return  Container(
         margin: EdgeInsets.symmetric(horizontal: 5),
         padding: EdgeInsetsDirectional.all(4),
-        // width: MediaQuery.of(context).size.width/ width,
-        // height: MediaQuery.of(context).size.height/ height,
-        // color: Colorcodes.billBody,
         alignment: Alignment.center,
         child: SvgPicture.asset(url.toString().trim(),
               width: MediaQuery.of(context).size.width/ width,
@@ -38,11 +35,8 @@ chatAvatartImage({ Key? key,required this.url,required this.width,required this.
   @override
   Widget build(BuildContext context){
     return  Container(
-        // margin: EdgeInsets.symmetric(horizontal: 5),
         padding: EdgeInsetsDirectional.all(4),
-        // width: MediaQuery.of(context).size.width/ width,
-        // height: MediaQuery.of(context).size.height/ height,
-        // color: Colorcodes.billBody,
+ 
         alignment: Alignment.center,
         child: SvgPicture.asset(url.toString().trim(),
               width: MediaQuery.of(context).size.width/ width,

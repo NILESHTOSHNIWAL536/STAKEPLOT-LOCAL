@@ -4,6 +4,8 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import './success_post.dart';
@@ -145,7 +147,8 @@ class _ImageScreenState extends State<ImageScreen> {
                                   snackBarAllFeilds(context);
                                   return ;
                             }
-                             print(selectedImage);
+                              if( posting.value)return; 
+                              posting.value=true;
                               if(selectedImage!=null)
                             {
                                createPost(context,titleController.text,textController.text,selectedImage!);
@@ -154,6 +157,7 @@ class _ImageScreenState extends State<ImageScreen> {
                             else{ 
                                createPostWithOutImage(context,titleController.text,textController.text);
                             }
+                            Navigator.pop(context);
                           },
                           // child: Text('Continue',
                           //   style: FontManager().getTextStyle(
@@ -176,7 +180,7 @@ class _ImageScreenState extends State<ImageScreen> {
                                       : AppColors.button,
                                   borderRadius: BorderRadius.circular(24)),
                               child: Center(
-                                child: Text(
+                                child:Obx(()=> posting.value? Spinner(size: 30,color: Colorcodes.white,): Text(
                                   'Continue',
                                   style: FontManager().getTextStyle(
                                     context,
@@ -187,7 +191,7 @@ class _ImageScreenState extends State<ImageScreen> {
                                         ? Colors.white
                                         : Colors.black,
                                   ),
-                                ),
+                                )),
                               ),
                             )
                         )
