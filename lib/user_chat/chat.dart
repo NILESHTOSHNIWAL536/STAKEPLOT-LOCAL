@@ -199,7 +199,7 @@ class _ChatState extends State<Chat> {
     socket.emit("LoadCharts", {
       "roomId": data['name'] + "" + data['name'],
     });
-    
+
   }
 
   Widget getDataWidget(Message message) {
@@ -379,9 +379,9 @@ class _ChatState extends State<Chat> {
       },
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: Colorcodes.white,
+          backgroundColor: AppColors.backgroundColor,
           appBar: AppBar(
-            backgroundColor: Colorcodes.white,
+            backgroundColor: AppColors.backgroundColor,
             // leading:
             automaticallyImplyLeading: false,
             centerTitle: false,
@@ -664,12 +664,9 @@ class _ChatState extends State<Chat> {
   }
 
   Widget profilepath(boolFlag) {
-    // if(boolFlag)return SizedBox(
-    //   width: 10,
-    // );
-
+  
     return chatAvatartImage(
-        url: boolFlag ? path : data['avatar'], width: 7, height: 17);
+        url: boolFlag ? path : data['avatar'], width: 20, height: 20);
   }
 
   Widget textIsme(msg, bool isme) {
@@ -683,12 +680,11 @@ class _ChatState extends State<Chat> {
         decoration: BoxDecoration(
           color: isme ? AppColors.primaryColor : null,
           borderRadius: BorderRadius.only(
-            bottomRight: Radius.zero,
+            bottomRight: isme? Radius.zero :Radius.circular(10),
             topLeft: Radius.circular(10.0),
             topRight: Radius.circular(10.0),
-            bottomLeft: Radius.circular(10.0),
+            bottomLeft: !isme? Radius.zero :Radius.circular(10),
           ),
-
           gradient: !isme
               ? LinearGradient(
                   begin: Alignment.centerLeft,
@@ -1116,7 +1112,7 @@ class _ChatState extends State<Chat> {
             },
             //poll in chat code
             child: Container(
-              width: MediaQuery.of(context).size.width / 1.62,
+              width: MediaQuery.of(context).size.width / 1.5,
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
                   color: AppColors.mt,
@@ -1135,8 +1131,8 @@ class _ChatState extends State<Chat> {
                           children: [
                             AvatarProfileImage(
                               url: dataObj["author"]['avatar'],
-                              width: 10,
-                              height: 14,
+                              width: 20,
+                              height: 20,
                             ),
                             const SizedBox(
                               width: 5,
@@ -1159,7 +1155,7 @@ class _ChatState extends State<Chat> {
                           dataObj['pollData'],
                         )
                       : Container(
-                          width: MediaQuery.of(context).size.width / 1.62,
+                          width: MediaQuery.of(context).size.width / 1.3,
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           child: Text((dataObj['title']),
                               style: FontManager().getTextStyle(context,
@@ -1199,7 +1195,7 @@ class _ChatState extends State<Chat> {
                   dataObj['image'] != null && dataObj['image'] != "none"
                       ? Image.network(
                           dataObj['image'],
-                          width: MediaQuery.of(context).size.width / 2,
+                          width: MediaQuery.of(context).size.width / 1.3,
                           height: MediaQuery.of(context).size.height / 5,
                           fit: BoxFit.cover,
                           color: Colors.black.withOpacity(0.0),

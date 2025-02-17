@@ -35,8 +35,7 @@ chatAvatartImage({ Key? key,required this.url,required this.width,required this.
   @override
   Widget build(BuildContext context){
     return  Container(
-        padding: EdgeInsetsDirectional.all(4),
- 
+        padding: EdgeInsetsDirectional.all(0),
         alignment: Alignment.center,
         child: SvgPicture.asset(url.toString().trim(),
               width: MediaQuery.of(context).size.width/ width,
