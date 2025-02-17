@@ -112,7 +112,7 @@ class _TribeSearchState extends State<TribeSearch> {
           children: [
             //  const SizedBox(height: 20,),
             Hero(
-                tag: "s",
+                tag: "TribeSearc",
                 child: InputDate("Search", TextInputType.name, search)),
             const SizedBox(
               height: 20,
@@ -177,7 +177,7 @@ class _TribeSearchState extends State<TribeSearch> {
   Widget profileContainer(data) {
     if (data['name'] == null || data['avatarType'] == null) {}
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 0),
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       child: Center(
           child: InkWell(
         onTap: () {
@@ -209,8 +209,8 @@ class _TribeSearchState extends State<TribeSearch> {
                       // height: MediaQuery.of(context).size.height/18,
                       child: AvatarProfileImage(
                           url: data['avatarType'] ?? userAvatar,
-                          width: 10,
-                          height: 15)),
+                          width: 20,
+                          height: 20)),
                   const SizedBox(
                     width: 5,
                   ),

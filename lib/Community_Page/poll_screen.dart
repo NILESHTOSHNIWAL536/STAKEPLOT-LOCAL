@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:get/get.dart';
 import './success_post.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 //import 'dart:io';
@@ -68,6 +73,9 @@ class _PollScreenState extends State<PollScreen> {
           "option": op,
         });
       }).toList();
+  
+     if( posting.value)return; 
+     posting.value=true;
 
       createPollOfCommunityPost(
           context, question.toString(), options, {}, [], "casual");
@@ -112,17 +120,15 @@ class _PollScreenState extends State<PollScreen> {
                   children: [
                     Row(
                       children: [
-                        CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              widget.userInfo['profilePic'].toString()),
-                          radius: 24,
-                        ),
+                          AvatarProfileImage(url: avatar.value, width: 20, height: 20),
+                         
+          
                         const SizedBox(width: 8),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              widget.userInfo['name'].toString(),
+                              userName.value.toString(),
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.w600,
                                   fontSize: 18,
@@ -213,17 +219,7 @@ class _PollScreenState extends State<PollScreen> {
                       const SizedBox(height: 20),
                       GestureDetector(
                         onTap: _createPoll,
-                        // child: Text('Continue',
-                        //     style: FontManager().getTextStyle(
-                        //       context,
-                        //       lWeight: FontWeight.normal,
-                        //       fontSize: 18,
-                        //       color: _questionController.text.isNotEmpty &&
-                        //               _optionControllers.every((controller) =>
-                        //                   controller.text.isNotEmpty)
-                        //           ? Colors.white
-                        //           : Colors.black,
-                        //     )),
+                        
                         child:Container(
                               width: MediaQuery.of(context).size.width / 1.1,
                               padding: EdgeInsets.symmetric(
@@ -236,7 +232,7 @@ class _PollScreenState extends State<PollScreen> {
                           : AppColors.button,
                                   borderRadius: BorderRadius.circular(24)),
                               child: Center(
-                                child: Text(
+                                child:Obx(()=> posting.value?Spinner(size: 30,color: Colorcodes.white,):  Text(
                                   'Continue',
                                   style: FontManager().getTextStyle(
                                     context,
@@ -248,7 +244,7 @@ class _PollScreenState extends State<PollScreen> {
                                         ? Colors.white
                                         : Colors.black,
                                   ),
-                                ),
+                                )),
                               ),
                             )
                       ),

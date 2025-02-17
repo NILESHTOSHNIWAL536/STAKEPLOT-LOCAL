@@ -482,15 +482,14 @@ void createPost(
       'fileName': 'file7'
     };
 
-    final bytes = io.File(imageFile.path).readAsBytesSync();
+    // final bytes = io.File(imageFile.path).readAsBytesSync();
 
-    String base64Image = base64Encode(bytes);
+    // String base64Image = base64Encode(bytes);
 
-    String fileExtension = p.extension(imageFile.path);
-    fileExtension = fileExtension.substring(1);
+    // String fileExtension = p.extension(imageFile.path);
+    // fileExtension = fileExtension.substring(1);
     // data:image/png;base64,
-    String base =
-        "data:image/${fileExtension};base64," + base64Image.toString();
+    // String base ="data:image/${fileExtension};base64," + base64Image.toString();
 
     final response = await http.post(
       Uri.parse('${urlp}'),
@@ -504,24 +503,13 @@ void createPost(
     //  printData(response, context);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
+       posting.value=false;
       store(response);
-      // //print('Post created successfully');
-      //   Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-      // getPost();
-      //  Navigator.pushReplacement(
-      //                         context,
-      //                         PageTransition(
-      //                           type: PageTransitionType.fade,
-      //                           alignment: Alignment.bottomRight,
-      //                           duration: Durations.long1,
-
-      //                           child:const TribeHome(),
-      //                           isIos: true,
-      //                         ));
+  
     } else {
-      // //print('Failed to create post: ${response.reasonPhrase}');
+      
     }
-
+      posting.value=false;
     getPost();
     getTrending();
     postDis.value = false;
@@ -529,18 +517,6 @@ void createPost(
     snackBarCalled(context, "server error", Colors.red);
   }
 
-  // Send a multipart request
-  // var request = http.MultipartRequest('POST', url);
-  // request.fields.addAll(requestBody);
-  // request.files.add(await http.MultipartFile.fromPath('fileName', imageFile.path));
-
-  // Send the request
-  // var response = await request.send();
-
-  // //printData(context,response);
-  // //print("response.statusCode");
-  // //print(response.statusCode);
-  // //print(response.body);
 }
 
 // Send a multipart request
@@ -576,15 +552,18 @@ void createPostWithOutImage(context, String title, String description) async {
       'isPoll': false,
     }),
   );
-   printData(response);
+  //  printData(response);
   if (response.statusCode == 200 || response.statusCode == 201) {
+          store(response);
           snackBarCalled(context, 'Post Uploaded successfully....');
   } else {}
 
+   posting.value=false;
+  postDis.value = false;
   getPost();
   getTrending();
-   Navigator.pop(context);
-  postDis.value = false;
+  getPosted.value = ! getPosted.value;
+  //  Navigator.pop(context);
 }
 
 void createPollOfCommunity(context, String title, String description) async {

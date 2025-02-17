@@ -4,7 +4,11 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import './success_post.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
@@ -87,7 +91,7 @@ class _TextScreenState extends State<TextScreen> {
                           Row(
                             children: [
                               AvatarProfileImage(
-                                  url: avatar.value, width: 5, height: 10),
+                                  url: avatar.value, width: 20, height: 20),
                               const SizedBox(width: 8),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,21 +113,20 @@ class _TextScreenState extends State<TextScreen> {
                           Stack(
                             children: [
                               DecoratedContainer(
-                                borderRadius: 30,
-                                // height: 50,
-                                // width: 50,
+                                borderRadius: 10,
+                  
                                 child: IconButton(
                                   onPressed: () {
                                     setState(() {
                                       showImage = !showImage;
                                     });
                                   },
-                                  icon: const Icon(Icons.photo),
+                                  icon: FaIcon(FontAwesomeIcons.images),
                                 ),
                               ),
                               const Positioned(
-                                top: 0,
-                                right: 0,
+                                top: 10,
+                                right: 2,
                                 // child: Text(
                                 //   '+',
                                 //   style: TextStyle(
@@ -189,28 +192,17 @@ class _TextScreenState extends State<TextScreen> {
                       GestureDetector(
                           onTap: () {
                             if (contentController.text.isNotEmpty) {
-                              // widget.onPostCreated({
-                              //   'profilePic':
-                              //       widget.userInfo['profilePic'].toString(),
-                              //   'name': widget.userInfo['name'].toString(),
-                              //   'contentType': 'textImage',
-                              //   'title': titleController.text,
-                              //   'content': contentController.text,
-                              //   'imageContent': selectedImage != null
-                              //       ? selectedImage!.path
-                              //       : '',
-                              //   'likeCount': 0,
-                              //   'isLiked': false,
-                              // });
-                              // setState(() {
-                              //   postSubmitted = true;
-                              // });
-
+                              
+                                 
                               if (showImage && selectedImage == null) {
                                 snackBarAllFeilds2(
                                     context, "Please Upload Image...");
                                 return;
                               }
+
+                              if( posting.value)return; 
+                              posting.value=true;
+
 
                               if (titleController.text.toString().trim() ==
                                       "" ||
@@ -221,18 +213,16 @@ class _TextScreenState extends State<TextScreen> {
                               }
 
                               if (selectedImage != null && showImage) {
-                                // createPost(context,titleController.text,descriptionsController.text,url!);
-                                onUploadImage(
-                                    selectedImage!,
-                                    context,
-                                    titleController.text,
-                                    contentController.text);
+                                 
+                                 createPost(context,titleController.text,contentController.text,selectedImage!);
                               } else {
                                 createPostWithOutImage(
                                     context,
                                     titleController.text,
                                     contentController.text);
                               }
+
+                              Navigator.pop(context);
                             }
                           },
                           child: Container(
@@ -246,7 +236,7 @@ class _TextScreenState extends State<TextScreen> {
                                     : AppColors.button,
                                 borderRadius: BorderRadius.circular(24)),
                             child: Center(
-                              child: Text(
+                              child:Obx(()=> posting.value? Spinner(size: 30,color: Colorcodes.white,) :Text(
                                 'Continue',
                                 style: FontManager().getTextStyle(
                                   context,
@@ -256,7 +246,7 @@ class _TextScreenState extends State<TextScreen> {
                                           contentController.text.isNotEmpty
                                       ? Colors.white
                                       : Colors.black,
-                                ),
+                                )),
                               ),
                             ),
                           )

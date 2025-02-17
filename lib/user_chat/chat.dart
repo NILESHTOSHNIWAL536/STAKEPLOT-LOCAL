@@ -199,6 +199,7 @@ class _ChatState extends State<Chat> {
     socket.emit("LoadCharts", {
       "roomId": data['name'] + "" + data['name'],
     });
+    
   }
 
   Widget getDataWidget(Message message) {
@@ -268,7 +269,7 @@ class _ChatState extends State<Chat> {
 
   Widget spliData(Message message) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       width: MediaQuery.of(context).size.width / 2,
       decoration: BoxDecoration(
           //  color: Colorcodes.appBarColor,
@@ -378,9 +379,9 @@ class _ChatState extends State<Chat> {
       },
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: AppColors.backgroundColor,
+          backgroundColor: Colorcodes.white,
           appBar: AppBar(
-            backgroundColor: AppColors.backgroundColor,
+            backgroundColor: Colorcodes.white,
             // leading:
             automaticallyImplyLeading: false,
             centerTitle: false,
@@ -727,7 +728,7 @@ class _ChatState extends State<Chat> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                flex: 3,
+                flex: 2,
                 child: Container(
                   // decoration: BoxDecoration(
                   //   borderRadius: BorderRadius.circular(24),
@@ -754,7 +755,7 @@ class _ChatState extends State<Chat> {
                         icon: Icon(Icons.emoji_emotions),
                         onPressed: () {
                           // Implement emoji picker or logic here
-                         
+                
                         },
                       ),
                       fillColor: AppColors.button,

@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/Community_Page/text_screen.da
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
@@ -39,59 +40,65 @@ class _CommunityState extends State<Community> {
   int likeCount = 0; // Counter for likes
   bool isLiked = false;
 
+ @override
+  void initState() 
+ {
+    getTrending();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true,
-      
-      backgroundColor: AppColors.backgroundColor,
-      bottomNavigationBar: BottomNavigations(data: 2),
-      body: Padding(
-        padding: const EdgeInsets.all(18.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Welcome Section
-              _buildWelcomeRow(),
-      
-              const SizedBox(height: 16),
-      
-              Obx(() => getTrendingData.length == 0 && findTranding
-                  ? Loader()
-                  : !findTranding && getTrendingData.length == 0
-                      ? Text("No Post yet")
-                      : Column(
-                          children: [
-                            Container(
-                                child: Column(
-                                    children: getTrendingData
-                                        .map((dataObj) =>
-                                            PostCard(data: dataObj))
-                                        .toList())),
-                            SizedBox(
-                              height: 100,
-                            ),
-                          ],
-                        ))
-      
-              // Posts List
-              // ListView.builder(
-              //   shrinkWrap:
-              //       true, // Ensures the list only takes up necessary space
-              //   physics:
-              //       NeverScrollableScrollPhysics(), // Prevents nested scrolling issues
-              //   itemCount: posts.length,
-              //   itemBuilder: (context, index) {
-              //     final post = posts[index];
-              //     return _buildPostCard(post);
-              //   },
-              // ),
-            ],
+    return SafeArea(
+      child: Scaffold(
+        extendBody: true,
+        
+        backgroundColor: AppColors.backgroundColor,
+        bottomNavigationBar: BottomNavigations(data: 2),
+        body: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Welcome Section
+                _buildWelcomeRow(),
+        
+                const SizedBox(height: 16),
+        
+                Obx(() => getTrendingData.length == 0 && findTranding
+                    ? Loader()
+                    : !findTranding && getTrendingData.length == 0
+                        ? Text("No Post yet")
+                        : Obx(()=> getPosted.value? getPostListview()  :getPostListview()),
+                      )
+        
+                
+  
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+
+  Widget getPostListview(){
+    double width= MediaQuery.of(context).size.width;
+    double height= MediaQuery.of(context).size.height;
+     return Container(
+            width: width,
+            height: height/1.6,
+            child: Expanded(
+              child: ListView.builder(
+                itemCount: getTrendingData.length,
+                itemBuilder: (context, index) {
+                  final dataObj = getTrendingData[index];
+                  return PostCard(data: dataObj);
+                },
+              ),
+            ),
+);
   }
 
   Widget _buildWelcomeRow() {
@@ -104,16 +111,14 @@ class _CommunityState extends State<Community> {
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    'Welcome back to',
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
-                        fontSize: 18,
-                        color: Colors.black),
-                  ),
+                Text(
+                  'Welcome back to',
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.normal,
+                      fontSize: 18,
+                      color: Colors.black),
                 ),
                 Text(
                   'Financial Community',
@@ -124,6 +129,7 @@ class _CommunityState extends State<Community> {
                 ),
               ],
             ),
+
             Align(
               alignment: Alignment.topRight,
               child: Column(
@@ -138,7 +144,7 @@ class _CommunityState extends State<Community> {
                       child: GestureDetector(
                         onTap: () async {
                           await showModal({});
-                          //await CommunityShowModalScreen();
+                         
                         },
                         child: AvatarProfileImage(
                           url: LikeComment.plus,
@@ -146,45 +152,47 @@ class _CommunityState extends State<Community> {
                           width: 22,
                         ),
                       )),
-                  TextButton(
-                      onPressed: () async {
-                        //await showModal(); // Await the result here
-                      },
-                      child: Text(
-                        'Create post',
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.normal,
-                            fontSize: 12,
-                            color: AppColors.bg1),
-                      )),
+                  Text(
+                    'Create post',
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.normal,
+                        fontSize: 12,
+                        color: AppColors.bg1),
+                  ),
                 ],
               ),
             ),
           ],
         ),
+        const SizedBox(height: 10,),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Hero(
               tag: "TribeSearch",
-              child: Container(
-                width: MediaQuery.sizeOf(context).width / 1.45,
-                child: TextField(
-                  controller: _searchController,
-                  onTap: () {
+              child: InkWell(
+                 onTap: () {
                     Navigator.pushNamed(context, '/TribeSearch');
                   },
-                  decoration: InputDecoration(
-                    filled: true,
-                    hintText: 'Search...',
-                    fillColor: AppColors.button,
-                    hintStyle: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
-                        fontSize: 14,
-                        color: Colors.black),
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(24.0),
+                child: Container(
+                  width: MediaQuery.sizeOf(context).width / 1.45,
+                  height: 50,
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 0),
+                      filled: true,
+                      enabled: false,
+                      hintText: 'Search...',
+                      fillColor: AppColors.button,
+                      hintStyle: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.normal,
+                          fontSize: 14,
+                          color: Colors.black),
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24.0),
+                      ),
                     ),
                   ),
                 ),
@@ -269,6 +277,7 @@ class _CommunityState extends State<Community> {
                             child: IconButton(
                               icon: const Icon(Icons.text_fields),
                               onPressed: () {
+                                     posting.value=false;
                                 // Replace the current modal content instead of showing a new one
                                 Navigator.of(context)
                                     .pop(); // Close the current modal
@@ -278,6 +287,7 @@ class _CommunityState extends State<Community> {
                                     return TextScreen(
                                       userInfo: post,
                                       onPostCreated: (newPost) {
+                                    
                                         setState(() {
                                           posts.add(newPost);
                                           k = 1;
@@ -312,13 +322,15 @@ class _CommunityState extends State<Community> {
                               icon: const Icon(Icons.image_rounded),
                               onPressed: () {
                                 Navigator.of(context)
-                                    .pop(); // Close the current modal
+                                    .pop(); 
+                                         posting.value=false;// Close the current modal
                                 showModalBottomSheet(
                                   context: context,
                                   builder: (context) {
                                     return ImageScreen(
                                       userInfo: post,
                                       onPostCreated: (newPost) {
+                                      
                                         setState(() {
                                           posts.add(newPost);
                                         });
@@ -353,7 +365,8 @@ class _CommunityState extends State<Community> {
                               icon: const Icon(Icons.poll_outlined),
                               onPressed: () {
                                 Navigator.of(context)
-                                    .pop(); // Close the current modal
+                                    .pop(); 
+                                     posting.value=false;// Close the current modal
                                 showModalBottomSheet(
                                   context: context,
                                   isScrollControlled: true,
@@ -370,9 +383,11 @@ class _CommunityState extends State<Community> {
                                       child: PollScreen(
                                         userInfo: post,
                                         onPollPosted: (pollData) {
+                                          
                                           setState(() {
                                             posts.add(pollData);
                                           });
+
                                           Navigator.pop(context);
                                         },
                                       ),

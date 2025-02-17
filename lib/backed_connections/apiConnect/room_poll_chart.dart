@@ -348,20 +348,9 @@ void createPollOfCommunityPost(context,String question,List options,roomDetails,
             // //print(obj['data']);
 
               questionRoom.add(obj['data']);
+              posting.value=false;
               getPost();
-
-               Navigator.pop(context);
-              //  Navigator.pop(context);
-           
-            Navigator.pushReplacement(
-            context,
-            PageTransition(
-              type: PageTransitionType.topToBottom,
-               duration: Durations.long1,
-              child: Community(),
-              isIos: true,
-            ),
-          ); 
+              Navigator.pop(context);
             
       }else{
            printData(response);
@@ -629,30 +618,30 @@ void addMessageImage(context,String messageType,String messageObj,String id,File
   final SharedPreferences _pref = await SharedPreferences.getInstance();
      var  accessToken=_pref.getString("accessToken");
 
-// final url2 = Uri.parse('https://api.cloudinary.com/v1_1/deus5rcgl/upload');
+final url2 = Uri.parse('https://api.cloudinary.com/v1_1/deus5rcgl/upload');
 
-// final request = http.MultipartRequest('POST', url2)
+final request = http.MultipartRequest('POST', url2)
 
-// ..fields['upload_preset'] = 'zu3td0li' ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
+..fields['upload_preset'] = 'zu3td0li' ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
 
-// final response2 = await request.send();
+final response2 = await request.send();
 
-// final responseData = await response2.stream.toBytes();
+final responseData = await response2.stream.toBytes();
 
-// final responseString = String.fromCharCodes(responseData);
+final responseString = String.fromCharCodes(responseData);
 
-// final jsonMap = jsonDecode(responseString);
+final jsonMap = jsonDecode(responseString);
   
-//  String urlPath=jsonMap['secure_url'];
+ String urlPath=jsonMap['secure_url'];
   
 
-   var urlPathData=await addImageToCloud(imageFile,context);
-   List urlLocalPath=urlPathData.split("futureImagepathNileshBhaijan");
+  //  var urlPathData=await addImageToCloud(imageFile,context);
+  //  List urlLocalPath=urlPathData.split("futureImagepathNileshBhaijan");
   
-  String urlPath=urlLocalPath[0];
-  String urlPath2=urlLocalPath[1];
-
-messages.insert(0, Message( 
+  // String urlPath=urlLocalPath[0];
+  // String urlPath2=urlLocalPath[1];
+   print(urlPath);
+    messages.insert(0, Message( 
                   text: messageObj, 
                   isMe: true,
                   type:messageType,
@@ -676,7 +665,7 @@ messages.insert(0, Message(
     "receiver":id,
      "sender": me,
     "message": null,
-    "image": urlPath2,
+    "image": urlPath,
     "poll": null,
     "post" : null,
     "split" : null,
@@ -737,7 +726,7 @@ messages.insert(0, Message(
   } else {
     // snackBarCalled(context, "payload limit increase pls, share image with less size",Colors.red);
   }
-  
+
 }
 
 
@@ -780,7 +769,6 @@ void  getChats2(data,key)async
                   poll:element['poll'] ?? "poll",
                   post: postData ,
                   split: element['split']??""
-
                  ));  
 
                 

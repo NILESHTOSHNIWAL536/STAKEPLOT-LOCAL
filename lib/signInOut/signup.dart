@@ -86,6 +86,7 @@ Widget allReadyHaveAccount(){
                               )),
                           InkWell(
                             onTap: () {
+                              acceptReset.value=false;
                               clearStack(context);
                               Navigator.pushReplacementNamed(context, '/');
                             },

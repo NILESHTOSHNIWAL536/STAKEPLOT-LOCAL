@@ -127,6 +127,7 @@ Widget dontHaveAccount(){
                                 )),
                             InkWell(
                               onTap: () {
+                                acceptReset.value=false;
                                 Navigator.pushNamed(context, '/signup');
                               },
                               child: Text(("Sign Up"),

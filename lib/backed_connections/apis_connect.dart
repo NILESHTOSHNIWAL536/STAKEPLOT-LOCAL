@@ -141,6 +141,8 @@ List<String> account = [];
 
 RxBool postInter = false.obs;
 RxBool postDis = false.obs;
+RxBool posting=false.obs;
+RxBool getPosted=false.obs;
 RxBool acceptReset = false.obs;
 RxList budgetList = [].obs;
 RxList debtsList = [].obs;

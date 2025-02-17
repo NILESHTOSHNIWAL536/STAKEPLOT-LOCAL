@@ -50,6 +50,7 @@ Future<void> loginUser(TextEditingController emailController,
     TextEditingController passwordController, BuildContext context,
     [bool flag = false]) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
+  print(url);
   final response = await http.post(
     Uri.parse('${url}/user/login'),
     headers: <String, String>{
