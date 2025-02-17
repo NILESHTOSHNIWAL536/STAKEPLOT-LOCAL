@@ -104,6 +104,7 @@ class _FinancePageState extends State<FinancePage> {
                     chartData: transactionChatGraph,
                     days: labels,
                     selectedButton: selectedButton,
+                    daysInMonth:30,
                   ),
                 ],
               ),
@@ -214,13 +215,15 @@ class LineChartWidget extends StatefulWidget {
   final Map<String, List<double>> chartData;
   final List days;
   final RxString selectedButton;
-  
+  final int daysInMonth; 
 
   const LineChartWidget({
     super.key,
     required this.chartData,
     required this.days,
     required this.selectedButton,
+    required this.daysInMonth,
+
     
   });
 
@@ -230,6 +233,7 @@ class LineChartWidget extends StatefulWidget {
 
 class _LineChartWidgetState extends State<LineChartWidget> {
   late double maxYValue;
+   
 
   @override
   void initState() {
@@ -294,17 +298,49 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   }
 
   Widget getContainerOfGraph(double screenWidth, double fontSizeFactor) {
-    List<ChartData> creditedData = widget.chartData["credited"]!
-        .asMap()
-        .entries
-        .map((entry) => ChartData(widget.days[entry.key], entry.value))
-        .toList();
+    
+    // List<ChartData> creditedData = widget.chartData["credited"]!
+    //     .asMap()
+    //     .entries
+    //     .map((entry) => ChartData(widget.days[entry.key], entry.value))
+    //     .toList();
 
-    List<ChartData> debitedData = widget.chartData["debited"]!
-        .asMap()
-        .entries
-        .map((entry) => ChartData(widget.days[entry.key], entry.value))
-        .toList();
+    // List<ChartData> debitedData = widget.chartData["debited"]!
+    //     .asMap()
+    //     .entries
+    //     .map((entry) => ChartData(widget.days[entry.key], entry.value))
+    //     .toList();
+   int dataLength = widget.daysInMonth;
+    
+    // Ensure widget.days has enough elements, pad with empty strings if needed
+    List<String> labels = List.from(widget.days);
+    while (labels.length < dataLength) {
+      labels.add((labels.length + 1).toString().padLeft(2, '0'));
+    }
+    // Trim excess labels if any
+    labels = labels.sublist(0, dataLength);
+
+    List<ChartData> creditedData = List.generate(dataLength, (index) {
+      double value = 0.0;
+      if (index < widget.chartData["credited"]!.length) {
+        value = widget.chartData["credited"]![index];
+      } else if (widget.chartData["credited"]!.length > 0) {
+        // Handle case where data exists but is shorter than required
+        value = 0.0;
+      }
+      return ChartData(labels[index], value);
+    });
+
+    List<ChartData> debitedData = List.generate(dataLength, (index) {
+      double value = 0.0;
+      if (index < widget.chartData["debited"]!.length) {
+        value = widget.chartData["debited"]![index];
+      } else if (widget.chartData["debited"]!.length > 0) {
+        // Handle case where data exists but is shorter than required
+        value = 0.0;
+      }
+      return ChartData(labels[index], value);
+    });
     //bool isPointTapped = false;
     return GestureDetector(
       // Handle taps outside the chart lines
