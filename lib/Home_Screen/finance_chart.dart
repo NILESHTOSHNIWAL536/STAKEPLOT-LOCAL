@@ -214,12 +214,14 @@ class LineChartWidget extends StatefulWidget {
   final Map<String, List<double>> chartData;
   final List days;
   final RxString selectedButton;
+  
 
   const LineChartWidget({
     super.key,
     required this.chartData,
     required this.days,
     required this.selectedButton,
+    
   });
 
   @override
@@ -303,29 +305,26 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         .entries
         .map((entry) => ChartData(widget.days[entry.key], entry.value))
         .toList();
-    bool isPointTapped = false;
+    //bool isPointTapped = false;
     return GestureDetector(
       // Handle taps outside the chart lines
 
       behavior: HitTestBehavior.opaque,
-      onTap: () {
-        // Use a slight delay to ensure point taps are processed first
-        Future.delayed(Duration(milliseconds: 100), () {
-          if (!isPointTapped) {
-            print('Navigating to ExpandedChartView');
-            Get.to(
-              () => ExpandedChartView(
-                chartData: widget.chartData,
-                days: widget.days,
-                selectedYear: DateTime.now().year,
-                selectedMonth: DateTime.now().month,
-                selectedButton: widget.selectedButton.value,
-              ),
-            );
-          }
-          isPointTapped = false;
-        });
-      },
+                  onTap: () {
+                    // Use a slight delay to ensure point taps are processed first
+                    Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ExpandedChartView(
+                        chartData: widget.chartData,
+                        days: widget.days,
+                        selectedButton: widget.selectedButton.value,
+                        selectedYear: DateTime.now().year,
+                        selectedMonth: DateTime.now().month,
+                      ),
+                    ),
+                  );
+                  },
       child: SizedBox(
           width: screenWidth * (widget.selectedButton.value == 'Week' ? 1 : 2),
           height: MediaQuery.of(context).size.height / 2.6,

@@ -217,6 +217,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
               chartData: currentChartData,
               days: currentDays,
               selectedButton: selectedButton,
+              
             ),
           ),
         ],
