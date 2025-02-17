@@ -1,398 +1,5 @@
-// import 'package:flutter/material.dart';
-// import 'dart:math';
-// import 'package:fl_chart/fl_chart.dart';
-// import 'package:flutter_application_code_stakeplot/Constants/customButton.dart';
-// import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
-// import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
-// import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-// import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
-// import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-// import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-// import 'package:flutter_application_code_stakeplot/loader.dart';
-// import 'package:get/get.dart';
-// import './colors.dart';
-// import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
-// import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-// import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
-// import 'package:flutter_svg/flutter_svg.dart';
-
-// class FinancePage extends StatefulWidget {
-//   const FinancePage({super.key});
-
-//   @override
-//   State<FinancePage> createState() => _FinancePageState();
-// }
-
-// class _FinancePageState extends State<FinancePage> {
-//   @override
-//   void initState() {
-//     super.initState();
-//     getGraphData.value = false;
-//     calledFunctionToFetchData();
-//   }
-
-//   void calledFunctionToFetchData() {
-//     if (selectedButton.value == "Month") {
-//       getAutoMationsTransactionsCustom(getFormattedDate(), context);
-//     } else if (selectedButton.value == "Week") {
-//       getAutoMationsTransactionsCustom(getCurrentWeek(), context, 'Week');
-//     } else {
-//       getAutoMationsTransactionsCustom(getFormattedDate(), context);
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     // Get screen width to make the UI responsive
-//     double screenWidth = MediaQuery.of(context).size.width;
-//     double fontSizeFactor = screenWidth * 0.01;
-
-//     return Scaffold(
-//       backgroundColor: AppColors.backgroundColor,
-//       body:Obx(()=> !getGraphData.value? Center(child: Spinner()):Padding(
-//          padding: EdgeInsets.all(0), // Responsive padding
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Text(
-//                       'Weekly spending and cash flow',
-//                       style: FontManager().getTextStyle(context,
-//                           lWeight: FontWeight.w500,
-//                           fontSize: fontSizeFactor * 4.5,
-//                           color: AppColors.accentColor),
-//                     ),
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               children: [
-//                 Row(
-//                   children: [
-//                     Text(
-//                       '₹${totalSpent.toStringAsFixed(2)}',
-//                       style: FontManager().getTextStyle(context,
-//                           lWeight: FontWeight.bold,
-//                           fontSize: fontSizeFactor * 4,
-//                           color: AppColors.accentColor),
-//                     ),
-//                     SizedBox(width: screenWidth * 0.02),
-//                     Text(
-//                       'This week',
-//                       style: FontManager().getTextStyle(context,
-//                           lWeight: FontWeight.normal,
-//                           fontSize: fontSizeFactor * 2.5,
-//                           color: AppColors.accentColor),
-//                     ),
-//                   ],
-//                 ),
-//                 CustomButton(
-//               onTap: () {},
-//               text: 'History',
-//               fontSize: fontSizeFactor * 2.8,
-//               height: 1.7,
-//               width: 5.0,
-//               icon: AvatarProfileImage(
-//                   url: HomePageIcons.history,
-//                   width: 36,
-//                   height:
-//                       36), // Optional; remove this line if you don't want an icon
-//             ),
-//               ],
-//             ),
-
-//             getMonthWeekCustom(fontSizeFactor, screenWidth),
-//             LineChartWidget(chartData: transactionChatGraph, days: labels, selectedButton: selectedButton)
-//           ],
-//         ),
-//       )
-//       )
-//       );
-//   }
-
-//   Widget getMonthWeekCustom(fontSizeFactor, screenWidth) {
-//     return Row(
-//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//       children: [
-//         Text(
-//           'My Spendings',
-//           style: FontManager().getTextStyle(context,
-//               lWeight: FontWeight.normal,
-//               fontSize: fontSizeFactor * 3.4,
-//               color: AppColors.bg1),
-//         ),
-//         Row(
-//           children: [
-//             GestureDetector(
-//               onTap: () {
-//                 getGraphData.value = false;
-//                 selectedButton.value = 'Month';
-//                 getAutoMationsTransactionsCustom(getFormattedDate(), context);
-//               },
-//               child: Container(
-//                 height: 35,
-//                 width: screenWidth * 0.15,
-//                 decoration: BoxDecoration(
-//                   borderRadius: BorderRadius.circular(16),
-//                   color: selectedButton.value == 'Month'
-//                       ? AppColors.button
-//                       : AppColors.backgroundColor,
-//                 ),
-//                 child: Center(
-//                   child: Text(
-//                     'Month',
-//                     style: FontManager().getTextStyle(context,
-//                         lWeight: FontWeight.normal,
-//                         fontSize: fontSizeFactor * 3.4,
-//                         color: AppColors.accentColor),
-//                   ),
-//                 ),
-//               ),
-//             ),
-//             SizedBox(width: screenWidth * 0.02),
-//             GestureDetector(
-//               onTap: () {
-
-//                  selectedButton.value='Week';
-//                  getGraphData.value = false;
-//                 getAutoMationsTransactionsCustom(
-//                     getCurrentWeek(), context, 'Week');
-
-//                 // selectedButton.value = 'Week';
-//               },
-//               child: Container(
-//                 height: 35,
-//                 width: screenWidth * 0.15,
-//                 decoration: BoxDecoration(
-//                   borderRadius: BorderRadius.circular(16),
-//                   color: selectedButton.value == 'Week'
-//                       ? AppColors.button
-//                       : AppColors.backgroundColor,
-//                 ),
-//                 child: Center(
-//                   child: Text(
-//                     'Week',
-//                     style: FontManager().getTextStyle(context,
-//                         lWeight: FontWeight.normal,
-//                         fontSize: fontSizeFactor * 3.4,
-//                         color: AppColors.accentColor),
-//                   ),
-//                 ),
-//               ),
-//             ),
-//             SizedBox(width: screenWidth * 0.02),
-//             GestureDetector(
-//               onTap: () {
-//                 pickCustomDateRange(context);
-//               },
-//               child: Container(
-//                 height: 35,
-//                 width: screenWidth * 0.15,
-//                 decoration: BoxDecoration(
-//                   borderRadius: BorderRadius.circular(16),
-//                   color: selectedButton.value == 'Custom'
-//                       ? AppColors.button
-//                       : AppColors.backgroundColor,
-//                 ),
-//                 child: Center(
-//                   child: Text(
-//                     'Custom',
-//                     style: FontManager().getTextStyle(context,
-//                         lWeight: FontWeight.normal,
-//                         fontSize: fontSizeFactor * 3.4,
-//                         color: AppColors.accentColor),
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ],
-//     );
-//   }
-// }
-
-// class LineChartWidget extends StatefulWidget {
-//   LineChartWidget({
-//     super.key,
-//     required this.chartData,
-//     required this.days,
-//     required this.selectedButton,
-//   });
-
-//   final Map<String, List<double>> chartData;
-//   final List days;
-//   final RxString selectedButton;
-//   @override
-//   State<LineChartWidget> createState() => _LineChartWidgetState();
-// }
-
-// class _LineChartWidgetState extends State<LineChartWidget> {
-//   List<double> yAxisLabels = [];
-
-//   @override
-//   void initState() {
-//     super.initState();
-//   }
-
-//   // Change to List
-//   @override
-//   Widget build(BuildContext context) {
-//     double screenWidth = MediaQuery.of(context).size.width;
-//     double screenHeight = MediaQuery.of(context).size.height;
-//     double fontSizeFactor = screenWidth * 0.01;
-//     double chartHeight = screenHeight * 0.1;
-
-//     return graphTransaction.value
-//         ? getGraphLineScroll(fontSizeFactor, chartHeight, screenWidth)
-//         : getGraphLineScroll(fontSizeFactor, chartHeight, screenWidth);
-//   }
-
-//   Widget getGraphLineScroll(fontSizeFactor, chartHeight, screenWidth) {
-//     return Container(
-//       child: selectedButton.value != 'Week'
-//           ? SingleChildScrollView(
-//               scrollDirection: Axis.horizontal,
-//               child: getContainerOfGraph(
-//                 screenWidth,
-//                 fontSizeFactor,
-//               ))
-//           : Container(
-//               child: getContainerOfGraph(
-//                 screenWidth,
-//                 fontSizeFactor,
-//               ),
-//             ),
-//     );
-//   }
-
-//   Widget getContainerOfGraph(
-//     screenWidth,
-//     fontSizeFactor,
-//   ) {
-//     return SizedBox(
-//       width: screenWidth * 2,
-//       height: MediaQuery.of(context).size.height / 2.6,
-//       child: GestureDetector(
-//         onPanUpdate: (details) {
-//           // Detect hover over points if required for further enhancements.
-//         },
-//         child: LineChart(
-//           LineChartData(
-//             gridData: FlGridData(
-//               show: false,
-//             ),
-//             titlesData: FlTitlesData(
-//               bottomTitles: AxisTitles(
-//                 sideTitles: SideTitles(
-//                   showTitles: true,
-//                   interval: 1,
-//                   // reservedSize: /,
-
-//                   getTitlesWidget: (value, meta) {
-//                     if (value.toInt() < labels.length) {
-//                       return Text(
-//                         labels[value.toInt()],
-//                         style: FontManager().getTextStyle(context,
-//                             lWeight: FontWeight.bold,
-//                             fontSize: fontSizeFactor * 3.5,
-//                             color: AppColors.accentColor),
-//                       );
-//                     }
-//                     return SizedBox.shrink();
-//                   },
-//                 ),
-//               ),
-//               rightTitles:
-//                   const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-//               topTitles:
-//                   const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-//               leftTitles: AxisTitles(
-//                 sideTitles: SideTitles(
-//                   showTitles: true,
-
-//                   reservedSize: screenWidth * 0.22,
-//                   // interval: maxYValue.value, // For 5 labels (4 intervals + 0 at the bottom)
-//                   getTitlesWidget: (value, meta) {
-//                     return Text(
-//                       '₹${formatNumberString(value.toString())}',
-//                       style: FontManager().getTextStyle(context,
-//                           lWeight: FontWeight.normal,
-//                           fontSize: fontSizeFactor * 3.3,
-//                           color: AppColors.accentColor),
-//                     );
-//                   },
-//                 ),
-//               ),
-//             ),
-//             borderData: FlBorderData(
-//               show: false,
-//             ),
-//             minY: 0,
-//             maxY: maxYValue.value*1.2,
-//             lineBarsData: [
-//               linechart(transactionChatGraph["credited"]!),
-//               linechart(transactionChatGraph["debited"]!),
-//             ],
-//             lineTouchData: LineTouchData(
-//               touchTooltipData: LineTouchTooltipData(
-//                 tooltipRoundedRadius: 1,
-//                 tooltipPadding: const EdgeInsets.all(8),
-//                 getTooltipItems: (touchedSpots) {
-//                   return touchedSpots.map((touchedSpot) {
-//                     String label =
-//                         touchedSpot.bar.color == AppColors.primaryColor
-//                             ? 'Credited'
-//                             : 'Debited';
-//                     return LineTooltipItem(
-//                       '$label: ₹${touchedSpot.y.toStringAsFixed(2)}',
-//                       FontManager().getTextStyle(context,
-//                           lWeight: FontWeight.normal,
-//                           fontSize: fontSizeFactor * 2.5,
-//                           color: AppColors.accentColor),
-//                     );
-//                   }).toList();
-//                 },
-//               ),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   String formatNumberString(String value) {
-//     // Convert string to double
-//     double numValue = double.tryParse(value) ?? 0;
-
-//     if (numValue >= 10000000) {
-//       return '${(numValue / 10000000).toStringAsFixed(2)} Cr'; // Crores
-//     } else if (numValue >= 100000) {
-//       return '${(numValue / 100000).toStringAsFixed(2)} L'; // Lakhs
-//     } else if (numValue >= 1000) {
-//       return '${(numValue / 1000).toStringAsFixed(2)} K'; // Thousands
-//     } else {
-//       return value; // Return original string if less than 1000
-//     }
-//   }
-
-//   LineChartBarData linechart(List<double> list) {
-//     return LineChartBarData(
-//       isCurved: true,
-//       color: AppColors.accentColor,
-//       barWidth: 1,
-//       dotData: FlDotData(show: false),
-//       belowBarData:
-//           BarAreaData(show: false, color: Colors.red.withOpacity(0.2)),
-//       spots: List.generate(
-//         list.length,
-//         (index) => FlSpot(index.toDouble(), list[index]),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'dart:math';
-import 'package:intl/intl.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_application_code_stakeplot/Constants/customButton.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/expanded_finance.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
@@ -408,23 +15,16 @@ import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart'
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class FinancePage extends StatefulWidget {
-  final bool isExpandedView;
-
-  final bool showMonthYearFilter;
-  const FinancePage(
-      {super.key,
-      this.isExpandedView = false,
-      this.showMonthYearFilter = false});
+  const FinancePage({super.key});
 
   @override
   State<FinancePage> createState() => _FinancePageState();
 }
 
 class _FinancePageState extends State<FinancePage> {
-  int selectedYear = DateTime.now().year;
-  int selectedMonth = DateTime.now().month;
   @override
   void initState() {
     super.initState();
@@ -432,300 +32,82 @@ class _FinancePageState extends State<FinancePage> {
     calledFunctionToFetchData();
   }
 
-  void _showYearPicker(BuildContext context) {
-    final currentYear = DateTime.now().year;
-    final yearsCount = currentYear - 2000 + 1;
-
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          height: 300.0, // Adjust this height as needed
-          padding: EdgeInsets.all(8.0), // Add some padding around the grid
-          child: GridView.count(
-            crossAxisCount: 3, // Number of columns
-            crossAxisSpacing: 4.0, // Horizontal spacing between items
-            mainAxisSpacing: 4.0, // Vertical spacing between items
-            childAspectRatio:
-                2.5, // Adjusted to make buttons narrower and taller
-            children: List.generate(yearsCount, (index) {
-              final year = 2000 + index;
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    selectedYear = year;
-                    print(
-                        "month offffffffffffff......................................................");
-                    print(month);
-                    // Here, you would call a function to update your data based on the new year
-                    calledFunctionToFetchData();
-                  });
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.button, // Background color of the button
-                    borderRadius: BorderRadius.circular(
-                        12), // Rounded corners, adjusted for smaller size
-                  ),
-                  child: Center(
-                    child: Text(
-                      year.toString(),
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.normal,
-                          fontSize: 14, // Reduced font size
-                          color: AppColors.accentColor),
-                    ),
-                  ),
-                ),
-              );
-            }),
-          ),
-        );
-      },
-    );
-  }
-
-  void _showMonthPicker(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          height: 220.0, // Adjust this height as needed
-          padding: EdgeInsets.all(8.0), // Add some padding around the grid
-          child: GridView.count(
-            crossAxisCount: 3, // Number of columns
-            crossAxisSpacing: 2.0, // Horizontal spacing between items
-            mainAxisSpacing: 2.0,
-            childAspectRatio: 2.5, // Vertical spacing between items
-            children: List.generate(12, (index) {
-              final month = index + 1;
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    selectedMonth = month;
-                    // Here, you would call a function to update your data based on the new month
-                    calledFunctionToFetchData();
-                  });
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  height: 20,
-                  width: 40,
-                  decoration: BoxDecoration(
-                    color: AppColors.button, // Background color of the button
-                    borderRadius: BorderRadius.circular(16), // Rounded corners
-                  ),
-                  child: Center(
-                    child: Text(
-                      DateFormat('MMMM').format(DateTime(2023, month, 1)),
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.normal,
-                          fontSize: 16,
-                          color: AppColors.accentColor),
-                    ),
-                  ),
-                ),
-              );
-            }),
-          ),
-        );
-      },
-    );
-  }
-
   void calledFunctionToFetchData() {
-    if (widget.showMonthYearFilter) {
-      // When in expanded view with month/year filter
-      if (selectedButton.value == "Month") {
-        // Fetch data for the selected month and year
-        String formattedDate = DateFormat('yyyy-MM-dd')
-            .format(DateTime(selectedYear, selectedMonth, 1));
-        getAutoMationsTransactionsCustom(formattedDate, context, 'Month');
-        print(formattedDate);
-      } else {
-        // Fetch data for the selected year
-        String formattedDate =
-            DateFormat('yyyy-01-01').format(DateTime(selectedYear));
-        getAutoMationsTransactionsCustom(formattedDate, context, 'Year');
-        print(formattedDate);
-      }
+    if (selectedButton.value == "Month") {
+      getAutoMationsTransactionsCustom(getFormattedDate(), context);
+    } else if (selectedButton.value == "Week") {
+      getAutoMationsTransactionsCustom(getCurrentWeek(), context, 'Week');
     } else {
-      // For week/month/custom views when not in expanded view
-      if (selectedButton.value == "Month") {
-        getAutoMationsTransactionsCustom(getFormattedDate(), context, 'Month');
-      } else if (selectedButton.value == "Week") {
-        getAutoMationsTransactionsCustom(getCurrentWeek(), context, 'Week');
-      } else {
-        // Assuming 'Custom' or default case
-        getAutoMationsTransactionsCustom(getFormattedDate(), context, 'Custom');
-      }
+      getAutoMationsTransactionsCustom(getFormattedDate(), context);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Get screen width to make the UI responsive
     double screenWidth = MediaQuery.of(context).size.width;
     double fontSizeFactor = screenWidth * 0.01;
 
     return Scaffold(
-        backgroundColor: AppColors.backgroundColor,
-        body: Obx(() => !getGraphData.value
-            ? Center(child: Spinner())
-            : Padding(
-                padding: EdgeInsets.all(0), // Responsive padding
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Weekly spending and cash flow',
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.w500,
-                          fontSize: fontSizeFactor * 4.5,
-                          color: AppColors.accentColor),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              '₹${totalSpent.toStringAsFixed(2)}',
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.bold,
-                                  fontSize: fontSizeFactor * 4,
-                                  color: AppColors.accentColor),
-                            ),
-                            SizedBox(width: screenWidth * 0.02),
-                            Text(
-                              'This week',
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.normal,
-                                  fontSize: fontSizeFactor * 2.5,
-                                  color: AppColors.accentColor),
-                            ),
-                          ],
-                        ),
-                        CustomButton(
-                          onTap: () {},
-                          text: 'History',
-                          fontSize: fontSizeFactor * 2.8,
-                          height: 1.7,
-                          width: 5.0,
-                          icon: AvatarProfileImage(
-                              url: HomePageIcons.history,
-                              width: 36,
-                              height:
-                                  36), // Optional; remove this line if you don't want an icon
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    //getMonthWeekCustom(fontSizeFactor, screenWidth),
-                    widget.showMonthYearFilter
-                        ? getMonthYearCustom(fontSizeFactor, screenWidth)
-                        : getMonthWeekCustom(fontSizeFactor, screenWidth),
-                    //SizedBox(height: screenWidth * 0.04),
-                    GestureDetector(
-                      onTap: () {
-                        if (!widget.isExpandedView) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ExpandedFinance(),
-                            ),
-                          );
-                        }
-                      },
-                      child: Expanded(
-                        child: LineChartWidget(
-                          chartData: transactionChatGraph,
-                          days: labels,
-                          selectedButton: selectedButton,
-                          isExpandedView: widget.isExpandedView,
-                          isMonthSelected: selectedButton.value == "Month" &&
-                              widget.showMonthYearFilter,
-                          isYearSelected: selectedButton.value != "Month" &&
-                              widget.showMonthYearFilter,
-                          selectedYear: selectedYear, // Pass selectedYear
-                          selectedMonth: selectedMonth,
+      backgroundColor: AppColors.backgroundColor,
+      body: Obx(() => !getGraphData.value
+          ? Center(child: Spinner())
+          : Padding(
+              padding: EdgeInsets.all(0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Weekly spending and cash flow',
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.w500,
+                        fontSize: fontSizeFactor * 4.5,
+                        color: AppColors.accentColor),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            '₹${totalSpent.toStringAsFixed(2)}',
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.bold,
+                                fontSize: fontSizeFactor * 4,
+                                color: AppColors.accentColor),
+                          ),
+                          SizedBox(width: screenWidth * 0.02),
+                          Text(
+                            'This week',
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.normal,
+                                fontSize: fontSizeFactor * 2.5,
+                                color: AppColors.accentColor),
+                          ),
+                        ],
+                      ),
+                      CustomButton(
+                        onTap: () {},
+                        text: 'History',
+                        fontSize: fontSizeFactor * 2.8,
+                        height: 1.7,
+                        width: 5.0,
+                        icon: AvatarProfileImage(
+                          url: HomePageIcons.history,
+                          width: 36,
+                          height: 36,
                         ),
                       ),
-                    )
-                  ],
-                ),
-              )));
-  }
-
-  Widget getMonthYearCustom(fontSizeFactor, screenWidth) {
-    // Here you would implement the logic for selecting month and year
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          'My Spendings',
-          style: FontManager().getTextStyle(context,
-              lWeight: FontWeight.normal,
-              fontSize: fontSizeFactor * 3.4,
-              color: AppColors.bg1),
-        ),
-        Row(
-          children: [
-            // Placeholder for month selection
-            GestureDetector(
-              onTap: () {
-                _showMonthPicker(context);
-              },
-              child: Container(
-                height: 35,
-                width: screenWidth * 0.2,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: AppColors.button,
-                ),
-                child: Center(
-                  child: Text(
-                    'Month',
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
-                        fontSize: fontSizeFactor * 3.4,
-                        color: AppColors.accentColor),
+                    ],
                   ),
-                ),
-              ),
-            ),
-            SizedBox(width: screenWidth * 0.02),
-            // Placeholder for year selection
-            GestureDetector(
-              onTap: () {
-                _showYearPicker(context);
-
-                // Implement year selection logic here
-              },
-              child: Container(
-                height: 35,
-                width: screenWidth * 0.2,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: AppColors.button,
-                ),
-                child: Center(
-                  child: Text(
-                    'Year',
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
-                        fontSize: fontSizeFactor * 3.4,
-                        color: AppColors.accentColor),
+                  getMonthWeekCustom(fontSizeFactor, screenWidth),
+                  LineChartWidget(
+                    chartData: transactionChatGraph,
+                    days: labels,
+                    selectedButton: selectedButton,
                   ),
-                ),
+                ],
               ),
-            ),
-          ],
-        ),
-      ],
+            )),
     );
   }
 
@@ -775,8 +157,6 @@ class _FinancePageState extends State<FinancePage> {
                 getGraphData.value = false;
                 getAutoMationsTransactionsCustom(
                     getCurrentWeek(), context, 'Week');
-
-                // selectedButton.value = 'Week';
               },
               child: Container(
                 height: 35,
@@ -831,403 +211,338 @@ class _FinancePageState extends State<FinancePage> {
 }
 
 class LineChartWidget extends StatefulWidget {
+  final Map<String, List<double>> chartData;
+  final List days;
+  final RxString selectedButton;
+
   const LineChartWidget({
     super.key,
     required this.chartData,
     required this.days,
     required this.selectedButton,
-    this.isExpandedView = false,
-    this.isMonthSelected = false,
-    this.isYearSelected = false,
-    this.selectedYear = 2025,
-    this.selectedMonth = 2,
   });
-
-  final Map<String, List<double>> chartData;
-  final List days;
-  final RxString selectedButton;
-  final bool isExpandedView;
-  final bool isMonthSelected;
-  final bool isYearSelected;
-  final int selectedYear;
-  final int selectedMonth;
 
   @override
   State<LineChartWidget> createState() => _LineChartWidgetState();
 }
 
 class _LineChartWidgetState extends State<LineChartWidget> {
-  // List<double> yAxisLabels = [];
-  double maxYValue = 0.0;
-  List<double> yAxisLabels = [];
+  late double maxYValue;
 
   @override
   void initState() {
     super.initState();
-    _calculateMaxYValueAndLabels();
+    _calculateMaxYValue();
   }
 
   @override
   void didUpdateWidget(LineChartWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.chartData != widget.chartData ||
-        oldWidget.selectedYear != widget.selectedYear ||
-        oldWidget.selectedMonth != widget.selectedMonth) {
-      _calculateMaxYValueAndLabels();
+    if (oldWidget.chartData != widget.chartData) {
+      _calculateMaxYValue();
     }
   }
 
-  void _calculateMaxYValueAndLabels() {
-    setState(() {
-      if (widget.chartData["credited"]!.isNotEmpty ||
-          widget.chartData["debited"]!.isNotEmpty) {
-        maxYValue = [
-          widget.chartData["credited"]!,
-          widget.chartData["debited"]!
-        ]
-            .expand((x) => x)
-            .reduce((value, element) => value > element ? value : element);
-      }
-      if (!maxYValue.isFinite) {
-        maxYValue = 1000.0; // or any other reasonable default
-      }
-      yAxisLabels = List.generate(5, (index) => index * (maxYValue / 4));
-    });
+  void _calculateMaxYValue() {
+    if (widget.chartData["credited"]?.isNotEmpty == true ||
+        widget.chartData["debited"]?.isNotEmpty == true) {
+      maxYValue = [
+        widget.chartData["credited"] ?? [],
+        widget.chartData["debited"] ?? []
+      ]
+          .expand((x) => x)
+          .reduce((value, element) => value > element ? value : element);
+    }
+    if (!maxYValue.isFinite || maxYValue == 0) {
+      maxYValue = 1000.0;
+    }
   }
 
-  // Change to List
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
     double fontSizeFactor = screenWidth * 0.01;
-    double chartHeight = screenHeight * 0.5;
 
-    return graphTransaction.value
-        ? getGraphLineScroll(fontSizeFactor, chartHeight, screenWidth)
-        : getGraphLineScroll(fontSizeFactor, chartHeight, screenWidth);
+    return getGraphLineScroll(fontSizeFactor, screenWidth);
   }
 
-  Widget getGraphLineScroll(fontSizeFactor, chartHeight, screenWidth) {
+  Widget getGraphLineScroll(double fontSizeFactor, double screenWidth) {
     return Container(
-      child: selectedButton.value != 'Week'
-          ? SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: getContainerOfGraph(
-                screenWidth,
-                fontSizeFactor,
-              ))
-          : Container(
-              child: getContainerOfGraph(
-                screenWidth,
-                fontSizeFactor,
-              ),
-            ),
+      height: MediaQuery.of(context).size.height / 2.6,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Fixed Y-axis labels
+          Container(
+            width: screenWidth * 0.15, // Fixed width for Y-axis labels
+            child: _buildYAxisLabels(fontSizeFactor),
+          ),
+          // Scrollable chart area
+          Expanded(
+            child: widget.selectedButton.value != 'Week'
+                ? SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: getContainerOfGraph(screenWidth, fontSizeFactor),
+                  )
+                : getContainerOfGraph(screenWidth, fontSizeFactor),
+          ),
+        ],
+      ),
     );
   }
 
-  int daysInMonth(int year, int month) {
-    if (month == DateTime.february) {
-      var isLeapYear = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
-      return isLeapYear ? 29 : 28;
-    }
-    if ([
-      DateTime.january,
-      DateTime.march,
-      DateTime.may,
-      DateTime.july,
-      DateTime.august,
-      DateTime.october,
-      DateTime.december
-    ].contains(month)) {
-      return 31;
-    }
-    return 30;
+  Widget getContainerOfGraph(double screenWidth, double fontSizeFactor) {
+    List<ChartData> creditedData = widget.chartData["credited"]!
+        .asMap()
+        .entries
+        .map((entry) => ChartData(widget.days[entry.key], entry.value))
+        .toList();
+
+    List<ChartData> debitedData = widget.chartData["debited"]!
+        .asMap()
+        .entries
+        .map((entry) => ChartData(widget.days[entry.key], entry.value))
+        .toList();
+    bool isPointTapped = false;
+    return GestureDetector(
+      // Handle taps outside the chart lines
+
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        // Use a slight delay to ensure point taps are processed first
+        Future.delayed(Duration(milliseconds: 100), () {
+          if (!isPointTapped) {
+            print('Navigating to ExpandedChartView');
+            Get.to(
+              () => ExpandedChartView(
+                chartData: widget.chartData,
+                days: widget.days,
+                selectedYear: DateTime.now().year,
+                selectedMonth: DateTime.now().month,
+                selectedButton: widget.selectedButton.value,
+              ),
+            );
+          }
+          isPointTapped = false;
+        });
+      },
+      child: SizedBox(
+          width: screenWidth * (widget.selectedButton.value == 'Week' ? 1 : 2),
+          height: MediaQuery.of(context).size.height / 2.6,
+          child: SfCartesianChart(
+            borderWidth: 0,
+            plotAreaBorderWidth: 0,
+            primaryXAxis: CategoryAxis(
+              labelStyle: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.bold,
+                  fontSize: fontSizeFactor * 3,
+                  color: AppColors.accentColor),
+              majorGridLines: MajorGridLines(width: 0),
+              minorGridLines:
+                  MinorGridLines(width: 0), // Ensure no minor grid lines
+              axisLine: AxisLine(width: 0),
+              interval: 1,
+              //  labelRotation: -45,
+              // edgeLabelPlacement: EdgeLabelPlacement.shift,
+            ),
+            primaryYAxis: NumericAxis(
+              isVisible: false,
+              labelStyle: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.normal,
+                  fontSize: fontSizeFactor * 3.3,
+                  color: AppColors.accentColor),
+              majorGridLines: MajorGridLines(width: 0),
+              minorGridLines:
+                  MinorGridLines(width: 0), // Ensure no minor grid lines
+              axisLine: AxisLine(width: 0),
+              labelFormat: '₹{value}',
+              minimum: 0,
+              maximum: maxYValue * 1.2,
+            ),
+            tooltipBehavior: TooltipBehavior(
+              enable: true,
+              builder: (dynamic data, dynamic point, dynamic series,
+                  int pointIndex, int seriesIndex) {
+                final ChartData chartData = data as ChartData;
+                String label = seriesIndex == 0 ? 'Debited' : 'Credited';
+                return GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    // Use a slight delay to ensure point taps are processed first
+                    Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ExpandedChartView(
+                        chartData: widget.chartData,
+                        days: widget.days,
+                        selectedButton: widget.selectedButton.value,
+                        selectedYear: DateTime.now().year,
+                        selectedMonth: DateTime.now().month,
+                      ),
+                    ),
+                  );
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.black54,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      '$label: ₹${chartData.y.toStringAsFixed(2)}',
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.normal,
+                          fontSize: fontSizeFactor * 2.5,
+                          color: Colors.white),
+                    ),
+                  ),
+                );
+              },
+            ),
+            series: <ChartSeries>[
+              SplineSeries<ChartData, String>(
+                dataSource: creditedData,
+                xValueMapper: (ChartData data, _) => data.x,
+                yValueMapper: (ChartData data, _) => data.y,
+                color: AppColors.accentColor,
+                width: 2, // Increased line width for better visibility
+                enableTooltip: true,
+                name: 'Debited',
+                splineType: SplineType.cardinal, // Makes the curve smoother
+                cardinalSplineTension: 0.5, // Adjust curve tension (0-1)
+                markerSettings: MarkerSettings(
+                  isVisible: false,
+                  height: 4,
+                  width: 4,
+                  shape: DataMarkerType.pentagon,
+                ),
+                onPointTap: (ChartPointDetails details) {
+                  // Handle point tap here
+                },
+              ),
+              SplineSeries<ChartData, String>(
+                dataSource: debitedData,
+                xValueMapper: (ChartData data, _) => data.x,
+                yValueMapper: (ChartData data, _) => data.y,
+                color: AppColors.primaryColor,
+                width: 2,
+                enableTooltip: true,
+                name: 'Credited',
+                splineType: SplineType.cardinal,
+                cardinalSplineTension: 0.5,
+                markerSettings: MarkerSettings(
+                  isVisible: false,
+                  height: 4,
+                  width: 4,
+                  shape: DataMarkerType.circle,
+                ),
+                onPointTap: (ChartPointDetails details) {
+                  // Handle point tap here
+                },
+              ),
+            ],
+            legend: Legend(
+              isVisible: false,
+              position: LegendPosition.top,
+              textStyle: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.normal,
+                  fontSize: fontSizeFactor * 3,
+                  color: AppColors.accentColor),
+            ),
+
+            // onChartTouchInteraction: (ChartTouchInteractionArgs args) {
+            //   if (args.type == ChartInteractionType.tapUp) {
+            //     // Check if the tap was on a data point
+            //     bool isPointTapped = false;
+            //     for (var series in args.series) {
+            //       if (series != null && series.dataPoints != null) {
+            //         for (var point in series.dataPoints) {
+            //           if (point.isVisible &&
+            //               point.region != null &&
+            //               point.region!.contains(args.position)) {
+            //             isPointTapped = true;
+            //             break;
+            //           }
+            //         }
+            //       }
+            //       if (isPointTapped) break;
+            //     }
+
+            // //     // Navigate only if the tap was outside data points
+            //     if (!isPointTapped) {
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //           builder: (context) => ExpandedChartView(
+            //             chartData: widget.chartData,
+            //             days: widget.days,
+            //             selectedButton: widget.selectedButton.value,
+            //             selectedYear: DateTime.now().year,
+            //             selectedMonth: DateTime.now().month,
+            //           ),
+            //         ),
+            //       );
+            //     }
+            //   }
+            //   return true;
+            // },
+          )),
+    );
   }
 
-  Widget getContainerOfGraph(
-    screenWidth,
-    fontSizeFactor,
-  ) {
-    return Row(
-      //mainAxisAlignment: Main,
-      children: [
-        // Padding(
-        //   padding: const EdgeInsets.only(bottom: 12),
-        //   child: Container(
-        //     width: screenWidth * 0.12, // Adjusted width to ensure visibility
-        //     height: MediaQuery.of(context).size.height * 0.5,
-        //     child: Column(
-        //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //       children: yAxisLabels.reversed.map((label) {
-        //         return Text(
-        //           '₹${formatNumberString(label.toStringAsFixed(1))}',
-        //           style: FontManager().getTextStyle(context,
-        //               lWeight: FontWeight.normal,
-        //               fontSize: fontSizeFactor * 3,
-        //               color: AppColors.accentColor),
-        //           textAlign: TextAlign.left,
-        //         );
-        //       }).toList(),
-        //     ),
-        //   ),
-        // ),
-        SizedBox(
-          width:
-              selectedButton == 'Week' ? screenWidth * 0.88 : screenWidth * 2,
-          height: MediaQuery.of(context).size.height / 2.06,
-          child: widget.isExpandedView
-              ? LineChart(
-                  LineChartData(
-                    gridData: FlGridData(
-                      show: false,
-                    ),
-                    titlesData: FlTitlesData(
-                      bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          interval: 1,
-                          getTitlesWidget: (value, meta) {
-                            if (widget.isMonthSelected) {
-                              final daysCount = daysInMonth(
-                                  widget.selectedYear, widget.selectedMonth);
-                              // if (value.toInt() < daysCount) {
-                              //   return Text(
-                              //     (value.toInt() + 1).toString(),
-                              //     style: FontManager().getTextStyle(context,
-                              //         lWeight: FontWeight.normal,
-                              //         fontSize: fontSizeFactor * 1,
-                              //         color: AppColors.accentColor),
-                              //   );
-                              // }
-                              return SizedBox.shrink();
-                            } else if (widget.isYearSelected) {
-                              final month = DateFormat('MMM').format(DateTime(
-                                  widget.selectedYear, value.toInt() + 1, 1));
-                              return Text(
-                                month,
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.normal,
-                                    fontSize: fontSizeFactor * 1,
-                                    color: AppColors.accentColor),
-                              );
-                            } else {
-                              if (value.toInt() < widget.days.length) {
-                                return Text(
-                                  widget.days[value.toInt()],
-                                  style: FontManager().getTextStyle(context,
-                                      lWeight: FontWeight.normal,
-                                      fontSize: fontSizeFactor * 3,
-                                      color: AppColors.accentColor),
-                                );
-                              }
-                              return SizedBox.shrink();
-                            }
-                          },
-                        ),
-                      ),
-                      rightTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false)),
-                      topTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false)),
-                      leftTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: false,
+  bool isTapOnLine(Offset tapPosition) {
+    // Implement your logic here
+    return false; // Placeholder return value
+  }
 
-                          reservedSize: screenWidth * 0.14,
-                          interval: maxYValue /
-                              4, // For 5 labels (4 intervals + 0 at the bottom)
-                          getTitlesWidget: (value, meta) {
-                            return Text(
-                              '₹${formatNumberString(value.toString())}',
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.normal,
-                                  fontSize: fontSizeFactor * 3.0,
-                                  color: AppColors.accentColor),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                    borderData: FlBorderData(
-                      show: false,
-                    ),
-                    minY: 0,
-                    maxY: maxYValue * 1.2,
-                    lineBarsData: [
-                      linechart(transactionChatGraph["credited"]!,
-                          AppColors.primaryColor),
-                      linechart(transactionChatGraph["debited"]!,
-                          AppColors.accentColor),
-                    ],
-                    lineTouchData: LineTouchData(
-                      touchTooltipData: LineTouchTooltipData(
-                        tooltipRoundedRadius: 1,
-                        tooltipPadding: const EdgeInsets.all(8),
-                        getTooltipItems: (touchedSpots) {
-                          return touchedSpots.map((touchedSpot) {
-                            String label =
-                                touchedSpot.bar.color == AppColors.primaryColor
-                                    ? 'Credited'
-                                    : 'Debited';
-                            return LineTooltipItem(
-                              '$label: ₹${touchedSpot.y.toStringAsFixed(2)}',
-                              FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.normal,
-                                  fontSize: fontSizeFactor * 2.5,
-                                  color: AppColors.accentColor),
-                            );
-                          }).toList();
-                        },
-                      ),
-                    ),
-                  ),
-                )
-              : GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ExpandedFinance(),
-                      ),
-                    );
-                  },
-                  child: LineChart(
-                    LineChartData(
-                      gridData: FlGridData(
-                        show: false,
-                      ),
-                      titlesData: FlTitlesData(
-                        bottomTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            interval: 1,
-                            getTitlesWidget: (value, meta) {
-                              if (value.toInt() < widget.days.length) {
-                                return Text(
-                                  widget.days[value.toInt()],
-                                  style: FontManager().getTextStyle(context,
-                                      lWeight: FontWeight.normal,
-                                      fontSize: fontSizeFactor * 3,
-                                      color: AppColors.accentColor),
-                                );
-                              }
-                              return SizedBox.shrink();
-                            },
-                          ),
-                        ),
-                        rightTitles: const AxisTitles(
-                            sideTitles: SideTitles(showTitles: false)),
-                        topTitles: const AxisTitles(
-                            sideTitles: SideTitles(showTitles: false)),
-                        leftTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
+  Widget _buildYAxisLabels(double fontSizeFactor) {
+    // Calculate intervals for Y-axis labels
 
-                            reservedSize: screenWidth * 0.14,
-                            interval: maxYValue /
-                                4, // For 5 labels (4 intervals + 0 at the bottom)
-                            getTitlesWidget: (value, meta) {
-                              return Text(
-                                '₹${formatNumberString(value.toString())}',
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.normal,
-                                    fontSize: fontSizeFactor * 3.0,
-                                    color: AppColors.accentColor),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                      borderData: FlBorderData(
-                        show: false,
-                      ),
-                      minY: 0,
-                      maxY: maxYValue * 1.2,
-                      lineBarsData: [
-                        linechart(transactionChatGraph["credited"]!,
-                            AppColors.primaryColor),
-                        linechart(transactionChatGraph["debited"]!,
-                            AppColors.accentColor),
-                      ],
-                      lineTouchData: LineTouchData(
-                        handleBuiltInTouches:
-                            false, // Disable built-in touch handling
-                        touchCallback: (event, response) {
-                          // Check if there's a touch response
-                          if (event is FlTapUpEvent &&
-                              response != null &&
-                              response.lineBarSpots != null &&
-                              response.lineBarSpots!.isNotEmpty) {
-                            // If there's a response, it means the user tapped on the line
-                            // Do nothing or handle line tap if needed
-                          } else {
-                            // If no response, it means the user tapped outside the line
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ExpandedFinance(),
-                              ),
-                            );
-                          }
-                        },
-                        touchTooltipData: LineTouchTooltipData(
-                          tooltipRoundedRadius: 1,
-                          tooltipPadding: const EdgeInsets.all(8),
-                          getTooltipItems: (touchedSpots) {
-                            return touchedSpots.map((touchedSpot) {
-                              String label = touchedSpot.bar.color ==
-                                      AppColors.primaryColor
-                                  ? 'Credited'
-                                  : 'Debited';
-                              return LineTooltipItem(
-                                '$label: ₹${touchedSpot.y.toStringAsFixed(2)}',
-                                FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.normal,
-                                    fontSize: fontSizeFactor * 2.5,
-                                    color: AppColors.accentColor),
-                              );
-                            }).toList();
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+    final double interval = maxYValue * 1.2 / 4; // For 5 labels
+    List<Widget> labels = [];
+
+    for (int i = 0; i <= 4; i++) {
+      double value = interval * i;
+      labels.add(
+        Expanded(
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              '₹${formatNumberString(value.toString())}',
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.normal,
+                fontSize: fontSizeFactor * 3.3,
+                color: AppColors.accentColor,
+              ),
+            ),
+          ),
         ),
-      ],
+      );
+    }
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children:
+          labels.reversed.toList(), // Reverse to have highest value at top
     );
   }
 
   String formatNumberString(String value) {
-    // Convert string to double
     double numValue = double.tryParse(value) ?? 0;
-
     if (numValue >= 10000000) {
-      return '${(numValue / 10000000).toStringAsFixed(2)} Cr'; // Crores
+      return '${(numValue / 10000000).toStringAsFixed(2)} Cr';
     } else if (numValue >= 100000) {
-      return '${(numValue / 100000).toStringAsFixed(2)} L'; // Lakhs
+      return '${(numValue / 100000).toStringAsFixed(2)} L';
     } else if (numValue >= 1000) {
-      return '${(numValue / 1000).toStringAsFixed(2)} K'; // Thousands
+      return '${(numValue / 1000).toStringAsFixed(2)} K';
     } else {
-      return value; // Return original string if less than 1000
+      return value;
     }
   }
+}
 
-  LineChartBarData linechart(List<double> list, Color color) {
-    return LineChartBarData(
-      isCurved: true,
-      color: color,
-      barWidth: 1,
-      dotData: FlDotData(show: false),
-      belowBarData:
-          BarAreaData(show: false, color: Colors.red.withOpacity(0.2)),
-      // Ensure the first and last points are within the chart area
-      spots: List.generate(
-        list.length,
-        (index) =>
-            FlSpot(index.toDouble(), list[index].clamp(0, maxYValue * 1.2)),
-      ),
-    );
-  }
+class ChartData {
+  ChartData(this.x, this.y);
+  final String x;
+  final double y;
 }

@@ -72,7 +72,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-       initialRoute: '/ShareAccountLogin', 
+       initialRoute: '/', 
         routes:
     {  
       '/': (context) =>  Signin(),   

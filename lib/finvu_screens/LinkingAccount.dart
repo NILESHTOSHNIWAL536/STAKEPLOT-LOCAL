@@ -739,7 +739,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
           fipId: fipId, typeIdentifiers: fetchFIPDetails.typeIdentifiers);
       FinvuFIPDetailsList[fipId] = fipDetails;
       info = await finvuManager.discoverAccounts(
-          fipId, finvuFIPInfo.fipFitypes, finvuTypeIdentifierInfo);
+          fipDetails, finvuFIPInfo.fipFitypes, finvuTypeIdentifierInfo);
 
       count.value += info.length;
       count.refresh();

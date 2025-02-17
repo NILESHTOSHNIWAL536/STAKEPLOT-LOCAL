@@ -189,20 +189,20 @@ packages:
     dependency: "direct main"
     description:
       path: client
-      ref: "1.0.3"
-      resolved-ref: f19b8fd10c9ed9c776cdbc29514a9ff7db4fdd8d
+      ref: "1.0.1"
+      resolved-ref: "7397b5f016a852bf0c1377237cd3b554c2d55648"
       url: "https://github.com/Cookiejar-technologies/finvu_flutter_sdk.git"
     source: git
-    version: "0.0.3"
+    version: "0.0.2"
   finvu_flutter_sdk_core:
     dependency: "direct main"
     description:
       path: core
-      ref: "1.0.3"
-      resolved-ref: f19b8fd10c9ed9c776cdbc29514a9ff7db4fdd8d
+      ref: "1.0.1"
+      resolved-ref: "7397b5f016a852bf0c1377237cd3b554c2d55648"
       url: "https://github.com/Cookiejar-technologies/finvu_flutter_sdk.git"
     source: git
-    version: "0.0.3"
+    version: "0.0.2"
   firebase_auth:
     dependency: "direct main"
     description:

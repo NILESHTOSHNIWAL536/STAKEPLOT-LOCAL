@@ -386,7 +386,7 @@ class _FinvuAccountState extends State<FinvuAccount> {
 
       List<FinvuDiscoveredAccountInfo> info =
           await finvuManager.discoverAccounts(
-              fipDetails.fipId, finvuFIPInfo.fipFitypes, finvuTypeIdentifierInfo);
+              fipDetails, finvuFIPInfo.fipFitypes, finvuTypeIdentifierInfo);
 
       //  info.forEach((e){
       //     print('e.accountType');

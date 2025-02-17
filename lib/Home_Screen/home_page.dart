@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/expanded_finance.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/donut_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/manual_transaction.dart';
@@ -108,6 +109,7 @@ class HomeScreen extends StatelessWidget {
 
               // Pending Users
               UserListScreen(),
+              
               //const SizedBox(height: 20),
 
               // Doughnut Chart

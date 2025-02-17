@@ -307,7 +307,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
 
       List<FinvuDiscoveredAccountInfo> info =
           await finvuManager.discoverAccounts(
-              fipId, finvuFIPInfo.fipFitypes, finvuTypeIdentifierInfo);
+              fipDetails, finvuFIPInfo.fipFitypes, finvuTypeIdentifierInfo);
 
 
       //  Navigator.push(
