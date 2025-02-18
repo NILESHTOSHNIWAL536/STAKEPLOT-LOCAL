@@ -6,6 +6,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import './BudgetDisplay.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
+
 class MyBudgetScreen extends StatefulWidget {
   final data;
 
@@ -25,21 +26,17 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
 
   @override
   void initState() {
+    super.initState();
     getmonthlyBudgetData();
+    print('Monthly Budget Data Length: ${monthlyBudgetData.length}');
+    
+    print('Monthly Budget Data: $monthlyBudgetData');
   }
 
   void getmonthlyBudgetData() {
     List list = widget.data['categoryBudgets'];
-  
-    // for(double i=0;i<list.length;i++){
-    //         int j=int.parse(i.toString());
-    //         monthlyBudgetData.add(FlSpot(i, double.parse(list[j]['amount'].toString())));
-    // };
-    // for(double i=0;i<list.length;i++){
-    //         int j=int.parse(i.toString());
-    //         //  print(list[j]);
-    //           categories[list[j]['category']]=double.parse(list[j]['amount'].toString())!;
-    // };
+
+    
     for (int i = 0; i < list.length; i++) {
       double amount = double.parse(list[i]['amount'].toString());
       monthlyBudgetData.add(FlSpot(i.toDouble(), amount));
@@ -263,19 +260,19 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
   }
 }
 
-
 class LineChartSample extends StatelessWidget {
   final List<FlSpot> monthlyBudgetData;
   final int currentMonthIndex = DateTime.now().month - 1;
 
   LineChartSample({required this.monthlyBudgetData});
-
+  @override
   List<_ChartData> _getChartData() {
     return monthlyBudgetData.map((spot) {
       return _ChartData(
-        x: spot.x.toInt() + 1, 
+        x: spot.x.toInt() + 1,
         y: spot.y,
-        xString: DateFormat('MMM').format(DateTime(2025, spot.x.toInt() + 1, 1)), // Example year
+        xString: DateFormat('MMM')
+            .format(DateTime(2025, spot.x.toInt() + 1, 1)), // Example year
       );
     }).toList();
   }
@@ -289,18 +286,22 @@ class LineChartSample extends StatelessWidget {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Container(
+          
           // Width is set to allow all months to be fully visible when scrolled
-          width: monthlyBudgetData.length * labelWidth > screenWidth ? 
-                 monthlyBudgetData.length * labelWidth : screenWidth, // Assuming each label takes around 80 pixels
+          width: monthlyBudgetData.length * labelWidth > screenWidth
+              ? monthlyBudgetData.length * labelWidth
+              : screenWidth, // Assuming each label takes around 80 pixels
           child: SfCartesianChart(
             plotAreaBorderWidth: 0,
             primaryXAxis: CategoryAxis(
               labelStyle: TextStyle(color: AppColors.accentColor),
               majorGridLines: MajorGridLines(width: 0),
               minorGridLines: MinorGridLines(width: 0),
-              edgeLabelPlacement: EdgeLabelPlacement.shift, // Ensures labels are visible at edges
+              edgeLabelPlacement: EdgeLabelPlacement
+                  .shift, // Ensures labels are visible at edges
             ),
             primaryYAxis: NumericAxis(
+              isVisible: false,
               labelStyle: TextStyle(color: AppColors.accentColor),
               majorGridLines: MajorGridLines(width: 0),
               minorGridLines: MinorGridLines(width: 0),
@@ -326,14 +327,17 @@ class LineChartSample extends StatelessWidget {
                   _ChartData(
                     x: currentMonthIndex + 1,
                     y: 0,
-                    xString: DateFormat('MMM').format(DateTime(2023, currentMonthIndex + 1, 1)),
+                    xString: DateFormat('MMM')
+                        .format(DateTime(2023, currentMonthIndex + 1, 1)),
                   ),
                   _ChartData(
                     x: currentMonthIndex + 1,
-                    y: monthlyBudgetData.isNotEmpty && currentMonthIndex < monthlyBudgetData.length
+                    y: monthlyBudgetData.isNotEmpty &&
+                            currentMonthIndex < monthlyBudgetData.length
                         ? monthlyBudgetData[currentMonthIndex].y
                         : 0, // Use actual spending for current month
-                    xString: DateFormat('MMM').format(DateTime(2023, currentMonthIndex + 1, 1)),
+                    xString: DateFormat('MMM')
+                        .format(DateTime(2023, currentMonthIndex + 1, 1)),
                   ),
                 ],
                 xValueMapper: (_ChartData data, _) => data.xString,
@@ -358,6 +362,7 @@ class _ChartData {
   final double y;
   final String xString;
 }
+
 class PieChartSample extends StatelessWidget {
   final Map<String, double> categories;
 

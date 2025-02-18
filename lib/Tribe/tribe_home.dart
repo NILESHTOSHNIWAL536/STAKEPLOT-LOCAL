@@ -1171,8 +1171,8 @@ Widget vote(context, dataObj, data) {
   String likeKey = "liked" + dataObj["_id"];
   bool isLiked = likedList.contains(likeKey);
   return Obx(() => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 4),
-    child: Row(
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -1187,7 +1187,7 @@ Widget vote(context, dataObj, data) {
                       onTap: () {
                         String likeKey = "liked" + dataObj["_id"];
                         bool isLiked = likedList.contains(likeKey);
-    
+
                         // Toggle like status
                         if (isLiked) {
                           likedList.remove(likeKey);
@@ -1199,13 +1199,13 @@ Widget vote(context, dataObj, data) {
                           likedList.add(likeKey);
                           postCount[idData] = postCount[idData]! + 1;
                         }
-    
+
                         // Update the server with new vote status
                         upvoteGlobal(context, "Post", dataObj["_id"], dataObj);
                         reRender.value = !reRender.value;
                       },
-                      child: likeIcon(
-                          context, likedList.contains("liked" + dataObj["_id"])),
+                      child: likeIcon(context,
+                          likedList.contains("liked" + dataObj["_id"])),
                     ),
                   ),
                   Padding(
@@ -1278,7 +1278,7 @@ Widget vote(context, dataObj, data) {
             )
           ],
         ),
-  ));
+      ));
 }
 
 // Helper function to get the appropriate icon based on like status
@@ -1286,15 +1286,16 @@ Widget vote(context, dataObj, data) {
 Widget likeIcon(BuildContext context, bool isLiked) {
   return isLiked
       ? Icon(
-          Icons.heart_broken,
+          Icons.favorite,
           color: Colorcodes.red,
           size: 30,
         )
-      : SvgPicture.asset(
-          LikeComment.likes, // Path to your outlined heart SVG
-          //color: Colors.white,
-          height: 25,
-        );
+       
+  : SvgPicture.asset(
+      LikeComment.likes, // Path to your outlined heart SVG
+      //color: Colors.white,
+      height: 25,
+    );
   // return isLiked
   //     ? SvgPicture.asset(
   //         LikeComment.likes, // Path to your filled heart SVG
