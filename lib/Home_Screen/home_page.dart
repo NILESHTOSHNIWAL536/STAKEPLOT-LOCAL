@@ -75,6 +75,9 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       bottomNavigationBar: BottomNavigations(data: 0,),
       backgroundColor: AppColors.backgroundColor,
+      // floatingActionButton: IconButton(onPressed: (){
+         
+      // }, icon: Icon(Icons.add,color: AppColors.primaryColor,)) ,
       appBar: AppBar(
         backgroundColor: AppColors.backgroundColor,
         automaticallyImplyLeading: false,

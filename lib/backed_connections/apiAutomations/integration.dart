@@ -45,15 +45,18 @@ Future<void> loginWithServer() async {
   final String custId =
       "${number.value}@finvu"; // Replace with dynamic value if needed
   
-  //  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  //  var accessToken = _pref.getString("accessToken");
-  //  print(accessToken);
+   final SharedPreferences _pref = await SharedPreferences.getInstance();
+   var accessToken = _pref.getString("accessToken");
+   print(accessToken);
+  print(custId);
+  print(apiUrl);
+
   try {
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {
         "Content-Type": "application/json",
-        // "Authorization": "$accessToken",
+        "Authorization": "$accessToken",
       },
       body: jsonEncode({"custId": custId,'number':number.value}),
     );
