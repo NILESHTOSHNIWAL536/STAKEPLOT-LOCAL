@@ -5,7 +5,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:get/get.dart';
 
 RxString balance = "0".obs;
-RxString accountName = "0".obs;
+RxString accountName = "Bank Name : ".obs;
+RxString accountNo = "XXXXXXXX".obs;
 
 void getCategoryData() async {
   var res = await getDataApiCall("${url}/transactionauto/categorize");
@@ -23,15 +24,12 @@ void getCategoryData() async {
 
 void getSummary() async {
   var res = await getDataApiCall("${url}/transactionauto/user-details");
-  // print("data transactionauto :");
-
   if (getFlagOfResponse(res)) {
     var data = jsonDecode(res.body);
     data = data['data'];
-    //print("data debt ..............................transactionauto....................... :");
-    // print(data['Bank']['fipName']);
-    // print(data['summaries'][0]['data']['currentBalance']);
     accountName.value = data['Bank']['fipName'];
+    accountNo.value = data['accounts'][0]['accounts']['maskedAccNumber'] ?? 0;
+    print(accountNo.value);
     balance.value = data['summaries'][0]['data']['currentBalance'].toString();
   }
 }

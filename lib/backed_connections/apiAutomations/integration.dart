@@ -92,8 +92,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
     String? handleId = prefs.getString("consentHandleId");
     // String? custId = prefs.getString("custId");
 
-      print(apiUrl);
-      print(custId);
+    
 
     if (handleId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -115,7 +114,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
      printData(response);
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      print("Data Fetched: ${data}");
+   
      sessionId.value=true;
       // Store values in SharedPreferences for later use
       prefs.setString("sessionId", data["sessionId"]);

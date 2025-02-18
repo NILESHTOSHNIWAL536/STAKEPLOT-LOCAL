@@ -23,7 +23,9 @@ void getAck() async {
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-    // hasGetNewNotifications.value= obj!=0 ;
+    hasGetNewNotifications.value= obj!=0 ;
+    print("hasGetNewNotifications.value----------------");
+    print(hasGetNewNotifications.value);
   } else {}
 }
 
@@ -91,6 +93,7 @@ void setPasswordApiCalled(context, String password) async {
    printData(response, context);
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
+    cupertinoPin.value=password;
     snackBarCalled(context, " Set Pin success!", Colors.black);
   } else {
     snackBarCalled(context, "can't Set pin!", Colors.red);
@@ -98,8 +101,7 @@ void setPasswordApiCalled(context, String password) async {
     Navigator.pop(context);
 }
 
-void PinPasswordVerify(
-    NumberPickerController controller, password, context) async {
+void PinPasswordVerify(password, context,Function setBack) async {
     
   var response = await getDataApiCall("${url}/user/cupertino/${password}");
   printData(response, context);
@@ -107,8 +109,11 @@ void PinPasswordVerify(
     hideBackAccountPassword.value = true;
     Timer(Duration(seconds: 5), () {
       hideBackAccountPassword.value = false;
-      controller.firstDigit.value = 0;
-      controller.secondDigit.value = 0;
+    
+      firstDigit.value = 0;
+      secondDigit.value = 0;
+      digitLoad.value= !digitLoad.value;
+      setBack();
     });
   } else {
     hideBackAccountPassword.value = false;

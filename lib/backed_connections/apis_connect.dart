@@ -19,7 +19,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
 bool flag = true;
-String portNo = flag ? "192.168.1.11" : "localhost";
+String portNo = flag ? "192.168.1.4" : "localhost";
 String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 
@@ -204,10 +204,10 @@ String toUpperCase(String str) {
 void printData(response, [context = ""]) {
   //  String data=  response.body;
 
-  print("response");
-  print(response);
-  print(response.statusCode);
-  print(response.body);
+  // print("response");
+  // print(response);
+  // print(response.statusCode);
+  // print(response.body);
 
   // if(data.contains("JsonWebTokenError"))Navigator.pushNamed(context, '/');
 }
