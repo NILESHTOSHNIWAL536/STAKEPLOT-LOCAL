@@ -81,94 +81,99 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
   }
 
   Future<void> _fetchYearlyData(int year) async {
-  try {
-    isLoading.value = true;
-    // Ensure the year is properly formatted as a four-digit string
-    String yearString = year.toString().padLeft(4, '0');
-    String endpoint = "${url}/transactionauto/getAllCustomTransactions/year/$yearString";
-    
-   // print('Fetching yearly data from endpoint: $endpoint');
-    var response = await getDataApiCall(endpoint);
-    
-    // print("Response status code: ${response.statusCode}");
-    // print("Response body: ${response.body}");
+    try {
+      isLoading.value = true;
+      // Ensure the year is properly formatted as a four-digit string
+      String yearString = year.toString().padLeft(4, '0');
+      String endpoint =
+          "${url}/transactionauto/getAllCustomTransactions/year/$yearString";
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      try {
-        var data = jsonDecode(response.body);
-        
-        if (data['success'] == true) {
-          Map<String, List<double>> yearlyData = {
-            'credited': List.filled(12, 0.0),
-            'debited': List.filled(12, 0.0),
-          };
+      // print('Fetching yearly data from endpoint: $endpoint');
+      var response = await getDataApiCall(endpoint);
 
-          try {
-         //   print('Processing yearly data for year: $year');
-            if (data['data'] != null && data['data']['transactions'] != null) {
-              data['data']['transactions'].forEach((key, value) {
-                int monthIndex = monthNameToIndex[key] ?? -1;
-                print('Month: $key, Month Index: $monthIndex, Value: $value');
-                if (monthIndex >= 0 && monthIndex < 12) {
-                  yearlyData['credited']![monthIndex] = getDouble(value['credit']);
-                  yearlyData['debited']![monthIndex] = getDouble(value['debit']);
-                } else {
-                  print('Invalid month index: $monthIndex for key: $key');
-                }
-              });
+      // print("Response status code: ${response.statusCode}");
+      // print("Response body: ${response.body}");
 
-              currentChartData.value = yearlyData;
-              maxYValue.value = data['data']['maxAmount']?.toDouble() ?? 500.0;
-              if (maxYValue.value == 0) maxYValue.value = 500.0;
-            } else {
-              print('Unexpected data structure: $data');
-              throw Exception('Invalid data structure received from API');
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        try {
+          var data = jsonDecode(response.body);
+
+          if (data['success'] == true) {
+            Map<String, List<double>> yearlyData = {
+              'credited': List.filled(12, 0.0),
+              'debited': List.filled(12, 0.0),
+            };
+
+            try {
+              //   print('Processing yearly data for year: $year');
+              if (data['data'] != null &&
+                  data['data']['transactions'] != null) {
+                data['data']['transactions'].forEach((key, value) {
+                  int monthIndex = monthNameToIndex[key] ?? -1;
+                  print('Month: $key, Month Index: $monthIndex, Value: $value');
+                  if (monthIndex >= 0 && monthIndex < 12) {
+                    yearlyData['credited']![monthIndex] =
+                        getDouble(value['credit']);
+                    yearlyData['debited']![monthIndex] =
+                        getDouble(value['debit']);
+                  } else {
+                    print('Invalid month index: $monthIndex for key: $key');
+                  }
+                });
+
+                currentChartData.value = yearlyData;
+                maxYValue.value =
+                    data['data']['maxAmount']?.toDouble() ?? 500.0;
+                if (maxYValue.value == 0) maxYValue.value = 500.0;
+              } else {
+                print('Unexpected data structure: $data');
+                throw Exception('Invalid data structure received from API');
+              }
+            } catch (e) {
+              //  print('Error processing yearly data: $e');
+              maxYValue.value = 500.0;
+              currentChartData.value = {
+                'credited': List.filled(12, 0.0),
+                'debited': List.filled(12, 0.0),
+              };
             }
-          } catch (e) {
-          //  print('Error processing yearly data: $e');
-            maxYValue.value = 500.0;
+          } else {
+            //  print('API returned success:false with error: ${data['error']}');
             currentChartData.value = {
               'credited': List.filled(12, 0.0),
               'debited': List.filled(12, 0.0),
             };
           }
-        } else {
-        //  print('API returned success:false with error: ${data['error']}');
+        } catch (e) {
+          // print('Error parsing response: $e');
           currentChartData.value = {
             'credited': List.filled(12, 0.0),
             'debited': List.filled(12, 0.0),
           };
         }
-      } catch (e) {
-       // print('Error parsing response: $e');
+      } else {
+        //  print('API request failed with status code: ${response.statusCode}');
+        try {
+          var errorData = jsonDecode(response.body);
+          print('API Error: ${errorData['error']}');
+        } catch (e) {
+          print('Failed to parse error response: $e');
+        }
         currentChartData.value = {
           'credited': List.filled(12, 0.0),
           'debited': List.filled(12, 0.0),
         };
       }
-    } else {
-    //  print('API request failed with status code: ${response.statusCode}');
-      try {
-        var errorData = jsonDecode(response.body);
-        print('API Error: ${errorData['error']}');
-      } catch (e) {
-        print('Failed to parse error response: $e');
-      }
+    } catch (e) {
+      // print('Error fetching yearly data: $e');
       currentChartData.value = {
         'credited': List.filled(12, 0.0),
         'debited': List.filled(12, 0.0),
       };
+    } finally {
+      isLoading.value = false;
     }
-  } catch (e) {
-  // print('Error fetching yearly data: $e');
-    currentChartData.value = {
-      'credited': List.filled(12, 0.0),
-      'debited': List.filled(12, 0.0),
-    };
-  } finally {
-    isLoading.value = false;
   }
-}
 
   Future<void> _fetchMonthlyData(int year, int month) async {
     try {
@@ -191,7 +196,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
           data['data']['transactions'].forEach((key, value) {
             try {
               int dayIndex = int.parse(key.split('-')[2]) - 1;
-             // print('Day Index: $dayIndex for key: $key');
+              // print('Day Index: $dayIndex for key: $key');
               if (dayIndex >= 0 && dayIndex < daysInMonth) {
                 monthlyData['credited']![dayIndex] = getDouble(value['credit']);
                 monthlyData['debited']![dayIndex] = getDouble(value['debit']);
@@ -346,61 +351,93 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
   }
 
   Widget _buildMonthYearSelector(double fontSizeFactor, double screenWidth) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'My Spendings',
+          'Weekly spending and cash flow',
           style: FontManager().getTextStyle(context,
-              lWeight: FontWeight.normal,
-              fontSize: fontSizeFactor * 3.4,
-              color: AppColors.bg1),
+              lWeight: FontWeight.w500,
+              fontSize: fontSizeFactor * 4.5,
+              color: AppColors.accentColor),
         ),
+        SizedBox(height: 10),
         Row(
           children: [
-            GestureDetector(
-              onTap: () =>
-                  _showMonthPicker(context, fontSizeFactor, screenWidth),
-              child: Container(
-                height: 35,
-                width: screenWidth * 0.2,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: AppColors.button,
-                ),
-                child: Center(
-                  child: Obx(() => Text(
-                        DateFormat('MMMM').format(DateTime(
-                            selectedYear.value, selectedMonth.value, 1)),
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.normal,
-                            fontSize: fontSizeFactor * 3.4,
-                            color: AppColors.accentColor),
-                      )),
-                ),
-              ),
+            Text(
+              '₹${totalSpent.toStringAsFixed(2)}',
+              style: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.bold,
+                  fontSize: fontSizeFactor * 4,
+                  color: AppColors.accentColor),
             ),
             SizedBox(width: screenWidth * 0.02),
-            GestureDetector(
-              onTap: () =>
-                  _showYearPicker(context, fontSizeFactor, screenWidth),
-              child: Container(
-                height: 35,
-                width: screenWidth * 0.2,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: AppColors.button,
+            Text(
+              'This week',
+              style: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.normal,
+                  fontSize: fontSizeFactor * 2.5,
+                  color: AppColors.accentColor),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'My Spendings',
+              style: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.normal,
+                  fontSize: fontSizeFactor * 3.4,
+                  color: AppColors.bg1),
+            ),
+            Row(
+              children: [
+                GestureDetector(
+                  onTap: () =>
+                      _showMonthPicker(context, fontSizeFactor, screenWidth),
+                  child: Container(
+                    height: 35,
+                    width: screenWidth * 0.2,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: AppColors.button,
+                    ),
+                    child: Center(
+                      child: Obx(() => Text(
+                            DateFormat('MMMM').format(DateTime(
+                                selectedYear.value, selectedMonth.value, 1)),
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.normal,
+                                fontSize: fontSizeFactor * 3.4,
+                                color: AppColors.accentColor),
+                          )),
+                    ),
+                  ),
                 ),
-                child: Center(
-                  child: Obx(() => Text(
-                        selectedYear.value.toString(),
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.normal,
-                            fontSize: fontSizeFactor * 3.4,
-                            color: AppColors.accentColor),
-                      )),
+                SizedBox(width: screenWidth * 0.02),
+                GestureDetector(
+                  onTap: () =>
+                      _showYearPicker(context, fontSizeFactor, screenWidth),
+                  child: Container(
+                    height: 35,
+                    width: screenWidth * 0.2,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: AppColors.button,
+                    ),
+                    child: Center(
+                      child: Obx(() => Text(
+                            selectedYear.value.toString(),
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.normal,
+                                fontSize: fontSizeFactor * 3.4,
+                                color: AppColors.accentColor),
+                          )),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
           ],
         ),
@@ -411,6 +448,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     double fontSizeFactor = screenWidth * 0.01;
 
     return Scaffold(
@@ -425,12 +463,19 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
               if (isLoading.value)
                 Center(child: CircularProgressIndicator())
               else
-                Expanded(
-                  child: LineChartWidget(
-                    chartData: currentChartData.value,
-                    days: isYearView.value ? monthLabels : currentDays,
-                    selectedButton: selectedButton,
-                    daysInMonth: isYearView.value ? 12 : _getDaysInMonth(selectedYear.value, selectedMonth.value),
+                Container(
+                  height: screenHeight / 2.6,
+                  child: Expanded(
+                    child: LineChartWidget(
+                      chartData: currentChartData.value,
+                      days: isYearView.value ? monthLabels : currentDays,
+                      selectedButton: selectedButton,
+                      daysInMonth: isYearView.value
+                          ? 12
+                          : _getDaysInMonth(
+                              selectedYear.value, selectedMonth.value),
+                      isExpandedView: true,
+                    ),
                   ),
                 ),
             ],

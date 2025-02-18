@@ -445,6 +445,7 @@ Future postDataApiCall(String urlPath, Map body) async {
     );
     String s= picked!.start.toString().substring(0,10)+","+ picked.end.toString().substring(0,10);
     getAutoMationsTransactionsCustom(s, context,'custom');
+    print("...........lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll");
     print(s);
     selectedButton.value='Custom';
     getGraphData.value=false;
