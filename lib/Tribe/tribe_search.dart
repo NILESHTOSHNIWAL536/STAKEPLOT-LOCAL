@@ -6,6 +6,7 @@ import "package:flutter_application_code_stakeplot/Tribe/userDetails.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/bottomNavigations.dart";
 import "package:flutter_application_code_stakeplot/loader.dart";
+import "package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import 'package:http/http.dart' as http;
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
@@ -183,12 +184,18 @@ class _TribeSearchState extends State<TribeSearch> {
         onTap: () {
           //  UserDetails
           // Navigator.pushNamed(context, '/UserDetails');
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => UserDetails(data: data, ids: ids),
-            ),
-          );
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => UserDetails(data: data, ids: ids),
+          //   ),
+          // );
+           Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CommunityUserProfile(data: data,ids:[],flag: true,),
+                      ),
+                  );
         },
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
