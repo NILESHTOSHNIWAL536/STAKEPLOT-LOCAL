@@ -450,10 +450,10 @@ Future postDataApiCall(String urlPath, Map body) async {
     selectedButton.value='Custom';
     getGraphData.value=false;
     // if (picked != null && picked != selectedDateRange) {
-      
+
         // selectedDateRange = picked;
         // selectedButton = 'Custom';
-    
+
     // }
   }
 

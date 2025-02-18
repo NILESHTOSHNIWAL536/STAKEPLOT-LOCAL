@@ -46,7 +46,7 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
                       child: Icon(
                         Icons.arrow_back_sharp,
                         color: widget.isBack
-                            ? Colorcodes.white
+                            ? Colorcodes.black
                             : Colors.transparent,
                       )),
                   Text((widget.name),
