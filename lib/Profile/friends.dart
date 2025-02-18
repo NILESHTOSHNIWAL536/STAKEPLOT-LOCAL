@@ -12,6 +12,7 @@ import "package:flutter_application_code_stakeplot/colorcodes.dart";
 import "package:flutter_application_code_stakeplot/controller.dart/userController.dart";
 import "package:flutter_application_code_stakeplot/headersList/userProfileHeader.dart";
 import "package:flutter_application_code_stakeplot/profile.dart";
+import "package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart";
 import "package:get/get.dart";
 import 'package:http/http.dart' as http;
 
@@ -97,7 +98,7 @@ class _FriendsState extends State<Friends> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => UserDetails(data: data,ids:[],flag: true,),
+                        builder: (context) => CommunityUserProfile(data: data,ids:[],flag: true,),
                       ),
                   );
             },

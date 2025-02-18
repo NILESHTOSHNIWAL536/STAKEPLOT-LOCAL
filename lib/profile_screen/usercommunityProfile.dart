@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -8,19 +10,44 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
+import 'package:get/get.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
-class CommunityProfileScreen extends StatefulWidget {
-  String id;
-   CommunityProfileScreen({super.key,required this.id});
+class CommunityUserProfile extends StatefulWidget {
+   final data;
+  final List ids;
+  bool flag = false;
+  CommunityUserProfile(
+      {Key? key, required this.data, required this.ids, this.flag = false})
+      : super(key: key);
+
 
   @override
-  State<CommunityProfileScreen> createState() => _CommunityProfileScreenState();
+  State<CommunityUserProfile> createState() => _CommunityProfileScreenState();
 }
 
-class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
-  File? _profileImage;
+class _CommunityProfileScreenState extends State<CommunityUserProfile> {
+
+  TextEditingController about = TextEditingController();
+  String dataReport = "";
+
+  List getTrendingData = [];
+  RxList getuerPost = [].obs;
+  List frds = [];
+  bool findData = true;
+  RxBool finduserPost = true.obs;
+  bool already = false;
+  RxInt count = 0.obs;
+  RxInt score = 0.obs;
+  RxBool fl = false.obs;
+  RxBool reload = false.obs;
+  RxString buttonValue="Add".obs;
+  RxString frdRequest="Friend Request not sent before".obs;
+  RxString frdRequestCheck="Friend Request not sent before".obs;
+   File? _profileImage;
   File? _coverImage;
 
   final dummyData = {
@@ -33,23 +60,100 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
   String _networkImageUrl =
       "https://static.vecteezy.com/system/resources/thumbnails/045/713/367/small_2x/aesthetic-leaves-on-a-dark-background-free-photo.jpg"; // This can be dynamically set
 
-  Future<void> _pickImage(ImageSource source, String type) async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: source);
-    if (pickedFile != null) {
-      setState(() {
-        if (type == "profile") {
-          _profileImage = File(pickedFile.path);
-        } else {
-          _coverImage = File(pickedFile.path);
-        }
-      });
-    }
-  }
+
 
   @override
   void initState() {
-      getuserPost(widget.id);
+      getDis();
+      getStatus();
+      getConnections();
+  }
+
+  void getDis() async {
+    final SharedPreferences _pref = await SharedPreferences.getInstance();
+    var accessToken = _pref.getString("accessToken");
+    final response = await http.get(
+      Uri.parse('${url}/post/userDiscussions/${widget.data['_id']}'),
+      // Uri.parse('https://stakeplot.in/api/v1/post/all'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Authorization": "$accessToken",
+      },
+    );
+    print(widget.data);
+    printData(response);
+    if (response.statusCode == 200) {
+      var his = jsonDecode(response.body);
+      var obj = his['data'];
+       
+       setState(() {
+        getTrendingData = obj;
+        findData = false;
+       });
+      getuerPost.clear();
+      getuerPost.addAll(obj);
+      getTrendingData.forEach((element) {
+        postCount[element["_id"]] =
+            element['upvotes'] < 0 ? 0 : element['upvotes'];
+      });
+   
+    } else {}
+  }
+
+  void getConnections() async {
+    final SharedPreferences _pref = await SharedPreferences.getInstance();
+    var accessToken = _pref.getString("accessToken");
+    
+    final response = await http.get(
+      Uri.parse(
+          '${url}/user/connections/${widget.data['_id']}'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Authorization": "$accessToken",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var his = jsonDecode(response.body);
+      
+       count.value = his['data']['connections'];
+       score.value = his['data']['score'];
+      // fl.value = !fl.value;
+    } else {}
+  }
+  void getStatus() async {
+    final SharedPreferences _pref = await SharedPreferences.getInstance();
+    var accessToken = _pref.getString("accessToken");
+    
+    final response = await http.post(
+      Uri.parse("${url}/user/friend/acceptRequestStatus"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Authorization": "$accessToken",
+      },
+       body: jsonEncode({
+          'userName':widget.data['name'],
+          'friendUserId':widget.data['_id'],
+       }),
+    );
+
+    if (response.statusCode == 200) {
+      var his = jsonDecode(response.body);
+       frdRequestCheck.value=his['data'];
+        if(frdRequestCheck.value=="Friend Request already sent"){
+                    buttonValue.value="Requested";
+        }
+        else if(frdRequestCheck.value=="Friend Request not sent before"){
+                    buttonValue.value="Add";
+        }
+        else if(frdRequestCheck.value=="User is already your friend")
+        {
+                    buttonValue.value="Remove";
+        }else{
+             buttonValue.value="Accept";
+        }
+      
+    } else {}
   }
 
   @override
@@ -69,13 +173,13 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
             
             Column(
               children: [
-                Text(userName.value.toString(),
+                Text(widget.data['name'].toString(),
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w600,
                         //fontSize: MediaQuery.of(context).size.width * 0.04,
                         //fontSize: 12,
                         color: AppColors.bg1)),
-                Text(email.value.toString(),
+                Text(widget.data['email'].toString(),
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w400,
                         //fontSize: MediaQuery.of(context).size.width * 0.04,
@@ -145,7 +249,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
           children: [
             Container(
               child: Column(
-                children: myPostList
+                children: getTrendingData
                     .map((item) => (item['isPoll'] ?? false)
                         ? const SizedBox.shrink()
                         : PostCard(data: item))
@@ -168,7 +272,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
           children: [
             Container(
                 child: Wrap(
-                    children: myPostList
+                    children: getTrendingData
                         .map((item) => (item['isPoll'] ?? false)
                             ? PostCard(data: item)
                             : SizedBox.shrink())
@@ -236,13 +340,13 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
                   Positioned(
                     top: 140,
                     left:  MediaQuery.of(context).size.width /6.7,
-                    child: networkFriends("Network",friendsList.length.toString(),Icons.person_2_outlined),
+                    child: networkFriends("Network",count.toString(),Icons.person_2_outlined),
                   ),
 
                   Positioned(
                     top: 140,
                     left: MediaQuery.of(context).size.width / 1.45,
-                    child: networkFriends("Posts",myPostList.length.toString(),Icons.post_add),
+                    child: networkFriends("Posts",getTrendingData.length.toString(),Icons.post_add),
                   ),
                   
                   Positioned(
