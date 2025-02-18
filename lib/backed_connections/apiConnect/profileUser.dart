@@ -90,18 +90,14 @@ void  getuserPost(id)async
       "Authorization": "$accessToken",
     },
   );
-
+    // print(url);
+    // printData(response);
       if(response.statusCode==200)
       {
                   var  his=jsonDecode(response.body);
                   var obj=his['data'];
-              
-
-                   
                    myPostList.clear();
                    myPostList.addAll(obj);
-
-
                      myPostList.forEach((element) {
                         postCount[element["_id"]]=element['upvotes'];
                         postCommentCount[element["_id"]]=element['comments'];
