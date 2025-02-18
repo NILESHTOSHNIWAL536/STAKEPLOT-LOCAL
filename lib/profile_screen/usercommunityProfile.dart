@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:get/get.dart';
 import 'dart:io';
@@ -167,7 +168,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
         child: Column(
           children: [
             // Top Cover and Profile Picture
-            topUserProfile(),
+            topUserProfile(widget.data),
            
             const SizedBox(height: 60),
             
@@ -179,7 +180,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
                         //fontSize: MediaQuery.of(context).size.width * 0.04,
                         //fontSize: 12,
                         color: AppColors.bg1)),
-                Text(widget.data['email'].toString(),
+                Text((widget.data['email'] ?? "").toString(),
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w400,
                         //fontSize: MediaQuery.of(context).size.width * 0.04,
@@ -249,11 +250,11 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
           children: [
             Container(
               child: Column(
-                children: getTrendingData
-                    .map((item) => (item['isPoll'] ?? false)
-                        ? const SizedBox.shrink()
-                        : PostCard(data: item))
-                    .toList(),
+                children: findData?[Spinner()] : getTrendingData.length == 0
+                ? [Center(
+                    child: Text("No Post Yet",
+                        style: FontManager().getTextStyle(context)))]
+                :   getTrendingData.map((item) => (item['isPoll'] ?? false)? const SizedBox.shrink(): PostCard(data: item)).toList(),
               ),
             ),
             SizedBox(
@@ -265,18 +266,29 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
     );
   }
 
+
+
   Widget pollWidgets(String type) {
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
           children: [
+            // Container(
+            //     child: Wrap(
+            //         children: getTrendingData
+            //             .map((item) => (item['isPoll'] ?? false)
+            //                 ? PostCard(data: item)
+            //                 : SizedBox.shrink())
+            //             .toList())),
             Container(
-                child: Wrap(
-                    children: getTrendingData
-                        .map((item) => (item['isPoll'] ?? false)
-                            ? PostCard(data: item)
-                            : SizedBox.shrink())
-                        .toList())),
+              child: Column(
+                children: findData?[Spinner()] : getTrendingData.length == 0
+                ? [Center(
+                    child: Text("No Post Yet",
+                        style: FontManager().getTextStyle(context)))]
+                :   getTrendingData.map((item) => !(item['isPoll'] ?? false)? const SizedBox.shrink(): PostCard(data: item)).toList(),
+              ),
+            ),
             SizedBox(
               height: 100,
             ),
@@ -289,7 +301,10 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
 
 
 
-  Widget topUserProfile(){
+  Widget topUserProfile(data){
+     String avatar= data['avatarType'] !=null ? data['avatarType']
+    :data['avatar']!=null?data['avatar']:userAvatar;
+
      return  Stack(
                 clipBehavior: Clip.none,
                 children: [
@@ -356,7 +371,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
                       // onTap: () => _pickImage(ImageSource.gallery, "profile"),
                       child: CircleAvatar(
                         radius: 50,
-                        child: ProfileImage(url: avatar.value),
+                        child: ProfileImage(url:avatar  ??""),
                       ),
                     ),
                   ),

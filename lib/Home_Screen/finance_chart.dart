@@ -347,15 +347,17 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     if (widget.selectedButton.value == 'Week') {
       dataLength = 7; // Always 7 days for a week
       labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    } else {
+    } else { // Custom and Month
       dataLength = widget.daysInMonth;
       labels = List.from(widget.days);
       while (labels.length < dataLength) {
         labels.add((labels.length + 1).toString().padLeft(2, '0'));
       }
       labels = labels.sublist(0, dataLength);
+      
+      // For custom, adjust labels to be more compact
+     
     }
-
     List<ChartData> creditedData = List.generate(dataLength, (index) {
       double value = 0.0;
       if (index < widget.chartData["credited"]!.length) {
