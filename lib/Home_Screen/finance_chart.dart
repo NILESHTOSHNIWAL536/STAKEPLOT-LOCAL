@@ -34,11 +34,41 @@ class _FinancePageState extends State<FinancePage> {
 
   void calledFunctionToFetchData() {
     if (selectedButton.value == "Month") {
+      print("ssuming transactionChatGraph is your data map");
+      //print(totalCredited);
       getAutoMationsTransactionsCustom(getFormattedDate(), context);
+      _calculateTotalSpent();
+      //print("ssuming transactionChatGraph is your data map");
+      //print(totalCredited);
     } else if (selectedButton.value == "Week") {
       getAutoMationsTransactionsCustom(getCurrentWeek(), context, 'Week');
+      _calculateTotalSpent();
     } else {
       getAutoMationsTransactionsCustom(getFormattedDate(), context);
+      _calculateTotalSpent();
+    }
+  }
+int _getDaysInCurrentMonth() {
+    final now = DateTime.now();
+    return DateTime(now.year, now.month + 1, 0).day;
+  }
+  void _calculateTotalSpent() {
+    // Assuming transactionChatGraph is your data map
+    if (transactionChatGraph.containsKey('credited') &&
+        transactionChatGraph.containsKey('debited')) {
+      List<double> credited = transactionChatGraph['credited'] ?? [];
+      List<double> debited = transactionChatGraph['debited'] ?? [];
+
+      // Calculate the sum of credited and debited amounts
+      double totalCredited = credited.fold(0.0, (sum, item) => sum + item);
+      double totalDebited = debited.fold(0.0, (sum, item) => sum + item);
+      print("ssuming transactionChatGraph is your data map");
+      print(totalCredited);
+
+      // Total spent is the difference between credited and debited
+      setState(() {
+        totalSpent = totalCredited - totalDebited;
+      });
     }
   }
 
@@ -59,8 +89,8 @@ class _FinancePageState extends State<FinancePage> {
                   Text(
                     'Weekly spending and cash flow',
                     style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.w500,
-                        fontSize: fontSizeFactor * 4.5,
+                        lWeight: FontWeight.w300,
+                        fontSize: fontSizeFactor * 4.0,
                         color: AppColors.accentColor),
                   ),
                   Row(
@@ -104,6 +134,8 @@ class _FinancePageState extends State<FinancePage> {
                     chartData: transactionChatGraph,
                     days: labels,
                     selectedButton: selectedButton,
+                    daysInMonth: selectedButton == "Week" ? 7 : 
+                                  selectedButton == "Month" ? _getDaysInCurrentMonth() : labels.length,
                   ),
                 ],
               ),
@@ -214,14 +246,16 @@ class LineChartWidget extends StatefulWidget {
   final Map<String, List<double>> chartData;
   final List days;
   final RxString selectedButton;
-  
+  final int daysInMonth;
+  final bool isExpandedView;
 
   const LineChartWidget({
     super.key,
     required this.chartData,
     required this.days,
     required this.selectedButton,
-    
+    required this.daysInMonth,
+    this.isExpandedView = false,
   });
 
   @override
@@ -275,10 +309,11 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Fixed Y-axis labels
-          Container(
-            width: screenWidth * 0.15, // Fixed width for Y-axis labels
-            child: _buildYAxisLabels(fontSizeFactor),
-          ),
+          if (!widget.isExpandedView)
+            Container(
+              width: screenWidth * 0.15,
+              child: _buildYAxisLabels(fontSizeFactor),
+            ),
           // Scrollable chart area
           Expanded(
             child: widget.selectedButton.value != 'Week'
@@ -294,37 +329,72 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   }
 
   Widget getContainerOfGraph(double screenWidth, double fontSizeFactor) {
-    List<ChartData> creditedData = widget.chartData["credited"]!
-        .asMap()
-        .entries
-        .map((entry) => ChartData(widget.days[entry.key], entry.value))
-        .toList();
+    // List<ChartData> creditedData = widget.chartData["credited"]!
+    //     .asMap()
+    //     .entries
+    //     .map((entry) => ChartData(widget.days[entry.key], entry.value))
+    //     .toList();
+    //     print("..........................................");
+    // print(creditedData.toList());
+    // List<ChartData> debitedData = widget.chartData["debited"]!
+    //     .asMap()
+    //     .entries
+    //     .map((entry) => ChartData(widget.days[entry.key], entry.value))
+    //     .toList();
+    int dataLength;
+    List<String> labels;
 
-    List<ChartData> debitedData = widget.chartData["debited"]!
-        .asMap()
-        .entries
-        .map((entry) => ChartData(widget.days[entry.key], entry.value))
-        .toList();
-    //bool isPointTapped = false;
+    if (widget.selectedButton.value == 'Week') {
+      dataLength = 7; // Always 7 days for a week
+      labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    } else {
+      dataLength = widget.daysInMonth;
+      labels = List.from(widget.days);
+      while (labels.length < dataLength) {
+        labels.add((labels.length + 1).toString().padLeft(2, '0'));
+      }
+      labels = labels.sublist(0, dataLength);
+    }
+
+    List<ChartData> creditedData = List.generate(dataLength, (index) {
+      double value = 0.0;
+      if (index < widget.chartData["credited"]!.length) {
+        value = widget.chartData["credited"]![index];
+      }
+      return ChartData(labels[index], value);
+    });
+
+    List<ChartData> debitedData = List.generate(dataLength, (index) {
+      double value = 0.0;
+      if (index < widget.chartData["debited"]!.length) {
+        value = widget.chartData["debited"]![index];
+      }
+      return ChartData(labels[index], value);
+    });
+
+    print("..........................................");
+    print(creditedData);
+    print(debitedData);
+
     return GestureDetector(
       // Handle taps outside the chart lines
 
       behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    // Use a slight delay to ensure point taps are processed first
-                    Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ExpandedChartView(
-                        chartData: widget.chartData,
-                        days: widget.days,
-                        selectedButton: widget.selectedButton.value,
-                        selectedYear: DateTime.now().year,
-                        selectedMonth: DateTime.now().month,
-                      ),
-                    ),
-                  );
-                  },
+      onTap: () {
+        // Use a slight delay to ensure point taps are processed first
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ExpandedChartView(
+              chartData: widget.chartData,
+              days: widget.days,
+              selectedButton: widget.selectedButton.value,
+              selectedYear: DateTime.now().year,
+              selectedMonth: DateTime.now().month,
+            ),
+          ),
+        );
+      },
       child: SizedBox(
           width: screenWidth * (widget.selectedButton.value == 'Week' ? 1 : 2),
           height: MediaQuery.of(context).size.height / 2.6,
@@ -369,17 +439,17 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                   onTap: () {
                     // Use a slight delay to ensure point taps are processed first
                     Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ExpandedChartView(
-                        chartData: widget.chartData,
-                        days: widget.days,
-                        selectedButton: widget.selectedButton.value,
-                        selectedYear: DateTime.now().year,
-                        selectedMonth: DateTime.now().month,
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ExpandedChartView(
+                          chartData: widget.chartData,
+                          days: widget.days,
+                          selectedButton: widget.selectedButton.value,
+                          selectedYear: DateTime.now().year,
+                          selectedMonth: DateTime.now().month,
+                        ),
                       ),
-                    ),
-                  );
+                    );
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),
