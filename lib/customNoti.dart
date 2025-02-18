@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
 
 
-RxBool hasGetNewNotifications=false.obs;
-
 class NotificationsBudget extends StatelessWidget {
 Widget child;
  NotificationsBudget({ Key? key, required  this.child }) : super(key: key);
+
+  @override
+  void initState() {
+  }
 
   @override
   Widget build(BuildContext context){
@@ -41,34 +45,46 @@ Widget child;
     //                   child: SvgPicture.asset(HomePageIcons.notification,
     //                       height: 30, width: 15),
     //           );
-   return  Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                   InkWell(
-                      onTap: (){
-                          Navigator.pushNamed(context, '/Notifications');
-                      },
-                      child: SvgPicture.asset(HomePageIcons.notification,
-                          height: 30, width: 15),
-              ),
-               !hasGetNewNotifications.value?   SizedBox.shrink():   Positioned(
-                      right: 0,
-                      top: 0,
-                      child: Container(
-                        width: 12,
-                        height: 12,
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                          shape: BoxShape.circle,
+   return  Container(
+     width: MediaQuery.of(context).size.width/4,
+    //  color: Colorcodes.billBody,
+     padding: EdgeInsets.symmetric(horizontal: 10),
+     child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                     Container(
+                       padding: EdgeInsets.all(8),
+                       decoration: BoxDecoration(
+                          color: Colorcodes.white,
+                          borderRadius: BorderRadius.circular(10)
+                       ),
+                       child: InkWell(
+                          onTap: (){
+                              Navigator.pushNamed(context, '/Notifications');
+                          },
+                          child: SvgPicture.asset(HomePageIcons.notification,
+                              height: 30, width: 15,color: Colorcodes.black,),
+                                       ),
+                     ),
+             Obx(()=> !hasGetNewNotifications.value?   SizedBox.shrink():   Positioned(
+                        right: 10,
+                        top: 9,
+                        child: Container(
+                          width: 7,
+                          height: 7,
+                          decoration: const BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-           );
+                      )),
+                    ],
+                  ),
+                ],
+             ),
+   );
   }
 }

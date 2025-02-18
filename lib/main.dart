@@ -69,7 +69,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         scaffoldBackgroundColor: AppColors.backgroundColor,
-        useMaterial3: true,
+        // useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
        initialRoute: '/', 

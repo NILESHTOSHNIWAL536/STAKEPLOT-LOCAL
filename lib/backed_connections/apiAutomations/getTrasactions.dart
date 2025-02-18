@@ -110,8 +110,7 @@ double getDouble(data){
 
 void getAutoMationsTransactionsCustom(date, context,[weekORmonth='month']) async {
   String urlPath="${url}/transactionauto/getAllCustomTransactions/${weekORmonth.toString().toLowerCase()}/${date}";
-  print('urlPath');
-  print(urlPath);
+
   var response = await getDataApiCall(urlPath);
   
   trasactionsDataCreditWeekly.clear();
@@ -182,16 +181,17 @@ List<String> getDaysInMonth(String yearMonth) {
   for (int i = 1; i <= daysInMonth; i++) {
     days.add('${i.toString().padLeft(2, '0')}');
   }
-   print(days);
+   
   return days;
 }
 
 Future<http.Response> getDataApiCall(urlPath) async {
+  print(urlPath);
   final SharedPreferences pref = await SharedPreferences.getInstance();
   // pref.setString("accessToken",
   //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMwYWZiZmNiMTcxMDc2NWFiOGU5MCIsImlhdCI6MTczNzcwMzU3NCwiZXhwIjoxNzQyODg3NTc0fQ.zYUUmoy_xlaZwdvM8r4KDOZNADlLyxPirqDm0avEUXg");
   var accessToken = pref.getString("accessToken");
- 
+  print(accessToken);
   final response = await http.get(
     Uri.parse(urlPath),
     headers: <String, String>{

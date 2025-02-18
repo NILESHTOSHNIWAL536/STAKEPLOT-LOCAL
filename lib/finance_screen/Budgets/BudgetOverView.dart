@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class BudgetOverView extends StatefulWidget {
   final String amount;
@@ -247,10 +248,63 @@ class _BudgetOverViewState extends State<BudgetOverView> {
 
     categoriesDividedList.clear();
     categoriesDividedList.addAll(List.from(categoryList));
-    print('Categorieslisttttttttttt to display: $categoryList');
+    
   }
 
+
   Future<Map<String, double>> adjustBudget(
+    double totalAmount,
+    String updatedCategory,
+    double updatedAmount,
+    List<String> selectedCategories,
+    ) async {
+   updatedAmounts[updatedCategory]=updatedAmount;
+  // Step 1: Calculate the total weight of selected categories
+  Map<String, double> subcategoryWeights = {};
+  categoryWeights.forEach((mainCategory, data) {
+    data["subcategories"].forEach((subCategory, weight) {
+      subcategoryWeights[subCategory] = weight.toDouble();
+    });
+  });
+
+  Map<String, double> selectedWeights = {
+    for (var category in selectedCategories)
+      if (subcategoryWeights.containsKey(category))
+        category: subcategoryWeights[category]!
+  };
+  
+  // //updatedAmounts[updatedCategory]=updatedAmount;
+  // double totalSelectedWeight = selectedWeights.values.fold(0, (a, b) => (a + b));
+
+  double totalSelectedWeight = selectedWeights.entries
+      .where((entry) => !updatedAmounts.containsKey(entry.key))
+      .fold(0, (sum, entry) => sum + entry.value);
+  
+  
+   
+  
+  // Step 2: Calculate the remaining budget after updated values
+  double usedBudget = updatedAmounts.values.fold(0, (a, b) => a + b);
+  double remainingBudget = totalAmount - usedBudget;
+
+  // Step 3: Distribute remaining budget proportionally based on category weights
+  Map<String, double> finalBudgets = {};
+  selectedWeights.forEach((subCategory, weight) {
+    if (!updatedAmounts.containsKey(subCategory)) {
+      finalBudgets[subCategory] = ((remainingBudget * weight) / totalSelectedWeight)
+              .clamp(0, double.infinity);
+    } else {
+      finalBudgets[subCategory] = updatedAmounts[subCategory]!; // Keep previous updates
+    }
+  });
+
+  // Step 4: Round all amounts to 2 decimal places
+  finalBudgets.updateAll((key, value) => (value * 100).roundToDouble() / 100);
+
+  return finalBudgets;
+}
+
+  Future<Map<String, double>> adjustBudget2(
       double totalAmount,
       String updatedCategory,
       double updatedAmount,
