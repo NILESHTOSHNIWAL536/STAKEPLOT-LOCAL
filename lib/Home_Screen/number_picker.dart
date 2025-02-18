@@ -85,10 +85,10 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                      Obx(()=> Text(
-                        '\u{20B9}${ hideBackAccountPassword.value? balance.value:"******"}',
+                        '\u{20B9} ${ hideBackAccountPassword.value? balance.value:"*********"}',
                         style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.normal,
-                            fontSize: 16,
+                            lWeight: FontWeight.bold,
+                            fontSize: 20,
                             color: AppColors.backgroundColor),
                       )),
 
