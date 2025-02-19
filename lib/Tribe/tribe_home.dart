@@ -1171,42 +1171,37 @@ Widget vote(context, dataObj, data) {
   String likeKey = "liked" + dataObj["_id"];
   bool isLiked = likedList.contains(likeKey);
   return Obx(() => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 4),
+    padding: const EdgeInsets.symmetric(horizontal: 15),
     child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              //color: Colorcodes.iconBackGround,
-              padding: EdgeInsets.symmetric(horizontal: 7, vertical: 3),
               child: Row(
                 children: [
-                  Container(
-                    height: 25,
-                    child: GestureDetector(
-                      onTap: () {
-                        String likeKey = "liked" + dataObj["_id"];
-                        bool isLiked = likedList.contains(likeKey);
-    
-                        // Toggle like status
-                        if (isLiked) {
-                          likedList.remove(likeKey);
-                          postCount[idData] = postCount[idData]! - 1;
-                          if (postCount[idData]! < 0) {
-                            postCount[idData] = 0;
-                          }
-                        } else {
-                          likedList.add(likeKey);
-                          postCount[idData] = postCount[idData]! + 1;
+                  GestureDetector(
+                    onTap: () {
+                      String likeKey = "liked" + dataObj["_id"];
+                      bool isLiked = likedList.contains(likeKey);
+                      
+                      // Toggle like status
+                      if (isLiked) {
+                        likedList.remove(likeKey);
+                        postCount[idData] = postCount[idData]! - 1;
+                        if (postCount[idData]! < 0) {
+                          postCount[idData] = 0;
                         }
-    
-                        // Update the server with new vote status
-                        upvoteGlobal(context, "Post", dataObj["_id"], dataObj);
-                        reRender.value = !reRender.value;
-                      },
-                      child: likeIcon(
-                          context, likedList.contains("liked" + dataObj["_id"])),
-                    ),
+                      } else {
+                        likedList.add(likeKey);
+                        postCount[idData] = postCount[idData]! + 1;
+                      }
+                      
+                      // Update the server with new vote status
+                      upvoteGlobal(context, "Post", dataObj["_id"], dataObj);
+                      reRender.value = !reRender.value;
+                    },
+                    child: likeIcon(
+                        context, likedList.contains("liked" + dataObj["_id"])),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -1218,7 +1213,7 @@ Widget vote(context, dataObj, data) {
                           : (postCount[dataObj['_id']].toString()),
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.w400,
-                          fontSize: 15,
+                          fontSize: 20,
                           color: AppColors.bg1),
                     ),
                   ),
@@ -1248,14 +1243,13 @@ Widget vote(context, dataObj, data) {
                               : postCommentCount[idData].toString(),
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.w400,
-                              fontSize: 12,
+                              fontSize: 20,
                               color: AppColors.likesharecommentCount),
                         ),
-                        const SizedBox(width: 7),
                       ],
                     ),
                   ),
-                  const SizedBox(width: 15),
+                  const SizedBox(width: 10),
                   Container(
                     child: InkWell(
                       onTap: () {
@@ -1269,7 +1263,7 @@ Widget vote(context, dataObj, data) {
                       },
                       child: SvgPicture.asset(
                         LikeComment.share,
-                        height: 25,
+                        height: 30,
                       ),
                     ),
                   ),
@@ -1288,7 +1282,7 @@ Widget likeIcon(BuildContext context, bool isLiked) {
       ? Icon(
           Icons.heart_broken,
           color: Colorcodes.red,
-          size: 30,
+          size: 25,
         )
       : SvgPicture.asset(
           LikeComment.likes, // Path to your outlined heart SVG

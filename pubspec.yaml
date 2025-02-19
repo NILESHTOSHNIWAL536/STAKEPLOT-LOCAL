@@ -77,6 +77,8 @@ dependencies:
   week_of_year: ^2.2.0
   font_awesome_flutter: ^10.8.0
   webview_flutter: ^4.10.0
+  cached_network_image: ^3.4.1
+  getwidget: ^5.0.0
   
   # sms_otp_auto_verify: ^2.2.0
 

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -12,9 +13,11 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/readmore.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:getwidget/components/image/gf_image_overlay.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:readmore/readmore.dart';
@@ -195,44 +198,26 @@ class _PostCardState extends State<PostCard> {
                                 : dataObj['chartType'] == "bargraph"
                                     ? barGraph(dataObj)
                                     : pieChart(dataObj)),
-                    // Readmore(str:dataObj['description']['message'].toString(),),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(bottom: 10.0),
-                    //   child: Text((dataObj['description']['message']),
-                    //       style: FontManager().getTextStyle(context,
-                    //           lWeight: FontWeight.w400,
-
-                    //           fontSize: 16,
-                    //           color: Colors.black)),
-                    // ),
-
-                    const SizedBox(
-                      height: 20,
-                    ),
+                  
 
                     dataObj['image'] != null &&
                             (dataObj['image'] != "none" &&
                                 dataObj['image'] != "")
-                        ? Center(
-                            // child: imageget(
-                            //     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLjPJGXPue6XcmdBqKKIYLEb1VUmExkIr0zA&s"),
-                            // child: imageget(dataObj['image']),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 15),
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height / 4.0,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                    20), // Apply border radius
-                                child: Image.network(
-                                  dataObj['image'],
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
+                        ? Padding(
+                          padding:  EdgeInsets.symmetric(vertical: Colorcodes.borderRadius),
+                          child: Center(
+                              child: GFImageOverlay(
+                                          width: MediaQuery.of(context).size.width / 1.3,
+                                          height: MediaQuery.of(context).size.height/3,
+                                          shape: BoxShape.rectangle,
+                                          borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
+                                          image: NetworkImage(dataObj['image']),
+                                          colorFilter:ColorFilter.mode(Colors.black.withOpacity(0.0),
+                                          BlendMode.exclusion
+                                        ),
+                                    ),
                             ),
-                          )
+                        )
                         //  child: GFImageOverlay(
                         //           width: MediaQuery.of(context).size.width / 1.3,
                         //           height: MediaQuery.of(context).size.height/3,
