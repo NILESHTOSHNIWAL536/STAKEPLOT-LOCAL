@@ -478,16 +478,20 @@ class ShowAllUsersScreen extends StatelessWidget {
                 tabs: const [Tab(text: 'Payable'), Tab(text: 'Owed')],
               ),
             ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 1.609,
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 0, horizontal: 12.0),
-                child: TabBarView(
-                  children: [
-                    Center(child: usersDuelist()),
-                    Center(child: userslist()),
-                  ],
+            SingleChildScrollView(
+              child: Expanded(
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height / 1.24,
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 0, horizontal: 12.0),
+                    child: TabBarView(
+                      children: [
+                        Center(child: usersDuelist()),
+                        Center(child: userslist()),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),

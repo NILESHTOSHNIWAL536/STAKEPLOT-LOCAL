@@ -27,8 +27,12 @@ void getRemainders(context) async {
   if (getFlagOfResponse(responce)) {
     var his = jsonDecode(responce.body);
     var userDue = his['data']['PendingBills'];
+    var userDue2 = his['data']['PendingPayments'];
+    var userDue3 = his['data']['PendingSplits'];
     dueAmountRemainders.clear();
     dueAmountRemainders.addAll(userDue);
+    dueAmountRemainders.addAll(userDue2);
+    dueAmountRemainders.addAll(userDue3);
     getdueUsers.value = !getdueUsers.value;
   }
   
