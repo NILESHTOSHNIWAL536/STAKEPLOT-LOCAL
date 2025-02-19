@@ -20,6 +20,7 @@ import 'dart:async';
 String bankImage =
     "https://static.vecteezy.com/system/resources/thumbnails/023/364/757/small_2x/3d-illustration-of-bank-building-and-money-bag-png.png";
 
+
 class ShareAccountLogin extends StatefulWidget {
   bool flag = false;
   ShareAccountLogin({Key? key, this.flag = false}) : super(key: key);
@@ -375,3 +376,4 @@ Widget getButton(context, str,[color=AppColors.primaryColor,textColor=AppColors.
     ),
   );
 }
+
