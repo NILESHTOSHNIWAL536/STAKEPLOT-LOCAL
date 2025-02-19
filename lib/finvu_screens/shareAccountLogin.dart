@@ -360,17 +360,17 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
 
 }
 
-Widget getButton(context, str) {
+Widget getButton(context, str,[color=AppColors.primaryColor,textColor=AppColors.bg5]) {
   return Container(
     width: MediaQuery.of(context).size.width / 1.1,
     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
     decoration: BoxDecoration(
-        color: AppColors.primaryColor, borderRadius: BorderRadius.circular(24)),
+        color: color, borderRadius: BorderRadius.circular(24)),
     child: Center(
       child: Text(
         str,
         style: FontManager().getTextStyle(context,
-            lWeight: FontWeight.bold, fontSize: 15, color: AppColors.bg5),
+            lWeight: FontWeight.bold, fontSize: 15, color:textColor ),
       ),
     ),
   );

@@ -4,9 +4,14 @@ import "package:flutter/widgets.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Tribe/userDetails.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
+import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends.dart";
 import "package:flutter_application_code_stakeplot/bottomNavigations.dart";
+import "package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart";
+import "package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart";
 import "package:flutter_application_code_stakeplot/loader.dart";
+import "package:flutter_application_code_stakeplot/profile.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart";
+import "package:get/get.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import 'package:http/http.dart' as http;
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
@@ -28,20 +33,64 @@ class _TribeSearchState extends State<TribeSearch> {
   List frdsList = [];
   List frdsListOrigin = [];
   bool frdsThere = false;
+  
+  TextEditingController about = TextEditingController();
+  String dataReport = "";
+  List getTrendingData = [];
+  RxList getuerPost = [].obs;
+  List frds = [];
+  bool findData = true;
+  RxBool finduserPost = true.obs;
+  bool already = false;
+  RxInt count = 0.obs;
+  RxInt score = 0.obs;
+  RxBool fl = false.obs;
+  RxBool reload = false.obs;
+  RxString buttonValue="Add".obs;
+  RxString frdRequest="Friend Request not sent before".obs;
+  RxString frdRequestCheck="Friend Request not sent before".obs;
 
   @override
   void initState() {
     super.initState();
     getTransaction();
-    // getNotifications();
+      // getDis();
+      // getStatus();
+      // getConnections();
   }
 
-  void getNotifications() async {
+
+  void getDis(data) async {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
     final response = await http.get(
-      Uri.parse('${url}/user/myNotifications'),
+      Uri.parse('${url}/post/userDiscussions/${data['_id']}'),
       // Uri.parse('https://stakeplot.in/api/v1/post/all'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Authorization": "$accessToken",
+      },
+    );
+   
+    if (response.statusCode == 200) {
+      var his = jsonDecode(response.body);
+      var obj = his['data'];
+       
+       setState(() {
+        getTrendingData = obj;
+
+       });
+   
+    } else {}
+  }
+
+  void getConnections(data) async {
+    final SharedPreferences _pref = await SharedPreferences.getInstance();
+    var accessToken = _pref.getString("accessToken");
+    
+    final response = await http.get(
+      Uri.parse(
+          '${url}/user/connections/${data['_id']}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Authorization": "$accessToken",
@@ -50,18 +99,51 @@ class _TribeSearchState extends State<TribeSearch> {
 
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
-      var obj = his['data'];
-
-      obj.forEach((e) {
-        if (e['notificationMessage']['type'] == "friendRequest") {
-          e = e['notificationMessage'];
-          ids.add(e['from_id']);
-        }
+      
+      setState(() {
+       count.value = his['data']['connections'];
       });
-      //
+      // fl.value = !fl.value;
+    
+    } else {}
+  }
+  void getStatus(data) async {
+    final SharedPreferences _pref = await SharedPreferences.getInstance();
+    var accessToken = _pref.getString("accessToken");
+    
+    final response = await http.post(
+      Uri.parse("${url}/user/friend/acceptRequestStatus"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Authorization": "$accessToken",
+      },
+       body: jsonEncode({
+          'userName':data['name'],
+          'friendUserId':data['_id'],
+       }),
+    );
+
+    if (response.statusCode == 200) {
+      var his = jsonDecode(response.body);
+       frdRequestCheck.value=his['data'];
+        if(frdRequestCheck.value=="Friend Request already sent"){
+                    buttonValue.value="Requested";
+        }
+        else if(frdRequestCheck.value=="Friend Request not sent before"){
+                    buttonValue.value="Add";
+        }
+        else if(frdRequestCheck.value=="User is already your friend")
+        {
+                    buttonValue.value="Remove";
+        }else{
+             buttonValue.value="Accept";
+        }
+      
     } else {}
   }
 
+
+ 
   void getTransaction() async {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
@@ -182,20 +264,12 @@ class _TribeSearchState extends State<TribeSearch> {
       child: Center(
           child: InkWell(
         onTap: () {
-          //  UserDetails
-          // Navigator.pushNamed(context, '/UserDetails');
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => UserDetails(data: data, ids: ids),
-          //   ),
-          // );
-           Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CommunityUserProfile(data: data,ids:[],flag: true,),
-                      ),
-                  );
+          
+          getDis(data);
+          getStatus(data);
+          getConnections(data);
+
+          showmodalWidget(data);
         },
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
@@ -243,4 +317,142 @@ class _TribeSearchState extends State<TribeSearch> {
       )),
     );
   }
+
+
+void showmodalWidget(data){
+       showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) {
+                                    return getScreen(data);
+                            },
+   );
+
+}
+
+
+  Widget getScreen(data){
+     String avatar= data['avatarType'] !=null ? data['avatarType']
+    :data['avatar']!=null?data['avatar']:userAvatar;
+
+      return Container(
+         width: MediaQuery.of(context).size.width,
+         height: MediaQuery.of(context).size.height/2.4,
+         decoration: BoxDecoration(
+        //  color: Colorcodes.white,
+         borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(70),
+          topRight: Radius.circular(70)
+         )
+
+         ),
+         child: Column(
+           children: [
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  width: MediaQuery.of(context).size.width/6,
+                  height: 3,
+                  decoration: BoxDecoration(
+                     color: AppColors.primaryColor,
+                     borderRadius: BorderRadius.circular(10)
+                     
+                  ),
+                
+                ),
+                const SizedBox(height: 20,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                   networkFriends("Network",count.toString(),Icons.person_2_outlined),
+                    CircleAvatar(
+                      radius: 50,
+                      child: ProfileImage(url:avatar  ??""),
+                    ),
+                    networkFriends("Posts",getTrendingData.length.toString(),Icons.post_add),
+                  ],
+                ),
+                const SizedBox(height: 5,),     
+                Text(data['name'].toString(),
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.w600,
+                        //fontSize: MediaQuery.of(context).size.width * 0.04,
+                        //fontSize: 12,
+                        color: AppColors.bg1)),
+                Text((data['email'] ?? "").toString(),
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.w400,
+                        //fontSize: MediaQuery.of(context).size.width * 0.04,
+                        //fontSize: 12,
+                        color: AppColors.userName)),
+                const SizedBox(height:30),
+
+                 InkWell(
+                  onTap: (){
+                       if (buttonValue.value=="Remove") {
+                getRemoveFrds(context, data['_id']);
+                 buttonValue.value="Add";
+            } else if (buttonValue.value=="Add"){
+                buttonValue.value="Requested";
+                addUsersendRequest(data['_id'], data['name'], context);
+            }
+              else if(buttonValue.value=="Requested"){
+                   buttonValue.value="Add";
+                   removeRequest(data['_id'], data['name'], context);
+              }
+            else {
+               buttonValue.value="Remove";
+               addUserAsFrd(data['_id'], context);
+            }
+                  },
+                   child: Padding(
+                     padding: const EdgeInsets.symmetric(vertical: 10),
+                     child:Obx(()=> getButton(context, buttonValue.value =="Add" ? "Connect":buttonValue.value)),
+                   ),
+                 ),
+
+                 GestureDetector(
+                  onTap: (){
+                     Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CommunityUserProfile(data: data,ids:[],flag: true,),
+                      ),
+                    );
+                  },
+                  child: getButton(context, "View Profile",AppColors.bg5,AppColors.primaryColor)),
+
+                     
+
+
+           ],
+         ),
+      );
+   }
+
+
+   Widget networkFriends(String network,String count,IconData icon){
+      return Column(
+        children: [
+          Container(
+              padding: EdgeInsets.symmetric(vertical: 5,horizontal: 14),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                      color: AppColors.primaryColor,
+                      width: .5
+                  ),
+              ),
+              child:Row(
+                children: [
+                   Icon(icon,size: 20,),
+                   textStyle(context: context,text: count.toString(),fontWeight: FontWeight.bold,fontsize: 12),
+                ],
+              )  
+          ),
+          const SizedBox(height: 5,),
+          textStyle(context: context,text: network.toString(),fontWeight: FontWeight.w400,fontsize: 12),
+        ],
+      );
+  }
+
 }

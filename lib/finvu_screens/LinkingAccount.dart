@@ -494,37 +494,55 @@ class _LinkingAccountState extends State<LinkingAccount> {
             const SizedBox(
               height: 10,
             ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 20),
+            //   child: PinCodeTextField(
+            //     appContext: context,
+            //     length: _otpCodeLength,
+            //     controller: otpController,
+            //     keyboardType: TextInputType.number,
+            //     autoFocus: true,
+            //     animationType: AnimationType.fade,
+            //     pinTheme: PinTheme(
+            //       shape: PinCodeFieldShape.box,
+            //       borderRadius: BorderRadius.circular(10),
+            //       fieldHeight: MediaQuery.of(context).size.width * 0.12,
+            //       fieldWidth: MediaQuery.of(context).size.width * 0.12,
+            //       activeFillColor: Colors.white,
+            //       activeColor: Colors.blue,
+            //       selectedFillColor: Colors.white,
+            //       selectedColor: Colors.blue,
+            //       inactiveFillColor: Colors.grey[200],
+            //       inactiveColor: Colors.grey,
+            //     ),
+            //     enableActiveFill: true,
+            //     textStyle: TextStyle(fontSize: 20, color: Colors.black),
+            //     onChanged: (value) {
+            //       _otpCode.value = value;
+            //       _isOtpValid.value = value.length == _otpCodeLength;
+            //     },
+            //   ),
+            // ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: PinCodeTextField(
-                appContext: context,
-                length: _otpCodeLength,
-                controller: otpController,
-                keyboardType: TextInputType.number,
-                autoFocus: true,
-                animationType: AnimationType.fade,
-                pinTheme: PinTheme(
-                  shape: PinCodeFieldShape.box,
-                  borderRadius: BorderRadius.circular(10),
-                  fieldHeight: MediaQuery.of(context).size.width * 0.12,
-                  fieldWidth: MediaQuery.of(context).size.width * 0.12,
-                  activeFillColor: Colors.white,
-                  activeColor: Colors.blue,
-                  selectedFillColor: Colors.white,
-                  selectedColor: Colors.blue,
-                  inactiveFillColor: Colors.grey[200],
-                  inactiveColor: Colors.grey,
-                ),
-                enableActiveFill: true,
-                textStyle: TextStyle(fontSize: 20, color: Colors.black),
-                onChanged: (value) {
-                  _otpCode.value = value;
-                  _isOtpValid.value = value.length == _otpCodeLength;
-                },
-              ),
-            ),
+  padding: const EdgeInsets.symmetric(horizontal: 20),
+  child: TextField(
+    controller: otpController,
+    keyboardType: TextInputType.number,
+    decoration: InputDecoration(
+      hintText: 'Enter OTP',
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.black12)
+      ),
+    ),
+    onChanged: (value) {
+      _otpCode.value = value;
+      _isOtpValid.value = value.isNotEmpty; // Or some other validation logic
+    },
+  ),
+),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+              padding: const EdgeInsets.fromLTRB(0, 4, 0, 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

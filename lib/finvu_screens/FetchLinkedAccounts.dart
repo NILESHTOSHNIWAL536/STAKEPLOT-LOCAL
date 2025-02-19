@@ -89,7 +89,7 @@ class _DiscoverAccountState extends State<FetchLinkedAccounts> {
         //  print('handleId.value');
         // seletedAccountInfomations
         if(seletedAccountIds.isEmpty){
-           snackBarCalled(context, "Account did not seleted.. pls add account");
+           snackBarCalled(context, "Account did not selected.. pls add account");
            
         }
         fetchAccountData.forEach((FinvuLinkedAccountDetailsInfo finvuInfo){

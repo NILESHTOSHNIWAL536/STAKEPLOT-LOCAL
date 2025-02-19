@@ -14,6 +14,7 @@ import "package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import "package:flutter_application_code_stakeplot/bottomNavigations.dart";
 import "package:flutter_application_code_stakeplot/model/comment.dart";
 import "package:flutter_application_code_stakeplot/profile.dart";
+import "package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart";
 import "package:flutter_svg/svg.dart";
 import "package:get/get.dart";
 import "package:page_transition/page_transition.dart";
@@ -313,15 +314,15 @@ class _TribeHomeState extends State<TribeUnique> {
                       padding: const EdgeInsets.only(left: 10.0),
                       child: GestureDetector(
                         onTap: () {
-                          //                   Navigator.push(
-                          //   context,
-                          //   PageTransition(
-                          //         type: PageTransitionType.fade,
-                          //         duration: Durations.long1,
-                          //         child:TribeChats(),
-                          //         isIos: true,
-                          //   ),
-                          // );
+                         Navigator.push(
+                            context,
+                            PageTransition(
+                                  type: PageTransitionType.fade,
+                                  duration: Durations.long1,
+                                  child:TribeChats(),
+                                  isIos: true,
+                            ),
+                          );
                         },
                         child: Container(
                             height: 40,
@@ -345,7 +346,10 @@ class _TribeHomeState extends State<TribeUnique> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // tribeHeader(context),
-              PostCard(data: widget.dataObj, flag: true),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: PostCard(data: widget.dataObj, flag: true),
+              ),
               uploadData(widget.dataObj),
               SizedBox(
                 height: 100,
@@ -366,7 +370,7 @@ class _TribeHomeState extends State<TribeUnique> {
 
   Widget uploadData(dataObj) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(bottom: 15),
       child: Column(
         children: [
           commentedData(),

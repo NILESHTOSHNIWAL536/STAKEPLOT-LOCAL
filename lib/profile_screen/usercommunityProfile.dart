@@ -34,7 +34,6 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
 
   TextEditingController about = TextEditingController();
   String dataReport = "";
-
   List getTrendingData = [];
   RxList getuerPost = [].obs;
   List frds = [];

@@ -22,15 +22,16 @@ void getRemainders(context) async {
   String urlPath = "${url}/reminders";
   var responce = await getDataApiCall(urlPath);
   print("responce................................");
-   print(responce.body);
+  print(responce.body);
 
   if (getFlagOfResponse(responce)) {
     var his = jsonDecode(responce.body);
-    var userDue = his['data'];
+    var userDue = his['data']['PendingBills'];
     dueAmountRemainders.clear();
     dueAmountRemainders.addAll(userDue);
     getdueUsers.value = !getdueUsers.value;
   }
+  
 }
 
 void getNotifications(context) async {

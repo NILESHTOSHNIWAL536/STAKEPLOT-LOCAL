@@ -993,133 +993,6 @@ class _TribeHomeState extends State<TribeHome> {
                     color: Colorcodes.dropdown))));
   }
 
-// void upvote(context,String str,String objectId,dataObj)async{
-//     final SharedPreferences _pref = await SharedPreferences.getInstance();
-//      var  accessToken=_pref.getString("accessToken");
-//     final response = await http.post(
-//     Uri.parse('${url}/upvote/'),
-//     headers: <String, String>{
-//       'Content-Type': 'application/json; charset=UTF-8',
-//        "Authorization": "$accessToken",
-//     },
-//     body: jsonEncode({
-//             'onModel': str.toString(),
-//             'objectId':objectId,
-//        }),
-//   );
-//       if(response.statusCode==200 || response.statusCode==201){
-//             final body = json.decode(response.body);
-
-//              if(!postListIds.contains(objectId)){
-//                    setState(() {
-//                     dataObj["upvotes"]++;
-//                   });
-//                    snackBarCalled(context,"Liked!",Colors.black);
-//                   postListIds.add(objectId);
-//              }else{
-//                  setState(() {
-//                     dataObj["upvotes"]--;
-//                   });
-//                    snackBarCalled(context,"Removed Liked!",Colors.black);
-//                   postListIds.remove(objectId);
-//              }
-//             //  Navigator.pop(context);
-//             //  Navigator.pushNamed(context, '/TribeHome');
-
-//       }else{
-//            snackBarCalled(context,"error while Liked!",Colors.red);
-//       }
-
-// }
-
-// Widget vote(dataObj){
-//   return  Row(
-//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                       crossAxisAlignment: CrossAxisAlignment.center,
-//                       children: [
-//                         Container(
-//                           padding: EdgeInsets.symmetric(horizontal: 8,vertical: 6),
-//                            decoration: BoxDecoration(
-//                                 border: Border.all(),
-//                                 borderRadius: BorderRadius.circular(100)
-//                            ),
-//                           child: Row(
-//                             children: [
-//                                GestureDetector(
-//                                 onTap: (){
-//                                      upvote(context,"Post",dataObj["_id"],dataObj);
-//                                 },
-//                                 child: upvoteLiked(context),
-
-//                               ),
-//                               Padding(
-//                                 padding: const EdgeInsets.symmetric(horizontal: 5.0),
-//                                 child: Text((dataObj["upvotes"].toString()),
-//                                     style: FontManager().getTextStyle(context,
-//                                         lWeight: FontWeight.w400,
-//                                         fontSize: 18,
-//                                         color: Colors.black)),
-//                               ),
-//                               GestureDetector(
-//                                 onTap: (){
-//                                      downvote(context,"Post",dataObj["_id"],dataObj);
-
-//                                 },
-//                                  child: downvoteLike(context),
-//                                 // child: const Icon(
-//                                 //   Icons.arrow_drop_down_outlined,
-//                                 //   size: 35,
-//                                 //   color: Colors.black,
-//                                 // ),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                         Container(
-//                           child: Row(
-//                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                             children: [
-//                               Container(
-//                                padding: EdgeInsets.symmetric(horizontal: 8,vertical: 6),
-//                                decoration: BoxDecoration(
-//                                 border: Border.all(),
-//                                 borderRadius: BorderRadius.circular(100)
-//                            ),
-//                                 child: Row(
-//                                   children: [
-//                                     Container(
-//                                       height: 25,
-//                                       child: ProfileImage(url: "assets/images/comment.svg",)
-//                                       ),
-//                                       const SizedBox(width: 6,),
-//                               Text(dataObj["comments"].toString(),style: FontManager().getTextStyle(context,
-//                                                      lWeight: FontWeight.w400,
-//                                                      fontSize: 18,
-//                                                      color: Colors.black)),
-//                                const SizedBox(width: 7),
-//                                   ],
-//                                 ),
-//                               ),
-
-//                                const SizedBox(width: 15),
-
-//                               InkWell(
-//                                 onTap: () {
-
-//                            showModalBottomSheet(context: context,
-//                             backgroundColor: Colorcodes.appBarColor,
-//                            builder: (context) {
-//                                 return TribeShare(data: data,dataObj:dataObj);
-//                            },);
-
-//                                 },
-//                                 child: imageurl('assets/images2/share.svg')),
-//                             ],
-//                           ),
-//                         )
-//                       ],
-//                     );
-// }
 }
 
 class SalesData {
@@ -1171,42 +1044,37 @@ Widget vote(context, dataObj, data) {
   String likeKey = "liked" + dataObj["_id"];
   bool isLiked = likedList.contains(likeKey);
   return Obx(() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4),
-        child: Row(
+    padding: const EdgeInsets.symmetric(horizontal: 15),
+    child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              //color: Colorcodes.iconBackGround,
-              padding: EdgeInsets.symmetric(horizontal: 7, vertical: 3),
               child: Row(
                 children: [
-                  Container(
-                    height: 25,
-                    child: GestureDetector(
-                      onTap: () {
-                        String likeKey = "liked" + dataObj["_id"];
-                        bool isLiked = likedList.contains(likeKey);
-
-                        // Toggle like status
-                        if (isLiked) {
-                          likedList.remove(likeKey);
-                          postCount[idData] = postCount[idData]! - 1;
-                          if (postCount[idData]! < 0) {
-                            postCount[idData] = 0;
-                          }
-                        } else {
-                          likedList.add(likeKey);
-                          postCount[idData] = postCount[idData]! + 1;
+                  GestureDetector(
+                    onTap: () {
+                      String likeKey = "liked" + dataObj["_id"];
+                      bool isLiked = likedList.contains(likeKey);
+                      
+                      // Toggle like status
+                      if (isLiked) {
+                        likedList.remove(likeKey);
+                        postCount[idData] = postCount[idData]! - 1;
+                        if (postCount[idData]! < 0) {
+                          postCount[idData] = 0;
                         }
-
-                        // Update the server with new vote status
-                        upvoteGlobal(context, "Post", dataObj["_id"], dataObj);
-                        reRender.value = !reRender.value;
-                      },
-                      child: likeIcon(context,
-                          likedList.contains("liked" + dataObj["_id"])),
-                    ),
+                      } else {
+                        likedList.add(likeKey);
+                        postCount[idData] = postCount[idData]! + 1;
+                      }
+                      
+                      // Update the server with new vote status
+                      upvoteGlobal(context, "Post", dataObj["_id"], dataObj);
+                      reRender.value = !reRender.value;
+                    },
+                    child: likeIcon(
+                        context, likedList.contains("liked" + dataObj["_id"])),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -1218,7 +1086,7 @@ Widget vote(context, dataObj, data) {
                           : (postCount[dataObj['_id']].toString()),
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.w400,
-                          fontSize: 15,
+                          fontSize: 20,
                           color: AppColors.bg1),
                     ),
                   ),
@@ -1248,14 +1116,13 @@ Widget vote(context, dataObj, data) {
                               : postCommentCount[idData].toString(),
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.w400,
-                              fontSize: 12,
+                              fontSize: 20,
                               color: AppColors.likesharecommentCount),
                         ),
-                        const SizedBox(width: 7),
                       ],
                     ),
                   ),
-                  const SizedBox(width: 15),
+                  const SizedBox(width: 10),
                   Container(
                     child: InkWell(
                       onTap: () {
@@ -1269,7 +1136,7 @@ Widget vote(context, dataObj, data) {
                       },
                       child: SvgPicture.asset(
                         LikeComment.share,
-                        height: 25,
+                        height: 30,
                       ),
                     ),
                   ),
@@ -1288,7 +1155,7 @@ Widget likeIcon(BuildContext context, bool isLiked) {
       ? Icon(
           Icons.favorite,
           color: Colorcodes.red,
-          size: 30,
+          size: 25,
         )
        
   : SvgPicture.asset(

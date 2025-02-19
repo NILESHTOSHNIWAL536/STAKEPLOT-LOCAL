@@ -48,34 +48,32 @@ class _CommunityState extends State<Community> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        extendBody: true,
-        
-        backgroundColor: AppColors.backgroundColor,
-        bottomNavigationBar: BottomNavigations(data: 2),
-        body: Padding(
-          padding: const EdgeInsets.all(18.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Welcome Section
-                _buildWelcomeRow(),
-        
-                const SizedBox(height: 16),
-        
-                Obx(() => getTrendingData.length == 0 && findTranding
-                    ? Loader()
-                    : !findTranding && getTrendingData.length == 0
-                        ? Text("No Post yet")
-                        : Obx(()=> getPosted.value? getPostListview()  :getPostListview()),
-                      )
-        
-                
-  
-              ],
-            ),
+    return Scaffold(
+      extendBody: true,
+      backgroundColor: AppColors.backgroundColor,
+      bottomNavigationBar: BottomNavigations(data: 2),
+      body: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Welcome Section
+              const SizedBox(height: 16),
+              _buildWelcomeRow(),
+      
+              // const SizedBox(height: 16),
+      
+              Obx(() => getTrendingData.length == 0 && findTranding
+                  ? Loader()
+                  : !findTranding && getTrendingData.length == 0
+                      ? Text("No Post yet")
+                      : Obx(()=> getPosted.value? getPostListview()  :getPostListview()),
+                    )
+      
+              
+      
+            ],
           ),
         ),
       ),
