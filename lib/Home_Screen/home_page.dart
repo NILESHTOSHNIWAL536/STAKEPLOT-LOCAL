@@ -31,7 +31,7 @@ import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:flutter_application_code_stakeplot/userAvatar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
-import 'package:get/get.dart';  
+import 'package:get/get.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 //import 'dart:io';
 
@@ -41,7 +41,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   final UserController userController = Get.find<UserController>();
 
   @override
@@ -55,29 +54,29 @@ class _HomePageState extends State<HomePage> {
     getUserInfomations();
     getUserLend(context);
     getBudget();
-    getSummary(); 
+    getSummary();
     getCategoryData();
+    getRemainders(context);
     getAutoMationsTransactionsCustom("date", context);
     userController.fetchUserInfo();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return HomeScreen();
+  }
 }
-
-}
-
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigations(data: 0,),
+      bottomNavigationBar: BottomNavigations(
+        data: 0,
+      ),
       backgroundColor: AppColors.backgroundColor,
       // floatingActionButton: IconButton(onPressed: (){
-         
+
       // }, icon: Icon(Icons.add,color: AppColors.primaryColor,)) ,
       appBar: AppBar(
         backgroundColor: AppColors.backgroundColor,
@@ -106,44 +105,47 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: ListView(
           children: [
-          
             // Bank Account Container
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.27,
               child: NumberPickerScreen(),
             ),
             const SizedBox(height: 10),
-              
+
             // Finance Chart
-              SizedBox(
-             height: MediaQuery.of(context).size.height * 0.5,
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.5,
               child: const FinancePage(),
             ),
             //const SizedBox(height: 20),
-              
+
             // Manual Transaction Container
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.16,
               child: Manualtransaction(),
             ),
             //const SizedBox(height: 20),
-              
+
             // Pending Users
             UserListScreen(),
-            
+
             //const SizedBox(height: 20),
-              
+
             // Doughnut Chart
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.5,
-              child: Obx(()=> setDonectChat.value? DoughnutChartExample() : DoughnutChartExample() ),
+              child: Obx(() => setDonectChat.value
+                  ? DoughnutChartExample()
+                  : DoughnutChartExample()),
             ),
             //const SizedBox(height: 20),
-              
+
             // Transaction History
             SizedBox(
               // height: MediaQuery.of(context).size.height * 0.8,
-              child: Obx(()=>  getHistory.value? TransactionHistory():TransactionHistory()),
+              child: Obx(() => getHistory.value
+                  ? TransactionHistory()
+                  : TransactionHistory()),
             ),
           ],
         ),

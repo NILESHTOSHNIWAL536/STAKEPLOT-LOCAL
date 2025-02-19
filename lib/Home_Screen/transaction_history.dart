@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -35,16 +34,14 @@ class _TransactionHistoryState extends State<TransactionHistory> {
   void initState() {
     super.initState();
     getAllTransaction(context);
-    
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return SingleChildScrollView(
       controller: scrollController,
       child: Container(
-         key: targetKey,
+        key: targetKey,
         child: Column(
           children: [
             Row(
@@ -68,7 +65,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
   }
 
   Widget getlist() {
-    return  ListView.builder(
+    return ListView.builder(
       itemCount: trasactionsHistory.length, // Ensure correct item count
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -77,7 +74,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
         var transactionList = transaction['transactions'];
         final date = transaction['date'];
         final total = transaction['total'];
-    
+
         return Column(
           children: [
             getTransactionListUi(transaction, date, total, transactionList),
@@ -89,17 +86,20 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                 return Stack(
                   children: [
                     Positioned(
-                    left: 0,
-                    right: 0,
-                    child: GestureDetector(
-                      onTap: () {
-                        hideTransaction(transactionList, index, groupIndex);
-                      },
+                      left: 0,
+                      right: 0,
                       child: Container(
-                       height: 80, // Adjust height as needed
-                        color: AppColors.primaryColor, // Background color when swiped
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.only(right: 16),
+                        height: 80,
+                        color: AppColors.primaryColor,
+                      ),
+                    ),
+                    Positioned(
+                      right: 10, // Position visibility_off icon from right
+                      top: 25, // Center vertically, adjust as needed
+                      child: GestureDetector(
+                        onTap: () {
+                          hideTransaction(transactionList, index, groupIndex);
+                        },
                         child: const Icon(
                           Icons.visibility_off,
                           color: Colors.white,
@@ -107,27 +107,43 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                         ),
                       ),
                     ),
-                  ),
-                    GestureDetector(
-                    onHorizontalDragUpdate: (details) {
-                      scrollLeft(details, transactionList, groupIndex, index);
-                    },
-                    onTap: () {
-                      hideTransaction(transactionList, index, groupIndex);
-                    },
-                    child: Transform.translate(
-                      offset: Offset(swipeOffsets[groupIndex * transactionList.length + index] ?? 0.0, 0),
-                      child: Container(
-                        decoration: getBoxDecoration(groupIndex, transactionList, index),
-                        child: historyTransactions(transactionList[index], date),
+                    Positioned(
+                      right: 50, // Position split bill icon from left
+                      top: 25, // Center vertically, adjust as needed
+                      child: GestureDetector(
+                        onTap: () {
+                          //splitBill(transactionList, index, groupIndex);
+                        },
+                        child: const Icon(
+                          Icons.person_add, // Placeholder for split bill icon
+                          color: Colors.white,
+                          size: 30,
+                        ),
                       ),
                     ),
-                  ),
-
+                    GestureDetector(
+                      onHorizontalDragUpdate: (details) {
+                        scrollLeft(details, transactionList, groupIndex, index);
+                      },
+                      onTap: () {
+                        // hideTransaction(transactionList, index, groupIndex);
+                      },
+                      child: Transform.translate(
+                        offset: Offset(
+                            swipeOffsets[groupIndex * transactionList.length +
+                                    index] ??
+                                0.0,
+                            0),
+                        child: Container(
+                          decoration: getBoxDecoration(
+                              groupIndex, transactionList, index),
+                          child:
+                              historyTransactions(transactionList[index], date),
+                        ),
+                      ),
+                    ),
                   ],
-                  
                 );
-             
               },
             ),
           ],
@@ -152,7 +168,8 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                   formatDate(date.toString()),
                   style: FontManager().getTextStyle(
                     context,
-                    lWeight:FontWeight.w600, // Correct weight enum for semi-bold
+                    lWeight:
+                        FontWeight.w600, // Correct weight enum for semi-bold
                     fontSize: 16,
                     lineHeight: 2.14,
                     color: AppColors.accentColor, // Style for category
@@ -174,8 +191,8 @@ class _TransactionHistoryState extends State<TransactionHistory> {
             ),
           ),
           Divider(
-              thickness: 1,
-              ),
+            thickness: 1,
+          ),
         ],
       ),
     );
@@ -309,18 +326,36 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     );
   }
 
+  // void scrollLeft(details, transactionList, groupIndex, index) {
+  //   setState(() {
+  //     double offset =
+  //         swipeOffsets[groupIndex * transactionList.length + index] ?? 0.0;
+  //     offset += details.delta.dx;
+  //     offset = offset.clamp(-90.0, 0.0); // Adjust the max swipe distance
+
+  //     swipeOffsets[(groupIndex * transactionList.length + index).toInt()] =
+  //         offset;
+  //   });
+  // }
   void scrollLeft(details, transactionList, groupIndex, index) {
     setState(() {
+      // Reset all other swipe offsets before updating the current one
+      swipeOffsets.forEach((key, value) {
+        if (key != (groupIndex * transactionList.length + index).toInt()) {
+          swipeOffsets[key] = 0.0;
+        }
+      });
+
       double offset =
           swipeOffsets[groupIndex * transactionList.length + index] ?? 0.0;
       offset += details.delta.dx;
-      offset = offset.clamp(-50.0, 0.0); // Adjust the max swipe distance
+      offset = offset.clamp(-90.0, 0.0); // Adjust the max swipe distance
 
       swipeOffsets[(groupIndex * transactionList.length + index).toInt()] =
           offset;
     });
   }
- 
+
   void hideTransaction(transactionList, index, groupIndex) {
     // String transactionId = transactionList[index]['_id'];
     // hideTransactionViaApi(transactionId);

@@ -34,14 +34,6 @@ void verify(String otp, context) async {
                       ),
                   );
                   
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => ShareAccountLogin(
-    //       flag: true,
-    //     ),
-    //   ),
-    // );
   } catch (e) {
     snackBarCalled(context, "Invalid Otp/Number...");
   }
