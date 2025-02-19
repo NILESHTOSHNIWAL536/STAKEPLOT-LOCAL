@@ -28,6 +28,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
+import 'package:flutter_application_code_stakeplot/userAvatar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:get/get.dart';  
@@ -84,7 +85,7 @@ class HomeScreen extends StatelessWidget {
         actions: [
                 Row(
                     children: [
-                          AvatarProfileImage(url: avatar.value, width: 15, height: 15),
+                          UserAvatar(url: avatar.value, width: 15, height: 15),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,

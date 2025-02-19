@@ -15,6 +15,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/readmore.dart';
+import 'package:flutter_application_code_stakeplot/userAvatar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
@@ -129,7 +130,7 @@ class _PostCardState extends State<PostCard> {
                         Container(
                           child: Row(
                             children: [
-                              AvatarProfileImage(
+                              UserAvatar(
                                 url: dataObj["author"]['avatar'],
                                 width: 10,
                                 height: 15,
@@ -210,10 +211,12 @@ class _PostCardState extends State<PostCard> {
                                           width: MediaQuery.of(context).size.width / 1.3,
                                           height: MediaQuery.of(context).size.height/3,
                                           shape: BoxShape.rectangle,
+                                          boxFit: BoxFit.contain,
                                           borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
                                           image: NetworkImage(dataObj['image']),
                                           colorFilter:ColorFilter.mode(Colors.black.withOpacity(0.0),
                                           BlendMode.exclusion
+                                          
                                         ),
                                     ),
                             ),

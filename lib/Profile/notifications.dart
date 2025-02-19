@@ -13,6 +13,7 @@ import "package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
 import "package:flutter_application_code_stakeplot/headersList/userProfileHeader.dart";
 import "package:flutter_application_code_stakeplot/loader.dart";
+import "package:flutter_application_code_stakeplot/userAvatar.dart";
 import "package:get/get.dart";
 import 'package:http/http.dart' as http;
 import "package:shared_preferences/shared_preferences.dart";
@@ -582,6 +583,6 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Widget getAvatarh(avatar) {
-    return AvatarProfileImage(url: avatar, width: 12, height: 18);
+    return UserAvatar(url: avatar, width: 12, height: 18);
   }
 }
