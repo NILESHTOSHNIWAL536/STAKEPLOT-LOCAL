@@ -23,7 +23,7 @@ void getAck() async {
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-    hasGetNewNotifications.value= obj!=0 ;
+    hasGetNewNotifications.value = obj != 0;
     print("hasGetNewNotifications.value----------------");
     print(hasGetNewNotifications.value);
   } else {}
@@ -78,7 +78,7 @@ void addTargets(context, String aim, String amount, String targetDate) async {
 void setPasswordApiCalled(context, String password) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
- 
+
   final response = await http.post(
     Uri.parse('${url}/user/cupertino/'),
     headers: <String, String>{
@@ -89,30 +89,29 @@ void setPasswordApiCalled(context, String password) async {
       'pin': password.toString(),
     }),
   );
- 
-   printData(response, context);
+
+  printData(response, context);
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    cupertinoPin.value=password;
+    cupertinoPin.value = password;
     snackBarCalled(context, " Set Pin success!", Colors.black);
   } else {
     snackBarCalled(context, "can't Set pin!", Colors.red);
   }
-    Navigator.pop(context);
+  Navigator.pop(context);
 }
 
-void PinPasswordVerify(password, context,Function setBack) async {
-    
+void PinPasswordVerify(password, context, Function setBack) async {
   var response = await getDataApiCall("${url}/user/cupertino/${password}");
   printData(response, context);
   if (response.statusCode == 200 || response.statusCode == 200) {
     hideBackAccountPassword.value = true;
     Timer(Duration(seconds: 5), () {
       hideBackAccountPassword.value = false;
-    
+
       firstDigit.value = 0;
       secondDigit.value = 0;
-      digitLoad.value= !digitLoad.value;
+      digitLoad.value = !digitLoad.value;
       setBack();
     });
   } else {
@@ -125,12 +124,26 @@ void getAllTransaction(context) async {
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
+    print("trasactionsHistory,,,,,,,,");
+    print(trasactionsHistory);
     trasactionsHistory.clear();
     trasactionsHistory.addAll(obj);
+    print(trasactionsHistory);
     getHistory.value = !getHistory.value;
   } else {}
 }
-
+// void getAllTransaction(context) async {
+//   var response = await getDataApiCall("${url}/transactionauto/getTransactions/1");
+//   if (response.statusCode == 200) {
+//     var his = jsonDecode(response.body);
+//     var obj = his['data'];
+//     print("trasactionsHistory,,,,,,,,");
+//     print(response.body);
+//     trasactionsHistory.clear();
+//     trasactionsHistory.addAll(obj);
+//     getHistory.value = !getHistory.value;
+//   } else {}
+// }
 // Future<List<dynamic>> getAllTransaction(BuildContext context) async {
 //   try {
 //     // Call your API to fetch data

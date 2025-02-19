@@ -34,12 +34,12 @@ dependencies:
     git:
       url: https://github.com/Cookiejar-technologies/finvu_flutter_sdk.git
       path: client
-      ref: 1.0.1
+      ref: 1.0.3
   finvu_flutter_sdk_core:
     git:
       url: https://github.com/Cookiejar-technologies/finvu_flutter_sdk.git
       path: core
-      ref: 1.0.1
+      ref: 1.0.3
   fl_chart: ^0.65.0
   syncfusion_flutter_charts: ^22.2.9
   get: ^4.6.6

@@ -3,7 +3,7 @@ allprojects {
         google()
         mavenCentral()
         maven { 
-            url 'https://maven.pkg.github.com/Cookiejar-technologies/finvu_android_sdk' 
+            url 'https://maven.pkg.github.com/yashwantGehlot/finvu_android_sdk' 
             credentials {
                 username = "NILESHTOSHNIWAL536"
                 password = "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"

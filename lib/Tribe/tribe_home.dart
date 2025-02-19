@@ -1145,7 +1145,7 @@ Widget vote(context, dataObj, data) {
             )
           ],
         ),
-  ));
+      ));
 }
 
 // Helper function to get the appropriate icon based on like status
@@ -1153,15 +1153,16 @@ Widget vote(context, dataObj, data) {
 Widget likeIcon(BuildContext context, bool isLiked) {
   return isLiked
       ? Icon(
-          Icons.heart_broken,
+          Icons.favorite,
           color: Colorcodes.red,
           size: 25,
         )
-      : SvgPicture.asset(
-          LikeComment.likes, // Path to your outlined heart SVG
-          //color: Colors.white,
-          height: 25,
-        );
+       
+  : SvgPicture.asset(
+      LikeComment.likes, // Path to your outlined heart SVG
+      //color: Colors.white,
+      height: 25,
+    );
   // return isLiked
   //     ? SvgPicture.asset(
   //         LikeComment.likes, // Path to your filled heart SVG
