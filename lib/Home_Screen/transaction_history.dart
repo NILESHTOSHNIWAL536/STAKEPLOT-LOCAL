@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/bill.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
@@ -74,6 +76,9 @@ class _TransactionHistoryState extends State<TransactionHistory> {
         var transactionList = transaction['transactions'];
         final date = transaction['date'];
         final total = transaction['total'];
+        print(
+            "totalllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll");
+        print(transactionList);
 
         return Column(
           children: [
@@ -112,7 +117,16 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                       top: 25, // Center vertically, adjust as needed
                       child: GestureDetector(
                         onTap: () {
-                          //splitBill(transactionList, index, groupIndex);
+                          // double amount = double.parse(
+                          //     transactionList["amount"].toString());
+                          // splitUserAmount(
+                          //     context,
+                          //     amount.toString(),
+                          //     addedMembers,
+                          //     transactionList["category"],
+                          //     transactionList["subcategory"],
+                          //     amount.toString());
+                          showCustomFriendsModal(context);
                         },
                         child: const Icon(
                           Icons.person_add, // Placeholder for split bill icon
@@ -148,6 +162,21 @@ class _TransactionHistoryState extends State<TransactionHistory> {
             ),
           ],
         );
+      },
+    );
+  }
+
+  void showCustomFriendsModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(18),
+        ),
+      ),
+      builder: (BuildContext context) {
+        return FriendsUi(); // Use the modal widget here
       },
     );
   }
@@ -361,6 +390,8 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     // hideTransactionViaApi(transactionId);
     setState(() {
       hiddenTransactions.add(transactionList[index]);
+      print("hiddenTransactions");
+      print(hiddenTransactions);
       transactionList.removeAt(index);
       swipeOffsets
           .remove((groupIndex * transactionList.length + index).toInt());

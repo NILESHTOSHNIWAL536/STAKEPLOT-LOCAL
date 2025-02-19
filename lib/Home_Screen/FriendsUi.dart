@@ -139,6 +139,7 @@ class _FriendsUiState extends State<FriendsUi> {
                   child: InkWell(
                     onTap: () {
                       Navigator.pop(context);
+                      
                     },
                     child: getButton(context, "Continue"),
                   ),

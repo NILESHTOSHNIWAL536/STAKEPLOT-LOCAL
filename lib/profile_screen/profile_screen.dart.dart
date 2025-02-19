@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/communityProfileScreen.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_Details.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/hiddenTransaction.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/webView.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -171,15 +172,25 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                           padding: const EdgeInsets.fromLTRB(10, 14, 10, 10),
                           child: Column(
                             children: [
-                              // _buildOption(
-                              //     AvatarProfileImage(
-                              //       url: ProfileIcons.support,
-                              //       height: 20,
-                              //       width: 20,
-                              //     ),
-                              //     'Support',
-                              //     'We are available 24x7 on your service'),
-                              // Divider(),
+                              InkWell(
+                                onTap: (){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => HiddenTransactionsScreen(hiddenTransactions: [],),
+                                    ),
+                                  );
+                                },
+                                child: _buildOption(
+                                    AvatarProfileImage(
+                                      url: ProfileIcons.support,
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                    'History archives ',
+                                    'Find you hidden history here'),
+                              ),
+                              Divider(),
                               InkWell(
                                 onTap: (){
                                   WebViewController controller  = WebViewController()..setJavaScriptMode(JavaScriptMode.unrestricted) ..loadRequest(Uri.parse("https://finvu.in/terms"));

@@ -151,8 +151,9 @@ final String termsUrl = "https://finvu.in/terms"; // Replace with actual URL
               child: getButton(context, "Continue"),
 
             ),
+            SizedBox(height: MediaQuery.sizeOf(context).height/2.4,),
             Padding(
-              padding: const EdgeInsets.only(top: 40),
+              padding: const EdgeInsets.only(top: 25),
               child: Center(
                       child: RichText(
                         text: TextSpan(

@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
-//import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 
-class HiddenTransactionsScreen extends StatelessWidget {
+class HiddenTransactionsScreen extends StatefulWidget {
   final List<Map<String, String>> hiddenTransactions;
-
   const HiddenTransactionsScreen({super.key, required this.hiddenTransactions});
+
+  @override
+  State<HiddenTransactionsScreen> createState() => _HiddenTransactionsScreenState();
+}
+
+class _HiddenTransactionsScreenState extends State<HiddenTransactionsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +26,7 @@ class HiddenTransactionsScreen extends StatelessWidget {
       // appBar: AppBar(
       //   title: const Text('Hidden Transactions'),
       // ),
-      body: hiddenTransactions.isEmpty
+      body: widget.hiddenTransactions.isEmpty
           ? Center(
               child: Text('No hidden transactions.',
                   style: FontManager().getTextStyle(context,
@@ -25,9 +35,9 @@ class HiddenTransactionsScreen extends StatelessWidget {
                       color: AppColors.accentColor)),
             )
           : ListView.builder(
-              itemCount: hiddenTransactions.length,
+              itemCount: widget.hiddenTransactions.length,
               itemBuilder: (context, index) {
-                final transaction = hiddenTransactions[index];
+                final transaction = widget.hiddenTransactions[index];
                 return ListTile(
                   leading: const Icon(Icons.payment),
                   title: Text(

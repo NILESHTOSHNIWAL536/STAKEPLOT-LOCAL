@@ -33,6 +33,7 @@ void getRemainders(context) async {
     dueAmountRemainders.addAll(userDue);
     dueAmountRemainders.addAll(userDue2);
     dueAmountRemainders.addAll(userDue3);
+    print(dueAmountRemainders);
     getdueUsers.value = !getdueUsers.value;
   }
   
