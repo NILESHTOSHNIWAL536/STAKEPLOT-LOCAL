@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -10,39 +9,34 @@ import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
+void approveBill(context, id, type, notifyId) async {
+  // /acceptBill/:id/:accept/:notificationsId
+  String urlPath = "${url}/bill/acceptBill/${id}/${type}/${notifyId}";
 
-
-void approveBill(context,id,type,notifyId)async
-{
-    // /acceptBill/:id/:accept/:notificationsId
-    String urlPath ="${url}/bill/acceptBill/${id}/${type}/${notifyId}";
-   
-    var responce=await getDataApiCall(urlPath);
-    printData(responce,"");
-    if(getFlagOfResponse(responce))
-    {
-         
-    }
+  var responce = await getDataApiCall(urlPath);
+  printData(responce, "");
+  if (getFlagOfResponse(responce)) {}
 }
 
-void getRemainders(context)async
-{
-    String urlPath ="${url}/reminders";
-    var responce=await getDataApiCall(urlPath);
+void getRemainders(context) async {
+  String urlPath = "${url}/reminders";
+  var responce = await getDataApiCall(urlPath);
+  print("responce................................");
+   print(responce.body);
 
-    if(getFlagOfResponse(responce))
-    {
-         
-    }
+  if (getFlagOfResponse(responce)) {
+    var his = jsonDecode(responce.body);
+    var userDue = his['data'];
+    dueAmountRemainders.clear();
+    dueAmountRemainders.addAll(userDue);
+    getdueUsers.value = !getdueUsers.value;
+  }
 }
 
-
-void  getNotifications(context)async
-{
-    
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var  accessToken=_pref.getString("accessToken");
-    final response = await http.get(
+void getNotifications(context) async {
+  final SharedPreferences _pref = await SharedPreferences.getInstance();
+  var accessToken = _pref.getString("accessToken");
+  final response = await http.get(
     Uri.parse('${url}/user/myNotifications'),
     // Uri.parse('https://stakeplot.in/api/v1/post/all'),
     headers: <String, String>{
@@ -50,37 +44,27 @@ void  getNotifications(context)async
       "Authorization": "$accessToken",
     },
   );
-      if(response.statusCode==200  )
-      {
-              
-                  var  his=jsonDecode(response.body);
-                  notificationList.clear();
-                  notificationList.addAll(his['data']);
-                  notificationList.forEach((req){
-                  String type=req['notificationMessage']['type'];
-                  var e=req['notificationMessage'];
-                  if(type=="friendRequest")
-                  {
-                      friendRequestList.add(e['from_id']);
-                  }
-                  });
-              
-            myNotificationBool.value=!myNotificationBool.value;
-            // snackBarCalled(context,"Lend Amount Adde to Dues!",Colors.black);
+  if (response.statusCode == 200) {
+    var his = jsonDecode(response.body);
+    notificationList.clear();
+    notificationList.addAll(his['data']);
+    notificationList.forEach((req) {
+      String type = req['notificationMessage']['type'];
+      var e = req['notificationMessage'];
+      if (type == "friendRequest") {
+        friendRequestList.add(e['from_id']);
       }
-      else{
-      }
- 
+    });
+
+    myNotificationBool.value = !myNotificationBool.value;
+    // snackBarCalled(context,"Lend Amount Adde to Dues!",Colors.black);
+  } else {}
 }
 
-
-
-void  getuserPost(id)async
-{
-    
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var  accessToken=_pref.getString("accessToken");
-    final response = await http.get(
+void getuserPost(id) async {
+  final SharedPreferences _pref = await SharedPreferences.getInstance();
+  var accessToken = _pref.getString("accessToken");
+  final response = await http.get(
     // Uri.parse('${url}/post/userDiscussions/${id}'),
     Uri.parse('${url}/post/myDiscussions'),
     // Uri.parse('https://stakeplot.in/api/v1/post/feed'),
@@ -90,184 +74,158 @@ void  getuserPost(id)async
       "Authorization": "$accessToken",
     },
   );
-    // print(url);
-    // printData(response);
-      if(response.statusCode==200)
-      {
-                  var  his=jsonDecode(response.body);
-                  var obj=his['data'];
-                   myPostList.clear();
-                   myPostList.addAll(obj);
-                     myPostList.forEach((element) {
-                        postCount[element["_id"]]=element['upvotes'];
-                        postCommentCount[element["_id"]]=element['comments'];
-                   });
-      }
-      else{
-          
-      }
- 
+  // print(url);
+  // printData(response);
+  if (response.statusCode == 200) {
+    var his = jsonDecode(response.body);
+    var obj = his['data'];
+    myPostList.clear();
+    myPostList.addAll(obj);
+    myPostList.forEach((element) {
+      postCount[element["_id"]] = element['upvotes'];
+      postCommentCount[element["_id"]] = element['comments'];
+    });
+  } else {}
 }
 
+void getSaved() async {
+  String urlPath = "${url}/post/saved";
+  final SharedPreferences _pref = await SharedPreferences.getInstance();
+  var accessToken = _pref.getString("accessToken");
+  final response = await http.get(
+    Uri.parse(urlPath),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      "Authorization": "$accessToken",
+    },
+  );
 
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    var his = jsonDecode(response.body);
+    var obj = his['data'];
 
+    savedList.clear();
+    savedList.addAll(obj);
+    savedList.forEach((element) {
+      postCount[element["_id"]] = element['upvotes'];
+      postCommentCount[element["_id"]] = element['comments'];
+    });
+  } else {}
+}
 
-  void getSaved() async {
-    String urlPath ="${url}/post/saved";
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-    final response = await http.get(
-      Uri.parse(urlPath),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-    );
-    
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      var his = jsonDecode(response.body);
-      var obj = his['data'];
-     
-      savedList.clear();
-      savedList.addAll(obj);
-        savedList.forEach((element) {
-                        postCount[element["_id"]]=element['upvotes'];
-                         postCommentCount[element["_id"]]=element['comments'];
-                   });
-                  
-    } else {
-    }
-  }
-
-
-
-
-  void  getUserInfomations()async
-{
-    
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var  accessToken=_pref.getString("accessToken");
-    final response = await http.get(
+void getUserInfomations() async {
+  final SharedPreferences _pref = await SharedPreferences.getInstance();
+  var accessToken = _pref.getString("accessToken");
+  final response = await http.get(
     Uri.parse('${url}/user/info'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       "Authorization": "$accessToken",
     },
   );
-      if(response.statusCode==200)
-      {
-                  var  his=jsonDecode(response.body);
-                  var obj=his['data'];
+  if (response.statusCode == 200) {
+    var his = jsonDecode(response.body);
+    var obj = his['data'];
 
-                     likedList.clear();
-      likedProducts.clear();
-      likedList.addAll(obj["likedPosts"]);
-      likedList.addAll(obj["likedComments"]);
-      likedProducts.addAll(obj["likedProducts"]);
+    likedList.clear();
+    likedProducts.clear();
+    likedList.addAll(obj["likedPosts"]);
+    likedList.addAll(obj["likedComments"]);
+    likedProducts.addAll(obj["likedProducts"]);
 
-                    frdsList.clear();
-                    frdsListOrigin.clear();
-                    frdsList.addAll(obj['friendsList']);
-                    frdsListOrigin.addAll(frdsList);
+    frdsList.clear();
+    frdsListOrigin.clear();
+    frdsList.addAll(obj['friendsList']);
+    frdsListOrigin.addAll(frdsList);
 
-                    aboutMe.value= (obj['aboutMe']=="Hello");
-                    aboutUS.value=obj['aboutMe'];
+    aboutMe.value = (obj['aboutMe'] == "Hello");
+    aboutUS.value = obj['aboutMe'];
 
-                  List s=obj['accounts'];
-                  income.value=0;
-                  s.forEach((element){ 
-                         income.value+= int.parse(element['income'].toString());
-                  });
-                    
-                 
-             
-                     var  data=obj;
-                
-                    getuserPost(data['_id']);
-                    getSaved();
-                    currentId.value=data['_id'];
-                    avatar.value=data['avatarType'].toString();
-                    userName.value= data['name'];
-                    email.value= data['email'];
-                    Phone.value= data['phone'];
-                    currency.value= data['currency'];
-                    score.value= data['score'].toString();
-                    coin=data['coins'].toString();
-                    expenses.value=data['expense'].toString();
-                    isBankAccountLink.value=data['isBankAccountLinked'] ?? false;
-                    cupertinoPin.value=data['cupertino_pin'] ;//?? '0';
-                   
-                    // savedList.clear();
-                    // savedList.addAll(data['saved'] );
-                    
-                    friendsList.clear();
-                    friendsList.addAll(obj['friendsList']);
+    List s = obj['accounts'];
+    income.value = 0;
+    s.forEach((element) {
+      income.value += int.parse(element['income'].toString());
+    });
 
-                 friendsList.forEach((element)
-                { 
-                    friendsListDetails[element['_id']]={
-                         'name':element['name'],
-                         'avatar':element['avatar'],
-                    };
-                 });
-      }
-      else{
-      }
+    var data = obj;
+
+    getuserPost(data['_id']);
+    getSaved();
+    currentId.value = data['_id'];
+    avatar.value = data['avatarType'].toString();
+    userName.value = data['name'];
+    email.value = data['email'];
+    Phone.value = data['phone'];
+    currency.value = data['currency'];
+    score.value = data['score'].toString();
+    coin = data['coins'].toString();
+    expenses.value = data['expense'].toString();
+    isBankAccountLink.value = data['isBankAccountLinked'] ?? false;
+    cupertinoPin.value = data['cupertino_pin']; //?? '0';
+
+    // savedList.clear();
+    // savedList.addAll(data['saved'] );
+
+    friendsList.clear();
+    friendsList.addAll(obj['friendsList']);
+
+    friendsList.forEach((element) {
+      friendsListDetails[element['_id']] = {
+        'name': element['name'],
+        'avatar': element['avatar'],
+      };
+    });
+  } else {}
 }
 
+void getUserInfo() async {
+  final SharedPreferences _pref = await SharedPreferences.getInstance();
+  var accessToken = _pref.getString("accessToken");
+  final response = await http.get(
+    Uri.parse('${url}/user/info'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      "Authorization": "$accessToken",
+    },
+  );
+  if (response.statusCode == 200) {
+    var his = jsonDecode(response.body);
+    var obj = his['data'];
 
-
- void getUserInfo() async {
+    List s = obj['accounts'];
     final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-    final response = await http.get(
-      Uri.parse('${url}/user/info'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-    );
-    if (response.statusCode == 200) {
-      var his = jsonDecode(response.body);
-      var obj = his['data'];
-      
 
-      List s = obj['accounts'];
-      final SharedPreferences _pref = await SharedPreferences.getInstance();
+    // likedList.clear();
+    // likedProducts.clear();
+    // likedList.addAll(obj["likedPosts"]);
+    // likedList.addAll(obj["likedComments"]);
+    // likedProducts.addAll(obj["likedProducts"]);
+    isBankAccountLink.value = obj['isBankAccountLinked'] ?? false;
 
-      // likedList.clear();
-      // likedProducts.clear();
-      // likedList.addAll(obj["likedPosts"]);
-      // likedList.addAll(obj["likedComments"]);
-      // likedProducts.addAll(obj["likedProducts"]);
-      isBankAccountLink.value=obj['isBankAccountLinked'] ?? false;
-   
-      s.forEach((element) {
-        if (!account.contains(element['name'])) {
-          account.add(element['name']);
-          // accountMap[element['name']]= double.parse(element['balance'].toString());
-        }
-      });
+    s.forEach((element) {
+      if (!account.contains(element['name'])) {
+        account.add(element['name']);
+        // accountMap[element['name']]= double.parse(element['balance'].toString());
+      }
+    });
 
-    
-        _pref.setString("userId", obj['_id']);
-        userId = obj['_id'];
-        
-        if (obj['roomsAssociated'].length > 0) {
-          room = obj['roomsAssociated'];
-       
-          var r = {
-            'name': obj['roomsAssociated'][0]['name'] ?? "",
-            'id': obj['roomsAssociated'][0]['id'] ?? "",
-            "expenseType": "running",
-            "expenseId": null
-          };
-          
-          room.insert(0, r);
-        }
-      
-    } else {}
-  }
+    _pref.setString("userId", obj['_id']);
+    userId = obj['_id'];
+
+    if (obj['roomsAssociated'].length > 0) {
+      room = obj['roomsAssociated'];
+
+      var r = {
+        'name': obj['roomsAssociated'][0]['name'] ?? "",
+        'id': obj['roomsAssociated'][0]['id'] ?? "",
+        "expenseType": "running",
+        "expenseId": null
+      };
+
+      room.insert(0, r);
+    }
+  } else {}
+}
 
 String getCurrentFormattedDate() {
   DateTime now = DateTime.now();
@@ -275,191 +233,163 @@ String getCurrentFormattedDate() {
   return formattedDate;
 }
 
+void addLendUserAmount(
+    context, String amount, List members, String name) async {
+  // List nameList=[];
+  // members.forEach((element) {
+  //      nameList.add(
+  //        {
+  //           'member':(element['id']),
+  //           'markAsComplete':false,
+  //        }
+  //      );
+  // });
 
-void addLendUserAmount(context,String amount,List members,String name)async{
-    // List nameList=[];
-    // members.forEach((element) {
-    //      nameList.add(
-    //        {
-    //           'member':(element['id']),
-    //           'markAsComplete':false,
-    //        }
-    //      );
-    // }); 
-    
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-     var  accessToken=_pref.getString("accessToken");
-    //  print('nameList');
-    //  print(nameList);
+  final SharedPreferences _pref = await SharedPreferences.getInstance();
+  var accessToken = _pref.getString("accessToken");
+  //  print('nameList');
+  //  print(nameList);
 
-    final response = await http.post(
+  final response = await http.post(
     Uri.parse('${url}/bill'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
-       "Authorization": "$accessToken",
+      "Authorization": "$accessToken",
     },
     body: jsonEncode({
-            "name": name,
-            "amount": amount,
-            "billReceiverId": members[0]['id'],
-            "subcategory":'Lend Money',
-            "Avatar":members[0]['avatar'],
-            "userName":members[0]['name'],
-            'dueDate': getCurrentFormattedDate(),
-       }),
+      "name": name,
+      "amount": amount,
+      "billReceiverId": members[0]['id'],
+      "subcategory": 'Lend Money',
+      "Avatar": members[0]['avatar'],
+      "userName": members[0]['name'],
+      'dueDate': getCurrentFormattedDate(),
+    }),
   );
-      //printData(response,context);
-      if(response.statusCode==200 || response.statusCode==201){
-            final body = json.decode(response.body);
-            snackBarCalled(context,"Lend Amount send to users!",Colors.black);
-          members.forEach((e)
-           {
-            sendNotificationsToDevice(e['id'],context,"${userName.value} Has Send U a Lend Bill..Of ${name} Of ${amount}");
-           }
-          );
+  //printData(response,context);
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    final body = json.decode(response.body);
+    snackBarCalled(context, "Lend Amount send to users!", Colors.black);
+    members.forEach((e) {
+      sendNotificationsToDevice(e['id'], context,
+          "${userName.value} Has Send U a Lend Bill..Of ${name} Of ${amount}");
+    });
 
-            addTransaction(amount, "Lend Bill", name, context, 'cash',true);
-            getUserLend(context);
-          //   Navigator.push(
-          //   context,
-          //   PageTransition(
-          //     type: PageTransitionType.fade,
-          //      duration: Durations.long1,
-          //     child: Home_Screen(),
-          //     isIos: true,
-          //   ),
-          // ); 
+    addTransaction(amount, "Lend Bill", name, context, 'cash', true);
+    getUserLend(context);
+    //   Navigator.push(
+    //   context,
+    //   PageTransition(
+    //     type: PageTransitionType.fade,
+    //      duration: Durations.long1,
+    //     child: Home_Screen(),
+    //     isIos: true,
+    //   ),
+    // );
     // }
-      }else{
-           snackBarCalled(context,"can't split error!",Colors.red);
-      }
-        acceptReset.value=false;
+  } else {
+    snackBarCalled(context, "can't split error!", Colors.red);
+  }
+  acceptReset.value = false;
 }
 
+void splitUserAmount(context, String amount, List members, String name) async {
+  List nameList = [];
+  members.forEach((element) {
+    nameList.add({'member': (element['id']), 'markAsComplete': false});
+  });
 
+  final SharedPreferences _pref = await SharedPreferences.getInstance();
+  var accessToken = _pref.getString("accessToken");
 
-void splitUserAmount(context,String amount,List members,String name)async{
-    List nameList=[];
-    members.forEach((element) {
-         nameList.add(
-           {
-              'member':(element['id']),
-              'markAsComplete':false
-           }
-         );
-    }); 
-
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-     var  accessToken=_pref.getString("accessToken");
-
-    final response = await http.post(
+  final response = await http.post(
     Uri.parse('${url}/split'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
-       "Authorization": "$accessToken",
+      "Authorization": "$accessToken",
     },
     body: jsonEncode({
-        "name": name,
-        "amount": amount,
-        "paymentStatus": nameList,
-        "image":''
-       }),
+      "name": name,
+      "amount": amount,
+      "paymentStatus": nameList,
+      "image": ''
+    }),
   );
-      //printData(response,context);
-      if(response.statusCode==200 || response.statusCode==201){
-            final body = json.decode(response.body);
-           
-            splitID.value=body['id']['_id'];
-            // print("splitID.value");
-            // print(body['id']);
-            // print(splitID.value);
-           members.forEach((e)
-           {
-            sendNotificationsToDevice(e['id'],context,"${userName.value} Has Send U a Split Bill..Of ${name} Of ${amount}");
-           });
-            
+  //printData(response,context);
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    final body = json.decode(response.body);
 
+    splitID.value = body['id']['_id'];
+    // print("splitID.value");
+    // print(body['id']);
+    // print(splitID.value);
+    members.forEach((e) {
+      sendNotificationsToDevice(e['id'], context,
+          "${userName.value} Has Send U a Split Bill..Of ${name} Of ${amount}");
+    });
 
-            snackBarCalled(context,"Slit Amount send to users!",Colors.black);
-            addTransaction(amount, "Split Bill", name, context, 'cash',true);
+    snackBarCalled(context, "Slit Amount send to users!", Colors.black);
+    addTransaction(amount, "Split Bill", name, context, 'cash', true);
 
-            // addSocketMessage(members);
-          //   Navigator.push(
-          //   context,
-          //   PageTransition(
-          //     type: PageTransitionType.fade,
-          //      duration: Durations.long1,
-          //     child: Home(),
-          //     isIos: true,
-          //   ),
-          // ); 
+    // addSocketMessage(members);
+    //   Navigator.push(
+    //   context,
+    //   PageTransition(
+    //     type: PageTransitionType.fade,
+    //      duration: Durations.long1,
+    //     child: Home(),
+    //     isIos: true,
+    //   ),
+    // );
     // }
-      }else{
-           snackBarCalled(context,"can't split error!",Colors.red);
-      }
-        acceptReset.value=false;
-
+  } else {
+    snackBarCalled(context, "can't split error!", Colors.red);
+  }
+  acceptReset.value = false;
 }
 
+void aboutuser(context, String about) async {
+  final SharedPreferences _pref = await SharedPreferences.getInstance();
+  var accessToken = _pref.getString("accessToken");
 
-
-void aboutuser(context,String about)async{
-    
-    
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-     var  accessToken=_pref.getString("accessToken");
-
-    final response = await http.patch(
+  final response = await http.patch(
     Uri.parse('https://stakeplot.in/api/v1/user/updateprofile'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
-       "Authorization": "$accessToken",
+      "Authorization": "$accessToken",
     },
     body: jsonEncode({
-        "aboutMe": about,
-       }),
+      "aboutMe": about,
+    }),
   );
-      // printData(response,context);
-      if(response.statusCode==200 || response.statusCode==201){
-          
-            snackBarCalled(context,"Updated users Info!",Colors.black);   
-      }else{
-
-           snackBarCalled(context,"can't edit User Info error!",Colors.red);
-      }
+  // printData(response,context);
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    snackBarCalled(context, "Updated users Info!", Colors.black);
+  } else {
+    snackBarCalled(context, "can't edit User Info error!", Colors.red);
+  }
 }
 
-
-void addAccount(context,String account,String money) async {
-   var urlPath = Uri.parse('${url}/user/addAccount');
+void addAccount(context, String account, String money) async {
+  var urlPath = Uri.parse('${url}/user/addAccount');
   final SharedPreferences _pref = await SharedPreferences.getInstance();
-     var  accessToken=_pref.getString("accessToken");
+  var accessToken = _pref.getString("accessToken");
 
   final response = await http.post(
     Uri.parse('${urlPath}'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
-       "Authorization": "$accessToken",
+      "Authorization": "$accessToken",
     },
     body: jsonEncode({
-           'newAccount': account,
-       }),
+      'newAccount': account,
+    }),
   );
 
-
-
-  if (response.statusCode == 200 || response.statusCode==201) {
+  if (response.statusCode == 200 || response.statusCode == 201) {
     snackBarCalled(context, "Account Added...!");
     Navigator.pushNamed(context, '/home');
-
   } else {
     // //print('Failed to create post: ${response.reasonPhrase}');
   }
-  
 }
-
-
-
-
-
-

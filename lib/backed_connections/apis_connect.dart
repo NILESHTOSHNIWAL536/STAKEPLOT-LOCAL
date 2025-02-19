@@ -103,6 +103,8 @@ RxString targetString = "".obs;
 RxString cupertinoPin = "".obs;
 RxList categoriesList = [].obs;
 Map<String, dynamic> loginUsersList = Map<String, dynamic>();
+RxList dueAmountRemainders = [].obs;
+RxBool getdueUsers = false.obs;
 
 List<String> month = [
   "",
