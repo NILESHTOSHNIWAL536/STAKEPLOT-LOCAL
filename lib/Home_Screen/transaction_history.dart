@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/bill.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
@@ -31,11 +32,18 @@ class _TransactionHistoryState extends State<TransactionHistory> {
   final Map<int, double> swipeOffsets = {}; // Store offset for each transaction
   final List<Map<String, dynamic>> hiddenTransactions = [];
   final transactionsHistory = <dynamic>[].obs;
+  BuildContext? _stableContext;
 
   @override
   void initState() {
     super.initState();
+    _stableContext = context;
     getAllTransaction(context);
+  }
+
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _stableContext ??= context; // Capture stable context
   }
 
   @override
@@ -76,9 +84,6 @@ class _TransactionHistoryState extends State<TransactionHistory> {
         var transactionList = transaction['transactions'];
         final date = transaction['date'];
         final total = transaction['total'];
-        print(
-            "totalllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll");
-        print(transactionList);
 
         return Column(
           children: [
@@ -126,7 +131,8 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                           //     transactionList["category"],
                           //     transactionList["subcategory"],
                           //     amount.toString());
-                          showCustomFriendsModal(context);
+                          showCustomFriendsModal2(
+                              context, transactionList[index]);
                         },
                         child: const Icon(
                           Icons.person_add, // Placeholder for split bill icon
@@ -177,6 +183,73 @@ class _TransactionHistoryState extends State<TransactionHistory> {
       ),
       builder: (BuildContext context) {
         return FriendsUi(); // Use the modal widget here
+      },
+    );
+  }
+
+  void showCustomFriendsModal2(
+      BuildContext context, Map<String, dynamic> transaction) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+      ),
+      builder: (BuildContext modalContext) {
+        // Rename context for clarity
+        return StatefulBuilder(
+          builder: (BuildContext modalContext, StateSetter setModalState) {
+            return Container(
+              height: MediaQuery.of(modalContext).size.height / 1.9,
+              decoration: const BoxDecoration(
+                color: AppColors.backgroundColor,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+              ),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: FriendsUi(),
+                  ),
+                  Obx(() => addedMembers.isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: InkWell(
+                            onTap: () async {
+                              try {
+                                double amount = double.parse(
+                                    transaction["amount"].toString());
+                                double sharePerFriend =
+                                    amount / addedMembers.length;
+                                print(
+                                    "Amount: $amount, Share Per Friend: $sharePerFriend");
+                                 splitUserAmount2(
+                                  _stableContext ??
+                                      context, // Use _stableContext or fallback to current context
+                                  amount.toString(),
+                                  addedMembers.toList(),
+                                  transaction["category"].toString(),
+                                  transaction["subcategory"].toString(),
+                                  sharePerFriend.toString(),
+                                );
+                                Navigator.pop(
+                                    modalContext); // Close modal after initiating split
+                              } catch (e) {
+                                ScaffoldMessenger.of(modalContext).showSnackBar(
+                                  SnackBar(
+                                      content:
+                                          Text("Error splitting amount: $e")),
+                                );
+                              }
+                            },
+                            child: getButton(modalContext, "Continue"),
+                          ),
+                        )
+                      : const SizedBox.shrink()),
+                ],
+              ),
+            );
+          },
+        );
       },
     );
   }
