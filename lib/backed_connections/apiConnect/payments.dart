@@ -124,7 +124,7 @@ void addBudget(BuildContext context, String name, String amount,
     'categoryBudgets': expenseCategory,
     'budgetPeriod': budgetPeriod.toString(),
   };
- 
+
   final response = await http.post(
     Uri.parse('${url}/budget/'),
     headers: <String, String>{
@@ -550,7 +550,6 @@ void getDebts2() async {
 void getUserLend(context) async {
   String urlPath = "${url}/bill/lend";
   var responce = await getDataApiCall(urlPath);
- 
 
   if (getFlagOfResponse(responce)) {
     var his = jsonDecode(responce.body);
@@ -558,7 +557,6 @@ void getUserLend(context) async {
     lendAmountRemainders.clear();
     lendAmountRemainders.addAll(userLend);
     getlendUsers.value = !getlendUsers.value;
-   
   }
 }
 
@@ -587,9 +585,38 @@ void getTopFiveCater() async {
     if (getFlagOfResponse(responce)) {
       var his = jsonDecode(responce.body);
       categoriesSeleted.clear();
-    
+
       categoriesSeleted.addAll(his['data']);
       getCategories.value = !getCategories.value;
     }
   } catch (e) {}
+}
+
+Future<String?> getToken() async {
+  final SharedPreferences pref = await SharedPreferences.getInstance();
+  var accessToken = pref.getString("accessToken");
+
+  if (accessToken == null) {
+    print("No access token found in SharedPreferences");
+    return null;
+  } else {
+    print("Token: $accessToken");
+    return accessToken;
+  }
+}
+
+class ApiService {
+  Future<http.Response> patchRequest(
+      String url, Map<String, dynamic> body) async {
+    var accessToken = await getToken();
+    final response = await http.patch(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': '$accessToken',
+      },
+      body: json.encode(body),
+    );
+    return response;
+  }
 }

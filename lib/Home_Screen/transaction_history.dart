@@ -23,13 +23,24 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TransactionHistory extends StatefulWidget {
-  const TransactionHistory({super.key});
+   final int? selectedYear; // Optional
+  final int? selectedMonth; // Optional
+  final bool? isYearView;
+
+  const TransactionHistory({
+    super.key,
+     this.selectedYear,
+    this.selectedMonth,
+    this.isYearView,
+  });
+ // const TransactionHistory({super.key});
 
   @override
   State<TransactionHistory> createState() => _TransactionHistoryState();
 }
 
 class _TransactionHistoryState extends State<TransactionHistory> {
+  
   final Map<int, double> swipeOffsets = {};
   final List<Map<String, dynamic>> hiddenTransactions = [];
   final transactionsHistory = <dynamic>[].obs; // Corrected typo
@@ -454,6 +465,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     return DateFormat("dd MMM yyyy").format(date);
   }
 }
+
 // import 'dart:convert';
 // import 'package:flutter/material.dart';
 // import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
@@ -654,7 +666,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
 //   int currentPage = 1;
 //   bool isLoadingMore = false;
 //   bool hasMoreData = true;
-//   final int transactionsPerPage = 10;
+//   final int transactionsPerPage = 20;
 //   final ScrollController scrollController = ScrollController();
 
 //   @override

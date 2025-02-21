@@ -11,6 +11,7 @@ import "package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
+import "package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart";
 import "package:flutter_application_code_stakeplot/headersList/userProfileHeader.dart";
 import "package:flutter_application_code_stakeplot/loader.dart";
 import "package:get/get.dart";
@@ -76,9 +77,18 @@ class _NotificationsState extends State<Notifications> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.backgroundColor,
+          title: textStyle(
+                  context: context,
+                  text: "Notifications",
+                  fontsize: 18,
+                  fontWeight: FontWeight.w600),
+        ),
           backgroundColor: AppColors.backgroundColor,
           body: Column(children: [
-            UserProfileHeader(name: "Notifications",),
+            // UserProfileHeader(name: "Notifications",),
+            
             Expanded(
               child: Container(
                   width: MediaQuery.of(context).size.width,
@@ -225,7 +235,7 @@ class _NotificationsState extends State<Notifications> {
                 ),
 
                 Container(
-                  width: MediaQuery.of(context).size.width / 1.5,
+                  width: MediaQuery.of(context).size.width / 1.4,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
