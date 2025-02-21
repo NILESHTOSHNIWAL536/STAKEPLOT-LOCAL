@@ -32,7 +32,7 @@ void changeTrasactiondata() async {
   List allTransactions = [];
   //  for (var category in trasactionsData)
   //  {
-  //       allTransactions.addAll(category["transactions"]);
+  //       allTransactions.addAll(category["transactions"]);trasactionsData
   //  }
   for (var category in trasactionsData) {
     String categoryId = category['_id'];
