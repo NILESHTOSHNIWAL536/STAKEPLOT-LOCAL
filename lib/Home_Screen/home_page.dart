@@ -53,6 +53,7 @@ class _HomePageState extends State<HomePage> {
     getUserInfomations();
     getUserLend(context);
     getBudget();
+    getHiddenTransactions(context);
     getSummary();
     getCategoryData();
     getRemainders(context);

@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
@@ -23,6 +24,12 @@ class ProfileScreenDart extends StatefulWidget {
 }
 
 class _ProfileScreenDartState extends State<ProfileScreenDart> {
+  @override
+  void initState() {
+    super.initState();
+    getHiddenTransactions(context);
+    
+  }
   @override
   Widget build(
     BuildContext context,
@@ -177,7 +184,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => HiddenTransactionsScreen(hiddenTransactions: [],),
+                                      builder: (context) => HiddenTransactionsScreen(),
                                     ),
                                   );
                                 },
@@ -188,7 +195,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                       width: 20,
                                     ),
                                     'History archives ',
-                                    'Find you hidden history here'),
+                                    'Find your hidden history here'),
                               ),
                               Divider(),
                               InkWell(

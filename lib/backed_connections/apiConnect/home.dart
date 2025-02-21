@@ -137,11 +137,24 @@ void getAllTransaction(context) async {
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-    print("trasactionsHistory,,,,,,,,");
+    //print("trasactionsHistory,,,,,,,,");
     print(response.body);
     trasactionsHistory.clear();
     trasactionsHistory.addAll(obj);
     getHistory.value = !getHistory.value;
+  } else {}
+}
+
+void getHiddenTransactions(context) async {
+  var response = await getDataApiCall("${url}/transactionauto/get-hide-transactions");
+  if (response.statusCode == 200) {
+    var her = jsonDecode(response.body);
+    var obj = her['data'];
+    print(" .................Hidden trasactions History,,,,,,,,");
+    print(response.body);
+    hiddentrasactionsHistory.clear();
+    hiddentrasactionsHistory.addAll(obj);
+    getHiddenHistory.value = !getHiddenHistory.value;
   } else {}
 }
 
