@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/donut_chart.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 // import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -186,10 +187,8 @@ List<String> getDaysInMonth(String yearMonth) {
 }
 
 Future<http.Response> getDataApiCall(urlPath) async {
-  print(urlPath);
   final SharedPreferences pref = await SharedPreferences.getInstance();
-  // pref.setString("accessToken",
-  //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMwYWZiZmNiMTcxMDc2NWFiOGU5MCIsImlhdCI6MTczNzcwMzU3NCwiZXhwIjoxNzQyODg3NTc0fQ.zYUUmoy_xlaZwdvM8r4KDOZNADlLyxPirqDm0avEUXg");
+  //VCJ9.eyJpZCI6IjY3NWMwYWZiZmNiMTcxMDc2NWFiOGU5MCIsImlhdCI6MTczNzcwMzU3NCwiZXhwIjoxNzQyODg3NTc0fQ.zYUUmoy_xlaZwdvM8r4KDOZNADlLyxPirqDm0avEUXg");
   var accessToken = pref.getString("accessToken");
   print(accessToken);
   final response = await http.get(
@@ -347,6 +346,7 @@ void addTransaction(String amount, String subCategory, String categories,
     getCategoryData();
      setDonectChat.value = !setDonectChat.value;
       processChartData();
+       getAutoMationsTransactionsCustom(getFormattedDate(), context);
     Navigator.pop(context);
   } else {
     snackBarCalled(context, "can't Add Trasactions!", Colors.red);

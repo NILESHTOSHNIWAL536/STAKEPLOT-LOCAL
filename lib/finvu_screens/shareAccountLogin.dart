@@ -13,6 +13,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'dart:async';
 
@@ -377,3 +378,15 @@ Widget getButton(context, str,[color=AppColors.primaryColor,textColor=AppColors.
   );
 }
 
+
+Widget getspinner(context, str,[color=AppColors.primaryColor,textColor=AppColors.bg5]) {
+  return Container(
+    width: MediaQuery.of(context).size.width / 1.1,
+    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+    decoration: BoxDecoration(
+        color: color, borderRadius: BorderRadius.circular(24)),
+    child: Center(
+      child: Spinner(color: Colorcodes.white,size: 20,)
+    ),
+  );
+}

@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/google.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
@@ -46,22 +47,20 @@ class _SigninState extends State<Signin> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colorcodes.white,
-      body: Expanded(
-        child: SingleChildScrollView(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                    textHeader(),
-                    getTextFeilds(),
-                    siginButton(),   
-                    signinWith(),  
-                    forgotPassword(),
-                    dontHaveAccount(),
-              ],
-            ),
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+                  textHeader(),
+                  getTextFeilds(),
+                  siginButton(),   
+                  signinWith(),  
+                  forgotPassword(),
+                  dontHaveAccount(),
+            ],
           ),
         ),
       ),
@@ -218,13 +217,18 @@ Widget signinWith(){
 
 
 Widget containerIconSiginWith(IconData icon,Color color){
-   return Container(
-     padding: EdgeInsets.symmetric(horizontal: 10,vertical: 7),
-     decoration: BoxDecoration(
-       color: Colorcodes.greyLight,
-       borderRadius: BorderRadius.circular(10)
+   return InkWell(
+    onTap: ()async{
+        //  await AuthService().signInWithGoogle();
+    },
+     child: Container(
+       padding: EdgeInsets.symmetric(horizontal: 10,vertical: 7),
+       decoration: BoxDecoration(
+         color: Colorcodes.greyLight,
+         borderRadius: BorderRadius.circular(10)
+       ),
+        child: FaIcon(icon,size: 30,color: color,),
      ),
-      child: FaIcon(icon,size: 30,color: color,),
    );
 }
 
@@ -256,7 +260,7 @@ Widget siginButton(){
 
                             
                             acceptReset.value = true;
-                             
+                             print(url); 
                             loginUser(emailController, passwordController, context);
                            
                           },

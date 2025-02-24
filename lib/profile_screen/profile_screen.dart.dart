@@ -29,21 +29,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
     return Scaffold(
       bottomNavigationBar: BottomNavigations(data: 4),
       backgroundColor: AppColors.backgroundColor,
-      // appBar: AppBar(
-      //   title: const Text('Profile'),
-      //   actions: [
-      //     TextButton(
-      //       onPressed: () {
-      //         // Edit details action
-      //       },
-      //       child: Text('Edit details',
-      //           style: FontManager().getTextStyle(context,
-      //               lWeight: FontWeight.w500,
-      //               //fontSize: MediaQuery.of(context).size.width * 0.04,
-      //               color: AppColors.bg1)),
-      //     ),
-      //   ],
-      // ),
+    
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.only(top: 5, left: 16, right: 16),
@@ -117,113 +103,111 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
               // Options list
               Padding(
                 padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: Expanded(
-                  child: Column(
-                    children: [
-                      // First Container for Community profile and Friends list
-                      Container(
-                        decoration: BoxDecoration(
-                            color: AppColors.mt,
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: AppColors.border)),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(12, 14, 12, 14),
-                          child: Column(
-                            children: [
-                              _buildOption(
-                                  AvatarProfileImage(
-                                    url: ProfileIcons.communityProf,
-                                    height: 24,
-                                    width: 24,
-                                  ),
-                                  'Community profile',
-                                  'Check your community profile', onTap: () {
+                child: Column(
+                  children: [
+                    // First Container for Community profile and Friends list
+                    Container(
+                      decoration: BoxDecoration(
+                          color: AppColors.mt,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: AppColors.border)),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(12, 14, 12, 14),
+                        child: Column(
+                          children: [
+                            _buildOption(
+                                AvatarProfileImage(
+                                  url: ProfileIcons.communityProf,
+                                  height: 24,
+                                  width: 24,
+                                ),
+                                'Community profile',
+                                'Check your community profile', onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CommunityProfileScreen( id: currentId.value,)),
+                              );
+                            }),
+                            Divider(),
+                            _buildOption(
+                                AvatarProfileImage(
+                                  url: ProfileIcons.friends,
+                                  height: 20,
+                                  width: 20,
+                                ),
+                                'Friends list',
+                                'Check your friends list here', onTap: () {
+                              Navigator.pushNamed(context, '/Friends');
+                            }),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    // Second Container for Support, Terms & conditions, and Privacy policy
+                    Container(
+                      decoration: BoxDecoration(
+                          color: AppColors.mt,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: AppColors.border)),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 14, 10, 10),
+                        child: Column(
+                          children: [
+                            // _buildOption(
+                            //     AvatarProfileImage(
+                            //       url: ProfileIcons.support,
+                            //       height: 20,
+                            //       width: 20,
+                            //     ),
+                            //     'Support',
+                            //     'We are available 24x7 on your service'),
+                            // Divider(),
+                            InkWell(
+                              onTap: (){
+                                WebViewController controller  = WebViewController()..setJavaScriptMode(JavaScriptMode.unrestricted) ..loadRequest(Uri.parse("https://finvu.in/terms"));
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          CommunityProfileScreen( id: currentId.value,)),
+                                    builder: (context) => WebViewPage(controller: controller),
+                                  ),
                                 );
-                              }),
-                              Divider(),
-                              _buildOption(
+                              },
+                              child: _buildOption(
                                   AvatarProfileImage(
-                                    url: ProfileIcons.friends,
+                                    url: ProfileIcons.terms,
                                     height: 20,
                                     width: 20,
                                   ),
-                                  'Friends list',
-                                  'Check your friends list here', onTap: () {
-                                Navigator.pushNamed(context, '/Friends');
-                              }),
-                            ],
-                          ),
+                                  'Terms & conditions',
+                                  'Please follow our terms and conditions'),
+                            ),
+                            // Divider(),
+                            // _buildOption(
+                            //     SizedBox(
+                            //       height: 40,
+                            //       width: 40,
+                            //       child: AvatarProfileImage(
+                            //         url: ProfileIcons.privacyPolicy,
+                            //         height: 22,
+                            //         width: 22,
+                            //       ),
+                            //     ),
+                            //     'Privacy policy',
+                            //     'We respect your privacy'),
+                          ],
                         ),
                       ),
-                      SizedBox(height: 10),
-                      // Second Container for Support, Terms & conditions, and Privacy policy
-                      Container(
-                        decoration: BoxDecoration(
-                            color: AppColors.mt,
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: AppColors.border)),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 14, 10, 10),
-                          child: Column(
-                            children: [
-                              // _buildOption(
-                              //     AvatarProfileImage(
-                              //       url: ProfileIcons.support,
-                              //       height: 20,
-                              //       width: 20,
-                              //     ),
-                              //     'Support',
-                              //     'We are available 24x7 on your service'),
-                              // Divider(),
-                              InkWell(
-                                onTap: (){
-                                  WebViewController controller  = WebViewController()..setJavaScriptMode(JavaScriptMode.unrestricted) ..loadRequest(Uri.parse("https://finvu.in/terms"));
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => WebViewPage(controller: controller),
-                                    ),
-                                  );
-                                },
-                                child: _buildOption(
-                                    AvatarProfileImage(
-                                      url: ProfileIcons.terms,
-                                      height: 20,
-                                      width: 20,
-                                    ),
-                                    'Terms & conditions',
-                                    'Please follow our terms and conditions'),
-                              ),
-                              // Divider(),
-                              // _buildOption(
-                              //     SizedBox(
-                              //       height: 40,
-                              //       width: 40,
-                              //       child: AvatarProfileImage(
-                              //         url: ProfileIcons.privacyPolicy,
-                              //         height: 22,
-                              //         width: 22,
-                              //       ),
-                              //     ),
-                              //     'Privacy policy',
-                              //     'We respect your privacy'),
-                            ],
-                          ),
-                        ),
-                      ),
-                     
-                      // Third Container for Log ou
-                      // t
-                      const SizedBox(height: 10,),
-                      logoutWidget(),
-                     
-                    ],
-                  ),
+                    ),
+                   
+                    // Third Container for Log ou
+                    // t
+                    const SizedBox(height: 10,),
+                    logoutWidget(),
+                   
+                  ],
                 ),
               ),
               // Spacer(),

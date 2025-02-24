@@ -70,77 +70,75 @@ class _BudgetOverViewState extends State<BudgetOverView> {
       padding: EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(color: AppColors.backgroundColor),
       child: SingleChildScrollView(
-        child: Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: Colorcodes.paddingSize),
-              textStyle(
-                  context: context,
-                  text: "Budget Calculations",
-                  fontsize: 20,
-                  fontWeight: FontWeight.bold),
-              SizedBox(height: Colorcodes.paddingSize),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                        decoration: BoxDecoration(
-                            color: AppColors.button,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: textStyle(
-                            context: context,
-                            text: "Budget amount",
-                            fontsize: 13,
-                            fontWeight: FontWeight.w600)),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: Colorcodes.paddingSize),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: Colorcodes.paddingSize),
+            textStyle(
+                context: context,
+                text: "Budget Calculations",
+                fontsize: 20,
+                fontWeight: FontWeight.bold),
+            SizedBox(height: Colorcodes.paddingSize),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                      decoration: BoxDecoration(
+                          color: AppColors.button,
+                          borderRadius: BorderRadius.circular(10)),
                       child: textStyle(
                           context: context,
-                          text: "₹" + widget.amount,
-                          fontsize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              Row(
-                children: [
-                  textStyle(
-                      context: context,
-                      text: "Budget ",
-                      fontsize: 18,
-                      fontWeight: FontWeight.bold),
-                  textStyle(
-                      context: context,
-                      text: "(${widget.period})",
-                      fontsize: 18,
-                      fontWeight: FontWeight.bold,
-                      c: AppColors.primaryColor),
+                          text: "Budget amount",
+                          fontsize: 13,
+                          fontWeight: FontWeight.w600)),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical: Colorcodes.paddingSize),
+                    child: textStyle(
+                        context: context,
+                        text: "₹" + widget.amount,
+                        fontsize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
-              SizedBox(
-                height: Colorcodes.paddingCard / 3,
-              ),
-              Obx(() => categoryList()),
-              SizedBox(
-                height: Colorcodes.paddingCard / 2,
-              ),
-              InkWell(
-                  onTap: () {
-                    addBudget(context, widget.name, widget.amount,
-                        categoriesDividedList, widget.period);
-                  },
-                  child: getButton(context, "Add Budget")),
-            ],
-          ),
+            ),
+            Row(
+              children: [
+                textStyle(
+                    context: context,
+                    text: "Budget ",
+                    fontsize: 18,
+                    fontWeight: FontWeight.bold),
+                textStyle(
+                    context: context,
+                    text: "(${widget.period})",
+                    fontsize: 18,
+                    fontWeight: FontWeight.bold,
+                    c: AppColors.primaryColor),
+              ],
+            ),
+            SizedBox(
+              height: Colorcodes.paddingCard / 3,
+            ),
+            Obx(() => categoryList()),
+            SizedBox(
+              height: Colorcodes.paddingCard / 2,
+            ),
+            InkWell(
+                onTap: () {
+                  addBudget(context, widget.name, widget.amount,
+                      categoriesDividedList, widget.period);
+                },
+                child: getButton(context, "Add Budget")),
+          ],
         ),
       ),
     );

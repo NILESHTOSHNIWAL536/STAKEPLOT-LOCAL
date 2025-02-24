@@ -14,18 +14,23 @@ import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void verify(String otp, context) async {
-
+  print(otp);
+  print(otpReference);
+  print(finvuManager.isConnected());
   try {
+    print(1);
     var login = await finvuManager.verifyLoginOtp(
       otp,
       otpReference,
     );
+    print(2);
 
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     String? token = await _pref.getString("token");
+    print("token 1");
     clearStackLocalInfo();
-
     getLinkedAccountInfo();
+    print("token 2");
 
                   Navigator.push(
                       context,
@@ -35,6 +40,8 @@ void verify(String otp, context) async {
                   );
                   
   } catch (e) {
+    print("error====");
+    print(e);
     snackBarCalled(context, "Invalid Otp/Number...");
   }
 }

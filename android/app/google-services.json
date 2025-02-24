@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1077126713872",
+    "project_id": "stakeplot-aebdc",
+    "storage_bucket": "stakeplot-aebdc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1077126713872:android:ed9cb368a77d896fcf7095",
+        "android_client_info": {
+          "package_name": "com.stakeplot.adnan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuf2vfrFqmCtD3hwSYWiqAQWO7fUpSKp4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

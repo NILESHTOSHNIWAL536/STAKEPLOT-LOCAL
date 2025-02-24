@@ -56,8 +56,6 @@ void loginToAutoTractions(context) async {
     final body = json.decode(response.body);
     String token = "Bearer " + body['body']['token'];
     _pref.setString("token", token);
-     print("token-----------------------------------");
-     print(token);
     ConsentRequestPlus(context, token, custId);
   } else {
     //  snackBarCalled(context,"can't Add Friend!",Colors.red);
@@ -286,7 +284,9 @@ Future<void> storeDataOfTransactions(context, data, consentHandleId, from, to,
   print("storeDataOfTransactions.....");
   print(data);
 
- String accessToken="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UxMjBhNzVhYWZiYWMyNTQ2NGFkNCIsImlhdCI6MTczODc1Nzc3OSwiZXhwIjoxNzQzOTQxNzc5fQ.5XeQtIM2CmFdyrfXiCcA5neACgSRuYScFa5ArcYhe34";
+//  String accessToken="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UxMjBhNzVhYWZiYWMyNTQ2NGFkNCIsImlhdCI6MTczODc1Nzc3OSwiZXhwIjoxNzQzOTQxNzc5fQ.5XeQtIM2CmFdyrfXiCcA5neACgSRuYScFa5ArcYhe34";
+//    final SharedPreferences pref = await SharedPreferences.getInstance();
+//    pref.setString("accessToken",accessToken);
 
   try{
   final response = await http.post(Uri.parse('${url}/transactionauto/'),
@@ -306,11 +306,9 @@ Future<void> storeDataOfTransactions(context, data, consentHandleId, from, to,
     final body = json.decode(response.body);
    
     print("body added--------------------");
-    // print(body);
-     SharedPreferences prefs = await SharedPreferences.getInstance();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.remove("sessionId");
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
   } else {}
   }catch(e){
        print("Error : ");

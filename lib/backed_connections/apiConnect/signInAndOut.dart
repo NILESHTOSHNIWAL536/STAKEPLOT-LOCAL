@@ -49,8 +49,9 @@ void check(context, String flag) async {
 Future<void> loginUser(TextEditingController emailController,
     TextEditingController passwordController, BuildContext context,
     [bool flag = false]) async {
+      
   final SharedPreferences _pref = await SharedPreferences.getInstance();
-  print(url);
+  
   final response = await http.post(
     Uri.parse('${url}/user/login'),
     headers: <String, String>{
@@ -66,7 +67,8 @@ Future<void> loginUser(TextEditingController emailController,
 
     String accessToken = body['data']['accessToken'];
     _pref.setString("accessToken", "Bearer " + accessToken);
-    // _pref.setString("accessToken","Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMwYWZiZmNiMTcxMDc2NWFiOGU5MCIsImlhdCI6MTczNzcwMzU3NCwiZXhwIjoxNzQyODg3NTc0fQ.zYUUmoy_xlaZwdvM8r4KDOZNADlLyxPirqDm0avEUXg");
+     print(accessToken);
+     print(body['-id']);
     storeinmap(body, _pref, passwordController.text);
 
     currentId.value = body['data']['_id'];
@@ -82,6 +84,7 @@ Future<void> loginUser(TextEditingController emailController,
     acceptReset.value = false;
     // Navigator.popAndPushNamed(context, '/home');
   } else {
+
     acceptReset.value = false;
     var snackBar = SnackBar(
       duration: Durations.medium4,
@@ -421,37 +424,37 @@ void clearGetX() {
 }
 
 void oneSignalApis(context) async {
-  String appId = "ff897875-4bac-4b0c-9bb6-a371998d4d1c";
+  // String appId = "ff897875-4bac-4b0c-9bb6-a371998d4d1c";
 
-  await OneSignal.shared.setAppId(appId);
+  // await OneSignal.shared.setAppId(appId);
 
-  OneSignal().promptUserForPushNotificationPermission().then((granted) {
-    if (granted) {
-      print("Notification permission granted");
-    } else {
-      print("Notification permission not granted");
-    }
-  });
-  var status = await OneSignal.shared.getDeviceState();
-  String? userDeviceId = status?.userId;
-  print("userDeviceId"); // Get us the device Unique Id
-  print(userDeviceId); // Get us the device Unique Id
-  await getDeviceInfo(userDeviceId!, context);
+  // OneSignal().promptUserForPushNotificationPermission().then((granted) {
+  //   if (granted) {
+  //     print("Notification permission granted");
+  //   } else {
+  //     print("Notification permission not granted");
+  //   }
+  // });
+  // var status = await OneSignal.shared.getDeviceState();
+  // String? userDeviceId = status?.userId;
+  // print("userDeviceId"); // Get us the device Unique Id
+  // print(userDeviceId); // Get us the device Unique Id
+  // await getDeviceInfo(userDeviceId!, context);
 
-  OneSignal.shared
-      .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-    print("Notification Opened: ${result.notification.additionalData}");
+  // OneSignal.shared
+  //     .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+  //   print("Notification Opened: ${result.notification.additionalData}");
 
-    String? screen = result.notification.additionalData?['screen'];
-    print("Screen to Navigate To: $screen");
-    // var data=await  getDeviceInfo();
+  //   String? screen = result.notification.additionalData?['screen'];
+  //   print("Screen to Navigate To: $screen");
+  //   // var data=await  getDeviceInfo();
 
-    if (screen != null) {
-      Navigator.pushNamed(context, screen); // Navigate to the screen
-    } else {
-      print("No screen specified in additional data.");
-    }
-  });
+  //   if (screen != null) {
+  //     Navigator.pushNamed(context, screen); // Navigate to the screen
+  //   } else {
+  //     print("No screen specified in additional data.");
+  //   }
+  // });
 
   // var data=await  getDeviceInfo();
   // print(data);
