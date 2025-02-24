@@ -20,8 +20,11 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 class FinancePage extends StatefulWidget {
   final ScrollController scrollController;
   final GlobalKey transactionHistoryKey;
-  const FinancePage({super.key,required this.scrollController,
-    required this.transactionHistoryKey,});
+  const FinancePage({
+    super.key,
+    required this.scrollController,
+    required this.transactionHistoryKey,
+  });
 
   @override
   State<FinancePage> createState() => _FinancePageState();
@@ -31,7 +34,7 @@ class _FinancePageState extends State<FinancePage> {
   @override
   void initState() {
     super.initState();
-    
+
     getGraphData.value = false;
     calledFunctionToFetchData();
   }
@@ -52,14 +55,17 @@ class _FinancePageState extends State<FinancePage> {
       _calculateTotalSpent();
     }
   }
- void _scrollToTransactionHistory() {
+
+  void _scrollToTransactionHistory() {
   final RenderObject? renderObject =
       widget.transactionHistoryKey.currentContext?.findRenderObject();
   if (renderObject != null && renderObject is RenderBox) {
     final position = renderObject.localToGlobal(Offset.zero);
-    print("Scrolling to position: ${position.dy}");
+    final scrollOffset = widget.scrollController.offset;
+    final targetOffset = position.dy - scrollOffset;
+    print("Target offset: $targetOffset");
     widget.scrollController.animateTo(
-      position.dy,
+      targetOffset > 0 ? targetOffset : 0,
       duration: Duration(milliseconds: 500),
       curve: Curves.easeInOut,
     );
@@ -67,6 +73,7 @@ class _FinancePageState extends State<FinancePage> {
     print("RenderObject not found for TransactionHistory");
   }
 }
+
   int _getDaysInCurrentMonth() {
     final now = DateTime.now();
     return DateTime(now.year, now.month + 1, 0).day;
@@ -136,7 +143,10 @@ class _FinancePageState extends State<FinancePage> {
                         ],
                       ),
                       CustomButton(
-                        onTap: _scrollToTransactionHistory,
+                        onTap: () {
+                          print("History button tapped");
+                          _scrollToTransactionHistory();
+                        },
                         text: 'History',
                         fontSize: fontSizeFactor * 2.8,
                         height: 1.7,
