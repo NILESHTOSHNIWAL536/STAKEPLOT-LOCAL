@@ -41,9 +41,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final UserController userController = Get.find<UserController>();
+  final ScrollController _scrollController = ScrollController();
+  final GlobalKey _transactionHistoryKey = GlobalKey();
 
   @override
   void initState() {
+    super.initState();
+    initializeData();
+  }
+
+  void initializeData() {
     check(context, "homeScreen");
     getAllTransaction(context);
     getTrending();
@@ -68,6 +75,8 @@ class _HomePageState extends State<HomePage> {
 }
 
 class HomeScreen extends StatelessWidget {
+  final ScrollController _scrollController = ScrollController();
+  final GlobalKey _transactionHistoryKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,6 +121,7 @@ class HomeScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: ListView(
+          controller: _scrollController,
           children: [
             // Bank Account Container
             SizedBox(
@@ -123,7 +133,10 @@ class HomeScreen extends StatelessWidget {
             // Finance Chart
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.5,
-              child: const FinancePage(),
+              child: FinancePage(
+                scrollController: _scrollController,
+                transactionHistoryKey: _transactionHistoryKey,
+              ),
             ),
             //const SizedBox(height: 20),
 
@@ -149,11 +162,14 @@ class HomeScreen extends StatelessWidget {
             //const SizedBox(height: 20),
 
             // Transaction History
+            // SizedBox(
+            //   // height: MediaQuery.of(context).size.height * 0.8,
+            //   child: Obx(() => getHistory.value
+            //       ? TransactionHistory(key: _transactionHistoryKey)
+            //       : TransactionHistory(key: _transactionHistoryKey)),
+            // ),
             SizedBox(
-              // height: MediaQuery.of(context).size.height * 0.8,
-              child: Obx(() => getHistory.value
-                  ? TransactionHistory()
-                  : TransactionHistory()),
+              child: TransactionHistory(key: _transactionHistoryKey),
             ),
           ],
         ),
