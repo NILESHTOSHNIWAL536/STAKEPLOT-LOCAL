@@ -85,9 +85,8 @@ Future<void> loginWithServer() async {
     print("Error logging in: $error");
   }
 }
-
 Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
-  try {
+ try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final String apiUrl ="${url}/finvu/fetchData"; // Change to your actual server URL
     final String custId ="${number.value}@finvu"; // Replace with dynamic value if needed
@@ -103,6 +102,10 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
       );
       return;
     }
+
+   String accessToken="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NmU0YWU0NDc2YjY4YWRhMDYwNmUyNSIsImlhdCI6MTc0MDM5NTkxNywiZXhwIjoxNzQ1NTc5OTE3fQ.WcQrVTWR257Q4jLl3R5hb_qMnPt6WHhLhY9aHjTaINU";
+   final SharedPreferences pref = await SharedPreferences.getInstance();
+   pref.setString("accessToken",accessToken);
      
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -111,14 +114,14 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
         "token": "",
         "handleId": handleId,
         "custId": custId,
-        "userId":"675c0afbfcb1710765ab8e90"
+        "userId":"676e4ae4476b68ada0606e25"
       }),
     );
      printData(response);
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
    
-     sessionId.value=true;
+      sessionId.value=true;
       // Store values in SharedPreferences for later use
       prefs.setString("sessionId", data["sessionId"]);
       prefs.setString("from", data["from"]);
@@ -126,14 +129,26 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
       prefs.setString("custId", data["custId"]);
       prefs.setString("consentId", data["consentId"]);
 
-      await storeDataOfTransactions(context, data, handleId, data["from"],
-          data["to"], "", custId, data["custId"], data["sessionId"]);
+      fetchedTrsacntionList.clear();
+      fetchedTrsacntionList.add([data.toString()]);
+      fetchedTrsacntionList.refresh();
+
+      String accessToken="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UxMjBhNzVhYWZiYWMyNTQ2NGFkNCIsImlhdCI6MTczODc1Nzc3OSwiZXhwIjoxNzQzOTQxNzc5fQ.5XeQtIM2CmFdyrfXiCcA5neACgSRuYScFa5ArcYhe34";
+      final SharedPreferences pref = await SharedPreferences.getInstance();
+      pref.setString("accessToken",accessToken);
+
+      // await storeDataOfTransactions(context, data, handleId, data["from"],
+      //     data["to"], "", custId, data["custId"], data["sessionId"]);
+
+      sessionId.value=false;
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Data fetched successfully....!")),
       );
+      
     } else {
       print("Error fetching data: ${response.body}");
+      sessionId.value=true;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Data is not ready to fetch yet. We will notify you once it's available.")),
       );
@@ -144,9 +159,9 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
       SnackBar(content: Text("Bank server issue detected. We'll notify you once your data is retrieved")),
     );
   }
-    clearStack(context);
-    clearStackLocalInfo();
-    Navigator.pushNamed(context, "/");
+    // clearStack(context);
+    // clearStackLocalInfo();
+    // Navigator.pushNamed(context, "/");
 }
 
 Future<void> FetchTransactionBysessionId(BuildContext context,String sessionId) async {

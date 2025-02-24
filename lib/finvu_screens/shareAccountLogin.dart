@@ -13,12 +13,14 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'dart:async';
 
 
 String bankImage =
     "https://static.vecteezy.com/system/resources/thumbnails/023/364/757/small_2x/3d-illustration-of-bank-building-and-money-bag-png.png";
+
 
 class ShareAccountLogin extends StatefulWidget {
   bool flag = false;
@@ -372,6 +374,19 @@ Widget getButton(context, str,[color=AppColors.primaryColor,textColor=AppColors.
         style: FontManager().getTextStyle(context,
             lWeight: FontWeight.bold, fontSize: 15, color:textColor ),
       ),
+    ),
+  );
+}
+
+
+Widget getspinner(context, str,[color=AppColors.primaryColor,textColor=AppColors.bg5]) {
+  return Container(
+    width: MediaQuery.of(context).size.width / 1.1,
+    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+    decoration: BoxDecoration(
+        color: color, borderRadius: BorderRadius.circular(24)),
+    child: Center(
+      child: Spinner(color: Colorcodes.white,size: 20,)
     ),
   );
 }

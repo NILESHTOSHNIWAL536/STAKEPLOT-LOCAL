@@ -41,7 +41,7 @@ class _FinancePageState extends State<FinancePage> {
 
   void calledFunctionToFetchData() {
     if (selectedButton.value == "Month") {
-      print("ssuming transactionChatGraph is your data map");
+     
       //print(totalCredited);
       getAutoMationsTransactionsCustom(getFormattedDate(), context);
       _calculateTotalSpent();
@@ -89,8 +89,7 @@ class _FinancePageState extends State<FinancePage> {
       // Calculate the sum of credited and debited amounts
       double totalCredited = credited.fold(0.0, (sum, item) => sum + item);
       double totalDebited = debited.fold(0.0, (sum, item) => sum + item);
-      print("ssuming transactionChatGraph is your data map");
-      print(totalCredited);
+    
 
       // Total spent is the difference between credited and debited
       setState(() {

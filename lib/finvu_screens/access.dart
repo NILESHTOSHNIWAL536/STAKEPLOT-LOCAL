@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
@@ -645,7 +646,19 @@ class _AccessState extends State<Access> {
           ),
         ),
         InkWell(
-          onTap: () {},
+          onTap: () async{
+            FinvuConsentRequestDetailInfo consentInfo =
+          await finvuManager.getConsentRequestDetails(handleId.value);
+
+             try{
+                finvuManager.denyConsentRequest(consentInfo);
+                 clearStack(context);
+                snackBarCalled(context, "Successfully disApproved request....");
+                Navigator.pushNamed(context, "/ShareAccountLogin");
+             }catch(e){
+                  snackBarCalled(context, "can't Disapprove request..");
+             }
+          },
           child: Container(
             width: MediaQuery.of(context).size.width / 1.1,
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
@@ -741,3 +754,5 @@ class _AccessState extends State<Access> {
 
 
 }
+
+

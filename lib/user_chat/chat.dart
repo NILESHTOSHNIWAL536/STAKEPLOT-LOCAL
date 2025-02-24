@@ -91,7 +91,7 @@ class _ChatState extends State<Chat> {
     //     urlWithLocallHost, '/',
     //     query: 'chatID=${data['_id']}');
     socket = IO.io(
-        urlWithLocallHost,
+        "https://stakeplot.in/",
         IO.OptionBuilder()
             .setTransports(['websocket'])
             .enableForceNewConnection()
@@ -159,7 +159,7 @@ class _ChatState extends State<Chat> {
                             ? data2['post']['postLocation']
                             : ""
                         // post:  postData,//data2['messageType']=="post"? (data2['post']['postLocation'])??"":"",
-                        )),
+                      )),
               unSeenChat(context, data['_id']),
               getChatLoader(),
               getChats(widget.data),

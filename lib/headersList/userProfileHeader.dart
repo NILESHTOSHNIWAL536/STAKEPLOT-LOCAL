@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/customNoti.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
+import 'package:flutter_application_code_stakeplot/userAvatar.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:intl/intl.dart';
@@ -84,13 +85,11 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
                                 ? Navigator.pushNamed(context, "/Profile")
                                 : null;
                           },
-                          child: CircleAvatar(
-                              backgroundColor: Colorcodes.budgetLightGreen,
-                              child: Center(
-                                  child: ProfileImage(
-                                      url: widget.flag
-                                          ? avatar.value
-                                          : svgIconPath.money))),
+                          child: Center(
+                              child: UserAvatar(
+                                  url: widget.flag
+                                      ? avatar.value
+                                      : svgIconPath.money,height: 15,width: 10,)),
                         )
                       ]),
                 ],

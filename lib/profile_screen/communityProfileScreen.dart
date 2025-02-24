@@ -134,45 +134,41 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
   }
 
   Widget feedWidgets(String type) {
-    return Expanded(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              child: Column(
-                children: myPostList
-                    .map((item) => (item['isPoll'] ?? false)
-                        ? const SizedBox.shrink()
-                        : PostCard(data: item))
-                    .toList(),
-              ),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+            child: Column(
+              children: myPostList
+                  .map((item) => (item['isPoll'] ?? false)
+                      ? const SizedBox.shrink()
+                      : PostCard(data: item))
+                  .toList(),
             ),
-            SizedBox(
-              height: 100,
-            ),
-          ],
-        ),
+          ),
+          SizedBox(
+            height: 100,
+          ),
+        ],
       ),
     );
   }
 
   Widget pollWidgets(String type) {
-    return Expanded(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-                child: Wrap(
-                    children: myPostList
-                        .map((item) => (item['isPoll'] ?? false)
-                            ? PostCard(data: item)
-                            : SizedBox.shrink())
-                        .toList())),
-            SizedBox(
-              height: 100,
-            ),
-          ],
-        ),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+              child: Wrap(
+                  children: myPostList
+                      .map((item) => (item['isPoll'] ?? false)
+                          ? PostCard(data: item)
+                          : SizedBox.shrink())
+                      .toList())),
+          SizedBox(
+            height: 100,
+          ),
+        ],
       ),
     );
   }

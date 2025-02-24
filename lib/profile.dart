@@ -13,10 +13,7 @@ class ProfileImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return flag
-        ? SvgPicture.asset(
-            url,
-            color: Colorcodes.textColor,
-          )
+        ? SvgPicture.asset(url,color: Colorcodes.textColor,)
         : SvgPicture.asset(url);
   }
 }

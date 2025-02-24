@@ -28,6 +28,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
+import 'package:flutter_application_code_stakeplot/userAvatar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:get/get.dart';
@@ -97,31 +98,23 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: AppColors.backgroundColor,
         automaticallyImplyLeading: false,
         actions: [
-          Row(
-            children: [
-              AvatarProfileImage(url: avatar.value, width: 15, height: 15),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  textStyle(
-                      context: context,
-                      text: "Hello..",
-                      fontWeight: FontWeight.w500,
-                      fontsize: 15),
-                  textStyle(
-                      context: context,
-                      text: userName.value,
-                      fontWeight: FontWeight.bold,
-                      fontsize: 15)
-                ],
-              )
-            ],
-          ),
-          Spacer(),
-          NotificationsBudget(
-            child: Text(""),
-          ),
+                Row(
+                    children: [
+                          UserAvatar(url: avatar.value, width: 15, height: 15),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                                 textStyle(context: context,text: "Hello..",fontWeight: FontWeight.w500,fontsize: 15),
+                               Obx(()=>  textStyle(context: context,text:userName.value,fontWeight: FontWeight.bold,fontsize: 15))
+                            ],
+                          )
+                    ],
+                ),
+               Spacer(),
+               NotificationsBudget(
+                    child: Text(""),
+               ),
         ],
       ),
       body: Padding(

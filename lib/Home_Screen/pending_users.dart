@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
+import 'package:flutter_application_code_stakeplot/userAvatar.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -165,7 +166,7 @@ Widget _buildListTile(
   return ListTile(
     leading: CircleAvatar(
       backgroundColor: Colorcodes.budgetLightGreen,
-      child: ProfileImage(url: data['Avatar'] ?? 'assets/avatar/menp4.svg'),
+      child: UserAvatar(url: data['Avatar'] ?? 'assets/avatar/menp4.svg',width: 1,height: 1,),
     ),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,

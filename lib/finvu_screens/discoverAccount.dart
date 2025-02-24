@@ -279,47 +279,47 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
     }
   }
 
-  void linkedaccoutnData(bankData) async {
-    String fipId = bankData.fipId;
-    FinvuFIPInfo finvuFIPInfo = bankData;
+  // void linkedaccoutnData(bankData) async {
+  //   String fipId = bankData.fipId;
+  //   FinvuFIPInfo finvuFIPInfo = bankData;
 
-    try {
-      var fetchFIPDetails =
-          await finvuManager.fetchFIPDetails(fipId); //dhanagarbank
-      // var fetchFIPDetails=await finvuManager.fetchFIPDetails("dhanagarbank");
-      var typeIdentifiers = fetchFIPDetails.typeIdentifiers;
+  //   try {
+  //     var fetchFIPDetails =
+  //         await finvuManager.fetchFIPDetails(fipId); //dhanagarbank
+  //     // var fetchFIPDetails=await finvuManager.fetchFIPDetails("dhanagarbank");
+  //     var typeIdentifiers = fetchFIPDetails.typeIdentifiers;
 
-      List<FinvuTypeIdentifierInfo> finvuTypeIdentifierInfo = [];
+  //     List<FinvuTypeIdentifierInfo> finvuTypeIdentifierInfo = [];
 
-      typeIdentifiers.forEach((e) {
-        e.identifiers.forEach((ele) {
-          FinvuTypeIdentifierInfo obj = FinvuTypeIdentifierInfo(
-            category: ele.category,
-            type: ele.type,
+  //     typeIdentifiers.forEach((e) {
+  //       e.identifiers.forEach((ele) {
+  //         FinvuTypeIdentifierInfo obj = FinvuTypeIdentifierInfo(
+  //           category: ele.category,
+  //           type: ele.type,
 
-            value: number.value, // dou
-          );
-          finvuTypeIdentifierInfo.add(obj);
-        });
-      });
-      FinvuFIPDetails fipDetails = FinvuFIPDetails(
-          fipId: fipId, typeIdentifiers: fetchFIPDetails.typeIdentifiers);
+  //           value: number.value, // dou
+  //         );
+  //         finvuTypeIdentifierInfo.add(obj);
+  //       });
+  //     });
+  //     FinvuFIPDetails fipDetails = FinvuFIPDetails(
+  //         fipId: fipId, typeIdentifiers: fetchFIPDetails.typeIdentifiers);
 
-      List<FinvuDiscoveredAccountInfo> info =
-          await finvuManager.discoverAccounts(
-              fipDetails, finvuFIPInfo.fipFitypes, finvuTypeIdentifierInfo);
+  //     List<FinvuDiscoveredAccountInfo> info =
+  //         await finvuManager.discoverAccounts(
+  //             fipDetails, finvuFIPInfo.fipFitypes, finvuTypeIdentifierInfo);
 
 
-      //  Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) => LinkingAccount(account: info,fipDetails: fipDetails,),
-      //     ),
-      //   );
-    } catch (e) {
-      snackBarCalled(context, "No Account Found...");
-    }
-  }
+  //     //  Navigator.push(
+  //     //     context,
+  //     //     MaterialPageRoute(
+  //     //       builder: (context) => LinkingAccount(account: info,fipDetails: fipDetails,),
+  //     //     ),
+  //     //   );
+  //   } catch (e) {
+  //     snackBarCalled(context, "No Account Found...");
+  //   }
+  // }
 }
 
 

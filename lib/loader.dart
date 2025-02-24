@@ -21,6 +21,7 @@ const Loader({ Key? key }) : super(key: key);
     );
   }
 }
+
 class Spinner extends StatelessWidget {
 double size;
 Color color;

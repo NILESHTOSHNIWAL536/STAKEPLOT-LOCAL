@@ -18,10 +18,15 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/otpScreen.dart'
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/verifyOTP.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/webView.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
+import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
+
 
 class MobileNumber extends StatefulWidget {
   const MobileNumber({super.key});
@@ -41,6 +46,36 @@ class _MobileNumberState extends State<MobileNumber> {
   TextEditingController otpController = TextEditingController();
 final String termsUrl = "https://finvu.in/terms"; // Replace with actual URL
 
+late final WebViewController controller ;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Step 1: Initialize WebView platform params
+    late final PlatformWebViewControllerCreationParams params;
+    if (WebViewPlatform.instance is WebKitWebViewPlatform) {
+      params = WebKitWebViewControllerCreationParams(
+        allowsInlineMediaPlayback: true,
+        mediaTypesRequiringUserAction: const <PlaybackMediaTypes>{},
+      );
+    } else {
+      params = const PlatformWebViewControllerCreationParams();
+    }
+
+    // Step 2: Create the WebViewController
+    controller = WebViewController.fromPlatformCreationParams(params)
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(Uri.parse("https://finvu.in/terms"));
+
+    // Step 3: Configure Android-specific settings
+    if (controller.platform is AndroidWebViewController) {
+      AndroidWebViewController.enableDebugging(true);
+      (controller.platform as AndroidWebViewController)
+          .setMediaPlaybackRequiresUserGesture(false);
+    }
+  }
+  
   Future<void> _launchURL() async {
     final Uri url = Uri.parse(termsUrl);
     if (await canLaunchUrl(url)) {
@@ -61,132 +96,161 @@ final String termsUrl = "https://finvu.in/terms"; // Replace with actual URL
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       bottomNavigationBar: BottomBar(),
-      // appBar: AppBar(
-      //   title: Text('Mobile Number'),
-      // ),
-      //bottomSheet: bottomSheet(context),
-      body: Padding(
-        padding: EdgeInsets.only(top: 100, left: 16, right: 16),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        padding: EdgeInsets.only(top: 100, left: 16, right: 16,bottom: 5),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
           children: [
-            Text(
-              "OTP Verification",
-              style: FontManager().getTextStyle(
-                context,
-                lWeight: FontWeight.bold,
-                fontSize: 20,
-                color: AppColors.bg1,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Text(
-                "Finvu will send you one-time OTP to your mobile number",
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.w400,
-                  fontSize: 14,
-                  color: AppColors.bg3,
-                ),
-              ),
-            ),
-            // TextField for entering phone number
-            TextField(
-              controller: _phoneController, // Attach the controller
-              maxLength: 10,
-              autocorrect: true,
-              keyboardType: TextInputType.phone, // Phone input keyboard
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.phone_android_outlined),
-                prefixIconColor: AppColors.primaryColor,
-                hintText: 'Enter 10 digit Number',
-                hintStyle: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.w500,
-                  fontSize: 12,
-                  color: AppColors.bg3,
-                ),
-                filled: true,
-                fillColor: AppColors.button,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide.none,
-                ),
-
-                //prefixIcon: Icon(Icons.phone),
-                //hintText: 'Mobile Number',
-              ),
-            ),
-            SizedBox(height: 60), // Add spacing between TextField and button
-            // Button for "Get OTP"
-            GestureDetector(
-              onTap: () async {
-                // Handle OTP logic here
-                if (_phoneController.text.length != 10) {
-                  snackBarCalled(context, "Please enter valid mobile number",
-                      Colorcodes.red);
-                  return;
-                }
-                ;
-                String phoneNumber = _phoneController.text;
-                number.value = phoneNumber;
-              
-                // loginToAutoTractions(context);
-                //  LOGOUT();
-                
-                await loginWithServer();
-                otpController = TextEditingController();
-
-                showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (BuildContext context) {
-                      return verifyaotp(context);
-                    });
-
-                //print("Phone Number: $phoneNumber");
-                // Add your logic for sending OTP
-              },
-              child: getButton(context, "Continue"),
-
-            ),
-            SizedBox(height: MediaQuery.sizeOf(context).height/2.4,),
-            Padding(
-              padding: const EdgeInsets.only(top: 25),
-              child: Center(
-                      child: RichText(
-                        text: TextSpan(
-              text: "By clicking continue, you agree to Finvu's ",
-              style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.w500,
-                  fontSize: 16,
-                  color: AppColors.bg1,
-                ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextSpan(
-                  text: "Terms & Conditions",
+                Text(
+                  "OTP Verification",
                   style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.w500,
-                  fontSize: 16,
-                  //decoration: UnderlineInputBorder(),
-                  color: Colors.blue,
+                    context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: AppColors.bg1,
+                  ),
                 ),
-                  // Make it clickable
-                  recognizer: TapGestureRecognizer()..onTap = _launchURL,
-                ),
-              ],
-                        ),
-                      ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Text(
+                    "Finvu will send you one-time OTP to your mobile number",
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w400,
+                      fontSize: 14,
+                      color: AppColors.bg3,
                     ),
+                  ),
+                ),
+                // TextField for entering phone number
+                TextField(
+                  controller: _phoneController, // Attach the controller
+                  maxLength: 10,
+                  autocorrect: true,
+                  keyboardType: TextInputType.phone, // Phone input keyboard
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.phone_android_outlined),
+                    prefixIconColor: AppColors.primaryColor,
+                    hintText: 'Enter 10 digit Number',
+                    hintStyle: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w500,
+                      fontSize: 12,
+                      color: AppColors.bg3,
+                    ),
+                    filled: true,
+                    fillColor: AppColors.button,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
+                    ),
+            
+                    //prefixIcon: Icon(Icons.phone),
+                    //hintText: 'Mobile Number',
+                  ),
+                ),
+                SizedBox(height: 60), // Add spacing between TextField and button
+                // Button for "Get OTP"
+                GestureDetector(
+                  onTap: () async {
+                    // Handle OTP logic here
+                    if (_phoneController.text.length != 10) {
+                      snackBarCalled(context, "Please enter valid mobile number",
+                          Colorcodes.red);
+                      return;
+                    }
+                    ;
+                    String phoneNumber = _phoneController.text;
+                    number.value = phoneNumber;
+                    print(number);
+                    // loginToAutoTractions(context);
+                    //  LOGOUT();
+                    
+                    await loginWithServer();
+                    otpController = TextEditingController();
+            
+                    showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (BuildContext context) {
+                          return verifyaotp(context);
+                        });
+            
+                    //print("Phone Number: $phoneNumber");
+                    // Add your logic for sending OTP
+                  },
+                  child: getButton(context, "Continue"),
+            
+                ),
+
+              
+             
+              ],
             ),
+
+
+              
+                Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: Center(
+                          child: RichText(
+                            text: TextSpan(
+                  text: "By clicking continue, you agree to Finvu's ",
+                  style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w500,
+                      fontSize: 10,
+                      color: AppColors.bg1,
+                    ),
+                  children: [
+                    TextSpan(
+                      text: "Terms & Conditions",
+                      
+                      style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w500,
+                      fontSize: 12,
+                      //decoration: UnderlineInputBorder(),
+                      color: Colors.blue,
+                
+                    ),
+                     recognizer: TapGestureRecognizer()
+                      ..onTap = ()  {
+                          
+                          click();
+                      }
+                      // Make it clickable
+                      
+                    ),
+                  ],
+                            ),
+                          ),
+                        ),
+                ),
+             
+
           ],
         ),
       ),
     );
   }
+
+
+  void click() {
+    // Step 4: Reuse the initialized controller instead of creating a new one
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WebViewPage(controller: controller),
+      ),
+    );
+  }
+
 
   Widget verifyaotp(context) {
     return AnimatedPadding(
@@ -304,6 +368,8 @@ final String termsUrl = "https://finvu.in/terms"; // Replace with actual URL
               child: GestureDetector(
                   onTap: _isOtpValid.value
                       ? () {
+                          print(_otpCode.value);
+                          print(_isOtpValid.value);
                           if (_isOtpValid.value) {
                             verify(_otpCode.value, context);
                           } else {

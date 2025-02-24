@@ -14,18 +14,23 @@ import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void verify(String otp, context) async {
-
+  print(otp);
+  print(otpReference);
+  print(finvuManager.isConnected());
   try {
+    print(1);
     var login = await finvuManager.verifyLoginOtp(
       otp,
       otpReference,
     );
+    print(2);
 
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     String? token = await _pref.getString("token");
+    print("token 1");
     clearStackLocalInfo();
-
     getLinkedAccountInfo();
+    print("token 2");
 
                   Navigator.push(
                       context,
@@ -34,15 +39,9 @@ void verify(String otp, context) async {
                       ),
                   );
                   
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => ShareAccountLogin(
-    //       flag: true,
-    //     ),
-    //   ),
-    // );
   } catch (e) {
+    print("error====");
+    print(e);
     snackBarCalled(context, "Invalid Otp/Number...");
   }
 }
@@ -357,48 +356,48 @@ class _FinvuAccountState extends State<FinvuAccount> {
     debugPrint('getConsentRequestDetails');
   }
 
-  void discoverAccounts() async {
-    try {
-      List<FinvuFIPInfo> data = await finvuManager.fipsAllFIPOptions();
+  // void discoverAccounts() async {
+  //   try {
+  //     List<FinvuFIPInfo> data = await finvuManager.fipsAllFIPOptions();
 
-      data = [data[0]];
-      FinvuFIPInfo finvuFIPInfo = data[0];
+  //     data = [data[0]];
+  //     FinvuFIPInfo finvuFIPInfo = data[0];
 
-      var fetchFIPDetails = await finvuManager.fetchFIPDetails("dhanagarbank");
-      var typeIdentifiers = fetchFIPDetails.typeIdentifiers;
+  //     var fetchFIPDetails = await finvuManager.fetchFIPDetails("dhanagarbank");
+  //     var typeIdentifiers = fetchFIPDetails.typeIdentifiers;
 
-      List<FinvuTypeIdentifierInfo> finvuTypeIdentifierInfo = [];
+  //     List<FinvuTypeIdentifierInfo> finvuTypeIdentifierInfo = [];
 
-      typeIdentifiers.forEach((e) {
-        e.identifiers.forEach((ele) {
-          FinvuTypeIdentifierInfo obj = FinvuTypeIdentifierInfo(
-            category: ele.category,
-            type: ele.type,
-            value: number.value, // dou
-          );
-          finvuTypeIdentifierInfo.add(obj);
-        });
-      });
+  //     typeIdentifiers.forEach((e) {
+  //       e.identifiers.forEach((ele) {
+  //         FinvuTypeIdentifierInfo obj = FinvuTypeIdentifierInfo(
+  //           category: ele.category,
+  //           type: ele.type,
+  //           value: number.value, // dou
+  //         );
+  //         finvuTypeIdentifierInfo.add(obj);
+  //       });
+  //     });
 
-      FinvuFIPDetails fipDetails = FinvuFIPDetails(
-          fipId: "dhanagarbank",
-          typeIdentifiers: fetchFIPDetails.typeIdentifiers);
+  //     FinvuFIPDetails fipDetails = FinvuFIPDetails(
+  //         fipId: "dhanagarbank",
+  //         typeIdentifiers: fetchFIPDetails.typeIdentifiers);
 
-      List<FinvuDiscoveredAccountInfo> info =
-          await finvuManager.discoverAccounts(
-              fipDetails, finvuFIPInfo.fipFitypes, finvuTypeIdentifierInfo);
+  //     List<FinvuDiscoveredAccountInfo> info =
+  //         await finvuManager.discoverAccounts(
+  //             fipDetails.fipId, finvuFIPInfo.fipFitypes, finvuTypeIdentifierInfo);
 
-      //  info.forEach((e){
-      //     print('e.accountType');
-      //     print(e.accountType);
-      //     print(e.fiType);
-      //  });
-    } catch (e) {
-      print(e);
-    }
+  //     //  info.forEach((e){
+  //     //     print('e.accountType');
+  //     //     print(e.accountType);
+  //     //     print(e.fiType);
+  //     //  });
+  //   } catch (e) {
+  //     print(e);
+  //   }
 
-    debugPrint('getConsentRequestDetails');
-  }
+  //   debugPrint('getConsentRequestDetails');
+  // }
 
   void completeMobileVerification() async {
     var sa = await finvuManager.completeMobileVerification(

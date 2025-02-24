@@ -35,12 +35,29 @@ import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'package:get/get.dart';
 import 'Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
 
 FinvuManager finvuManager = FinvuManager();
 
-void main() {
+void main()async {
   Get.put(UserController());
+  checkFirebase();
   runApp(const MyApp());
+}
+
+
+void checkFirebase() async {
+   WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    print('✅ Firebase is set up correctly!');
+  } catch (e) {
+    print('❌ Firebase setup error: $e');
+  }
 }
 
 class MyApp extends StatefulWidget {
