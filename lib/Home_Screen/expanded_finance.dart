@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:intl/intl.dart';
@@ -457,29 +458,38 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
         title: Text('Detailed Chart View'),
         backgroundColor: AppColors.backgroundColor,
       ),
-      body: Obx(() => Column(
-            children: [
-              _buildMonthYearSelector(fontSizeFactor, screenWidth),
-              if (isLoading.value)
-                Center(child: CircularProgressIndicator())
-              else
-                Container(
-                  height: screenHeight / 2.6,
-                  child: Expanded(
-                    child: LineChartWidget(
-                      chartData: currentChartData.value,
-                      days: isYearView.value ? monthLabels : currentDays,
-                      selectedButton: selectedButton,
-                      daysInMonth: isYearView.value
-                          ? 12
-                          : _getDaysInMonth(
-                              selectedYear.value, selectedMonth.value),
-                      isExpandedView: true,
+      body: Obx(() => SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+                children: [
+                  _buildMonthYearSelector(fontSizeFactor, screenWidth),
+                  if (isLoading.value)
+                    Center(child: CircularProgressIndicator())
+                  else
+                    Container(
+                      height: screenHeight / 2.6,
+                      child: Expanded(
+                        child: LineChartWidget(
+                          chartData: currentChartData.value,
+                          days: isYearView.value ? monthLabels : currentDays,
+                          selectedButton: selectedButton,
+                          daysInMonth: isYearView.value
+                              ? 12
+                              : _getDaysInMonth(
+                                  selectedYear.value, selectedMonth.value),
+                          isExpandedView: true,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-            ],
-          )),
+                    SizedBox(height: 10,),
+                    TransactionHistory(
+                      
+                    )
+                ],
+              ),
+        ),
+      )),
     );
   }
 }

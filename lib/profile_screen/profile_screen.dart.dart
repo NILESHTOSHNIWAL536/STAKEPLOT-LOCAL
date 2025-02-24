@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/communityProfileScreen.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_Details.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/hiddenTransaction.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/webView.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,6 +24,12 @@ class ProfileScreenDart extends StatefulWidget {
 }
 
 class _ProfileScreenDartState extends State<ProfileScreenDart> {
+  @override
+  void initState() {
+    super.initState();
+    getHiddenTransactions(context);
+    
+  }
   @override
   Widget build(
     BuildContext context,
@@ -199,21 +207,85 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                             //     'We respect your privacy'),
                           ],
                         ),
+                      )),
+                      SizedBox(height: 10),
+                      // Second Container for Support, Terms & conditions, and Privacy policy
+                      Container(
+                        decoration: BoxDecoration(
+                            color: AppColors.mt,
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(color: AppColors.border)),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 14, 10, 10),
+                          child: Column(
+                            children: [
+                              InkWell(
+                                onTap: (){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => HiddenTransactionsScreen(),
+                                    ),
+                                  );
+                                },
+                                child: _buildOption(
+                                    AvatarProfileImage(
+                                      url: ProfileIcons.support,
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                    'History archives ',
+                                    'Find your hidden history here'),
+                              ),
+                              Divider(),
+                              InkWell(
+                                onTap: (){
+                                  WebViewController controller  = WebViewController()..setJavaScriptMode(JavaScriptMode.unrestricted) ..loadRequest(Uri.parse("https://finvu.in/terms"));
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => WebViewPage(controller: controller),
+                                    ),
+                                  );
+                                },
+                                child: _buildOption(
+                                    AvatarProfileImage(
+                                      url: ProfileIcons.terms,
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                    'Terms & conditions',
+                                    'Please follow our terms and conditions'),
+                              ),
+                              // Divider(),
+                              // _buildOption(
+                              //     SizedBox(
+                              //       height: 40,
+                              //       width: 40,
+                              //       child: AvatarProfileImage(
+                              //         url: ProfileIcons.privacyPolicy,
+                              //         height: 22,
+                              //         width: 22,
+                              //       ),
+                              //     ),
+                              //     'Privacy policy',
+                              //     'We respect your privacy'),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                   
-                    // Third Container for Log ou
-                    // t
-                    const SizedBox(height: 10,),
-                    logoutWidget(),
-                   
-                  ],
-                ),
-              ),
+                     
+                      // Third Container for Log ou
+                      // t
+                      const SizedBox(height: 10,),
+                      logoutWidget(),
+                     
+                  
+            ]) ),
               // Spacer(),
               // logoutWidget(),
-            ],
-          ),
+  
+         ] ),
         ),
       ),
     );

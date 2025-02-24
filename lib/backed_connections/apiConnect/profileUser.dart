@@ -18,6 +18,26 @@ void approveBill(context, id, type, notifyId) async {
   if (getFlagOfResponse(responce)) {}
 }
 
+// void getRemainders(context) async {
+//   String urlPath = "${url}/reminders";
+//   var responce = await getDataApiCall(urlPath);
+//   print("responce................................");
+//   print(responce.body);
+
+//   if (getFlagOfResponse(responce)) {
+//     var his = jsonDecode(responce.body);
+//     var userDue = his['data']['PendingBills'];
+//     var userDue2 = his['data']['PendingPayments'];
+//     var userDue3 = his['data']['PendingSplits'];
+//     dueAmountRemainders.clear();
+//     dueAmountRemainders.addAll(userDue);
+//     dueAmountRemainders.addAll(userDue2);
+//     dueAmountRemainders.addAll(userDue3);
+//     print(dueAmountRemainders);
+//     getdueUsers.value = !getdueUsers.value;
+//   }
+
+// }
 void getRemainders(context) async {
   String urlPath = "${url}/reminders";
   var responce = await getDataApiCall(urlPath);
@@ -26,12 +46,22 @@ void getRemainders(context) async {
 
   if (getFlagOfResponse(responce)) {
     var his = jsonDecode(responce.body);
-    var userDue = his['data']['PendingBills'];
+    var userDue = his['data']['billsPayable'];
+    var userDue2 = his['data']['billsOwed'];
+    var userDue3 = his['data']['splitsPayable'];
+    var userDue4 = his['data']['splitsOwed'];
+
     dueAmountRemainders.clear();
+    lendAmountRemainders.clear();
+
     dueAmountRemainders.addAll(userDue);
+    lendAmountRemainders.addAll(userDue2);
+    dueAmountRemainders.addAll(userDue3);
+    lendAmountRemainders.addAll(userDue4);
+    print(dueAmountRemainders);
+     print(lendAmountRemainders);
     getdueUsers.value = !getdueUsers.value;
   }
-  
 }
 
 void getNotifications(context) async {

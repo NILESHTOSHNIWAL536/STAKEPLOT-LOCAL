@@ -13,7 +13,6 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/MyBudget.dart';
 
-
 import 'package:get/get.dart';
 
 class BudgetDisplay extends StatefulWidget {
@@ -123,7 +122,8 @@ class _BudgetDisplayState extends State<BudgetDisplay> {
   Widget containerCardBudget(data) {
     return GestureDetector(
       onTap: () {
-        
+        print("data....////////////////////////////////////////");
+        print(data);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => MyBudgetScreen(data: data)),
@@ -145,7 +145,7 @@ class _BudgetDisplayState extends State<BudgetDisplay> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.only( bottom: Colorcodes.paddingSize / 2),
+                  padding: EdgeInsets.only(bottom: Colorcodes.paddingSize / 2),
                   child: Expanded(
                     child: textStyle(
                         context: context,

@@ -119,69 +119,43 @@ void PinPasswordVerify(password, context, Function setBack) async {
   }
 }
 
-void getAllTransaction(context) async {
-  var response = await getDataApiCall("${url}/transaction/all");
-  if (response.statusCode == 200) {
-    var his = jsonDecode(response.body);
-    var obj = his['data'];
-    print("trasactionsHistory,,,,,,,,");
-    print(trasactionsHistory);
-    trasactionsHistory.clear();
-    trasactionsHistory.addAll(obj);
-    print(trasactionsHistory);
-    getHistory.value = !getHistory.value;
-  } else {}
-}
 // void getAllTransaction(context) async {
-//   var response = await getDataApiCall("${url}/transactionauto/getTransactions/1");
+//   var response = await getDataApiCall("${url}/transaction/all");
 //   if (response.statusCode == 200) {
 //     var his = jsonDecode(response.body);
 //     var obj = his['data'];
 //     print("trasactionsHistory,,,,,,,,");
-//     print(response.body);
+//     print(trasactionsHistory);
 //     trasactionsHistory.clear();
 //     trasactionsHistory.addAll(obj);
+//     print(trasactionsHistory);
 //     getHistory.value = !getHistory.value;
 //   } else {}
 // }
-// Future<List<dynamic>> getAllTransaction(BuildContext context) async {
-//   try {
-//     // Call your API to fetch data
-//     var response = await getDataApiCall("${url}/transaction/all");
-    
-//     print("obj------------------------------------------------------------");
-//     printData(response, context);
-    
-//     // Check if the API call was successful
-//     if (response.statusCode == 200) {
-//       // Parse the response if it's successful
-//       var data = jsonDecode(response.body);
-//       var transactions = data['data']; // This contains the transaction list
-      
-//       print("obj------------------------------------------------------------");
-//       print(transactions[0]); // Print the first transaction (or any item you want to inspect)
-      
-//       // Optionally, update your global state or list
-//       trasactionsHistory.clear();
-//       trasactionsHistory.addAll(transactions);
-      
-//       print('transactionsHistory');
-//       print(trasactionsHistory);
-      
-//       // Trigger any necessary UI updates or state changes
-//       getHistory.value = !getHistory.value;
+void getAllTransaction(context) async {
+  var response = await getDataApiCall("${url}/transactionauto/getTransactions/1");
+  if (response.statusCode == 200) {
+    var his = jsonDecode(response.body);
+    var obj = his['data'];
+    //print("trasactionsHistory,,,,,,,,");
+    print(response.body);
+    trasactionsHistory.clear();
+    trasactionsHistory.addAll(obj);
+    getHistory.value = !getHistory.value;
+  } else {}
+}
 
-//       // Return the transactions list
-//       return transactions;
-//     } else {
-//       // If API response isn't successful, return an empty list
-//       print("Failed to load transactions");
-//       return [];
-//     }
-//   } catch (e) {
-//     // Handle any error (e.g., network issues) and return an empty list
-//     print("Error occurred while fetching transactions: $e");
-//     return [];
-//   }
-// }
+void getHiddenTransactions(context) async {
+  var response = await getDataApiCall("${url}/transactionauto/get-hide-transactions");
+  if (response.statusCode == 200) {
+    var her = jsonDecode(response.body);
+    var obj = her['data'];
+    print(" .................Hidden trasactions History,,,,,,,,");
+    print(response.body);
+    hiddentrasactionsHistory.clear();
+    hiddentrasactionsHistory.addAll(obj);
+    getHiddenHistory.value = !getHiddenHistory.value;
+  } else {}
+}
+
 

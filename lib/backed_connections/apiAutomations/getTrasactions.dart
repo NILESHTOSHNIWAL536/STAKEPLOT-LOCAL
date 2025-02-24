@@ -33,7 +33,7 @@ void changeTrasactiondata() async {
   List allTransactions = [];
   //  for (var category in trasactionsData)
   //  {
-  //       allTransactions.addAll(category["transactions"]);
+  //       allTransactions.addAll(category["transactions"]);trasactionsData
   //  }
   for (var category in trasactionsData) {
     String categoryId = category['_id'];
@@ -422,40 +422,23 @@ Future postDataApiCall(String urlPath, Map body) async {
 
 
 
-  Future<void> pickCustomDateRange(BuildContext context) async {
-    final DateTimeRange? picked = await showDateRangePicker(
-      context: context,
-      firstDate: DateTime(2025),
-      lastDate: DateTime(2027),
-      // initialDateRange: selectedDateRange,
-      builder: (context, child) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Container(
-            color: AppColors.mt,
-            width: MediaQuery.of(context).size.width * 0.8,
-            height: MediaQuery.of(context).size.height *
-                0.5, // Adjust height (60% of screen height)
-            child: child!,
-          ),
-        );
-      },
-    );
-    String s= picked!.start.toString().substring(0,10)+","+ picked.end.toString().substring(0,10);
-    getAutoMationsTransactionsCustom(s, context,'custom');
-    print("...........lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll");
-    print(s);
-    selectedButton.value='Custom';
-    getGraphData.value=false;
-    // if (picked != null && picked != selectedDateRange) {
-
-        // selectedDateRange = picked;
-        // selectedButton = 'Custom';
-
-    // }
+  void pickCustomDateRange(BuildContext context) async {
+  DateTimeRange? picked = await showDateRangePicker(
+    context: context,
+    firstDate: DateTime(2020),
+    lastDate: DateTime.now(),
+  );
+  if (picked != null) {
+    selectedButton.value = 'Custom';
+    getGraphData.value = false;
+    List<String> customDays = [];
+    for (int i = 0; i <= picked.end.difference(picked.start).inDays; i++) {
+      customDays.add((picked.start.day + i).toString().padLeft(2, '0'));
+    }
+    labels = customDays; // Update the global RxList labels
+    getAutoMationsTransactionsCustom(picked.start.toString(), context, 'Custom');
   }
+}
 
 void getWeekDate()
 {

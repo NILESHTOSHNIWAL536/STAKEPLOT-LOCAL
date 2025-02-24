@@ -168,7 +168,8 @@ final GlobalKey targetKey = GlobalKey(); // Key to identify the target widget
    RxBool graphTransaction=false.obs;
      List<String> labels=[];
     RxDouble maxYValue = 0.0.obs;
-
+RxList hiddentrasactionsHistory = [].obs;
+RxBool getHiddenHistory = false.obs;
 
 class Message {
   Message(

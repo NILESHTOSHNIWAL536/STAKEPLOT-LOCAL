@@ -13,7 +13,7 @@ import 'package:image_picker/image_picker.dart';
 
 class CommunityProfileScreen extends StatefulWidget {
   String id;
-   CommunityProfileScreen({super.key,required this.id});
+  CommunityProfileScreen({super.key, required this.id});
 
   @override
   State<CommunityProfileScreen> createState() => _CommunityProfileScreenState();
@@ -49,7 +49,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
 
   @override
   void initState() {
-      getuserPost(widget.id);
+    getuserPost(widget.id);
   }
 
   @override
@@ -64,16 +64,15 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
           children: [
             // Top Cover and Profile Picture
             topUserProfile(),
-           
+
             const SizedBox(height: 60),
-            
+
             Column(
               children: [
                 Text(userName.value.toString(),
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w600,
-                        //fontSize: MediaQuery.of(context).size.width * 0.04,
-                        //fontSize: 12,
+                       
                         color: AppColors.bg1)),
                 Text(email.value.toString(),
                     style: FontManager().getTextStyle(context,
@@ -81,46 +80,43 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
                         //fontSize: MediaQuery.of(context).size.width * 0.04,
                         //fontSize: 12,
                         color: AppColors.userName)),
-        
                 DefaultTabController(
                   length: 3, // Number of tabs
                   child: Column(
                     children: [
                       Container(
-                        padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-                        child: DecoratedBox(
-                          decoration: const BoxDecoration(),
-                          child: TabBar(
-                            indicator: BoxDecoration(
-                              // Rounded corners
-        
-                              color: AppColors.tab,
-        
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            // Padding for labels
-                            labelColor: AppColors
-                                .primaryColor, // Text color for selected tab
-                            unselectedLabelColor: AppColors
-                                .bg1, // Text color for unselected tabs
-        
-                            tabs: const [
-                              Tab(child: Text('Posts')),
-                              Tab(text: 'Polls'),
-                              // Tab(text: 'Exploria'),
-                            ],
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: TabBar(
+                          indicator: BoxDecoration(
+                            // Rounded corners
+                        
+                            color: AppColors.tab,
+                        
+                            borderRadius: BorderRadius.circular(16),
                           ),
+                          // Padding for labels
+                          labelColor: AppColors
+                              .primaryColor, // Text color for selected tab
+                          unselectedLabelColor:
+                              AppColors.bg1, // Text color for unselected tabs
+                        
+                          tabs: const [
+                            Tab(child: Text('Posts')),
+                            Tab(text: 'Polls'),
+                            // Tab(text: 'Exploria'),
+                          ],
                         ),
                       ),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height/1.609, // Adjust as needed for TabBarView
+                        height: MediaQuery.of(context).size.height /
+                            1.609, // Adjust as needed for TabBarView
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 12.0),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 0, horizontal: 12.0),
                           child: TabBarView(
                             children: [
                               Center(child: feedWidgets("post")),
                               Center(child: pollWidgets("poll")),
-                             
                             ],
                           ),
                         ),
@@ -128,7 +124,6 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
                     ],
                   ),
                 ),
-                
               ],
             ),
             const SizedBox(height: 20),
@@ -178,109 +173,113 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
     );
   }
 
+  Widget topUserProfile() {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        // Positioned button to edit cover image
+        Positioned(
+          top: 20,
+          right: 16,
+          child: TextButton.icon(
+            onPressed: () {
+              // _pickImage(ImageSource.gallery, "cover");
+            },
+            label: const Text(
+              'Edit cover',
+              style: TextStyle(color: AppColors.bg1),
+            ),
+            icon: const Icon(Icons.edit),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            // Add the action to be triggered on tap, like picking an image
+          },
+          child: Container(
+            height: MediaQuery.of(context).size.height / 6,
+            // height: 200,
+            decoration: BoxDecoration(
+              color: Colors.lightBlueAccent,
+              image: _coverImage != null
+                  ? DecorationImage(
+                      image: FileImage(_coverImage!),
+                      fit: BoxFit.cover,
+                    )
+                  : _networkImageUrl != null && _networkImageUrl.isNotEmpty
+                      ? DecorationImage(
+                          image: NetworkImage(_networkImageUrl),
+                          fit: BoxFit.cover,
+                        )
+                      : const DecorationImage(
+                          image: AssetImage(
+                              'assets/cover_placeholder.jpg'), // Default placeholder asset
+                          fit: BoxFit.cover,
+                        ),
+            ),
+          ),
+        ),
 
+        Positioned(
+          top: 140,
+          left: MediaQuery.of(context).size.width / 6.7,
+          child: networkFriends("Network", friendsList.length.toString(),
+              Icons.person_2_outlined),
+        ),
 
+        Positioned(
+          top: 140,
+          left: MediaQuery.of(context).size.width / 1.45,
+          child: networkFriends(
+              "Posts", myPostList.length.toString(), Icons.post_add),
+        ),
 
-  Widget topUserProfile(){
-     return  Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  // Positioned button to edit cover image
-                  Positioned(
-                    top: 20,
-                    right: 16,
-                    child: TextButton.icon(
-                      onPressed: () {
-                        // _pickImage(ImageSource.gallery, "cover");
-                      },
-                      label: const Text(
-                        'Edit cover',
-                        style: TextStyle(color: AppColors.bg1),
-                      ),
-                      icon: const Icon(Icons.edit),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      // Add the action to be triggered on tap, like picking an image
-                    },
-                    child: Container(
-                      height: MediaQuery.of(context).size.height/6,
-                      // height: 200,
-                      decoration: BoxDecoration(
-                        color: Colors.lightBlueAccent,
-                        image: _coverImage != null
-                            ? DecorationImage(
-                                image: FileImage(_coverImage!),
-                                fit: BoxFit.cover,
-                              )
-                            : _networkImageUrl != null &&
-                                    _networkImageUrl.isNotEmpty
-                                ? DecorationImage(
-                                    image: NetworkImage(_networkImageUrl),
-                                    fit: BoxFit.cover,
-                                  )
-                                : const DecorationImage(
-                                    image: AssetImage(
-                                        'assets/cover_placeholder.jpg'), // Default placeholder asset
-                                    fit: BoxFit.cover,
-                                  ),
-                      ),
-                    ),
-                  ),
-
-                  Positioned(
-                    top: 140,
-                    left:  MediaQuery.of(context).size.width /6.7,
-                    child: networkFriends("Network",friendsList.length.toString(),Icons.person_2_outlined),
-                  ),
-
-                  Positioned(
-                    top: 140,
-                    left: MediaQuery.of(context).size.width / 1.45,
-                    child: networkFriends("Posts",myPostList.length.toString(),Icons.post_add),
-                  ),
-                  
-                  Positioned(
-                    top: 80,
-                    left: MediaQuery.of(context).size.width / 2 - 50,
-                    child: GestureDetector(
-                      // onTap: () => _pickImage(ImageSource.gallery, "profile"),
-                      child: CircleAvatar(
-                        radius: 50,
-                        child: ProfileImage(url: avatar.value),
-                      ),
-                    ),
-                  ),
-                ],
-              );
+        Positioned(
+          top: 80,
+          left: MediaQuery.of(context).size.width / 2 - 50,
+          child: GestureDetector(
+            // onTap: () => _pickImage(ImageSource.gallery, "profile"),
+            child: CircleAvatar(
+              radius: 50,
+              child: ProfileImage(url: avatar.value),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
-
-
-
-  Widget networkFriends(String network,String count,IconData icon){
-      return Column(
-        children: [
-          Container(
-              padding: EdgeInsets.symmetric(vertical: 5,horizontal: 14),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                      color: AppColors.primaryColor,
-                      width: .5
-                  ),
-              ),
-              child:Row(
-                children: [
-                   Icon(icon,size: 20,),
-                   textStyle(context: context,text: count.toString(),fontWeight: FontWeight.bold,fontsize: 12),
-                ],
-              )  
-          ),
-          const SizedBox(height: 5,),
-          textStyle(context: context,text: network.toString(),fontWeight: FontWeight.w400,fontsize: 12),
-        ],
-      );
+  Widget networkFriends(String network, String count, IconData icon) {
+    return Column(
+      children: [
+        Container(
+            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 14),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: AppColors.primaryColor, width: .5),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  icon,
+                  size: 20,
+                ),
+                textStyle(
+                    context: context,
+                    text: count.toString(),
+                    fontWeight: FontWeight.bold,
+                    fontsize: 12),
+              ],
+            )),
+        const SizedBox(
+          height: 5,
+        ),
+        textStyle(
+            context: context,
+            text: network.toString(),
+            fontWeight: FontWeight.w400,
+            fontsize: 12),
+      ],
+    );
   }
 }

@@ -11,6 +11,7 @@ import "package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
 import "package:flutter_application_code_stakeplot/controller.dart/userController.dart";
+import "package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart";
 import "package:flutter_application_code_stakeplot/headersList/userProfileHeader.dart";
 import "package:flutter_application_code_stakeplot/profile.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart";
@@ -41,11 +42,20 @@ class _FriendsState extends State<Friends> {
     return Scaffold(
         extendBody: true,
         backgroundColor: AppColors.backgroundColor,
+        appBar: AppBar(
+          backgroundColor: AppColors.backgroundColor,
+          title: textStyle(
+                  context: context,
+                  text: "Friends list",
+                  fontsize: 18,
+                  fontWeight: FontWeight.w600),
+        ),
         //  bottomNavigationBar:logoutWidget(),
 
         body: SafeArea(
           child: Column(children: [
-            UserProfileHeader(name: "Friends List"),
+            // UserProfileHeader(name: "Friends List"),
+           // Text("Friends List"),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.only(top: Colorcodes.paddingTopDesign/2),
