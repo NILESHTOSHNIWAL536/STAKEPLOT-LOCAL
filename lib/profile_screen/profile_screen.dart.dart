@@ -234,8 +234,8 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
               ),
               // Spacer(),
               // logoutWidget(),
-            ],
-          ),
+  
+         ] ),
         ),
       ),
     );

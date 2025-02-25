@@ -29,8 +29,7 @@ void getSummary() async {
     data = data['data'];
     accountName.value = data['Bank']['fipName'];
     accountNo.value = data['accounts'][0]['accounts']['maskedAccNumber'] ?? 0;
-    print(accountNo.value);
-    balance.value = data['summaries'][0]['data']['currentBalance'].toString();
+    balance.value = data['summaries'][1]['data']['currentBalance'].toString();
   }
 }
 

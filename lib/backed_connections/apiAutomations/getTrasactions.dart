@@ -105,65 +105,137 @@ void getAutoMationsTransactionsWeekly() async {
   }
 }
 
-double getDouble(data){
-   return double.parse(data.toString());
+double getDouble(data) {
+  return double.parse(data.toString());
 }
 
-void getAutoMationsTransactionsCustom(date, context,[weekORmonth='month']) async {
-  String urlPath="${url}/transactionauto/getAllCustomTransactions/${weekORmonth.toString().toLowerCase()}/${date}";
+// void getAutoMationsTransactionsCustom(date, context,
+//     [weekORmonth = 'month']) async {
+//   String urlPath =
+//       "${url}/transactionauto/getAllCustomTransactions/${weekORmonth.toString().toLowerCase()}/${date}";
+//       print("urlPath//////////////");
+//   print(urlPath);
+
+//   var response = await getDataApiCall(urlPath);
+// print("response//////////////");
+//   print(response);
+//   trasactionsDataCreditWeekly.clear();
+//   trasactionsDataDebitWeekly.clear();
+
+//   if (getFlagOfResponse(response)) {
+//     var his = jsonDecode(response.body);
+//     List<String> labelsLocal = [];
+//     List<double> debitList = [];
+//     List<double> creditList = [];
+
+//     transactionChatGraph.clear();
+//     labels.clear();
+
+//     try {
+//       Map data = his['data']['transactions'];
+//       try {
+//         maxYValue.value =
+//             double.parse(his['data']['maxAmount'].toString()) ?? 0.0;
+//       } catch (e) {
+//         maxYValue.value = 500.0;
+//       }
+//       if (maxYValue.value == 0 || maxYValue.value == 0.0)
+//         maxYValue.value = 500.0;
+//       his['data']['transactions'].forEach((key, value) {
+//         selectedButton.value == "Custom"
+//             ? labelsLocal.add(key.toString())
+//             : labelsLocal
+//                 .add(key.toString().substring(key.toString().length - 2));
+//         debitList.add(getDouble(value['debit']));
+//         creditList.add(getDouble(value['credit']));
+//       });
+//     } catch (e) {
+//       maxYValue.value = 500;
+//       debitList = [];
+//       creditList = [];
+//       labelsLocal = weekORmonth.toString() == 'Week'
+//           ? getWeekDays()
+//           : getDaysInMonth(date);
+//       debitList = List.filled(labelsLocal.length, 0);
+//       creditList = List.filled(labelsLocal.length, 0);
+//     }
+
+//     if (selectedButton.value == 'Week') {
+//       labelsLocal = getWeekDays();
+//     }
+
+//     transactionChatGraph['credited'] = debitList;
+//     transactionChatGraph['debited'] = creditList;
+//     graphTransaction.value = !graphTransaction.value;
+// print("response//////////////");
+//   print(transactionChatGraph);
+//     labels.addAll(labelsLocal);
+//     getGraphData.value = true;
+//   }
+// }
+Future<void> getAutoMationsTransactionsCustom(String date, BuildContext context, [String weekORmonth = 'month']) async {
+  String urlPath = "$url/transactionauto/getAllCustomTransactions/${weekORmonth.toLowerCase()}/$date";
+  print("Fetching from: $urlPath");
 
   var response = await getDataApiCall(urlPath);
-  
+  print("Response: ${response.body}");
+
   trasactionsDataCreditWeekly.clear();
   trasactionsDataDebitWeekly.clear();
 
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
-     List<String> labelsLocal = [];
+    List<String> labelsLocal = List.from(labels); // Start with predefined labels
     List<double> debitList = [];
     List<double> creditList = [];
 
-     transactionChatGraph.clear();
-    labels.clear();
+    transactionChatGraph.clear();
 
-      try{
-        Map data = his['data']['transactions'];
-        try{
-        maxYValue.value=double.parse(his['data']['maxAmount'].toString()) ?? 0.0;
-        }catch(e){
-             maxYValue.value=500.0;
-        }
-        if(maxYValue.value==0 || maxYValue.value==0.0)maxYValue.value=500.0;
-        his['data']['transactions'].forEach((key, value) {
-             selectedButton.value=="Custom"? labelsLocal.add(key.toString())   :  labelsLocal.add(key.toString().substring(key.toString().length-2));
-                  debitList.add( getDouble(value['debit']));
-                  creditList.add( getDouble(value['credit']));
-    });
-    }catch(e)
-    {
-          maxYValue.value= 500;
-          debitList=[];
-          creditList=[];
-          labelsLocal=weekORmonth.toString()=='Week'?getWeekDays():getDaysInMonth(date);
-          debitList=  List.filled(labelsLocal.length, 0);
-          creditList=  List.filled(labelsLocal.length, 0);
-    }
-    
-    if(selectedButton.value=='Week')
-    {
-         labelsLocal=getWeekDays();
+    try {
+      Map data = his['data']['transactions'];
+      maxYValue.value = double.tryParse(his['data']['maxAmount'].toString()) ?? 500.0;
+      if (maxYValue.value == 0) maxYValue.value = 500.0;
+
+      if (data.isNotEmpty) {
+        data.forEach((key, value) {
+          String label = weekORmonth == 'Custom' ? key.toString() : key.toString().substring(key.length - 2);
+          if (!labelsLocal.contains(label)) labelsLocal.add(label); // Add only if not already present
+          debitList.add(getDouble(value['debit']));
+          creditList.add(getDouble(value['credit']));
+        });
+      } else {
+        // No transactions, use predefined labels and fill with zeros
+        debitList = List.filled(labelsLocal.length, 0.0);
+        creditList = List.filled(labelsLocal.length, 0.0);
+      }
+    } catch (e) {
+      print("Error processing transactions: $e");
+      maxYValue.value = 500.0;
+      debitList = List.filled(labelsLocal.length, 0.0);
+      creditList = List.filled(labelsLocal.length, 0.0);
     }
 
-    transactionChatGraph['credited']=debitList;
-    transactionChatGraph['debited']=creditList;
-    graphTransaction.value=!graphTransaction.value;
-  
-    labels.addAll(labelsLocal);
-    getGraphData.value=true;
+    if (weekORmonth == 'Week') {
+      labelsLocal = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      if (debitList.length < 7) {
+        debitList = List.filled(7, 0.0)..setRange(0, debitList.length, debitList);
+      }
+      if (creditList.length < 7) {
+        creditList = List.filled(7, 0.0)..setRange(0, creditList.length, creditList);
+      }
+    }
 
+    transactionChatGraph['credited'] = debitList;
+    transactionChatGraph['debited'] = creditList;
+    labels = labelsLocal; // Update only if necessary
+    print("Updated transactionChatGraph: $transactionChatGraph");
+    print("Updated labels: $labels");
+  } else {
+    print("API call failed");
+    transactionChatGraph['credited'] = List.filled(labels.length, 0.0);
+    transactionChatGraph['debited'] = List.filled(labels.length, 0.0);
   }
 }
-
 List<String> getWeekDays() {
   return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 }
@@ -182,7 +254,7 @@ List<String> getDaysInMonth(String yearMonth) {
   for (int i = 1; i <= daysInMonth; i++) {
     days.add('${i.toString().padLeft(2, '0')}');
   }
-   
+
   return days;
 }
 
@@ -222,10 +294,9 @@ String getCurrentMonth() {
 }
 
 String getCurrentWeek() {
-  
   final now = DateTime.now();
   final year = now.year;
-  String s='$year-W${now.weekOfYear.toString().padLeft(2, '0')}';
+  String s = '$year-W${now.weekOfYear.toString().padLeft(2, '0')}';
   return s;
 }
 
@@ -329,7 +400,7 @@ void addTransaction(String amount, String subCategory, String categories,
     'room': {},
     'isSplit': isSplit,
   };
- 
+
   final response = await http.post(
     Uri.parse('${url}/transaction/add'),
     headers: <String, String>{
@@ -344,47 +415,44 @@ void addTransaction(String amount, String subCategory, String categories,
     if (!isSplit) snackBarCalled(context, "Added Trasactions!", Colors.black);
     getAllTransaction(context);
     getCategoryData();
-     setDonectChat.value = !setDonectChat.value;
-      processChartData();
-       getAutoMationsTransactionsCustom(getFormattedDate(), context);
+    setDonectChat.value = !setDonectChat.value;
+    processChartData();
+    getAutoMationsTransactionsCustom(getFormattedDate(), context);
     Navigator.pop(context);
   } else {
     snackBarCalled(context, "can't Add Trasactions!", Colors.red);
   }
 }
 
- void processChartData() {
-    List<ChartData> newData = [];
-    double newTotalValue = 0.0;
+void processChartData() {
+  List<ChartData> newData = [];
+  double newTotalValue = 0.0;
 
-    Map<String, Color> categoryColors = {
-      "Food": Color.fromARGB(255, 198, 172, 245),
-      "Shopping": Color.fromARGB(255, 103, 133, 146),
-      "Travel": Color.fromARGB(255, 206, 231, 243),
-      "Health": Color.fromARGB(255, 130, 175, 167),
-      "Subscriptions": Color.fromARGB(255, 132, 203, 119),
-      "Entertainment": Color.fromARGB(255, 193, 118, 175),
-      "Insurance": Color(0xFF0288D1),
-      "Emi": Color(0xFFFFC107),
-      "Investments": Color.fromARGB(255, 247, 114, 114),
-      "Untagged": Color.fromARGB(255, 74, 117, 139),
-    };
+  Map<String, Color> categoryColors = {
+    "Food": Color.fromARGB(255, 198, 172, 245),
+    "Shopping": Color.fromARGB(255, 103, 133, 146),
+    "Travel": Color.fromARGB(255, 206, 231, 243),
+    "Health": Color.fromARGB(255, 130, 175, 167),
+    "Subscriptions": Color.fromARGB(255, 132, 203, 119),
+    "Entertainment": Color.fromARGB(255, 193, 118, 175),
+    "Insurance": Color(0xFF0288D1),
+    "Emi": Color(0xFFFFC107),
+    "Investments": Color.fromARGB(255, 247, 114, 114),
+    "Untagged": Color.fromARGB(255, 74, 117, 139),
+  };
 
-    
-   for (var item in categoriesList) {
-      String category = item["category"];
-      double value = item["total_debit"].toDouble();
-      Color color = categoryColors[category] ?? Colors.grey; // Default color
+  for (var item in categoriesList) {
+    String category = item["category"];
+    double value = item["total_debit"].toDouble();
+    Color color = categoryColors[category] ?? Colors.grey; // Default color
 
-      newData.add(ChartData(category, value, color));
-      newTotalValue += value;
-    }
-
-
-      chartData.value= newData;
-      totalValue.value = newTotalValue;
-  
+    newData.add(ChartData(category, value, color));
+    newTotalValue += value;
   }
+
+  chartData.value = newData;
+  totalValue.value = newTotalValue;
+}
 
 void getTransaction(context) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
@@ -404,10 +472,11 @@ void getTransaction(context) async {
     trasactionsHistory.addAll(obj);
   } else {}
 }
+
 Future postDataApiCall(String urlPath, Map body) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   var accessToken = pref.getString("accessToken");
-  
+
   final response = await http.post(
     Uri.parse(urlPath),
     headers: {
@@ -419,90 +488,84 @@ Future postDataApiCall(String urlPath, Map body) async {
   return response;
 }
 
+// void pickCustomDateRange(BuildContext context) async {
+//   DateTimeRange? picked = await showDateRangePicker(
+//     context: context,
+//     firstDate: DateTime(2020),
+//     lastDate: DateTime.now(),
+//   );
+//   if (picked != null) {
+//     selectedButton.value = 'Custom';
+//     getGraphData.value = false;
+//     List<String> customDays = [];
+//     for (int i = 0; i <= picked.end.difference(picked.start).inDays; i++) {
+//       customDays.add((picked.start.day + i).toString().padLeft(2, '0'));
+//     }
+//     labels = customDays; // Update the global RxList labels
+//     getAutoMationsTransactionsCustom(
+//         picked.start.toString(), context, 'Custom');
+//   }
+// }
 
+void getWeekDate() {
+  //   if (selectedButton == 'Week') {
+  //   final currentWeek = weekData[0]!;
+  //   chartData = {
+  //     "credited": currentWeek.values.toList(),
+  //     "debited": currentWeek.values
+  //         .map((e) => e * 0.8)
+  //         .toList(), // Debited is 80% of credited
+  //   };
+  //   labels = currentWeek.keys.toList();
+  // } else if (selectedButton == 'Month') {
+  //   chartData = {
+  //     "credited": List.generate(
+  //       30,
+  //       (index) => creditedData[index + 1]?.reduce((a, b) => a + b) ?? 0.0,
+  //     ),
+  //     "debited": List.generate(
+  //       30,
+  //       (index) => debitedData[index + 1]?.reduce((a, b) => a + b) ?? 0.0,
+  //     ),
+  //   };
+  //   labels = List.generate(30, (index) => (index + 1).toString());
+  // } else if (selectedButton == 'Custom' && selectedDateRange != null) {
+  //   final startDate = selectedDateRange!.start;
+  //   final endDate = selectedDateRange!.end;
 
+  //   // Filter data for the selected range
+  //   chartData = {
+  //     "credited": List.generate(
+  //       endDate.difference(startDate).inDays + 1,
+  //       (index) => creditedData[startDate.add(Duration(days: index)).day]!
+  //           .reduce((a, b) => a + b),
+  //     ),
+  //     "debited": List.generate(
+  //       endDate.difference(startDate).inDays + 1,
+  //       (index) => debitedData[startDate.add(Duration(days: index)).day]!
+  //           .reduce((a, b) => a + b),
+  //     ),
+  //   };
 
-  void pickCustomDateRange(BuildContext context) async {
-  DateTimeRange? picked = await showDateRangePicker(
-    context: context,
-    firstDate: DateTime(2020),
-    lastDate: DateTime.now(),
-  );
-  if (picked != null) {
-    selectedButton.value = 'Custom';
-    getGraphData.value = false;
-    List<String> customDays = [];
-    for (int i = 0; i <= picked.end.difference(picked.start).inDays; i++) {
-      customDays.add((picked.start.day + i).toString().padLeft(2, '0'));
-    }
-    labels = customDays; // Update the global RxList labels
-    getAutoMationsTransactionsCustom(picked.start.toString(), context, 'Custom');
-  }
+  //   // Generate labels for the selected date range
+  //   labels = List.generate(
+  //     endDate.difference(startDate).inDays + 1,
+  //     (index) => (startDate.add(Duration(days: index))).day.toString(),
+  //   );
+  // } else {
+  //   // Default case
+  //   chartData = {
+  //     "credited": [],
+  //     "debited": [],
+  //   };
+  //   labels = [];
+  // }
 }
 
-void getWeekDate()
-{
-    //   if (selectedButton == 'Week') {
-    //   final currentWeek = weekData[0]!;
-    //   chartData = {
-    //     "credited": currentWeek.values.toList(),
-    //     "debited": currentWeek.values
-    //         .map((e) => e * 0.8)
-    //         .toList(), // Debited is 80% of credited
-    //   };
-    //   labels = currentWeek.keys.toList();
-    // } else if (selectedButton == 'Month') {
-    //   chartData = {
-    //     "credited": List.generate(
-    //       30,
-    //       (index) => creditedData[index + 1]?.reduce((a, b) => a + b) ?? 0.0,
-    //     ),
-    //     "debited": List.generate(
-    //       30,
-    //       (index) => debitedData[index + 1]?.reduce((a, b) => a + b) ?? 0.0,
-    //     ),
-    //   };
-    //   labels = List.generate(30, (index) => (index + 1).toString());
-    // } else if (selectedButton == 'Custom' && selectedDateRange != null) {
-    //   final startDate = selectedDateRange!.start;
-    //   final endDate = selectedDateRange!.end;
+//double totalSpent = calculateTotal(chartData);
+//  totalSpent =chartData["credited"]!.isNotEmpty && chartData["debited"]!.isNotEmpty? calculateTotal(chartData): 0.0;
 
-    //   // Filter data for the selected range
-    //   chartData = {
-    //     "credited": List.generate(
-    //       endDate.difference(startDate).inDays + 1,
-    //       (index) => creditedData[startDate.add(Duration(days: index)).day]!
-    //           .reduce((a, b) => a + b),
-    //     ),
-    //     "debited": List.generate(
-    //       endDate.difference(startDate).inDays + 1,
-    //       (index) => debitedData[startDate.add(Duration(days: index)).day]!
-    //           .reduce((a, b) => a + b),
-    //     ),
-    //   };
-
-    //   // Generate labels for the selected date range
-    //   labels = List.generate(
-    //     endDate.difference(startDate).inDays + 1,
-    //     (index) => (startDate.add(Duration(days: index))).day.toString(),
-    //   );
-    // } else {
-    //   // Default case
-    //   chartData = {
-    //     "credited": [],
-    //     "debited": [],
-    //   };
-    //   labels = [];
-    // }
-    
+double calculateTotal(Map<String, List<double>> data) {
+  return data["credited"]!.reduce((a, b) => a + b) -
+      data["debited"]!.reduce((a, b) => a + b);
 }
-
-
- //double totalSpent = calculateTotal(chartData);
-  //  totalSpent =chartData["credited"]!.isNotEmpty && chartData["debited"]!.isNotEmpty? calculateTotal(chartData): 0.0;
-
-
- double calculateTotal(Map<String, List<double>> data) {
-    return data["credited"]!.reduce((a, b) => a + b) -
-        data["debited"]!.reduce((a, b) => a + b);
-  }

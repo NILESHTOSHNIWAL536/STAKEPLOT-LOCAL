@@ -42,7 +42,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final UserController userController = Get.find<UserController>();
-  
 
   @override
   void initState() {
@@ -77,11 +76,10 @@ class _HomePageState extends State<HomePage> {
 class HomeScreen extends StatelessWidget {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _transactionHistoryKey = GlobalKey();
-  
-  
-   HomeScreen() {
+
+  HomeScreen() {
     _scrollController.addListener(() {
-     // print("Scroll position: ${_scrollController.offset}");
+      // print("Scroll position: ${_scrollController.offset}");
     });
   }
   @override
@@ -98,23 +96,31 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: AppColors.backgroundColor,
         automaticallyImplyLeading: false,
         actions: [
-                Row(
-                    children: [
-                          UserAvatar(url: avatar.value, width: 15, height: 15),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                                 textStyle(context: context,text: "Hello..",fontWeight: FontWeight.w500,fontsize: 15),
-                               Obx(()=>  textStyle(context: context,text:userName.value,fontWeight: FontWeight.bold,fontsize: 15))
-                            ],
-                          )
-                    ],
-                ),
-               Spacer(),
-               NotificationsBudget(
-                    child: Text(""),
-               ),
+          Row(
+            children: [
+              UserAvatar(url: avatar.value, width: 15, height: 15),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  textStyle(
+                      context: context,
+                      text: "Hello..",
+                      fontWeight: FontWeight.w500,
+                      fontsize: 15),
+                  Obx(() => textStyle(
+                      context: context,
+                      text: userName.value,
+                      fontWeight: FontWeight.bold,
+                      fontsize: 15))
+                ],
+              )
+            ],
+          ),
+          Spacer(),
+          NotificationsBudget(
+            child: Text(""),
+          ),
         ],
       ),
       body: Padding(
@@ -130,7 +136,7 @@ class HomeScreen extends StatelessWidget {
                 child: NumberPickerScreen(),
               ),
               const SizedBox(height: 10),
-          
+
               // Finance Chart
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.5,
@@ -140,19 +146,19 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               //const SizedBox(height: 20),
-          
+
               // Manual Transaction Container
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.16,
                 child: Manualtransaction(),
               ),
               //const SizedBox(height: 20),
-          
+
               // Pending Users
               UserListScreen(),
-          
+
               //const SizedBox(height: 20),
-          
+
               // Doughnut Chart
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.5,
@@ -161,7 +167,7 @@ class HomeScreen extends StatelessWidget {
                     : DoughnutChartExample()),
               ),
               //const SizedBox(height: 20),
-          
+
               // Transaction History
               // SizedBox(
               //   // height: MediaQuery.of(context).size.height * 0.8,
@@ -247,7 +253,6 @@ class HomeScreen extends StatelessWidget {
   //   );
   // }
 }
-
 
 // import 'package:flutter/material.dart';
 // import 'package:flutter_application_code_stakeplot/Home_Screen/expanded_finance.dart';

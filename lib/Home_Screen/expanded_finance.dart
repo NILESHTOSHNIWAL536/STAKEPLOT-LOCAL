@@ -365,13 +365,13 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
         SizedBox(height: 10),
         Row(
           children: [
-            Text(
-              '₹${totalSpent.toStringAsFixed(2)}',
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.bold,
-                  fontSize: fontSizeFactor * 4,
-                  color: AppColors.accentColor),
-            ),
+            // Text(
+            //   '₹${totalSpent.toStringAsFixed(2)}',
+            //   style: FontManager().getTextStyle(context,
+            //       lWeight: FontWeight.bold,
+            //       fontSize: fontSizeFactor * 4,
+            //       color: AppColors.accentColor),
+            // ),
             SizedBox(width: screenWidth * 0.02),
             Text(
               'This week',
@@ -387,56 +387,56 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
           children: [
             Text(
               'My Spendings',
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.normal,
-                  fontSize: fontSizeFactor * 3.4,
-                  color: AppColors.bg1),
-            ),
-            Row(
-              children: [
-                GestureDetector(
+          style: FontManager().getTextStyle(context,
+              lWeight: FontWeight.normal,
+              fontSize: fontSizeFactor * 3.4,
+              color: AppColors.bg1),
+        ),
+        Row(
+          children: [
+            GestureDetector(
                   onTap: () =>
                       _showMonthPicker(context, fontSizeFactor, screenWidth),
-                  child: Container(
-                    height: 35,
-                    width: screenWidth * 0.2,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      color: AppColors.button,
-                    ),
-                    child: Center(
-                      child: Obx(() => Text(
+              child: Container(
+                height: 35,
+                width: screenWidth * 0.2,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: AppColors.button,
+                ),
+                child: Center(
+                  child: Obx(() => Text(
                             DateFormat('MMMM').format(DateTime(
                                 selectedYear.value, selectedMonth.value, 1)),
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.normal,
-                                fontSize: fontSizeFactor * 3.4,
-                                color: AppColors.accentColor),
-                          )),
-                    ),
-                  ),
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.normal,
+                            fontSize: fontSizeFactor * 3.4,
+                            color: AppColors.accentColor),
+                      )),
                 ),
-                SizedBox(width: screenWidth * 0.02),
-                GestureDetector(
+              ),
+            ),
+            SizedBox(width: screenWidth * 0.02),
+            GestureDetector(
                   onTap: () =>
                       _showYearPicker(context, fontSizeFactor, screenWidth),
-                  child: Container(
-                    height: 35,
-                    width: screenWidth * 0.2,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      color: AppColors.button,
-                    ),
-                    child: Center(
-                      child: Obx(() => Text(
-                            selectedYear.value.toString(),
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.normal,
-                                fontSize: fontSizeFactor * 3.4,
-                                color: AppColors.accentColor),
-                          )),
-                    ),
-                  ),
+              child: Container(
+                height: 35,
+                width: screenWidth * 0.2,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: AppColors.button,
+                ),
+                child: Center(
+                  child: Obx(() => Text(
+                        selectedYear.value.toString(),
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.normal,
+                            fontSize: fontSizeFactor * 3.4,
+                            color: AppColors.accentColor),
+                      )),
+                ),
+              ),
                 ),
               ],
             ),
@@ -462,18 +462,18 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-                children: [
-                  _buildMonthYearSelector(fontSizeFactor, screenWidth),
+        children: [
+          _buildMonthYearSelector(fontSizeFactor, screenWidth),
                   if (isLoading.value)
                     Center(child: CircularProgressIndicator())
                   else
                     Container(
                       height: screenHeight / 2.6,
                       child: Expanded(
-                        child: LineChartWidget(
+            child: LineChartWidget(
                           chartData: currentChartData.value,
                           days: isYearView.value ? monthLabels : currentDays,
-                          selectedButton: selectedButton,
+              selectedButton: selectedButton,
                           daysInMonth: isYearView.value
                               ? 12
                               : _getDaysInMonth(
