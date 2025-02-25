@@ -109,133 +109,71 @@ double getDouble(data) {
   return double.parse(data.toString());
 }
 
-// void getAutoMationsTransactionsCustom(date, context,
-//     [weekORmonth = 'month']) async {
-//   String urlPath =
-//       "${url}/transactionauto/getAllCustomTransactions/${weekORmonth.toString().toLowerCase()}/${date}";
-//       print("urlPath//////////////");
-//   print(urlPath);
-
-//   var response = await getDataApiCall(urlPath);
-// print("response//////////////");
-//   print(response);
-//   trasactionsDataCreditWeekly.clear();
-//   trasactionsDataDebitWeekly.clear();
-
-//   if (getFlagOfResponse(response)) {
-//     var his = jsonDecode(response.body);
-//     List<String> labelsLocal = [];
-//     List<double> debitList = [];
-//     List<double> creditList = [];
-
-//     transactionChatGraph.clear();
-//     labels.clear();
-
-//     try {
-//       Map data = his['data']['transactions'];
-//       try {
-//         maxYValue.value =
-//             double.parse(his['data']['maxAmount'].toString()) ?? 0.0;
-//       } catch (e) {
-//         maxYValue.value = 500.0;
-//       }
-//       if (maxYValue.value == 0 || maxYValue.value == 0.0)
-//         maxYValue.value = 500.0;
-//       his['data']['transactions'].forEach((key, value) {
-//         selectedButton.value == "Custom"
-//             ? labelsLocal.add(key.toString())
-//             : labelsLocal
-//                 .add(key.toString().substring(key.toString().length - 2));
-//         debitList.add(getDouble(value['debit']));
-//         creditList.add(getDouble(value['credit']));
-//       });
-//     } catch (e) {
-//       maxYValue.value = 500;
-//       debitList = [];
-//       creditList = [];
-//       labelsLocal = weekORmonth.toString() == 'Week'
-//           ? getWeekDays()
-//           : getDaysInMonth(date);
-//       debitList = List.filled(labelsLocal.length, 0);
-//       creditList = List.filled(labelsLocal.length, 0);
-//     }
-
-//     if (selectedButton.value == 'Week') {
-//       labelsLocal = getWeekDays();
-//     }
-
-//     transactionChatGraph['credited'] = debitList;
-//     transactionChatGraph['debited'] = creditList;
-//     graphTransaction.value = !graphTransaction.value;
-// print("response//////////////");
-//   print(transactionChatGraph);
-//     labels.addAll(labelsLocal);
-//     getGraphData.value = true;
-//   }
-// }
-Future<void> getAutoMationsTransactionsCustom(String date, BuildContext context, [String weekORmonth = 'month']) async {
-  String urlPath = "$url/transactionauto/getAllCustomTransactions/${weekORmonth.toLowerCase()}/$date";
-  print("Fetching from: $urlPath");
+void getAutoMationsTransactionsCustom(date, context,
+    [weekORmonth = 'month']) async {
+  String urlPath =
+      "${url}/transactionauto/getAllCustomTransactions/${weekORmonth.toString().toLowerCase()}/${date}";
+      print("urlPath//////////////");
+  print(urlPath);
 
   var response = await getDataApiCall(urlPath);
-  print("Response: ${response.body}");
-
+print("response//////////////");
+  print(response);
   trasactionsDataCreditWeekly.clear();
   trasactionsDataDebitWeekly.clear();
 
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
-    List<String> labelsLocal = List.from(labels); // Start with predefined labels
+    List<String> labelsLocal = [];
     List<double> debitList = [];
     List<double> creditList = [];
 
     transactionChatGraph.clear();
+    labels.clear();
 
     try {
       Map data = his['data']['transactions'];
-      maxYValue.value = double.tryParse(his['data']['maxAmount'].toString()) ?? 500.0;
-      if (maxYValue.value == 0) maxYValue.value = 500.0;
-
-      if (data.isNotEmpty) {
-        data.forEach((key, value) {
-          String label = weekORmonth == 'Custom' ? key.toString() : key.toString().substring(key.length - 2);
-          if (!labelsLocal.contains(label)) labelsLocal.add(label); // Add only if not already present
-          debitList.add(getDouble(value['debit']));
-          creditList.add(getDouble(value['credit']));
-        });
-      } else {
-        // No transactions, use predefined labels and fill with zeros
-        debitList = List.filled(labelsLocal.length, 0.0);
-        creditList = List.filled(labelsLocal.length, 0.0);
+      try {
+        maxYValue.value =
+            double.parse(his['data']['maxAmount'].toString()) ?? 0.0;
+      } catch (e) {
+        maxYValue.value = 500.0;
       }
+      if (maxYValue.value == 0 || maxYValue.value == 0.0)
+        maxYValue.value = 500.0;
+      his['data']['transactions'].forEach((key, value) {
+        selectedButton.value == "Custom"
+            ? labelsLocal.add(key.toString())
+            : labelsLocal
+                .add(key.toString().substring(key.toString().length - 2));
+        debitList.add(getDouble(value['debit']));
+        creditList.add(getDouble(value['credit']));
+      });
     } catch (e) {
-      print("Error processing transactions: $e");
-      maxYValue.value = 500.0;
-      debitList = List.filled(labelsLocal.length, 0.0);
-      creditList = List.filled(labelsLocal.length, 0.0);
+      maxYValue.value = 500;
+      debitList = [];
+      creditList = [];
+      labelsLocal = weekORmonth.toString() == 'Week'
+          ? getWeekDays()
+          : getDaysInMonth(date);
+      debitList = List.filled(labelsLocal.length, 0);
+      creditList = List.filled(labelsLocal.length, 0);
     }
 
-    if (weekORmonth == 'Week') {
-      labelsLocal = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-      if (debitList.length < 7) {
-        debitList = List.filled(7, 0.0)..setRange(0, debitList.length, debitList);
-      }
-      if (creditList.length < 7) {
-        creditList = List.filled(7, 0.0)..setRange(0, creditList.length, creditList);
-      }
+    if (selectedButton.value == 'Week') {
+      labelsLocal = getWeekDays();
     }
 
     transactionChatGraph['credited'] = debitList;
     transactionChatGraph['debited'] = creditList;
-    labels = labelsLocal; // Update only if necessary
-    print("Updated transactionChatGraph: $transactionChatGraph");
-    print("Updated labels: $labels");
-  } else {
-    print("API call failed");
-    transactionChatGraph['credited'] = List.filled(labels.length, 0.0);
-    transactionChatGraph['debited'] = List.filled(labels.length, 0.0);
+    graphTransaction.value = !graphTransaction.value;
+print("response//////////////");
+  print(transactionChatGraph);
+    labels.addAll(labelsLocal);
+    getGraphData.value = true;
   }
 }
+
 List<String> getWeekDays() {
   return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 }
@@ -488,24 +426,24 @@ Future postDataApiCall(String urlPath, Map body) async {
   return response;
 }
 
-// void pickCustomDateRange(BuildContext context) async {
-//   DateTimeRange? picked = await showDateRangePicker(
-//     context: context,
-//     firstDate: DateTime(2020),
-//     lastDate: DateTime.now(),
-//   );
-//   if (picked != null) {
-//     selectedButton.value = 'Custom';
-//     getGraphData.value = false;
-//     List<String> customDays = [];
-//     for (int i = 0; i <= picked.end.difference(picked.start).inDays; i++) {
-//       customDays.add((picked.start.day + i).toString().padLeft(2, '0'));
-//     }
-//     labels = customDays; // Update the global RxList labels
-//     getAutoMationsTransactionsCustom(
-//         picked.start.toString(), context, 'Custom');
-//   }
-// }
+void pickCustomDateRange(BuildContext context) async {
+  DateTimeRange? picked = await showDateRangePicker(
+    context: context,
+    firstDate: DateTime(2020),
+    lastDate: DateTime.now(),
+  );
+  if (picked != null) {
+    selectedButton.value = 'Custom';
+    getGraphData.value = false;
+    List<String> customDays = [];
+    for (int i = 0; i <= picked.end.difference(picked.start).inDays; i++) {
+      customDays.add((picked.start.day + i).toString().padLeft(2, '0'));
+    }
+    labels = customDays; // Update the global RxList labels
+    getAutoMationsTransactionsCustom(
+        picked.start.toString(), context, 'Custom');
+  }
+}
 
 void getWeekDate() {
   //   if (selectedButton == 'Week') {
