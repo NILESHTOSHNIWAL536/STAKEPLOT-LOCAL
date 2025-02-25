@@ -153,61 +153,9 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+                   // SizedBox(height: 10),
                     // Second Container for Support, Terms & conditions, and Privacy policy
-                    Container(
-                      decoration: BoxDecoration(
-                          color: AppColors.mt,
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: AppColors.border)),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 14, 10, 10),
-                        child: Column(
-                          children: [
-                            // _buildOption(
-                            //     AvatarProfileImage(
-                            //       url: ProfileIcons.support,
-                            //       height: 20,
-                            //       width: 20,
-                            //     ),
-                            //     'Support',
-                            //     'We are available 24x7 on your service'),
-                            // Divider(),
-                            InkWell(
-                              onTap: (){
-                                WebViewController controller  = WebViewController()..setJavaScriptMode(JavaScriptMode.unrestricted) ..loadRequest(Uri.parse("https://finvu.in/terms"));
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => WebViewPage(controller: controller),
-                                  ),
-                                );
-                              },
-                              child: _buildOption(
-                                  AvatarProfileImage(
-                                    url: ProfileIcons.terms,
-                                    height: 20,
-                                    width: 20,
-                                  ),
-                                  'Terms & conditions',
-                                  'Please follow our terms and conditions'),
-                            ),
-                            // Divider(),
-                            // _buildOption(
-                            //     SizedBox(
-                            //       height: 40,
-                            //       width: 40,
-                            //       child: AvatarProfileImage(
-                            //         url: ProfileIcons.privacyPolicy,
-                            //         height: 22,
-                            //         width: 22,
-                            //       ),
-                            //     ),
-                            //     'Privacy policy',
-                            //     'We respect your privacy'),
-                          ],
-                        ),
-                      ),),
+                    
                       SizedBox(height: 10),
                       // Second Container for Support, Terms & conditions, and Privacy policy
                       Container(

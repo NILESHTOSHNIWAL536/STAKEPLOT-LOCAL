@@ -329,18 +329,18 @@ class LineChartSample extends StatelessWidget {
         labelRotation = 45;
         break;
       case 'yearly':
-        labelWidth = 40.0;
-        labelRotation = 0;
+        labelWidth = 50.0;
+        labelRotation = 45;
         break;
       default:
         labelWidth = 80.0;
         labelRotation = 0;
     }
-
+double chartWidth = budgetData.length * labelWidth;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: SizedBox(
-        width: math.max(budgetData.length * labelWidth, MediaQuery.of(context).size.width),
+        width: math.max(chartWidth, MediaQuery.of(context).size.width),
         child: SfCartesianChart(
           plotAreaBorderWidth: 0,
           primaryXAxis: CategoryAxis(
@@ -348,6 +348,7 @@ class LineChartSample extends StatelessWidget {
             majorGridLines: MajorGridLines(width: 0),
             minorGridLines: MinorGridLines(width: 0),
             edgeLabelPlacement: EdgeLabelPlacement.shift,
+             interval: 1,
             labelRotation: labelRotation.toInt(),
             maximumLabels: budgetData.length,
           ),
