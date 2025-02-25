@@ -39,7 +39,7 @@ class _FinancePageState extends State<FinancePage> {
     calledFunctionToFetchData();
   }
 
-  void calledFunctionToFetchData() {
+  void calledFunctionToFetchData() async {
     if (selectedButton.value == "Month") {
      
       //print(totalCredited);
@@ -63,14 +63,14 @@ class _FinancePageState extends State<FinancePage> {
     final position = renderObject.localToGlobal(Offset.zero);
     final scrollOffset = widget.scrollController.offset;
     final targetOffset = position.dy - scrollOffset;
-    print("Target offset: $targetOffset");
+   // print("Target offset: $targetOffset");
     widget.scrollController.animateTo(
       targetOffset > 0 ? targetOffset : 0,
       duration: Duration(milliseconds: 500),
       curve: Curves.easeInOut,
     );
   } else {
-    print("RenderObject not found for TransactionHistory");
+  //  print("RenderObject not found for TransactionHistory");
   }
 }
 
@@ -143,7 +143,7 @@ class _FinancePageState extends State<FinancePage> {
                       ),
                       CustomButton(
                         onTap: () {
-                          print("History button tapped");
+                         // print("History button tapped");
                           _scrollToTransactionHistory();
                         },
                         text: 'History',
@@ -295,7 +295,7 @@ class LineChartWidget extends StatefulWidget {
 }
 
 class _LineChartWidgetState extends State<LineChartWidget> {
-  late double maxYValue;
+   double maxYValue=10000;
 
   @override
   void initState() {
@@ -407,10 +407,13 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       return ChartData(labels[index], value);
     });
 
-    print("..........................................");
-    print("Labels: $labels");
-    print(creditedData);
-    print(debitedData);
+   // print("..........................................");
+    //print("Labels: $labels");
+   // print(creditedData);
+    //print(debitedData);
+    print("getContainerOfGraph - dataLength: $dataLength, labels: $labels");
+  print("CreitedData: ${creditedData.map((d) => '(${d.x}, ${d.y})').toList()}");
+  print("DebitedData: ${debitedData.map((d) => '(${d.x}, ${d.y})').toList()}");
  double labelWidth = widget.selectedButton.value == 'Week' ? 50.0 : 40.0;
     double chartWidth = dataLength * labelWidth;
     return GestureDetector(
