@@ -1,26 +1,44 @@
 {
   "project_info": {
-    "project_number": "1077126713872",
-    "project_id": "stakeplot-aebdc",
-    "storage_bucket": "stakeplot-aebdc.firebasestorage.app"
+    "project_number": "692984262321",
+    "project_id": "stakeplot-ec62b",
+    "storage_bucket": "stakeplot-ec62b.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1077126713872:android:ed9cb368a77d896fcf7095",
+        "mobilesdk_app_id": "1:692984262321:android:635156900c421c60633c90",
         "android_client_info": {
-          "package_name": "com.stakeplot.adnan"
+          "package_name": "com.stakeplot.adnan.dev"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "692984262321-1ae1oprs3vj18mavo22tot0ks5ee4nd4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stakeplot.adnan.dev",
+            "certificate_hash": "cb4d98fd017c699b643dafbfd579b0df543158f8"
+          }
+        },
+        {
+          "client_id": "692984262321-im5mdri65d3323ok3tiukv0r9ctfp5eh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyDuf2vfrFqmCtD3hwSYWiqAQWO7fUpSKp4"
+          "current_key": "AIzaSyAipu3u7iEP1ehKArsLZKOMpQNmNhusMRQ"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "692984262321-im5mdri65d3323ok3tiukv0r9ctfp5eh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

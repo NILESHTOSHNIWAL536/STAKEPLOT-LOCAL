@@ -188,11 +188,12 @@ Widget signinWith(){
                 Row(
                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                    children: [
-                       containerIconSiginWith(FontAwesomeIcons.apple,Colorcodes.black),
+                      //  containerIconSiginWith(FontAwesomeIcons.apple,Colorcodes.black),
                        containerIconSiginWith(FontAwesomeIcons.google,Colorcodes.white),
-                       containerIconSiginWith(FontAwesomeIcons.facebook,Colorcodes.blue),
+                      //  containerIconSiginWith(FontAwesomeIcons.facebook,Colorcodes.blue),
                    ],
                 ),
+                const SizedBox(height: 10,),
                 InkWell(
                           onTap: () {
                             
@@ -219,7 +220,7 @@ Widget signinWith(){
 Widget containerIconSiginWith(IconData icon,Color color){
    return InkWell(
     onTap: ()async{
-        //  await AuthService().signInWithGoogle();
+         await GoogleAuthService().signInWithGoogle();
     },
      child: Container(
        padding: EdgeInsets.symmetric(horizontal: 10,vertical: 7),

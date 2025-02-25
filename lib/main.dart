@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Profile/notifications.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/controller.dart/userController.dart';
 import 'package:flutter_application_code_stakeplot/customNoti.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
@@ -36,8 +37,7 @@ import 'package:get/get.dart';
 import 'Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 FinvuManager finvuManager = FinvuManager();
 
@@ -51,9 +51,7 @@ void main()async {
 void checkFirebase() async {
    WidgetsFlutterBinding.ensureInitialized();
   try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    await Firebase.initializeApp();
     print('✅ Firebase is set up correctly!');
   } catch (e) {
     print('❌ Firebase setup error: $e');
@@ -73,7 +71,15 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     initPlatformState();
     initFinvuManager();
+    oneSignalInit();
   }
+
+
+ void oneSignalInit() {
+  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+  OneSignal.initialize("66bc1852-d40b-4ad0-8a11-5e3d0da698a2");
+  OneSignal.Notifications.requestPermission(true);
+}
 
   Future<void> initPlatformState() async {
     if (!mounted) return;
