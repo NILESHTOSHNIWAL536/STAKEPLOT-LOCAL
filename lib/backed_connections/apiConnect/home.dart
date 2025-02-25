@@ -94,9 +94,9 @@ void setPasswordApiCalled(context, String password) async {
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     cupertinoPin.value = password;
-    snackBarCalled(context, " Set Pin success!", Colors.black);
+    snackBarCalled(context, " Pin set successfully!", Colors.black);
   } else {
-    snackBarCalled(context, "can't Set pin!", Colors.red);
+    snackBarCalled(context, "can't set pin!", Colors.red);
   }
   Navigator.pop(context);
 }

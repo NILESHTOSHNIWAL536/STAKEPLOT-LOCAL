@@ -70,17 +70,17 @@ class _TransactionHistoryState extends State<TransactionHistory> {
        // color: AppColors.backgroundColor,
         key: targetKey,
         child: Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Transaction History',
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: AppColors.accentColor),
-                ),
+            Text(
+              'Transaction History',
+              style: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: AppColors.accentColor),
+            ),
               ],
             ),
             const SizedBox(height: 20),
@@ -94,36 +94,36 @@ class _TransactionHistoryState extends State<TransactionHistory> {
   Widget getlist() {
     return ListView.builder(
       itemCount: transactionsHistory.length,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
         final transaction = transactionsHistory[index];
         //   print("Transaction: $transaction");
 
         return Stack(
-          children: [
+                children: [
             Positioned(
               left: 0,
               right: 0,
               child: Container(
-                height: 80,
-                color: AppColors.primaryColor,
+                    height: 80,
+                    color: AppColors.primaryColor,
               ),
             ),
             Positioned(
               right: 10,
               top: 25,
-              child: GestureDetector(
-                onTap: () {
+                    child: GestureDetector(
+                      onTap: () {
                   hideTransaction(index);
-                },
-                child: const Icon(
-                  Icons.visibility_off,
-                  color: Colors.white,
-                  size: 30,
-                ),
-              ),
-            ),
+                      },
+                      child: const Icon(
+                        Icons.visibility_off,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
+                  ),
             Positioned(
               right: 50,
               top: 25,
@@ -246,9 +246,9 @@ class _TransactionHistoryState extends State<TransactionHistory> {
               children: [
                 Expanded(
                   flex: 1,
-                  child: Container(
+                    child: Container(
                     margin: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
+                      decoration: BoxDecoration(
                       color: Colorcodes.greyLight,
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -320,18 +320,18 @@ class _TransactionHistoryState extends State<TransactionHistory> {
 
   BoxDecoration getBoxDecoration(int index) {
     return BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.centerLeft,
-        end: Alignment.centerRight,
-        stops: [
+                        gradient: LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          stops: [
           (1.0 - ((swipeOffsets[index] ?? 0.0).abs() / 200)).clamp(0.0, 1.0),
-          1.0,
-        ],
-        colors: [
-          AppColors.backgroundColor,
-          AppColors.backgroundColor.withOpacity(0.0),
-        ],
-      ),
+                            1.0,
+                          ],
+                          colors: [
+                            AppColors.backgroundColor,
+                            AppColors.backgroundColor.withOpacity(0.0),
+                          ],
+                        ),
     );
   }
 

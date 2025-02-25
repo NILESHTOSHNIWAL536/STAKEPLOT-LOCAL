@@ -33,7 +33,8 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
   }
 
   Future<void> fetchBudgetData() async {
-    final String budgetId = widget.data['_id']?.toString() ?? '67b84fdcfab72f34be29c893';
+    final String budgetId =
+        widget.data['_id']?.toString() ?? '67b84fdcfab72f34be29c893';
     final String apiUrl = '$url/budget/get-budget-spents/$budgetId';
     print('Fetching budget data from: $apiUrl');
 
@@ -56,9 +57,10 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
 
   void processBudgetData(dynamic data) {
     // Access the 'transactions' list within 'data'
-    List<dynamic> spentData = data['data'] != null && data['data']['transactions'] != null
-        ? data['data']['transactions']
-        : [];
+    List<dynamic> spentData =
+        data['data'] != null && data['data']['transactions'] != null
+            ? data['data']['transactions']
+            : [];
     budgetSpentData.clear();
 
     if (spentData.isEmpty) {
@@ -93,18 +95,22 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     } else if (budgetType == 'yearly') {
       for (int i = 0; i < spentData.length && i < 12; i++) {
         double amount = spentData[i]['debitTotalAmount']?.toDouble() ?? 0.0;
+        String monthName = DateFormat('MMM').format(DateTime(2025, i + 1, 1));
         budgetSpentData.add(_ChartData(
           x: i,
           y: amount,
-          xString: spentData[i]['_id'], // e.g., "19-02-2025"
+          xString: monthName,
+          //  xString: spentData[i]['_id'], // e.g., "19-02-2025"
         ));
       }
       // Fill remaining months with 0
       for (int i = spentData.length; i < 12; i++) {
+        String monthName = DateFormat('MMM').format(DateTime(2025, i + 1, 1));
         budgetSpentData.add(_ChartData(
           x: i,
           y: 0.0,
-          xString: DateFormat('MMM').format(DateTime(2025, i + 1, 1)),
+           xString: monthName,
+          //xString: DateFormat('MMM').format(DateTime(2025, i + 1, 1)),
         ));
       }
     }
@@ -122,13 +128,15 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
       double amount = double.parse(list[i]['amount'].toString());
       monthlyBudgetData.add(FlSpot(i.toDouble(), amount));
     }
-    double totalAmount = list.fold(0, (sum, item) => sum + double.parse(item['amount'].toString()));
+    double totalAmount = list.fold(
+        0, (sum, item) => sum + double.parse(item['amount'].toString()));
     for (int i = 0; i < list.length; i++) {
       double amount = double.parse(list[i]['amount'].toString());
       double percentage = totalAmount > 0 ? (amount / totalAmount) * 100 : 0;
       categories[list[i]['category']] = percentage;
       graphObj.add({
-        'title': list[i]['category'] + "\n" + percentage.toStringAsFixed(1) + "%",
+        'title':
+            list[i]['category'] + "\n" + percentage.toStringAsFixed(1) + "%",
         'value': percentage,
       });
     }
@@ -146,7 +154,8 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         elevation: 0,
-        title: Text('My Budget', style: TextStyle(color: Colors.black, fontSize: 20)),
+        title: Text('My Budget',
+            style: TextStyle(color: Colors.black, fontSize: 20)),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -179,7 +188,8 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
       children: [
         Icon(Icons.access_time, color: Colors.grey),
         SizedBox(width: 8),
-        Text('Days remaining: $daysRemaining days', style: TextStyle(color: Colors.grey)),
+        Text('Days remaining: $daysRemaining days',
+            style: TextStyle(color: Colors.grey)),
       ],
     );
   }
@@ -201,7 +211,8 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
           SizedBox(height: 16),
           _buildRow('Amount spent', '₹ 2580', Colors.black), // Updated from API
           SizedBox(height: 8),
-          _buildRow('Over spent', '₹ ${2580 - widget.data['amount']}', Colors.red),
+          _buildRow(
+              'Over spent', '₹ ${2580 - widget.data['amount']}', Colors.red),
         ],
       ),
     );
@@ -221,7 +232,8 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
       {double fontSize = 16, FontWeight fontWeight = FontWeight.normal}) {
     return Text(
       text,
-      style: TextStyle(color: color, fontSize: fontSize, fontWeight: fontWeight),
+      style:
+          TextStyle(color: color, fontSize: fontSize, fontWeight: fontWeight),
     );
   }
 
@@ -229,13 +241,17 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildText('Budget Spending', Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+        _buildText('Budget Spending', Colors.black,
+            fontSize: 18, fontWeight: FontWeight.bold),
         SizedBox(height: 8),
         budgetSpentData.isEmpty
-            ? Center(child: Text('No spending data available', style: TextStyle(color: Colors.red)))
+            ? Center(
+                child: Text('No spending data available',
+                    style: TextStyle(color: Colors.red)))
             : SizedBox(
                 height: 300,
-                child: LineChartSample(budgetData: budgetSpentData, budgetType: budgetType),
+                child: LineChartSample(
+                    budgetData: budgetSpentData, budgetType: budgetType),
               ),
       ],
     );
@@ -243,10 +259,22 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
 
   Widget _buildInsights() {
     final insights = [
-      {'title': 'Unwanted purchases', 'description': 'Reduce shopping to maintain proper budget'},
-      {'title': 'Your essentials', 'description': 'Cut down on non-essentials to stay within budget'},
-      {'title': 'Upgrade budget', 'description': 'Review your expenses and set higher limits'},
-      {'title': 'Strict cutoffs', 'description': 'Limit unnecessary expenses to save more'},
+      {
+        'title': 'Unwanted purchases',
+        'description': 'Reduce shopping to maintain proper budget'
+      },
+      {
+        'title': 'Your essentials',
+        'description': 'Cut down on non-essentials to stay within budget'
+      },
+      {
+        'title': 'Upgrade budget',
+        'description': 'Review your expenses and set higher limits'
+      },
+      {
+        'title': 'Strict cutoffs',
+        'description': 'Limit unnecessary expenses to save more'
+      },
     ];
 
     return Container(
@@ -261,19 +289,26 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildText('Insights', Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
-              Chip(label: Text('Budget hero'), backgroundColor: Colors.grey[200]),
+              _buildText('Insights', Colors.black,
+                  fontSize: 18, fontWeight: FontWeight.bold),
+              Chip(
+                  label: Text('Budget hero'),
+                  backgroundColor: Colors.grey[200]),
             ],
           ),
           SizedBox(height: 16),
-          ...insights.map((insight) => _buildInsightCard(
-              title: insight['title']!, description: insight['description']!)).toList(),
+          ...insights
+              .map((insight) => _buildInsightCard(
+                  title: insight['title']!,
+                  description: insight['description']!))
+              .toList(),
         ],
       ),
     );
   }
 
-  Widget _buildInsightCard({required String title, required String description}) {
+  Widget _buildInsightCard(
+      {required String title, required String description}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
       padding: EdgeInsets.all(12),
@@ -293,14 +328,16 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
   }
 
   Widget graph() {
-    return PieChartGraph(title: "Categories", graphData: graphObj, graphDisc: []);
+    return PieChartGraph(
+        title: "Categories", graphData: graphObj, graphDisc: []);
   }
 
   Widget _buildCategoriesChart() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildText('Categories', Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+        _buildText('Categories', Colors.black,
+            fontSize: 18, fontWeight: FontWeight.bold),
         SizedBox(height: 8),
         graph(),
       ],
@@ -326,21 +363,21 @@ class LineChartSample extends StatelessWidget {
         break;
       case 'monthly':
         labelWidth = 30.0;
-        labelRotation = 45;
+        labelRotation = 0;
         break;
       case 'yearly':
-        labelWidth = 40.0;
+        labelWidth = 50.0;
         labelRotation = 0;
         break;
       default:
         labelWidth = 80.0;
         labelRotation = 0;
     }
-
+    double chartWidth = budgetData.length * labelWidth;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: SizedBox(
-        width: math.max(budgetData.length * labelWidth, MediaQuery.of(context).size.width),
+        width: math.max(chartWidth, MediaQuery.of(context).size.width),
         child: SfCartesianChart(
           plotAreaBorderWidth: 0,
           primaryXAxis: CategoryAxis(
@@ -348,6 +385,7 @@ class LineChartSample extends StatelessWidget {
             majorGridLines: MajorGridLines(width: 0),
             minorGridLines: MinorGridLines(width: 0),
             edgeLabelPlacement: EdgeLabelPlacement.shift,
+            interval: 1,
             labelRotation: labelRotation.toInt(),
             maximumLabels: budgetData.length,
           ),
@@ -357,7 +395,9 @@ class LineChartSample extends StatelessWidget {
             majorGridLines: MajorGridLines(width: 0),
             minorGridLines: MinorGridLines(width: 0),
             minimum: 0,
-            maximum: budgetData.isNotEmpty ? budgetData.map((e) => e.y).reduce(math.max) * 1.2 : 1000.0,
+            maximum: budgetData.isNotEmpty
+                ? budgetData.map((e) => e.y).reduce(math.max) * 1.2
+                : 1000.0,
           ),
           series: <ChartSeries>[
             SplineSeries<_ChartData, String>(
@@ -373,7 +413,8 @@ class LineChartSample extends StatelessWidget {
           ],
           tooltipBehavior: TooltipBehavior(
             enable: true,
-            builder: (dynamic data, dynamic point, dynamic series, int pointIndex, int seriesIndex) {
+            builder: (dynamic data, dynamic point, dynamic series,
+                int pointIndex, int seriesIndex) {
               final _ChartData chartData = data as _ChartData;
               return Container(
                 decoration: BoxDecoration(
@@ -412,13 +453,15 @@ class PieChartSample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double totalAmount = categories.values.fold(0.0, (sum, amount) => sum + amount);
+    double totalAmount =
+        categories.values.fold(0.0, (sum, amount) => sum + amount);
     return AspectRatio(
       aspectRatio: 1.4,
       child: PieChart(
         PieChartData(
           sections: categories.entries.map((entry) {
-            double percentage = totalAmount > 0 ? (entry.value / totalAmount) * 100 : 0;
+            double percentage =
+                totalAmount > 0 ? (entry.value / totalAmount) * 100 : 0;
             return PieChartSectionData(
               color: _getColor(entry.key),
               value: entry.value,

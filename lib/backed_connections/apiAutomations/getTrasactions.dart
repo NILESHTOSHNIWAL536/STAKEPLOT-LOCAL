@@ -105,63 +105,269 @@ void getAutoMationsTransactionsWeekly() async {
   }
 }
 
-double getDouble(data){
-   return double.parse(data.toString());
+double getDouble(data) {
+  return double.parse(data.toString());
 }
+// void getAutoMationsTransactionsCustom(date, context,
+//     [weekORmonth = 'month', String? endDate]) async {
+//   String urlPath = endDate != null && weekORmonth == 'Custom'
+//       ? "$url/transactionauto/getAllCustomTransactions/${weekORmonth.toLowerCase()}/$date,$endDate"
+//       : "$url/transactionauto/getAllCustomTransactions/${weekORmonth.toLowerCase()}/$date";
 
-void getAutoMationsTransactionsCustom(date, context,[weekORmonth='month']) async {
-  String urlPath="${url}/transactionauto/getAllCustomTransactions/${weekORmonth.toString().toLowerCase()}/${date}";
+//   var response = await getDataApiCall(urlPath);
 
+//   trasactionsDataCreditWeekly.clear();
+//   trasactionsDataDebitWeekly.clear();
+
+//   List<String> labelsLocal = weekORmonth == 'Custom' ? List.from(labels) : [];
+//   List<double> debitList = [];
+//   List<double> creditList = [];
+
+//   if (getFlagOfResponse(response)) {
+//     var his = jsonDecode(response.body);
+//     print("Full API response: ${his['data']}");
+
+//     transactionChatGraph.clear();
+//     if (weekORmonth != 'Custom') {
+//       labels.clear();
+//     }
+
+//     try {
+//       Map data = his['data']['transactions'];
+//       print("Transactions map keys: ${data.keys.toList()}");
+//       maxYValue.value = double.parse(his['data']['maxAmount'].toString()) ?? 500.0;
+//       if (maxYValue.value == 0) maxYValue.value = 500.0;
+
+//       if (weekORmonth == 'Custom' && endDate != null) {
+//         DateTime startDate = DateTime.parse(date);
+//         DateTime end = DateTime.parse(endDate);
+//         debitList = List.filled(labelsLocal.length, 0.0);
+//         creditList = List.filled(labelsLocal.length, 0.0);
+//         print("Labels before mapping: $labelsLocal");
+//         print("Date range - Start: $startDate, End: $end");
+
+//         double totalDebitFromApi = his['data']['totalDebit'].toDouble();
+//         double mappedDebitSum = 0.0;
+
+//         data.forEach((key, value) {
+//           DateTime txDate = DateTime.parse(key);
+//           String dayStr = txDate.day.toString().padLeft(2, '0');
+//           int index = labelsLocal.indexOf(dayStr);
+
+//           print("Processing - key: $key, day: $dayStr, index: $index, value: $value");
+//           if (index != -1 && txDate.isAfter(startDate.subtract(Duration(days: 1))) &&
+//               txDate.isBefore(end.add(Duration(days: 1)))) {
+//             debitList[index] = getDouble(value['debit']);
+//             creditList[index] = getDouble(value['credit']);
+//             mappedDebitSum += debitList[index];
+//             print("Mapped - key: $key, day: $dayStr, index: $index, debit: ${debitList[index]}, credit: ${creditList[index]}");
+//           } else {
+//             print("Skipped - key: $key, day: $dayStr, index: $index (out of range or invalid index)");
+//           }
+//         });
+
+//         // Workaround: If totalDebit exceeds mapped sum, assign the difference to Feb 24
+//         if (totalDebitFromApi > mappedDebitSum) {
+//           int feb24Index = labelsLocal.indexOf("24");
+//           if (feb24Index != -1 && debitList[feb24Index] == 0.0) {
+//             double missingDebit = totalDebitFromApi - mappedDebitSum;
+//             debitList[feb24Index] = missingDebit;
+//             print("Added missing debit for Feb 24: $missingDebit at index $feb24Index");
+//           }
+//         }
+
+//         print("Debit list after mapping: $debitList");
+//         print("Credit list after mapping: $creditList");
+//       } else {
+//         data.forEach((key, value) {
+//           String label = weekORmonth == 'Custom'
+//               ? key.toString()
+//               : key.toString().substring(key.toString().length - 2);
+//           labelsLocal.add(label);
+//           debitList.add(getDouble(value['debit']));
+//           creditList.add(getDouble(value['credit']));
+//         });
+//       }
+//     } catch (e) {
+//       print("Error processing data: $e");
+//       maxYValue.value = 500.0;
+//       debitList = List.filled(labelsLocal.length, 0.0);
+//       creditList = List.filled(labelsLocal.length, 0.0);
+//       if (labelsLocal.isEmpty) {
+//         labelsLocal = weekORmonth == 'Week' ? getWeekDays() : getDaysInMonth(date);
+//       }
+//     }
+
+//     if (selectedButton.value == 'Week') {
+//       labelsLocal = getWeekDays();
+//       if (debitList.length < 7) {
+//         debitList = List.filled(7, 0.0)..setRange(0, debitList.length, debitList);
+//         creditList = List.filled(7, 0.0)..setRange(0, creditList.length, creditList);
+//       }
+//     }
+
+//     transactionChatGraph['debited'] = debitList;
+//     transactionChatGraph['credited'] = creditList;
+
+//     graphTransaction.value = !graphTransaction.value;
+//     labels.assignAll(labelsLocal);
+//     getGraphData.value = true;
+//   } else {
+//     if (weekORmonth == 'Custom') {
+//       debitList = List.filled(labels.length, 0.0);
+//       creditList = List.filled(labels.length, 0.0);
+//       transactionChatGraph['debited'] = debitList;
+//       transactionChatGraph['credited'] = creditList;
+//     }
+//     getGraphData.value = true;
+//   }
+// }
+void getAutoMationsTransactionsCustom(date, context,
+    [weekORmonth = 'month', String? endDate]) async {
+  print("start date ${date}");
+  print("end date ${endDate}");
+  String urlPath = endDate != null && weekORmonth == 'Custom'
+      ? "$url/transactionauto/getAllCustomTransactions/${weekORmonth.toLowerCase()}/$date,${getNextDay(endDate)}"
+      : "$url/transactionauto/getAllCustomTransactions/${weekORmonth.toLowerCase()}/$date";
+  // print("Raw date input: $date");
+  // print("Raw endDate input: $endDate");
+
+  // // Parse and format dates, handling potential incomplete formats
+  // String startDateStr;
+  // try {
+  //   startDateStr = DateTime.parse(date).toIso8601String().split('T')[0];
+  // } catch (e) {
+  //   print("Error parsing date: $e, defaulting to current date");
+  //   startDateStr = DateTime.now().toIso8601String().split('T')[0];
+  // }
+
+  // String endDateStr = '';
+  // if (endDate != null) {
+  //   try {
+  //     endDateStr = DateTime.parse(endDate).toIso8601String().split('T')[0];
+  //   } catch (e) {
+  //     print("Error parsing endDate: $e, defaulting to current date");
+  //     endDateStr = DateTime.now().toIso8601String().split('T')[0];
+  //   }
+  // }
+
+  // String urlPath = endDate != null && weekORmonth == 'Custom'
+  //     ? "$url/transactionauto/getAllCustomTransactions/${weekORmonth.toLowerCase()}/$startDateStr,$endDateStr"
+  //     : "$url/transactionauto/getAllCustomTransactions/${weekORmonth.toLowerCase()}/$startDateStr";
+
+  print("end................... date ${urlPath}");
   var response = await getDataApiCall(urlPath);
-  
+  print("end................... date ${response.body}");
+
   trasactionsDataCreditWeekly.clear();
   trasactionsDataDebitWeekly.clear();
 
+  List<String> labelsLocal = weekORmonth == 'Custom' ? List.from(labels) : [];
+  List<double> debitList = [];
+  List<double> creditList = [];
+
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
-     List<String> labelsLocal = [];
-    List<double> debitList = [];
-    List<double> creditList = [];
+    print("Full API response: ${his['data']}");
 
-     transactionChatGraph.clear();
-    labels.clear();
-
-      try{
-        Map data = his['data']['transactions'];
-        try{
-        maxYValue.value=double.parse(his['data']['maxAmount'].toString()) ?? 0.0;
-        }catch(e){
-             maxYValue.value=500.0;
-        }
-        if(maxYValue.value==0 || maxYValue.value==0.0)maxYValue.value=500.0;
-        his['data']['transactions'].forEach((key, value) {
-             selectedButton.value=="Custom"? labelsLocal.add(key.toString())   :  labelsLocal.add(key.toString().substring(key.toString().length-2));
-                  debitList.add( getDouble(value['debit']));
-                  creditList.add( getDouble(value['credit']));
-    });
-    }catch(e)
-    {
-          maxYValue.value= 500;
-          debitList=[];
-          creditList=[];
-          labelsLocal=weekORmonth.toString()=='Week'?getWeekDays():getDaysInMonth(date);
-          debitList=  List.filled(labelsLocal.length, 0);
-          creditList=  List.filled(labelsLocal.length, 0);
-    }
-    
-    if(selectedButton.value=='Week')
-    {
-         labelsLocal=getWeekDays();
+    transactionChatGraph.clear();
+    if (weekORmonth != 'Custom') {
+      labels.clear();
     }
 
-    transactionChatGraph['credited']=debitList;
-    transactionChatGraph['debited']=creditList;
-    graphTransaction.value=!graphTransaction.value;
-  
-    labels.addAll(labelsLocal);
-    getGraphData.value=true;
+    try {
+      Map data = his['data']['transactions'];
+      print("Transactions map keys: ${data.keys.toList()}"); // Log all keys
+      maxYValue.value =
+          double.parse(his['data']['maxAmount'].toString()) ?? 500.0;
+      if (maxYValue.value == 0) maxYValue.value = 500.0;
 
+      if (weekORmonth == 'Custom' && endDate != null) {
+        DateTime startDate = DateTime.parse(date);
+        DateTime end = DateTime.parse(endDate);
+        debitList = List.filled(labelsLocal.length, 0.0);
+        creditList = List.filled(labelsLocal.length, 0.0);
+        print("Labels before mapping: $labelsLocal");
+        print("Date range - Start: $startDate, End: $end");
+
+        data.forEach((key, value) {
+          DateTime txDate = DateTime.parse(key);
+          String dayStr = txDate.day.toString().padLeft(2, '0');
+          int index = labelsLocal.indexOf(dayStr);
+
+          print(
+              "Processing - key: $key, day: $dayStr, index: $index, value: $value");
+          if (index != -1 &&
+              txDate.isAfter(startDate.subtract(Duration(days: 1))) &&
+              txDate.isBefore(end.add(Duration(days: 1)))) {
+            debitList[index] = getDouble(value['debit']);
+            creditList[index] = getDouble(value['credit']);
+            print(
+                "Mapped - key: $key, day: $dayStr, index: $index, debit: ${debitList[index]}, credit: ${creditList[index]}");
+          } else {
+            print(
+                "Skipped - key: $key, day: $dayStr, index: $index (out of range or invalid index)");
+          }
+        });
+        print("Debit list after mapping: $debitList");
+        print("Credit list after mapping: $creditList");
+      } else {
+        data.forEach((key, value) {
+          String label = weekORmonth == 'Custom'
+              ? key.toString()
+              : key.toString().substring(key.toString().length - 2);
+          labelsLocal.add(label);
+          debitList.add(getDouble(value['debit']));
+          creditList.add(getDouble(value['credit']));
+        });
+      }
+    } catch (e) {
+      print("Error processing data: $e");
+      maxYValue.value = 500.0;
+      debitList = List.filled(labelsLocal.length, 0.0);
+      creditList = List.filled(labelsLocal.length, 0.0);
+      if (labelsLocal.isEmpty) {
+        labelsLocal =
+            weekORmonth == 'Week' ? getWeekDays() : getDaysInMonth(date);
+      }
+    }
+
+    if (selectedButton.value == 'Week') {
+      labelsLocal = getWeekDays();
+      if (debitList.length < 7) {
+        debitList = List.filled(7, 0.0)
+          ..setRange(0, debitList.length, debitList);
+        creditList = List.filled(7, 0.0)
+          ..setRange(0, creditList.length, creditList);
+      }
+    }
+
+    // Corrected assignment
+    transactionChatGraph['debited'] = debitList; // Debits go to debitedData
+    transactionChatGraph['credited'] = creditList; // Credits go to creditedData
+
+    graphTransaction.value = !graphTransaction.value;
+    labels.assignAll(labelsLocal);
+    getGraphData.value = true;
+  } else {
+    if (weekORmonth == 'Custom') {
+      debitList = List.filled(labels.length, 0.0);
+      creditList = List.filled(labels.length, 0.0);
+      transactionChatGraph['debited'] = debitList;
+      transactionChatGraph['credited'] = creditList;
+    }
+    getGraphData.value = true;
   }
+}
+
+
+String getNextDay(String endDate) {
+  // Parse the input date string
+  DateTime date = DateTime.parse(endDate);
+  // Add one day
+  DateTime nextDay = date.add(Duration(days: 1));
+  // Return formatted as YYYY-MM-DD
+  return nextDay.toIso8601String().split('T')[0];
 }
 
 List<String> getWeekDays() {
@@ -182,7 +388,7 @@ List<String> getDaysInMonth(String yearMonth) {
   for (int i = 1; i <= daysInMonth; i++) {
     days.add('${i.toString().padLeft(2, '0')}');
   }
-   
+
   return days;
 }
 
@@ -222,10 +428,9 @@ String getCurrentMonth() {
 }
 
 String getCurrentWeek() {
-  
   final now = DateTime.now();
   final year = now.year;
-  String s='$year-W${now.weekOfYear.toString().padLeft(2, '0')}';
+  String s = '$year-W${now.weekOfYear.toString().padLeft(2, '0')}';
   return s;
 }
 
@@ -329,7 +534,7 @@ void addTransaction(String amount, String subCategory, String categories,
     'room': {},
     'isSplit': isSplit,
   };
- 
+
   final response = await http.post(
     Uri.parse('${url}/transaction/add'),
     headers: <String, String>{
@@ -344,47 +549,44 @@ void addTransaction(String amount, String subCategory, String categories,
     if (!isSplit) snackBarCalled(context, "Added Trasactions!", Colors.black);
     getAllTransaction(context);
     getCategoryData();
-     setDonectChat.value = !setDonectChat.value;
-      processChartData();
-       getAutoMationsTransactionsCustom(getFormattedDate(), context);
+    setDonectChat.value = !setDonectChat.value;
+    processChartData();
+    getAutoMationsTransactionsCustom(getFormattedDate(), context);
     Navigator.pop(context);
   } else {
     snackBarCalled(context, "can't Add Trasactions!", Colors.red);
   }
 }
 
- void processChartData() {
-    List<ChartData> newData = [];
-    double newTotalValue = 0.0;
+void processChartData() {
+  List<ChartData> newData = [];
+  double newTotalValue = 0.0;
 
-    Map<String, Color> categoryColors = {
-      "Food": Color.fromARGB(255, 198, 172, 245),
-      "Shopping": Color.fromARGB(255, 103, 133, 146),
-      "Travel": Color.fromARGB(255, 206, 231, 243),
-      "Health": Color.fromARGB(255, 130, 175, 167),
-      "Subscriptions": Color.fromARGB(255, 132, 203, 119),
-      "Entertainment": Color.fromARGB(255, 193, 118, 175),
-      "Insurance": Color(0xFF0288D1),
-      "Emi": Color(0xFFFFC107),
-      "Investments": Color.fromARGB(255, 247, 114, 114),
-      "Untagged": Color.fromARGB(255, 74, 117, 139),
-    };
+  Map<String, Color> categoryColors = {
+    "Food": Color.fromARGB(255, 198, 172, 245),
+    "Shopping": Color.fromARGB(255, 103, 133, 146),
+    "Travel": Color.fromARGB(255, 206, 231, 243),
+    "Health": Color.fromARGB(255, 130, 175, 167),
+    "Subscriptions": Color.fromARGB(255, 132, 203, 119),
+    "Entertainment": Color.fromARGB(255, 193, 118, 175),
+    "Insurance": Color(0xFF0288D1),
+    "Emi": Color(0xFFFFC107),
+    "Investments": Color.fromARGB(255, 247, 114, 114),
+    "Untagged": Color.fromARGB(255, 74, 117, 139),
+  };
 
-    
-   for (var item in categoriesList) {
-      String category = item["category"];
-      double value = item["total_debit"].toDouble();
-      Color color = categoryColors[category] ?? Colors.grey; // Default color
+  for (var item in categoriesList) {
+    String category = item["category"];
+    double value = item["total_debit"].toDouble();
+    Color color = categoryColors[category] ?? Colors.grey; // Default color
 
-      newData.add(ChartData(category, value, color));
-      newTotalValue += value;
-    }
-
-
-      chartData.value= newData;
-      totalValue.value = newTotalValue;
-  
+    newData.add(ChartData(category, value, color));
+    newTotalValue += value;
   }
+
+  chartData.value = newData;
+  totalValue.value = newTotalValue;
+}
 
 void getTransaction(context) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
@@ -404,10 +606,11 @@ void getTransaction(context) async {
     trasactionsHistory.addAll(obj);
   } else {}
 }
+
 Future postDataApiCall(String urlPath, Map body) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   var accessToken = pref.getString("accessToken");
-  
+
   final response = await http.post(
     Uri.parse(urlPath),
     headers: {
@@ -419,90 +622,99 @@ Future postDataApiCall(String urlPath, Map body) async {
   return response;
 }
 
-
-
-
-  void pickCustomDateRange(BuildContext context) async {
+void pickCustomDateRange(BuildContext context) async {
   DateTimeRange? picked = await showDateRangePicker(
     context: context,
     firstDate: DateTime(2020),
     lastDate: DateTime.now(),
   );
+
   if (picked != null) {
     selectedButton.value = 'Custom';
     getGraphData.value = false;
+
     List<String> customDays = [];
     for (int i = 0; i <= picked.end.difference(picked.start).inDays; i++) {
-      customDays.add((picked.start.day + i).toString().padLeft(2, '0'));
+      String day = (picked.start.day + i).toString().padLeft(2, '0');
+      customDays.add(day);
     }
-    labels = customDays; // Update the global RxList labels
-    getAutoMationsTransactionsCustom(picked.start.toString(), context, 'Custom');
+
+    labels.assignAll(customDays); // Assuming labels is RxList
+
+    // getAutoMationsTransactionsCustom(
+    //   picked.start.toString(),
+    //   context,
+    //   'Custom',
+    //   picked.end.toString(), // Pass end date
+    // );
+    String startDate =
+        picked.start.toIso8601String().split('T')[0]; // Format to YYYY-MM-DD
+    String endDate =
+        picked.end.toIso8601String().split('T')[0]; // Format to YYYY-MM-DD
+    print("Calling getAutoMations with start: $startDate, end: $endDate");
+    getAutoMationsTransactionsCustom(startDate, context, 'Custom', endDate);
   }
 }
 
-void getWeekDate()
-{
-    //   if (selectedButton == 'Week') {
-    //   final currentWeek = weekData[0]!;
-    //   chartData = {
-    //     "credited": currentWeek.values.toList(),
-    //     "debited": currentWeek.values
-    //         .map((e) => e * 0.8)
-    //         .toList(), // Debited is 80% of credited
-    //   };
-    //   labels = currentWeek.keys.toList();
-    // } else if (selectedButton == 'Month') {
-    //   chartData = {
-    //     "credited": List.generate(
-    //       30,
-    //       (index) => creditedData[index + 1]?.reduce((a, b) => a + b) ?? 0.0,
-    //     ),
-    //     "debited": List.generate(
-    //       30,
-    //       (index) => debitedData[index + 1]?.reduce((a, b) => a + b) ?? 0.0,
-    //     ),
-    //   };
-    //   labels = List.generate(30, (index) => (index + 1).toString());
-    // } else if (selectedButton == 'Custom' && selectedDateRange != null) {
-    //   final startDate = selectedDateRange!.start;
-    //   final endDate = selectedDateRange!.end;
+void getWeekDate() {
+  //   if (selectedButton == 'Week') {
+  //   final currentWeek = weekData[0]!;
+  //   chartData = {
+  //     "credited": currentWeek.values.toList(),
+  //     "debited": currentWeek.values
+  //         .map((e) => e * 0.8)
+  //         .toList(), // Debited is 80% of credited
+  //   };
+  //   labels = currentWeek.keys.toList();
+  // } else if (selectedButton == 'Month') {
+  //   chartData = {
+  //     "credited": List.generate(
+  //       30,
+  //       (index) => creditedData[index + 1]?.reduce((a, b) => a + b) ?? 0.0,
+  //     ),
+  //     "debited": List.generate(
+  //       30,
+  //       (index) => debitedData[index + 1]?.reduce((a, b) => a + b) ?? 0.0,
+  //     ),
+  //   };
+  //   labels = List.generate(30, (index) => (index + 1).toString());
+  // } else if (selectedButton == 'Custom' && selectedDateRange != null) {
+  //   final startDate = selectedDateRange!.start;
+  //   final endDate = selectedDateRange!.end;
 
-    //   // Filter data for the selected range
-    //   chartData = {
-    //     "credited": List.generate(
-    //       endDate.difference(startDate).inDays + 1,
-    //       (index) => creditedData[startDate.add(Duration(days: index)).day]!
-    //           .reduce((a, b) => a + b),
-    //     ),
-    //     "debited": List.generate(
-    //       endDate.difference(startDate).inDays + 1,
-    //       (index) => debitedData[startDate.add(Duration(days: index)).day]!
-    //           .reduce((a, b) => a + b),
-    //     ),
-    //   };
+  //   // Filter data for the selected range
+  //   chartData = {
+  //     "credited": List.generate(
+  //       endDate.difference(startDate).inDays + 1,
+  //       (index) => creditedData[startDate.add(Duration(days: index)).day]!
+  //           .reduce((a, b) => a + b),
+  //     ),
+  //     "debited": List.generate(
+  //       endDate.difference(startDate).inDays + 1,
+  //       (index) => debitedData[startDate.add(Duration(days: index)).day]!
+  //           .reduce((a, b) => a + b),
+  //     ),
+  //   };
 
-    //   // Generate labels for the selected date range
-    //   labels = List.generate(
-    //     endDate.difference(startDate).inDays + 1,
-    //     (index) => (startDate.add(Duration(days: index))).day.toString(),
-    //   );
-    // } else {
-    //   // Default case
-    //   chartData = {
-    //     "credited": [],
-    //     "debited": [],
-    //   };
-    //   labels = [];
-    // }
-    
+  //   // Generate labels for the selected date range
+  //   labels = List.generate(
+  //     endDate.difference(startDate).inDays + 1,
+  //     (index) => (startDate.add(Duration(days: index))).day.toString(),
+  //   );
+  // } else {
+  //   // Default case
+  //   chartData = {
+  //     "credited": [],
+  //     "debited": [],
+  //   };
+  //   labels = [];
+  // }
 }
 
+//double totalSpent = calculateTotal(chartData);
+//  totalSpent =chartData["credited"]!.isNotEmpty && chartData["debited"]!.isNotEmpty? calculateTotal(chartData): 0.0;
 
- //double totalSpent = calculateTotal(chartData);
-  //  totalSpent =chartData["credited"]!.isNotEmpty && chartData["debited"]!.isNotEmpty? calculateTotal(chartData): 0.0;
-
-
- double calculateTotal(Map<String, List<double>> data) {
-    return data["credited"]!.reduce((a, b) => a + b) -
-        data["debited"]!.reduce((a, b) => a + b);
-  }
+double calculateTotal(Map<String, List<double>> data) {
+  return data["credited"]!.reduce((a, b) => a + b) -
+      data["debited"]!.reduce((a, b) => a + b);
+}
