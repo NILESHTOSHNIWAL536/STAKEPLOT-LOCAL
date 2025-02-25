@@ -196,7 +196,7 @@ Widget acceptButton(){
                                                onTap: (){
                        
                         //  Navigator.pushReplacementNamed(context, '/ShareAccountLogin'); 
-                           acceptReset.value=true;
+                            acceptReset.value=true;
                             storeData(context,widget.data, _otpCode.value, widget.url);
                        },
                       child:Obx(() =>  Center(

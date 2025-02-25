@@ -103,18 +103,18 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
       return;
     }
 
-   String accessToken="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NmU0YWU0NDc2YjY4YWRhMDYwNmUyNSIsImlhdCI6MTc0MDM5NTkxNywiZXhwIjoxNzQ1NTc5OTE3fQ.WcQrVTWR257Q4jLl3R5hb_qMnPt6WHhLhY9aHjTaINU";
    final SharedPreferences pref = await SharedPreferences.getInstance();
-   pref.setString("accessToken",accessToken);
+   String accessToken=pref.getString("accessToken").toString() ; //"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NmU0YWU0NDc2YjY4YWRhMDYwNmUyNSIsImlhdCI6MTc0MDM5NTkxNywiZXhwIjoxNzQ1NTc5OTE3fQ.WcQrVTWR257Q4jLl3R5hb_qMnPt6WHhLhY9aHjTaINU";
+  //  pref.setString("accessToken",accessToken);
      
     final response = await http.post(
       Uri.parse(apiUrl),
-      headers: {"Content-Type": "application/json"},
+      headers: {"Content-Type": "application/json", "Authorization": "$accessToken",},
       body: jsonEncode({
         "token": "",
         "handleId": handleId,
         "custId": custId,
-        "userId":"676e4ae4476b68ada0606e25"
+ 
       }),
     );
      printData(response);
