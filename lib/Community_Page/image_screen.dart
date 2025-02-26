@@ -48,7 +48,7 @@ class _ImageScreenState extends State<ImageScreen> {
     return imageSubmitted
         ? const SuccessPost()
         : Container(
-          height: MediaQuery.of(context).size.height/2 ,
+         // height: MediaQuery.of(context).size.height/2 ,
           child: Expanded(
             child: AnimatedPadding(
               padding: EdgeInsets.only(

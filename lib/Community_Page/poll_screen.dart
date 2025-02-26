@@ -29,7 +29,7 @@ class _PollScreenState extends State<PollScreen> {
     TextEditingController(),
     TextEditingController(),
   ];
-
+double modalHeight = 300; 
   String? question;
   bool pollSubmitted = false;
   List<String>? options;

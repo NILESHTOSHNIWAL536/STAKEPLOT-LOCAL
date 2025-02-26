@@ -426,8 +426,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
 
   void getAllTransaction(BuildContext context) async {
     try {
-      var response =
-          await getDataApiCall("${url}/transactionauto/getTransactions/1");
+      var response =await getDataApiCall("${url}/transactionauto/getTransactions/1");
       if (response.statusCode == 200) {
         var his = jsonDecode(response.body);
 

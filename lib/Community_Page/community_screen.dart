@@ -280,6 +280,7 @@ class _CommunityState extends State<Community> {
                                 Navigator.of(context)
                                     .pop(); // Close the current modal
                                 showModalBottomSheet(
+                                   isScrollControlled: true,
                                   context: context,
                                   builder: (context) {
                                     return TextScreen(
@@ -323,6 +324,7 @@ class _CommunityState extends State<Community> {
                                     .pop(); 
                                          posting.value=false;// Close the current modal
                                 showModalBottomSheet(
+                                  isScrollControlled: true,
                                   context: context,
                                   builder: (context) {
                                     return ImageScreen(
@@ -367,6 +369,7 @@ class _CommunityState extends State<Community> {
                                      posting.value=false;// Close the current modal
                                 showModalBottomSheet(
                                   context: context,
+                                  
                                   isScrollControlled: true,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.vertical(
@@ -375,8 +378,8 @@ class _CommunityState extends State<Community> {
                                   builder: (BuildContext context) {
                                     return Container(
                                       padding: const EdgeInsets.all(16.0),
-                                      height:
-                                          MediaQuery.sizeOf(context).height / 2,
+                                      // height:
+                                      //     MediaQuery.sizeOf(context).height / 2,
                                       width: MediaQuery.sizeOf(context).width,
                                       child: PollScreen(
                                         userInfo: post,
