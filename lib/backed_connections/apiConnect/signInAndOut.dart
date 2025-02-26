@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -38,7 +39,6 @@ void expire(responce, BuildContext context) {
 
 void check(context, String flag) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
- 
   if (!_pref.containsKey("accessToken")) 
   {
     if (flag != "loginuser") Navigator.pushReplacementNamed(context, '/');
@@ -413,6 +413,8 @@ void clearGetX() {
   //  listOfCater =<Plot> [].obs;
   isBankAccountLink.value = true;
   trasactionsData.clear();
+  addedMembers.clear();
+  addedUser.clear();
   isBankAccountLink.value = false;
   cupertinoPin.value='0';
   balance.value="";
@@ -421,6 +423,8 @@ void clearGetX() {
     labels.clear();
     selectedButton.value="Month";
     graphTransaction.value=false;
+    isSplit.value=false;
+    isLend.value=false;
 }
 
 // void oneSignalApis(context) async {

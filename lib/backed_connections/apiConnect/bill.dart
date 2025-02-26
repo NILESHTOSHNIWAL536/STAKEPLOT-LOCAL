@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/chat.dart';
 import 'package:http/http.dart' as http;
@@ -106,6 +107,7 @@ void addSocketMessage(
       });
     });
   }
+
 void splitUserAmount2(
     dynamic context,
     String amount,
@@ -128,7 +130,7 @@ void splitUserAmount2(
         'isVegNonVeg': true,
       });
     });
-    print("Name List: $nameList");
+  
 
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
@@ -154,83 +156,38 @@ void splitUserAmount2(
       final body = json.decode(response.body);
       splitID.value = body['id']['_id'];
 
-      List<String> notifiedMembers = [];
       List<String> messagedMembers = [];
 
       for (var member in members) {
         String memberId = member['id'];
+        print(memberId);
         String memberName = member['name'] ?? 'Unknown';
+
+       addChatSplitAmount(context, name, amount, memberId, members);
         
         // Send notification
         try {
-          print("Attempting to notify member: $memberId ($memberName)");
+
            sendNotificationsToDevice(
             memberId,
             context,
             "${userName.value} has sent you a Split Bill of $name for $perFriendShare",
           );
-          notifiedMembers.add(memberId);
-          print("Successfully notified: $memberId");
+         
         } catch (notificationError) {
-          print("Failed to notify $memberId: $notificationError");
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Split successful, but notification failed for $memberId"),
-              backgroundColor: Colors.orange,
-            ),
-          );
+          snackBarCalled(context, "split successful, but notification failed for $memberId");
         }
 
         // Send socket message separately
-        try {
-          if (socket == null) {
-            print("Socket not initialized for $memberId - skipping message");
-            continue;
-          }
-          
-          List<Map<String, String>> formattedMember = [{
-            'id': memberId,
-            'name': memberName
-          }];
-          
-          addSocketMessage(
-            formattedMember,
-            perFriendShare.toString(),
-            subCategories,
-            splitID.value
-          );
-          messagedMembers.add(memberId);
-          print("Successfully messaged: $memberId");
-        } catch (socketError) {
-          print("Failed to send socket message to $memberId: $socketError");
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Split successful, but messaging failed for $memberId"),
-              backgroundColor: Colors.orange,
-            ),
-          );
-        }
+  
       }
 
-      print("Total members notified: ${notifiedMembers.length}/${members.length}");
-      print("Notified members: $notifiedMembers");
-      print("Total members messaged: ${messagedMembers.length}/${members.length}");
-      print("Messaged members: $messagedMembers");
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            "Split amount sent to ${notifiedMembers.length} users! "
-            "(${messagedMembers.length} messaged)"
-          ),
-          backgroundColor: Colors.black,
-        ),
-      );
+
+     
     } else {
-      print("API Error: ${response.statusCode}, Body: ${response.body}");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Can't split - error! ${response.statusCode}"), backgroundColor: Colors.red),
-      );
+       snackBarCalled(context, "Can't split - error! ${response.statusCode}");
+
     }
     acceptReset.value = false;
   }

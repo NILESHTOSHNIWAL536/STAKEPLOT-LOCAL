@@ -579,6 +579,53 @@ void addMessage(context,String messageType,String message,String id,var data) as
   
 }
 
+void addChatSplitAmount(context,String splitName,String amount,String id,List addedUser) async 
+{
+  var urlPath = Uri.parse('${url}/chat/');
+  final SharedPreferences _pref = await SharedPreferences.getInstance();
+  var  accessToken=_pref.getString("accessToken");
+
+try{
+  var jsonData = {
+        "messageType": "split",
+        "receiver": id,
+        "sender": currentId.value,
+        "message": null,
+        "image": null,
+        "poll": null,
+        "post": null,
+        "split": {
+          "BillName": splitName,
+          "Amount": amount,
+          "Share": ((double.parse(amount) / (addedUser.length + 1)).toString()),
+          "isPaid": false,
+          "splitId": splitID.value,
+        },
+        "roomId": "",
+      };
+  // print(jsonData);
+  final response = await http.post(
+    Uri.parse('${urlPath}'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+       "Authorization": "$accessToken",
+    },
+    body: jsonEncode(jsonData),
+
+  );
+  // printData(response);
+
+  if (response.statusCode == 200 || response.statusCode==201){
+      //  print('Post created successfully');
+  }else{
+    // print('Failed to create post: ${response.reasonPhrase}');
+  }
+}catch(e){
+    print(e);
+}
+  
+}
+
 
 // Future<String> addImageToCloud(imageFile)async
 // {

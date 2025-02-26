@@ -23,14 +23,14 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TransactionHistory extends StatefulWidget {
-   final int? selectedYear; // Optional
-  final int? selectedMonth; // Optional
+ /// Optional
   final bool? isYearView;
+  final bool? isflag;
+
 
   const TransactionHistory({
     super.key,
-     this.selectedYear,
-    this.selectedMonth,
+    this.isflag=false,
     this.isYearView,
   });
  // const TransactionHistory({super.key});
@@ -178,7 +178,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
               ),
               child: Column(
                 children: [
-                  Expanded(child: FriendsUi()),
+                  Expanded(child: FriendsUi(flag: false,)),
                   Obx(() => addedMembers.isNotEmpty
                       ? Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -188,9 +188,8 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                                 double amount = double.parse(
                                     transaction["amount"].toString());
                                 double sharePerFriend =
-                                    amount / addedMembers.length;
-                                print(
-                                    "Amount: $amount, Share Per Friend: $sharePerFriend");
+                                    amount / (addedMembers.length+1);
+                                
                                 splitUserAmount2(
                                   _stableContext ?? context,
                                   amount.toString(),
@@ -201,11 +200,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                                 );
                                 Navigator.pop(modalContext);
                               } catch (e) {
-                                ScaffoldMessenger.of(modalContext).showSnackBar(
-                                  SnackBar(
-                                      content:
-                                          Text("Error splitting amount: $e")),
-                                );
+                                  snackBarCalled(context, "Error splitting Amount");
                               }
                             },
                             child: getButton(modalContext, "Continue"),
@@ -434,8 +429,14 @@ class _TransactionHistoryState extends State<TransactionHistory> {
         var obj = his['data'];
 
         transactionsHistory.clear();
-        if (obj != null && obj is List<dynamic>) {
-          transactionsHistory.addAll(obj);
+        if (obj != null && obj is List<dynamic>)
+        {
+
+          if(widget.isflag!){
+                  extractTransaction(widget.isYearView??false,obj);
+          }else{
+            transactionsHistory.addAll(obj);
+          }
 
           getHistory.value = !getHistory.value;
         } else {
@@ -465,4 +466,31 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     DateTime date = DateTime.parse(dateString);
     return DateFormat("dd MMM yyyy").format(date);
   }
+  
+  void extractTransaction(bool isYearView, List obj) 
+  {
+      if(isYearView){
+              getTransactionByYear(obj,selectedYear.value);
+      } else{
+             getTransactionByYear(obj,selectedMonth.value);
+      }    
+  }
+  
+  void getTransactionByYear(List obj,y) {
+    
+      obj.forEach((ele)
+      {
+           if(isCurrentYear(ele['transactionTimestamp'],y))
+           {
+               transactionsHistory.add(ele);
+           }
+      });
+  }
+  
+
+  
+  bool isCurrentYear(date,y) {
+       return date.toString().contains(y);
+  }
+
 }

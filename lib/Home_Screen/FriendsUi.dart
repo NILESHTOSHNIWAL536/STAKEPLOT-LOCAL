@@ -347,7 +347,8 @@ RxList addedUser = [].obs;
 RxList addedMembers = [].obs;
 
 class FriendsUi extends StatefulWidget {
-  const FriendsUi({Key? key}) : super(key: key);
+  bool flag=true;
+   FriendsUi({Key? key,this.flag=true}) : super(key: key);
 
   @override
   _FriendsUiState createState() => _FriendsUiState();
@@ -439,6 +440,7 @@ class _FriendsUiState extends State<FriendsUi> {
                                               //  addedMembers=me;
                                               addedUser.remove(element['id']);
                                             });
+
                                           },
                                           child: const Icon(
                                             Icons.remove_circle,
@@ -467,7 +469,7 @@ class _FriendsUiState extends State<FriendsUi> {
 
                 commentedData(),
 
-                Center(
+              widget.flag?  Center(
                   child: InkWell(
                     onTap: () {
                        // double amount = double.parse(
@@ -484,7 +486,7 @@ class _FriendsUiState extends State<FriendsUi> {
                     },
                     child: getButton(context, "Continue"),
                   ),
-                ),
+                ):SizedBox.shrink(),
 
                 // InkWell(
                 //   onTap: Navigator.pop(context),
@@ -526,6 +528,10 @@ class _FriendsUiState extends State<FriendsUi> {
                         children: [
                           GestureDetector(
                             onTap: () {
+                              if(isLend.value){
+                                  addedUser.clear();
+                                  addedMembers.clear();
+                              }
                               setState(() {
                                 addedUser.contains(values)
                                     ? addedUser.remove(values)

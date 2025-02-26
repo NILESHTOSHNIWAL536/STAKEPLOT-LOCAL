@@ -351,8 +351,7 @@ class _ModalContentState extends State<ModalContent>
   String? selectedSubCategory2;
   // List  addedUser=[];
   // List addedMembers=[];
-  RxBool isSplit = false.obs;
-  RxBool isLend = false.obs;
+  
   late IO.Socket socket;
 
   void initState() {
@@ -737,6 +736,10 @@ class _ModalContentState extends State<ModalContent>
             // Action for Split Bill button
             //isSplit = true;
             // splitBill();
+            if(isLend.value){
+                                  addedUser.clear();
+                                  addedMembers.clear();
+              }
             isSplit.value = true;
             isLend.value = false;
 
@@ -762,9 +765,14 @@ class _ModalContentState extends State<ModalContent>
         GestureDetector(
           onTap: () {
             // Action for Continue button
+            if(isSplit.value){
+                                  addedUser.clear();
+                                  addedMembers.clear();
+                }
             isSplit.value = false;
             isLend.value = true;
             showCustomFriendsModal(context);
+            
           },
           child: Container(
             width: MediaQuery.of(context).size.width / 2.4,
@@ -821,7 +829,7 @@ class _ModalContentState extends State<ModalContent>
     );
   }
 
-  void splitBill(categories, amount, subCategories, bool isSplit) {
+  void splitBill(categories, amount, subCategories, bool isSplitAmount) {
     if (categories == "" || amount == "" || subCategories == "") {
       snackBarAllFeilds(context);
       return;
@@ -833,8 +841,9 @@ class _ModalContentState extends State<ModalContent>
 
     if (acceptReset.value) return;
     acceptReset.value = true;
-
-    if (isSplit)
+    isLend.value=false;
+    isSplit.value=false;
+    if (isSplitAmount)
       splitUserAmount(context, amount, addedMembers, categories, subCategories);
     else
       addLendUserAmount(
@@ -977,8 +986,7 @@ class _ModalContentState extends State<ModalContent>
       });
 
       snackBarCalled(context, "Lend amount sent to users!", Colors.black);
-      addTransaction(
-          amount, "Lend Bill (${subCategories})", name, context, 'cash', true);
+      addTransaction(amount, "Lend Bill (${subCategories})", name, context, 'cash', true);
       // addSocketMessage(addedMembers,amount.toString(),selectedCategory2.toString()+"Lend Bill (${subCategories})", splitID.value);
       getUserLend(context);
       // Navigator.push(

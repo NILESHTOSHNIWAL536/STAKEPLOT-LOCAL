@@ -31,8 +31,8 @@ class ExpandedChartView extends StatefulWidget {
 }
 
 class _ExpandedChartViewState extends State<ExpandedChartView> {
-  final RxInt selectedYear = DateTime.now().year.obs;
-  final RxInt selectedMonth = DateTime.now().month.obs;
+  // final RxInt selectedYear = DateTime.now().year.obs;
+  // final RxInt selectedMonth = DateTime.now().month.obs;
   final RxString selectedButton = 'Month'.obs;
   final RxList<String> monthLabels = <String>[].obs;
   final Rx<Map<String, List<double>>> currentChartData =
@@ -276,6 +276,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                 onTap: () async {
                   selectedYear.value = year;
                   isYearView.value = true;
+                
                   _updateMonthLabels();
                   await _fetchYearlyData(year);
                   Navigator.pop(context);
@@ -484,7 +485,10 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                     ),
                     SizedBox(height: 10,),
                     TransactionHistory(
-                      
+                      isYearView: isYearView.value,
+                      isflag: true,
+
+                
                     )
                 ],
               ),

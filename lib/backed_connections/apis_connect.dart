@@ -19,7 +19,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
 bool flag = true;
-String portNo = !flag ? "192.168.1.11" : "localhost";
+String portNo = flag ? "192.168.1.11" : "localhost";
 String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 
@@ -105,6 +105,8 @@ RxList categoriesList = [].obs;
 Map<String, dynamic> loginUsersList = Map<String, dynamic>();
 RxList dueAmountRemainders = [].obs;
 RxBool getdueUsers = false.obs;
+ RxInt selectedYear = DateTime.now().year.obs;
+ RxInt selectedMonth = DateTime.now().month.obs;
 
 List<String> month = [
   "",
@@ -152,6 +154,8 @@ RxList historyListData = [].obs;
 RxList getTrendingData = [].obs;
 RxBool hasGetNewNotifications = false.obs;
 RxBool getGraphData=false.obs;
+RxBool isSplit = false.obs;
+  RxBool isLend = false.obs;
 final ScrollController scrollController = ScrollController();
 final GlobalKey targetKey = GlobalKey(); // Key to identify the target widget
 
