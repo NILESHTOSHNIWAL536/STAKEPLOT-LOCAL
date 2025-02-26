@@ -74,7 +74,7 @@ Future<void> loginUser(TextEditingController emailController,
     currentId.value = body['data']['_id'];
     Phone.value = body['data']['phone'];
     isBankAccountLink.value = body['data']['isBankAccountLinked'];
-
+    await  initializeOneSignal(context);
     if (flag) return;
 
     // isBankAccountLink.value ?  getUserInfoBackDetails(context): loginToAutoTractions(context, Phone.value);
@@ -461,34 +461,39 @@ void clearGetX() {
 // }
 
 
-// Future<void> initializeOneSignal(BuildContext context) async {
-//   String appId = "ff897875-4bac-4b0c-9bb6-a371998d4d1c";
+Future<void> initializeOneSignal(BuildContext context) async {
+ 
 
-//    OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
-//    OneSignal.initialize(appId);
-//    OneSignal.Notifications.requestPermission(true);
+   oneSignalInit();
 
-//   var deviceState =  OneSignal.User.getDeviceState();
-//   String? userDeviceId = deviceState?.userId;
+  String? userDeviceId = OneSignal.User.pushSubscription.id;
+  print(userDeviceId);
+  if (userDeviceId != null) {
+    print("User Device ID: $userDeviceId");
+    await getDeviceInfo(userDeviceId, context);
+  } else {
+    print("Failed to retrieve user device ID");
+  }
 
-//   if (userDeviceId != null) {
-//     print("User Device ID: $userDeviceId");
-//     await getDeviceInfo(userDeviceId, context);
-//   } else {
-//     print("Failed to retrieve user device ID");
-//   }
-
-//   OneSignal.Notifications.addClickListener((event) {
-//     print("Notification Opened: \${event.notification.additionalData}");
+  OneSignal.Notifications.addClickListener((event) {
+    print("Notification Opened: \${event.notification.additionalData}");
     
-//     String? screen = event.notification.additionalData?['screen'];
-//     if (screen != null) {
-//       Navigator.pushNamed(context, screen);
-//     } else {
-//       print("No screen specified in additional data.");
-//     }
-//   });
-// }
+    String? screen = event.notification.additionalData?['screen'];
+    if (screen != null) {
+      Navigator.pushNamed(context, screen);
+    } else {
+      print("No screen specified in additional data.");
+    }
+  });
+}
+
+
+ void oneSignalInit() {
+   String appId = "66bc1852-d40b-4ad0-8a11-5e3d0da698a2";
+  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+  OneSignal.initialize(appId);
+  OneSignal.Notifications.requestPermission(true);
+}
 
 
 Future<void> getDeviceInfo(String playerId, context) async {
@@ -503,20 +508,20 @@ Future<void> getDeviceInfo(String playerId, context) async {
       // print(androidInfo.device);
       deviceData = {
         'deviceId': playerId,
-        'deviceName': androidInfo.device ?? 'Unknown',
+        'deviceName': androidInfo.device,
         // 'manufacturer': androidInfo.manufacturer ?? 'Unknown',
         'os': 'Android',
-        'osVersion': androidInfo.version.release ?? 'Unknown',
+        'osVersion': androidInfo.version.release,
       };
     } else if (Platform.isIOS) {
       // For iOS devices
       final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       deviceData = {
         'deviceId': playerId,
-        'deviceName': iosInfo.name ?? 'Unknown',
+        'deviceName': iosInfo.name,
         // 'manufacturer': 'Apple',
         'os': 'iOS',
-        'osVersion': iosInfo.systemVersion ?? 'Unknown',
+        'osVersion': iosInfo.systemVersion
       };
     } else {
       deviceData = {
