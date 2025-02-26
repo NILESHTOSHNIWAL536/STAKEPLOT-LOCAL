@@ -43,7 +43,7 @@ FinvuManager finvuManager = FinvuManager();
 
 void main()async {
   Get.put(UserController());
-  checkFirebase();
+  // checkFirebase();
   runApp(const MyApp());
 }
 
@@ -71,15 +71,11 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     initPlatformState();
     initFinvuManager();
-    oneSignalInit();
+    // oneSignalInit();
   }
 
 
- void oneSignalInit() {
-  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
-  OneSignal.initialize("66bc1852-d40b-4ad0-8a11-5e3d0da698a2");
-  OneSignal.Notifications.requestPermission(true);
-}
+
 
   Future<void> initPlatformState() async {
     if (!mounted) return;
