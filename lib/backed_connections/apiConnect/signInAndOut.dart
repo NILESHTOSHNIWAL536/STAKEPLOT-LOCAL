@@ -423,7 +423,7 @@ void clearGetX() {
     graphTransaction.value=false;
 }
 
-void oneSignalApis(context) async {
+// void oneSignalApis(context) async {
   // String appId = "ff897875-4bac-4b0c-9bb6-a371998d4d1c";
 
   // await OneSignal.shared.setAppId(appId);
@@ -458,7 +458,38 @@ void oneSignalApis(context) async {
 
   // var data=await  getDeviceInfo();
   // print(data);
-}
+// }
+
+
+// Future<void> initializeOneSignal(BuildContext context) async {
+//   String appId = "ff897875-4bac-4b0c-9bb6-a371998d4d1c";
+
+//    OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+//    OneSignal.initialize(appId);
+//    OneSignal.Notifications.requestPermission(true);
+
+//   var deviceState =  OneSignal.User.getDeviceState();
+//   String? userDeviceId = deviceState?.userId;
+
+//   if (userDeviceId != null) {
+//     print("User Device ID: $userDeviceId");
+//     await getDeviceInfo(userDeviceId, context);
+//   } else {
+//     print("Failed to retrieve user device ID");
+//   }
+
+//   OneSignal.Notifications.addClickListener((event) {
+//     print("Notification Opened: \${event.notification.additionalData}");
+    
+//     String? screen = event.notification.additionalData?['screen'];
+//     if (screen != null) {
+//       Navigator.pushNamed(context, screen);
+//     } else {
+//       print("No screen specified in additional data.");
+//     }
+//   });
+// }
+
 
 Future<void> getDeviceInfo(String playerId, context) async {
   final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
