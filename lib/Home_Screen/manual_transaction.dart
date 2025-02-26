@@ -981,7 +981,6 @@ class _ModalContentState extends State<ModalContent>
           amount, "Lend Bill (${subCategories})", name, context, 'cash', true);
       // addSocketMessage(addedMembers,amount.toString(),selectedCategory2.toString()+"Lend Bill (${subCategories})", splitID.value);
       getUserLend(context);
-      Navigator.pop(context);
       // Navigator.push(
       //   context,
       //   PageTransition(

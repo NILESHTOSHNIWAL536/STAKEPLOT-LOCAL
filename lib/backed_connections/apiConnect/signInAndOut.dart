@@ -67,8 +67,8 @@ Future<void> loginUser(TextEditingController emailController,
 
     String accessToken = body['data']['accessToken'];
     _pref.setString("accessToken", "Bearer " + accessToken);
+     print("accessToken");
      print(accessToken);
-     print(body['-id']);
     storeinmap(body, _pref, passwordController.text);
 
     currentId.value = body['data']['_id'];
@@ -463,7 +463,7 @@ void clearGetX() {
 
 Future<void> initializeOneSignal(BuildContext context) async {
  
-
+   print("------------------------------------");
    oneSignalInit();
 
   String? userDeviceId = OneSignal.User.pushSubscription.id;
@@ -489,7 +489,7 @@ Future<void> initializeOneSignal(BuildContext context) async {
 
 
  void oneSignalInit() {
-   String appId = "66bc1852-d40b-4ad0-8a11-5e3d0da698a2";
+  String appId = "66bc1852-d40b-4ad0-8a11-5e3d0da698a2";
   OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
   OneSignal.initialize(appId);
   OneSignal.Notifications.requestPermission(true);

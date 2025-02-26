@@ -1,7 +1,7 @@
 plugins {
     id "com.android.application"
     // START: FlutterFire Configuration
-    // id 'com.google.gms.google-services'  // Required for Firebase
+    id 'com.google.gms.google-services'  // Required for Firebase
     // END: FlutterFire Configuration
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
@@ -39,29 +39,29 @@ android {
         versionName = flutter.versionName
 
         // Add MultiDex support
-        // multiDexEnabled true
+         multiDexEnabled true
     }
 
-    // signingConfigs {
-    //     release {
-    //         keyAlias keystoreProperties['keyAlias']
-    //         keyPassword keystoreProperties['keyPassword']
-    //         storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-    //         storePassword keystoreProperties['storePassword']
-    //     }
-    // }
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
+        }
+    }
 
     buildTypes {
-        // release {
-        //     // TODO: Add your own signing config for the release build.
-        //     // Signing with the debug keys for now, so `flutter run --release` works.
+        release {
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
 
-        //     minifyEnabled true
-        //     shrinkResources true
-        //     // useProguard true
-        //     proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        //      signingConfig signingConfigs.release
-        // }
+            minifyEnabled true
+            shrinkResources true
+            // useProguard true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+             signingConfig signingConfigs.release
+        }
     }
 }
 
