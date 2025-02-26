@@ -41,7 +41,6 @@ class _FinancePageState extends State<FinancePage> {
 
   void calledFunctionToFetchData() async {
     if (selectedButton.value == "Month") {
-     
       //print(totalCredited);
       getAutoMationsTransactionsCustom(getFormattedDate(), context);
       _calculateTotalSpent();
@@ -57,22 +56,22 @@ class _FinancePageState extends State<FinancePage> {
   }
 
   void _scrollToTransactionHistory() {
-  final RenderObject? renderObject =
-      widget.transactionHistoryKey.currentContext?.findRenderObject();
-  if (renderObject != null && renderObject is RenderBox) {
-    final position = renderObject.localToGlobal(Offset.zero);
-    final scrollOffset = widget.scrollController.offset;
-    final targetOffset = position.dy - scrollOffset;
-   // print("Target offset: $targetOffset");
-    widget.scrollController.animateTo(
-      targetOffset > 0 ? targetOffset : 0,
-      duration: Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-    );
-  } else {
-  //  print("RenderObject not found for TransactionHistory");
+    final RenderObject? renderObject =
+        widget.transactionHistoryKey.currentContext?.findRenderObject();
+    if (renderObject != null && renderObject is RenderBox) {
+      final position = renderObject.localToGlobal(Offset.zero);
+      final scrollOffset = widget.scrollController.offset;
+      final targetOffset = position.dy - scrollOffset;
+      // print("Target offset: $targetOffset");
+      widget.scrollController.animateTo(
+        targetOffset > 0 ? targetOffset : 0,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      //  print("RenderObject not found for TransactionHistory");
+    }
   }
-}
 
   int _getDaysInCurrentMonth() {
     final now = DateTime.now();
@@ -89,7 +88,6 @@ class _FinancePageState extends State<FinancePage> {
       // Calculate the sum of credited and debited amounts
       double totalCredited = credited.fold(0.0, (sum, item) => sum + item);
       double totalDebited = debited.fold(0.0, (sum, item) => sum + item);
-    
 
       // Total spent is the difference between credited and debited
       setState(() {
@@ -109,12 +107,12 @@ class _FinancePageState extends State<FinancePage> {
           ? Center(child: Spinner())
           : Padding(
               padding: EdgeInsets.all(0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
                     'Weekly spending and cash flow',
-                style: FontManager().getTextStyle(context,
+                    style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w300,
                         fontSize: fontSizeFactor * 4.0,
                         color: AppColors.accentColor),
@@ -122,28 +120,28 @@ class _FinancePageState extends State<FinancePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-            Row(
-              children: [
-                Text(
-                  '₹${totalSpent.toStringAsFixed(2)}',
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.bold,
+                      Row(
+                        children: [
+                          Text(
+                            '₹${totalSpent.toStringAsFixed(2)}',
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.bold,
                                 fontSize: fontSizeFactor * 4,
-                      color: AppColors.accentColor),
-                ),
-                SizedBox(width: screenWidth * 0.02),
-                Text(
-                  'This week',
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.normal,
+                                color: AppColors.accentColor),
+                          ),
+                          SizedBox(width: screenWidth * 0.02),
+                          Text(
+                            'This week',
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.normal,
                                 fontSize: fontSizeFactor * 2.5,
-                      color: AppColors.accentColor),
-                ),
+                                color: AppColors.accentColor),
+                          ),
                         ],
                       ),
                       CustomButton(
                         onTap: () {
-                         // print("History button tapped");
+                          // print("History button tapped");
                           _scrollToTransactionHistory();
                         },
                         text: 'History',
@@ -168,26 +166,26 @@ class _FinancePageState extends State<FinancePage> {
                         : selectedButton == "Month"
                             ? _getDaysInCurrentMonth()
                             : labels.length,
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
             )),
     );
   }
 
   Widget getMonthWeekCustom(fontSizeFactor, screenWidth) {
     return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'My Spendings',
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.normal,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          'My Spendings',
+          style: FontManager().getTextStyle(context,
+              lWeight: FontWeight.normal,
               fontSize: fontSizeFactor * 3.4,
               color: AppColors.bg1),
-                ),
-                Row(
-                  children: [
+        ),
+        Row(
+          children: [
             GestureDetector(
               onTap: () {
                 getGraphData.value = false;
@@ -204,17 +202,17 @@ class _FinancePageState extends State<FinancePage> {
                       : AppColors.backgroundColor,
                 ),
                 child: Center(
-                      child: Text(
-                        'Month',
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.normal,
+                  child: Text(
+                    'Month',
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.normal,
                         fontSize: fontSizeFactor * 3.4,
-                            color: AppColors.accentColor),
+                        color: AppColors.accentColor),
                   ),
                 ),
-                      ),
-                    ),
-                    SizedBox(width: screenWidth * 0.02),
+              ),
+            ),
+            SizedBox(width: screenWidth * 0.02),
             GestureDetector(
               onTap: () {
                 selectedButton.value = 'Week';
@@ -232,17 +230,17 @@ class _FinancePageState extends State<FinancePage> {
                       : AppColors.backgroundColor,
                 ),
                 child: Center(
-                      child: Text(
-                        'Week',
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.normal,
+                  child: Text(
+                    'Week',
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.normal,
                         fontSize: fontSizeFactor * 3.4,
-                            color: AppColors.accentColor),
+                        color: AppColors.accentColor),
                   ),
                 ),
-                      ),
-                    ),
-                    SizedBox(width: screenWidth * 0.02),
+              ),
+            ),
+            SizedBox(width: screenWidth * 0.02),
             GestureDetector(
               onTap: () {
                 pickCustomDateRange(context);
@@ -257,13 +255,13 @@ class _FinancePageState extends State<FinancePage> {
                       : AppColors.backgroundColor,
                 ),
                 child: Center(
-                      child: Text(
-                        'Custom',
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.normal,
+                  child: Text(
+                    'Custom',
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.normal,
                         fontSize: fontSizeFactor * 3.4,
-                            color: AppColors.accentColor),
-                      ),
+                        color: AppColors.accentColor),
+                  ),
                 ),
               ),
             ),
@@ -295,7 +293,7 @@ class LineChartWidget extends StatefulWidget {
 }
 
 class _LineChartWidgetState extends State<LineChartWidget> {
-   double maxYValue=10000;
+  double maxYValue = 10000;
 
   @override
   void initState() {
@@ -377,13 +375,13 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     List<String> labels;
 
     if (widget.selectedButton.value == 'Week') {
-      dataLength = 7; 
+      dataLength = 7;
       labels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     } else {
       // Custom and Month
       dataLength = widget.daysInMonth;
       labels = List.from(widget.days);
-      
+
       while (labels.length < dataLength) {
         labels.add((labels.length + 1).toString().padLeft(2, '0'));
       }
@@ -407,14 +405,14 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       return ChartData(labels[index], value);
     });
 
-   // print("..........................................");
+    // print("..........................................");
     //print("Labels: $labels");
-   // print(creditedData);
+    // print(creditedData);
     //print(debitedData);
-    print("getContainerOfGraph - dataLength: $dataLength, labels: $labels");
-  print("CreitedData: ${creditedData.map((d) => '(${d.x}, ${d.y})').toList()}");
-  print("DebitedData: ${debitedData.map((d) => '(${d.x}, ${d.y})').toList()}");
- double labelWidth = widget.selectedButton.value == 'Week' ? 50.0 : 40.0;
+    //   print("getContainerOfGraph - dataLength: $dataLength, labels: $labels");
+    // print("CreditedData: ${creditedData.map((d) => '(${d.x}, ${d.y})').toList()}");
+    // print("DebitedData: ${debitedData.map((d) => '(${d.x}, ${d.y})').toList()}");
+    double labelWidth = widget.selectedButton.value == 'Week' ? 50.0 : 40.0;
     double chartWidth = dataLength * labelWidth;
     return GestureDetector(
       // Handle taps outside the chart lines
@@ -437,10 +435,10 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         }
       },
       child: SizedBox(
-         // width: screenWidth * (widget.selectedButton.value == 'Week' ? 1 : 2),
+          // width: screenWidth * (widget.selectedButton.value == 'Week' ? 1 : 2),
           width: widget.selectedButton.value == 'Week'
-            ? screenWidth * 0.85 // Fixed width for Week
-            : max(chartWidth, screenWidth * 0.85), 
+              ? screenWidth * 0.85 // Fixed width for Week
+              : max(chartWidth, screenWidth * 0.85),
           height: MediaQuery.of(context).size.height / 2.6,
           child: SfCartesianChart(
             borderWidth: 0,
@@ -455,9 +453,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                   MinorGridLines(width: 0), // Ensure no minor grid lines
               axisLine: AxisLine(width: 0),
               interval: 1,
-                 labelRotation: widget.selectedButton.value == 'Week' ? 0 : -45,
-            edgeLabelPlacement: EdgeLabelPlacement.shift,
-            maximumLabels: dataLength, // Ensure all labels are considered
+              labelRotation: widget.selectedButton.value == 'Week' ? 0 : -45,
+              edgeLabelPlacement: EdgeLabelPlacement.shift,
+              maximumLabels: dataLength, // Ensure all labels are considered
             ),
             primaryYAxis: NumericAxis(
               isVisible: false,
@@ -497,8 +495,8 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                         ),
                       );
                     }
-      },
-      child: Container(
+                  },
+                  child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: Colors.black54,
@@ -512,15 +510,15 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                           color: Colors.white),
                     ),
                   ),
-                    );
-                  },
-                ),
+                );
+              },
+            ),
             series: <ChartSeries>[
               SplineSeries<ChartData, String>(
                 dataSource: creditedData,
                 xValueMapper: (ChartData data, _) => data.x,
                 yValueMapper: (ChartData data, _) => data.y,
-                color: AppColors.accentColor,
+                color: AppColors.primaryColor,
                 width: 2, // Increased line width for better visibility
                 enableTooltip: true,
                 name: 'Debited',
@@ -540,7 +538,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 dataSource: debitedData,
                 xValueMapper: (ChartData data, _) => data.x,
                 yValueMapper: (ChartData data, _) => data.y,
-                color: AppColors.primaryColor,
+                color: AppColors.accentColor,
                 width: 2,
                 enableTooltip: true,
                 name: 'Credited',
@@ -561,9 +559,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
               isVisible: false,
               position: LegendPosition.top,
               textStyle: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.normal,
+                  lWeight: FontWeight.normal,
                   fontSize: fontSizeFactor * 3,
-                            color: AppColors.accentColor),
+                  color: AppColors.accentColor),
             ),
           )),
     );

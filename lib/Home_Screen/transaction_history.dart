@@ -189,8 +189,8 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                                     transaction["amount"].toString());
                                 double sharePerFriend =
                                     amount / addedMembers.length;
-                                print(
-                                    "Amount: $amount, Share Per Friend: $sharePerFriend");
+                                // print(
+                                //     "Amount: $amount, Share Per Friend: $sharePerFriend");
                                 splitUserAmount2(
                                   _stableContext ?? context,
                                   amount.toString(),
@@ -364,10 +364,10 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     var accessToken = pref.getString("accessToken");
 
     if (accessToken == null) {
-      print("No access token found in SharedPreferences");
+     // print("No access token found in SharedPreferences");
       return null;
     } else {
-      print("Token: $accessToken");
+    //  print("Token: $accessToken");
       return accessToken;
     }
   }
@@ -386,7 +386,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
       );
       return response;
     } catch (e) {
-      print("Error in updateDataApiCall: $e");
+     // print("Error in updateDataApiCall: $e");
       rethrow;
     }
   }
@@ -397,7 +397,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     final transactionId = transaction['_id']?.toString();
 
     if (transactionId == null) {
-      print("Error: Transaction ID is null");
+   //   print("Error: Transaction ID is null");
       return;
     }
 
@@ -439,13 +439,13 @@ class _TransactionHistoryState extends State<TransactionHistory> {
 
           getHistory.value = !getHistory.value;
         } else {
-          print("Error: 'data' is null or not a List. Data received: $obj");
+         // print("Error: 'data' is null or not a List. Data received: $obj");
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("No transaction data available")),
           );
         }
       } else {
-        print("API call failed with status: ${response.statusCode}");
+      //  print("API call failed with status: ${response.statusCode}");
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content:
@@ -453,7 +453,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
         );
       }
     } catch (e) {
-      print("Exception occurred: $e");
+    //  print("Exception occurred: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text("An error occurred while fetching transactions")),
