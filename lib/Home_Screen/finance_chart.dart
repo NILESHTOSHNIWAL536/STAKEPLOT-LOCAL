@@ -453,8 +453,8 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                   MinorGridLines(width: 0), // Ensure no minor grid lines
               axisLine: AxisLine(width: 0),
               interval: 1,
-              labelRotation: widget.selectedButton.value == 'Week' ? 0 : -45,
-              edgeLabelPlacement: EdgeLabelPlacement.shift,
+              // labelRotation: widget.selectedButton.value == 'Week' ? 0 : -45,
+              // edgeLabelPlacement: EdgeLabelPlacement.shift,
               maximumLabels: dataLength, // Ensure all labels are considered
             ),
             primaryYAxis: NumericAxis(
