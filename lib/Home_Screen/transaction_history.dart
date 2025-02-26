@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/bill.dart';
@@ -23,27 +22,25 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TransactionHistory extends StatefulWidget {
-   final int? selectedYear; // Optional
-  final int? selectedMonth; // Optional
+  /// Optional
   final bool? isYearView;
+  final bool? isflag;
 
   const TransactionHistory({
     super.key,
-     this.selectedYear,
-    this.selectedMonth,
-    this.isYearView,
+    this.isflag = false,
+    this.isYearView =false,
   });
- // const TransactionHistory({super.key});
+  // const TransactionHistory({super.key});
 
   @override
   State<TransactionHistory> createState() => _TransactionHistoryState();
 }
 
 class _TransactionHistoryState extends State<TransactionHistory> {
-  
   final Map<int, double> swipeOffsets = {};
   final List<Map<String, dynamic>> hiddenTransactions = [];
-  final transactionsHistory = <dynamic>[].obs; // Corrected typo
+  // final transactionsHistory = <dynamic>[].obs; // Corrected typo
   final scrollController = ScrollController();
   final targetKey = GlobalKey();
   final getHistory = false.obs;
@@ -53,7 +50,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
   void initState() {
     super.initState();
     _stableContext = context;
-    getAllTransaction(context);
+    getAllTransactionHistory(context, widget.isflag!, widget.isYearView!);
   }
 
   @override
@@ -67,20 +64,20 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     return SingleChildScrollView(
       controller: scrollController,
       child: Container(
-       // color: AppColors.backgroundColor,
+        // color: AppColors.backgroundColor,
         key: targetKey,
         child: Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Transaction History',
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.bold,
-                  fontSize: 18,
-                  color: AppColors.accentColor),
-            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Transaction History',
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: AppColors.accentColor),
+                ),
               ],
             ),
             const SizedBox(height: 20),
@@ -94,36 +91,36 @@ class _TransactionHistoryState extends State<TransactionHistory> {
   Widget getlist() {
     return ListView.builder(
       itemCount: transactionsHistory.length,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
         final transaction = transactionsHistory[index];
         //   print("Transaction: $transaction");
 
         return Stack(
-                children: [
+          children: [
             Positioned(
               left: 0,
               right: 0,
               child: Container(
-                    height: 80,
-                    color: AppColors.primaryColor,
+                height: 80,
+                color: AppColors.primaryColor,
               ),
             ),
             Positioned(
               right: 10,
               top: 25,
-                    child: GestureDetector(
-                      onTap: () {
+              child: GestureDetector(
+                onTap: () {
                   hideTransaction(index);
-                      },
-                      child: const Icon(
-                        Icons.visibility_off,
-                        color: Colors.white,
-                        size: 30,
-                      ),
-                    ),
-                  ),
+                },
+                child: const Icon(
+                  Icons.visibility_off,
+                  color: Colors.white,
+                  size: 30,
+                ),
+              ),
+            ),
             Positioned(
               right: 50,
               top: 25,
@@ -178,7 +175,10 @@ class _TransactionHistoryState extends State<TransactionHistory> {
               ),
               child: Column(
                 children: [
-                  Expanded(child: FriendsUi()),
+                  Expanded(
+                      child: FriendsUi(
+                    flag: false,
+                  )),
                   Obx(() => addedMembers.isNotEmpty
                       ? Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -188,9 +188,8 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                                 double amount = double.parse(
                                     transaction["amount"].toString());
                                 double sharePerFriend =
-                                    amount / addedMembers.length;
-                                // print(
-                                //     "Amount: $amount, Share Per Friend: $sharePerFriend");
+                                    amount / (addedMembers.length + 1);
+
                                 splitUserAmount2(
                                   _stableContext ?? context,
                                   amount.toString(),
@@ -201,11 +200,8 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                                 );
                                 Navigator.pop(modalContext);
                               } catch (e) {
-                                ScaffoldMessenger.of(modalContext).showSnackBar(
-                                  SnackBar(
-                                      content:
-                                          Text("Error splitting amount: $e")),
-                                );
+                                snackBarCalled(
+                                    context, "Error splitting Amount");
                               }
                             },
                             child: getButton(modalContext, "Continue"),
@@ -246,9 +242,9 @@ class _TransactionHistoryState extends State<TransactionHistory> {
               children: [
                 Expanded(
                   flex: 1,
-                    child: Container(
+                  child: Container(
                     margin: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
+                    decoration: BoxDecoration(
                       color: Colorcodes.greyLight,
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -320,18 +316,18 @@ class _TransactionHistoryState extends State<TransactionHistory> {
 
   BoxDecoration getBoxDecoration(int index) {
     return BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                          stops: [
+      gradient: LinearGradient(
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+        stops: [
           (1.0 - ((swipeOffsets[index] ?? 0.0).abs() / 200)).clamp(0.0, 1.0),
-                            1.0,
-                          ],
-                          colors: [
-                            AppColors.backgroundColor,
-                            AppColors.backgroundColor.withOpacity(0.0),
-                          ],
-                        ),
+          1.0,
+        ],
+        colors: [
+          AppColors.backgroundColor,
+          AppColors.backgroundColor.withOpacity(0.0),
+        ],
+      ),
     );
   }
 
@@ -364,10 +360,10 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     var accessToken = pref.getString("accessToken");
 
     if (accessToken == null) {
-     // print("No access token found in SharedPreferences");
+      // print("No access token found in SharedPreferences");
       return null;
     } else {
-    //  print("Token: $accessToken");
+      //  print("Token: $accessToken");
       return accessToken;
     }
   }
@@ -386,18 +382,17 @@ class _TransactionHistoryState extends State<TransactionHistory> {
       );
       return response;
     } catch (e) {
-     // print("Error in updateDataApiCall: $e");
+      // print("Error in updateDataApiCall: $e");
       rethrow;
     }
   }
 
-  
   void hideTransaction(int index) async {
     final transaction = transactionsHistory[index];
     final transactionId = transaction['_id']?.toString();
 
     if (transactionId == null) {
-   //   print("Error: Transaction ID is null");
+      //   print("Error: Transaction ID is null");
       return;
     }
 
@@ -405,11 +400,9 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     try {
       final response = await updateDataApiCall(apiUrl, {"Hidden": true});
       if (response.statusCode == 200) {
-        
-          hiddenTransactions.add(transaction);
-          transactionsHistory.removeAt(index);
-          swipeOffsets.remove(index);
-       
+        hiddenTransactions.add(transaction);
+        transactionsHistory.removeAt(index);
+        swipeOffsets.remove(index);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -424,44 +417,94 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     }
   }
 
-  void getAllTransaction(BuildContext context) async {
-    try {
-      var response =await getDataApiCall("${url}/transactionauto/getTransactions/1");
-      if (response.statusCode == 200) {
-        var his = jsonDecode(response.body);
+  // void getAllTransaction(BuildContext context) async {
+  //   try {
+  //     var response = await getDataApiCall( widget.isflag!?  "${url}/transactionauto/getTransactions/33":"${url}/transactionauto/getTransactions/33");
+  //     if (response.statusCode == 200) {
+  //       var his = jsonDecode(response.body);
 
-        var obj = his['data'];
+  //       var obj = his['data'];
 
-        transactionsHistory.clear();
-        if (obj != null && obj is List<dynamic>) {
-          transactionsHistory.addAll(obj);
+  //       transactionsHistory.clear();
+  //       if (obj != null && obj is List<dynamic>) {
+  //         if (widget.isflag!) {
+  //           extractTransaction(widget.isYearView ?? false, obj);
+  //         } else {
+  //           transactionsHistory.addAll(obj);
+  //         }
 
-          getHistory.value = !getHistory.value;
-        } else {
-         // print("Error: 'data' is null or not a List. Data received: $obj");
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("No transaction data available")),
-          );
-        }
-      } else {
-      //  print("API call failed with status: ${response.statusCode}");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content:
-                  Text("Failed to load transactions: ${response.statusCode}")),
-        );
-      }
-    } catch (e) {
-    //  print("Exception occurred: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text("An error occurred while fetching transactions")),
-      );
-    }
-  }
+  //         getHistory.value = !getHistory.value;
+  //       } else {
+  //         // print("Error: 'data' is null or not a List. Data received: $obj");
+  //         ScaffoldMessenger.of(context).showSnackBar(
+  //           const SnackBar(content: Text("No transaction data available")),
+  //         );
+  //       }
+  //     } else {
+  //       //  print("API call failed with status: ${response.statusCode}");
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //             content:
+  //                 Text("Failed to load transactions: ${response.statusCode}")),
+  //       );
+  //     }
+  //   } catch (e) {
+  //     //  print("Exception occurred: $e");
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //           content: Text("An error occurred while fetching transactions")),
+  //     );
+  //   }
+  // }
 
   String formatDate(String dateString) {
     DateTime date = DateTime.parse(dateString);
     return DateFormat("dd MMM yyyy").format(date);
+  }
+
+  void extractTransaction(bool isYearView, List obj) {
+    print("------------------------ extra called...");
+    print(isYearView);
+    if (isYearView) {
+      getTransactionByYear(obj, selectedYear.value);
+    } else {
+      getTransactionByMonth(obj, selectedMonth.value);
+    }
+  }
+
+  void getTransactionByYear(List obj, y) {
+    obj.forEach((ele) {
+      print(ele);
+      if (isCurrentYear(ele['transactionTimestamp'], y)) {
+        transactionsHistory.add(ele);
+      }
+    });
+  }
+
+  void getTransactionByMonth(List obj, y) {
+    obj.forEach((ele) {
+      print(ele);
+      if (isCurrentMonth(ele['transactionTimestamp'], y)) {
+        transactionsHistory.add(ele);
+      }
+    });
+  }
+
+  bool isCurrentYear(String date, int y) {
+    try {
+      DateTime parsedDate = DateTime.parse(date); // Parse the date string
+      return parsedDate.year == y; // Compare year
+    } catch (e) {
+      return false; // Return false if parsing fails
+    }
+  }
+
+  bool isCurrentMonth(String date, int m) {
+    try {
+      DateTime parsedDate = DateTime.parse(date);
+      return parsedDate.month == m; // Compare month
+    } catch (e) {
+      return false;
+    }
   }
 }

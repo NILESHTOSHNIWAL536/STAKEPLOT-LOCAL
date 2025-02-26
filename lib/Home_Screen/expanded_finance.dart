@@ -484,7 +484,7 @@
 //                     ),
 //                     SizedBox(height: 10,),
 //                     TransactionHistory(
-                      
+
 //                     )
 //                 ],
 //               ),
@@ -499,6 +499,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
@@ -526,14 +527,14 @@ class ExpandedChartView extends StatefulWidget {
 }
 
 class _ExpandedChartViewState extends State<ExpandedChartView> {
-  final RxInt selectedYear = DateTime.now().year.obs;
-  final RxInt selectedMonth = DateTime.now().month.obs;
+  // final RxInt selectedYear = DateTime.now().year.obs;
+  // final RxInt selectedMonth = DateTime.now().month.obs;
   final RxString selectedButton = 'Month'.obs;
   final RxList<String> monthLabels = <String>[].obs;
   final Rx<Map<String, List<double>>> currentChartData =
       Rx<Map<String, List<double>>>({});
   final RxList<String> currentDays = <String>[].obs;
-  final RxBool isYearView = false.obs;
+  // final RxBool isYearView = false.obs;
   final RxBool isLoading = false.obs;
 
   // Map for converting month names to indices
@@ -556,10 +557,11 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
   void initState() {
     super.initState();
     selectedButton.value = widget.selectedButton;
-    selectedYear.value = widget.selectedYear;
-    selectedMonth.value = widget.selectedMonth.clamp(1, 12);
+    // selectedYear.value = widget.selectedYear;
+    // selectedMonth.value = widget.selectedMonth.clamp(1, 12);
     currentChartData.value = widget.chartData;
     currentDays.value = List.from(widget.days);
+    getAllTransactionHistory(context, true, isYearView.value);
     _updateMonthLabels();
     _filterDataForSelectedMonth();
   }
@@ -771,9 +773,13 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                 onTap: () async {
                   selectedYear.value = year;
                   isYearView.value = true;
+                  loadChatdataOnChnage.value = !loadChatdataOnChnage.value;
+                  getAllTransactionHistory(context, true, true);
                   _updateMonthLabels();
+
                   await _fetchYearlyData(year);
                   Navigator.pop(context);
+                  setState(() {});
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -817,8 +823,11 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                 onTap: () async {
                   selectedMonth.value = month;
                   isYearView.value = false;
+                    loadChatdataOnChnage.value = !loadChatdataOnChnage.value;
+                    getAllTransactionHistory(context, true, false);
                   await _fetchMonthlyData(selectedYear.value, month);
                   Navigator.pop(context);
+                  setState(() {});
                 },
                 child: Container(
                   height: 20,
@@ -882,56 +891,56 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
           children: [
             Text(
               'My Spendings',
-          style: FontManager().getTextStyle(context,
-              lWeight: FontWeight.normal,
-              fontSize: fontSizeFactor * 3.4,
-              color: AppColors.bg1),
-        ),
-        Row(
-          children: [
-            GestureDetector(
+              style: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.normal,
+                  fontSize: fontSizeFactor * 3.4,
+                  color: AppColors.bg1),
+            ),
+            Row(
+              children: [
+                GestureDetector(
                   onTap: () =>
                       _showMonthPicker(context, fontSizeFactor, screenWidth),
-              child: Container(
-                height: 35,
-                width: screenWidth * 0.2,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: AppColors.button,
-                ),
-                child: Center(
-                  child: Obx(() => Text(
+                  child: Container(
+                    height: 35,
+                    width: screenWidth * 0.2,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: AppColors.button,
+                    ),
+                    child: Center(
+                      child: Obx(() => Text(
                             DateFormat('MMMM').format(DateTime(
                                 selectedYear.value, selectedMonth.value, 1)),
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.normal,
-                            fontSize: fontSizeFactor * 3.4,
-                            color: AppColors.accentColor),
-                      )),
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.normal,
+                                fontSize: fontSizeFactor * 3.4,
+                                color: AppColors.accentColor),
+                          )),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            SizedBox(width: screenWidth * 0.02),
-            GestureDetector(
+                SizedBox(width: screenWidth * 0.02),
+                GestureDetector(
                   onTap: () =>
                       _showYearPicker(context, fontSizeFactor, screenWidth),
-              child: Container(
-                height: 35,
-                width: screenWidth * 0.2,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: AppColors.button,
-                ),
-                child: Center(
-                  child: Obx(() => Text(
-                        selectedYear.value.toString(),
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.normal,
-                            fontSize: fontSizeFactor * 3.4,
-                            color: AppColors.accentColor),
-                      )),
-                ),
-              ),
+                  child: Container(
+                    height: 35,
+                    width: screenWidth * 0.2,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: AppColors.button,
+                    ),
+                    child: Center(
+                      child: Obx(() => Text(
+                            selectedYear.value.toString(),
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.normal,
+                                fontSize: fontSizeFactor * 3.4,
+                                color: AppColors.accentColor),
+                          )),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -954,21 +963,21 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
         backgroundColor: AppColors.backgroundColor,
       ),
       body: Obx(() => SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-        children: [
-          _buildMonthYearSelector(fontSizeFactor, screenWidth),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  _buildMonthYearSelector(fontSizeFactor, screenWidth),
                   if (isLoading.value)
                     Center(child: CircularProgressIndicator())
                   else
                     Container(
                       height: screenHeight / 2.6,
                       child: Expanded(
-            child: LineChartWidget(
+                        child: LineChartWidget(
                           chartData: currentChartData.value,
                           days: isYearView.value ? monthLabels : currentDays,
-              selectedButton: selectedButton,
+                          selectedButton: selectedButton,
                           daysInMonth: isYearView.value
                               ? 12
                               : _getDaysInMonth(
@@ -977,14 +986,22 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10,),
-                    TransactionHistory(
-                      
-                    )
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Obx(() => loadChatdataOnChnage.value
+                      ? TransactionHistory(
+                          isYearView: isYearView.value,
+                          isflag: true,
+                        )
+                      : TransactionHistory(
+                          isYearView: isYearView.value,
+                          isflag: true,
+                        ))
                 ],
               ),
-        ),
-      )),
+            ),
+          )),
     );
   }
 }

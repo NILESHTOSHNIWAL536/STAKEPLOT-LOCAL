@@ -105,6 +105,8 @@ RxList categoriesList = [].obs;
 Map<String, dynamic> loginUsersList = Map<String, dynamic>();
 RxList dueAmountRemainders = [].obs;
 RxBool getdueUsers = false.obs;
+ RxInt selectedYear = DateTime.now().year.obs;
+ RxInt selectedMonth = DateTime.now().month.obs;
 
 List<String> month = [
   "",
@@ -152,6 +154,8 @@ RxList historyListData = [].obs;
 RxList getTrendingData = [].obs;
 RxBool hasGetNewNotifications = false.obs;
 RxBool getGraphData=false.obs;
+RxBool isSplit = false.obs;
+  RxBool isLend = false.obs;
 final ScrollController scrollController = ScrollController();
 final GlobalKey targetKey = GlobalKey(); // Key to identify the target widget
 
@@ -170,7 +174,9 @@ final GlobalKey targetKey = GlobalKey(); // Key to identify the target widget
     RxDouble maxYValue = 0.0.obs;
 RxList hiddentrasactionsHistory = [].obs;
 RxBool getHiddenHistory = false.obs;
-
+RxBool isYearView = false.obs;
+RxBool loadChatdataOnChnage = false.obs;
+RxList  transactionsHistory = <dynamic>[].obs;
 class Message {
   Message(
       {this.text,

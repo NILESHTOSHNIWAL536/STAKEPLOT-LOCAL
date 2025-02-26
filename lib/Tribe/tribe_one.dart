@@ -559,11 +559,12 @@ class _TribeHomeState extends State<TribeUnique> {
                                         //   size: 35,
                                         //   color: Colors.black,
                                         // ),
-                                        child: likedList.contains(
-                                                "liked" + data.sId.toString())
-                                            ? upvoteLiked(context, false)
-                                            : upvoteLike(context, false),
-                                      ),
+                                        child: likeIcon(context, likedList.contains("liked" + data.sId.toString()))),
+                                      //   child: likedList.contains(
+                                      //           "liked" + data.sId.toString())
+                                      //       ? upvoteLiked(context, false)
+                                      //       : upvoteLike(context, false),
+                                      // ),
 
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
@@ -593,58 +594,58 @@ class _TribeHomeState extends State<TribeUnique> {
                                       //         fontSize: 18,
                                       //         color: Colors.black)),
 
-                                      GestureDetector(
-                                        onTap: () {
-                                          downvote2(
-                                              context,
-                                              "Comment",
-                                              data.sId!,
-                                              data,
-                                              historyListData,
-                                              index);
-                                          String l1 = "liked" + idData;
-                                          bool liked = likedList.contains(l1);
+                                      // GestureDetector(
+                                      //   onTap: () {
+                                      //     downvote2(
+                                      //         context,
+                                      //         "Comment",
+                                      //         data.sId!,
+                                      //         data,
+                                      //         historyListData,
+                                      //         index);
+                                      //     String l1 = "liked" + idData;
+                                      //     bool liked = likedList.contains(l1);
 
-                                          String l2 = "disliked" + idData;
-                                          bool disliked =
-                                              likedList.contains(l2);
-                                          // likedList.remove("liked"+dataObj["_id"])  :likedList.add("liked"+dataObj["_id"]);
-                                          reRender.value = !reRender.value;
-                                          if (disliked) {
-                                            if (liked) {
-                                              postCount[idData] =
-                                                  postCount[idData]! - 1;
-                                              if (postCount[idData]! < 0) {
-                                                postCount[idData] = 0;
-                                              }
-                                              likedList.remove(l1);
-                                            }
-                                            likedList.remove(l2);
-                                          } else {
-                                            //  likedList.add(l1);
-                                            if (liked) {
-                                              postCount[idData] =
-                                                  postCount[idData]! - 1;
-                                              if (postCount[idData]! < 0) {
-                                                postCount[idData] = 0;
-                                              }
-                                              likedList.remove(l1);
-                                            }
+                                      //     String l2 = "disliked" + idData;
+                                      //     bool disliked =
+                                      //         likedList.contains(l2);
+                                      //     // likedList.remove("liked"+dataObj["_id"])  :likedList.add("liked"+dataObj["_id"]);
+                                      //     reRender.value = !reRender.value;
+                                      //     if (disliked) {
+                                      //       if (liked) {
+                                      //         postCount[idData] =
+                                      //             postCount[idData]! - 1;
+                                      //         if (postCount[idData]! < 0) {
+                                      //           postCount[idData] = 0;
+                                      //         }
+                                      //         likedList.remove(l1);
+                                      //       }
+                                      //       likedList.remove(l2);
+                                      //     } else {
+                                      //       //  likedList.add(l1);
+                                      //       if (liked) {
+                                      //         postCount[idData] =
+                                      //             postCount[idData]! - 1;
+                                      //         if (postCount[idData]! < 0) {
+                                      //           postCount[idData] = 0;
+                                      //         }
+                                      //         likedList.remove(l1);
+                                      //       }
 
-                                            //  postCount[idData]=postCount[idData]!-1;
-                                            likedList.add(l2);
-                                          }
-                                        },
-                                        child: likedList.contains("disliked" +
-                                                data.sId.toString())
-                                            ? downvoteLiked(context, false)
-                                            : downvoteLike(context, false),
-                                        // child: const Icon(
-                                        //   Icons.arrow_drop_down_outlined,
-                                        //   size: 35,
-                                        //   color: Colors.black,
-                                        // ),
-                                      ),
+                                      //       //  postCount[idData]=postCount[idData]!-1;
+                                      //       likedList.add(l2);
+                                      //     }
+                                      //   },
+                                      //   child: likedList.contains("disliked" +
+                                      //           data.sId.toString())
+                                      //       ? downvoteLiked(context, false)
+                                      //       : downvoteLike(context, false),
+                                      //   // child: const Icon(
+                                      //   //   Icons.arrow_drop_down_outlined,
+                                      //   //   size: 35,
+                                      //   //   color: Colors.black,
+                                      //   // ),
+                                      // ),
                                     ],
                                   ),
                                 ),

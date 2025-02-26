@@ -339,7 +339,7 @@ class _TribeHomeState extends State<TribeShare> {
                 "roomId": userToSend,
               });
               index++;
-            sendNotificationsToDevice(rec, context, "Nilesh Toshniwal");
+              sendNotificationsToDevice(rec, context, "Hey there! 👋, ${userName.value} have shared a post 📩. Please check it out 🛒 ");
             });
             Navigator.pop(context);
           },
@@ -420,7 +420,11 @@ class _TribeHomeState extends State<TribeShare> {
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: AppColors.bg1))
+                          color: AppColors.bg1),
+                         overflow: TextOverflow.ellipsis,
+
+                        ),
+                        
                 ],
               ),
             );
