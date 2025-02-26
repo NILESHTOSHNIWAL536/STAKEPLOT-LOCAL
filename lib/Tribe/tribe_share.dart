@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/readmore.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -338,6 +339,7 @@ class _TribeHomeState extends State<TribeShare> {
                 "roomId": userToSend,
               });
               index++;
+            sendNotificationsToDevice(rec, context, "Nilesh Toshniwal");
             });
             Navigator.pop(context);
           },

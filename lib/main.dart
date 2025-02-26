@@ -28,6 +28,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransactio
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/finvuAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+import 'package:flutter_application_code_stakeplot/firebase_options.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/forgot.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
@@ -43,7 +44,7 @@ FinvuManager finvuManager = FinvuManager();
 
 void main()async {
   Get.put(UserController());
-  // checkFirebase();
+  checkFirebase();
   runApp(const MyApp());
 }
 
@@ -51,7 +52,9 @@ void main()async {
 void checkFirebase() async {
    WidgetsFlutterBinding.ensureInitialized();
   try {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     print('✅ Firebase is set up correctly!');
   } catch (e) {
     print('❌ Firebase setup error: $e');
