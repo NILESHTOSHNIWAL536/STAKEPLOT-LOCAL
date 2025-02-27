@@ -22,7 +22,7 @@ import 'package:http/http.dart' as http;
 void initFinvuManager() async {
   finvuManager.initialize(
     FinvuConfig(
-      finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
+      finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
       certificatePins: [],
     ),
   );

@@ -243,24 +243,22 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
   }
 
   Widget feedWidgets(String type) {
-    return Expanded(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              child: Column(
-                children: findData?[Spinner()] : getTrendingData.length == 0
-                ? [Center(
-                    child: Text("No Post Yet",
-                        style: FontManager().getTextStyle(context)))]
-                :   getTrendingData.map((item) => (item['isPoll'] ?? false)? const SizedBox.shrink(): PostCard(data: item)).toList(),
-              ),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+            child: Column(
+              children: findData?[Spinner()] : getTrendingData.length == 0
+              ? [Center(
+                  child: Text("No Post Yet",
+                      style: FontManager().getTextStyle(context)))]
+              :   getTrendingData.map((item) => (item['isPoll'] ?? false)? const SizedBox.shrink(): PostCard(data: item)).toList(),
             ),
-            SizedBox(
-              height: 100,
-            ),
-          ],
-        ),
+          ),
+          SizedBox(
+            height: 100,
+          ),
+        ],
       ),
     );
   }
@@ -268,31 +266,29 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
 
 
   Widget pollWidgets(String type) {
-    return Expanded(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Container(
-            //     child: Wrap(
-            //         children: getTrendingData
-            //             .map((item) => (item['isPoll'] ?? false)
-            //                 ? PostCard(data: item)
-            //                 : SizedBox.shrink())
-            //             .toList())),
-            Container(
-              child: Column(
-                children: findData?[Spinner()] : getTrendingData.length == 0
-                ? [Center(
-                    child: Text("No Post Yet",
-                        style: FontManager().getTextStyle(context)))]
-                :   getTrendingData.map((item) => !(item['isPoll'] ?? false)? const SizedBox.shrink(): PostCard(data: item)).toList(),
-              ),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          // Container(
+          //     child: Wrap(
+          //         children: getTrendingData
+          //             .map((item) => (item['isPoll'] ?? false)
+          //                 ? PostCard(data: item)
+          //                 : SizedBox.shrink())
+          //             .toList())),
+          Container(
+            child: Column(
+              children: findData?[Spinner()] : getTrendingData.length == 0
+              ? [Center(
+                  child: Text("No Post Yet",
+                      style: FontManager().getTextStyle(context)))]
+              :   getTrendingData.map((item) => !(item['isPoll'] ?? false)? const SizedBox.shrink(): PostCard(data: item)).toList(),
             ),
-            SizedBox(
-              height: 100,
-            ),
-          ],
-        ),
+          ),
+          SizedBox(
+            height: 100,
+          ),
+        ],
       ),
     );
   }

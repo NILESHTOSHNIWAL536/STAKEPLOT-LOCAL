@@ -101,7 +101,6 @@ late final WebViewController controller ;
         padding: EdgeInsets.only(top: 100, left: 16, right: 16,bottom: 5),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,8 +167,7 @@ late final WebViewController controller ;
                     String phoneNumber = _phoneController.text;
                     number.value = phoneNumber;
                     print(number);
-                    // loginToAutoTractions(context);
-                    //  LOGOUT();
+                
                     
                     await loginWithServer();
                     otpController = TextEditingController();
@@ -326,6 +324,7 @@ late final WebViewController controller ;
                 onChanged: (value) {
                   _otpCode.value = value;
                   _isOtpValid.value = value.length == _otpCodeLength;
+                  if(_isOtpValid.value)checkOtp();
                 },
               ),
             ),
@@ -368,14 +367,7 @@ late final WebViewController controller ;
               child: GestureDetector(
                   onTap: _isOtpValid.value
                       ? () {
-                          print(_otpCode.value);
-                          print(_isOtpValid.value);
-                          if (_isOtpValid.value) {
-                            verify(_otpCode.value, context);
-                          } else {
-                            snackBarCalled(
-                                context, "please enter otp of length 6");
-                          }
+                          checkOtp();
                         }
                       : null,
                   child: Obx(
@@ -432,5 +424,14 @@ late final WebViewController controller ;
         ),
       ),
     );
+  }
+  
+  void checkOtp() {
+               if (_isOtpValid.value) {
+                            verify(_otpCode.value, context);
+                          } else {
+                            snackBarCalled(
+                                context, "please enter otp of length 6");
+                          }
   }
 }

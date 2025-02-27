@@ -43,22 +43,20 @@ class _SigninState extends State<SignUp> {
       child: Scaffold(
         backgroundColor: Colorcodes.white,
         body: SingleChildScrollView(
-          child: Expanded(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: Column(
-                children: [
-                 
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              children: [
+               
+              
+                topHeader() ,          
+                getTextFeilds(),
+                signUpButton(),
+                allReadyHaveAccount()
+                     
                 
-                  topHeader() ,          
-                  getTextFeilds(),
-                  signUpButton(),
-                  allReadyHaveAccount()
-                       
-                  
-                ],
-              ),
+              ],
             ),
           ),
         ),
