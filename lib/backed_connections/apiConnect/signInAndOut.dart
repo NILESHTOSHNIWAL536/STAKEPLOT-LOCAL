@@ -196,7 +196,7 @@ void checkEmail(context, email, otp, name) async {
     },
     body: jsonEncode({
       'email': email,
-      "otp": otp,
+      "otp": otp.toString(),
     }),
   );
 
