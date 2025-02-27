@@ -1000,17 +1000,17 @@
 //   }
 // }
 
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
+// import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:confetti/confetti.dart';
 //import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
@@ -1038,7 +1038,6 @@ class Manualtransaction extends StatefulWidget {
 }
 
 class _ManualtransactionState extends State<Manualtransaction> {
-
   Widget build(BuildContext context) {
     return Container(
       //height: 300,
@@ -1649,8 +1648,7 @@ class _ModalContentState extends State<ModalContent>
           try {
             urlPath = Categories.link +
                 BudgetCategories.listofCategories[
-                    BudgetCategories.listofCategories.keys
-                        .elementAt(index)];
+                    BudgetCategories.listofCategories.keys.elementAt(index)];
           } catch (e) {}
 
           return ListTile(
@@ -1729,61 +1727,74 @@ class _ModalContentState extends State<ModalContent>
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         GestureDetector(
-          onTap: () {
-            // Action for Split Bill button
-            //isSplit = true;
-            // splitBill();
-            if(isLend.value){
-                                  addedUser.clear();
-                                  addedMembers.clear();
-              }
+          onTap: () async {
+            if (isLend.value) {
+              addedUser.clear();
+              addedMembers.clear();
+            }
             isSplit.value = true;
             isLend.value = false;
 
-            showCustomFriendsModal(context);
+            final amounts =
+                await showCustomFriendsModal(context, amount ?? 0.0);
+            if (amounts != null && addedMembers.isNotEmpty) {
+              // print("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\Selected friends with amounts: $amounts");
+              splitUserAmount(
+                context,
+                amount.toString(),
+                addedMembers,
+                selectedCategory2.toString(),
+                selectedSubCategory2.toString(),
+                amounts: amounts,
+              );
+            }
           },
           child: Container(
             width: MediaQuery.of(context).size.width / 2.4,
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
             decoration: BoxDecoration(
-                color: AppColors.button,
-                borderRadius: BorderRadius.circular(24)),
+              color: AppColors.button,
+              borderRadius: BorderRadius.circular(24),
+            ),
             child: Center(
               child: Text(
                 'Bill Split',
-                style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.bold,
-                    fontSize: 15,
-                    color: AppColors.primaryColor),
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: AppColors.primaryColor,
+                ),
               ),
             ),
           ),
         ),
         GestureDetector(
           onTap: () {
-            // Action for Continue button
-            if(isSplit.value){
-                                  addedUser.clear();
-                                  addedMembers.clear();
-                }
+            if (isSplit.value) {
+              addedUser.clear();
+              addedMembers.clear();
+            }
             isSplit.value = false;
             isLend.value = true;
-            showCustomFriendsModal(context);
-
+            showCustomFriendsModal(context, amount ?? 0.0);
           },
           child: Container(
             width: MediaQuery.of(context).size.width / 2.4,
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
             decoration: BoxDecoration(
-                color: AppColors.button,
-                borderRadius: BorderRadius.circular(24)),
+              color: AppColors.button,
+              borderRadius: BorderRadius.circular(24),
+            ),
             child: Center(
               child: Text(
                 'Lend money',
-                style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.bold,
-                    fontSize: 15,
-                    color: AppColors.primaryColor),
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: AppColors.primaryColor,
+                ),
               ),
             ),
           ),
@@ -1816,7 +1827,6 @@ class _ModalContentState extends State<ModalContent>
                       context,
                       "cash");
                 }
-
               },
               child: getButton(context, "Continue"),
             ),
@@ -1838,8 +1848,8 @@ class _ModalContentState extends State<ModalContent>
 
     if (acceptReset.value) return;
     acceptReset.value = true;
-    isLend.value=false;
-    isSplit.value=false;
+    isLend.value = false;
+    isSplit.value = false;
     if (isSplitAmount)
       splitUserAmount(context, amount, addedMembers, categories, subCategories);
     else
@@ -1848,8 +1858,7 @@ class _ModalContentState extends State<ModalContent>
   }
 
   void addSocketMessage(
-      addedUser, String amount, String splitName, String splitID) {
-
+      addedUser, String amount, String splitName,String splitID,double parsedTotalAmount) {
     if (addedUser.isEmpty) {
       return;
     }
@@ -1872,8 +1881,8 @@ class _ModalContentState extends State<ModalContent>
         "post": null,
         "split": {
           "BillName": splitName,
-          "Amount": amount,
-          "Share": ((double.parse(amount) / (addedUser.length + 1)).toString()),
+          "Amount": parsedTotalAmount, // This is now the individual amount
+          "Share": amount,
           "isPaid": false,
           "splitId": splitID,
         },
@@ -1889,67 +1898,194 @@ class _ModalContentState extends State<ModalContent>
     });
   }
 
-  void showCustomFriendsModal(BuildContext context) {
-    showModalBottomSheet(
+  Future<Map<String, double>?> showCustomFriendsModal(
+    BuildContext context,
+    double totalAmount,
+  ) async {
+    return await showModalBottomSheet<Map<String, double>?>(
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(18),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
       ),
       builder: (BuildContext context) {
-        return FriendsUi(); // Use the modal widget here
+        return NewFriendsUi(
+          totalAmount: totalAmount,
+          userId: currentId.value,
+          userName: userName.value,
+          userAvatar: userAvatarProfile.value,
+        );
       },
     );
   }
 
-  void splitUserAmount(context, String amount, List members, String name,
-      String subCategories) async {
-    List nameList = [];
+// void showCustomFriendsModal2(BuildContext context) {
+//     showModalBottomSheet(
+//       context: context,
+//       isScrollControlled: true,
+//       shape: const RoundedRectangleBorder(
+//         borderRadius: BorderRadius.vertical(
+//           top: Radius.circular(18),
+//         ),
+//       ),
+//       builder: (BuildContext context) {
+//         return FriendsUi(); // Use the modal widget here
+//       },
+//     );
+//   }
+  void splitUserAmount(
+  BuildContext context,
+  String totalAmount,
+  List members,
+  String name,
+  String subCategories, {
+  Map<String, double>? amounts, // Manual amounts including user's share
+}) async {
+  double? parsedTotalAmount = double.tryParse(totalAmount);
+  if (parsedTotalAmount == null || parsedTotalAmount <= 0) {
+    print("splitUserAmount: Invalid totalAmount: $totalAmount");
+    snackBarCalled(context, "Invalid amount entered!", Colors.red);
+    return;
+  }
+  print("splitUserAmount: Parsed totalAmount: $parsedTotalAmount");
+
+  if (members.isEmpty) {
+    print("splitUserAmount: No members selected");
+    snackBarCalled(context, "No members selected!", Colors.red);
+    return;
+  }
+  print("splitUserAmount: Members count: ${members.length}, Members: $members");
+
+  // Prepare paymentStatus list with individual amounts
+  List<Map<String, dynamic>> nameList = [];
+  if (amounts != null) {
+    print("splitUserAmount: Using manual amounts: $amounts");
     members.forEach((element) {
-      nameList.add({'member': (element['id']), 'markAsComplete': false,'amount':600});
-    });
-
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-
-    final response = await http.post(
-      Uri.parse('${url}/split'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-      body: jsonEncode({
-        "name": name,
-        "subcategory": subCategories,
-        "category:": name,
-        "amount": amount,
-        "paymentStatus": nameList,
-        "image": ''
-      }),
-    );
-    //printData(response,context);
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      final body = json.decode(response.body);
-
-      splitID.value = body['id']['_id'];
-
-      members.forEach((e) {
-        sendNotificationsToDevice(e['id'], context,
-            "${userName.value} has send u a Split Bill..Of ${name} Of ${doubleToFixed((getDouble(amount)/members.length+1).toString())}");
+      double memberAmount = amounts[element['id']] ?? 0.0;
+      nameList.add({
+        'member': element['id'],
+        'markAsComplete': false,
+        'amount': memberAmount,
       });
-      addSocketMessage(addedMembers, amount.toString(),
-          selectedCategory2.toString(), splitID.value);
-
-      snackBarCalled(context, "Split amount sent to users!", Colors.black);
-      // addTransaction(amount, "Split Bill (${subCategories})", name, context, 'cash', true);
-      Navigator.pop(context);
-    } else {
-      snackBarCalled(context, "can't split error!", Colors.red);
-    }
-    acceptReset.value = false;
+      print("splitUserAmount: Added member ${element['id']} with amount: $memberAmount");
+    });
+    // Include the user's amount if present in amounts (commented out in your version)
+    // if (amounts.containsKey(currentId.value)) {
+    //   nameList.add({
+    //     'member': currentId.value,
+    //     'markAsComplete': false,
+    //     'amount': amounts[currentId.value]!,
+    //   });
+    //   print("splitUserAmount: Added user ${currentId.value} with amount: ${amounts[currentId.value]}");
+    // }
+  } else {
+    print("splitUserAmount: Falling back to equal split");
+    double amountPerPerson = parsedTotalAmount / (members.length + 1);
+    members.forEach((element) {
+      nameList.add({
+        'member': element['id'],
+        'markAsComplete': false,
+        'amount': amountPerPerson,
+      });
+      print("splitUserAmount: Added member ${element['id']} with equal amount: $amountPerPerson");
+    });
+    nameList.add({
+      'member': currentId.value,
+      'markAsComplete': false,
+      'amount': amountPerPerson,
+    });
+    print("splitUserAmount: Added user ${currentId.value} with equal amount: $amountPerPerson");
   }
+
+  // Verify total matches (optional, for debugging)
+  double calculatedTotal = nameList.fold(0.0, (sum, item) => sum + item['amount']);
+  print("splitUserAmount: Calculated total from nameList: $calculatedTotal, Expected: $parsedTotalAmount");
+  // if (calculatedTotal != parsedTotalAmount) {
+  //   print("splitUserAmount: Total mismatch detected!");
+  //   snackBarCalled(context, "Total amount mismatch!", Colors.red);
+  //   return;
+  // }
+
+  final SharedPreferences _pref = await SharedPreferences.getInstance();
+  var accessToken = _pref.getString("accessToken");
+  print("splitUserAmount: Access token retrieved: ${accessToken != null ? 'Yes' : 'No'}");
+
+  final response = await http.post(
+    Uri.parse('$url/split'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      "Authorization": "$accessToken",
+    },
+    body: jsonEncode({
+      "name": name,
+      "subcategory": subCategories,
+      "category": name,
+      "amount": calculatedTotal,
+      "paymentStatus": nameList,
+      "image": '',
+    }),
+  );
+  print("splitUserAmount: API request sent with paymentStatus: $nameList");
+  print("splitUserAmount: API response status: ${response.statusCode}, body: ${response.body}");
+
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    final body = json.decode(response.body);
+    splitID.value = body['id']['_id'];
+    print("splitUserAmount: Split ID set: ${splitID.value}");
+
+    // Send notifications with individual amounts
+    for (var member in members) {
+      double memberAmount = amounts?[member['id']] ?? (parsedTotalAmount / (members.length + 1));
+      String formattedAmount = memberAmount.toStringAsFixed(2);
+      print("splitUserAmount: Sending notification to ${member['id']} with amount: $formattedAmount");
+      sendNotificationsToDevice(
+        member['id'],
+        context,
+        "${userName.value} has sent you a Split Bill of $name for ₹$formattedAmount",
+      );
+    }
+
+    // Send socket messages with individual amounts
+    if (amounts != null) {
+      members.forEach((member) {
+        double memberAmount = amounts[member['id']] ?? 0.0;
+        print("splitUserAmount: Sending socket message to ${member['id']} with amount: $memberAmount");
+        addSocketMessage(
+          [member],
+          memberAmount.toString(),
+          name,
+          splitID.value,
+          parsedTotalAmount
+          
+          
+          
+        );
+      });
+    } else {
+      double amountPerPerson = parsedTotalAmount / (members.length + 1);
+      print("splitUserAmount: Sending socket message (equal split) with amount: $amountPerPerson");
+      addSocketMessage(
+        members,
+        amountPerPerson.toString(),
+        name,
+        splitID.value,
+        parsedTotalAmount
+        
+      );
+    }
+
+    print("splitUserAmount: Split successful, showing celebration");
+    snackBarCalled(context, "Split amount sent to users!", Colors.black);
+    Navigator.pop(context);
+    _showCelebration();
+  } else {
+    print("splitUserAmount: API error - Status: ${response.statusCode}, Body: ${response.body}");
+    snackBarCalled(context, "Can't split, error!", Colors.red);
+  }
+
+  acceptReset.value = false;
+  print("splitUserAmount: Finished execution");
+}
 
   void addLendUserAmount(context, String amount, List members, String name,
       String subCategories) async {
@@ -1983,7 +2119,8 @@ class _ModalContentState extends State<ModalContent>
       });
 
       snackBarCalled(context, "Lend amount sent to users!", Colors.black);
-      addTransaction(amount, "Lend Bill (${subCategories})", name, context, 'cash', true);
+      addTransaction(
+          amount, "Lend Bill (${subCategories})", name, context, 'cash', true);
       // addSocketMessage(addedMembers,amount.toString(),selectedCategory2.toString()+"Lend Bill (${subCategories})", splitID.value);
       getUserLend(context);
       // Navigator.push(

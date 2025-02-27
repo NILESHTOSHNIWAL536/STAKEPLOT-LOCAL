@@ -19,10 +19,11 @@ import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+      // finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
 void initFinvuManager() async {
   finvuManager.initialize(
     FinvuConfig(
-      finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
+      finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
       certificatePins: [],
     ),
   );
