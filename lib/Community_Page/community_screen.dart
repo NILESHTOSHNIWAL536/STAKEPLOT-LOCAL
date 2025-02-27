@@ -87,14 +87,12 @@ class _CommunityState extends State<Community> {
      return Container(
             width: width,
             height: height/1.6,
-            child: Expanded(
-              child: ListView.builder(
-                itemCount: getTrendingData.length,
-                itemBuilder: (context, index) {
-                  final dataObj = getTrendingData[index];
-                  return PostCard(data: dataObj);
-                },
-              ),
+            child: ListView.builder(
+              itemCount: getTrendingData.length,
+              itemBuilder: (context, index) {
+                final dataObj = getTrendingData[index];
+                return PostCard(data: dataObj);
+              },
             ),
 );
   }

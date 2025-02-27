@@ -56,62 +56,60 @@ class _FriendsState extends State<Friends> {
           child: Column(children: [
             // UserProfileHeader(name: "Friends List"),
            // Text("Friends List"),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(top: Colorcodes.paddingTopDesign/2),
-                child: ListView(
-                  children: [
-                    Hero(
-                      tag: "TribeSearch",
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pushNamed(context, '/TribeSearch');
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 18),
-                          child: Container(
-                            width: MediaQuery.sizeOf(context).width / 3,
-                            height: 50,
-                            child: TextField(
-                              controller: _searchController,
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 0),
-                                filled: true,
-                                enabled: false,
-                                hintText: 'Search...',
-                                fillColor: AppColors.button,
-                                hintStyle: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.normal,
-                                    fontSize: 14,
-                                    color: Colors.black),
-                                prefixIcon: Icon(Icons.search),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(24.0),
-                                ),
+            Padding(
+              padding: EdgeInsets.only(top: Colorcodes.paddingTopDesign/2),
+              child: ListView(
+                children: [
+                  Hero(
+                    tag: "TribeSearch",
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/TribeSearch');
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 18),
+                        child: Container(
+                          width: MediaQuery.sizeOf(context).width / 3,
+                          height: 50,
+                          child: TextField(
+                            controller: _searchController,
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 0),
+                              filled: true,
+                              enabled: false,
+                              hintText: 'Search...',
+                              fillColor: AppColors.button,
+                              hintStyle: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.normal,
+                                  fontSize: 14,
+                                  color: Colors.black),
+                              prefixIcon: Icon(Icons.search),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(24.0),
                               ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(height: 20,),
-                    Obx(() => userController.friendsList.isEmpty
-                        ? Center(
-                            child: AvatarProfileImage(
-                              url: ProfileIcons.emptyFrnds,
-                              height: 4,
-                              width: 4,
-                            ),
-                          )
-                        : Column(
-                            children: userController.friendsList
-                                .map((d) =>
-                                    d == null ? Text("") : profileContainer(d))
-                                .toList(),
-                          )),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: 20,),
+                  Obx(() => userController.friendsList.isEmpty
+                      ? Center(
+                          child: AvatarProfileImage(
+                            url: ProfileIcons.emptyFrnds,
+                            height: 4,
+                            width: 4,
+                          ),
+                        )
+                      : Column(
+                          children: userController.friendsList
+                              .map((d) =>
+                                  d == null ? Text("") : profileContainer(d))
+                              .toList(),
+                        )),
+                ],
               ),
             ),
           ]),

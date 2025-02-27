@@ -115,18 +115,16 @@ class ShowAllUsersScreen extends StatelessWidget {
               ),
             ),
             SingleChildScrollView(
-              child: Expanded(
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height / 1.24,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 0, horizontal: 12.0),
-                    child: TabBarView(
-                      children: [
-                        Center(child: usersDuelist()),
-                        Center(child: userslist()),
-                      ],
-                    ),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height / 1.24,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 0, horizontal: 12.0),
+                  child: TabBarView(
+                    children: [
+                      Center(child: usersDuelist()),
+                      Center(child: userslist()),
+                    ],
                   ),
                 ),
               ),

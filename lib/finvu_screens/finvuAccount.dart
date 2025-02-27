@@ -24,6 +24,8 @@ void verify(String otp, context) async {
       otpReference,
     );
     print(2);
+    print(login);
+    print(login.userId);
 
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     String? token = await _pref.getString("token");

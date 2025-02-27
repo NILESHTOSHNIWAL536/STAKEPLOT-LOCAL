@@ -368,131 +368,129 @@ class _FriendsUiState extends State<FriendsUi> {
           )),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 1.9,
-      child: Expanded(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 24, left: 18, right: 18),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Select people',
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: AppColors.bg1)),
-                SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  child: InputDat('Search', TextInputType.name, Textcontroller),
-                ),
-
-                Text('My friends',
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.w600,
-                        fontSize: 16,
-                        color: AppColors.bg1)),
-                SizedBox(
-                  height: 10,
-                ),
-
-                addedMembers.length > 0
-                    ? Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.width / 5,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: addedMembers.map((element) {
-                            return Container(
-                              width: MediaQuery.of(context).size.width / 6,
-                              height: MediaQuery.of(context).size.width / 7,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Stack(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.all(0.0),
-                                        child: Center(
-                                            child: AvatarProfileImage(
-                                                url: element['avatar'] ??
-                                                    userAvatar,
-                                                width: 10,
-                                                height: 20)),
-                                      ),
-                                      Positioned(
-                                        right: 0,
-                                        top: 0,
-                                        child: InkWell(
-                                          onTap: () {
-                                            List me = [];
-                                            addedMembers.forEach((ele) {
-                                              if (element['id'] != ele['id']) {
-                                                me.add(ele);
-                                              }
-                                            });
-
-                                            setState(() {
-                                              addedMembers.clear();
-                                              addedMembers.addAll(me);
-                                              //  addedMembers=me;
-                                              addedUser.remove(element['id']);
-                                            });
-
-                                          },
-                                          child: const Icon(
-                                            Icons.remove_circle,
-                                            color: Colors.black,
-                                          ),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 24, left: 18, right: 18),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Select people',
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: AppColors.bg1)),
+              SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                child: InputDat('Search', TextInputType.name, Textcontroller),
+              ),
+      
+              Text('My friends',
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: AppColors.bg1)),
+              SizedBox(
+                height: 10,
+              ),
+      
+              addedMembers.length > 0
+                  ? Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.width / 5,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: addedMembers.map((element) {
+                          return Container(
+                            width: MediaQuery.of(context).size.width / 6,
+                            height: MediaQuery.of(context).size.width / 7,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Stack(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(0.0),
+                                      child: Center(
+                                          child: AvatarProfileImage(
+                                              url: element['avatar'] ??
+                                                  userAvatar,
+                                              width: 10,
+                                              height: 20)),
+                                    ),
+                                    Positioned(
+                                      right: 0,
+                                      top: 0,
+                                      child: InkWell(
+                                        onTap: () {
+                                          List me = [];
+                                          addedMembers.forEach((ele) {
+                                            if (element['id'] != ele['id']) {
+                                              me.add(ele);
+                                            }
+                                          });
+      
+                                          setState(() {
+                                            addedMembers.clear();
+                                            addedMembers.addAll(me);
+                                            //  addedMembers=me;
+                                            addedUser.remove(element['id']);
+                                          });
+      
+                                        },
+                                        child: const Icon(
+                                          Icons.remove_circle,
+                                          color: Colors.black,
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                  Center(
-                                      child: Text(element['name'],
-                                          style: FontManager().getTextStyle(
-                                              context,
-                                              fontSize: 12,
-                                              maxLines: 1,
-                                              ),overflow: TextOverflow.ellipsis,))
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      )
-                    : SizedBox.shrink(),
-
-                //  const SizedBox(height: 50,),
-
-                commentedData(),
-
-              widget.flag?  Center(
-                  child: InkWell(
-                    onTap: () {
-                       // double amount = double.parse(
-                          //     transactionList["amount"].toString());
-                          // splitUserAmount(
-                          //     context,
-                          //     amount.toString(),
-                          //     addedMembers,
-                          //     transactionList["category"],
-                          //     transactionList["subcategory"],
-                          //     amount.toString());
-                      Navigator.pop(context);
-                      
-                    },
-                    child: getButton(context, "Continue"),
-                  ),
-                ):SizedBox.shrink(),
-
-                // InkWell(
-                //   onTap: Navigator.pop(context),
-                //   child: getButton(context, "Continue"))
-              ],
-            ),
+                                    ),
+                                  ],
+                                ),
+                                Center(
+                                    child: Text(element['name'],
+                                        style: FontManager().getTextStyle(
+                                            context,
+                                            fontSize: 12,
+                                            maxLines: 1,
+                                            ),overflow: TextOverflow.ellipsis,))
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    )
+                  : SizedBox.shrink(),
+      
+              //  const SizedBox(height: 50,),
+      
+              commentedData(),
+      
+            widget.flag?  Center(
+                child: InkWell(
+                  onTap: () {
+                     // double amount = double.parse(
+                        //     transactionList["amount"].toString());
+                        // splitUserAmount(
+                        //     context,
+                        //     amount.toString(),
+                        //     addedMembers,
+                        //     transactionList["category"],
+                        //     transactionList["subcategory"],
+                        //     amount.toString());
+                    Navigator.pop(context);
+                    
+                  },
+                  child: getButton(context, "Continue"),
+                ),
+              ):SizedBox.shrink(),
+      
+              // InkWell(
+              //   onTap: Navigator.pop(context),
+              //   child: getButton(context, "Continue"))
+            ],
           ),
         ),
       ),

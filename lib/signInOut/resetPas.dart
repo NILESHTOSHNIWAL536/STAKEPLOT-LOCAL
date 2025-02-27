@@ -128,43 +128,41 @@ class _SigninState extends State<ResetOtp> {
                  padding: const EdgeInsets.symmetric(horizontal: 20),
                  height: MediaQuery.of(context).size.height/1.3,
                  width: MediaQuery.of(context).size.width,
-                 child: Expanded(
-                   child: Column(
-                             mainAxisAlignment: MainAxisAlignment.start,
-                             crossAxisAlignment: CrossAxisAlignment.start,
-                             children: [
-                               const SizedBox(height: 20,),
-                               topHeader(),
-                               textStyle(context: context,text:StringConstant.otpText,fontWeight: FontWeight.w400,fontsize: 10 ),
-    
-                              const SizedBox(height: 40,),
+                 child: Column(
+                           mainAxisAlignment: MainAxisAlignment.start,
+                           crossAxisAlignment: CrossAxisAlignment.start,
+                           children: [
+                             const SizedBox(height: 20,),
+                             topHeader(),
+                             textStyle(context: context,text:StringConstant.otpText,fontWeight: FontWeight.w400,fontsize: 10 ),
+                     
+                            const SizedBox(height: 40,),
+                 
+                                   
+                          verifyOpt(),
+                   
                    
                   
-                            verifyOpt(),
-                     
-                     
-                    
-                            acceptButton(),  
-                           
-                              
-                              SizedBox(height: Colorcodes.paddingSize*2,),
-                     
+                          acceptButton(),  
+                         
+                            
+                            SizedBox(height: Colorcodes.paddingSize*2,),
+                   
+                 
+                 
+                 
+                               InkWell(
+                                 onTap: (){
+                 
+                  //  resendOptUser(context,widget.data['email'],widget.data['name']);
+                 
+                                 },
+                                 child: resendOtp()
+                               ),
                    
                    
-                   
-                                 InkWell(
-                                   onTap: (){
-                   
-                    //  resendOptUser(context,widget.data['email'],widget.data['name']);
-                   
-                                   },
-                                   child: resendOtp()
-                                 ),
-                     
-                     
-                                   
-                             ],
-                   ),
+                                 
+                           ],
                  ),
                ),
              ),
