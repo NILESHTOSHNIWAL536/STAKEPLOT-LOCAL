@@ -11,6 +11,7 @@ import 'package:flutter_application_code_stakeplot/Community_Page/community_scre
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
@@ -51,6 +52,7 @@ class _HomePageState extends State<HomePage> {
 
   void initializeData() {
     check(context, "homeScreen");
+    getBankAccounts();
     getAllTransaction(context);
     getTrending();
     getPost();

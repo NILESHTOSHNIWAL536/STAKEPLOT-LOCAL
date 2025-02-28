@@ -28,16 +28,27 @@ Future<http.Response> loginToAutoTractionsGetData(context) async {
   return response;
 }
 
-void login(handleId) async {
-  var login =
-      await finvuManager.loginWithUsernameOrMobileNumberAndConsentHandle(
+void login(handleId,context) async {
+    // snackBarCalled(context,await finvuManager.connect().toString());
+  try{
+    // snackBarCalled(context,"Login inside...");
+  var login = await finvuManager.loginWithUsernameOrMobileNumberAndConsentHandle(
     '${number.value}@finvu',
     '${number.value}',
     handleId,
   );
-
+    // snackBarCalled(context,"Login out...");
   otpReference = login.reference;
+  //  snackBarCalled(context, "handleId : "+handleId.toString()+"%%");
+  //  snackBarCalled(context, "otpReference  : "+otpReference.toString()+"%%");
+  // final login = await finvuManager.loginWithUsernameOrMobileNumberAndConsentHandle(
+  //             "yashwantg@finvu",
+  //             "8459177562",
+  //             "fba57400-29f0-4e24-923a-c5ce2e284299");
   debugPrint('LoggedIn');
+  }catch(e){
+      snackBarCalled(context, e.toString());
+  }
 }
 
 void loginToAutoTractions(context) async {
@@ -95,7 +106,7 @@ void ConsentRequestPlus(context, accessToken, custId) async {
       String ConsentHandleId = (body['body']['ConsentHandle']);
       String url = (body['body']['url']);
 
-      login(ConsentHandleId);
+      login(ConsentHandleId,context);
       print(ConsentHandleId);
       handleId.value = ConsentHandleId;
       ConsentStatus(context, accessToken, ConsentHandleId, custId);

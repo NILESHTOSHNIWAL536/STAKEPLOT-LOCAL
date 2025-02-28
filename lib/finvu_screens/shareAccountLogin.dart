@@ -195,7 +195,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
               child: InkWell(
                   onTap: () {
                    
-                    if (!widget.flag) initFinvuManager();
+                    if (!widget.flag) initFinvuManager(context);
 
                     Navigator.push(
                       context,

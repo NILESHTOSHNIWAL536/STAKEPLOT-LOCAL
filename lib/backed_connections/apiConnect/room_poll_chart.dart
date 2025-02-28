@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -421,18 +422,9 @@ void votePollInPost(context,String id,int index)async{
       printData(response,context);
       if(response.statusCode==200 || response.statusCode==201){
             final body = json.decode(response.body);
-            var snackBar = SnackBar(
-                    duration: Durations.long1,
-                   content: Text('Added Your Vote...!',style:FontManager().getTextStyle(context,
-                         color: Colors.white,
-                         fontSize: 15,
-                        
-                   ),),
-                   backgroundColor: Colors.black,
-              );
+            print(body);
+            // var dataFetch=await getDataApiCall("${url}/poll/");
 
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
- 
             
       }else{
       }

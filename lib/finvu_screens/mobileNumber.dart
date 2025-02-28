@@ -169,7 +169,7 @@ late final WebViewController controller ;
                     print(number);
                 
                     
-                    await loginWithServer();
+                    await loginWithServer(context);
                     otpController = TextEditingController();
             
                     showModalBottomSheet(
@@ -324,7 +324,7 @@ late final WebViewController controller ;
                 onChanged: (value) {
                   _otpCode.value = value;
                   _isOtpValid.value = value.length == _otpCodeLength;
-                  if(_isOtpValid.value)checkOtp();
+                 
                 },
               ),
             ),

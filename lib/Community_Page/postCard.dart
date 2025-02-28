@@ -677,23 +677,12 @@ Widget getQuestionsAndOptions(e, context, flag, PostId) {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               width: width <= 500 ? width / 1.4 : width / 1.3,
-              // decoration: BoxDecoration(
-              //   //  color: Colorcodes.appBarColor,
-              //   border: Border.all(width: .5, color: AppColors.button),
-              //   //  borderRadius: BorderRadius.circular(9),
-              // ),
+      
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: Text(e['question'] + "?",
-                  //       style: FontManager().getTextStyle(context,
-                  //           lWeight: FontWeight.w600,
-                  //           fontSize: 18,
-                  //           color: AppColors.bg1)),
-                  // ),
+                
                   Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,

@@ -19,15 +19,20 @@ import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-void initFinvuManager() async {
+void initFinvuManager(BuildContext context) async {
   finvuManager.initialize(
     FinvuConfig(
-      finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
-      certificatePins: [],
+      // finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
+      finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
+      certificatePins: [
+             "R6wXZnQsKKyg56qFKQNytvygyr/o4Mkq1VXL5LenBYI=",
+             "bdrBhpj38ffhxpubzkINl0rG+UyossdhcBYj+Zx2fcc="
+      ],
     ),
   );
 
   await finvuManager.connect();
+   snackBarCalled(context,finvuManager.connect().toString());
   var isConnected = await finvuManager.isConnected();
 
   print("websocket connected : ");
@@ -39,7 +44,7 @@ void initFinvuManager() async {
   }
 }
 
-Future<void> loginWithServer() async {
+Future<void> loginWithServer(context) async {
   final String apiUrl =
       "${url}/finvu/login"; // Change to your actual server URL
   final String custId =
@@ -47,9 +52,7 @@ Future<void> loginWithServer() async {
   
    final SharedPreferences _pref = await SharedPreferences.getInstance();
    var accessToken = _pref.getString("accessToken");
-   print(accessToken);
-  print(custId);
-  print(apiUrl);
+  
 
   try {
     final response = await http.post(
@@ -72,9 +75,10 @@ Future<void> loginWithServer() async {
       await prefs.setString("consentHandleId", consentHandleId);
 
     
-
+   
       handleId.value = consentHandleId;
-      login(handleId.value);
+      snackBarCalled(context, consentHandleId);
+      login(handleId.value,context);
 
       // Proceed with next steps, e.g., calling another API
       // ConsentStatus(context, token, consentHandleId, custId);
