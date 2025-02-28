@@ -40,6 +40,13 @@ final Map<String, TextEditingController> _controllers = {
     'Number': TextEditingController(text: number.value),
   };
 
+
+    @override
+  void initState() {
+    super.initState();
+    changeAvater.value=avatar.value;
+  }
+
   @override
   void dispose() {
     // Dispose all controllers when the widget is removed from the tree
