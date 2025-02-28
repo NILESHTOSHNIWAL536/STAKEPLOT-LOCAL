@@ -9,14 +9,14 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 RxList addedUser = [].obs;
 RxList addedMembers = [].obs;
-  
+
 class NewFriendsUi extends StatefulWidget {
   final bool showContinueButton;
   final double totalAmount;
   final String userId;
   final String userName;
   final String userAvatar;
-final bool isLendMode;
+  final bool isLendMode;
   const NewFriendsUi({
     Key? key,
     this.showContinueButton = true,
@@ -24,7 +24,7 @@ final bool isLendMode;
     required this.userId,
     required this.userName,
     required this.userAvatar,
-    this.isLendMode = false, 
+    this.isLendMode = false,
   }) : super(key: key);
 
   @override
@@ -96,7 +96,8 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                       padding: const EdgeInsets.all(0.0),
                                       child: Center(
                                         child: AvatarProfileImage(
-                                          url: element['avatar'] ?? widget.userAvatar,
+                                          url: element['avatar'] ??
+                                              widget.userAvatar,
                                           width: 10,
                                           height: 20,
                                         ),
@@ -108,7 +109,8 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                       child: InkWell(
                                         onTap: () {
                                           setState(() {
-                                            addedMembers.removeWhere((ele) => ele['id'] == element['id']);
+                                            addedMembers.removeWhere((ele) =>
+                                                ele['id'] == element['id']);
                                             addedUser.remove(element['id']);
                                           });
                                         },
@@ -142,31 +144,43 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
               if (widget.showContinueButton)
                 Center(
                   child: InkWell(
-                     onTap: () async {
+                    onTap: () async {
                       if (addedMembers.isNotEmpty) {
                         if (widget.isLendMode) {
                           if (addedMembers.length > 1) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Please select only one friend for lending')),
+                              const SnackBar(
+                                  content: Text(
+                                      'Please select only one friend for lending')),
                             );
                             return;
                           }
-                          print("NewFriendsUi: Lend mode - Selected friend: ${addedMembers[0]}");
-                          Navigator.pop(context, addedMembers[0]); // Return single friend’s details
+                          print(
+                              "NewFriendsUi: Lend mode - Selected friend: ${addedMembers[0]}");
+                          Navigator.pop(
+                              context,
+                              addedMembers[
+                                  0]); // Return single friend’s details
                         } else {
-                          print("NewFriendsUi: Split mode - Opening AmountEntryModal with totalAmount: ${widget.totalAmount}");
+                          print(
+                              "NewFriendsUi: Split mode - Opening AmountEntryModal with totalAmount: ${widget.totalAmount}");
                           final amounts = await showAmountEntryModal(context);
                           if (amounts != null) {
-                            print("NewFriendsUi: Split mode - Received amounts: $amounts");
-                            Navigator.pop(context, amounts); // Return amounts for split
+                            print(
+                                "NewFriendsUi: Split mode - Received amounts: $amounts");
+                            Navigator.pop(
+                                context, amounts); // Return amounts for split
                           } else {
-                            print("NewFriendsUi: Split mode - No amounts returned");
+                            print(
+                                "NewFriendsUi: Split mode - No amounts returned");
                           }
                         }
                       } else {
                         print("NewFriendsUi: No friends selected");
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Please select at least one friend')),
+                          const SnackBar(
+                              content:
+                                  Text('Please select at least one friend')),
                         );
                       }
                     },
@@ -180,7 +194,8 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
     );
   }
 
-  Future<Map<String, double>?> showAmountEntryModal(BuildContext context) async {
+  Future<Map<String, double>?> showAmountEntryModal(
+      BuildContext context) async {
     return await showModalBottomSheet<Map<String, double>?>(
       context: context,
       isScrollControlled: true,
@@ -245,8 +260,10 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                               setState(() {
                                 if (addedUser.contains(values)) {
                                   addedUser.remove(values);
-                                  addedMembers.removeWhere((element) => element['id'] == values);
-                                } else if (widget.isLendMode && addedMembers.isNotEmpty) {
+                                  addedMembers.removeWhere(
+                                      (element) => element['id'] == values);
+                                } else if (widget.isLendMode &&
+                                    addedMembers.isNotEmpty) {
                                   // For lend mode, replace the current selection
                                   addedUser.clear();
                                   addedMembers.clear();
@@ -257,7 +274,8 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                     'avatar': frdsList[index]['avatar'],
                                     "balance": 200,
                                   });
-                                  print("NewFriendsUi: Lend mode - Replaced with ${frdsList[index]['name']} (ID: $values)");
+                                  print(
+                                      "NewFriendsUi: Lend mode - Replaced with ${frdsList[index]['name']} (ID: $values)");
                                 } else {
                                   addedUser.add(values);
                                   addedMembers.add({
@@ -266,7 +284,8 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                     'avatar': frdsList[index]['avatar'],
                                     "balance": 200,
                                   });
-                                  print("NewFriendsUi: Added member ${frdsList[index]['name']} with ID: $values");
+                                  print(
+                                      "NewFriendsUi: Added member ${frdsList[index]['name']} with ID: $values");
                                 }
                               });
                             },
@@ -277,7 +296,8 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                 children: [
                                   Center(
                                     child: AvatarProfileImage(
-                                      url: frdsList[index]['avatar'] ?? widget.userAvatar,
+                                      url: frdsList[index]['avatar'] ??
+                                          widget.userAvatar,
                                       width: 8,
                                       height: 18,
                                     ),
@@ -319,7 +339,8 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
     );
   }
 
-  Widget InputDat(String labelText, TextInputType keyboardType, TextEditingController controller) {
+  Widget InputDat(String labelText, TextInputType keyboardType,
+      TextEditingController controller) {
     return Center(
       child: Container(
         color: const Color.fromRGBO(246, 246, 246, 1),
@@ -334,28 +355,35 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
               frdsList.addAll(frdsListOrigin);
             } else {
               frdsListOrigin.forEach((element) {
-                if (element['name'].toString().toLowerCase().contains(value.toLowerCase())) {
+                if (element['name']
+                    .toString()
+                    .toLowerCase()
+                    .contains(value.toLowerCase())) {
                   filteredList.add(element);
                 }
               });
               setState(() {
                 frdsList.clear();
                 frdsList.addAll(filteredList);
-                print("NewFriendsUi: Filtered friends list updated: ${frdsList.length} items");
+                print(
+                    "NewFriendsUi: Filtered friends list updated: ${frdsList.length} items");
               });
             }
           },
           decoration: InputDecoration(
             filled: true,
             hintText: labelText,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(24),
-              borderSide: const BorderSide(color: Color.fromRGBO(249, 246, 238, 1)),
+              borderSide:
+                  const BorderSide(color: Color.fromRGBO(249, 246, 238, 1)),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(24),
-              borderSide: const BorderSide(color: Color.fromRGBO(246, 246, 246, 1)),
+              borderSide:
+                  const BorderSide(color: Color.fromRGBO(246, 246, 246, 1)),
             ),
             fillColor: AppColors.button,
             border: InputBorder.none,
@@ -390,24 +418,28 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
   Map<String, TextEditingController> amountControllers = {};
   double currentTotal = 0.0;
   double leftoverAmount = 0.0;
-
+Map<String, double> initialAmounts = {}; // Store initial values
+  Map<String, bool> isModified = {};
   @override
   void initState() {
     super.initState();
     int totalParticipants = widget.selectedFriends.length + 1;
     double equalAmount = widget.totalAmount / totalParticipants;
-print("-----------------------------------------------------------------------------------------------------------------------------");
+    print(
+        "-----------------------------------------------------------------------------------------------------------------------------");
 
     amountControllers[widget.userId] = TextEditingController(
       text: equalAmount.toStringAsFixed(2),
     );
-    print("AmountEntryModal: Initialized user ${widget.userName} (ID: ${widget.userId}) with amount: $equalAmount");
+    print(
+        "AmountEntryModal: Initialized user ${widget.userName} (ID: ${widget.userId}) with amount: $equalAmount");
 
     widget.selectedFriends.forEach((friend) {
       amountControllers[friend['id']] = TextEditingController(
         text: equalAmount.toStringAsFixed(2),
       );
-      print("AmountEntryModal: Initialized friend ${friend['name']} (ID: ${friend['id']}) with amount: $equalAmount");
+      print(
+          "AmountEntryModal: Initialized friend ${friend['name']} (ID: ${friend['id']}) with amount: $equalAmount");
     });
 
     calculateTotal();
@@ -427,8 +459,31 @@ print("-------------------------------------------------------------------------
       print("AmountEntryModal: Amount for ID $key updated to: $amount");
     });
     leftoverAmount = widget.totalAmount - currentTotal;
-    print("AmountEntryModal: Current Total: $currentTotal, Leftover: $leftoverAmount");
+    print(
+        "AmountEntryModal: Current Total: $currentTotal, Leftover: $leftoverAmount");
     setState(() {});
+  }
+
+  void settleLeftover() {
+    if (leftoverAmount == 0) {
+      print("AmountEntryModal: No leftover to settle");
+      return;
+    }
+
+    int totalParticipants = widget.selectedFriends.length + 1;
+    double leftoverPerPerson = leftoverAmount / totalParticipants;
+
+    amountControllers.forEach((id, controller) {
+      double currentAmount = double.tryParse(controller.text) ?? 0.0;
+      double newAmount = currentAmount + leftoverPerPerson;
+      controller.text = newAmount.toStringAsFixed(2);
+      print(
+          "AmountEntryModal: Settled ID $id: Updated amount from $currentAmount to $newAmount");
+    });
+
+    calculateTotal(); // Recalculate to update UI and ensure leftover is zero
+    print(
+        "AmountEntryModal: Leftover settled, new total: $currentTotal, new leftover: $leftoverAmount");
   }
 
   @override
@@ -437,7 +492,7 @@ print("-------------------------------------------------------------------------
       padding: const EdgeInsets.all(16.0),
       child: SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          //mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -524,7 +579,8 @@ print("-------------------------------------------------------------------------
                           controller: amountControllers[friend['id']],
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.currency_rupee, size: 18),
+                            prefixIcon:
+                                const Icon(Icons.currency_rupee, size: 18),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -553,35 +609,72 @@ print("-------------------------------------------------------------------------
               ),
             ),
             const SizedBox(height: 16),
-            Center(
-              child: InkWell(
-                onTap: () {
-                  if (leftoverAmount != 0) {
-                    print("AmountEntryModal: Cannot confirm, leftover amount: $leftoverAmount");
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          leftoverAmount > 0
-                              ? 'Please distribute the remaining ₹${leftoverAmount.toStringAsFixed(2)}'
-                              : 'Total exceeds by ₹${(-leftoverAmount).toStringAsFixed(2)}',
-                        ),
-                      ),
-                    );
-                    return;
-                  }
-                  Map<String, double> amounts = {};
-                  amountControllers.forEach((id, controller) {
-                    amounts[id] = double.tryParse(controller.text) ?? 0.0;
-                  });
-                  print("AmountEntryModal: Confirming amounts: $amounts");
-                  Navigator.pop(context, amounts);
-                },
-                child: getButton(context, "Confirm"),
+            Text(
+              'Click Settle to split leftover amount equally among all',
+              style: FontManager().getTextStyle(
+                context,
+                fontSize: 12,
+                color: Colors.grey,
               ),
+              overflow: TextOverflow
+                  .ellipsis, // Truncate with ellipsis if too long
+              textAlign: TextAlign.center, // Center the text
+            ),
+                           // const SizedBox(width: 8), // Add spacing between text and Settle
+                            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InkWell(
+                  onTap: settleLeftover,
+                   child:  buttonContainer(context, "Settle"),
+                ),
+                
+                InkWell(
+                  onTap: () {
+                    if (leftoverAmount != 0) {
+                      print(
+                          "AmountEntryModal: Cannot confirm, leftover amount: $leftoverAmount");
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            leftoverAmount > 0
+                                ? 'Please distribute the remaining ₹${leftoverAmount.toStringAsFixed(2)}'
+                                : 'Total exceeds by ₹${(-leftoverAmount).toStringAsFixed(2)}',
+                          ),
+                        ),
+                      );
+                      return;
+                    }
+                    Map<String, double> amounts = {};
+                    amountControllers.forEach((id, controller) {
+                      amounts[id] = double.tryParse(controller.text) ?? 0.0;
+                    });
+                    print("AmountEntryModal: Confirming amounts: $amounts");
+                    Navigator.pop(context, amounts);
+                  },
+                  child:  buttonContainer(context, "Confirm"),
+                ),
+              ],
             ),
           ],
         ),
       ),
     );
   }
+}
+Widget buttonContainer(context, str,[color=AppColors.primaryColor,textColor=AppColors.bg5]) {
+  return Container(
+    width: MediaQuery.of(context).size.width / 2.3,
+    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+    decoration: BoxDecoration(
+        color: color, borderRadius: BorderRadius.circular(24)),
+    child: Center(
+      child: Text(
+        str,
+        style: FontManager().getTextStyle(context,
+            lWeight: FontWeight.bold, fontSize: 15, color:textColor ),
+      ),
+    ),
+  );
 }

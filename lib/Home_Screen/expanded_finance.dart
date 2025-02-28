@@ -583,8 +583,9 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
       isLoading.value = true;
       // Ensure the year is properly formatted as a four-digit string
       String yearString = year.toString().padLeft(4, '0');
+      String accountId = "67c04da09c48079de5840b23";
       String endpoint =
-          "${url}/transactionauto/getAllCustomTransactions/year/$yearString";
+          "${url}/transactionauto/getAllCustomTransactions/${accountId}/year/$yearString";
 
       // print('Fetching yearly data from endpoint: $endpoint');
       var response = await getDataApiCall(endpoint);
@@ -678,8 +679,9 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
       isLoading.value = true;
       String formattedDate =
           DateFormat('yyyy-MM').format(DateTime(year, month));
+      String accountId = "67c04da09c48079de5840b23";
       var response = await getDataApiCall(
-          "${url}/transactionauto/getAllCustomTransactions/month/$formattedDate");
+          "${url}/transactionauto/getAllCustomTransactions/${accountId}/month/$formattedDate");
 
       if (getFlagOfResponse(response)) {
         var data = jsonDecode(response.body);
@@ -823,8 +825,8 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                 onTap: () async {
                   selectedMonth.value = month;
                   isYearView.value = false;
-                    loadChatdataOnChnage.value = !loadChatdataOnChnage.value;
-                    getAllTransactionHistory(context, true, false);
+                  loadChatdataOnChnage.value = !loadChatdataOnChnage.value;
+                  getAllTransactionHistory(context, true, false);
                   await _fetchMonthlyData(selectedYear.value, month);
                   Navigator.pop(context);
                   setState(() {});

@@ -165,7 +165,7 @@ void getAllTransactionHistory(
   try {
     var response = await getDataApiCall(flag
         ? "${url}/transactionauto/getTransactions/2"
-        : "${url}/transactionauto/getTransactions/3");
+        : "${url}/transactionauto/getTransactions/1");
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
 
