@@ -9,14 +9,14 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 RxList addedUser = [].obs;
 RxList addedMembers = [].obs;
-
+  
 class NewFriendsUi extends StatefulWidget {
   final bool showContinueButton;
   final double totalAmount;
   final String userId;
   final String userName;
   final String userAvatar;
-
+final bool isLendMode;
   const NewFriendsUi({
     Key? key,
     this.showContinueButton = true,
@@ -24,6 +24,7 @@ class NewFriendsUi extends StatefulWidget {
     required this.userId,
     required this.userName,
     required this.userAvatar,
+    this.isLendMode = false, 
   }) : super(key: key);
 
   @override
@@ -141,15 +142,26 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
               if (widget.showContinueButton)
                 Center(
                   child: InkWell(
-                    onTap: () async {
+                     onTap: () async {
                       if (addedMembers.isNotEmpty) {
-                        print("NewFriendsUi: Opening AmountEntryModal with totalAmount: ${widget.totalAmount}");
-                        final amounts = await showAmountEntryModal(context);
-                        if (amounts != null) {
-                          print("NewFriendsUi: Received amounts from AmountEntryModal: $amounts");
-                          Navigator.pop(context, amounts); // Pass amounts back to parent
+                        if (widget.isLendMode) {
+                          if (addedMembers.length > 1) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Please select only one friend for lending')),
+                            );
+                            return;
+                          }
+                          print("NewFriendsUi: Lend mode - Selected friend: ${addedMembers[0]}");
+                          Navigator.pop(context, addedMembers[0]); // Return single friend’s details
                         } else {
-                          print("NewFriendsUi: No amounts returned from AmountEntryModal");
+                          print("NewFriendsUi: Split mode - Opening AmountEntryModal with totalAmount: ${widget.totalAmount}");
+                          final amounts = await showAmountEntryModal(context);
+                          if (amounts != null) {
+                            print("NewFriendsUi: Split mode - Received amounts: $amounts");
+                            Navigator.pop(context, amounts); // Return amounts for split
+                          } else {
+                            print("NewFriendsUi: Split mode - No amounts returned");
+                          }
                         }
                       } else {
                         print("NewFriendsUi: No friends selected");
@@ -212,11 +224,40 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                       child: Column(
                         children: [
                           GestureDetector(
+                            // onTap: () {
+                            //   setState(() {
+                            //     if (addedUser.contains(values)) {
+                            //       addedUser.remove(values);
+                            //       addedMembers.removeWhere((element) => element['id'] == values);
+                            //     } else {
+                            //       addedUser.add(values);
+                            //       addedMembers.add({
+                            //         "name": frdsList[index]['name'],
+                            //         "id": values,
+                            //         'avatar': frdsList[index]['avatar'],
+                            //         "balance": 200,
+                            //       });
+                            //       print("NewFriendsUi: Added member ${frdsList[index]['name']} with ID: $values");
+                            //     }
+                            //   });
+                            // },
                             onTap: () {
                               setState(() {
                                 if (addedUser.contains(values)) {
                                   addedUser.remove(values);
                                   addedMembers.removeWhere((element) => element['id'] == values);
+                                } else if (widget.isLendMode && addedMembers.isNotEmpty) {
+                                  // For lend mode, replace the current selection
+                                  addedUser.clear();
+                                  addedMembers.clear();
+                                  addedUser.add(values);
+                                  addedMembers.add({
+                                    "name": frdsList[index]['name'],
+                                    "id": values,
+                                    'avatar': frdsList[index]['avatar'],
+                                    "balance": 200,
+                                  });
+                                  print("NewFriendsUi: Lend mode - Replaced with ${frdsList[index]['name']} (ID: $values)");
                                 } else {
                                   addedUser.add(values);
                                   addedMembers.add({
