@@ -113,7 +113,7 @@ final Map<String, TextEditingController> _controllers = {
                   ),
                       Divider(),
                   _buildEditableField(
-                      Icons.phone, "Number", Phone.value),
+                      Icons.phone, "Number", number.value),
                       Divider(),
                   _buildEditableField(
                       Icons.calendar_today, "dob",dob.value ),

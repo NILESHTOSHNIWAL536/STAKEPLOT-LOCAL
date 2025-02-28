@@ -95,8 +95,8 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                         children: [
                           AvatarProfileImage(
                             url: ProfileIcons.edit,
-                            height: 50,
-                            width: 50,
+                            height: 30,
+                            width: 30,
                           ),
                           Text('',
                               style: FontManager().getTextStyle(context,
