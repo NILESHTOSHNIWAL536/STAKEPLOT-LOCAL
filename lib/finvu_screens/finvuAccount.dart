@@ -17,7 +17,8 @@ void verify(String otp, context) async {
   print(otp);
   print(otpReference);
   print(finvuManager.isConnected());
-  snackBarCalled(context, otp+" send1 "+otpReference);
+
+  
   try {
     print(1);
     var login = await finvuManager.verifyLoginOtp(

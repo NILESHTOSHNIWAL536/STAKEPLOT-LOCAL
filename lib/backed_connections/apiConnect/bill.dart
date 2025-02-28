@@ -148,7 +148,7 @@ void splitUserAmount2(
         "amount": totalAmount,
         "paymentStatus": nameList,
         "image": '',
-        "isVegNonVeg": true,
+        //"isVegNonVeg": true,
       }),
     );
 

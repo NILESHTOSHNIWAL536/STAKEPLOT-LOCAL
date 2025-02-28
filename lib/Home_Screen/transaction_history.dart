@@ -463,8 +463,8 @@ class _TransactionHistoryState extends State<TransactionHistory> {
   }
 
   void extractTransaction(bool isYearView, List obj) {
-    print("------------------------ extra called...");
-    print(isYearView);
+   // print("------------------------ extra called...");
+   // print(isYearView);
     if (isYearView) {
       getTransactionByYear(obj, selectedYear.value);
     } else {
@@ -474,7 +474,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
 
   void getTransactionByYear(List obj, y) {
     obj.forEach((ele) {
-      print(ele);
+     // print(ele);
       if (isCurrentYear(ele['transactionTimestamp'], y)) {
         transactionsHistory.add(ele);
       }
