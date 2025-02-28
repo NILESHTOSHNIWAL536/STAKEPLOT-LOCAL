@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
+import 'package:flutter_application_code_stakeplot/main.dart';
+import 'package:flutter_application_code_stakeplot/profile.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
+import 'package:get/get.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
@@ -24,9 +34,10 @@ class _EditDetailsState extends State<EditDetails> {
     }
   }
 final Map<String, TextEditingController> _controllers = {
-    'Username': TextEditingController(text: userName.value),
+    'name': TextEditingController(text: userName.value),
     'Email': TextEditingController(text: email.value),
-    'Address': TextEditingController(text: '6-10-128/3/A/5/A, Budwel, Telangana'),
+    'dob': TextEditingController(text: dob.value),
+    'Number': TextEditingController(text: number.value),
   };
 
   @override
@@ -53,15 +64,29 @@ final Map<String, TextEditingController> _controllers = {
             // Profile Picture
             Column(
               children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: _image != null
-                      ? FileImage(_image!)
-                      : AssetImage("assets/profile_picture.png")
-                          as ImageProvider,
-                ),
+                // CircleAvatar(
+                //   radius: 50,
+                //   backgroundImage: _image != null
+                //       ? FileImage(_image!)
+                //       : ,
+                // ),
+               Obx(()=> AvatarProfileImage(url: changeAvater.value,width: 10,height: 10,)),
+
                 GestureDetector(
-                  onTap: _pickImage,
+                  onTap: (){
+                          var data={
+                            'name':userName.value,
+                            'email':email.value,
+                          };
+                          showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  context: context,
+                                  builder: (context) {
+                                    return  Avatar(data: data,isEdit: true,);
+                                  },
+                                );
+
+                  },
                   child: const Padding(
                     padding: EdgeInsets.only(top: 8.0),
                     child: Text(
@@ -81,22 +106,20 @@ final Map<String, TextEditingController> _controllers = {
               ),
               child: Column(
                 children: [
-                  _buildNonEditableField(
-                      Icons.phone, "Phone Number", Phone.value),
+                  _buildNonEditableField(Icons.email, "Email", email.value),
                       Divider(),
                   _buildEditableField(
-                      Icons.alternate_email, "Username", userName.value),
+                      Icons.person, "name", userName.value
+                  ),
                       Divider(),
-                  _buildNonEditableField(
-                      Icons.person, "Full Name", "Rohit Sharma"),
+                  _buildEditableField(
+                      Icons.phone, "Number", Phone.value),
                       Divider(),
-                  _buildNonEditableField(
-                      Icons.calendar_today, "Date of Birth", "01 April 2000"),
-                      Divider(),
-                  _buildEditableField(Icons.email, "Email", email.value),
-                  Divider(),
-                  _buildEditableField(Icons.location_on, "Address",
-                      "6-10-128/3/A/5/A, Budwel, Telangana"),
+                  _buildEditableField(
+                      Icons.calendar_today, "dob",dob.value ),
+                  // Divider(),
+                  // _buildEditableField(Icons.location_on, "Address",
+                  //     "6-10-128/3/A/5/A, Budwel, Telangana"),
                 ],
               ),
             ),
@@ -106,14 +129,20 @@ final Map<String, TextEditingController> _controllers = {
             const SizedBox(height: 10),
             Align(
               alignment: Alignment.topLeft,
-              child: Text('Account details'),
+              child: textStyle(text: 'Account Details',context: context,fontWeight: FontWeight.bold,fontsize: 12),
             ),
             // Account Details
-            _buildAccountDetails("SBI", "SB1XXXXXXXX"),
-
+            const SizedBox(height: 20),
+            getListOfBankConnected(),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                      // _controllers.forEach((e,v){
+                      //     print(e+" -> "+v.text.toString());
+                      // });
+                      //  print(changeAvater);
+                      editUserDetails(context,_controllers);
+              },
               child: const Text("Save Changes"),
             )
           ],
@@ -122,56 +151,94 @@ final Map<String, TextEditingController> _controllers = {
     );
   }
 
+
+  Widget getListOfBankConnected(){
+      return Container(
+          child: Column(
+            children: [
+              Column(
+                  children:  bankAccountLinkedList.map((e){
+                       return   _buildAccountDetails(e['bankName'],e['fipId'],e);
+                  }).toList(),
+              ),
+              const SizedBox(height: 10,),
+              
+              Align(
+                  alignment: Alignment.bottomRight,
+                  child: InkWell(
+                    onTap: (){
+                      number.value=Phone.value;
+                     Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MobileNumber(flag: true,),
+                        ),
+                    );
+                    },
+                    child: textStyle(text: '+ Add Bank',context: context,fontWeight: FontWeight.bold,fontsize: 16)),
+              ),
+              const SizedBox(height: 10,),
+            ],
+          ),
+      );
+  }
+
   Widget _buildEditableField(IconData icon, String label, String value) {
     final controller = _controllers[label] ?? TextEditingController(text: value);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
-      child: TextField(
-        controller: controller, // Use the controller to manage the text
-        decoration: InputDecoration(
-          prefixIcon: Icon(icon, color: Colors.blueGrey),
-          hintText: value,
-          border: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          focusedBorder: InputBorder.none,
-          suffixIcon: const Icon(Icons.edit, color: Colors.blueGrey),
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 0),
+      width: MediaQuery.of(context).size.width / 1.1,
+      child: Center(
+        child: TextFormField(
+          controller: controller, // Use the controller to manage the text
+          decoration: InputDecoration(
+           contentPadding: EdgeInsets.symmetric(vertical: 10),
+            prefixIcon: Icon(icon, color: Colors.blueGrey),
+            hintText: value,
+            border: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            suffixIcon: const Icon(Icons.edit, color: Colors.blueGrey),
+          ),
         ),
       ),
     );
   }
 
   Widget _buildNonEditableField(IconData icon, String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
-      child: TextField(
-        enabled: false,
-        decoration: InputDecoration(
-          prefixIcon: Icon(icon, color: Colors.blueGrey),
-          //labelText: value,
-          border: InputBorder.none, // No border
-          enabledBorder: InputBorder.none, // No border when not focused
-          focusedBorder: InputBorder.none,
-          hintText: value,
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 0),
+      width: MediaQuery.of(context).size.width / 1.1,
+      child: Center(
+        child: TextFormField(
+          enabled: false,
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 10),
+            prefixIcon: Icon(icon, color: Colors.blueGrey),
+            //labelText: value,
+            border: InputBorder.none, // No border
+            enabledBorder: InputBorder.none, // No border when not focused
+            focusedBorder: InputBorder.none,
+            hintText: value,
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildAccountDetails(String bankName, String accountNumber) {
+  Widget _buildAccountDetails(String bankName, String accountNumber,var data) {
     return Card(
       //elevation: 2,
       child: ListTile(
-        leading: Icon(Icons.account_balance, color: Colors.blue),
+        // leading: AvatarProfileImage(url:  bankImagemap[accountNumber]?? avatarUser.value, width: 10, height: 10),
         title: Text(bankName),
         subtitle: Text(accountNumber),
-        trailing: TextButton(
-          onPressed: () {
-            // Implement add bank functionality
-          },
-          child: const Text("+ Add Bank"),
-        ),
+
       ),
     );
   }
+  
+
+
 }

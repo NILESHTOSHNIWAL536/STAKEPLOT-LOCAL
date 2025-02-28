@@ -30,8 +30,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
     "polls": "Polls Content",
     "exploria": "Exploria Content"
   };
-  String _networkImageUrl =
-      "https://static.vecteezy.com/system/resources/thumbnails/045/713/367/small_2x/aesthetic-leaves-on-a-dark-background-free-photo.jpg"; // This can be dynamically set
+  String _networkImageUrl = "https://static.vecteezy.com/system/resources/thumbnails/045/713/367/small_2x/aesthetic-leaves-on-a-dark-background-free-photo.jpg"; // This can be dynamically set
 
   Future<void> _pickImage(ImageSource source, String type) async {
     final picker = ImagePicker();

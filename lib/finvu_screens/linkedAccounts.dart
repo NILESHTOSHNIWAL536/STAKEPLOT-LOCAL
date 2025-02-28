@@ -32,11 +32,17 @@ void login(handleId,context) async {
     // snackBarCalled(context,await finvuManager.connect().toString());
   try{
     // snackBarCalled(context,"Login inside...");
+  // print("--------------------------");
+  // print("Login inside...");
+  // print(number.value);
+  // print(handleId);
   var login = await finvuManager.loginWithUsernameOrMobileNumberAndConsentHandle(
     '${number.value}@finvu',
     '${number.value}',
     handleId,
   );
+  // print('login After .....');
+  // print(login);
     // snackBarCalled(context,"Login out...");
   otpReference = login.reference;
   //  snackBarCalled(context, "handleId : "+handleId.toString()+"%%");
@@ -47,6 +53,7 @@ void login(handleId,context) async {
   //             "fba57400-29f0-4e24-923a-c5ce2e284299");
   debugPrint('LoggedIn');
   }catch(e){
+       print("error throw by finvu----"+e.toString());
       snackBarCalled(context, e.toString());
   }
 }

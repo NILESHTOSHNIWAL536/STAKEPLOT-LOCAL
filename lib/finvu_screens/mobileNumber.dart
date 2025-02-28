@@ -29,7 +29,8 @@ import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
 
 class MobileNumber extends StatefulWidget {
-  const MobileNumber({super.key});
+  bool flag;
+   MobileNumber({super.key,this.flag=false});
 
   @override
   State<MobileNumber> createState() => _MobileNumberState();
@@ -53,6 +54,7 @@ late final WebViewController controller ;
     super.initState();
 
     // Step 1: Initialize WebView platform params
+    try{
     late final PlatformWebViewControllerCreationParams params;
     if (WebViewPlatform.instance is WebKitWebViewPlatform) {
       params = WebKitWebViewControllerCreationParams(
@@ -73,6 +75,10 @@ late final WebViewController controller ;
       AndroidWebViewController.enableDebugging(true);
       (controller.platform as AndroidWebViewController)
           .setMediaPlaybackRequiresUserGesture(false);
+    }
+    }catch(e){}
+    if(widget.flag){
+          _phoneController.text=number.value.toString();
     }
   }
   
@@ -127,10 +133,11 @@ late final WebViewController controller ;
                   ),
                 ),
                 // TextField for entering phone number
-                TextField(
+                TextFormField(
                   controller: _phoneController, // Attach the controller
                   maxLength: 10,
                   autocorrect: true,
+                  enabled: !widget.flag,
                   keyboardType: TextInputType.phone, // Phone input keyboard
                   decoration: InputDecoration(
                     prefixIcon: const Icon(Icons.phone_android_outlined),
@@ -166,9 +173,6 @@ late final WebViewController controller ;
                     ;
                     String phoneNumber = _phoneController.text;
                     number.value = phoneNumber;
-                    print(number);
-                
-                    
                     await loginWithServer(context);
                     otpController = TextEditingController();
             

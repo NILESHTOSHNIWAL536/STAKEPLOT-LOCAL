@@ -4,9 +4,11 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/reset.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/resetPas.dart';
 import 'package:get/get.dart';
@@ -74,11 +76,12 @@ Future<void> loginUser(TextEditingController emailController,
     currentId.value = body['data']['_id'];
     Phone.value = body['data']['phone'];
     isBankAccountLink.value = body['data']['isBankAccountLinked'];
+     
     await  initializeOneSignal(context);
     if (flag) return;
 
     // isBankAccountLink.value ?  getUserInfoBackDetails(context): loginToAutoTractions(context, Phone.value);
-
+    storeImageinMapFinvu();
     Navigator.of(context)
         .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
     acceptReset.value = false;
@@ -408,6 +411,7 @@ void clearGetX() {
   currency = "Loading...".obs;
   score = "Loading...".obs;
   email = "Loading...".obs;
+  changeAvater = "Loading...".obs;
   userId = "";
   targetString = "".obs;
   //  listOfCater =<Plot> [].obs;
@@ -425,6 +429,7 @@ void clearGetX() {
     graphTransaction.value=false;
     isSplit.value=false;
     isLend.value=false;
+    bankAccountLinkedList.clear();
 }
 
 // void oneSignalApis(context) async {

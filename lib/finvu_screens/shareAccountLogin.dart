@@ -201,7 +201,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            widget.flag ? const DiscoverAccount() : const MobileNumber(),
+                            widget.flag ? const DiscoverAccount() : MobileNumber(),
                       ),
                     );
                   },

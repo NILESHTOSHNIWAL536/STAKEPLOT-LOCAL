@@ -1727,28 +1727,27 @@ class _ModalContentState extends State<ModalContent>
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         GestureDetector(
-          onTap: () async {
-            if (isLend.value) {
-              addedUser.clear();
-              addedMembers.clear();
-            }
-            isSplit.value = true;
-            isLend.value = false;
+           onTap: () async {
+          if (isLend.value) {
+            addedUser.clear();
+            addedMembers.clear();
+          }
+          isSplit.value = true;
+          isLend.value = false;
 
-            final amounts =
-                await showCustomFriendsModal(context, amount ?? 0.0);
-            if (amounts != null && addedMembers.isNotEmpty) {
-              // print("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\Selected friends with amounts: $amounts");
-              splitUserAmount(
-                context,
-                amount.toString(),
-                addedMembers,
-                selectedCategory2.toString(),
-                selectedSubCategory2.toString(),
-                amounts: amounts,
-              );
-            }
-          },
+          final result = await showCustomFriendsModal(context, amount ?? 0.0, false);
+          if (result != null && addedMembers.isNotEmpty) {
+            print("buttonsWidget: Split mode - Received amounts: $result");
+            splitUserAmount(
+              context,
+              amount.toString(),
+              addedMembers,
+              selectedCategory2.toString(),
+              selectedSubCategory2.toString(),
+              amounts: result as Map<String, double>,
+            );
+          }
+        },
           child: Container(
             width: MediaQuery.of(context).size.width / 2.4,
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
@@ -1770,14 +1769,20 @@ class _ModalContentState extends State<ModalContent>
           ),
         ),
         GestureDetector(
-          onTap: () {
+          onTap: () async{
             if (isSplit.value) {
               addedUser.clear();
               addedMembers.clear();
             }
             isSplit.value = false;
             isLend.value = true;
-            showCustomFriendsModal(context, amount ?? 0.0);
+            // showCustomFriendsModal(context, amount ?? 0.0);
+            final result =  await showCustomFriendsModal(context, amount ?? 0.0, true);
+          if (result != null) {
+            print("buttonsWidget: Lend mode - Selected friend: $result");
+            // Don’t send amount yet, just pop out and wait for parent "Continue"
+           // Navigator.pop(context); // Close the modal to return to Manualtransaction
+          }
           },
           child: Container(
             width: MediaQuery.of(context).size.width / 2.4,
@@ -1812,22 +1817,33 @@ class _ModalContentState extends State<ModalContent>
           child: Padding(
             padding: const EdgeInsets.only(top: 10),
             child: InkWell(
-              onTap: () {
-                if (isSplit.value) {
-                  splitBill(selectedCategory2.toString(), amount.toString(),
-                      selectedSubCategory2.toString(), true);
-                } else if (isLend.value) {
-                  splitBill(selectedCategory2.toString(), amount.toString(),
-                      selectedSubCategory2.toString(), false);
-                } else {
-                  addTransaction(
-                      amount.toString(),
-                      selectedSubCategory2.toString(),
-                      selectedCategory2.toString(),
-                      context,
-                      "cash");
+             onTap: () {
+              if (isSplit.value && addedMembers.isNotEmpty) {
+                splitBill(selectedCategory2.toString(), amount.toString(),
+                    selectedSubCategory2.toString(), true);
+              } else if (isLend.value && addedMembers.isNotEmpty) {
+                if (addedMembers.length > 1) {
+                  snackBarCalled(context, "Please select only one friend for lending", Colors.red);
+                  return;
                 }
-              },
+                print("continueButton: Lending ${amount.toString()} to ${addedMembers[0]['id']}");
+                addLendUserAmount(
+                  context,
+                  amount.toString(),
+                  addedMembers,
+                  selectedCategory2.toString(),
+                  selectedSubCategory2.toString(),
+                );
+              } else {
+                addTransaction(
+                  amount.toString(),
+                  selectedSubCategory2.toString(),
+                  selectedCategory2.toString(),
+                  context,
+                  "cash",
+                );
+              }
+            },
               child: getButton(context, "Continue"),
             ),
           ),
@@ -1898,26 +1914,28 @@ class _ModalContentState extends State<ModalContent>
     });
   }
 
-  Future<Map<String, double>?> showCustomFriendsModal(
-    BuildContext context,
-    double totalAmount,
-  ) async {
-    return await showModalBottomSheet<Map<String, double>?>(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
-      ),
-      builder: (BuildContext context) {
-        return NewFriendsUi(
-          totalAmount: totalAmount,
-          userId: currentId.value,
-          userName: userName.value,
-          userAvatar: userAvatarProfile.value,
-        );
-      },
-    );
-  }
+ Future<dynamic> showCustomFriendsModal(
+  BuildContext context,
+  double totalAmount,
+  bool isLendMode,
+) async {
+  return await showModalBottomSheet<dynamic>(
+    context: context,
+    isScrollControlled: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+    ),
+    builder: (BuildContext context) {
+      return NewFriendsUi(
+        totalAmount: totalAmount,
+        userId: currentId.value,
+        userName: userName.value,
+        userAvatar: userAvatarProfile.value,
+        isLendMode: isLendMode,
+      );
+    },
+  );
+}
 
 // void showCustomFriendsModal2(BuildContext context) {
 //     showModalBottomSheet(

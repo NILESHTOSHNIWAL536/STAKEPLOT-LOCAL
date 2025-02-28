@@ -19,7 +19,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
 bool flag = true;
-String portNo = !flag ? "192.168.1.4" : "localhost";
+String portNo = !flag ? "192.168.1.35" : "localhost";
 String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 
@@ -91,6 +91,7 @@ RxInt paymentLength = 0.obs;
 String userAvatar = "assets/images2/user.svg";
 RxString userAvatarProfile = "assets/images2/user.svg".obs;
 RxString userName = "Loading...".obs;
+RxString dob = "Loading...".obs;
 RxString currentId = "Loading...".obs;
 RxString Phone = "Loading...".obs;
 RxString currency = "Loading...".obs;

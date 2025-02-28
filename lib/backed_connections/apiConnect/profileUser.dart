@@ -1,9 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:http/http.dart' as http;
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -190,6 +193,7 @@ void getUserInfomations() async {
     currency.value = data['currency'];
     score.value = data['score'].toString();
     coin = data['coins'].toString();
+    dob.value = data['dob'].toString().substring(0,10);
     expenses.value = data['expense'].toString();
     isBankAccountLink.value = data['isBankAccountLinked'] ?? false;
     cupertinoPin.value = data['cupertino_pin']; //?? '0';
@@ -423,4 +427,49 @@ void addAccount(context, String account, String money) async {
   } else {
     // //print('Failed to create post: ${response.reasonPhrase}');
   }
+}
+
+
+
+
+void editUserDetails(context, Map<String, TextEditingController> controller) async {
+  final SharedPreferences _pref = await SharedPreferences.getInstance();
+  var accessToken = _pref.getString("accessToken");
+ try{
+  final response = await http.post(
+    Uri.parse('${url}/user/updateprofile'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      "Authorization": "$accessToken",
+    },
+    body: jsonEncode({
+      "name":controller['name']!.text.toString() ,
+       "phone":controller['Number']!.text.toString() ,
+      "dob":controller['dob']!.text.toString() ,
+      "avatarType":(changeAvater.value =="Loading..." || changeAvater.value =="")?avatar.value:changeAvater.value ,
+    }),
+  );
+   printData(response,context);
+   var responce = jsonDecode(response.body);
+   
+    bool boolvar = responce['success'];
+     if (!boolvar) {
+      snackBarCalled(context, responce['error']['explanation'], Colors.red);
+      return;
+    }
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    snackBarCalled(context, "Updated users Info!", Colors.black);
+    // getUserInfomations();
+    avatar.value=changeAvater.value;
+    userName.value=controller['name']!.text.toString();
+    Phone.value=controller['Number']!.text.toString();
+    number.value=controller['Number']!.text.toString();
+    dob.value=controller['dob']!.text.toString();
+  } else {
+    
+    // snackBarCalled(context, "can't edit User Info error!", Colors.red);
+  }
+ }catch(e){
+     print("error----"+e.toString());
+ }
 }

@@ -15,11 +15,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import 'package:week_of_year/week_of_year.dart';
 
+double getDouble(data) {
+  return double.parse(data.toString());
+}
+
 bool getFlagOfResponse(response) {
   if (response.statusCode == 200 || response.statusCode == 201) return true;
   return false;
 }
 
+// Functions to fetch the data
 void getAutoMationsTransactions() async {
   var response = await getDataApiCall("${url}/transactionauto/");
   if (getFlagOfResponse(response)) {
@@ -106,9 +111,6 @@ void getAutoMationsTransactionsWeekly() async {
   }
 }
 
-double getDouble(data) {
-  return double.parse(data.toString());
-}
 // void getAutoMationsTransactionsCustom(date, context,
 //     [weekORmonth = 'month', String? endDate]) async {
 //   String urlPath = endDate != null && weekORmonth == 'Custom'
@@ -227,9 +229,10 @@ void getAutoMationsTransactionsCustom(date, context,
     [weekORmonth = 'month', String? endDate]) async {
   print("start date ${date}");
   print("end date ${endDate}");
+  String accountId = "67c04da09c48079de5840b23";
   String urlPath = endDate != null && weekORmonth == 'Custom'
-      ? "$url/transactionauto/getAllCustomTransactions/${weekORmonth.toLowerCase()}/$date,${getNextDay(endDate)}"
-      : "$url/transactionauto/getAllCustomTransactions/${weekORmonth.toLowerCase()}/$date";
+      ? "$url/transactionauto/getAllCustomTransactions/${accountId}/${weekORmonth.toLowerCase()}/$date,${getNextDay(endDate)}"
+      : "$url/transactionauto/getAllCustomTransactions/${accountId}/${weekORmonth.toLowerCase()}/$date";
   // print("Raw date input: $date");
   // print("Raw endDate input: $endDate");
 
@@ -360,7 +363,6 @@ void getAutoMationsTransactionsCustom(date, context,
     getGraphData.value = true;
   }
 }
-
 
 String getNextDay(String endDate) {
   // Parse the input date string
@@ -643,7 +645,8 @@ void pickCustomDateRange(BuildContext context) async {
 
     labels.assignAll(customDays); // Assuming labels is RxList
 
-    String startDate = picked.start.toIso8601String().split('T')[0]; // YYYY-MM-DD
+    String startDate =
+        picked.start.toIso8601String().split('T')[0]; // YYYY-MM-DD
     String endDate = picked.end.toIso8601String().split('T')[0]; // YYYY-MM-DD
     print("Calling getAutoMations with start: $startDate, end: $endDate");
     getAutoMationsTransactionsCustom(startDate, context, 'Custom', endDate);
@@ -657,7 +660,8 @@ class DateRangePickerDialog extends StatefulWidget {
 }
 
 class _DateRangePickerDialogState extends State<DateRangePickerDialog> {
-  DateTime? startDate = DateTime.now().subtract(Duration(days: 7)); // Default start
+  DateTime? startDate =
+      DateTime.now().subtract(Duration(days: 7)); // Default start
   DateTime? endDate = DateTime.now(); // Default end
 
   @override
@@ -672,11 +676,11 @@ class _DateRangePickerDialogState extends State<DateRangePickerDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             textStyle(
-                  text: "Select Date Range",
-                  context: context,
-                  fontWeight: FontWeight.bold,
-                  fontsize: 16,
-                ),
+              text: "Select Date Range",
+              context: context,
+              fontWeight: FontWeight.bold,
+              fontsize: 16,
+            ),
             // Text(
             //   "Select Date Range",
             //   style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -689,13 +693,12 @@ class _DateRangePickerDialogState extends State<DateRangePickerDialog> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                     textStyle(
-                  text: "Start Date",
-                  context: context,
-                  fontWeight: FontWeight.w400,
-                  fontsize: 14,
-                ),
-                    
+                    textStyle(
+                      text: "Start Date",
+                      context: context,
+                      fontWeight: FontWeight.w400,
+                      fontsize: 14,
+                    ),
                     const SizedBox(height: 8),
                     ElevatedButton(
                       onPressed: () async {
@@ -709,7 +712,8 @@ class _DateRangePickerDialogState extends State<DateRangePickerDialog> {
                           setState(() {
                             startDate = picked;
                             // Ensure end date isn’t before start date
-                            if (endDate != null && endDate!.isBefore(startDate!)) {
+                            if (endDate != null &&
+                                endDate!.isBefore(startDate!)) {
                               endDate = startDate;
                             }
                           });
@@ -727,19 +731,20 @@ class _DateRangePickerDialogState extends State<DateRangePickerDialog> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                      textStyle(
-                  text: "End Date",
-                  context: context,
-                  fontWeight: FontWeight.w400,
-                  fontsize: 14,
-                ),
+                    textStyle(
+                      text: "End Date",
+                      context: context,
+                      fontWeight: FontWeight.w400,
+                      fontsize: 14,
+                    ),
                     const SizedBox(height: 8),
                     ElevatedButton(
                       onPressed: () async {
                         final DateTime? picked = await showDatePicker(
                           context: context,
                           initialDate: endDate ?? DateTime.now(),
-                          firstDate: startDate ?? DateTime(2020), // Prevent end before start
+                          firstDate: startDate ??
+                              DateTime(2020), // Prevent end before start
                           lastDate: DateTime.now(),
                         );
                         if (picked != null && picked != endDate) {
@@ -766,30 +771,33 @@ class _DateRangePickerDialogState extends State<DateRangePickerDialog> {
                   onPressed: () {
                     Navigator.pop(context); // Cancel
                   },
-                  child:   textStyle(
-                  text: "Cancel",
-                  context: context,
-                  fontWeight: FontWeight.w400,
-                  fontsize: 14,
-                ),
+                  child: textStyle(
+                    text: "Cancel",
+                    context: context,
+                    fontWeight: FontWeight.w400,
+                    fontsize: 14,
+                  ),
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: () {
                     if (startDate != null && endDate != null) {
-                      Navigator.pop(context, DateTimeRange(start: startDate!, end: endDate!));
+                      Navigator.pop(context,
+                          DateTimeRange(start: startDate!, end: endDate!));
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Please select both start and end dates")),
+                        SnackBar(
+                            content:
+                                Text("Please select both start and end dates")),
                       );
                     }
                   },
-                  child:  textStyle(
-                  text: "OK",
-                  context: context,
-                  fontWeight: FontWeight.w400,
-                  fontsize: 14,
-                ),
+                  child: textStyle(
+                    text: "OK",
+                    context: context,
+                    fontWeight: FontWeight.w400,
+                    fontsize: 14,
+                  ),
                 ),
               ],
             ),

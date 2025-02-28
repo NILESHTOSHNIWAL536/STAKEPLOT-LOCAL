@@ -11,11 +11,10 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 
-
   // FinvuManager finvuManager = FinvuManager();
   String otpReference = "";
   String displayText = '';
-  RxString number="8978958221".obs;//  9347064783
+  RxString number="8459177562".obs;//  9347064783
   //double numericValue = double.tryParse(number.value) ?? 0.0;
 
   String custId="${number.value}@finvu";

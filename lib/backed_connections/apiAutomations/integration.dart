@@ -67,6 +67,7 @@ Future<void> loginWithServer(context) async {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       String token = "";//data["token"];
+      // number.value="8459177562@finvu";
       String consentHandleId = data["consentHandleId"];
 
       // Store token and consentHandleId in SharedPreferences

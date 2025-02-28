@@ -9,22 +9,18 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/confirm.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-
-
-
-
-
-
+RxString changeAvater=avatar.value.obs;
 
 class Avatar extends StatefulWidget {
    var data;
-   Avatar({ Key? key,required this.data }) : super(key: key);
+   bool isEdit;
+   Avatar({ Key? key,required this.data,this.isEdit=false }) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -161,6 +157,12 @@ class _SigninState extends State<Avatar> {
                             InkWell(
                               onTap: () {
                                   //  storeData(context);
+                                  if(widget.isEdit){
+                                    changeAvater.value=images[activePage];
+                                    avatar.value=changeAvater.value;
+                                    Navigator.pop(context);
+                                    return;
+                                  }
                                   snackBarCalled(context,"Sended Otp To Email Id...!",Colors.green);
                                   getOTP(context, widget.data['name'], widget.data['email']);
                                   // openShowModal();
