@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
@@ -27,16 +28,28 @@ void getBankAccounts()async
 }
 
 
-void storeImageinMapFinvu()async
+void storeImageinMapFinvu(context)async
 {
+   var isConnected = await finvuManager.isConnected();
+   if(!isConnected)initFinvuManager(context);
+  print("websocket connected : ");
+  print(isConnected);
+
   try{
+    print(1);
+    print(2);
     List<FinvuFIPInfo> finvuFIPInfo=await finvuManager.fipsAllFIPOptions();
+    print(3);
     finvuFIPInfo.forEach((FinvuFIPInfo info){
-               bankImagemap[info.fipId]=info.productIconUri;
+               bankImagemap[info.productName]=info.productIconUri;
     }); 
+    print(4);
   }catch(e)
   {
-      print(e);
+      print("e error");
   } 
+
+  print("bankImagemap");
+  print(bankImagemap);
   
 }

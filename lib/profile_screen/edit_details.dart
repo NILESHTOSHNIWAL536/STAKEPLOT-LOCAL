@@ -235,10 +235,11 @@ final Map<String, TextEditingController> _controllers = {
   }
 
   Widget _buildAccountDetails(String bankName, String accountNumber,var data) {
+    // print(bankImagemap);
     return Card(
       //elevation: 2,
       child: ListTile(
-        // leading: AvatarProfileImage(url:  bankImagemap[accountNumber]?? avatarUser.value, width: 10, height: 10),
+        leading: AvatarProfileImage(url:  bankImagemap[bankName] ?? avatarUser.value, width: 10, height: 10),
         title: Text(bankName),
         subtitle: Text(accountNumber),
 

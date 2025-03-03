@@ -35,14 +35,9 @@ void getSummary() async {
 
 void getdebts() async {
   Map<String, dynamic> body = {};
-  print("data debt ..............................transactionauto....................... :");
   var res = await postDataApiCall("${url}/debt",body);
-  print("data debt ..............................transactionauto....................... :");
-
   if (getFlagOfResponse(res)) {
     var data = jsonDecode(res.body);
-    print(data);
     data = data['data'];
-
   }
 }

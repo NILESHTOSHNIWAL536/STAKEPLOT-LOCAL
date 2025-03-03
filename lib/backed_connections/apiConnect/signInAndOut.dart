@@ -79,7 +79,7 @@ Future<void> loginUser(TextEditingController emailController,
     if (flag) return;
 
     // isBankAccountLink.value ?  getUserInfoBackDetails(context): loginToAutoTractions(context, Phone.value);
-    storeImageinMapFinvu();
+    storeImageinMapFinvu(context);
     Navigator.of(context)
         .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
     acceptReset.value = false;
