@@ -1082,23 +1082,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                       child: Column(
                         children: [
                           GestureDetector(
-                            // onTap: () {
-                            //   setState(() {
-                            //     if (addedUser.contains(values)) {
-                            //       addedUser.remove(values);
-                            //       addedMembers.removeWhere((element) => element['id'] == values);
-                            //     } else {
-                            //       addedUser.add(values);
-                            //       addedMembers.add({
-                            //         "name": frdsList[index]['name'],
-                            //         "id": values,
-                            //         'avatar': frdsList[index]['avatar'],
-                            //         "balance": 200,
-                            //       });
-                            //       print("NewFriendsUi: Added member ${frdsList[index]['name']} with ID: $values");
-                            //     }
-                            //   });
-                            // },
+                            
                             onTap: () {
                               setState(() {
                                 if (addedUser.contains(values)) {
