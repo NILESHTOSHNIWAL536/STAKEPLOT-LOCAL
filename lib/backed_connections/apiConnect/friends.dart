@@ -55,14 +55,11 @@ void  rejectFrdRequest(body,context)async
         body: jsonEncode(body),
 
   );
-      //printData(response,context);
-       //print("rejectRequest ");
-      //print(response.statusCode);
-      //print(response.body);
+   
       if(response.statusCode==200 || response.statusCode==201){
             final body = json.decode(response.body);
             
-            // snackBarCalled(context,"Rem user As Friend...!",Colors.black);
+  
             
       }else{
           snackBarCalled(context,"can't Reject error Friend!",Colors.red);

@@ -43,6 +43,7 @@ class _FinancePageState extends State<FinancePage> {
     if (selectedButton.value == "Month") {
       //print(totalCredited);
       getAutoMationsTransactionsCustom(getFormattedDate(), context);
+      
       _calculateTotalSpent();
       //print("ssuming transactionChatGraph is your data map");
       //print(totalCredited);
@@ -108,6 +109,7 @@ class _FinancePageState extends State<FinancePage> {
           : Padding(
               padding: EdgeInsets.all(0),
               child: Column(
+                
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -123,7 +125,7 @@ class _FinancePageState extends State<FinancePage> {
                       Row(
                         children: [
                           Text(
-                            '₹${totalSpent.toStringAsFixed(2)}',
+                             '₹${transactionChatGraph['totalDebit']?.toString() ?? '0'}',
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.bold,
                                 fontSize: fontSizeFactor * 4,
@@ -294,6 +296,14 @@ class LineChartWidget extends StatefulWidget {
 
 class _LineChartWidgetState extends State<LineChartWidget> {
   double maxYValue = 10000;
+int getCurrentDateIndex(List<String> labels) {
+    final now = DateTime.now();
+    if (widget.selectedButton.value == 'Week') {
+      return now.weekday % 7; // 0 for Sunday, 1 for Monday, etc.
+    } else {
+      return now.day - 1; // 0-based index for day of month
+    }
+  }
 
   @override
   void initState() {
@@ -453,6 +463,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                   MinorGridLines(width: 0), // Ensure no minor grid lines
               axisLine: AxisLine(width: 0),
               interval: 1,
+              
               // labelRotation: widget.selectedButton.value == 'Week' ? 0 : -45,
               // edgeLabelPlacement: EdgeLabelPlacement.shift,
               maximumLabels: dataLength, // Ensure all labels are considered
@@ -519,11 +530,11 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 xValueMapper: (ChartData data, _) => data.x,
                 yValueMapper: (ChartData data, _) => data.y,
                 color: AppColors.primaryColor,
-                width: 2, // Increased line width for better visibility
+                width: 3, // Increased line width for better visibility
                 enableTooltip: true,
-                name: 'Debited',
+                name: 'Credited',
                 splineType: SplineType.cardinal, // Makes the curve smoother
-                cardinalSplineTension: 0.5, // Adjust curve tension (0-1)
+                cardinalSplineTension: 0.9, // Adjust curve tension (0-1)
                 markerSettings: MarkerSettings(
                   isVisible: false,
                   height: 4,
@@ -539,11 +550,11 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 xValueMapper: (ChartData data, _) => data.x,
                 yValueMapper: (ChartData data, _) => data.y,
                 color: AppColors.accentColor,
-                width: 2,
+                width: 3,
                 enableTooltip: true,
-                name: 'Credited',
+                name: 'Debited',
                 splineType: SplineType.cardinal,
-                cardinalSplineTension: 0.5,
+                cardinalSplineTension: 0.9,
                 markerSettings: MarkerSettings(
                   isVisible: false,
                   height: 4,

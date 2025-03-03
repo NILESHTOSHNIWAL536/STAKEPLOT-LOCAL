@@ -587,12 +587,10 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
       String endpoint =
           "${url}/transactionauto/getAllCustomTransactions/${accountId}/year/$yearString";
 
-      // print('Fetching yearly data from endpoint: $endpoint');
+   
       var response = await getDataApiCall(endpoint);
 
-      // print("Response status code: ${response.statusCode}");
-      // print("Response body: ${response.body}");
-
+    
       if (response.statusCode == 200 || response.statusCode == 201) {
         try {
           var data = jsonDecode(response.body);
@@ -609,14 +607,14 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                   data['data']['transactions'] != null) {
                 data['data']['transactions'].forEach((key, value) {
                   int monthIndex = monthNameToIndex[key] ?? -1;
-                  print('Month: $key, Month Index: $monthIndex, Value: $value');
+                
                   if (monthIndex >= 0 && monthIndex < 12) {
                     yearlyData['credited']![monthIndex] =
                         getDouble(value['credit']);
                     yearlyData['debited']![monthIndex] =
                         getDouble(value['debit']);
                   } else {
-                    print('Invalid month index: $monthIndex for key: $key');
+                  
                   }
                 });
 
@@ -625,11 +623,11 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                     data['data']['maxAmount']?.toDouble() ?? 500.0;
                 if (maxYValue.value == 0) maxYValue.value = 500.0;
               } else {
-                print('Unexpected data structure: $data');
+             
                 throw Exception('Invalid data structure received from API');
               }
             } catch (e) {
-              //  print('Error processing yearly data: $e');
+             
               maxYValue.value = 500.0;
               currentChartData.value = {
                 'credited': List.filled(12, 0.0),
@@ -644,19 +642,19 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
             };
           }
         } catch (e) {
-          // print('Error parsing response: $e');
+          
           currentChartData.value = {
             'credited': List.filled(12, 0.0),
             'debited': List.filled(12, 0.0),
           };
         }
       } else {
-        //  print('API request failed with status code: ${response.statusCode}');
+        
         try {
           var errorData = jsonDecode(response.body);
-          print('API Error: ${errorData['error']}');
+         
         } catch (e) {
-          print('Failed to parse error response: $e');
+        
         }
         currentChartData.value = {
           'credited': List.filled(12, 0.0),
@@ -664,7 +662,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
         };
       }
     } catch (e) {
-      // print('Error fetching yearly data: $e');
+      
       currentChartData.value = {
         'credited': List.filled(12, 0.0),
         'debited': List.filled(12, 0.0),
@@ -692,19 +690,19 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
         };
 
         try {
-          print('Fetching monthly data for year: $year, month: $month');
+        
           data['data']['transactions'].forEach((key, value) {
             try {
               int dayIndex = int.parse(key.split('-')[2]) - 1;
-              // print('Day Index: $dayIndex for key: $key');
+              
               if (dayIndex >= 0 && dayIndex < daysInMonth) {
                 monthlyData['credited']![dayIndex] = getDouble(value['credit']);
                 monthlyData['debited']![dayIndex] = getDouble(value['debit']);
               } else {
-                print('Invalid day index: $dayIndex for key: $key');
+             
               }
             } catch (e) {
-              print('Error parsing day index for key $key: $e');
+             
             }
           });
 
@@ -712,7 +710,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
           maxYValue.value = data['data']['maxAmount']?.toDouble() ?? 500.0;
           if (maxYValue.value == 0) maxYValue.value = 500.0;
         } catch (e) {
-          print('Error processing monthly data: $e');
+          
           maxYValue.value = 500.0;
           currentChartData.value = {
             'credited': List.filled(daysInMonth, 0.0),
@@ -727,7 +725,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
         };
       }
     } catch (e) {
-      print('Error fetching monthly data: $e');
+    
       int daysInMonth = _getDaysInMonth(year, month);
       currentChartData.value = {
         'credited': List.filled(daysInMonth, 0.0),

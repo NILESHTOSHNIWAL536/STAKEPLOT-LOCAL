@@ -24,8 +24,6 @@ void getAck() async {
     var his = jsonDecode(response.body);
     var obj = his['data'];
     hasGetNewNotifications.value = obj != 0;
-    print("hasGetNewNotifications.value----------------");
-    print(hasGetNewNotifications.value);
   } else {}
 }
 
@@ -148,10 +146,20 @@ void getAllTransaction(context) async {
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-    //print("trasactionsHistory,,,,,,,,");
-    print(response.body);
     trasactionsHistory.clear();
     trasactionsHistory.addAll(obj);
+    getHistory.value = !getHistory.value;
+  } else {}
+}
+void getInsights(context) async {
+  var response =
+      await getDataApiCall("${url}/budget/get-insights/679b6ea12af555d641c5da61");
+  if (response.statusCode == 200) {
+    var his = jsonDecode(response.body);
+    var obj = his['data'];
+   
+    inSights.clear();
+    inSights.addAll(obj);
     getHistory.value = !getHistory.value;
   } else {}
 }
@@ -162,8 +170,6 @@ void getHiddenTransactions(context) async {
   if (response.statusCode == 200) {
     var her = jsonDecode(response.body);
     var obj = her['data'];
-    print(" .................Hidden trasactions History,,,,,,,,");
-    print(response.body);
     hiddentrasactionsHistory.clear();
     hiddentrasactionsHistory.addAll(obj);
     getHiddenHistory.value = !getHiddenHistory.value;
@@ -180,7 +186,7 @@ void getAllTransactionHistory(
       var his = jsonDecode(response.body);
 
       var obj = his['data'];
-      print(his);
+    
       transactionsHistory.clear();
       if (obj != null && obj is List<dynamic>) {
         if (flag) {
@@ -218,10 +224,8 @@ void extractTransaction(bool isYearView, List obj) {
 }
 
 void getTransactionByYear(List obj, y) {
-  print(y);
-  print(obj);
   obj.forEach((ele) {
-    print(ele);
+  
     if (isCurrentYear(ele['transactionTimestamp'], y)) {
       transactionsHistory.add(ele);
     }
@@ -229,10 +233,8 @@ void getTransactionByYear(List obj, y) {
 }
 
 void getTransactionByMonth(List obj, y) {
-  print(y);
-  print(obj);
+ 
   obj.forEach((ele) {
-    print(ele);
     if (isCurrentMonth(ele['transactionTimestamp'], y)) {
       transactionsHistory.add(ele);
     }

@@ -108,7 +108,8 @@ RxList dueAmountRemainders = [].obs;
 RxBool getdueUsers = false.obs;
  RxInt selectedYear = DateTime.now().year.obs;
  RxInt selectedMonth = DateTime.now().month.obs;
-
+RxList inSights = [].obs;
+RxBool getInsights = false.obs;
 List<String> month = [
   "",
   "January",

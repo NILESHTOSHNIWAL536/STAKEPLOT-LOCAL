@@ -57,24 +57,20 @@ void storeImageinMapFinvu(context)async
 {
    var isConnected = await finvuManager.isConnected();
    if(!isConnected)initFinvuManager(context);
-  print("websocket connected : ");
-  print(isConnected);
+  // print("websocket connected : ");
+  // print(isConnected);
 
   try{
-    print(1);
-    print(2);
+   
     List<FinvuFIPInfo> finvuFIPInfo=await finvuManager.fipsAllFIPOptions();
-    print(3);
+   
     finvuFIPInfo.forEach((FinvuFIPInfo info){
                bankImagemap[info.productName]=info.productIconUri;
     }); 
-    print(4);
+   
   }catch(e)
   {
       print("e error");
   } 
-
-  print("bankImagemap");
-  print(bankImagemap);
   
 }

@@ -121,7 +121,7 @@ void ConsentRequestPlus(context, accessToken, custId) async {
 }
 
 void ConsentStatus(context, accessToken, ConsentHandleId, custId) async {
-  print("ConsentStatus");
+
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   if (_pref.containsKey("consentId")) {
     print(_pref.getString("consentId"));

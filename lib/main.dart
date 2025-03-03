@@ -56,7 +56,7 @@ void checkFirebase() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    print('✅ Firebase is set up correctly!');
+    // print('✅ Firebase is set up correctly!');
   } catch (e) {
     print('❌ Firebase setup error: $e');
   }
