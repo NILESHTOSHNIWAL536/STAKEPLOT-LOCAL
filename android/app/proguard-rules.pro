@@ -1,0 +1,3 @@
+-keep class com.finvu.android.publicInterface.** { *; }
+-keep class com.finvu.android.models.** { *; }
+-keep class com.finvu.android.types.** { *; }

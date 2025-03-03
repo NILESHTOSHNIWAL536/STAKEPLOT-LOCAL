@@ -119,6 +119,16 @@ void PinPasswordVerify(password, context, Function setBack) async {
   }
 }
 
+void seletedBankUpdateInfo(id,context) async {
+  var response = await getDataApiCall("${url}/user/selectedBank/${id}");
+  printData(response, context);
+  if (response.statusCode == 200 || response.statusCode == 200) {
+      
+  } else {
+  
+  }
+}
+
 // void getAllTransaction(context) async {
 //   var response = await getDataApiCall("${url}/transaction/all");
 //   if (response.statusCode == 200) {
@@ -187,12 +197,7 @@ void getAllTransactionHistory(
         );
       }
     } else {
-      //  print("API call failed with status: ${response.statusCode}");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content:
-                Text("Failed to load transactions: ${response.statusCode}")),
-      );
+      
     }
   } catch (e) {
     //  print("Exception occurred: $e");
@@ -204,8 +209,7 @@ void getAllTransactionHistory(
 }
 
 void extractTransaction(bool isYearView, List obj) {
-  print("------------------------ extra called...");
-  print(isYearView);
+ 
   if (isYearView) {
     getTransactionByYear(obj, selectedYear.value);
   } else {

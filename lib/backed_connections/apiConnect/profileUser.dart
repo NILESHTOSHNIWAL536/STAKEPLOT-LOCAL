@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:http/http.dart' as http;
 import 'package:page_transition/page_transition.dart';
@@ -174,6 +175,7 @@ void getUserInfomations() async {
 
     aboutMe.value = (obj['aboutMe'] == "Hello");
     aboutUS.value = obj['aboutMe'];
+    selectedBank.value = obj['selectedBank']??"";
 
     List s = obj['accounts'];
     income.value = 0;

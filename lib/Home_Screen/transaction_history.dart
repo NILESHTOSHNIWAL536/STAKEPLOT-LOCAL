@@ -512,6 +512,7 @@
 
 import 'dart:convert';
 // import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/bill.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:http/http.dart' as http;
@@ -538,11 +539,13 @@ class TransactionHistory extends StatefulWidget {
   /// Optional
   final bool? isYearView;
   final bool? isflag;
+  bool pageTransition;
 
-  const TransactionHistory({
-    super.key,
+   TransactionHistory({
     this.isflag = false,
     this.isYearView = false,
+    this.pageTransition = false,
+    super.key
   });
   // const TransactionHistory({super.key});
 
@@ -574,11 +577,44 @@ class _TransactionHistoryState extends State<TransactionHistory> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      controller: scrollController,
+    return widget.pageTransition  ?
+   WillPopScope(
+      onWillPop: ()async
+      {
+        changeTheBool();
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: InkWell(
+            onTap: (){
+                 changeTheBool();
+            },
+            child: Icon(Icons.arrow_back_ios)),
+          title:Text(
+                    'Transaction History',
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: AppColors.accentColor),
+                  ), 
+        ),
+        body: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).size.height/1.1,
+            child: Column(
+              children: [
+                Obx(() => Expanded(
+                      child: getlist()
+                )), // Wrapped in Obx for reactivity
+              ],
+            ),
+          ),
+        ),
+      ),
+    ):SingleChildScrollView(
       child: Container(
         // color: AppColors.backgroundColor,
-        key: targetKey,
         child: Column(
           children: [
             Row(
@@ -601,6 +637,11 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     );
   }
 
+  void changeTheBool(){
+    sectionReached.value=true;
+   Navigator.pop(context);
+  }
+
   Widget getlist() {
     return ListView.builder(
       itemCount: transactionsHistory.length,
@@ -611,10 +652,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
         double amount = (transaction['amount'] is int)
             ? (transaction['amount'] as int).toDouble()
             : (transaction['amount'] as double);
-        String category = transaction['category:'];
-        String subcategory = transaction['subcategory'];
-        print("Transaction: $transaction");
-
+  
         return Stack(
           children: [
             Positioned(

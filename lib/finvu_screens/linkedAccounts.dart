@@ -33,15 +33,14 @@ void login(handleId,context) async {
   try{
     // snackBarCalled(context,"Login inside...");
   // print("--------------------------");
-  // print("Login inside...");
-  // print(number.value);
-  // print(handleId);
+  print("Login inside...");
+  print(handleId);
   var login = await finvuManager.loginWithUsernameOrMobileNumberAndConsentHandle(
     '${number.value}@finvu',
     '${number.value}',
     handleId,
   );
-  // print('login After .....');
+ print('login After .....');
   // print(login);
     // snackBarCalled(context,"Login out...");
   otpReference = login.reference;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
@@ -50,12 +51,15 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   //mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.more_vert),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: popUpBox(context) ,
+                        ),
+                      ],
                     ),
                     //  SizedBox(height: Colorcodes.paddingCard/2),
                     Obx(() => Text(
@@ -86,7 +90,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Obx(() => Text(
-                              '\u{20B9} ${hideBackAccountPassword.value ? balance.value : "*********"}',
+                              '\u{20B9} ${!hideBackAccountPassword.value ? balance.value : "*********"}',
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.bold,
                                   fontSize: 20,
@@ -306,4 +310,37 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
       ),
     );
   }
+
+Widget popUpBox(BuildContext context) {
+  return PopupMenuButton<String>(  // Specify the expected value type
+    initialValue: bankAccountLinkedList.isNotEmpty?bankAccountLinkedList[0]['fipId']:"",
+    color: AppColors.backgroundColor,
+    child: Center(
+      child: Icon(
+        Icons.more_vert_outlined,
+        size: 25,
+        color: AppColors.backgroundColor, // Ensure the icon is visible
+      ),
+    ),
+    onSelected: (value) {
+      // Handle selection
+      print(value);
+      seletedBankUpdateInfo(value,context);
+      selectedBank.value=value;
+    },
+    itemBuilder: (context) {
+      return bankAccountLinkedList.map<PopupMenuEntry<String>>((e) {
+        return getItemOfListPopupMenuItem(e['bankName'], e['fipId'], e);
+      }).toList(); // Ensure it returns List<PopupMenuEntry<String>>
+    },
+  );
+}
+
+PopupMenuEntry<String> getItemOfListPopupMenuItem(
+    String bankName, String fipId, var data) {
+  return PopupMenuItem<String>(
+    value: fipId, // Ensure value is of type String
+    child: Text(bankName),
+  );
+}
 }

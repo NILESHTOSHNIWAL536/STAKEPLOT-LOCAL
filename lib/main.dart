@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Profile/friends.dart';
 import 'package:flutter_application_code_stakeplot/Profile/notifications.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
+import 'package:flutter_application_code_stakeplot/animated/splashScreen.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/controller.dart/userController.dart';
@@ -94,9 +95,11 @@ class _MyAppState extends State<MyApp> {
         // useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-       initialRoute: '/home', 
-        routes:
+       initialRoute: '/splash', 
+      // home:  SplashScreen(),
+  routes:
     {  
+      '/splash': (context) =>  SplashScreen(),   
       '/': (context) =>  Signin(),   
       '/signup': (context) => SignUp(),  
       '/home': (context) => HomePage(),  
