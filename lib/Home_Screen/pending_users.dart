@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -27,7 +26,7 @@ class _UserListScreenState extends State<UserListScreen> {
     super.initState();
     //getUserLend(context);
     getRemainders(context);
-   //duesPaid(context,index);
+    //duesPaid(context,index);
   }
 
   @override
@@ -118,8 +117,8 @@ class ShowAllUsersScreen extends StatelessWidget {
               child: SizedBox(
                 height: MediaQuery.of(context).size.height / 1.24,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 0, horizontal: 12.0),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 12.0),
                   child: TabBarView(
                     children: [
                       Center(child: usersDuelist()),
@@ -164,7 +163,11 @@ Widget _buildListTile(
   return ListTile(
     leading: CircleAvatar(
       backgroundColor: Colorcodes.budgetLightGreen,
-      child: UserAvatar(url: data['Avatar'] ?? 'assets/avatar/menp4.svg',width: 1,height: 1,),
+      child: UserAvatar(
+        url: data['Avatar'] ?? 'assets/avatar/menp4.svg',
+        width: 1,
+        height: 1,
+      ),
     ),
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,7 +175,7 @@ Widget _buildListTile(
         Row(
           children: [
             Text(
-              !isDue ? data["name"]:data["name"],
+              !isDue ? data["name"] : data["name"],
               style: FontManager().getTextStyle(context,
                   lWeight: FontWeight.bold,
                   fontSize: 16,
@@ -208,7 +211,6 @@ Widget _buildListTile(
         InkWell(
           onTap: () {
             if (isDue) {
-              
               int index = dueAmountRemainders
                   .indexWhere((element) => element['_id'] == data['_id']);
               if (index != -1) {
@@ -257,8 +259,7 @@ Future<String?> getToken() async {
   }
 }
 
-Future<http.Response> updateDataApiCall(
-    String url, Map<String, dynamic> body) async {
+Future<http.Response> updateDataApiCall(String url) async {
   try {
     var accessToken = await getToken();
     final response = await http.patch(
@@ -267,11 +268,10 @@ Future<http.Response> updateDataApiCall(
         'Content-Type': 'application/json; charset=UTF-8',
         "Authorization": "$accessToken",
       },
-      body: jsonEncode(body),
     );
     return response;
-  } catch (e) {
-    print("Error in updateDataApiCall: $e");
+  } catch (error) {
+    print("Error in updateDataApiCall: $error");
     rethrow;
   }
 }
@@ -279,21 +279,18 @@ Future<http.Response> updateDataApiCall(
 void duesPaid(BuildContext context, int index) async {
   final due = dueAmountRemainders[index];
   final dueId = due['_id']?.toString();
-  final List<Map<String, dynamic>> hiddenDues = [];
+  final type = due['type'];
 
   if (dueId == null) {
     print("Error: Transaction ID is null");
     return;
   }
 
-  final apiUrl = "$url/bill/settle/$dueId";
+  final apiUrl = "$url/reminders/settle/$type/$dueId";
   try {
-    final response = await updateDataApiCall(apiUrl, {"markAsComplete": true});
+    final response = await updateDataApiCall(apiUrl);
     if (response.statusCode == 200) {
-      // Remove the due from the observable list
       dueAmountRemainders.removeAt(index);
-
-      // Optionally show success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Due settled successfully"),
