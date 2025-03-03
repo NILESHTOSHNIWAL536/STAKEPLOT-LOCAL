@@ -926,6 +926,7 @@ class _ModalContentState extends State<ModalContent>
     ),
     builder: (BuildContext context) {
       return NewFriendsUi(
+        
         totalAmount: totalAmount,
         userId: currentId.value,
         userName: userName.value,

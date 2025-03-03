@@ -145,6 +145,21 @@ void getAllTransaction(context) async {
     getHistory.value = !getHistory.value;
   } else {}
 }
+void getInsights(context) async {
+  var response =
+      await getDataApiCall("${url}/budget/get-insights/679b6ea12af555d641c5da61");
+  if (response.statusCode == 200) {
+    var his = jsonDecode(response.body);
+    var obj = his['data'];
+    //print("trasactionsHistory,,,,,,,,");
+     print(" .................insights  History,,,,,,,,");
+    print(response.body);
+    print(response.body);
+    inSights.clear();
+    inSights.addAll(obj);
+    getHistory.value = !getHistory.value;
+  } else {}
+}
 
 void getHiddenTransactions(context) async {
   var response =

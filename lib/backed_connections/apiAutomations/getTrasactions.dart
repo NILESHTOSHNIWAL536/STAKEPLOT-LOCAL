@@ -259,7 +259,6 @@ void getAutoMationsTransactionsCustom(date, context,
   //     ? "$url/transactionauto/getAllCustomTransactions/${weekORmonth.toLowerCase()}/$startDateStr,$endDateStr"
   //     : "$url/transactionauto/getAllCustomTransactions/${weekORmonth.toLowerCase()}/$startDateStr";
 
-  print("end................... date ${urlPath}");
   var response = await getDataApiCall(urlPath);
   print("end................... date ${response.body}");
 
@@ -269,10 +268,10 @@ void getAutoMationsTransactionsCustom(date, context,
   List<String> labelsLocal = weekORmonth == 'Custom' ? List.from(labels) : [];
   List<double> debitList = [];
   List<double> creditList = [];
-
+ double totalDebit = 0.0;
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
-    print("Full API response: ${his['data']}");
+    // print("Full API response: ${his['data']}");
 
     transactionChatGraph.clear();
     if (weekORmonth != 'Custom') {
@@ -281,7 +280,8 @@ void getAutoMationsTransactionsCustom(date, context,
 
     try {
       Map data = his['data']['transactions'];
-      print("Transactions map keys: ${data.keys.toList()}"); // Log all keys
+       totalDebit = (his['data']['totalDebit'] as num?)?.toDouble() ?? 0.0;
+      // print("Transactions map keys: ${data.keys.toList()}"); // Log all keys
       maxYValue.value =
           double.parse(his['data']['maxAmount'].toString()) ?? 500.0;
       if (maxYValue.value == 0) maxYValue.value = 500.0;
@@ -291,30 +291,30 @@ void getAutoMationsTransactionsCustom(date, context,
         DateTime end = DateTime.parse(endDate);
         debitList = List.filled(labelsLocal.length, 0.0);
         creditList = List.filled(labelsLocal.length, 0.0);
-        print("Labels before mapping: $labelsLocal");
-        print("Date range - Start: $startDate, End: $end");
-
+        // print("Labels before mapping: $labelsLocal");
+        // print("Date range - Start: $startDate, End: $end");
+//transactionChatGraph['totalDebit'] = his['data']['totalDebit'];
         data.forEach((key, value) {
           DateTime txDate = DateTime.parse(key);
           String dayStr = txDate.day.toString().padLeft(2, '0');
           int index = labelsLocal.indexOf(dayStr);
 
-          print(
-              "Processing - key: $key, day: $dayStr, index: $index, value: $value");
+          // print(
+          //     "Processing - key: $key, day: $dayStr, index: $index, value: $value");
           if (index != -1 &&
               txDate.isAfter(startDate.subtract(Duration(days: 1))) &&
               txDate.isBefore(end.add(Duration(days: 1)))) {
             debitList[index] = getDouble(value['debit']);
             creditList[index] = getDouble(value['credit']);
-            print(
-                "Mapped - key: $key, day: $dayStr, index: $index, debit: ${debitList[index]}, credit: ${creditList[index]}");
+            // print(
+            //     "Mapped - key: $key, day: $dayStr, index: $index, debit: ${debitList[index]}, credit: ${creditList[index]}");
           } else {
-            print(
-                "Skipped - key: $key, day: $dayStr, index: $index (out of range or invalid index)");
+            // print(
+            //     "Skipped - key: $key, day: $dayStr, index: $index (out of range or invalid index)");
           }
         });
-        print("Debit list after mapping: $debitList");
-        print("Credit list after mapping: $creditList");
+       // print("Debit list after mapping: $debitList");
+       // print("Credit list after mapping: $creditList");
       } else {
         data.forEach((key, value) {
           String label = weekORmonth == 'Custom'
@@ -330,10 +330,13 @@ void getAutoMationsTransactionsCustom(date, context,
       maxYValue.value = 500.0;
       debitList = List.filled(labelsLocal.length, 0.0);
       creditList = List.filled(labelsLocal.length, 0.0);
+      //transactionChatGraph['totalDebit'] = 0.0; 
+       //totalDebit = 0.0; 
       if (labelsLocal.isEmpty) {
         labelsLocal =
             weekORmonth == 'Week' ? getWeekDays() : getDaysInMonth(date);
       }
+      
     }
 
     if (selectedButton.value == 'Week') {
@@ -359,8 +362,10 @@ void getAutoMationsTransactionsCustom(date, context,
       creditList = List.filled(labels.length, 0.0);
       transactionChatGraph['debited'] = debitList;
       transactionChatGraph['credited'] = creditList;
+       totalDebit = 0.0; 
     }
     getGraphData.value = true;
+    
   }
 }
 
@@ -625,11 +630,212 @@ Future postDataApiCall(String urlPath, Map body) async {
   return response;
 }
 
+// void pickCustomDateRange(BuildContext context) async {
+//   DateTimeRange? picked = await showDialog<DateTimeRange>(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return DateRangePickerDialog();
+//     },
+//   );
+
+//   if (picked != null) {
+//     selectedButton.value = 'Custom';
+//     getGraphData.value = false;
+
+//     List<String> customDays = [];
+//     for (int i = 0; i <= picked.end.difference(picked.start).inDays; i++) {
+//       String day = (picked.start.day + i).toString().padLeft(2, '0');
+//       customDays.add(day);
+//     }
+
+//     labels.assignAll(customDays); // Assuming labels is RxList
+
+//     String startDate =
+//         picked.start.toIso8601String().split('T')[0]; // YYYY-MM-DD
+//     String endDate = picked.end.toIso8601String().split('T')[0]; // YYYY-MM-DD
+//     print("Calling getAutoMations with start: $startDate, end: $endDate");
+//     getAutoMationsTransactionsCustom(startDate, context, 'Custom', endDate);
+//   }
+// }
+
+// // New StatefulWidget for the dialog content
+// class DateRangePickerDialog extends StatefulWidget {
+//   @override
+//   _DateRangePickerDialogState createState() => _DateRangePickerDialogState();
+// }
+
+// class _DateRangePickerDialogState extends State<DateRangePickerDialog> {
+//   DateTime? startDate =
+//       DateTime.now().subtract(Duration(days: 7)); // Default start
+//   DateTime? endDate = DateTime.now(); // Default end
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Dialog(
+//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+//       child: Container(
+//         width: 300, // Compact width
+//         padding: const EdgeInsets.all(16),
+//         child: Column(
+//           mainAxisSize: MainAxisSize.min, // Keeps the dialog compact
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             textStyle(
+//               text: "Select Date Range",
+//               context: context,
+//               fontWeight: FontWeight.bold,
+//               fontsize: 16,
+//             ),
+//             // Text(
+//             //   "Select Date Range",
+//             //   style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+//             // ),
+//             const SizedBox(height: 16),
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: [
+//                 // Start Date Picker
+//                 Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     textStyle(
+//                       text: "Start Date",
+//                       context: context,
+//                       fontWeight: FontWeight.w400,
+//                       fontsize: 14,
+//                     ),
+//                     const SizedBox(height: 8),
+//                     ElevatedButton(
+//                       onPressed: () async {
+//                         final DateTime? picked = await showDatePicker(
+//                           context: context,
+//                           initialDate: startDate ?? DateTime.now(),
+//                           firstDate: DateTime(2020),
+//                           lastDate: DateTime.now(),
+//                         );
+//                         if (picked != null && picked != startDate) {
+//                           setState(() {
+//                             startDate = picked;
+//                             // Ensure end date isn’t before start date
+//                             if (endDate != null &&
+//                                 endDate!.isBefore(startDate!)) {
+//                               endDate = startDate;
+//                             }
+//                           });
+//                         }
+//                       },
+//                       child: Text(
+//                         startDate != null
+//                             ? "${startDate!.day}/${startDate!.month}/${startDate!.year}"
+//                             : "Select",
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//                 // End Date Picker
+//                 Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     textStyle(
+//                       text: "End Date",
+//                       context: context,
+//                       fontWeight: FontWeight.w400,
+//                       fontsize: 14,
+//                     ),
+//                     const SizedBox(height: 8),
+//                     ElevatedButton(
+//                       onPressed: () async {
+//                         final DateTime? picked = await showDatePicker(
+//                           context: context,
+//                           initialDate: endDate ?? DateTime.now(),
+//                           firstDate: startDate ??
+//                               DateTime(2020), // Prevent end before start
+//                           lastDate: DateTime.now(),
+//                         );
+//                         if (picked != null && picked != endDate) {
+//                           setState(() {
+//                             endDate = picked;
+//                           });
+//                         }
+//                       },
+//                       child: Text(
+//                         endDate != null
+//                             ? "${endDate!.day}/${endDate!.month}/${endDate!.year}"
+//                             : "Select",
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ],
+//             ),
+//             const SizedBox(height: 20),
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.end,
+//               children: [
+//                 TextButton(
+//                   onPressed: () {
+//                     Navigator.pop(context); // Cancel
+//                   },
+//                   child: textStyle(
+//                     text: "Cancel",
+//                     context: context,
+//                     fontWeight: FontWeight.w400,
+//                     fontsize: 14,
+//                   ),
+//                 ),
+//                 const SizedBox(width: 8),
+//                 ElevatedButton(
+//                   onPressed: () {
+//                     if (startDate != null && endDate != null) {
+//                       Navigator.pop(context,
+//                           DateTimeRange(start: startDate!, end: endDate!));
+//                     } else {
+//                       ScaffoldMessenger.of(context).showSnackBar(
+//                         SnackBar(
+//                             content:
+//                                 Text("Please select both start and end dates")),
+//                       );
+//                     }
+//                   },
+//                   child: textStyle(
+//                     text: "OK",
+//                     context: context,
+//                     fontWeight: FontWeight.w400,
+//                     fontsize: 14,
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 void pickCustomDateRange(BuildContext context) async {
-  DateTimeRange? picked = await showDialog<DateTimeRange>(
+  // Show the date range picker with custom styling
+  DateTimeRange? picked = await showDateRangePicker(
     context: context,
-    builder: (BuildContext context) {
-      return DateRangePickerDialog();
+    initialDateRange: DateTimeRange(
+      start: DateTime.now().subtract(Duration(days: 7)),
+      end: DateTime.now(),
+    ),
+    firstDate: DateTime(2020),
+    lastDate: DateTime.now(),
+    builder: (BuildContext context, Widget? child) {
+      return  Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        //  elevation: 8,
+          child: Container(
+            width: 380, // Fixed width for consistency
+            height: 580, // Constrained height for better control
+            padding: const EdgeInsets.all(8.0),
+            child: Expanded(
+              child: child!,
+            ),
+          ));
     },
   );
 
@@ -643,171 +849,14 @@ void pickCustomDateRange(BuildContext context) async {
       customDays.add(day);
     }
 
-    labels.assignAll(customDays); // Assuming labels is RxList
+    labels.assignAll(customDays);
 
-    String startDate =
-        picked.start.toIso8601String().split('T')[0]; // YYYY-MM-DD
-    String endDate = picked.end.toIso8601String().split('T')[0]; // YYYY-MM-DD
+    String startDate = picked.start.toIso8601String().split('T')[0];
+    String endDate = picked.end.toIso8601String().split('T')[0];
     print("Calling getAutoMations with start: $startDate, end: $endDate");
     getAutoMationsTransactionsCustom(startDate, context, 'Custom', endDate);
   }
 }
-
-// New StatefulWidget for the dialog content
-class DateRangePickerDialog extends StatefulWidget {
-  @override
-  _DateRangePickerDialogState createState() => _DateRangePickerDialogState();
-}
-
-class _DateRangePickerDialogState extends State<DateRangePickerDialog> {
-  DateTime? startDate =
-      DateTime.now().subtract(Duration(days: 7)); // Default start
-  DateTime? endDate = DateTime.now(); // Default end
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Container(
-        width: 300, // Compact width
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min, // Keeps the dialog compact
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            textStyle(
-              text: "Select Date Range",
-              context: context,
-              fontWeight: FontWeight.bold,
-              fontsize: 16,
-            ),
-            // Text(
-            //   "Select Date Range",
-            //   style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-            // ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Start Date Picker
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    textStyle(
-                      text: "Start Date",
-                      context: context,
-                      fontWeight: FontWeight.w400,
-                      fontsize: 14,
-                    ),
-                    const SizedBox(height: 8),
-                    ElevatedButton(
-                      onPressed: () async {
-                        final DateTime? picked = await showDatePicker(
-                          context: context,
-                          initialDate: startDate ?? DateTime.now(),
-                          firstDate: DateTime(2020),
-                          lastDate: DateTime.now(),
-                        );
-                        if (picked != null && picked != startDate) {
-                          setState(() {
-                            startDate = picked;
-                            // Ensure end date isn’t before start date
-                            if (endDate != null &&
-                                endDate!.isBefore(startDate!)) {
-                              endDate = startDate;
-                            }
-                          });
-                        }
-                      },
-                      child: Text(
-                        startDate != null
-                            ? "${startDate!.day}/${startDate!.month}/${startDate!.year}"
-                            : "Select",
-                      ),
-                    ),
-                  ],
-                ),
-                // End Date Picker
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    textStyle(
-                      text: "End Date",
-                      context: context,
-                      fontWeight: FontWeight.w400,
-                      fontsize: 14,
-                    ),
-                    const SizedBox(height: 8),
-                    ElevatedButton(
-                      onPressed: () async {
-                        final DateTime? picked = await showDatePicker(
-                          context: context,
-                          initialDate: endDate ?? DateTime.now(),
-                          firstDate: startDate ??
-                              DateTime(2020), // Prevent end before start
-                          lastDate: DateTime.now(),
-                        );
-                        if (picked != null && picked != endDate) {
-                          setState(() {
-                            endDate = picked;
-                          });
-                        }
-                      },
-                      child: Text(
-                        endDate != null
-                            ? "${endDate!.day}/${endDate!.month}/${endDate!.year}"
-                            : "Select",
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context); // Cancel
-                  },
-                  child: textStyle(
-                    text: "Cancel",
-                    context: context,
-                    fontWeight: FontWeight.w400,
-                    fontsize: 14,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: () {
-                    if (startDate != null && endDate != null) {
-                      Navigator.pop(context,
-                          DateTimeRange(start: startDate!, end: endDate!));
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content:
-                                Text("Please select both start and end dates")),
-                      );
-                    }
-                  },
-                  child: textStyle(
-                    text: "OK",
-                    context: context,
-                    fontWeight: FontWeight.w400,
-                    fontsize: 14,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 void getWeekDate() {
   //   if (selectedButton == 'Week') {
   //   final currentWeek = weekData[0]!;

@@ -609,10 +609,10 @@ class _TransactionHistoryState extends State<TransactionHistory> {
       itemBuilder: (context, index) {
         final transaction = transactionsHistory[index];
         double amount = (transaction['amount'] is int)
-            ? (transaction['amount'] as int).toDouble()
-            : (transaction['amount'] as double);
-        String category = transaction['category:'];
-        String subcategory = transaction['subcategory'];
+          ? (transaction['amount'] as int).toDouble()
+          : (transaction['amount'] as double? ?? 0.0);
+        String category = transaction['category']?.toString() ?? 'Uncategorized'; // Fixed typo and added null check
+      String subcategory = transaction['subcategory']?.toString() ?? 'General';
         print("Transaction: $transaction");
 
         return Stack(
@@ -647,7 +647,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                   // final result = await showCustomFriendsModal(
                   //     context, amount, false, category, subcategory);
                   final result = await showCustomFriendsModal(
-                      context, amount, false, );
+                      context, amount, false,category, subcategory );
 
                   // showCustomFriendsModal2(context, transaction);
                 },
@@ -667,9 +667,9 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                 child: Container(
                   decoration: getBoxDecoration(index),
                   child: historyTransactions(
-                    transaction,
-                    transaction['transactionTimestamp'],
-                  ),
+                  transaction,
+                  transaction['transactionTimestamp']?.toString(), // Ensure this is a String or null
+                ),
                 ),
               ),
             ),
@@ -744,8 +744,8 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     BuildContext context,
     double amount,
     bool isLendMode,
-    // String category,
-    // String subcategory,
+     String category,
+     String subcategory,
   ) async {
     return await showModalBottomSheet<dynamic>(
       context: context,
@@ -760,18 +760,18 @@ class _TransactionHistoryState extends State<TransactionHistory> {
             userName: userName.value,
             userAvatar: userAvatarProfile.value,
             isLendMode: isLendMode,
-            // category: category,
-            // subcategory: subcategory
+             category: category,
+             subcategory: subcategory
             );
       },
     );
   }
 
   Widget historyTransactions(Map<String, dynamic> transaction, String? date) {
-    final category = transaction['category']?.toString() ?? 'Uncategorized';
-    final subcategory = transaction['subcategory']?.toString() ?? 'General';
-    final amount = transaction['amount']?.toString() ?? '0';
-    final formattedDate = date != null ? formatDate(date) : 'Unknown Date';
+   final category = transaction['category']?.toString() ?? 'Uncategorized';
+  final subcategory = transaction['subcategory']?.toString() ?? 'General';
+  final amount = transaction['amount']?.toString() ?? '0';
+  final formattedDate = date != null ? formatDate(date) : 'Unknown Date';
     // String? s = imageMapForHistory[
     //     transaction['category'].toString().toLowerCase()];
     //String ImageUrl = Categories.link + s.toString();
@@ -800,7 +800,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                     ),
                     child: AvatarProfileImage(
                       url: Categories.link +
-                          (imageMapForHistory[category.toLowerCase()] ?? ''),
+                          (imageMapForHistory[category.toLowerCase()] ?? 'default_image.png'),
                       height: 16,
                       width: 20,
                     ),
@@ -982,23 +982,21 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     }
   }
 
-  void getTransactionByYear(List obj, y) {
-    obj.forEach((ele) {
-      // print(ele);
-      if (isCurrentYear(ele['transactionTimestamp'], y)) {
-        transactionsHistory.add(ele);
-      }
-    });
-  }
+  void getTransactionByYear(List obj, int y) {
+  obj.forEach((ele) {
+    if (ele is Map<String, dynamic> && isCurrentYear(ele['transactionTimestamp']?.toString() ?? '', y)) {
+      transactionsHistory.add(ele);
+    }
+  });
+}
 
-  void getTransactionByMonth(List obj, y) {
-    obj.forEach((ele) {
-      print(ele);
-      if (isCurrentMonth(ele['transactionTimestamp'], y)) {
-        transactionsHistory.add(ele);
-      }
-    });
-  }
+  void getTransactionByMonth(List obj, int m) {
+  obj.forEach((ele) {
+    if (ele is Map<String, dynamic> && isCurrentMonth(ele['transactionTimestamp']?.toString() ?? '', m)) {
+      transactionsHistory.add(ele);
+    }
+  });
+}
 
   bool isCurrentYear(String date, int y) {
     try {

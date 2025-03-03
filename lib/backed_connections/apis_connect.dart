@@ -19,7 +19,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
 bool flag = true;
-String portNo = flag ? "192.168.1.35" : "localhost";
+String portNo = flag ? "192.168.1.3" : "localhost";
 String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 
@@ -108,7 +108,8 @@ RxList dueAmountRemainders = [].obs;
 RxBool getdueUsers = false.obs;
  RxInt selectedYear = DateTime.now().year.obs;
  RxInt selectedMonth = DateTime.now().month.obs;
-
+RxList inSights = [].obs;
+RxBool getInsights = false.obs;
 List<String> month = [
   "",
   "January",
