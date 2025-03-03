@@ -420,14 +420,18 @@ void clearGetX() {
   isBankAccountLink.value = false;
   cupertinoPin.value='0';
   balance.value="";
-   accountName.value="";
-   transactionChatGraph.clear();
-    labels.clear();
-    selectedButton.value="Month";
-    graphTransaction.value=false;
-    isSplit.value=false;
-    isLend.value=false;
-    bankAccountLinkedList.clear();
+  accountName.value="";
+  transactionChatGraph.clear();
+  labels.clear();
+  selectedButton.value="Month";
+  graphTransaction.value=false;
+  isSplit.value=false;
+  isLend.value=false;
+  bankAccountLinkedList.clear();
+  accountName.value = "";
+  accountNo.value = "0";
+  balance.value = "0";
+  selectedBank.value="";
 }
 
 // void oneSignalApis(context) async {

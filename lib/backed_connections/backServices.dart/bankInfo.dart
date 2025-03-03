@@ -27,7 +27,6 @@ void getSummary() async {
   if (getFlagOfResponse(res)) {
     var data = jsonDecode(res.body);
     data = data['data'];
-    print(data);
     accountName.value = data['Bank'][0]['fipName'];
     accountNo.value = data['accounts'][0]['accounts']['maskedAccNumber'] ?? 0;
     balance.value = data['summaries'][0]['data']['currentBalance'].toString();

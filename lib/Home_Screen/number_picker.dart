@@ -313,7 +313,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
 
 Widget popUpBox(BuildContext context) {
   return PopupMenuButton<String>(  // Specify the expected value type
-    initialValue: bankAccountLinkedList.isNotEmpty?bankAccountLinkedList[0]['fipId']:"",
+    initialValue: selectedBank.value,
     color: AppColors.backgroundColor,
     child: Center(
       child: Icon(
@@ -324,9 +324,9 @@ Widget popUpBox(BuildContext context) {
     ),
     onSelected: (value) {
       // Handle selection
-      print(value);
-      seletedBankUpdateInfo(value,context);
       selectedBank.value=value;
+      seletedBankUpdateInfo(value,context);
+       updateInfo();
     },
     itemBuilder: (context) {
       return bankAccountLinkedList.map<PopupMenuEntry<String>>((e) {
