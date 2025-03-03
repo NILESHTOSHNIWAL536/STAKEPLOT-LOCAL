@@ -29,27 +29,18 @@ Future<http.Response> loginToAutoTractionsGetData(context) async {
 }
 
 void login(handleId,context) async {
-    // snackBarCalled(context,await finvuManager.connect().toString());
   try{
-    // snackBarCalled(context,"Login inside...");
-  // print("--------------------------");
-  print("Login inside...");
+  print("Login inside........................");
   print(handleId);
+  print("${number.value}@finvu");
+  print(number.value);
   var login = await finvuManager.loginWithUsernameOrMobileNumberAndConsentHandle(
     '${number.value}@finvu',
     '${number.value}',
     handleId,
   );
- print('login After .....');
-  // print(login);
-    // snackBarCalled(context,"Login out...");
+ print('login After .........................');
   otpReference = login.reference;
-  //  snackBarCalled(context, "handleId : "+handleId.toString()+"%%");
-  //  snackBarCalled(context, "otpReference  : "+otpReference.toString()+"%%");
-  // final login = await finvuManager.loginWithUsernameOrMobileNumberAndConsentHandle(
-  //             "yashwantg@finvu",
-  //             "8459177562",
-  //             "fba57400-29f0-4e24-923a-c5ce2e284299");
   debugPrint('LoggedIn');
   }catch(e){
        print("error throw by finvu----"+e.toString());

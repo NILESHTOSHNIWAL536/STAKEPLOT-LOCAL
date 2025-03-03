@@ -637,7 +637,6 @@ void getPost() async {
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-    // //print(obj);
     historyListData.clear();
     historyListData.addAll(obj);
     getTrendingData.clear();
