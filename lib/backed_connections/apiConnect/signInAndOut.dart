@@ -69,6 +69,7 @@ Future<void> loginUser(TextEditingController emailController,
 
     String accessToken = body['data']['accessToken'];
     _pref.setString("accessToken", "Bearer " + accessToken);
+    getBankAccounts();
     storeinmap(body, _pref, passwordController.text);
 
     currentId.value = body['data']['_id'];
@@ -474,11 +475,9 @@ void clearGetX() {
 
 Future<void> initializeOneSignal(BuildContext context) async {
  
-   print("------------------------------------");
    oneSignalInit();
 
   String? userDeviceId = OneSignal.User.pushSubscription.id;
-  print(userDeviceId);
   if (userDeviceId != null) {
     print("User Device ID: $userDeviceId");
     await getDeviceInfo(userDeviceId, context);

@@ -21,8 +21,7 @@ void verify(String otp, context) async {
       otp,
       otpReference,
     );
-    snackBarCalled(context, otp+" send2 "+otpReference);
-  
+   
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     String? token = await _pref.getString("token");
   

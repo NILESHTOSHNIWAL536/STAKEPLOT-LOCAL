@@ -119,7 +119,6 @@ void PinPasswordVerify(password, context, Function setBack) async {
 
 void seletedBankUpdateInfo(id,context) async {
   var response = await getDataApiCall("${url}/user/selectedBank/${id}");
-  printData(response, context);
   if (response.statusCode == 200 || response.statusCode == 200) {
       
   } else {
@@ -127,19 +126,7 @@ void seletedBankUpdateInfo(id,context) async {
   }
 }
 
-// void getAllTransaction(context) async {
-//   var response = await getDataApiCall("${url}/transaction/all");
-//   if (response.statusCode == 200) {
-//     var his = jsonDecode(response.body);
-//     var obj = his['data'];
-//     print("trasactionsHistory,,,,,,,,");
-//     print(trasactionsHistory);
-//     trasactionsHistory.clear();
-//     trasactionsHistory.addAll(obj);
-//     print(trasactionsHistory);
-//     getHistory.value = !getHistory.value;
-//   } else {}
-// }
+
 void getAllTransaction(context) async {
   var response =
       await getDataApiCall("${url}/transactionauto/getTransactions/1");
@@ -151,6 +138,7 @@ void getAllTransaction(context) async {
     getHistory.value = !getHistory.value;
   } else {}
 }
+
 void getInsights(context) async {
   var response =
       await getDataApiCall("${url}/budget/get-insights/679b6ea12af555d641c5da61");
@@ -207,10 +195,10 @@ void getAllTransactionHistory(
     }
   } catch (e) {
     //  print("Exception occurred: $e");
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-          content: Text("An error occurred while fetching transactions")),
-    );
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   const SnackBar(
+    //       content: Text("An error occurred while fetching transactions")),
+    // );
   }
 }
 

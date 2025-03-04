@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/expanded_finance.
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -34,31 +35,12 @@ class _FinancePageState extends State<FinancePage> {
   @override
   void initState() {
     super.initState();
-
-    getGraphData.value = false;
-    calledFunctionToFetchData();
+    calledFunctionToFetchData(context);
   }
 
-  void calledFunctionToFetchData() async {
-    if (selectedButton.value == "Month") {
-      //print(totalCredited);
-      getAutoMationsTransactionsCustom(getFormattedDate(), context);
-      
-      _calculateTotalSpent();
-      //print("ssuming transactionChatGraph is your data map");
-      //print(totalCredited);
-    } else if (selectedButton.value == "Week") {
-      getAutoMationsTransactionsCustom(getCurrentWeek(), context, 'Week');
-      _calculateTotalSpent();
-    } else {
-      getAutoMationsTransactionsCustom(getFormattedDate(), context);
-      _calculateTotalSpent();
-    }
-  }
 
   void _scrollToTransactionHistory() {
-    final RenderObject? renderObject =
-        widget.transactionHistoryKey.currentContext?.findRenderObject();
+    final RenderObject? renderObject =widget.transactionHistoryKey.currentContext?.findRenderObject();
     if (renderObject != null && renderObject is RenderBox) {
       final position = renderObject.localToGlobal(Offset.zero);
       final scrollOffset = widget.scrollController.offset;
@@ -79,23 +61,7 @@ class _FinancePageState extends State<FinancePage> {
     return DateTime(now.year, now.month + 1, 0).day;
   }
 
-  void _calculateTotalSpent() {
-    // Assuming transactionChatGraph is your data map
-    if (transactionChatGraph.containsKey('credited') &&
-        transactionChatGraph.containsKey('debited')) {
-      List<double> credited = transactionChatGraph['credited'] ?? [];
-      List<double> debited = transactionChatGraph['debited'] ?? [];
-
-      // Calculate the sum of credited and debited amounts
-      double totalCredited = credited.fold(0.0, (sum, item) => sum + item);
-      double totalDebited = debited.fold(0.0, (sum, item) => sum + item);
-
-      // Total spent is the difference between credited and debited
-      setState(() {
-        totalSpent = totalCredited - totalDebited;
-      });
-    }
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -549,7 +515,7 @@ int getCurrentDateIndex(List<String> labels) {
                 dataSource: debitedData,
                 xValueMapper: (ChartData data, _) => data.x,
                 yValueMapper: (ChartData data, _) => data.y,
-                color: AppColors.accentColor,
+                color: const Color.fromARGB(255, 244, 58, 58),
                 width: 3,
                 enableTooltip: true,
                 name: 'Debited',

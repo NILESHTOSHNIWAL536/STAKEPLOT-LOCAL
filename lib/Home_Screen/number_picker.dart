@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:getwidget/components/carousel/gf_carousel.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 //import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
@@ -32,82 +34,107 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
       FixedExtentScrollController(initialItem: 0);
   final FixedExtentScrollController secondDigitController =
       FixedExtentScrollController(initialItem: 0);
+  
+  final PageController _pageController = PageController(viewportFraction: 0.7);
+  int _currentPage = 0;
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         // Wrap content with SingleChildScrollView
         body: SafeArea(
-            child: Container(
-                padding: const EdgeInsets.only(
-                    top: 8, left: 16, right: 16, bottom: 0),
-                //padding: const EdgeInsets.only(right: 8),
+            child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height/2.5, // Adjust height as needed
+          child: avatarSlider2()
+        )       
+    ));
+  }
 
+
+
+Widget avatarSlider2(){
+    return   GFCarousel(
+      // aspectRatio: ,
+      viewportFraction: 1.0,
+      reverse: false,
+     enlargeMainPage: false,
+     autoPlay: false,
+    items: bankAccountLinkedList.map(
+     (data)
+     {
+        return Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: getListViewBankInfo(data),
+        );
+    },
+    ).toList(),
+    onPageChanged: (index)
+    {
+         accountId.value=bankAccountLinkedList[index]['accountId']??"";
+         calledFunctionToFetchData(context);
+    },
+ );   
+
+}
+
+
+
+
+  Widget getListViewBankInfo(data)
+  {
+      return  Container(
+                padding:  EdgeInsets.symmetric(horizontal: Colorcodes.paddingHorizontal,vertical:  Colorcodes.paddingHorizontal/4),
                 decoration: BoxDecoration(
                   color: AppColors.accentColor,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  //mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: popUpBox(context) ,
-                        ),
-                      ],
-                    ),
-                    //  SizedBox(height: Colorcodes.paddingCard/2),
-                    Obx(() => Text(
-                          accountName.value,
+                     SizedBox(height: Colorcodes.borderRadius30 / 2),
+                     Text(
+                          data['bankName'],
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.normal,
-                              fontSize: 16,
+                              fontSize: 18,
                               color: AppColors.backgroundColor),
-                        )),
-                    SizedBox(height: Colorcodes.paddingCard / 2),
-                    Obx(() => Text(
-                          "Acc No : " + accountNo.value,
+                        ),
+                    SizedBox(height: Colorcodes.borderRadius30 / 2),
+                    Text(
+                          "Acc No : " + data['maskedAccNumber'],
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.bold,
                               fontSize: 16,
                               color: AppColors.backgroundColor),
-                        )),
-                    SizedBox(height: Colorcodes.paddingCard / 2),
+                      ),
+                    SizedBox(height: Colorcodes.borderRadius30 / 2),
 
-                    SizedBox(height: Colorcodes.paddingCard / 2),
                     Text('Available balance',
                         style: FontManager().getTextStyle(context,
                             lWeight: FontWeight.w400,
-                            fontSize: 10,
+                            fontSize: 12,
                             color: AppColors.backgroundColor)),
-                    SizedBox(height: Colorcodes.paddingCard / 2),
+                    SizedBox(height: Colorcodes.borderRadius30 / 2),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Obx(() => Text(
-                              '\u{20B9} ${!hideBackAccountPassword.value ? balance.value : "*********"}',
+                       Text(
+                              '\u{20B9} ${!hideBackAccountPassword.value ? data['currentBalance'] : "*********"}',
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.bold,
                                   fontSize: 20,
                                   color: AppColors.backgroundColor),
-                            )),
-
+                            ),
                         //  locker(context),
                         setPinForAccountHide(context)
                       ],
                     ),
-
-                    // Container(
-                    //   width: 200,
-                    //   height: 200,
-                    //   child: setPinForAccountHide(context))
+                  
                   ],
-                ))));
+                ));
   }
 
   Widget locker(context) {
@@ -313,7 +340,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
 
 Widget popUpBox(BuildContext context) {
   return PopupMenuButton<String>(  // Specify the expected value type
-    initialValue: selectedBank.value,
+    initialValue: selectedBank.value ,
     color: AppColors.backgroundColor,
     child: Center(
       child: Icon(
@@ -325,21 +352,23 @@ Widget popUpBox(BuildContext context) {
     onSelected: (value) {
       // Handle selection
       selectedBank.value=value;
+      accountId.value=value;
       seletedBankUpdateInfo(value,context);
        updateInfo();
     },
     itemBuilder: (context) {
       return bankAccountLinkedList.map<PopupMenuEntry<String>>((e) {
-        return getItemOfListPopupMenuItem(e['bankName'], e['fipId'], e);
+        print(e);
+        return getItemOfListPopupMenuItem(e['bankName'], e['fipId'], e,e['bankId']);
       }).toList(); // Ensure it returns List<PopupMenuEntry<String>>
     },
   );
 }
 
 PopupMenuEntry<String> getItemOfListPopupMenuItem(
-    String bankName, String fipId, var data) {
+    String bankName, String fipId, var data,String id) {
   return PopupMenuItem<String>(
-    value: fipId, // Ensure value is of type String
+    value: id, // Ensure value is of type String
     child: Text(bankName),
   );
 }

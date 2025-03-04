@@ -384,33 +384,31 @@ class _LinkingAccountState extends State<LinkingAccount> {
       width: MediaQuery.of(context).size.width / 1.1,
       height: height / 1.5,
       child: SingleChildScrollView(
-        child: Expanded(
-          child: Column(
-            children: widget.listOfBankAccount.map((account) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Display bank name and image before calling linkedaccoutnData
-                  getBankNameAndImage(account),
-
-                  FutureBuilder<Widget>(
-                    future: linkedaccoutnData(account),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator(); // Show loading indicator
-                      } else if (snapshot.hasError) {
-                        return Text("Error: ${snapshot.error}");
-                      } else {
-                        return snapshot.data ??
-                            SizedBox.shrink(); // Return the widget from Future
-                      }
-                    },
-                  ),
-                ],
-              );
-            }).toList(),
-          ),
+        child: Column(
+          children: widget.listOfBankAccount.map((account) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Display bank name and image before calling linkedaccoutnData
+                getBankNameAndImage(account),
+        
+                FutureBuilder<Widget>(
+                  future: linkedaccoutnData(account),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator(); // Show loading indicator
+                    } else if (snapshot.hasError) {
+                      return Text("Error: ${snapshot.error}");
+                    } else {
+                      return snapshot.data ??
+                          SizedBox.shrink(); // Return the widget from Future
+                    }
+                  },
+                ),
+              ],
+            );
+          }).toList(),
         ),
       ),
     );
@@ -862,27 +860,24 @@ class _LinkingAccountState extends State<LinkingAccount> {
           width: 50,
           height: 50,
           
-          child: Expanded(
-            flex: 1,
-            child: Checkbox(value: seletedAccountIds.contains(fipId), 
-                    // checkColor: AppColors.primaryColor,
-                    activeColor: AppColors.primaryColor,
-                    shape: RoundedRectangleBorder(
-                           borderRadius: BorderRadius.circular(4), // Apply border radius
-                      ),
-                    onChanged: (value)
-                   {
-                          
-                           if(seletedAccountIds.contains(fipId))
-                           {
-                               seletedAccountIds.remove(fipId); 
-                           }else{
-                               seletedAccountIds.add(fipId); 
-                           }
-                           print(seletedAccountIds);
-                           addAccount.value= !addAccount.value;
-                   }),
-          ),
+          child: Checkbox(value: seletedAccountIds.contains(fipId), 
+                  // checkColor: AppColors.primaryColor,
+                  activeColor: AppColors.primaryColor,
+                  shape: RoundedRectangleBorder(
+                         borderRadius: BorderRadius.circular(4), // Apply border radius
+                    ),
+                  onChanged: (value)
+                 {
+                        
+                         if(seletedAccountIds.contains(fipId))
+                         {
+                             seletedAccountIds.remove(fipId); 
+                         }else{
+                             seletedAccountIds.add(fipId); 
+                         }
+                         print(seletedAccountIds);
+                         addAccount.value= !addAccount.value;
+                 }),
         ),
       );
  }

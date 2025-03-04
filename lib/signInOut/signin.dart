@@ -32,7 +32,7 @@ class _SigninState extends State<Signin> {
   // TextEditingController passwordController = TextEditingController();
   // TextEditingController emailController=TextEditingController(text: "user63@gmail.com");
   // TextEditingController passwordController =TextEditingController(text: "user63password");
-  TextEditingController emailController= TextEditingController(text: "roshanchenna3@gmail.com");
+  TextEditingController emailController= TextEditingController(text: "roshanchenna12@gmail.com");
   TextEditingController passwordController= TextEditingController(text: "nilesh123");
 
   
@@ -258,7 +258,6 @@ Widget siginButton(){
                               snackBarCalled(context, "Pls Enter All Feilds");
                               return;
                             }
-
                             
                             acceptReset.value = true;
                             

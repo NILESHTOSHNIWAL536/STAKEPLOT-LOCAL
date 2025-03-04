@@ -654,7 +654,6 @@ class _TransactionHistoryState extends State<TransactionHistory> {
           : (transaction['amount'] as double? ?? 0.0);
         String category = transaction['category']?.toString() ?? 'Uncategorized'; // Fixed typo and added null check
       String subcategory = transaction['subcategory']?.toString() ?? 'General';
-        print("Transaction: $transaction");
 
         return Stack(
           children: [
