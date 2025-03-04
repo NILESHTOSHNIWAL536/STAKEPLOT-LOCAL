@@ -19,7 +19,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
 bool flag = true;
-String portNo = flag ? "192.168.1.9" : "localhost";
+String portNo = flag ? "192.168.1.3" : "localhost";
 String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 

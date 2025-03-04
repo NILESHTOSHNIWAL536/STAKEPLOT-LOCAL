@@ -30,7 +30,8 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
     "polls": "Polls Content",
     "exploria": "Exploria Content"
   };
-  String _networkImageUrl = "https://static.vecteezy.com/system/resources/thumbnails/045/713/367/small_2x/aesthetic-leaves-on-a-dark-background-free-photo.jpg"; // This can be dynamically set
+  String _networkImageUrl =
+      "https://static.vecteezy.com/system/resources/thumbnails/045/713/367/small_2x/aesthetic-leaves-on-a-dark-background-free-photo.jpg"; // This can be dynamically set
 
   Future<void> _pickImage(ImageSource source, String type) async {
     final picker = ImagePicker();
@@ -70,45 +71,77 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
               children: [
                 Text(userName.value.toString(),
                     style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.w600,
-                       
-                        color: AppColors.bg1)),
+                        lWeight: FontWeight.w600, color: AppColors.bg1)),
                 Text(email.value.toString(),
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w400,
                         //fontSize: MediaQuery.of(context).size.width * 0.04,
                         //fontSize: 12,
                         color: AppColors.userName)),
+                        const SizedBox(height: 10),
                 DefaultTabController(
-                  length: 3, // Number of tabs
+                  length: 2, // Number of tabs
                   child: Column(
                     children: [
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         child: TabBar(
+                          indicatorPadding:
+                              EdgeInsets.zero, // Ensures no extra spacing
+                          labelPadding:
+                              EdgeInsets.zero, // Controls padding inside tabs
                           indicator: BoxDecoration(
-                            // Rounded corners
-                        
-                            color: AppColors.tab,
-                        
-                            borderRadius: BorderRadius.circular(16),
+                            color: AppColors.tab, // Background for selected tab
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          // Padding for labels
                           labelColor: AppColors
                               .primaryColor, // Text color for selected tab
                           unselectedLabelColor:
                               AppColors.bg1, // Text color for unselected tabs
-                        
-                          tabs: const [
-                            Tab(child: Text('Posts')),
-                            Tab(text: 'Polls'),
-                            // Tab(text: 'Exploria'),
+                          indicatorSize: TabBarIndicatorSize
+                              .tab, // Indicator fills the tab
+                          tabs: [
+                            Tab(
+                              child: AnimatedContainer(
+                                duration: Duration(milliseconds: 200),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4), // Adjusted for smaller size
+                                decoration: BoxDecoration(
+                                  color: Colors
+                                      .transparent, // No background when unselected
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text('Posts',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500)),
+                              ),
+                            ),
+                            Tab(
+                              child: AnimatedContainer(
+                                duration: Duration(milliseconds: 200),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4), // Smaller padding
+                                decoration: BoxDecoration(
+                                  color: Colors
+                                      .transparent, // No background when unselected
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text('Polls',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500)),
+                              ),
+                            ),
                           ],
                         ),
                       ),
+                      const SizedBox(height: 10),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height /
-                            1.609, // Adjust as needed for TabBarView
+                        height: MediaQuery.of(context).size.height / 1.67,
+                        // Adjust as needed for TabBarView
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 0, horizontal: 12.0),

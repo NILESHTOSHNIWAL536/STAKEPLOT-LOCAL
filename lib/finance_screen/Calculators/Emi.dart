@@ -96,6 +96,25 @@ double emi = 0.0;
       calculateEMI();
     });
   }
+  // void updateSliderValue(int index, double newValue) {
+  //   setState(() {
+  //     if (index == 2) {
+  //       // For "Loan tenure (months)", enforce integer values
+  //       int intValue = newValue.round(); // Round to nearest integer
+  //       slidersList[index]['value'] = intValue.toDouble(); // Store as double but integer value
+  //       slidersList[index]['controller'].text = intValue.toString(); // No decimals
+  //       loanTenure = intValue.toDouble(); // Assign as double but will be an integer
+  //     } else {
+  //       // For other sliders, allow decimal values
+  //       slidersList[index]['value'] = newValue;
+  //       slidersList[index]['controller'].text =
+  //           newValue.toStringAsFixed(index == 1 ? 3 : 0); // 3 decimals for interest, 0 for amount
+  //       loanAmount = slidersList[0]['value'];
+  //       annualInterestPaid = slidersList[1]['value'];
+  //     }
+  //     calculateEMI();
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

@@ -117,13 +117,10 @@ void PinPasswordVerify(password, context, Function setBack) async {
   }
 }
 
-void seletedBankUpdateInfo(id,context) async {
+void seletedBankUpdateInfo(id, context) async {
   var response = await getDataApiCall("${url}/user/selectedBank/${id}");
   if (response.statusCode == 200 || response.statusCode == 200) {
-      
-  } else {
-  
-  }
+  } else {}
 }
 
 
@@ -139,13 +136,15 @@ void getAllTransaction(context) async {
   } else {}
 }
 
-void getInsights(context) async {
-  var response =
-      await getDataApiCall("${url}/budget/get-insights/679b6ea12af555d641c5da61");
+void getInsights(context,String id) async {
+ 
+  var response = await getDataApiCall(
+    //String t="679b6ea12af555d641c5da61";
+      "${url}/budget/get-insights/$id");
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-   
+
     inSights.clear();
     inSights.addAll(obj);
     getHistory.value = !getHistory.value;
@@ -174,7 +173,7 @@ void getAllTransactionHistory(
       var his = jsonDecode(response.body);
 
       var obj = his['data'];
-    
+
       transactionsHistory.clear();
       if (obj != null && obj is List<dynamic>) {
         if (flag) {
@@ -190,9 +189,7 @@ void getAllTransactionHistory(
           const SnackBar(content: Text("No transaction data available")),
         );
       }
-    } else {
-      
-    }
+    } else {}
   } catch (e) {
     //  print("Exception occurred: $e");
     // ScaffoldMessenger.of(context).showSnackBar(
@@ -203,7 +200,6 @@ void getAllTransactionHistory(
 }
 
 void extractTransaction(bool isYearView, List obj) {
- 
   if (isYearView) {
     getTransactionByYear(obj, selectedYear.value);
   } else {
@@ -213,7 +209,6 @@ void extractTransaction(bool isYearView, List obj) {
 
 void getTransactionByYear(List obj, y) {
   obj.forEach((ele) {
-  
     if (isCurrentYear(ele['transactionTimestamp'], y)) {
       transactionsHistory.add(ele);
     }
@@ -221,7 +216,6 @@ void getTransactionByYear(List obj, y) {
 }
 
 void getTransactionByMonth(List obj, y) {
- 
   obj.forEach((ele) {
     if (isCurrentMonth(ele['transactionTimestamp'], y)) {
       transactionsHistory.add(ele);

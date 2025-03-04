@@ -1,3 +1,4 @@
+
 // import "dart:convert";
 // // import "dart:ffi";
 
@@ -72,20 +73,37 @@
 //     } else {}
 //   }
 
+//   Future<void> deleteNotification(String notifyId) async {
+//     final SharedPreferences _pref = await SharedPreferences.getInstance();
+//     var accessToken = _pref.getString("accessToken");
+//     final response = await http.delete(
+//       Uri.parse('${url}/user/myNotifications/$notifyId'),
+//       headers: <String, String>{
+//         'Content-Type': 'application/json; charset=UTF-8',
+//         "Authorization": "$accessToken",
+//       },
+//     );
+
+//     if (response.statusCode != 200) {
+//       snackBarCalled(context, "Failed to delete notification");
+//       getTransaction(); // Re-fetch to sync with server if deletion fails
+//     }
+//   }
+
 //   int index = -1;
 
 //   @override
 //   Widget build(BuildContext context) {
 //     return SafeArea(
 //       child: Scaffold(
-//         appBar: AppBar(
-//           backgroundColor: AppColors.backgroundColor,
-//           title: textStyle(
-//                   context: context,
-//                   text: "Notifications",
-//                   fontsize: 18,
-//                   fontWeight: FontWeight.w600),
-//         ),
+//           appBar: AppBar(
+//             backgroundColor: AppColors.backgroundColor,
+//             title: textStyle(
+//                 context: context,
+//                 text: "Notifications",
+//                 fontsize: 18,
+//                 fontWeight: FontWeight.w600),
+//           ),
 //           backgroundColor: AppColors.backgroundColor,
 //           body: Column(children: [
 //             // UserProfileHeader(name: "Notifications",),
@@ -95,8 +113,8 @@
 //                   width: MediaQuery.of(context).size.width,
 //                   height: MediaQuery.of(context).size.height / 1.165,
 //                   //margin:  EdgeInsets.only(top: Colorcodes.paddingTopDesign),
-//                   padding:
-//                       EdgeInsets.symmetric(vertical: Colorcodes.paddingTopScroll),
+//                   padding: EdgeInsets.symmetric(
+//                       vertical: Colorcodes.paddingTopScroll),
 //                   //  decoration: BoxDecoration(
 //                   //     color: Colorcodes.white,
 //                   //       borderRadius: BorderRadius.only(
@@ -153,12 +171,34 @@
 //                 child: Container(
 //                     height: MediaQuery.of(context).size.height / 1.1,
 //                     child: Text("No Notifications",
-//                         style:  FontManager().getTextStyle(context,
-//                   lWeight: FontWeight.bold,
-//                   fontSize: 18,
-//                   color: AppColors.accentColor))))
+//                         style: FontManager().getTextStyle(context,
+//                             lWeight: FontWeight.bold,
+//                             fontSize: 18,
+//                             color: AppColors.accentColor))))
 //             : ListView(
-//                 children: notificationList.map((e) => getContainer(e)).toList(),
+//                 children: notificationList.map((e) {
+//                   var notifyId = e['_id'];
+//                   return Dismissible(
+//                     key: Key(notifyId), // Unique key for each notification
+//                     direction:
+//                         DismissDirection.endToStart, // Right-to-left swipe
+//                     onDismissed: (direction) {
+//                       setState(() {
+//                         notificationList
+//                             .removeWhere((item) => item['_id'] == notifyId);
+//                       });
+//                       deleteNotification(notifyId); // Call API to delete
+//                       snackBarCalled(context, "Notification deleted");
+//                     },
+//                     background: Container(
+//                       color: Colors.red,
+//                       alignment: Alignment.centerRight,
+//                       padding: EdgeInsets.only(right: 20),
+//                       child: Icon(Icons.delete, color: Colors.white),
+//                     ),
+//                     child: getContainer(e),
+//                   );
+//                 }).toList(),
 //               );
 //   }
 
@@ -216,220 +256,224 @@
 //   }
 
 //   Widget lendRequest(String name, String id, String avatar, e, int index,
-//     String itemName, String notifyId) {
-//   // Get the screen width
-//   double screenWidth = MediaQuery.of(context).size.width;
+//       String itemName, String notifyId) {
+//     // Get the screen width
+//     double screenWidth = MediaQuery.of(context).size.width;
 
-//   // Define fixed width for avatar (adjust based on your getAvatarh implementation)
-//   const double avatarWidth = 60.0; // Example: adjust this based on getAvatarh size
-//   const double horizontalPadding = 10.0; // 5 on each side
-//   const double spacingBetweenAvatarAndContent = 5.0;
+//     // Define fixed width for avatar (adjust based on your getAvatarh implementation)
+//     const double avatarWidth =
+//         60.0; // Example: adjust this based on getAvatarh size
+//     const double horizontalPadding = 10.0; // 5 on each side
+//     const double spacingBetweenAvatarAndContent = 5.0;
 
-//   // Calculate the available width for the content (text and buttons)
-//   double contentWidth = screenWidth - (avatarWidth + horizontalPadding + spacingBetweenAvatarAndContent);
+//     // Calculate the available width for the content (text and buttons)
+//     double contentWidth = screenWidth -
+//         (avatarWidth + horizontalPadding + spacingBetweenAvatarAndContent);
 
-//   return Center(
-//     child: Container(
-//       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-//       decoration: BoxDecoration(
-//         borderRadius: BorderRadius.circular(10),
-//       ),
-//       width: screenWidth,
-//       child: Column(
-//         children: [
-//           Row(
-//             crossAxisAlignment: CrossAxisAlignment.start, // Align items at the top
-//             children: [
-//               // Avatar with a fixed width
-//               SizedBox(
-//                 width: avatarWidth,
-//                 height: 50, // Adjust height as needed
-//                 child: getAvatarh(avatar),
-//               ),
-//               const SizedBox(width: spacingBetweenAvatarAndContent),
-
-//               // Content area with calculated width
-//               Container(
-//                 width: contentWidth,
-//                 child: Column(
-//                   mainAxisAlignment: MainAxisAlignment.start,
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     Text(
-//                       "${name} has lent you ₹${e['amount'] ?? '500'} for $itemName",
-//                       style: FontManager().getTextStyle(
-//                         context,
-//                         lWeight: FontWeight.w600,
-//                         fontSize: 14,
-//                         lineHeight: 1.3,
-//                         color: AppColors.bg1,
-//                       ),
-//                       maxLines: 2, // Allow wrapping if text is too long
-//                       overflow: TextOverflow.ellipsis,
-//                     ),
-//                     const SizedBox(height: 5),
-//                     Row(
-//                       mainAxisAlignment: MainAxisAlignment.start,
-//                       children: [
-//                         InkWell(
-//                           onTap: () {
-//                             approveBill(context, e['bill_id'] ?? "", "accept", notifyId);
-//                             getNotifications(context);
-//                             setState(() {});
-//                           },
-//                           child: Container(
-//                             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
-//                             decoration: BoxDecoration(
-//                               color: const Color.fromRGBO(97, 143, 214, 1),
-//                               borderRadius: BorderRadius.circular(5),
-//                             ),
-//                             child: Text(
-//                               "Approve",
-//                               style: FontManager().getTextStyle(
-//                                 context,
-//                                 lWeight: FontWeight.w400,
-//                                 fontSize: 14,
-//                                 color: AppColors.bg5,
-//                               ),
-//                             ),
-//                           ),
-//                         ),
-//                         const SizedBox(width: 10),
-//                         InkWell(
-//                           onTap: () {
-//                             approveBill(context, e['bill_id'] ?? "", "reject", notifyId);
-//                             getNotifications(context);
-//                             setState(() {});
-//                           },
-//                           child: Container(
-//                             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
-//                             decoration: BoxDecoration(
-//                               color: Colors.white,
-//                               border: Border.all(width: 0.5),
-//                               borderRadius: BorderRadius.circular(5),
-//                             ),
-//                             child: Text(
-//                               "Reject",
-//                               style: FontManager().getTextStyle(
-//                                 context,
-//                                 lWeight: FontWeight.w400,
-//                                 fontSize: 14,
-//                                 color: AppColors.bg3,
-//                               ),
-//                             ),
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-//           divider(),
-//         ],
-//       ),
-//     ),
-//   );
-// }
-
-//   Widget friends(String name, String id, String avatar, e, index) {
 //     return Center(
 //       child: Container(
-//         padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+//         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
 //         decoration: BoxDecoration(
-//             //  color:const Color.fromRGBO(249, 246, 238, 1),
-//             borderRadius: BorderRadius.circular(10)),
-//         width: MediaQuery.of(context).size.width / 1.1,
+//           borderRadius: BorderRadius.circular(10),
+//         ),
+//         width: screenWidth,
 //         child: Column(
 //           children: [
 //             Row(
+//               crossAxisAlignment:
+//                   CrossAxisAlignment.start, // Align items at the top
 //               children: [
-//                 // AvatarProfileImage(url:avatar , width: 8, height: 18),
-//                 getAvatarh(avatar),
-
-//                 const SizedBox(
-//                   width: 5,
+//                 // Avatar with a fixed width
+//                 SizedBox(
+//                   width: avatarWidth,
+//                   height: 50, // Adjust height as needed
+//                   child: getAvatarh(avatar),
 //                 ),
+//                 const SizedBox(width: spacingBetweenAvatarAndContent),
 
+//                 // Content area with calculated width
 //                 Container(
-//                   width: MediaQuery.of(context).size.width / 1.5,
+//                   width: contentWidth,
 //                   child: Column(
 //                     mainAxisAlignment: MainAxisAlignment.start,
 //                     crossAxisAlignment: CrossAxisAlignment.start,
 //                     children: [
 //                       Text(
-//                         (name),
-//                         style: FontManager().getTextStyle(context,
-//                             lWeight: FontWeight.bold,
-//                             fontSize: 24,
-//                             color: Colors.black),
-//                         //  maxLines: 1,
-//                         // overflow: TextOverflow.ellipsis,
+//                         "${name} has lent you ₹${e['amount'] ?? '500'} for $itemName",
+//                         style: FontManager().getTextStyle(
+//                           context,
+//                           lWeight: FontWeight.w600,
+//                           fontSize: 14,
+//                           lineHeight: 1.3,
+//                           color: AppColors.bg1,
+//                         ),
+//                         maxLines: 2, // Allow wrapping if text is too long
+//                         overflow: TextOverflow.ellipsis,
 //                       ),
-//                       const SizedBox(
-//                         height: 5,
-//                       ),
-
+//                       const SizedBox(height: 5),
 //                       Row(
 //                         mainAxisAlignment: MainAxisAlignment.start,
 //                         children: [
 //                           InkWell(
 //                             onTap: () {
-//                               //  home
-//                               // Navigator.pushNamed(context, '/home');
-//                               addUserAsFrd(id, context);
-//                               getNotifications(context);
+//                               // approveBill(context, e['bill_id'] ?? "", "accept", notifyId);
+//                               // getNotifications(context);
+//                               // setState(() {});
+
+//                               notificationList.removeWhere((item) =>
+//                                   item['_id'] == notifyId); // Optimistic update
+
+//                               approveBill(context, e['bill_id'] ?? "", "accept",
+//                                   notifyId);
+//                               getNotifications(context); // Sync with server
+//                               notificationList.refresh();
 //                             },
 //                             child: Container(
 //                               padding: const EdgeInsets.symmetric(
 //                                   horizontal: 20, vertical: 7),
 //                               decoration: BoxDecoration(
-//                                   color: const Color.fromRGBO(97, 143, 214, 1),
-//                                   borderRadius: BorderRadius.circular(5)),
-//                               child: Text(("Accept"),
-//                                   style: FontManager().getTextStyle(context,
-//                                       lWeight: FontWeight.bold,
-//                                       fontSize: 14,
-//                                       color: Colors.white)),
+//                                 color: const Color.fromRGBO(97, 143, 214, 1),
+//                                 borderRadius: BorderRadius.circular(5),
+//                               ),
+//                               child: Text(
+//                                 "Approve",
+//                                 style: FontManager().getTextStyle(
+//                                   context,
+//                                   lWeight: FontWeight.w400,
+//                                   fontSize: 14,
+//                                   color: AppColors.bg5,
+//                                 ),
+//                               ),
 //                             ),
 //                           ),
-//                           const SizedBox(
-//                             width: 10,
-//                           ),
+//                           const SizedBox(width: 10),
 //                           InkWell(
 //                             onTap: () {
-//                               //  home
-//                               // Navigator.pushNamed(context, '/home');
-//                               rejectFrdRequest(e, context);
+//                               // approveBill(context, e['bill_id'] ?? "", "reject", notifyId);
+//                               // getNotifications(context);
+//                               // setState(() {});
+//                               setState(() {
+//                                 notificationList.removeWhere((item) =>
+//                                     item['_id'] ==
+//                                     notifyId); // Optimistic update
+//                               });
+//                               approveBill(context, e['bill_id'] ?? "", "reject",
+//                                   notifyId);
 //                               getNotifications(context);
-//                               setState(() {});
-//                               //  notificationList.removeAt(index);
 //                             },
 //                             child: Container(
 //                               padding: const EdgeInsets.symmetric(
 //                                   horizontal: 20, vertical: 7),
 //                               decoration: BoxDecoration(
-//                                   color: Colors.white,
-//                                   border: Border.all(width: .5),
-//                                   borderRadius: BorderRadius.circular(5)),
-//                               child: Text(("Reject"),
-//                                   style: FontManager().getTextStyle(context,
-//                                       lWeight: FontWeight.bold,
-//                                       fontSize: 14,
-//                                       color: Colors.black)),
+//                                 color: Colors.white,
+//                                 border: Border.all(width: 0.5),
+//                                 borderRadius: BorderRadius.circular(5),
+//                               ),
+//                               child: Text(
+//                                 "Reject",
+//                                 style: FontManager().getTextStyle(
+//                                   context,
+//                                   lWeight: FontWeight.w400,
+//                                   fontSize: 14,
+//                                   color: AppColors.bg3,
+//                                 ),
+//                               ),
 //                             ),
 //                           ),
 //                         ],
 //                       ),
-
-//                       // divider()
 //                     ],
 //                   ),
 //                 ),
 //               ],
 //             ),
-//             divider()
+//             divider(),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget friends(String name, String id, String avatar, e, int index) {
+//     double screenWidth = MediaQuery.of(context).size.width;
+//     const double avatarWidth = 60.0;
+//     const double horizontalPadding = 10.0;
+//     const double spacingBetweenAvatarAndContent = 5.0;
+//     double contentWidth = screenWidth - (avatarWidth + horizontalPadding + spacingBetweenAvatarAndContent);
+
+//     return Center(
+//       child: Container(
+//         padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+//         decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+//         width: screenWidth,
+//         child: Column(
+//           children: [
+//             Row(
+//               children: [
+//                 SizedBox(width: avatarWidth, height: 50, child: getAvatarh(avatar)),
+//                 const SizedBox(width: spacingBetweenAvatarAndContent),
+//                 Container(
+//                   width: contentWidth,
+//                   child: Column(
+//                     mainAxisAlignment: MainAxisAlignment.start,
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       Row(
+//                         children: [
+//                           Text(
+//                             "$name" ,
+//                             style: FontManager().getTextStyle(context, lWeight: FontWeight.w800, fontSize: 14, color: Colors.black),
+//                           ),
+//                           const SizedBox(width: 5),
+//                           Text(
+//                             "sent you a friend request" ,
+//                             style: FontManager().getTextStyle(context, lWeight: FontWeight.w600, fontSize: 14, color: Colors.black),
+//                           ),
+//                         ],
+//                       ),
+//                       const SizedBox(height: 5),
+//                       Row(
+//                         mainAxisAlignment: MainAxisAlignment.start,
+//                         children: [
+//                           InkWell(
+//                             onTap: ()  {
+                              
+//                                 notificationList.removeAt(index); // Optimistic update
+                             
+                              
+//                                getNotifications(context); // Sync with server
+//                                addUserAsFrd(id, context);
+
+//                             },
+//                             child: Container(
+//                               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
+//                               decoration: BoxDecoration(color: const Color.fromRGBO(97, 143, 214, 1), borderRadius: BorderRadius.circular(5)),
+//                               child: Text("Accept", style: FontManager().getTextStyle(context, lWeight: FontWeight.bold, fontSize: 14, color: Colors.white)),
+//                             ),
+//                           ),
+//                           const SizedBox(width: 20),
+//                           InkWell(
+//                             onTap: () async {
+//                               setState(() {
+//                                 notificationList.removeAt(index); // Optimistic update
+//                               });
+//                                rejectFrdRequest(e, context);
+//                               getNotifications(context); // Sync with server
+//                             },
+//                             child: Container(
+//                               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
+//                               decoration: BoxDecoration(color: Colors.white, border: Border.all(width: 0.5), borderRadius: BorderRadius.circular(5)),
+//                               child: Text("Reject", style: FontManager().getTextStyle(context, lWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+//                             ),
+//                           ),
+//                         ],
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ],
+//             ),
+//             divider(),
 //           ],
 //         ),
 //       ),
@@ -612,6 +656,8 @@
 //     return UserAvatar(url: avatar, width: 12, height: 18);
 //   }
 // }
+
+
 import "dart:convert";
 // import "dart:ffi";
 
@@ -651,8 +697,10 @@ class _NotificationsState extends State<Notifications> {
   }
 
   void getTransaction() async {
+    print("Fetching transactions..."); // Debug statement
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
+    print("Access Token: $accessToken"); // Debug statement
     final response = await http.get(
       Uri.parse('${url}/user/myNotifications'),
       // Uri.parse('https://stakeplot.in/api/v1/post/all'),
@@ -662,18 +710,22 @@ class _NotificationsState extends State<Notifications> {
       },
     );
 
+    print("Response status: ${response.statusCode}"); // Debug statement
     if (response.statusCode == 200) {
+      print("Response body: ${response.body}"); // Debug statement
       if (response.body.isEmpty) {
         snackBarCalled(context, "No Notifications");
         return;
       }
       var his = jsonDecode(response.body);
+      print("Parsed notifications: $his"); // Debug statement
 
       notificationList.clear();
       notificationList.addAll(his['data']);
       notificationList.forEach((req) {
         String type = req['notificationMessage']['type'];
         var e = req['notificationMessage'];
+        print("Processing notification type: $type"); // Debug statement
         if (type == "friendRequest") {
           friendRequestList.add(e['from_id']);
         }
@@ -683,10 +735,13 @@ class _NotificationsState extends State<Notifications> {
       });
       hasGetNewNotifications.value = false;
       myNotificationBool.value != myNotificationBool.value;
-    } else {}
+    } else {
+      print("Failed to fetch notifications."); // Debug statement
+    }
   }
 
   Future<void> deleteNotification(String notifyId) async {
+    print("Deleting notification with ID: $notifyId"); // Debug statement
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
     final response = await http.delete(
@@ -697,9 +752,12 @@ class _NotificationsState extends State<Notifications> {
       },
     );
 
+    print("Delete response status: ${response.statusCode}"); // Debug statement
     if (response.statusCode != 200) {
       snackBarCalled(context, "Failed to delete notification");
       getTransaction(); // Re-fetch to sync with server if deletion fails
+    } else {
+      print("Notification deleted successfully."); // Debug statement
     }
   }
 
@@ -1012,7 +1070,8 @@ class _NotificationsState extends State<Notifications> {
     const double avatarWidth = 60.0;
     const double horizontalPadding = 10.0;
     const double spacingBetweenAvatarAndContent = 5.0;
-    double contentWidth = screenWidth - (avatarWidth + horizontalPadding + spacingBetweenAvatarAndContent);
+    double contentWidth = screenWidth -
+        (avatarWidth + horizontalPadding + spacingBetweenAvatarAndContent);
 
     return Center(
       child: Container(
@@ -1023,7 +1082,8 @@ class _NotificationsState extends State<Notifications> {
           children: [
             Row(
               children: [
-                SizedBox(width: avatarWidth, height: 50, child: getAvatarh(avatar)),
+                SizedBox(
+                    width: avatarWidth, height: 50, child: getAvatarh(avatar)),
                 const SizedBox(width: spacingBetweenAvatarAndContent),
                 Container(
                   width: contentWidth,
@@ -1034,13 +1094,19 @@ class _NotificationsState extends State<Notifications> {
                       Row(
                         children: [
                           Text(
-                            "$name" ,
-                            style: FontManager().getTextStyle(context, lWeight: FontWeight.w800, fontSize: 14, color: Colors.black),
+                            "$name",
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.w800,
+                                fontSize: 14,
+                                color: Colors.black),
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            "sent you a friend request" ,
-                            style: FontManager().getTextStyle(context, lWeight: FontWeight.w600, fontSize: 14, color: Colors.black),
+                            "sent you a friend request",
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.w600,
+                                fontSize: 14,
+                                color: Colors.black),
                           ),
                         ],
                       ),
@@ -1049,34 +1115,48 @@ class _NotificationsState extends State<Notifications> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           InkWell(
-                            onTap: ()  {
-                              
-                                notificationList.removeAt(index); // Optimistic update
-                             
-                              
-                               getNotifications(context); // Sync with server
-                               addUserAsFrd(id, context);
+                            onTap: () {
+                              notificationList
+                                  .removeAt(index); // Optimistic update
 
+                              getNotifications(context); // Sync with server
+                              addUserAsFrd(id, context);
                             },
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
-                              decoration: BoxDecoration(color: const Color.fromRGBO(97, 143, 214, 1), borderRadius: BorderRadius.circular(5)),
-                              child: Text("Accept", style: FontManager().getTextStyle(context, lWeight: FontWeight.bold, fontSize: 14, color: Colors.white)),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 7),
+                              decoration: BoxDecoration(
+                                  color: const Color.fromRGBO(97, 143, 214, 1),
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Text("Accept",
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: Colors.white)),
                             ),
                           ),
                           const SizedBox(width: 20),
                           InkWell(
                             onTap: () async {
                               setState(() {
-                                notificationList.removeAt(index); // Optimistic update
+                                notificationList
+                                    .removeAt(index); // Optimistic update
                               });
-                               rejectFrdRequest(e, context);
+                              rejectFrdRequest(e, context);
                               getNotifications(context); // Sync with server
                             },
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
-                              decoration: BoxDecoration(color: Colors.white, border: Border.all(width: 0.5), borderRadius: BorderRadius.circular(5)),
-                              child: Text("Reject", style: FontManager().getTextStyle(context, lWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 7),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(width: 0.5),
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Text("Reject",
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: Colors.black)),
                             ),
                           ),
                         ],

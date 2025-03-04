@@ -26,6 +26,7 @@ Future<void> getBankAccounts()async
              bankAccountLinkedList.clear();
             his['data'].forEach((bank) {
                   bank['accounts'].forEach((account) {
+                    if(accountId.value=="")accountId.value=account['accountId'];
                     bankAccountLinkedList.add({
                       'bankId': bank['bankId'],
                       'bankName': bank['bankName'],
@@ -48,8 +49,6 @@ void storeImageinMapFinvu(context)async
 {
    var isConnected = await finvuManager.isConnected();
    if(!isConnected)initFinvuManager(context);
-  // print("websocket connected : ");
-  // print(isConnected);
 
   try{
    

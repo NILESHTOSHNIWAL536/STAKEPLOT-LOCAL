@@ -170,8 +170,9 @@ class LikeComment {
   static String share = "assets/icons/likeComment/Send.svg";
   static String plus = "assets/icons/likeComment/Plus.svg";
   static String message = "assets/icons/likeComment/Messagecircle.svg";
-  
- static String manualTransaction = "assets/icons/likeComment/manualTransaction.svg";
+
+  static String manualTransaction =
+      "assets/icons/likeComment/manualTransaction.svg";
 }
 
 class ProfileIcons {
@@ -184,8 +185,6 @@ class ProfileIcons {
   static String support = "assets/icons/profileScreen/support.svg";
   static String terms = "assets/icons/profileScreen/terms.svg";
   static String emptyFrnds = "assets/icons/profileScreen/emptyFrnds.svg";
-
-  
 }
 
 class Sign {
@@ -218,8 +217,7 @@ class Finance {
   static String user = "assets/icons/financeScreen/user.svg";
   static String amt = "assets/icons/financeScreen/amt.svg";
   static String addBudget = "assets/icons/financeScreen/addBudget.svg";
-    static String vegNonveg = "assets/icons/financeScreen/vegnonveg.svg";
-
+  static String vegNonveg = "assets/icons/financeScreen/vegnonveg.svg";
 }
 
 class BudgetCategories {
@@ -252,6 +250,7 @@ class BudgetCategories {
   static List<String> categories =
       listofCategories.keys.map((key) => key.toString()).toList();
 }
+
 class BudgetCategories2 {
   static Map<String, dynamic> listofCategories = {
     "Food": Categories.food,
@@ -263,10 +262,10 @@ class BudgetCategories2 {
     "Events": Categories.events,
     "Personal Care": Categories.personalCare,
     "Services": Categories.services,
-    "EMi": Categories.emi,
+    "Emi": Categories.emi,
     "Insurance": Categories.insurance,
     //"Support": Categories.support,
-   // "Children": Categories.children,
+    // "Children": Categories.children,
     "Pet Care": Categories.petCare,
     "Sports": Categories.sports,
     "Alcohol": Categories.alcohal,

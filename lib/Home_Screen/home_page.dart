@@ -107,6 +107,8 @@ class _HomeScreenState extends State<HomeScreen> {
           _transactionHistoryKey.currentContext!.findRenderObject() as RenderBox;
       final position = renderBox.localToGlobal(Offset.zero);
       final screenHeight = MediaQuery.of(context).size.height;
+      //print(renderBox.size.height+position.dy);
+      //print(screenHeight);
       if ((position.dy + renderBox.size.height-650) <= screenHeight && !sectionReached.value) {
         _navigateToNextPage();
         setState(() {
@@ -198,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: MediaQuery.of(context).size.height * 0.5,
                 child: FinancePage(
                   scrollController: _scrollController,
-                  transactionHistoryKey:_transactionHistoryKey2 ,
+                  transactionHistoryKey:_transactionHistoryKey ,
                 ),
               ),
           
@@ -228,6 +230,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+
+
+
+
+
+//------------------------------------------------------------------------------ merged code--------------------------------------------------------------- 
+
+
 // import 'package:flutter/material.dart';
 // import 'package:flutter_application_code_stakeplot/Home_Screen/expanded_finance.dart';
 // import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
@@ -241,6 +251,7 @@ class _HomeScreenState extends State<HomeScreen> {
 // import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 // import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 // import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+// import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 // import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 // import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 // import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
@@ -258,12 +269,14 @@ class _HomeScreenState extends State<HomeScreen> {
 // import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 // import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 // import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
+// import 'package:flutter_application_code_stakeplot/userAvatar.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 // import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 // import 'package:get/get.dart';
 // import 'package:flutter_spinkit/flutter_spinkit.dart';
+// import 'package:page_transition/page_transition.dart';
 // //import 'dart:io';
-
+// RxBool sectionReached = false.obs;
 // class HomePage extends StatefulWidget {
 //   @override
 //   State<HomePage> createState() => _HomePageState();
@@ -281,6 +294,7 @@ class _HomeScreenState extends State<HomeScreen> {
 //   void initializeData() {
 //     check(context, "homeScreen");
 //     getAllTransaction(context);
+//     getBankAccounts();
 //     getTrending();
 //     getPost();
 //     getAck();
@@ -294,6 +308,7 @@ class _HomeScreenState extends State<HomeScreen> {
 //     getRemainders(context);
 //     getAutoMationsTransactionsCustom("date", context);
 //     userController.fetchUserInfo();
+//     sectionReached.value=false;
 //   }
 
 //   @override
@@ -311,6 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
 //   final ScrollController _scrollController = ScrollController();
 
 //   final GlobalKey _transactionHistoryKey = GlobalKey();
+//  // final GlobalKey _transactionHistoryKey2 = GlobalKey();
 //   HomeScreen() {
 //     _scrollController.addListener(() {
 //       // print("Scroll position: ${_scrollController.offset}");
@@ -319,10 +335,47 @@ class _HomeScreenState extends State<HomeScreen> {
 
 //   bool _isFullPage = false;
 
+//   // Assuming setDonectChat and getHistory are RxBool from GetX
+//   var setDonectChat = false.obs; 
+//  // Example, replace with your actual state
+//   var getHistory = false.obs; 
+//  // Example, replace with your actual state
+//     void _onScroll() {
+//     if (_transactionHistoryKey.currentContext != null) {
+//       final RenderBox renderBox =
+//           _transactionHistoryKey.currentContext!.findRenderObject() as RenderBox;
+//       final position = renderBox.localToGlobal(Offset.zero);
+//       final screenHeight = MediaQuery.of(context).size.height;
+//       //print(renderBox.size.height+position.dy);
+//       //print(screenHeight);
+//       if ((position.dy + renderBox.size.height-650) <= screenHeight && !sectionReached.value) {
+//         _navigateToNextPage();
+//         setState(() {
+//           sectionReached.value=true;
+//         });
+//       }
+//     }
+//   }
+
+//   void _navigateToNextPage() {
+//     // Navigate to your desired page
+//     Navigator.push(
+//   context,
+//   PageTransition(
+//     type: PageTransitionType.bottomToTop,
+//     alignment: Alignment.bottomCenter,
+//     duration: const Duration(milliseconds: 2000),  // Increase duration
+//     curve: Curves.easeInOut,  // Smooth transition
+//     child: TransactionHistory(pageTransition: true,),
+//     isIos: true,
+//   ),
+// );
+//   }
 //   @override
 //   void initState() {
 //     super.initState();
 //     _scrollController.addListener(_handleScroll);
+//     _scrollController.addListener(_onScroll);
 //   }
 
 //   void _handleScroll() {
@@ -387,7 +440,7 @@ class _HomeScreenState extends State<HomeScreen> {
 //         actions: [
 //           Row(
 //             children: [
-//               AvatarProfileImage(url: avatar.value, width: 15, height: 15),
+//               UserAvatar(url: avatar.value, width: 15, height: 15),
 //               Column(
 //                 mainAxisAlignment: MainAxisAlignment.center,
 //                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -397,11 +450,11 @@ class _HomeScreenState extends State<HomeScreen> {
 //                       text: "Hello..",
 //                       fontWeight: FontWeight.w500,
 //                       fontsize: 15),
-//                   textStyle(
+//                    Obx(() => textStyle(
 //                       context: context,
 //                       text: userName.value,
 //                       fontWeight: FontWeight.bold,
-//                       fontsize: 15)
+//                       fontsize: 15))
 //                 ],
 //               )
 //             ],
@@ -496,3 +549,4 @@ class _HomeScreenState extends State<HomeScreen> {
 //     );
 //   }
 // }
+

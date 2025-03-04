@@ -35,6 +35,7 @@ class _FinancePageState extends State<FinancePage> {
   @override
   void initState() {
     super.initState();
+    getGraphData.value=false;
     calledFunctionToFetchData(context);
   }
 
@@ -44,15 +45,14 @@ class _FinancePageState extends State<FinancePage> {
     if (renderObject != null && renderObject is RenderBox) {
       final position = renderObject.localToGlobal(Offset.zero);
       final scrollOffset = widget.scrollController.offset;
-      final targetOffset = position.dy - scrollOffset;
-      // print("Target offset: $targetOffset");
+      final targetOffset = position.dy - scrollOffset-700;
       widget.scrollController.animateTo(
         targetOffset > 0 ? targetOffset : 0,
         duration: Duration(milliseconds: 500),
         curve: Curves.easeInOut,
       );
     } else {
-      //  print("RenderObject not found for TransactionHistory");
+
     }
   }
 
@@ -109,7 +109,7 @@ class _FinancePageState extends State<FinancePage> {
                       ),
                       CustomButton(
                         onTap: () {
-                          // print("History button tapped");
+                           print("History button tapped");
                           _scrollToTransactionHistory();
                         },
                         text: 'History',

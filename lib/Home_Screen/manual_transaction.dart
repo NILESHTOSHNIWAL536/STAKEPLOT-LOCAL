@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -726,27 +725,28 @@ class _ModalContentState extends State<ModalContent>
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         GestureDetector(
-           onTap: () async {
-          if (isLend.value) {
-            addedUser.clear();
-            addedMembers.clear();
-          }
-          isSplit.value = true;
-          isLend.value = false;
+          onTap: () async {
+            if (isLend.value) {
+              addedUser.clear();
+              addedMembers.clear();
+            }
+            isSplit.value = true;
+            isLend.value = false;
 
-          final result = await showCustomFriendsModal(context, amount ?? 0.0, false);
-          if (result != null && addedMembers.isNotEmpty) {
-            print("buttonsWidget: Split mode - Received amounts: $result");
-            splitUserAmount(
-              context,
-              amount.toString(),
-              addedMembers,
-              selectedCategory2.toString(),
-              selectedSubCategory2.toString(),
-              amounts: result as Map<String, double>,
-            );
-          }
-        },
+            final result =
+                await showCustomFriendsModal(context, amount ?? 0.0, false);
+            if (result != null && addedMembers.isNotEmpty) {
+              // print("buttonsWidget: Split mode - Received amounts: $result");
+              splitUserAmount(
+                context,
+                amount.toString(),
+                addedMembers,
+                selectedCategory2.toString(),
+                selectedSubCategory2.toString(),
+                amounts: result as Map<String, double>,
+              );
+            }
+          },
           child: Container(
             width: MediaQuery.of(context).size.width / 2.4,
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
@@ -768,7 +768,7 @@ class _ModalContentState extends State<ModalContent>
           ),
         ),
         GestureDetector(
-          onTap: () async{
+          onTap: () async {
             if (isSplit.value) {
               addedUser.clear();
               addedMembers.clear();
@@ -776,12 +776,13 @@ class _ModalContentState extends State<ModalContent>
             isSplit.value = false;
             isLend.value = true;
             // showCustomFriendsModal(context, amount ?? 0.0);
-            final result =  await showCustomFriendsModal(context, amount ?? 0.0, true);
-          if (result != null) {
-            print("buttonsWidget: Lend mode - Selected friend: $result");
-            // Don’t send amount yet, just pop out and wait for parent "Continue"
-           // Navigator.pop(context); // Close the modal to return to Manualtransaction
-          }
+            final result =
+                await showCustomFriendsModal(context, amount ?? 0.0, true);
+            if (result != null) {
+              // print("buttonsWidget: Lend mode - Selected friend: $result");
+              // Don't send amount yet, just pop out and wait for parent "Continue"
+              // Navigator.pop(context); // Close the modal to return to Manualtransaction
+            }
           },
           child: Container(
             width: MediaQuery.of(context).size.width / 2.4,
@@ -816,33 +817,36 @@ class _ModalContentState extends State<ModalContent>
           child: Padding(
             padding: const EdgeInsets.only(top: 10),
             child: InkWell(
-             onTap: () {
-              if (isSplit.value && addedMembers.isNotEmpty) {
-                splitBill(selectedCategory2.toString(), amount.toString(),
-                    selectedSubCategory2.toString(), true);
-              } else if (isLend.value && addedMembers.isNotEmpty) {
-                if (addedMembers.length > 1) {
-                  snackBarCalled(context, "Please select only one friend for lending", Colors.red);
-                  return;
+              onTap: () {
+                if (isSplit.value && addedMembers.isNotEmpty) {
+                  splitBill(selectedCategory2.toString(), amount.toString(),
+                      selectedSubCategory2.toString(), true);
+                } else if (isLend.value && addedMembers.isNotEmpty) {
+                  if (addedMembers.length > 1) {
+                    snackBarCalled(
+                        context,
+                        "Please select only one friend for lending",
+                        Colors.red);
+                    return;
+                  }
+                  //   print("continueButton: Lending ${amount.toString()} to ${addedMembers[0]['id']}");
+                  addLendUserAmount(
+                    context,
+                    amount.toString(),
+                    addedMembers,
+                    selectedCategory2.toString(),
+                    selectedSubCategory2.toString(),
+                  );
+                } else {
+                  addTransaction(
+                    amount.toString(),
+                    selectedSubCategory2.toString(),
+                    selectedCategory2.toString(),
+                    context,
+                    "cash",
+                  );
                 }
-                print("continueButton: Lending ${amount.toString()} to ${addedMembers[0]['id']}");
-                addLendUserAmount(
-                  context,
-                  amount.toString(),
-                  addedMembers,
-                  selectedCategory2.toString(),
-                  selectedSubCategory2.toString(),
-                );
-              } else {
-                addTransaction(
-                  amount.toString(),
-                  selectedSubCategory2.toString(),
-                  selectedCategory2.toString(),
-                  context,
-                  "cash",
-                );
-              }
-            },
+              },
               child: getButton(context, "Continue"),
             ),
           ),
@@ -872,8 +876,8 @@ class _ModalContentState extends State<ModalContent>
           context, amount, addedMembers, categories, subCategories);
   }
 
-  void addSocketMessage(
-      addedUser, String amount, String splitName,String splitID,double parsedTotalAmount) {
+  void addSocketMessage(addedUser, String amount, String splitName,
+      String splitID, double parsedTotalAmount) {
     if (addedUser.isEmpty) {
       return;
     }
@@ -913,29 +917,28 @@ class _ModalContentState extends State<ModalContent>
     });
   }
 
- Future<dynamic> showCustomFriendsModal(
-  BuildContext context,
-  double totalAmount,
-  bool isLendMode,
-) async {
-  return await showModalBottomSheet<dynamic>(
-    context: context,
-    isScrollControlled: true,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
-    ),
-    builder: (BuildContext context) {
-      return NewFriendsUi(
-        
-        totalAmount: totalAmount,
-        userId: currentId.value,
-        userName: userName.value,
-        userAvatar: userAvatarProfile.value,
-        isLendMode: isLendMode,
-      );
-    },
-  );
-}
+  Future<dynamic> showCustomFriendsModal(
+    BuildContext context,
+    double totalAmount,
+    bool isLendMode,
+  ) async {
+    return await showModalBottomSheet<dynamic>(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+      ),
+      builder: (BuildContext context) {
+        return NewFriendsUi(
+          totalAmount: totalAmount,
+          userId: currentId.value,
+          userName: userName.value,
+          userAvatar: userAvatarProfile.value,
+          isLendMode: isLendMode,
+        );
+      },
+    );
+  }
 
 // void showCustomFriendsModal2(BuildContext context) {
 //     showModalBottomSheet(
@@ -952,158 +955,146 @@ class _ModalContentState extends State<ModalContent>
 //     );
 //   }
   void splitUserAmount(
-  BuildContext context,
-  String totalAmount,
-  List members,
-  String name,
-  String subCategories, {
-  Map<String, double>? amounts, // Manual amounts including user's share
-}) async {
-  double? parsedTotalAmount = double.tryParse(totalAmount);
-  if (parsedTotalAmount == null || parsedTotalAmount <= 0) {
-    print("splitUserAmount: Invalid totalAmount: $totalAmount");
-    snackBarCalled(context, "Invalid amount entered!", Colors.red);
-    return;
-  }
-  print("splitUserAmount: Parsed totalAmount: $parsedTotalAmount");
+    BuildContext context,
+    String totalAmount,
+    List members,
+    String name,
+    String subCategories, {
+    Map<String, double>? amounts, // Manual amounts including user's share
+  }) async {
+    double? parsedTotalAmount = double.tryParse(totalAmount);
+    if (parsedTotalAmount == null || parsedTotalAmount <= 0) {
+      // print("splitUserAmount: Invalid totalAmount: $totalAmount");
+      snackBarCalled(context, "Invalid amount entered!", Colors.red);
+      return;
+    }
+    // print("splitUserAmount: Parsed totalAmount: $parsedTotalAmount");
 
-  if (members.isEmpty) {
-    print("splitUserAmount: No members selected");
-    snackBarCalled(context, "No members selected!", Colors.red);
-    return;
-  }
-  print("splitUserAmount: Members count: ${members.length}, Members: $members");
+    if (members.isEmpty) {
+      // print("splitUserAmount: No members selected");
+      snackBarCalled(context, "No members selected!", Colors.red);
+      return;
+    }
+    // print("splitUserAmount: Members count: ${members.length}, Members: $members");
 
-  // Prepare paymentStatus list with individual amounts
-  List<Map<String, dynamic>> nameList = [];
-  if (amounts != null) {
-    print("splitUserAmount: Using manual amounts: $amounts");
-    members.forEach((element) {
-      double memberAmount = amounts[element['id']] ?? 0.0;
-      nameList.add({
-        'member': element['id'],
-        'markAsComplete': false,
-        'amount': memberAmount,
+    // Prepare paymentStatus list with individual amounts
+    List<Map<String, dynamic>> nameList = [];
+    if (amounts != null) {
+      // print("splitUserAmount: Using manual amounts: $amounts");
+      members.forEach((element) {
+        double memberAmount = amounts[element['id']] ?? 0.0;
+        nameList.add({
+          'member': element['id'],
+          'markAsComplete': false,
+          'amount': memberAmount,
+        });
+        // print("splitUserAmount: Added member ${element['id']} with amount: $memberAmount");
       });
-      print("splitUserAmount: Added member ${element['id']} with amount: $memberAmount");
-    });
-    // Include the user's amount if present in amounts (commented out in your version)
-    // if (amounts.containsKey(currentId.value)) {
-    //   nameList.add({
-    //     'member': currentId.value,
-    //     'markAsComplete': false,
-    //     'amount': amounts[currentId.value]!,
-    //   });
-    //   print("splitUserAmount: Added user ${currentId.value} with amount: ${amounts[currentId.value]}");
-    // }
-  } else {
-    print("splitUserAmount: Falling back to equal split");
-    double amountPerPerson = parsedTotalAmount / (members.length + 1);
-    members.forEach((element) {
+      // Include the user's amount if present in amounts (commented out in your version)
+      // if (amounts.containsKey(currentId.value)) {
+      //   nameList.add({
+      //     'member': currentId.value,
+      //     'markAsComplete': false,
+      //     'amount': amounts[currentId.value]!,
+      //   });
+      //   print("splitUserAmount: Added user ${currentId.value} with amount: ${amounts[currentId.value]}");
+      // }
+    } else {
+      // print("splitUserAmount: Falling back to equal split");
+      double amountPerPerson = parsedTotalAmount / (members.length + 1);
+      members.forEach((element) {
+        nameList.add({
+          'member': element['id'],
+          'markAsComplete': false,
+          'amount': amountPerPerson,
+        });
+        // print("splitUserAmount: Added member ${element['id']} with equal amount: $amountPerPerson");
+      });
       nameList.add({
-        'member': element['id'],
+        'member': currentId.value,
         'markAsComplete': false,
         'amount': amountPerPerson,
       });
-      print("splitUserAmount: Added member ${element['id']} with equal amount: $amountPerPerson");
-    });
-    nameList.add({
-      'member': currentId.value,
-      'markAsComplete': false,
-      'amount': amountPerPerson,
-    });
-    print("splitUserAmount: Added user ${currentId.value} with equal amount: $amountPerPerson");
-  }
-
-  // Verify total matches (optional, for debugging)
-  double calculatedTotal = nameList.fold(0.0, (sum, item) => sum + item['amount']);
-  print("splitUserAmount: Calculated total from nameList: $calculatedTotal, Expected: $parsedTotalAmount");
-  // if (calculatedTotal != parsedTotalAmount) {
-  //   print("splitUserAmount: Total mismatch detected!");
-  //   snackBarCalled(context, "Total amount mismatch!", Colors.red);
-  //   return;
-  // }
-
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  print("splitUserAmount: Access token retrieved: ${accessToken != null ? 'Yes' : 'No'}");
-
-  final response = await http.post(
-    Uri.parse('$url/split'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
-      "name": name,
-      "subcategory": subCategories,
-      "category": name,
-      "amount": calculatedTotal,
-      "paymentStatus": nameList,
-      "image": '',
-    }),
-  );
-  print("splitUserAmount: API request sent with paymentStatus: $nameList");
-  print("splitUserAmount: API response status: ${response.statusCode}, body: ${response.body}");
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
-    splitID.value = body['id']['_id'];
-    print("splitUserAmount: Split ID set: ${splitID.value}");
-
-    // Send notifications with individual amounts
-    for (var member in members) {
-      double memberAmount = amounts?[member['id']] ?? (parsedTotalAmount / (members.length + 1));
-      String formattedAmount = memberAmount.toStringAsFixed(2);
-      print("splitUserAmount: Sending notification to ${member['id']} with amount: $formattedAmount");
-      sendNotificationsToDevice(
-        member['id'],
-        context,
-        "${userName.value} has sent you a Split Bill of $name for ₹$formattedAmount",
-      );
+      // print("splitUserAmount: Added user ${currentId.value} with equal amount: $amountPerPerson");
     }
 
-    // Send socket messages with individual amounts
-    if (amounts != null) {
-      members.forEach((member) {
-        double memberAmount = amounts[member['id']] ?? 0.0;
-        print("splitUserAmount: Sending socket message to ${member['id']} with amount: $memberAmount");
-        addSocketMessage(
-          [member],
-          memberAmount.toString(),
-          name,
-          splitID.value,
-          parsedTotalAmount
-          
-          
-          
+    // Verify total matches (optional, for debugging)
+    double calculatedTotal =
+        nameList.fold(0.0, (sum, item) => sum + item['amount']);
+    // print("splitUserAmount: Calculated total from nameList: $calculatedTotal, Expected: $parsedTotalAmount");
+    // if (calculatedTotal != parsedTotalAmount) {
+    //   print("splitUserAmount: Total mismatch detected!");
+    //   snackBarCalled(context, "Total amount mismatch!", Colors.red);
+    //   return;
+    // }
+
+    final SharedPreferences _pref = await SharedPreferences.getInstance();
+    var accessToken = _pref.getString("accessToken");
+    // print("splitUserAmount: Access token retrieved: ${accessToken != null ? 'Yes' : 'No'}");
+
+    final response = await http.post(
+      Uri.parse('$url/split'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Authorization": "$accessToken",
+      },
+      body: jsonEncode({
+        "name": name,
+        "subcategory": subCategories,
+        "category": name,
+        "amount": calculatedTotal,
+        "paymentStatus": nameList,
+        "image": '',
+      }),
+    );
+    // print("splitUserAmount: API request sent with paymentStatus: $nameList");
+    // print("splitUserAmount: API response status: ${response.statusCode}, body: ${response.body}");
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final body = json.decode(response.body);
+      splitID.value = body['id']['_id'];
+      // print("splitUserAmount: Split ID set: ${splitID.value}");
+
+      // Send notifications with individual amounts
+      for (var member in members) {
+        double memberAmount = amounts?[member['id']] ??
+            (parsedTotalAmount / (members.length + 1));
+        String formattedAmount = memberAmount.toStringAsFixed(2);
+        // print("splitUserAmount: Sending notification to ${member['id']} with amount: $formattedAmount");
+        sendNotificationsToDevice(
+          member['id'],
+          context,
+          "${userName.value} has sent you a Split Bill of $name for ₹$formattedAmount",
         );
-      });
+      }
+
+      // Send socket messages with individual amounts
+      if (amounts != null) {
+        members.forEach((member) {
+          double memberAmount = amounts[member['id']] ?? 0.0;
+          // print("splitUserAmount: Sending socket message to ${member['id']} with amount: $memberAmount");
+          addSocketMessage([member], memberAmount.toString(), name,
+              splitID.value, parsedTotalAmount);
+        });
+      } else {
+        double amountPerPerson = parsedTotalAmount / (members.length + 1);
+        // print("splitUserAmount: Sending socket message (equal split) with amount: $amountPerPerson");
+        addSocketMessage(members, amountPerPerson.toString(), name,
+            splitID.value, parsedTotalAmount);
+      }
+
+      // print("splitUserAmount: Split successful, showing celebration");
+      snackBarCalled(context, "Split amount sent to users!", Colors.black);
+      Navigator.pop(context);
+      _showCelebration();
     } else {
-      double amountPerPerson = parsedTotalAmount / (members.length + 1);
-      print("splitUserAmount: Sending socket message (equal split) with amount: $amountPerPerson");
-      addSocketMessage(
-        members,
-        amountPerPerson.toString(),
-        name,
-        splitID.value,
-        parsedTotalAmount
-        
-      );
+      // print("splitUserAmount: API error - Status: ${response.statusCode}, Body: ${response.body}");
+      snackBarCalled(context, "Can't split, error!", Colors.red);
     }
 
-    print("splitUserAmount: Split successful, showing celebration");
-    snackBarCalled(context, "Split amount sent to users!", Colors.black);
-    Navigator.pop(context);
-    _showCelebration();
-  } else {
-    print("splitUserAmount: API error - Status: ${response.statusCode}, Body: ${response.body}");
-    snackBarCalled(context, "Can't split, error!", Colors.red);
+    acceptReset.value = false;
+    // print("splitUserAmount: Finished execution");
   }
-
-  acceptReset.value = false;
-  print("splitUserAmount: Finished execution");
-}
 
   void addLendUserAmount(context, String amount, List members, String name,
       String subCategories) async {

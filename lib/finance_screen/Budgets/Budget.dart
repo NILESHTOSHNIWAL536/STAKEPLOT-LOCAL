@@ -47,7 +47,7 @@ Map<String, dynamic> categoryWeights = {
   },
   "Savings": {
     "percentage": 20.0,
-    "subcategories": {"Investments": 10.0, "EMi": 8.0, "Hobbies": 2.0}
+    "subcategories": {"Investments": 10.0, "Emi": 8.0, "Hobbies": 2.0}
   }
 };
 
@@ -69,8 +69,6 @@ class _BudgetState extends State<Budget> {
     super.initState();
     getTopFiveCater();
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +112,6 @@ class _BudgetState extends State<Budget> {
           TextFeildWidgetCustom(
             textEditingController: nameController,
             heading: "Name",
-            
             keyBoard: TextInputType.emailAddress,
             lableText: "Enter budget name",
             icon: Finance.user,
@@ -124,18 +121,14 @@ class _BudgetState extends State<Budget> {
             heading: "Amount",
             keyBoard: TextInputType.number,
             lableText: "Enter amount",
-            
-            
             icon: Finance.amt,
           ),
-          
           Padding(
             padding: EdgeInsets.symmetric(vertical: Colorcodes.paddingSize),
             child: textStyle(
                 context: context,
                 text: "Duration",
                 fontsize: 20,
-                
                 fontWeight: FontWeight.bold),
           ),
           Container(
@@ -217,7 +210,6 @@ Widget textStyle(
     {required BuildContext context,
     text,
     double fontsize = 12,
-    
     Color c = AppColors.bg1,
     FontWeight fontWeight = FontWeight.w500}) {
   return Column(
