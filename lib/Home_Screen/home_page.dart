@@ -107,9 +107,9 @@ class _HomeScreenState extends State<HomeScreen> {
           _transactionHistoryKey.currentContext!.findRenderObject() as RenderBox;
       final position = renderBox.localToGlobal(Offset.zero);
       final screenHeight = MediaQuery.of(context).size.height;
-      //print(renderBox.size.height+position.dy);
-      //print(screenHeight);
-      if ((position.dy + renderBox.size.height-650) <= screenHeight && !sectionReached.value) {
+      print(renderBox.size.height+position.dy-screenHeight);
+      print(sectionReached.value);
+      if ((position.dy + renderBox.size.height-screenHeight) <= 1600 && !sectionReached.value) {
         _navigateToNextPage();
         setState(() {
           sectionReached.value=true;
