@@ -26,6 +26,7 @@ class _UserListScreenState extends State<UserListScreen> {
     super.initState();
     //getUserLend(context);
     getRemainders(context);
+
     //duesPaid(context,index);
   }
 
@@ -136,25 +137,26 @@ class ShowAllUsersScreen extends StatelessWidget {
 }
 
 Widget userslist() {
-  return ListView.builder(
-    itemCount: lendAmountRemainders.length,
-    itemBuilder: (context, index) =>
-        _buildListTile(context, lendAmountRemainders[index], false),
-  );
+  return Obx(() => ListView.builder(
+        itemCount: lendAmountRemainders.length,
+        itemBuilder: (context, index) =>
+            _buildListTile(context, lendAmountRemainders[index], false),
+      ));
 }
 
 Widget usersDuelist() {
-  final itemCount = dueAmountRemainders.length;
-
-  return ListView.builder(
-    itemCount: itemCount,
-    itemBuilder: (context, index) {
-      if (itemCount == 0) {
-        return Center(child: Text('No payable dues found.'));
-      }
-      return _buildListTile(context, dueAmountRemainders[index], true);
-    },
-  );
+  return Obx(() {
+    final itemCount = dueAmountRemainders.length;
+    if (itemCount == 0) {
+      return const Center(child: Text('No payable dues found.'));
+    }
+    return ListView.builder(
+      itemCount: itemCount,
+      itemBuilder: (context, index) {
+        return _buildListTile(context, dueAmountRemainders[index], true);
+      },
+    );
+  });
 }
 
 // Reusable method to build ListTile for both Userslist and UsersDuelist
@@ -271,7 +273,7 @@ Future<http.Response> updateDataApiCall(String url) async {
     );
     return response;
   } catch (error) {
-    print("Error in updateDataApiCall: $error");
+  //  print("Error in updateDataApiCall: $error");
     rethrow;
   }
 }
@@ -282,7 +284,7 @@ void duesPaid(BuildContext context, int index) async {
   final type = due['type'];
 
   if (dueId == null) {
-    print("Error: Transaction ID is null");
+  //  print("Error: Transaction ID is null");
     return;
   }
 
@@ -290,33 +292,19 @@ void duesPaid(BuildContext context, int index) async {
   try {
     final response = await updateDataApiCall(apiUrl);
     if (response.statusCode == 200) {
+      // Remove the item from the observable list
       dueAmountRemainders.removeAt(index);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Due settled successfully"),
-          backgroundColor: Colors.green,
-        ),
-      );
-
-      // Trigger UI update
-      dueAmountRemainders.refresh();
+      // This triggers the UI update automatically
+      snackBarCalled(context, "Due settled successfully");
+      
     } else {
-      print("Failed to settle due: ${response.statusCode} - ${response.body}");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-              "Failed to settle due: ${response.statusCode} - ${response.body}"),
-          backgroundColor: Colors.red,
-        ),
-      );
+    //  print("Failed to settle due: ${response.statusCode} - ${response.body}");
+      
+      snackBarCalled(context, "Failed to settle due: ${response.statusCode} - ${response.body}");
     }
   } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Error settling due"),
-        backgroundColor: Colors.red,
-      ),
-    );
-    print("Error in duesPaid: $e");
+   
+    snackBarCalled(context, "Error settling due");
+   // print("Error in duesPaid: $e");
   }
 }
