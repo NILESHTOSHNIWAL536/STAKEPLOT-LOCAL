@@ -469,75 +469,73 @@ class _AccessState extends State<Access> {
     );
   }
 
-  Widget accountInfo() {
+  Widget accountInfo(){
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 3,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       child: SingleChildScrollView(
-        child: Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    textStyle("Linked Bank Account", 15, AppColors.primaryColor,
-                        FontWeight.bold),
-                    InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Icon(Icons.close)),
-                  ],
-                ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  textStyle("Linked Bank Account", 15, AppColors.primaryColor,
+                      FontWeight.bold),
+                  InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(Icons.close)),
+                ],
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: fetchAccountData.map((e) {
-                  String url = bankImageAndid.containsKey(e.fipId)
-                      ? bankImageAndid[e.fipId].toString()
-                      : "".toString();
-                  //  var d=await finvuManager.fetchFIPDetails(e.fipId);
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Container(
-                            width: 40,
-                            height: 30,
-                            child: Image.network(
-                              url,
-                              fit: BoxFit.contain,
-                            ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: fetchAccountData.map((e) {
+                String url = bankImageAndid.containsKey(e.fipId)
+                    ? bankImageAndid[e.fipId].toString()
+                    : "".toString();
+                //  var d=await finvuManager.fetchFIPDetails(e.fipId);
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Container(
+                          width: 40,
+                          height: 30,
+                          child: Image.network(
+                            url,
+                            fit: BoxFit.contain,
                           ),
                         ),
-                        textStyle(e.fipName),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        textStyle(e.accountType),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        textStyle(e.maskedAccountNumber),
-                        Obx(()=>  addAccount.value? getcheckBox(e.accountReferenceNumber) :getcheckBox(e.accountReferenceNumber))
-                      ],
-                    ),
-                  );
-                }).toList(),
-              ),
-            ],
-          ),
+                      ),
+                      textStyle(e.fipName),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      textStyle(e.accountType),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      textStyle(e.maskedAccountNumber),
+                      Obx(()=>  addAccount.value? getcheckBox(e.accountReferenceNumber) :getcheckBox(e.accountReferenceNumber))
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
         ),
       ),
     );
@@ -551,21 +549,18 @@ class _AccessState extends State<Access> {
         child: Container(
           width: 50,
           height: 50,
-          child: Expanded(
-            flex: 1,
-            child: Checkbox(value: seletedAccountIds.contains(fipId), onChanged: (value)
-                   {
-                          
-                           if(seletedAccountIds.contains(fipId))
-                           {
-                               seletedAccountIds.remove(fipId); 
-                           }else{
-                               seletedAccountIds.add(fipId); 
-                           }
-                           print(seletedAccountIds);
-                           addAccount.value= !addAccount.value;
-                   }),
-          ),
+          child: Checkbox(value: seletedAccountIds.contains(fipId), onChanged: (value)
+                 {
+                        
+                         if(seletedAccountIds.contains(fipId))
+                         {
+                             seletedAccountIds.remove(fipId); 
+                         }else{
+                             seletedAccountIds.add(fipId); 
+                         }
+                         print(seletedAccountIds);
+                         addAccount.value= !addAccount.value;
+                 }),
         ),
       );
  }
@@ -602,7 +597,8 @@ class _AccessState extends State<Access> {
         children: [
           Icon(Icons.info_outline, color: Colors.grey),
           SizedBox(width: 10),
-          Expanded(
+          Container(
+            width: MediaQuery.of(context).size.width/1.1,
             child: Text(
               "You can pause or cancel sharing anytime via your Finvu app.",
               style: FontManager().getTextStyle(
@@ -733,21 +729,18 @@ class _AccessState extends State<Access> {
         child: Container(
           width: 50,
           height: 50,
-          child: Expanded(
-            flex: 1,
-            child: Checkbox(value: seletedAccountIds.contains(fipId), onChanged: (value)
-                   {
-                          
-                           if(seletedAccountIds.contains(fipId))
-                           {
-                               seletedAccountIds.remove(fipId); 
-                           }else{
-                               seletedAccountIds.add(fipId); 
-                           }
-                           print(seletedAccountIds);
-                           addAccount.value= !addAccount.value;
-                   }),
-          ),
+          child: Checkbox(value: seletedAccountIds.contains(fipId), onChanged: (value)
+                 {
+                        
+                         if(seletedAccountIds.contains(fipId))
+                         {
+                             seletedAccountIds.remove(fipId); 
+                         }else{
+                             seletedAccountIds.add(fipId); 
+                         }
+                         print(seletedAccountIds);
+                         addAccount.value= !addAccount.value;
+                 }),
         ),
       );
  }

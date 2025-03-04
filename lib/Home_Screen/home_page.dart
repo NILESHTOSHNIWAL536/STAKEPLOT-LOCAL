@@ -64,11 +64,8 @@ class _HomePageState extends State<HomePage> {
     getUserLend(context);
     getBudget();
     getHiddenTransactions(context);
-    // getSummary();
     getCategoryData();
     getRemainders(context);
-    getAutoMationsTransactionsCustom("date", context);
-    userController.fetchUserInfo();
     sectionReached.value=false;
   }
 

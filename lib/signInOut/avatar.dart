@@ -81,7 +81,6 @@ class _SigninState extends State<Avatar> {
                 duration: const Duration(milliseconds: 300),
                 margin: const EdgeInsets.symmetric(horizontal: 8),
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-
                 transform: Matrix4.identity()..scale(scale),
                 child: Container(
                   height: 20,
@@ -214,42 +213,42 @@ class _SigninState extends State<Avatar> {
   
 
 // Widget avatarSlider2(){
-    // return   Container(
-    //             width: MediaQuery.of(context).size.width,
-    //              height: MediaQuery.of(context).size.height/3,
-    //             // color: Colors.red,
-    //             // height: MediaQuery.of(context).size.height/2,
-    //             padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 20),
-    //             child: CarouselSlider.builder(
-    //             itemCount: images.length,
+//     return   Container(
+//                 width: MediaQuery.of(context).size.width,
+//                  height: MediaQuery.of(context).size.height/3,
+//                 // color: Colors.red,
+//                 // height: MediaQuery.of(context).size.height/2,
+//                 padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 20),
+//                 child: CarouselSlider.builder(
+//                 itemCount: images.length,
                 
-    //             itemBuilder: (context, index, realIndex) {
-    //                 return  Container(
-    //                                height: MediaQuery.of(context).size.height/4,
+//                 itemBuilder: (context, index, realIndex) {
+//                     return  Container(
+//                                    height: MediaQuery.of(context).size.height/4,
                                    
-    //                                color: Colorcodes.appBarColor,
-    //                                margin: EdgeInsets.symmetric(horizontal: 2),
+//                                    color: Colorcodes.appBarColor,
+//                                    margin: EdgeInsets.symmetric(horizontal: 2),
                                   
-    //                               child: SvgPicture.asset(
-    //                              images[index],
-    //                              width: MediaQuery.of(context).size.width,
-    //                      ),
-    //                             );
-    //             },
-    //           options: CarouselOptions(
-    //              aspectRatio: 1.3,
-    //              height: 400,
-    //             //  autoPlay: true,
+//                                   child: SvgPicture.asset(
+//                                  images[index],
+//                                  width: MediaQuery.of(context).size.width,
+//                          ),
+//                                 );
+//                 },
+//               options: CarouselOptions(
+//                  aspectRatio: 1.3,
+//                  height: 400,
+//                 //  autoPlay: true,
                  
-    //              onPageChanged: (position,reason){
-    //             setState(() {
-    //                   activePage=position;
-    //             });
-    //             },
+//                  onPageChanged: (position,reason){
+//                 setState(() {
+//                       activePage=position;
+//                 });
+//                 },
                 
-    //           )
+//               )
                
-    // ));       
+//     ));       
 
 }
 

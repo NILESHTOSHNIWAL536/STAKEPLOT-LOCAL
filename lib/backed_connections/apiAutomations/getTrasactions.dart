@@ -228,60 +228,31 @@ void getAutoMationsTransactionsWeekly() async {
 void getAutoMationsTransactionsCustom(date, context,
     [weekORmonth = 'month', String? endDate]) async {
  
-  String accountId = "67c04da09c48079de5840b23";
+  if(accountId.value.trim().toString()=="")return;
   String urlPath = endDate != null && weekORmonth == 'Custom'
-      ? "$url/transactionauto/getAllCustomTransactions/${accountId}/${weekORmonth.toLowerCase()}/$date,${getNextDay(endDate)}"
-      : "$url/transactionauto/getAllCustomTransactions/${accountId}/${weekORmonth.toLowerCase()}/$date";
+      ? "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date,${getNextDay(endDate)}"
+      : "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date";
  
-
-  // // Parse and format dates, handling potential incomplete formats
-  // String startDateStr;
-  // try {
-  //   startDateStr = DateTime.parse(date).toIso8601String().split('T')[0];
-  // } catch (e) {
-  //   print("Error parsing date: $e, defaulting to current date");
-  //   startDateStr = DateTime.now().toIso8601String().split('T')[0];
-  // }
-
-  // String endDateStr = '';
-  // if (endDate != null) {
-  //   try {
-  //     endDateStr = DateTime.parse(endDate).toIso8601String().split('T')[0];
-  //   } catch (e) {
-  //     print("Error parsing endDate: $e, defaulting to current date");
-  //     endDateStr = DateTime.now().toIso8601String().split('T')[0];
-  //   }
-  // }
-
-  // String urlPath = endDate != null && weekORmonth == 'Custom'
-  //     ? "$url/transactionauto/getAllCustomTransactions/${weekORmonth.toLowerCase()}/$startDateStr,$endDateStr"
-  //     : "$url/transactionauto/getAllCustomTransactions/${weekORmonth.toLowerCase()}/$startDateStr";
-
   var response = await getDataApiCall(urlPath);
 
-
-  trasactionsDataCreditWeekly.clear();
   trasactionsDataDebitWeekly.clear();
 
   List<String> labelsLocal = weekORmonth == 'Custom' ? List.from(labels) : [];
   List<double> debitList = [];
   List<double> creditList = [];
- double totalDebit = 0.0;
+
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
-    // print("Full API response: ${his['data']}");
-
+   
     transactionChatGraph.clear();
-    if (weekORmonth != 'Custom') {
+    if (weekORmonth != 'Custom')
+    {
       labels.clear();
     }
 
     try {
       Map data = his['data']['transactions'];
-       totalDebit = (his['data']['totalDebit'] as num?)?.toDouble() ?? 0.0;
-      // print("Transactions map keys: ${data.keys.toList()}"); // Log all keys
-      maxYValue.value =
-          double.parse(his['data']['maxAmount'].toString()) ?? 500.0;
+      maxYValue.value = double.parse((his['data']['maxAmount'] ?? 500.0).toString());
       if (maxYValue.value == 0) maxYValue.value = 500.0;
 
       if (weekORmonth == 'Custom' && endDate != null) {
@@ -342,16 +313,17 @@ void getAutoMationsTransactionsCustom(date, context,
     transactionChatGraph['debited'] = debitList; // Debits go to debitedData
     transactionChatGraph['credited'] = creditList; // Credits go to creditedData
 
-    graphTransaction.value = !graphTransaction.value;
+  
     labels.assignAll(labelsLocal);
     getGraphData.value = true;
+
   } else {
     if (weekORmonth == 'Custom') {
       debitList = List.filled(labels.length, 0.0);
       creditList = List.filled(labels.length, 0.0);
       transactionChatGraph['debited'] = debitList;
       transactionChatGraph['credited'] = creditList;
-       totalDebit = 0.0; 
+       //totalDebit = 0.0; 
     }
     getGraphData.value = true;
     
@@ -393,6 +365,7 @@ Future<http.Response> getDataApiCall(urlPath) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   //VCJ9.eyJpZCI6IjY3NWMwYWZiZmNiMTcxMDc2NWFiOGU5MCIsImlhdCI6MTczNzcwMzU3NCwiZXhwIjoxNzQyODg3NTc0fQ.zYUUmoy_xlaZwdvM8r4KDOZNADlLyxPirqDm0avEUXg");
   var accessToken = pref.getString("accessToken");
+
     final response = await http.get(
     Uri.parse(urlPath),
     headers: <String, String>{

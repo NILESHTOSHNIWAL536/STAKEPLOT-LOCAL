@@ -347,21 +347,21 @@ void onUploadImage2(File selectedImage, BuildContext context, String title,
 void sn(res, context) {
   try {
     if (res.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Image uploaded successfully!")),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text("Image uploaded successfully!")),
+      // );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content:
-                Text("Failed to upload image. Status code: ${res.statusCode}")),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //       content:
+      //           Text("Failed to upload image. Status code: ${res.statusCode}")),
+      // );
     }
   } catch (e) {
     // print("Error occurred: $e");
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("An error occurred while uploading the image.")),
-    );
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   // SnackBar(content: Text("An error occurred while uploading the image.")),
+    // );
   }
 }
 
@@ -637,7 +637,6 @@ void getPost() async {
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-    // //print(obj);
     historyListData.clear();
     historyListData.addAll(obj);
     getTrendingData.clear();
