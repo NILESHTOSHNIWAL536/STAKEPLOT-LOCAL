@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:getwidget/components/carousel/gf_carousel.dart';
@@ -38,6 +39,10 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
   final PageController _pageController = PageController(viewportFraction: 0.7);
   int _currentPage = 0;
 
+   void initializeData() {
+    getBankAccounts();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +52,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
             child: SizedBox(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height/2.5, // Adjust height as needed
-          child: avatarSlider2()
+          child:Obx(()=> loadBanks.value ? Spinner(size: 50.0,):avatarSlider2())
         )       
     ));
   }
@@ -84,6 +89,7 @@ Widget avatarSlider2(){
 
   Widget getListViewBankInfo(data)
   {
+      try{
       return  Container(
                 padding:  EdgeInsets.symmetric(horizontal: Colorcodes.paddingHorizontal,vertical:  Colorcodes.paddingHorizontal/4),
                 decoration: BoxDecoration(
@@ -135,6 +141,10 @@ Widget avatarSlider2(){
                   
                   ],
                 ));
+      }catch(e){
+        print(e);
+         return Spinner();
+      }
   }
 
   Widget locker(context) {
@@ -191,35 +201,7 @@ Widget avatarSlider2(){
     );
   }
 
-  //  Widget setPinForAccountHide(context) {
-  //   return Obx(() => cupertinoPin.value == "0"
-  //       ? Padding(
-  //         padding: const EdgeInsets.symmetric(vertical: 10),
-  //         child: InkWell(
-  //             onTap: () {
-  //               showModalBottomSheet(
-  //                 context: context,
-  //                 backgroundColor: Colorcodes.appBarColor,
-  //                 builder: (context) {
-  //                   return setPassword(context);
-  //                 },
-  //               );
-  //             },
-  //             child: Container(
-  //               padding: const EdgeInsets.all(8.0),
-  //               decoration: BoxDecoration(
-  //                borderRadius: BorderRadius.circular(6),
-  //                   color: Colorcodes.textFeild,
-  //               ),
-  //               child: textStyle(
-  //                   text: "Set pin",
-  //                   context: context,
-  //                   fontsize: 10,
-  //                   fontWeight: FontWeight.bold),
-  //             )),
-  //       )
-  //       : digitLoad.value?  locker(context): locker(context));
-  // }
+
   Widget setPinForAccountHide(context) {
     return Obx(() => cupertinoPin.value == "0"?
      Padding(
@@ -309,7 +291,7 @@ Widget avatarSlider2(){
                   // Second Cupertino Picker
                   SizedBox(
                     width: MediaQuery.of(context).size.width / 6,
-      height: MediaQuery.of(context).size.height / 16, // Adjust height as needed
+                     height: MediaQuery.of(context).size.height / 16, // Adjust height as needed
                     child: CupertinoPicker(
                       itemExtent: 26.0, // Height of each item
                       onSelectedItemChanged: (int index) {
@@ -350,11 +332,9 @@ Widget popUpBox(BuildContext context) {
       ),
     ),
     onSelected: (value) {
-      // Handle selection
       selectedBank.value=value;
       accountId.value=value;
       seletedBankUpdateInfo(value,context);
-       updateInfo();
     },
     itemBuilder: (context) {
       return bankAccountLinkedList.map<PopupMenuEntry<String>>((e) {
