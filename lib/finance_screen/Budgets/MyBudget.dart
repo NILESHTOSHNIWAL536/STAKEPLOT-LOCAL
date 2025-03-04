@@ -393,26 +393,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     );
   }
 
-  Widget _buildInsightCard(
-      {required String title, required String description}) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.button,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildText(title, Colors.black, fontWeight: FontWeight.bold),
-          SizedBox(height: 4),
-          _buildText(description, Colors.grey),
-        ],
-      ),
-    );
-  }
-
+  
   Widget graph() {
     return PieChartGraph(
         title: "Categories", graphData: graphObj, graphDisc: []);
@@ -507,7 +488,7 @@ class LineChartSample extends StatelessWidget {
                 ),
                 padding: EdgeInsets.all(8),
                 child: Text(
-                  '${chartData.xString}: ₹${chartData.y.toStringAsFixed(2)}',
+                  '₹${chartData.y.toStringAsFixed(2)}',
                   style: TextStyle(color: Colors.white),
                 ),
               );

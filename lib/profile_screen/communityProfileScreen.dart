@@ -80,7 +80,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
                         //fontSize: 12,
                         color: AppColors.userName)),
                 DefaultTabController(
-                  length: 3, // Number of tabs
+                  length: 2, // Number of tabs
                   child: Column(
                     children: [
                       Container(
