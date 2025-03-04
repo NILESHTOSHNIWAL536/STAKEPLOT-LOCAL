@@ -264,7 +264,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.mt,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -281,10 +281,12 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
             Colors.black,
           ),
           SizedBox(height: 8),
-          _buildRow(
+         
+          _buildRow2(
             'Over spent',
             '₹ ${(totalSpent - (widget.data['amount'] as num)).clamp(0, double.infinity)}',
             Colors.red,
+            
           ),
         ],
       ),
@@ -301,7 +303,21 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
             fontSize: 18, fontWeight: FontWeight.w500),
       ],
     );
+
   }
+   Widget _buildRow2(String title, String value, Color textColor) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _buildText(title, Colors.red,
+            fontSize: 16, fontWeight: FontWeight.w500),
+        _buildText(value, Colors.red,
+            fontSize: 18, fontWeight: FontWeight.w500),
+      ],
+    );
+
+  }
+   
 
   Widget _buildText(String text, Color color,
       {double fontSize = 16, FontWeight fontWeight = FontWeight.normal}) {

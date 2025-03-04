@@ -62,18 +62,40 @@ class _FinancePageState extends State<FinancePage> {
     if (renderObject != null && renderObject is RenderBox) {
       final position = renderObject.localToGlobal(Offset.zero);
       final scrollOffset = widget.scrollController.offset;
-      final targetOffset = position.dy - scrollOffset;
-      // print("Target offset: $targetOffset");
+      final targetOffset = position.dy - scrollOffset-700;
+       print("Target offset: $targetOffset");
       widget.scrollController.animateTo(
         targetOffset > 0 ? targetOffset : 0,
         duration: Duration(milliseconds: 500),
         curve: Curves.easeInOut,
       );
     } else {
-      //  print("RenderObject not found for TransactionHistory");
+        print("RenderObject not found for TransactionHistory");
     }
   }
-
+// void _scrollToTransactionHistory() {
+//     print("Attempting to scroll to TransactionHistory");
+//     final context = widget.transactionHistoryKey.currentContext;
+//     if (context == null) {
+//       print("No context found for transactionHistoryKey");
+//       return;
+//     }
+//     final RenderObject? renderObject = context.findRenderObject();
+//     if (renderObject != null && renderObject is RenderBox) {
+//       final position = renderObject.localToGlobal(Offset.zero);
+//       final scrollOffset = widget.scrollController.offset;
+//       // Scroll to align the top of TransactionHistory with the top of the visible area
+//       final targetOffset = position.dy - 100; // Adjust for app bar height (~100px)
+//       print("Target offset: $targetOffset, Current offset: $scrollOffset");
+//       widget.scrollController.animateTo(
+//         targetOffset.clamp(0, widget.scrollController.position.maxScrollExtent),
+//         duration: Duration(milliseconds: 500),
+//         curve: Curves.easeInOut,
+//       );
+//     } else {
+//       print("RenderObject not found or not a RenderBox");
+//     }
+//   }
   int _getDaysInCurrentMonth() {
     final now = DateTime.now();
     return DateTime(now.year, now.month + 1, 0).day;
@@ -143,7 +165,7 @@ class _FinancePageState extends State<FinancePage> {
                       ),
                       CustomButton(
                         onTap: () {
-                          // print("History button tapped");
+                           print("History button tapped");
                           _scrollToTransactionHistory();
                         },
                         text: 'History',

@@ -336,7 +336,7 @@ void showmodalWidget(data){
 
       return Container(
          width: MediaQuery.of(context).size.width,
-         height: MediaQuery.of(context).size.height/2.4,
+         height: MediaQuery.of(context).size.height/2.7,
          decoration: BoxDecoration(
         //  color: Colorcodes.white,
          borderRadius: BorderRadius.only(
@@ -378,13 +378,13 @@ void showmodalWidget(data){
                         //fontSize: MediaQuery.of(context).size.width * 0.04,
                         //fontSize: 12,
                         color: AppColors.bg1)),
-                Text((data['email'] ?? "").toString(),
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.w400,
-                        //fontSize: MediaQuery.of(context).size.width * 0.04,
-                        //fontSize: 12,
-                        color: AppColors.userName)),
-                const SizedBox(height:30),
+                // Text((data['email'] ?? "").toString(),
+                //     style: FontManager().getTextStyle(context,
+                //         lWeight: FontWeight.w400,
+                //         //fontSize: MediaQuery.of(context).size.width * 0.04,
+                //         //fontSize: 12,
+                //         color: AppColors.userName)),
+                const SizedBox(height:10),
 
                  InkWell(
                   onTap: (){
