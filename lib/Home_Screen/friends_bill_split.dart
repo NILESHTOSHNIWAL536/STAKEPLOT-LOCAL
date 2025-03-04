@@ -988,39 +988,33 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                             );
                             return;
                           }
-                          print(
-                              "NewFriendsUi: Lend mode - Selected friend: ${addedMembers[0]}");
                           Navigator.pop(
                               context,
                               addedMembers[
                                   0]); // Return single friend’s details
                         } else {
-                          print(
-                              "NewFriendsUi: Split mode - Opening AmountEntryModal with totalAmount: ${widget.totalAmount}");
                           Navigator.pop(context);
                           final amounts = await showAmountEntryModal(
                             context,
                             widget.category ?? 'Uncategorized',
                             widget.subcategory ?? 'General',
                           );
-                          print(amounts);
+                         
                           if (amounts != null) {
                             Navigator.pop(context,
                                 amounts); // Return amounts to TransactionHistory
                           }
                           ;
                           if (amounts != null) {
-                            print(
-                                "NewFriendsUi: Split mode - Received amounts: $amounts");
+                           
                             Navigator.pop(
                                 context, amounts); // Return amounts for split
                           } else {
-                            print(
-                                "NewFriendsUi: Split mode - No amounts returned");
+                          
                           }
                         }
                       } else {
-                        print("NewFriendsUi: No friends selected");
+                       
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content:
@@ -1088,23 +1082,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                       child: Column(
                         children: [
                           GestureDetector(
-                            // onTap: () {
-                            //   setState(() {
-                            //     if (addedUser.contains(values)) {
-                            //       addedUser.remove(values);
-                            //       addedMembers.removeWhere((element) => element['id'] == values);
-                            //     } else {
-                            //       addedUser.add(values);
-                            //       addedMembers.add({
-                            //         "name": frdsList[index]['name'],
-                            //         "id": values,
-                            //         'avatar': frdsList[index]['avatar'],
-                            //         "balance": 200,
-                            //       });
-                            //       print("NewFriendsUi: Added member ${frdsList[index]['name']} with ID: $values");
-                            //     }
-                            //   });
-                            // },
+                            
                             onTap: () {
                               setState(() {
                                 if (addedUser.contains(values)) {
@@ -1123,8 +1101,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                     'avatar': frdsList[index]['avatar'],
                                     "balance": 200,
                                   });
-                                  print(
-                                      "NewFriendsUi: Lend mode - Replaced with ${frdsList[index]['name']} (ID: $values)");
+                                 
                                 } else {
                                   addedUser.add(values);
                                   addedMembers.add({
@@ -1133,8 +1110,6 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                     'avatar': frdsList[index]['avatar'],
                                     "balance": 200,
                                   });
-                                  print(
-                                      "NewFriendsUi: Added member ${frdsList[index]['name']} with ID: $values");
                                 }
                               });
                             },
@@ -1214,8 +1189,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
               setState(() {
                 frdsList.clear();
                 frdsList.addAll(filteredList);
-                print(
-                    "NewFriendsUi: Filtered friends list updated: ${frdsList.length} items");
+              
               });
             }
           },
@@ -1287,17 +1261,13 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
       text: initialEqualAmount.toStringAsFixed(2),
     );
     isModified[widget.userId] = false;
-    print(
-        "AmountEntryModal: Initialized user ${widget.userName} (ID: ${widget.userId}) with amount: $initialEqualAmount");
-
+   
     widget.selectedFriends.forEach((friend) {
       amountControllers[friend['id']] = TextEditingController(
         text: initialEqualAmount.toStringAsFixed(2),
       );
       isModified[friend['id']] = false;
-      print(
-          "AmountEntryModal: Initialized friend ${friend['name']} (ID: ${friend['id']}) with amount: $initialEqualAmount");
-    });
+     });
     socket = IO.io(urlWithLocallHost,
         IO.OptionBuilder().setTransports(['websocket']).build());
     setUpSocketListener();
@@ -1327,26 +1297,23 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
       if (amount > widget.totalAmount) {
         amount = widget.totalAmount;
         controller.text = amount.toStringAsFixed(2);
-        print("AmountEntryModal: Capped amount for ID $key to total: $amount");
       }
       currentTotal += amount;
-      print(
-          "AmountEntryModal: Amount for ID $key is: $amount, Modified: ${isModified[key]}");
+ 
     });
     leftoverAmount = widget.totalAmount - currentTotal;
-    print(
-        "AmountEntryModal: Current Total: $currentTotal, Leftover: $leftoverAmount");
+   
     setState(() {});
   }
 
   void settleLeftover() {
     if (leftoverAmount == 0) {
-      print("AmountEntryModal: No leftover to settle");
+     
       return;
     }
 
     if (leftoverAmount < 0) {
-      print("AmountEntryModal: Negative leftover detected, adjusting...");
+     
       // Adjust amounts to fit totalAmount
       double overage = -leftoverAmount;
       List<String> adjustableParticipants = [];
@@ -1366,8 +1333,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         double newAmount =
             (currentAmount - reductionPerPerson).clamp(0, widget.totalAmount);
         amountControllers[id]!.text = newAmount.toStringAsFixed(2);
-        print(
-            "AmountEntryModal: Reduced ID $id: Updated amount from $currentAmount to $newAmount");
+       
       }
     } else {
       // Distribute positive leftover among unchanged participants
@@ -1380,11 +1346,9 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
 
       if (unchangedParticipants.isEmpty) {
         unchangedParticipants = amountControllers.keys.toList();
-        print(
-            "AmountEntryModal: All amounts modified, distributing leftover among all: $unchangedParticipants");
+       
       } else {
-        print(
-            "AmountEntryModal: Distributing leftover among unchanged participants: $unchangedParticipants");
+       
       }
 
       double leftoverPerPerson = leftoverAmount / unchangedParticipants.length;
@@ -1396,14 +1360,12 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         double newAmount =
             (currentAmount + leftoverPerPerson).clamp(0, widget.totalAmount);
         amountControllers[id]!.text = newAmount.toStringAsFixed(2);
-        print(
-            "AmountEntryModal: Settled ID $id: Updated amount from $currentAmount to $newAmount");
+       
       }
     }
 
     calculateTotal();
-    print(
-        "AmountEntryModal: Leftover settled, new total: $currentTotal, new leftover: $leftoverAmount");
+   
   }
 
   @override
@@ -1623,8 +1585,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                     : InkWell(
                        onTap: () {
                     if (leftoverAmount != 0) {
-                      print(
-                          "AmountEntryModal: Cannot confirm, leftover amount: $leftoverAmount");
+                      
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
@@ -1641,7 +1602,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                       amounts[id] = double.tryParse(controller.text) ?? 0.0;
                     });
 
-                    print("AmountEntryModal: Confirming amounts: $amounts");
+               
                     Navigator.pop(context, amounts);
                   },
                   child: buttonContainer(context, "Confirm"),
@@ -1666,7 +1627,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
   double parsedTotalAmount,
 ) {
   if (addedUser.isEmpty) {
-    print("addSocketMessage: No users to send messages to");
+  
     return;
   }
 
@@ -1698,9 +1659,9 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
       socket.emit("message", jsonData);
       String userToSend = rec['name'] + rec['name']; // Fix concatenation if needed
       socket.emit("LoadCharts", {"roomId": userToSend});
-      print("addSocketMessage: Sent message to ${rec['id']} for split $splitID");
+    
     } catch (e) {
-      print("addSocketMessage: Error sending message to ${rec['id']}: $e");
+     
     }
   }
 }
@@ -1714,26 +1675,23 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
   }) async {
     double? parsedTotalAmount = double.tryParse(totalAmount);
     if (parsedTotalAmount == null || parsedTotalAmount <= 0) {
-      print("splitUserAmount: Invalid totalAmount: $totalAmount");
+    
       snackBarCalled(context, "Invalid amount entered!", Colors.red);
       return;
     }
-    print("splitUserAmount: Parsed totalAmount: $parsedTotalAmount");
+    
 
     if (members.isEmpty) {
-      print("splitUserAmount: No members selected");
       snackBarCalled(context, "No members selected!", Colors.red);
       return;
     }
-    print(
-        "splitUserAmount: Members count: ${members.length}, Members: $members");
+    
 
     // Prepare paymentStatus list with individual amounts
     List<Map<String, dynamic>> nameList = [];
     double calculatedTotal = 0.0;
 
     if (amounts != null) {
-      print("splitUserAmount: Using manual amounts: $amounts");
       members.forEach((element) {
         double memberAmount = amounts[element['id']] ?? 0.0;
         nameList.add({
@@ -1742,8 +1700,6 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
           'amount': memberAmount,
         });
         calculatedTotal += memberAmount;
-        print(
-            "splitUserAmount: Added member ${element['id']} with amount: $memberAmount");
       });
       // Include the user's amount if present
       if (amounts.containsKey(currentId.value)) {
@@ -1754,11 +1710,8 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
           'amount': userAmount,
         });
         calculatedTotal += userAmount;
-        print(
-            "splitUserAmount: Added user ${currentId.value} with amount: $userAmount");
       }
     } else {
-      print("splitUserAmount: Falling back to equal split");
       double amountPerPerson = parsedTotalAmount / (members.length + 1);
       members.forEach((element) {
         nameList.add({
@@ -1767,8 +1720,6 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
           'amount': amountPerPerson,
         });
         calculatedTotal += amountPerPerson;
-        print(
-            "splitUserAmount: Added member ${element['id']} with equal amount: $amountPerPerson");
       });
       nameList.add({
         'member': currentId.value,
@@ -1776,15 +1727,12 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         'amount': amountPerPerson,
       });
       calculatedTotal += amountPerPerson;
-      print(
-          "splitUserAmount: Added user ${currentId.value} with equal amount: $amountPerPerson");
+      
     }
 
     // Verify total matches
     if ((calculatedTotal - parsedTotalAmount).abs() > 0.01) {
       // Allow small floating-point errors
-      print(
-          "splitUserAmount: Total mismatch detected! Calculated: $calculatedTotal, Expected: $parsedTotalAmount");
       snackBarCalled(context, "Total amount mismatch!", Colors.red);
       return;
     }
@@ -1792,7 +1740,6 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
     if (accessToken == null) {
-      print("splitUserAmount: No access token found");
       snackBarCalled(context, "Authentication error!", Colors.red);
       return;
     }
@@ -1812,22 +1759,16 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         "image": '',
       }),
     );
-    print("splitUserAmount: API request sent with paymentStatus: $nameList");
-    print(
-        "splitUserAmount: API response status: ${response.statusCode}, body: ${response.body}");
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
       splitID.value = body['id']['_id'];
-      print("splitUserAmount: Split ID set: ${splitID.value}");
 
       // Send notifications and socket messages with individual amounts
       for (var member in members) {
         double memberAmount = amounts?[member['id']] ??
             (parsedTotalAmount / (members.length + 1));
         String formattedAmount = memberAmount.toStringAsFixed(2);
-        print(
-            "splitUserAmount: Sending notification to ${member['id']} with amount: $formattedAmount");
         sendNotificationsToDevice(
           member['id'],
           context,
@@ -1842,12 +1783,9 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         );
       }
 
-      print("splitUserAmount: Split successful");
       snackBarCalled(context, "Split amount sent to users!", Colors.black);
       //Navigator.pop(context);
     } else {
-      print(
-          "splitUserAmount: API error - Status: ${response.statusCode}, Body: ${response.body}");
       snackBarCalled(context, "Can't split, error!", Colors.red);
     }
 

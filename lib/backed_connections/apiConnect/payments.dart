@@ -38,11 +38,9 @@ void getBudget() async {
   String urlPath = "${url}/budget/";
   try {
     var responce = await getDataApiCall(urlPath);
-    printData(responce);
     if (getFlagOfResponse(responce)) {
       var his = jsonDecode(responce.body);
       var obj = his['data'];
-      print(obj);
       budgetList.clear();
       budgetList.addAll(obj);
       budgetLength.value = obj.length;
@@ -595,12 +593,9 @@ void getTopFiveCater() async {
 Future<String?> getToken() async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   var accessToken = pref.getString("accessToken");
-
   if (accessToken == null) {
-    print("No access token found in SharedPreferences");
     return null;
   } else {
-    print("Token: $accessToken");
     return accessToken;
   }
 }

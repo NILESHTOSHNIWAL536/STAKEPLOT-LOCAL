@@ -24,8 +24,6 @@ void getAck() async {
     var his = jsonDecode(response.body);
     var obj = his['data'];
     hasGetNewNotifications.value = obj != 0;
-    print("hasGetNewNotifications.value----------------");
-    print(hasGetNewNotifications.value);
   } else {}
 }
 
@@ -119,6 +117,16 @@ void PinPasswordVerify(password, context, Function setBack) async {
   }
 }
 
+void seletedBankUpdateInfo(id,context) async {
+  var response = await getDataApiCall("${url}/user/selectedBank/${id}");
+  printData(response, context);
+  if (response.statusCode == 200 || response.statusCode == 200) {
+      
+  } else {
+  
+  }
+}
+
 // void getAllTransaction(context) async {
 //   var response = await getDataApiCall("${url}/transaction/all");
 //   if (response.statusCode == 200) {
@@ -138,8 +146,6 @@ void getAllTransaction(context) async {
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-    //print("trasactionsHistory,,,,,,,,");
-    print(response.body);
     trasactionsHistory.clear();
     trasactionsHistory.addAll(obj);
     getHistory.value = !getHistory.value;
@@ -151,10 +157,7 @@ void getInsights(context) async {
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-    //print("trasactionsHistory,,,,,,,,");
-     print(" .................insights  History,,,,,,,,");
-    print(response.body);
-    print(response.body);
+   
     inSights.clear();
     inSights.addAll(obj);
     getHistory.value = !getHistory.value;
@@ -167,8 +170,6 @@ void getHiddenTransactions(context) async {
   if (response.statusCode == 200) {
     var her = jsonDecode(response.body);
     var obj = her['data'];
-    print(" .................Hidden trasactions History,,,,,,,,");
-    print(response.body);
     hiddentrasactionsHistory.clear();
     hiddentrasactionsHistory.addAll(obj);
     getHiddenHistory.value = !getHiddenHistory.value;
@@ -185,7 +186,7 @@ void getAllTransactionHistory(
       var his = jsonDecode(response.body);
 
       var obj = his['data'];
-      print(his);
+    
       transactionsHistory.clear();
       if (obj != null && obj is List<dynamic>) {
         if (flag) {
@@ -202,12 +203,7 @@ void getAllTransactionHistory(
         );
       }
     } else {
-      //  print("API call failed with status: ${response.statusCode}");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content:
-                Text("Failed to load transactions: ${response.statusCode}")),
-      );
+      
     }
   } catch (e) {
     //  print("Exception occurred: $e");
@@ -219,8 +215,7 @@ void getAllTransactionHistory(
 }
 
 void extractTransaction(bool isYearView, List obj) {
-  print("------------------------ extra called...");
-  print(isYearView);
+ 
   if (isYearView) {
     getTransactionByYear(obj, selectedYear.value);
   } else {
@@ -229,10 +224,8 @@ void extractTransaction(bool isYearView, List obj) {
 }
 
 void getTransactionByYear(List obj, y) {
-  print(y);
-  print(obj);
   obj.forEach((ele) {
-    print(ele);
+  
     if (isCurrentYear(ele['transactionTimestamp'], y)) {
       transactionsHistory.add(ele);
     }
@@ -240,10 +233,8 @@ void getTransactionByYear(List obj, y) {
 }
 
 void getTransactionByMonth(List obj, y) {
-  print(y);
-  print(obj);
+ 
   obj.forEach((ele) {
-    print(ele);
     if (isCurrentMonth(ele['transactionTimestamp'], y)) {
       transactionsHistory.add(ele);
     }

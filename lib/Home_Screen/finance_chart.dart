@@ -101,8 +101,7 @@ class _FinancePageState extends State<FinancePage> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double fontSizeFactor = screenWidth * 0.01;
-    print("=========================transactionChatGraph");
-print(transactionChatGraph);
+
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       body: Obx(() => !getGraphData.value

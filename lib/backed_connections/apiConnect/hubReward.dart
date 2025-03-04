@@ -84,10 +84,9 @@ void  getproduct()async
                 
       }
       else{
-           //print("error in getting Offers");
+      
       }
     }catch(e){
-       //print("error in offers Api");
 
     }
  

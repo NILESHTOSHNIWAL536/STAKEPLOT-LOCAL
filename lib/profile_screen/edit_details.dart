@@ -239,10 +239,9 @@ final Map<String, TextEditingController> _controllers = {
     return Card(
       //elevation: 2,
       child: ListTile(
-        leading: AvatarProfileImage(url:  bankImagemap[bankName] ?? avatarUser.value, width: 10, height: 10),
+        // leading: AvatarProfileImage(url:  bankImagemap[bankName] ?? avatarUser.value, width: 10, height: 10),
         title: Text(bankName),
         subtitle: Text(accountNumber),
-
       ),
     );
   }

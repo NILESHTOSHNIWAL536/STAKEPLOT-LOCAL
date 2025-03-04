@@ -35,12 +35,8 @@ void initFinvuManager(BuildContext context) async {
    snackBarCalled(context,finvuManager.connect().toString());
   var isConnected = await finvuManager.isConnected();
 
-  print("websocket connected : ");
-  print(isConnected);
-
   if (!isConnected) {
     isConnected = await finvuManager.isConnected();
-    print(isConnected);
   }
 }
 
@@ -84,10 +80,10 @@ Future<void> loginWithServer(context) async {
       // Proceed with next steps, e.g., calling another API
       // ConsentStatus(context, token, consentHandleId, custId);
     } else {
-      print("Login failed: ${response.body}");
+    
     }
   } catch (error) {
-    print("Error logging in: $error");
+   
   }
 }
 Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
@@ -152,14 +148,14 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
       );
       
     } else {
-      print("Error fetching data: ${response.body}");
+    
       sessionId.value=true;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Data is not ready to fetch yet. We will notify you once it's available.")),
       );
     }
   } catch (e) {
-    print("Error: $e");
+   
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text("Bank server issue detected. We'll notify you once your data is retrieved")),
     );
@@ -180,17 +176,17 @@ Future<void> FetchTransactionBysessionId(BuildContext context,String sessionId) 
     if (response.statusCode == 200) {
         final data = json.decode(response.body);
         
-      print("storeDataOfTransactions 1");
+    
       await storeDataOfTransactions(context, data['data'], data['handleId'], data["from"],
           data["to"], "",  data["custId"],data['consentId'], data["sessionId"]);
-      print("storeDataOfTransactions 2");
+   
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Data fetched successfully!")),
       );
 
     } else {
-      print("Error fetching data: ${response.body}");
+     
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Failed to fetch data")),
       );

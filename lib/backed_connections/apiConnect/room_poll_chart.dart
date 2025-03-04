@@ -15,8 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 void getChats(data) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
-  // //print(data);
-  // //print(data['_id']);
+  
   final response = await http.get(
     Uri.parse('${url}/chat/${data['_id']}'),
     headers: <String, String>{
@@ -28,9 +27,6 @@ void getChats(data) async {
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     List obj = his['data'];
-
-    // //print("chat data");
-    // //print(obj);
     messagesTemp.clear();
     messages.clear();
     obj.forEach((element) {
@@ -69,13 +65,10 @@ void upvote(context, String str, String objectId) async {
       'objectId': objectId,
     }),
   );
-  //printData(response,context);
+ 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     snackBarCalled(context, "Liked!", Colors.black);
-    //  sets
-    //  Navigator.pop(context);
-    //  Navigator.pushNamed(context, '/TribeHome');
   } else {
     snackBarCalled(context, "error while Liked!", Colors.red);
   }
@@ -96,13 +89,10 @@ void downvote(context, String str, String objectId) async {
       'objectId': objectId,
     }),
   );
-  //printData(response,context);
+ 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     snackBarCalled(context, "DisLiked!", Colors.black);
-
-    //  Navigator.pop(context);
-    //  Navigator.pushNamed(context, '/home');
   } else {
     snackBarCalled(context, "error while DisLiked!", Colors.red);
   }
@@ -122,7 +112,7 @@ void mute(context, String type, String id) async {
       'id': id,
     }),
   );
-  //printData(response,context);
+  
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     snackBarCalled(context, "Muted...!", Colors.black);
@@ -134,7 +124,7 @@ void mute(context, String type, String id) async {
 void exitRoom(context, String id) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
-  //print("account");
+ 
   final response = await http.patch(
     Uri.parse('${url}/room/exit/${id}'),
     headers: <String, String>{
@@ -143,17 +133,11 @@ void exitRoom(context, String id) async {
     },
     body: jsonEncode({}),
   );
-  printData(response, context);
+
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    // Navigator.pushReplacement(
-    //         context,
-    //         MaterialPageRoute(
-    //           builder: (context) => RoomHome(),
-    //         ),
-    //     );
+    
     getUserInfomations();
-    //  room.clear();
     snackBarCalled(context, "exited from room...!", Colors.black);
   } else {
     snackBarCalled(context, "error while exiting...!", Colors.red);
@@ -392,10 +376,9 @@ void votePollInPost(context, String id, int index) async {
     },
     body: jsonEncode({'optionIndex': index}),
   );
-  printData(response, context);
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    print(body['data']);
+  
     var data=body['data'];
       for (int i = 0; i < getTrendingData.length; i++) {
             if (getTrendingData[i]['_id'] == data['_id']) {
@@ -426,21 +409,10 @@ void updateRoom(
       "expenses": expenses,
     }),
   );
-  //printData(response,context);
+
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     snackBarCalled(context, "Room Is Updated!", Colors.black);
-
-    //  Navigator.pop(context);
-    //   Navigator.push(
-    //   context,
-    //   PageTransition(
-    //     type: PageTransitionType.fade,
-    //      duration: Durations.long1,
-    //     child: RoomHome(),
-    //     isIos: true,
-    //   ),
-    // );
   } else {
     snackBarCalled(context, "can't update  room error!", Colors.red);
   }
@@ -449,7 +421,6 @@ void updateRoom(
 void getChatLoader() async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
-  // //print("getChatLoader");
   final response = await http.get(
     Uri.parse(url + '/chat/users/order'),
     // Uri.parse(url+'/chat/un/viewed'),
@@ -459,17 +430,16 @@ void getChatLoader() async {
     },
   );
 
-  //  printData(response);
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     var his = jsonDecode(response.body);
     List obj = his['data'];
-    // print(obj);
+   
 
     chatList.clear();
     chatListOriginal.clear();
     obj.forEach((element) {
-      print(element);
+    
       try {
         var userInfo = element['chats']['details']['_id'];
         String key = userInfo['sender'] == currentId.value
@@ -530,9 +500,9 @@ void addMessage(
   );
 
   if (response.statusCode == 200 || response.statusCode == 201) {
-    // //print('Post created successfully')
+   
   } else {
-    // //print('Failed to create post: ${response.reasonPhrase}');
+    
   }
 }
 
@@ -569,15 +539,15 @@ void addChatSplitAmount(
       },
       body: jsonEncode(jsonData),
     );
-    // printData(response);
+   
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      //  print('Post created successfully');
+     
     } else {
-      // print('Failed to create post: ${response.reasonPhrase}');
+      
     }
   } catch (e) {
-    print(e);
+    
   }
 }
 
@@ -631,12 +601,6 @@ void addMessageImage(context, String messageType, String messageObj, String id,
 
   String urlPath = jsonMap['secure_url'];
 
-  //  var urlPathData=await addImageToCloud(imageFile,context);
-  //  List urlLocalPath=urlPathData.split("futureImagepathNileshBhaijan");
-
-  // String urlPath=urlLocalPath[0];
-  // String urlPath2=urlLocalPath[1];
-  print(urlPath);
   messages.insert(
       0,
       Message(
@@ -694,7 +658,7 @@ void addMessageImage(context, String messageType, String messageObj, String id,
   );
 
   if (response.statusCode == 200 || response.statusCode == 201) {
-    // //print('Post created successfully');
+    
 
     messages.insert(
         0,
@@ -719,8 +683,7 @@ void addMessageImage(context, String messageType, String messageObj, String id,
 void getChats2(data, key) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
-  // //print(data);
-  // //print(data['_id']);
+  
   final response = await http.get(
     Uri.parse('${url}/chat/${data['_id']}'),
     headers: <String, String>{
@@ -733,8 +696,7 @@ void getChats2(data, key) async {
     var his = jsonDecode(response.body);
     List obj = his['data'];
 
-    // //print("chat data");
-    // //print(obj);
+
     messagesTemp.clear();
     //  messages.clear();
     obj.forEach((element) {
@@ -755,8 +717,7 @@ void getChats2(data, key) async {
     });
 
     chatOfUserListData[key] = messagesTemp;
-    //  //print("chatOfUserListData ------------------------------");
-    //  //print(chatOfUserListData);
+  
   } else {}
 }
 
@@ -772,7 +733,7 @@ void unSeenChat(context, String id) async {
     },
     body: jsonEncode({}),
   );
-  //print(response.body);
+ 
 }
 
 void getPolls(id) async {

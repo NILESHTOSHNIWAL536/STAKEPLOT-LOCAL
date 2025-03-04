@@ -14,28 +14,20 @@ import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void verify(String otp, context) async {
-  print(otp);
-  print(otpReference);
-  print(finvuManager.isConnected());
-
-  
+ 
   try {
-    print(1);
+   
     var login = await finvuManager.verifyLoginOtp(
       otp,
       otpReference,
     );
     snackBarCalled(context, otp+" send2 "+otpReference);
-    print(2);
-    print(login);
-    print(login.userId);
-
+  
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     String? token = await _pref.getString("token");
-    print("token 1");
+  
     clearStackLocalInfo();
     getLinkedAccountInfo();
-    print("token 2");
 
                   Navigator.push(
                       context,
@@ -45,8 +37,7 @@ void verify(String otp, context) async {
                   );
                   
   } catch (e) {
-    print("error====");
-    print(e);
+   
     snackBarCalled(context, "Invalid Otp/Number...");
   }
 }
@@ -88,10 +79,10 @@ class _FinvuAccountState extends State<FinvuAccount> {
 
     await finvuManager.connect();
     var isConnected = await finvuManager.isConnected();
-    print(isConnected);
+
     if (!isConnected) {
       isConnected = await finvuManager.isConnected();
-      print(isConnected);
+    
     }
   }
 
@@ -242,7 +233,7 @@ class _FinvuAccountState extends State<FinvuAccount> {
     snackBarCalled(context, "%"+finvuManager.isConnected().toString()+"%");
     snackBarCalled(context, "%"+login.reference+"%");
     otpReference = login.reference;
-    debugPrint('LoggedIn');
+    
   }
 
   void fetch() async {
@@ -303,21 +294,9 @@ class _FinvuAccountState extends State<FinvuAccount> {
   void fetchLinkedAccounts() async {
     try {
       finvuLinkedAccountDetailsInfo = await finvuManager.fetchLinkedAccounts();
-      // finvuLinkedAccountDetailsInfo.forEach((e){
-      //       print("---------------------------");
-      //       print(e.userId);
-      //       print(e.consentIdList);
-      //       print(e.fiType);
-      //       print(e.fipName);
-      //       print(e.fipId);
-      //       print(e);
-
-      // });
     } catch (e) {
-      print(e);
+  
     }
-
-    debugPrint('fetchLinkedAccounts');
   }
 
   void getConsentHandleStatus() async {
@@ -343,12 +322,12 @@ class _FinvuAccountState extends State<FinvuAccount> {
       _pref.remove("ConsentHandleId");
       await finvuManager.logout();
 
-      print("Logout user...");
+     
     } catch (e) {
-      print(e);
+      
     }
 
-    debugPrint('getConsentHandleStatus');
+
   }
 
   void getConsentRequestDetails() async {
@@ -356,10 +335,10 @@ class _FinvuAccountState extends State<FinvuAccount> {
       finvuConsentRequestDetailInfo =
           await finvuManager.getConsentRequestDetails(handleId.value);
     } catch (e) {
-      print(e);
+     
     }
 
-    debugPrint('getConsentRequestDetails');
+   
   }
 
   // void discoverAccounts() async {

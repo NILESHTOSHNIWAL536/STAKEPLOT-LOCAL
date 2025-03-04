@@ -112,7 +112,7 @@ void addPost(context, String title, String description, File obj) async {
   var imageBytes = obj.readAsBytesSync();
   // var base64Image = compressImage(imageBytes);
   var base64Image = base64Encode(imageBytes);
-  // //print(base64Image);
+ 
 
   final response = await http.post(
     Uri.parse('${url}/post'),

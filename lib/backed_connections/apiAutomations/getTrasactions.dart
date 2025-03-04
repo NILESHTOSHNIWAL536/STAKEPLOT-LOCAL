@@ -227,14 +227,12 @@ void getAutoMationsTransactionsWeekly() async {
 // }
 void getAutoMationsTransactionsCustom(date, context,
     [weekORmonth = 'month', String? endDate]) async {
-  print("start date ${date}");
-  print("end date ${endDate}");
+ 
   String accountId = "67c04da09c48079de5840b23";
   String urlPath = endDate != null && weekORmonth == 'Custom'
       ? "$url/transactionauto/getAllCustomTransactions/${accountId}/${weekORmonth.toLowerCase()}/$date,${getNextDay(endDate)}"
       : "$url/transactionauto/getAllCustomTransactions/${accountId}/${weekORmonth.toLowerCase()}/$date";
-  // print("Raw date input: $date");
-  // print("Raw endDate input: $endDate");
+ 
 
   // // Parse and format dates, handling potential incomplete formats
   // String startDateStr;
@@ -260,7 +258,7 @@ void getAutoMationsTransactionsCustom(date, context,
   //     : "$url/transactionauto/getAllCustomTransactions/${weekORmonth.toLowerCase()}/$startDateStr";
 
   var response = await getDataApiCall(urlPath);
-  print("end................... date ${response.body}");
+
 
   trasactionsDataCreditWeekly.clear();
   trasactionsDataDebitWeekly.clear();
@@ -291,30 +289,21 @@ void getAutoMationsTransactionsCustom(date, context,
         DateTime end = DateTime.parse(endDate);
         debitList = List.filled(labelsLocal.length, 0.0);
         creditList = List.filled(labelsLocal.length, 0.0);
-        // print("Labels before mapping: $labelsLocal");
-        // print("Date range - Start: $startDate, End: $end");
-//transactionChatGraph['totalDebit'] = his['data']['totalDebit'];
+       
         data.forEach((key, value) {
           DateTime txDate = DateTime.parse(key);
           String dayStr = txDate.day.toString().padLeft(2, '0');
           int index = labelsLocal.indexOf(dayStr);
 
-          // print(
-          //     "Processing - key: $key, day: $dayStr, index: $index, value: $value");
           if (index != -1 &&
               txDate.isAfter(startDate.subtract(Duration(days: 1))) &&
               txDate.isBefore(end.add(Duration(days: 1)))) {
             debitList[index] = getDouble(value['debit']);
             creditList[index] = getDouble(value['credit']);
-            // print(
-            //     "Mapped - key: $key, day: $dayStr, index: $index, debit: ${debitList[index]}, credit: ${creditList[index]}");
-          } else {
-            // print(
-            //     "Skipped - key: $key, day: $dayStr, index: $index (out of range or invalid index)");
-          }
+             } else {
+             }
         });
-       // print("Debit list after mapping: $debitList");
-       // print("Credit list after mapping: $creditList");
+       
       } else {
         data.forEach((key, value) {
           String label = weekORmonth == 'Custom'
@@ -326,7 +315,7 @@ void getAutoMationsTransactionsCustom(date, context,
         });
       }
     } catch (e) {
-      print("Error processing data: $e");
+   
       maxYValue.value = 500.0;
       debitList = List.filled(labelsLocal.length, 0.0);
       creditList = List.filled(labelsLocal.length, 0.0);
@@ -404,8 +393,7 @@ Future<http.Response> getDataApiCall(urlPath) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   //VCJ9.eyJpZCI6IjY3NWMwYWZiZmNiMTcxMDc2NWFiOGU5MCIsImlhdCI6MTczNzcwMzU3NCwiZXhwIjoxNzQyODg3NTc0fQ.zYUUmoy_xlaZwdvM8r4KDOZNADlLyxPirqDm0avEUXg");
   var accessToken = pref.getString("accessToken");
-  print(accessToken);
-  final response = await http.get(
+    final response = await http.get(
     Uri.parse(urlPath),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
@@ -853,7 +841,6 @@ void pickCustomDateRange(BuildContext context) async {
 
     String startDate = picked.start.toIso8601String().split('T')[0];
     String endDate = picked.end.toIso8601String().split('T')[0];
-    print("Calling getAutoMations with start: $startDate, end: $endDate");
     getAutoMationsTransactionsCustom(startDate, context, 'Custom', endDate);
   }
 }

@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:http/http.dart' as http;
 import 'package:page_transition/page_transition.dart';
@@ -17,15 +18,13 @@ void approveBill(context, id, type, notifyId) async {
   String urlPath = "${url}/bill/acceptBill/${id}/${type}/${notifyId}";
 
   var responce = await getDataApiCall(urlPath);
-  printData(responce, "");
+
   if (getFlagOfResponse(responce)) {}
 }
 
 // void getRemainders(context) async {
 //   String urlPath = "${url}/reminders";
 //   var responce = await getDataApiCall(urlPath);
-//   print("responce................................");
-//   print(responce.body);
 
 //   if (getFlagOfResponse(responce)) {
 //     var his = jsonDecode(responce.body);
@@ -36,7 +35,6 @@ void approveBill(context, id, type, notifyId) async {
 //     dueAmountRemainders.addAll(userDue);
 //     dueAmountRemainders.addAll(userDue2);
 //     dueAmountRemainders.addAll(userDue3);
-//     print(dueAmountRemainders);
 //     getdueUsers.value = !getdueUsers.value;
 //   }
 
@@ -44,8 +42,6 @@ void approveBill(context, id, type, notifyId) async {
 void getRemainders(context) async {
   String urlPath = "${url}/reminders";
   var responce = await getDataApiCall(urlPath);
-  print("responce................................");
-  print(responce.body);
 
   if (getFlagOfResponse(responce)) {
     var his = jsonDecode(responce.body);
@@ -61,8 +57,7 @@ void getRemainders(context) async {
     lendAmountRemainders.addAll(userDue2);
     dueAmountRemainders.addAll(userDue3);
     lendAmountRemainders.addAll(userDue4);
-    print(dueAmountRemainders);
-     print(lendAmountRemainders);
+ 
     getdueUsers.value = !getdueUsers.value;
   }
 }
@@ -108,8 +103,7 @@ void getuserPost(id) async {
       "Authorization": "$accessToken",
     },
   );
-  // print(url);
-  // printData(response);
+
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
@@ -174,6 +168,7 @@ void getUserInfomations() async {
 
     aboutMe.value = (obj['aboutMe'] == "Hello");
     aboutUS.value = obj['aboutMe'];
+    selectedBank.value = obj['selectedBank']??"";
 
     List s = obj['accounts'];
     income.value = 0;
@@ -282,9 +277,7 @@ void addLendUserAmount(
 
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
-  //  print('nameList');
-  //  print(nameList);
-
+ 
   final response = await http.post(
     Uri.parse('${url}/bill'),
     headers: <String, String>{
@@ -301,7 +294,7 @@ void addLendUserAmount(
       'dueDate': getCurrentFormattedDate(),
     }),
   );
-  //printData(response,context);
+  
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     snackBarCalled(context, "Lend Amount send to users!", Colors.black);
@@ -350,14 +343,12 @@ void splitUserAmount(context, String amount, List members, String name) async {
       "image": ''
     }),
   );
-  //printData(response,context);
+
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
 
     splitID.value = body['id']['_id'];
-    // print("splitID.value");
-    // print(body['id']);
-    // print(splitID.value);
+   
     members.forEach((e) {
       sendNotificationsToDevice(e['id'], context,
           "${userName.value} Has Send U a Split Bill..Of ${name} Of ${amount}");
@@ -397,7 +388,7 @@ void aboutuser(context, String about) async {
       "aboutMe": about,
     }),
   );
-  // printData(response,context);
+  
   if (response.statusCode == 200 || response.statusCode == 201) {
     snackBarCalled(context, "Updated users Info!", Colors.black);
   } else {
@@ -425,7 +416,7 @@ void addAccount(context, String account, String money) async {
     snackBarCalled(context, "Account Added...!");
     Navigator.pushNamed(context, '/home');
   } else {
-    // //print('Failed to create post: ${response.reasonPhrase}');
+    
   }
 }
 
@@ -449,7 +440,7 @@ void editUserDetails(context, Map<String, TextEditingController> controller) asy
       "avatarType":(changeAvater.value =="Loading..." || changeAvater.value =="")?avatar.value:changeAvater.value ,
     }),
   );
-   printData(response,context);
+  
    var responce = jsonDecode(response.body);
    
     bool boolvar = responce['success'];
@@ -470,6 +461,6 @@ void editUserDetails(context, Map<String, TextEditingController> controller) asy
     // snackBarCalled(context, "can't edit User Info error!", Colors.red);
   }
  }catch(e){
-     print("error----"+e.toString());
+    
  }
 }
