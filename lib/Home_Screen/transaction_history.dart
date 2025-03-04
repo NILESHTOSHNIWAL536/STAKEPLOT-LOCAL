@@ -1858,7 +1858,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
             totalAmount: amount.toDouble(),
             userId: currentId.value,
             userName: userName.value,
-            userAvatar: userAvatarProfile.value,
+            userAvatar: avatar.value,
             isLendMode: isLendMode,
              category: category,
              subcategory: subcategory

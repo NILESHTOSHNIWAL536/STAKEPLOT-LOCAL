@@ -933,7 +933,7 @@ class _ModalContentState extends State<ModalContent>
           totalAmount: totalAmount,
           userId: currentId.value,
           userName: userName.value,
-          userAvatar: userAvatarProfile.value,
+          userAvatar: avatar.value,
           isLendMode: isLendMode,
         );
       },

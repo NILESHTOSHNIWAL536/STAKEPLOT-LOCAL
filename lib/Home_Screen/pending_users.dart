@@ -64,7 +64,7 @@ class _UserListScreenState extends State<UserListScreen> {
             ],
           ),
         ),
-        Obx(() => getlendUsers.value ? getUser() : getUser())
+        Obx(() => getlendUsers.value ? getUser() : getUser2())
       ],
     );
   }
@@ -80,6 +80,23 @@ class _UserListScreenState extends State<UserListScreen> {
               .take(2)
               .map((data) => _buildListTile(context, data, false))
               .toList(),
+              
+        ),
+      ),
+    );
+  }
+  Widget getUser2() {
+    return Visibility(
+      visible: dueAmountRemainders.isNotEmpty,
+      child: Container(
+        width: MediaQuery.of(context).size.width / 1.1,
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        child: Column(
+          children: dueAmountRemainders
+              .take(2)
+              .map((data) => _buildListTile(context, data, true))
+              .toList(),
+              
         ),
       ),
     );

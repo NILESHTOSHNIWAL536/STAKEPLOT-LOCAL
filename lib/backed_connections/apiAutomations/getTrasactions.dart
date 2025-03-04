@@ -227,12 +227,11 @@ void getAutoMationsTransactionsWeekly() async {
 // }
 void getAutoMationsTransactionsCustom(date, context,
     [weekORmonth = 'month', String? endDate]) async {
- 
-  if(accountId.value.trim().toString()=="")return;
+  if (accountId.value.trim().toString() == "") return;
   String urlPath = endDate != null && weekORmonth == 'Custom'
       ? "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date,${getNextDay(endDate)}"
       : "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date";
- 
+
   var response = await getDataApiCall(urlPath);
 
   trasactionsDataDebitWeekly.clear();
@@ -243,16 +242,21 @@ void getAutoMationsTransactionsCustom(date, context,
 
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
-   
+
     transactionChatGraph.clear();
-    if (weekORmonth != 'Custom')
-    {
+    if (weekORmonth != 'Custom') {
       labels.clear();
     }
 
     try {
       Map data = his['data']['transactions'];
-      maxYValue.value = double.parse((his['data']['maxAmount'] ?? 500.0).toString());
+      //print(data);
+      print("his['totalDebit']");
+      print(his['data']['totalCredit']);
+      totalDebitValue.value =
+          double.parse((his['data']['totalCredit'] ?? 500.0).toString());
+      maxYValue.value =
+          double.parse((his['data']['maxAmount'] ?? 500.0).toString());
       if (maxYValue.value == 0) maxYValue.value = 500.0;
 
       if (weekORmonth == 'Custom' && endDate != null) {
@@ -260,7 +264,7 @@ void getAutoMationsTransactionsCustom(date, context,
         DateTime end = DateTime.parse(endDate);
         debitList = List.filled(labelsLocal.length, 0.0);
         creditList = List.filled(labelsLocal.length, 0.0);
-       
+
         data.forEach((key, value) {
           DateTime txDate = DateTime.parse(key);
           String dayStr = txDate.day.toString().padLeft(2, '0');
@@ -271,10 +275,8 @@ void getAutoMationsTransactionsCustom(date, context,
               txDate.isBefore(end.add(Duration(days: 1)))) {
             debitList[index] = getDouble(value['debit']);
             creditList[index] = getDouble(value['credit']);
-             } else {
-             }
+          } else {}
         });
-       
       } else {
         data.forEach((key, value) {
           String label = weekORmonth == 'Custom'
@@ -286,17 +288,15 @@ void getAutoMationsTransactionsCustom(date, context,
         });
       }
     } catch (e) {
-   
       maxYValue.value = 500.0;
       debitList = List.filled(labelsLocal.length, 0.0);
       creditList = List.filled(labelsLocal.length, 0.0);
-      //transactionChatGraph['totalDebit'] = 0.0; 
-       //totalDebit = 0.0; 
+      //transactionChatGraph['totalDebit'] = 0.0;
+      //totalDebit = 0.0;
       if (labelsLocal.isEmpty) {
         labelsLocal =
             weekORmonth == 'Week' ? getWeekDays() : getDaysInMonth(date);
       }
-      
     }
 
     if (selectedButton.value == 'Week') {
@@ -313,20 +313,17 @@ void getAutoMationsTransactionsCustom(date, context,
     transactionChatGraph['debited'] = debitList; // Debits go to debitedData
     transactionChatGraph['credited'] = creditList; // Credits go to creditedData
 
-  
     labels.assignAll(labelsLocal);
     getGraphData.value = true;
-
   } else {
     if (weekORmonth == 'Custom') {
       debitList = List.filled(labels.length, 0.0);
       creditList = List.filled(labels.length, 0.0);
       transactionChatGraph['debited'] = debitList;
       transactionChatGraph['credited'] = creditList;
-       //totalDebit = 0.0; 
+      //totalDebit = 0.0;
     }
     getGraphData.value = true;
-    
   }
 }
 
@@ -366,7 +363,7 @@ Future<http.Response> getDataApiCall(urlPath) async {
   //VCJ9.eyJpZCI6IjY3NWMwYWZiZmNiMTcxMDc2NWFiOGU5MCIsImlhdCI6MTczNzcwMzU3NCwiZXhwIjoxNzQyODg3NTc0fQ.zYUUmoy_xlaZwdvM8r4KDOZNADlLyxPirqDm0avEUXg");
   var accessToken = pref.getString("accessToken");
 
-    final response = await http.get(
+  final response = await http.get(
     Uri.parse(urlPath),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
@@ -784,11 +781,11 @@ void pickCustomDateRange(BuildContext context) async {
     firstDate: DateTime(2020),
     lastDate: DateTime.now(),
     builder: (BuildContext context, Widget? child) {
-      return  Dialog(
+      return Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-        //  elevation: 8,
+          //  elevation: 8,
           child: Container(
             width: 380, // Fixed width for consistency
             height: 580, // Constrained height for better control
@@ -817,6 +814,7 @@ void pickCustomDateRange(BuildContext context) async {
     getAutoMationsTransactionsCustom(startDate, context, 'Custom', endDate);
   }
 }
+
 void getWeekDate() {
   //   if (selectedButton == 'Week') {
   //   final currentWeek = weekData[0]!;

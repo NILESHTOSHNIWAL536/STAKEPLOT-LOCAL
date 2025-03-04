@@ -88,6 +88,7 @@ class _FinancePageState extends State<FinancePage> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     double fontSizeFactor = screenWidth * 0.01;
 
     return Scaffold(
@@ -113,7 +114,8 @@ class _FinancePageState extends State<FinancePage> {
                       Row(
                         children: [
                           Text(
-                             '₹${transactionChatGraph['totalDebit']?.toString() ?? '0'}',
+                            '₹$totalDebitValue',
+                            //  '₹${transactionChatGraph['totalDebit']?.toString() ?? '0'}',
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.bold,
                                 fontSize: fontSizeFactor * 4,
@@ -146,6 +148,7 @@ class _FinancePageState extends State<FinancePage> {
                       ),
                     ],
                   ),
+                  SizedBox(height: screenHeight * 0.01),
                   getMonthWeekCustom(fontSizeFactor, screenWidth),
                   LineChartWidget(
                     chartData: transactionChatGraph,
@@ -335,11 +338,13 @@ int getCurrentDateIndex(List<String> labels) {
       height: MediaQuery.of(context).size.height / 2.6,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
+       // mainAxisAlignment: MainAxisAlignment.start,
+       //mainAxisSize: MainAxisSize.min,
         children: [
           // Fixed Y-axis labels
           if (!widget.isExpandedView)
             Container(
-              width: screenWidth * 0.15,
+              width: screenWidth * 0.14,
               child: _buildYAxisLabels(fontSizeFactor),
             ),
           // Scrollable chart area
@@ -450,6 +455,8 @@ int getCurrentDateIndex(List<String> labels) {
               minorGridLines:
                   MinorGridLines(width: 0), // Ensure no minor grid lines
               axisLine: AxisLine(width: 0),
+               majorTickLines: const MajorTickLines(size: 0), // Hide major tick marks if desired
+            minorTickLines: const MinorTickLines(size: 0),
               interval: 1,
               
               // labelRotation: widget.selectedButton.value == 'Week' ? 0 : -45,
@@ -466,6 +473,8 @@ int getCurrentDateIndex(List<String> labels) {
               minorGridLines:
                   MinorGridLines(width: 0), // Ensure no minor grid lines
               axisLine: AxisLine(width: 0),
+               majorTickLines: const MajorTickLines(size: 0), // Hide major tick marks if desired
+            minorTickLines: const MinorTickLines(size: 0),
               labelFormat: '₹{value}',
               minimum: 0,
               maximum: maxYValue * 1.2,
