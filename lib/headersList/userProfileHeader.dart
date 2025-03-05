@@ -62,7 +62,7 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
                           onTap: () {
                             //  String currentRoute = ModalRoute.of(context)?.settings.name ?? '';
 
-                            if (currentPage(context) != "/Notifications")
+                            if (currentPage2(context) != "/Notifications")
                               Navigator.pushNamed(context, '/Notifications');
                           },
                           child: NotificationsBudget(
@@ -80,7 +80,7 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            if (currentPage(context) == "/Profile") return;
+                            if (currentPage2(context) == "/Profile") return;
                             widget.flag
                                 ? Navigator.pushNamed(context, "/Profile")
                                 : null;

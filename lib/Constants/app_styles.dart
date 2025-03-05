@@ -39,6 +39,7 @@ class Categories {
   static String subscription = "Subscripition.svg";
   static String support = "Support.svg";
   static String travel = "Travel.svg";
+  static String default_image = "Travel.svg";
 
   static List<String> categoriesList = [
     alcohal,

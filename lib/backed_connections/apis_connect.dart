@@ -126,6 +126,9 @@ List<String> month = [
   "November",
   "December"
 ];
+int currentPage = 1;
+RxBool isLoadingMore = false.obs;
+bool hasMoreData = true;
 int m = DateTime.now().month;
 List targetsData = [];
 List arr = [];
@@ -204,7 +207,7 @@ class Message {
   File? url;
 }
 
-String currentPage(context) {
+String currentPage2(context) {
   String modalRoute = ModalRoute.of(context)?.settings.name ?? '';
   return modalRoute;
 }
@@ -215,14 +218,10 @@ String toUpperCase(String str) {
 }
 
 void printData(response, [context = ""]) {
-  //  String data=  response.body;
-
   print("response");
   print(response);
   print(response.statusCode);
   print(response.body);
-
-  // if(data.contains("JsonWebTokenError"))Navigator.pushNamed(context, '/');
 }
 
 void snackBarCalled(context, String text, [Color colors = Colors.black]) {

@@ -98,7 +98,7 @@ void ConsentRequestPlus(context, accessToken, custId) async {
             "aaId": "cookiejar-aa@finvu.in"
           }
         }));
-    // printData(response, context);
+    
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
       String ConsentHandleId = (body['body']['ConsentHandle']);
@@ -128,7 +128,7 @@ void ConsentStatus(context, accessToken, ConsentHandleId, custId) async {
         "Authorization": "$accessToken",
       },
     );
-    // printData(response, context);
+   
   
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
@@ -164,7 +164,7 @@ void getData(context, custId, consentId, sessionId, token) async {
       "Authorization": token,
     },
   );
-  // printData(response, context);
+
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
   }
@@ -188,7 +188,7 @@ void ConsentFromAndToRequest(
         "Authorization": "$accessToken",
       },
     );
-    printData(response, context);
+
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
       // print('ConsentDetail-----------');
@@ -310,7 +310,6 @@ Future<void> storeDataOfTransactions(context, data, consentHandleId, from, to,
       },
       body: jsonEncode(data));
 
-   printData(response, context);
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
    

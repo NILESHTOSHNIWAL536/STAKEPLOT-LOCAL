@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/number_picker.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -62,7 +63,6 @@ void addTargets(context, String aim, String amount, String targetDate) async {
       'targetDate': targetDate.toString(),
     }),
   );
-  //printData(response,context);
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     snackBarCalled(context, " Add Traget!", Colors.black);
@@ -88,7 +88,6 @@ void setPasswordApiCalled(context, String password) async {
     }),
   );
 
-  printData(response, context);
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     cupertinoPin.value = password;
@@ -101,7 +100,7 @@ void setPasswordApiCalled(context, String password) async {
 
 void PinPasswordVerify(password, context, Function setBack) async {
   var response = await getDataApiCall("${url}/user/cupertino/${password}");
-  printData(response, context);
+
   if (response.statusCode == 200 || response.statusCode == 200) {
     hideBackAccountPassword.value = true;
     Timer(Duration(seconds: 5), () {
@@ -163,35 +162,85 @@ void getHiddenTransactions(context) async {
   } else {}
 }
 
-void getAllTransactionHistory(
-    BuildContext context, bool flag, bool isYearView) async {
+// List<dynamic> transactionsHistory = [];
+
+
+// void getAllTransactionHistory( BuildContext context, bool flag, bool isYearView) async {
+//   try {
+//     var response = await getDataApiCall(flag
+//         ? "${url}/transactionauto/getTransactions/2"
+//         : "${url}/transactionauto/getTransactions/1");
+//     if (response.statusCode == 200) {
+//       var his = jsonDecode(response.body);
+
+//       var obj = his['data'];
+
+//       transactionsHistory.clear();
+//       if (obj != null && obj is List<dynamic>) {
+//         if (flag) {
+//           extractTransaction(isYearView, obj);
+//         } else {
+//           transactionsHistory.addAll(obj);
+//         }
+
+//         getHistory.value = !getHistory.value;
+//       } else {
+
+//         snackBarCalled(context, "No transaction data available");
+//       }
+//     } else {}
+//   } catch (e) {
+   
+//   }
+// }
+
+
+Future<void> getAllTransactionHistory(BuildContext context,bool flag,bool  isYearView,{bool isRefreshing = false}) async {
+  if (isLoadingMore.value) return; // Prevent multiple API calls
+
   try {
-    var response = await getDataApiCall(flag
-        ? "${url}/transactionauto/getTransactions/2"
-        : "${url}/transactionauto/getTransactions/1");
+    isLoadingMore.value = true;
+    // /get-monthly-transactions-history/:accountId/:type/:page
+    String type= isYearView ? selectedYear.value.toString(): selectedYear.value.toString()+"-"+selectedMonth.value.toString().padLeft(2, '0');
+    String urlPath= flag? "${url}/transactionauto/get-monthly-transactions-history/${accountId.value}/${type}/$currentPage":"${url}/transactionauto/getTransactions/$currentPage";
+ 
+    var response = await getDataApiCall(urlPath);
     if (response.statusCode == 200) {
-      var his = jsonDecode(response.body);
+      var data = jsonDecode(response.body);
+      var obj = data['data'];
+      if (obj != null && obj is List<dynamic>) 
+      {
+       
+            if (isRefreshing) {
+              transactionsHistory.clear(); // Clear only on refresh
+            }
+         
+            transactionsHistory.addAll(obj);
 
-      var obj = his['data'];
 
-      transactionsHistory.clear();
-      if (obj != null && obj is List<dynamic>) {
-        if (flag) {
-          extractTransaction(isYearView, obj);
+        // Stop loading indicator if no more transactions exist
+        if (obj.isEmpty || obj.length<20) {
+          hasMoreData = false;
+          isLoadingMore.value=false;
         } else {
-          transactionsHistory.addAll(obj);
+          currentPage++; // Increment page count for next load
         }
-
+         await Future.delayed(const Duration(seconds: 1));
+        if(flag){
+          loadChatdataOnChnage.value=!loadChatdataOnChnage.value;
+        }
         getHistory.value = !getHistory.value;
       } else {
-
         snackBarCalled(context, "No transaction data available");
       }
-    } else {}
+    }
   } catch (e) {
    
+  } finally {
+    isLoadingMore.value = false;
   }
 }
+
 
 void extractTransaction(bool isYearView, List obj) {
   if (isYearView) {

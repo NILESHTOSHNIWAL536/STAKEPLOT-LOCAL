@@ -253,10 +253,8 @@ Future<String?> getToken() async {
   var accessToken = pref.getString("accessToken");
 
   if (accessToken == null) {
-    print("No access token found in SharedPreferences");
     return null;
   } else {
-    print("Token: $accessToken");
     return accessToken;
   }
 }

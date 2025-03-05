@@ -22,6 +22,8 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
 
+
+
 class TransactionHistory extends StatefulWidget {
   /// Optional
   final bool? isYearView;
@@ -42,18 +44,24 @@ class TransactionHistory extends StatefulWidget {
 
 class _TransactionHistoryState extends State<TransactionHistory> {
   final Map<int, double> swipeOffsets = {};
+  final _scrollController2 = ScrollController();
   final List<Map<String, dynamic>> hiddenTransactions = [];
-  // final transactionsHistory = <dynamic>[].obs; // Corrected typo
-  final scrollController = ScrollController();
   final targetKey = GlobalKey();
-  final getHistory = false.obs;
   BuildContext? _stableContext;
 
   @override
   void initState() {
     super.initState();
+    //  currentPage=0;
     _stableContext = context;
-    getAllTransactionHistory(context, widget.isflag!, widget.isYearView!);
+    // getAllTransactionHistory(context, widget.isflag!, widget.isYearView!);
+    _scrollController2.addListener(() {
+    if (_scrollController2.position.pixels >= _scrollController2.position.maxScrollExtent - 100) {
+      getAllTransactionHistory(context, widget.isflag!, widget.isYearView!); // Fetch next page
+    }
+  });
+  currentPage=1;
+  getAllTransactionHistory(context, widget.isflag!, widget.isYearView!, isRefreshing: true); 
   }
 
   @override
@@ -61,6 +69,13 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     super.didChangeDependencies();
     _stableContext ??= context;
   }
+
+  @override
+void dispose() {
+  _scrollController2.dispose();
+  super.dispose();
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +107,10 @@ class _TransactionHistoryState extends State<TransactionHistory> {
             child: Column(
               children: [
                 Obx(() => Expanded(
-                      child: getlist()
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 13,vertical: 10),
+                        child: getlist(),
+                      )
                 )), // Wrapped in Obx for reactivity
               ],
             ),
@@ -117,7 +135,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
               ],
             ),
             const SizedBox(height: 20),
-            Obx(() => getlist()), // Wrapped in Obx for reactivity
+             Obx(() => getlist()), // Wrapped in Obx for reactivity
           ],
         ),
       ),
@@ -131,15 +149,16 @@ class _TransactionHistoryState extends State<TransactionHistory> {
 
   Widget getlist() {
     return ListView.builder(
-      itemCount: transactionsHistory.length,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+      itemCount: transactionsHistory.length+1,
+     controller: _scrollController2, // Attach ScrollControlle
+    shrinkWrap: true,
       itemBuilder: (context, index) {
+         if (index < transactionsHistory.length) {
         final transaction = transactionsHistory[index];
         double amount = (transaction['amount'] is int)? (transaction['amount'] as int).toDouble(): (transaction['amount'] as double? ?? 0.0);
         String category = transaction['category']?.toString() ?? 'Uncategorized'; // Fixed typo and added null check
         String subcategory = transaction['subcategory']?.toString() ?? 'General';
-    
+      
         return Stack(
           children: [
             Positioned(
@@ -196,6 +215,16 @@ class _TransactionHistoryState extends State<TransactionHistory> {
             ),
           ],
         );
+         }else{
+            return isLoadingMore.value
+            ? Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+            )
+            : const SizedBox.shrink();
+         }
       },
     );
   }
@@ -293,14 +322,12 @@ class _TransactionHistoryState extends State<TransactionHistory> {
   final subcategory = transaction['subcategory']?.toString() ?? 'General';
   final amount = transaction['amount']?.toString() ?? '0';
   final formattedDate = date != null ? formatDate(date) : 'Unknown Date';
-    // String? s = imageMapForHistory[
-    //     transaction['category'].toString().toLowerCase()];
-    //String ImageUrl = Categories.link + s.toString();
+  
     return Container(
       width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
-        border: Border.all(color: Colorcodes.greyLight, width: 0.3),
+        border: Border.all(color: Colorcodes.greyLight, width: 0.6),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -320,8 +347,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: AvatarProfileImage(
-                      url: Categories.link +
-                          (imageMapForHistory[category.toLowerCase()] ?? 'default_image.png'),
+                      url: Categories.link +(imageMapForHistory[category.toLowerCase()] ?? 'default_image.png'),
                       height: 16,
                       width: 20,
                     ),
@@ -446,7 +472,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
       );
       return response;
     } catch (e) {
-      // print("Error in updateDataApiCall: $e");
+    
       rethrow;
     }
   }

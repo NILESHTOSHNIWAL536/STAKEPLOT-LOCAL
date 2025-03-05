@@ -295,8 +295,7 @@ Widget getTextFeilds(){
     var responce = jsonDecode(response.body);
    
     bool boolvar = responce['success'];
-     print(responce);
-     print(responce['error']);
+   
     if (!boolvar && responce['error'] == "Invalid Otp") {
       flag.value = false;
       call();

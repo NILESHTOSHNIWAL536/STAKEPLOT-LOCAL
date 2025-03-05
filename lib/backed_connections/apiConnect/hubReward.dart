@@ -74,7 +74,7 @@ void  getproduct()async
       "Authorization": "$accessToken",
     },
   );
-    printData(response, BuildContext);
+    
       if(response.statusCode==200)
       {
                   var  his=jsonDecode(response.body);
@@ -117,7 +117,7 @@ void addVoucher(context,var data)async{
     },
     body: jsonEncode(body),
   );
-      printData(response,context);
+     
       if(response.statusCode==200 || response.statusCode==201){
           
             snackBarCalled(context,"Updated users Info!",Colors.black);   
@@ -139,7 +139,6 @@ void addLiked(context,String id)async{
     },
     body: jsonEncode({}),
   );
-      // printData(response,context);
       if(response.statusCode==200 || response.statusCode==201){
             // likedProducts.add(id);
             snackBarCalled(context,"Liked Product!",Colors.black);   

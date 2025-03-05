@@ -101,7 +101,6 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 //                  if(directFetch.value){
 //                        String urlPath = "${url}/transactionauto/";
 //                         var response=await getDataApiCall(urlPath);
-//                         printData(response);
 //                          if (getFlagOfResponse(response)) {
 //                             trasactionsData.clear();
 //                             var his = jsonDecode(response.body);
@@ -267,7 +266,7 @@ class _FetchTransactionState extends State<FetchTransaction> {
                  if(directFetch.value){
                        String urlPath = "${url}/transactionauto/";
                         var response=await getDataApiCall(urlPath);
-                        printData(response);
+                       
                          if (getFlagOfResponse(response)) {
                             trasactionsData.clear();
                             var his = jsonDecode(response.body);
@@ -387,7 +386,6 @@ void getSess() async{
 //                  if(directFetch.value){
 //                        String urlPath = "${url}/transactionauto/";
 //                         var response=await getDataApiCall(urlPath);
-//                         printData(response);
 //                          if (getFlagOfResponse(response)) {
 //                             trasactionsData.clear();
 //                             var his = jsonDecode(response.body);

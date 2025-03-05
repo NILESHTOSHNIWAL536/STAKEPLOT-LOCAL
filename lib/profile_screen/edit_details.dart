@@ -144,10 +144,7 @@ final Map<String, TextEditingController> _controllers = {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                      // _controllers.forEach((e,v){
-                      //     print(e+" -> "+v.text.toString());
-                      // });
-                      //  print(changeAvater);
+                      
                       editUserDetails(context,_controllers);
               },
               child: const Text("Save Changes"),
@@ -235,7 +232,7 @@ final Map<String, TextEditingController> _controllers = {
   }
 
   Widget _buildAccountDetails(String bankName, String accountNumber,var data) {
-    // print(bankImagemap);
+   
     return Card(
       //elevation: 2,
       child: ListTile(

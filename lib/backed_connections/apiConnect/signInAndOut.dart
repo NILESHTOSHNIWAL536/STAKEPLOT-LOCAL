@@ -143,7 +143,6 @@ void getOTP(context, String name, String email) async {
       'name': name,
     }),
   );
-  // printData(response, context);
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
 
@@ -167,7 +166,6 @@ void getforgotPassword(context, String name, String email) async {
       'name': name,
     }),
   );
-  printData(response, context);
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
 
@@ -287,7 +285,6 @@ void resendOptUser(context, email, name) async {
     }),
   );
 
-  printData(response, context);
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     snackBarCalled(context, "ReSended Otp To Email Id...!", Colors.black);
@@ -309,7 +306,6 @@ void loginUser2(TextEditingController emailController,
       'userpassword': passwordController.text.toString(),
     }),
   );
-  //printData(response,context);
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     String accessToken = body['data']['accessToken'];
@@ -560,7 +556,6 @@ Future<void> addThisDeviceToBackend(deviceData, context) async {
     },
     body: jsonEncode(deviceData),
   );
-  // printData(response, context);
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     // print(body);

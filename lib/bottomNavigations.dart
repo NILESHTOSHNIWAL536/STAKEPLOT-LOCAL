@@ -6,6 +6,7 @@ import "package:flutter_application_code_stakeplot/Community_Page/community_scre
 import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/home_page.dart";
+import "package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart";
 import "package:flutter_application_code_stakeplot/Profile/profile.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
@@ -14,6 +15,7 @@ import "package:flutter_application_code_stakeplot/finance_screen/plot_finance.d
 import "package:flutter_application_code_stakeplot/profile_screen/profile_screen.dart.dart";
 
 import "package:get/get.dart";
+import "package:page_transition/page_transition.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
@@ -392,3 +394,19 @@ Widget logoutWidget(context, [flag = false]) {
     ),
   );
 }
+
+
+ void navigateToNextPage(context) {
+    // Navigate to your desired page
+    Navigator.push(
+  context,
+  PageTransition(
+    type: PageTransitionType.bottomToTop,
+    alignment: Alignment.bottomCenter,
+    duration: const Duration(milliseconds: 2000),  // Increase duration
+    curve: Curves.easeInOut,  // Smooth transition
+    child: TransactionHistory(pageTransition: true,),
+    isIos: true,
+  ),
+);
+  }

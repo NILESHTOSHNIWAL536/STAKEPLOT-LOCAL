@@ -111,120 +111,6 @@ void getAutoMationsTransactionsWeekly() async {
   }
 }
 
-// void getAutoMationsTransactionsCustom(date, context,
-//     [weekORmonth = 'month', String? endDate]) async {
-//   String urlPath = endDate != null && weekORmonth == 'Custom'
-//       ? "$url/transactionauto/getAllCustomTransactions/${weekORmonth.toLowerCase()}/$date,$endDate"
-//       : "$url/transactionauto/getAllCustomTransactions/${weekORmonth.toLowerCase()}/$date";
-
-//   var response = await getDataApiCall(urlPath);
-
-//   trasactionsDataCreditWeekly.clear();
-//   trasactionsDataDebitWeekly.clear();
-
-//   List<String> labelsLocal = weekORmonth == 'Custom' ? List.from(labels) : [];
-//   List<double> debitList = [];
-//   List<double> creditList = [];
-
-//   if (getFlagOfResponse(response)) {
-//     var his = jsonDecode(response.body);
-//     print("Full API response: ${his['data']}");
-
-//     transactionChatGraph.clear();
-//     if (weekORmonth != 'Custom') {
-//       labels.clear();
-//     }
-
-//     try {
-//       Map data = his['data']['transactions'];
-//       print("Transactions map keys: ${data.keys.toList()}");
-//       maxYValue.value = double.parse(his['data']['maxAmount'].toString()) ?? 500.0;
-//       if (maxYValue.value == 0) maxYValue.value = 500.0;
-
-//       if (weekORmonth == 'Custom' && endDate != null) {
-//         DateTime startDate = DateTime.parse(date);
-//         DateTime end = DateTime.parse(endDate);
-//         debitList = List.filled(labelsLocal.length, 0.0);
-//         creditList = List.filled(labelsLocal.length, 0.0);
-//         print("Labels before mapping: $labelsLocal");
-//         print("Date range - Start: $startDate, End: $end");
-
-//         double totalDebitFromApi = his['data']['totalDebit'].toDouble();
-//         double mappedDebitSum = 0.0;
-
-//         data.forEach((key, value) {
-//           DateTime txDate = DateTime.parse(key);
-//           String dayStr = txDate.day.toString().padLeft(2, '0');
-//           int index = labelsLocal.indexOf(dayStr);
-
-//           print("Processing - key: $key, day: $dayStr, index: $index, value: $value");
-//           if (index != -1 && txDate.isAfter(startDate.subtract(Duration(days: 1))) &&
-//               txDate.isBefore(end.add(Duration(days: 1)))) {
-//             debitList[index] = getDouble(value['debit']);
-//             creditList[index] = getDouble(value['credit']);
-//             mappedDebitSum += debitList[index];
-//             print("Mapped - key: $key, day: $dayStr, index: $index, debit: ${debitList[index]}, credit: ${creditList[index]}");
-//           } else {
-//             print("Skipped - key: $key, day: $dayStr, index: $index (out of range or invalid index)");
-//           }
-//         });
-
-//         // Workaround: If totalDebit exceeds mapped sum, assign the difference to Feb 24
-//         if (totalDebitFromApi > mappedDebitSum) {
-//           int feb24Index = labelsLocal.indexOf("24");
-//           if (feb24Index != -1 && debitList[feb24Index] == 0.0) {
-//             double missingDebit = totalDebitFromApi - mappedDebitSum;
-//             debitList[feb24Index] = missingDebit;
-//             print("Added missing debit for Feb 24: $missingDebit at index $feb24Index");
-//           }
-//         }
-
-//         print("Debit list after mapping: $debitList");
-//         print("Credit list after mapping: $creditList");
-//       } else {
-//         data.forEach((key, value) {
-//           String label = weekORmonth == 'Custom'
-//               ? key.toString()
-//               : key.toString().substring(key.toString().length - 2);
-//           labelsLocal.add(label);
-//           debitList.add(getDouble(value['debit']));
-//           creditList.add(getDouble(value['credit']));
-//         });
-//       }
-//     } catch (e) {
-//       print("Error processing data: $e");
-//       maxYValue.value = 500.0;
-//       debitList = List.filled(labelsLocal.length, 0.0);
-//       creditList = List.filled(labelsLocal.length, 0.0);
-//       if (labelsLocal.isEmpty) {
-//         labelsLocal = weekORmonth == 'Week' ? getWeekDays() : getDaysInMonth(date);
-//       }
-//     }
-
-//     if (selectedButton.value == 'Week') {
-//       labelsLocal = getWeekDays();
-//       if (debitList.length < 7) {
-//         debitList = List.filled(7, 0.0)..setRange(0, debitList.length, debitList);
-//         creditList = List.filled(7, 0.0)..setRange(0, creditList.length, creditList);
-//       }
-//     }
-
-//     transactionChatGraph['debited'] = debitList;
-//     transactionChatGraph['credited'] = creditList;
-
-//     graphTransaction.value = !graphTransaction.value;
-//     labels.assignAll(labelsLocal);
-//     getGraphData.value = true;
-//   } else {
-//     if (weekORmonth == 'Custom') {
-//       debitList = List.filled(labels.length, 0.0);
-//       creditList = List.filled(labels.length, 0.0);
-//       transactionChatGraph['debited'] = debitList;
-//       transactionChatGraph['credited'] = creditList;
-//     }
-//     getGraphData.value = true;
-//   }
-// }
 void getAutoMationsTransactionsCustom(date, context,
     [weekORmonth = 'month', String? endDate]) async {
  
@@ -287,8 +173,7 @@ void getAutoMationsTransactionsCustom(date, context,
         });
       }
     } catch (e) {
-      print("error--->");
-      print(e);
+     
       maxYValue.value = 500.0;
       debitList = List.filled(labelsLocal.length, 0.0);
       creditList = List.filled(labelsLocal.length, 0.0);
@@ -439,7 +324,7 @@ void updateTheTagOfTarnsactions(
         "Authorization": "$accessToken",
       },
     );
-    printData(response, context);
+  
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
       var obj = his['data'];
@@ -480,8 +365,6 @@ void unHideTransactions(
 void getHideTransactions(context) async {
   String urlPath = "${url}/transactionauto/getHideTransaction/";
   var response = await getDataApiCall(urlPath);
-
-  // printData(response, context);
   if (getFlagOfResponse(response)) {
     trasactionsHideData.clear();
     var his = jsonDecode(response.body);
@@ -513,7 +396,7 @@ void addTransaction(String amount, String subCategory, String categories,
     },
     body: jsonEncode(body),
   );
-  printData(response);
+  
   if (response.statusCode == 200) {
     final body = json.decode(response.body);
     if (!isSplit) snackBarCalled(context, "Added Trasactions!", Colors.black);
@@ -568,7 +451,7 @@ void getTransaction(context) async {
       "Authorization": "$accessToken",
     },
   );
-  printData(response, context);
+
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];

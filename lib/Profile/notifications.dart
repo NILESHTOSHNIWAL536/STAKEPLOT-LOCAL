@@ -60,7 +60,7 @@ class _NotificationsState extends State<Notifications> {
       hasGetNewNotifications.value = false;
       myNotificationBool.value != myNotificationBool.value;
     } else {
-      print("Failed to fetch notifications."); // Debug statement
+      
     }
   }
 

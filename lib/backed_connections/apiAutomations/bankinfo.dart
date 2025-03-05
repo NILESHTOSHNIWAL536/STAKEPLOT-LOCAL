@@ -60,7 +60,7 @@ void storeImageinMapFinvu(context)async
    
   }catch(e)
   {
-      print("e error");
+    
   } 
   
 }
