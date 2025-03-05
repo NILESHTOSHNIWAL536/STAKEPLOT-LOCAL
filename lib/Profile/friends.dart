@@ -33,6 +33,7 @@ class _FriendsState extends State<Friends> {
   @override
   void initState() {
     super.initState();
+  
   }
 
   @override
@@ -56,7 +57,9 @@ class _FriendsState extends State<Friends> {
           child: Column(children: [
             // UserProfileHeader(name: "Friends List"),
            // Text("Friends List"),
-            Padding(
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height/1.2,
               padding: EdgeInsets.only(top: Colorcodes.paddingTopDesign/2),
               child: ListView(
                 children: [
@@ -95,7 +98,7 @@ class _FriendsState extends State<Friends> {
                     ),
                   ),
                   SizedBox(height: 20,),
-                  Obx(() => userController.friendsList.isEmpty
+                  Obx(() => friendsList.isEmpty
                       ? Center(
                           child: AvatarProfileImage(
                             url: ProfileIcons.emptyFrnds,
@@ -104,7 +107,7 @@ class _FriendsState extends State<Friends> {
                           ),
                         )
                       : Column(
-                          children: userController.friendsList
+                          children: friendsList
                               .map((d) =>
                                   d == null ? Text("") : profileContainer(d))
                               .toList(),

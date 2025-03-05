@@ -66,6 +66,7 @@ class _HomePageState extends State<HomePage> {
     getHiddenTransactions(context);
     getCategoryData();
     getRemainders(context);
+    getNotifications(context);
     sectionReached.value=false;
   }
 

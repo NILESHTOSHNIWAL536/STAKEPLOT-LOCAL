@@ -59,8 +59,6 @@ void  rejectFrdRequest(body,context)async
       if(response.statusCode==200 || response.statusCode==201){
             final body = json.decode(response.body);
             
-  
-            
       }else{
           snackBarCalled(context,"can't Reject error Friend!",Colors.red);
 }

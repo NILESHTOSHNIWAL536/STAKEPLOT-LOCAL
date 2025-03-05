@@ -184,18 +184,12 @@ void getAllTransactionHistory(
 
         getHistory.value = !getHistory.value;
       } else {
-        // print("Error: 'data' is null or not a List. Data received: $obj");
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("No transaction data available")),
-        );
+
+        snackBarCalled(context, "No transaction data available");
       }
     } else {}
   } catch (e) {
-    //  print("Exception occurred: $e");
-    // ScaffoldMessenger.of(context).showSnackBar(
-    //   const SnackBar(
-    //       content: Text("An error occurred while fetching transactions")),
-    // );
+   
   }
 }
 
