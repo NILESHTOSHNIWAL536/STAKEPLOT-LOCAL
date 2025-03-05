@@ -684,6 +684,10 @@ class _ModalContentState extends State<ModalContent>
       spacing: 8.0, // Horizontal spacing between chips
       runSpacing: 8.0, // Vertical spacing between rows
       children: categories[selectedCategory]!.map((subCategory) {
+        // Get the URL path for the subcategory's icon from BudgetSubCategories
+        String urlPath = BudgetSubCategories.listofSubCategories[subCategory] ??"assets/icons/subCategoryIcons/default.svg";
+            print("urlPath------------------------------------------");
+        print(urlPath);
         return GestureDetector(
           onTap: () {
             setState(() {
@@ -691,24 +695,25 @@ class _ModalContentState extends State<ModalContent>
               selectedSubCategory2 = subCategory;
               categoryFieldController.text =
                   '$selectedCategory ($selectedSubCategory)';
-              //isSplitbill = true;
+              // isSplitbill = true; // Uncomment if needed
               fin = '$selectedCategory ($selectedSubCategory)';
               selectedCategory2 = selectedCategory;
               resetToInitialScreen();
             });
           },
           child: Chip(
-            avatar: Icon(
-              Icons.category, // Replace with a relevant icon
-              color: Colors.blue, // Icon color
-              size: 18, // Adjust size to fit within the chip
+            avatar: ProfileImage(
+              url: urlPath,
+              
             ),
             label: Text(
               subCategory,
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.normal,
-                  fontSize: 14,
-                  color: AppColors.accentColor),
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.normal,
+                fontSize: 14,
+                color: AppColors.accentColor,
+              ),
             ),
             backgroundColor: AppColors.button,
             shape: RoundedRectangleBorder(

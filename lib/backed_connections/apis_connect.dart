@@ -19,7 +19,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 
 bool flag = true;
-String portNo = flag ? "192.168.1.3" : "localhost";
+String portNo = flag ? "192.168.1.5" : "localhost";
 String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 
@@ -182,6 +182,7 @@ RxBool isYearView = false.obs;
 RxBool loadChatdataOnChnage = false.obs;
 RxList  transactionsHistory = <dynamic>[].obs;
 RxDouble totalDebitValue = 0.0.obs;
+RxDouble totalExpandedValue = 0.0.obs;
 class Message {
   Message(
       {this.text,
