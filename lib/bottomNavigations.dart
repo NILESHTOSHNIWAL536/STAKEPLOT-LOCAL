@@ -12,6 +12,7 @@ import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart";
 import "package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/profile_screen.dart.dart";
+import "package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart";
 
 import "package:get/get.dart";
 import "package:shared_preferences/shared_preferences.dart";
@@ -110,6 +111,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
 
     return InkWell(
       onLongPress: () {
+         if (i == 2 && widget.data != i) pushName(TribeChats());
         if (i == 0) {
           // Handle long press for index 0
         } else if (i == 2 && widget.data != i) {
