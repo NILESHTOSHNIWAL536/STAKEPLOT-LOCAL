@@ -30,7 +30,7 @@ void addReply(context, String data, String postId) async {
       'replyText': data,
     }),
   );
-  // printData(response,context);
+  
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
   } else {
@@ -128,7 +128,7 @@ void addPost(context, String title, String description, File obj) async {
       'fileName': 'file7'
     }),
   );
-  //printData(response,context);
+ 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     var snackBar = SnackBar(
@@ -178,7 +178,6 @@ void reportPost(context, String id, String spam) async {
     body: jsonEncode({'reason': spam}),
   );
 
-  //printData(response,context);
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     snackBarCalled(
@@ -233,7 +232,6 @@ void createPostCopy(
   // Send the request
   // var response = await request.send();
 
-  // //printData(context,response);
   // //print("response.statusCode");
   // //print(response.statusCode);
   // //print(response.body);
@@ -420,7 +418,6 @@ void sn(res, context) {
 //     body: jsonEncode(body),
 //   );
 
-//   //  printData(response, context);
 
 //   if (response.statusCode == 200 || response.statusCode==201) {
 //             store(response);
@@ -500,7 +497,6 @@ void createPost(
       body: jsonEncode(body),
     );
 
-    //  printData(response, context);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
        posting.value=false;
@@ -527,7 +523,6 @@ void createPost(
 // Send the request
 // var response = await request.send();
 
-// //printData(context,response);
 // //print("response.statusCode");
 // //print(response.statusCode);
 // //print(response.body);
@@ -552,7 +547,6 @@ void createPostWithOutImage(context, String title, String description) async {
       'isPoll': false,
     }),
   );
-  //  printData(response);
   if (response.statusCode == 200 || response.statusCode == 201) {
           store(response);
           snackBarCalled(context, 'Post Uploaded successfully....');

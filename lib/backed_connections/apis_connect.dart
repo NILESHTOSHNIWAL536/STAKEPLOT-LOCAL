@@ -1,22 +1,12 @@
-import 'dart:async';
 import 'dart:io';
-import 'dart:io' as io;
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:http_parser/http_parser.dart';
-import 'package:path/path.dart' as p;
+
 
 bool flag = true;
 String portNo = flag ? "192.168.1.5" : "localhost";
@@ -126,6 +116,9 @@ List<String> month = [
   "November",
   "December"
 ];
+int currentPage = 1;
+RxBool isLoadingMore = false.obs;
+bool hasMoreData = true;
 int m = DateTime.now().month;
 List targetsData = [];
 List arr = [];
@@ -206,7 +199,7 @@ class Message {
   File? url;
 }
 
-String currentPage(context) {
+String currentPage2(context) {
   String modalRoute = ModalRoute.of(context)?.settings.name ?? '';
   return modalRoute;
 }
@@ -217,14 +210,10 @@ String toUpperCase(String str) {
 }
 
 void printData(response, [context = ""]) {
-  //  String data=  response.body;
-
   print("response");
   print(response);
   print(response.statusCode);
   print(response.body);
-
-  // if(data.contains("JsonWebTokenError"))Navigator.pushNamed(context, '/');
 }
 
 void snackBarCalled(context, String text, [Color colors = Colors.black]) {

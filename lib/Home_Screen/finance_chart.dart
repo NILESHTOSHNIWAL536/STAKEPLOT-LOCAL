@@ -45,7 +45,7 @@ class _FinancePageState extends State<FinancePage> {
     if (renderObject != null && renderObject is RenderBox) {
       final position = renderObject.localToGlobal(Offset.zero);
       final scrollOffset = widget.scrollController.offset;
-      final targetOffset = position.dy - scrollOffset-MediaQuery.of(context).size.height/1.2;
+      final targetOffset = position.dy - scrollOffset-MediaQuery.of(context).size.height/6.9;
       widget.scrollController.animateTo(
         targetOffset > 0 ? targetOffset : 0,
         duration: Duration(milliseconds: 500),
@@ -111,7 +111,7 @@ class _FinancePageState extends State<FinancePage> {
                       ),
                       CustomButton(
                         onTap: () {
-                           print("History button tapped");
+                      
                           _scrollToTransactionHistory();
                         },
                         text: 'History',
@@ -466,6 +466,8 @@ int getCurrentDateIndex(List<String> labels) {
                 return GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {
+                    currentPage=1;
+                    transactionsHistory.clear();
                     // Use a slight delay to ensure point taps are processed first
                     if (widget.selectedButton.value == 'Month') {
                       Navigator.push(

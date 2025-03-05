@@ -255,7 +255,7 @@ class _TribeSearchState extends State<TribeChats> {
     String key = item['_id'];
     getChats2(id, key);
     double width = MediaQuery.of(context).size.width;
-    print(item);
+    
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),

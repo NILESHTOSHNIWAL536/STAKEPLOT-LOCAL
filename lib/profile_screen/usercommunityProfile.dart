@@ -80,8 +80,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
         "Authorization": "$accessToken",
       },
     );
-    print(widget.data);
-    printData(response);
+ 
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
       var obj = his['data'];

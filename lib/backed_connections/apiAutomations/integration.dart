@@ -59,7 +59,7 @@ Future<void> loginWithServer(context) async {
       },
       body: jsonEncode({"custId": custId,'number':number.value}),
     );
-    printData(response);
+    
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       String token = "";//data["token"];
@@ -118,7 +118,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
  
       }),
     );
-     printData(response);
+   
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
    
@@ -192,7 +192,7 @@ Future<void> FetchTransactionBysessionId(BuildContext context,String sessionId) 
       );
     }
   } catch (e) {
-    print("Error: $e");
+  
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text("An error occurred")),
     );

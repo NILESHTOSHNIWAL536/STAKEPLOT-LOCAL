@@ -166,7 +166,7 @@ void createRoom(context, List expenses, List user, String name) async {
       'expenses': expenses,
     }),
   );
-  printData(response, context);
+
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     snackBarCalled(context, "Room Is Created!", Colors.black);
@@ -304,17 +304,13 @@ void createPollOfCommunityPost(context, String question, List options,
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-    // //print(response.body);
     var obj = jsonDecode(response.body);
-    // //print(obj['data']);
-
     questionRoom.add(obj['data']);
     posting.value = false;
     getPost();
     Navigator.pop(context);
   } else {
-    printData(response);
+ 
     var snackBar = SnackBar(
       duration: Durations.medium4,
       content: Text(
@@ -344,7 +340,7 @@ void votePoll(context, String id, int index) async {
     },
     body: jsonEncode({'optionIndex': index}),
   );
-  printData(response, context);
+
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     var snackBar = SnackBar(

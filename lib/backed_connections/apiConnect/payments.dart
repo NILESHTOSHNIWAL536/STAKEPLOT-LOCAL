@@ -131,14 +131,14 @@ void addBudget(BuildContext context, String name, String amount,
     },
     body: jsonEncode(body),
   );
-  //printData(response,context);
+
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     getBudget();
     Navigator.pushNamed(context, "/BudgetDisplay");
     snackBarCalled(context, 'Added Budget!');
   } else {
-    printData(response, context);
+   
     snackBarCalled(context, "can't add bedget!", Colors.red);
   }
 
@@ -164,8 +164,7 @@ void budgetUpdate(context, name, amount, expenseCategory, budgetType,
       'budgetPeriod': budgetPeriod.toString(),
     }),
   );
-  // printData(response,context);
-  // //print(object)
+ 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
 
@@ -208,7 +207,7 @@ void addDebts(context, name, amount, interest, startDate, durations) async {
       'duration': durations,
     }),
   );
-  //printData(response,context);
+  
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
 
@@ -253,10 +252,9 @@ void addBillTranscations(
     List<TextEditingController> controller, context) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
-  // //print("bills called");
+  
   int end = controller.length;
 
-  // //print("bills called2");
   for (int i = 0; i < end; i += 3) {
     billLength.value += 1;
     String name = controller[i].text;
@@ -275,7 +273,7 @@ void addBillTranscations(
         'dueDate': expenseCategory.toString(),
       }),
     );
-    //printData(response,context);
+   
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
 
@@ -342,8 +340,7 @@ void addPaymentTranscations(
         'date': expenseCategory.toString(),
       }),
     );
-    //printData(response,context);
-    if (response.statusCode == 200 || response.statusCode == 201) {
+       if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
       acceptReset.value = false;
       snackBarCalled(context, "Add payment!", Colors.black);
@@ -372,7 +369,6 @@ void deleteDebts(context, String id, [flag = false]) async {
     },
     body: jsonEncode({}),
   );
-  //printData(response,context);
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     snackBarCalled(context, "Closed Debts...!", Colors.black);
@@ -401,7 +397,6 @@ void deleteAmount(context, String id, String am) async {
     },
     body: jsonEncode({}),
   );
-  //printData(response,context);
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
   } else {
@@ -425,7 +420,6 @@ void updateBill(context, String path, String objectId) async {
     }),
   );
 
-  // printData(response,context);
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     getBills();
@@ -447,7 +441,6 @@ void deleteBudget(context, String id) async {
       "Authorization": "$accessToken",
     },
   );
-  //printData(response,context);
   if (response.statusCode == 200 || response.statusCode == 201) {
     snackBarCalled(context, "Deleting Budget.....!", Colors.red);
 
@@ -479,7 +472,7 @@ void clearDebts(context, String id, String amount, String value) async {
     'remainderId': id,
     'merchantId': 'assxx',
   };
-  //print(body);
+  
 
   final response = await http.post(
     Uri.parse('${url}/transaction/add'),
@@ -489,7 +482,6 @@ void clearDebts(context, String id, String amount, String value) async {
     },
     body: jsonEncode(body),
   );
-  printData(response, context);
   if (response.statusCode == 200) {
     final body = json.decode(response.body);
     snackBarCalled(context, "Cleared Debts OF This Month!", Colors.black);

@@ -370,7 +370,7 @@ try{
                 return;
   } 
       final body = json.decode(response.body);
-    printData(response);
+    
     String accessToken = body['data'];
       final SharedPreferences _pref = await SharedPreferences.getInstance();
     _pref.setString("accessToken", "Bearer " + accessToken);

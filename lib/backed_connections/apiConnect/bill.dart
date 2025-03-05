@@ -27,7 +27,7 @@ void splitUserAmount(context, String amount, List members, String name,
       'priorities': data
     });
   });
-  print(nameList);
+
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
 
@@ -47,7 +47,6 @@ void splitUserAmount(context, String amount, List members, String name,
       'isVegNonVeg': true,
     }),
   );
-  //printData(response,context);
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
 
@@ -160,7 +159,7 @@ void splitUserAmount2(
 
       for (var member in members) {
         String memberId = member['id'];
-        print(memberId);
+       
         String memberName = member['name'] ?? 'Unknown';
 
        addChatSplitAmount(context, name, amount, memberId, members);

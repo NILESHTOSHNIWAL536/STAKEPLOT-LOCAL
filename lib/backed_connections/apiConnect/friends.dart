@@ -14,7 +14,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void   addUserAsFrd(id,context)async
 {
-     //print(id);
       final SharedPreferences _pref = await SharedPreferences.getInstance();
      var  accessToken=_pref.getString("accessToken");
      
@@ -59,8 +58,6 @@ void  rejectFrdRequest(body,context)async
       if(response.statusCode==200 || response.statusCode==201){
             final body = json.decode(response.body);
             
-  
-            
       }else{
           snackBarCalled(context,"can't Reject error Friend!",Colors.red);
 }
@@ -85,7 +82,7 @@ void   addUsersendRequest(id,name,context)async
              'friendUserId':id,
        }),
   );
-      //printData(response,context);
+     
       if(response.statusCode==200 || response.statusCode==201){
             sendNotificationsToDevice(id,context,"${userName.value} Has Send U a Friend Request..");
             snackBarCalled(context,"Sending Friend Request...!",Colors.black);
@@ -116,7 +113,7 @@ void  removeRequest(id,name,context)async
              'friendUserId':id,
        }),
   );
-      //printData(response,context);
+      
       if(response.statusCode==200 || response.statusCode==201){
             snackBarCalled(context,"Removed Friend Request...!",Colors.black);
 
