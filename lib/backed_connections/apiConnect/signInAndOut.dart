@@ -69,9 +69,8 @@ Future<void> loginUser(TextEditingController emailController,
 
     String accessToken = body['data']['accessToken'];
     _pref.setString("accessToken", "Bearer " + accessToken);
-    getBankAccounts();
+    await getBankAccounts();
     storeinmap(body, _pref, passwordController.text);
-
     currentId.value = body['data']['_id'];
     Phone.value = body['data']['phone'];
     isBankAccountLink.value = body['data']['isBankAccountLinked'];
@@ -479,7 +478,7 @@ Future<void> initializeOneSignal(BuildContext context) async {
 
   String? userDeviceId = OneSignal.User.pushSubscription.id;
   if (userDeviceId != null) {
-    print("User Device ID: $userDeviceId");
+   
     await getDeviceInfo(userDeviceId, context);
   } else {
     print("Failed to retrieve user device ID");
@@ -561,11 +560,11 @@ Future<void> addThisDeviceToBackend(deviceData, context) async {
     },
     body: jsonEncode(deviceData),
   );
-  printData(response, context);
+  // printData(response, context);
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    print(body);
-    snackBarCalled(context, "user device login...!", Colors.black);
+    // print(body);
+    // snackBarCalled(context, "user device login...!", Colors.black);
   } else {
     snackBarCalled(context, "can't send opt!", Colors.red);
   }

@@ -377,6 +377,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
@@ -386,6 +387,7 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:getwidget/components/carousel/gf_carousel.dart';
@@ -415,6 +417,11 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
   final PageController _pageController = PageController(viewportFraction: 0.7);
   int _currentPage = 0;
 
+   void initializeData() {
+    getBankAccounts();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -427,11 +434,11 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
             child: SizedBox(
                 width: width,
                 height: height > 0 ? height / 2.5 : 100, // Fallback height
-                child: avatarSlider2())));
+                child: Obx(()=> loadBanks.value ? Spinner(size: 50.0,):avatarSlider2()))));
   }
 
   Widget avatarSlider2() {
-    return GFCarousel(
+    return bankAccountLinkedList.isEmpty? AvatarProfileImage(url: bankImage, width: 10, height: 10):GFCarousel(
       // aspectRatio: ,
       viewportFraction: 1.0,
       reverse: false,
@@ -446,8 +453,9 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
         },
       ).toList(),
       onPageChanged: (index) {
+        if(bankAccountLinkedList.isEmpty)return;
         accountId.value = bankAccountLinkedList[index]['accountId'] ?? "";
-        calledFunctionToFetchData(context);
+         calledFunctionToFetchData(context);
       },
     );
   }
@@ -456,7 +464,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
     return Container(
         padding: EdgeInsets.symmetric(
             horizontal: Colorcodes.paddingHorizontal,
-            vertical: Colorcodes.paddingHorizontal / 4),
+            vertical: Colorcodes.paddingHorizontal / 5),
         decoration: BoxDecoration(
           color: AppColors.accentColor,
           borderRadius: BorderRadius.circular(16),
@@ -465,7 +473,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(height: Colorcodes.borderRadius30 / 2),
+            SizedBox(height: Colorcodes.borderRadius10 ),
             Text(
               data['bankName'],
               style: FontManager().getTextStyle(context,
@@ -473,7 +481,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                   fontSize: 18,
                   color: AppColors.backgroundColor),
             ),
-            SizedBox(height: Colorcodes.borderRadius30 / 2),
+            SizedBox(height: Colorcodes.borderRadius),
             Text(
               "Acc No : " + data['maskedAccNumber'],
               style: FontManager().getTextStyle(context,
@@ -481,13 +489,13 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                   fontSize: 16,
                   color: AppColors.backgroundColor),
             ),
-            SizedBox(height: Colorcodes.borderRadius30 / 2),
+            SizedBox(height: Colorcodes.borderRadius ),
             Text('Available balance',
                 style: FontManager().getTextStyle(context,
                     lWeight: FontWeight.w400,
                     fontSize: 12,
                     color: AppColors.backgroundColor)),
-            SizedBox(height: Colorcodes.borderRadius30 / 2),
+            SizedBox(height: Colorcodes.borderRadius10 ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -562,39 +570,11 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
     );
   }
 
-  //  Widget setPinForAccountHide(context) {
-  //   return Obx(() => cupertinoPin.value == "0"
-  //       ? Padding(
-  //         padding: const EdgeInsets.symmetric(vertical: 10),
-  //         child: InkWell(
-  //             onTap: () {
-  //               showModalBottomSheet(
-  //                 context: context,
-  //                 backgroundColor: Colorcodes.appBarColor,
-  //                 builder: (context) {
-  //                   return setPassword(context);
-  //                 },
-  //               );
-  //             },
-  //             child: Container(
-  //               padding: const EdgeInsets.all(8.0),
-  //               decoration: BoxDecoration(
-  //                borderRadius: BorderRadius.circular(6),
-  //                   color: Colorcodes.textFeild,
-  //               ),
-  //               child: textStyle(
-  //                   text: "Set pin",
-  //                   context: context,
-  //                   fontsize: 10,
-  //                   fontWeight: FontWeight.bold),
-  //             )),
-  //       )
-  //       : digitLoad.value?  locker(context): locker(context));
-  // }
+
   Widget setPinForAccountHide(context) {
     return Obx(() => cupertinoPin.value == "0"
         ? Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.symmetric(vertical: 5),
             child: InkWell(
                 onTap: () {
                   showModalBottomSheet(
@@ -732,7 +712,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
         selectedBank.value = value;
         accountId.value = value;
         seletedBankUpdateInfo(value, context);
-        updateInfo();
+
       },
       itemBuilder: (context) {
         return bankAccountLinkedList.map<PopupMenuEntry<String>>((e) {

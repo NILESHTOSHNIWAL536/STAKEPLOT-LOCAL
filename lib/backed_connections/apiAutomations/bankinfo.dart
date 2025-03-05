@@ -26,6 +26,7 @@ Future<void> getBankAccounts()async
              bankAccountLinkedList.clear();
             his['data'].forEach((bank) {
                   bank['accounts'].forEach((account) {
+                    if(accountId.value=="")accountId.value=account['accountId'];
                     bankAccountLinkedList.add({
                       'bankId': bank['bankId'],
                       'bankName': bank['bankName'],
@@ -38,33 +39,9 @@ Future<void> getBankAccounts()async
                   });
                 });
 
-              updateInfo();
     }
+    loadBanks.value=false;
 
-}
-
-
-void updateInfo(){
-    var data = bankAccountLinkedList.firstWhere(
-    (bank) =>  bank['bankId'] == selectedBank.value ||  bank['fipId'] == selectedBank.value,
-    orElse: () => bankAccountLinkedList.isNotEmpty ? bankAccountLinkedList[0] : null,
-  );
-  
-  if(data==null && bankAccountLinkedList.isNotEmpty)data=bankAccountLinkedList[0];
-
-    if (data != null) {
-    accountId.value=data['bankId'] ?? "";
-    accountName.value = data['bankName'] ?? "";
-    accountNo.value = data['fipId'] ?? "";
-    balance.value = (data['accounts']?.isNotEmpty ?? false) 
-        ? data['accounts'][0]['currentBalance'].toString() 
-        : "0";
-  } else {
-             accountId.value="";
-            accountName.value = "";
-            accountNo.value = "0";
-            balance.value = "0";
-  }
 }
 
 
@@ -72,8 +49,6 @@ void storeImageinMapFinvu(context)async
 {
    var isConnected = await finvuManager.isConnected();
    if(!isConnected)initFinvuManager(context);
-  // print("websocket connected : ");
-  // print(isConnected);
 
   try{
    

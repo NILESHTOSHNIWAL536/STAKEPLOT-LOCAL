@@ -35,6 +35,7 @@ class _FinancePageState extends State<FinancePage> {
   @override
   void initState() {
     super.initState();
+    getGraphData.value=false;
     calledFunctionToFetchData(context);
   }
 
@@ -44,40 +45,17 @@ class _FinancePageState extends State<FinancePage> {
     if (renderObject != null && renderObject is RenderBox) {
       final position = renderObject.localToGlobal(Offset.zero);
       final scrollOffset = widget.scrollController.offset;
-      final targetOffset = position.dy - scrollOffset-700;
-       print("Target offset: $targetOffset");
+      final targetOffset = position.dy - scrollOffset-MediaQuery.of(context).size.height/1.2;
       widget.scrollController.animateTo(
         targetOffset > 0 ? targetOffset : 0,
         duration: Duration(milliseconds: 500),
         curve: Curves.easeInOut,
       );
     } else {
-        print("RenderObject not found for TransactionHistory");
+
     }
   }
-// void _scrollToTransactionHistory() {
-//     print("Attempting to scroll to TransactionHistory");
-//     final context = widget.transactionHistoryKey.currentContext;
-//     if (context == null) {
-//       print("No context found for transactionHistoryKey");
-//       return;
-//     }
-//     final RenderObject? renderObject = context.findRenderObject();
-//     if (renderObject != null && renderObject is RenderBox) {
-//       final position = renderObject.localToGlobal(Offset.zero);
-//       final scrollOffset = widget.scrollController.offset;
-//       // Scroll to align the top of TransactionHistory with the top of the visible area
-//       final targetOffset = position.dy - 100; // Adjust for app bar height (~100px)
-//       print("Target offset: $targetOffset, Current offset: $scrollOffset");
-//       widget.scrollController.animateTo(
-//         targetOffset.clamp(0, widget.scrollController.position.maxScrollExtent),
-//         duration: Duration(milliseconds: 500),
-//         curve: Curves.easeInOut,
-//       );
-//     } else {
-//       print("RenderObject not found or not a RenderBox");
-//     }
-//   }
+
   int _getDaysInCurrentMonth() {
     final now = DateTime.now();
     return DateTime(now.year, now.month + 1, 0).day;

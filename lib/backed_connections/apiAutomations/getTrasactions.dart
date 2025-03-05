@@ -242,7 +242,7 @@ void getAutoMationsTransactionsCustom(date, context,
 
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
-
+    
     transactionChatGraph.clear();
     if (weekORmonth != 'Custom') {
       labels.clear();
@@ -250,13 +250,8 @@ void getAutoMationsTransactionsCustom(date, context,
 
     try {
       Map data = his['data']['transactions'];
-      //print(data);
-      print("his['totalDebit']");
-      print(his['data']['totalCredit']);
-      totalDebitValue.value =
-          double.parse((his['data']['totalCredit'] ?? 500.0).toString());
-      maxYValue.value =
-          double.parse((his['data']['maxAmount'] ?? 500.0).toString());
+      maxYValue.value = double.parse((his['data']['maxAmount'] ?? 500.0).toString());
+     
       if (maxYValue.value == 0) maxYValue.value = 500.0;
 
       if (weekORmonth == 'Custom' && endDate != null) {
@@ -288,6 +283,8 @@ void getAutoMationsTransactionsCustom(date, context,
         });
       }
     } catch (e) {
+      print("error--->");
+      print(e);
       maxYValue.value = 500.0;
       debitList = List.filled(labelsLocal.length, 0.0);
       creditList = List.filled(labelsLocal.length, 0.0);
@@ -311,8 +308,8 @@ void getAutoMationsTransactionsCustom(date, context,
 
     // Corrected assignment
     transactionChatGraph['debited'] = debitList; // Debits go to debitedData
-    transactionChatGraph['credited'] = creditList; // Credits go to creditedData
-
+    transactionChatGraph['credited'] = creditList; // Credits go to creditedDat
+  
     labels.assignAll(labelsLocal);
     getGraphData.value = true;
   } else {

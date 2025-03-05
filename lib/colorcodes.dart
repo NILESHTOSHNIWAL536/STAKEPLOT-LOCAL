@@ -82,7 +82,7 @@ class Colorcodes {
   static double elevation5 = 5;
   static double borderRadius = 15;
   static double borderRadius10 = 10;
-  static double borderRadius30 = 30;
+  static double borderRadius30 = 30.0;
   static double borderRadiusCard = 100;
   static double paddingSize = 20;
   static double paddingCard = 20;
