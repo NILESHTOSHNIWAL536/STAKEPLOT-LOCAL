@@ -134,11 +134,12 @@ Widget getGraph(){
             color: pieChatColor[index], borderRadius: BorderRadius.circular(4)),
         child: textStyleOnly(
             context: context,
-            text: data['title'],
+           text: data['title'],
             fontWeight: FontWeight.bold,
             fontsize: 12,
             c: index - 1 == 0 ? pieChatColor[0] : pieChatColor[1]),
       ),
+      
       // title: data['title'],
       color: pieChatColor[index] ?? AppColors.uncoloredPie,
       radius: 50,

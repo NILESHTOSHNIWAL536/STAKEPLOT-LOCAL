@@ -1577,7 +1577,8 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                               widget.subcate ?? 'General',
                               amounts: amounts,
                             );
-                            Navigator.pop(context, amounts);
+                          // Navigator.pop(context,amounts);
+                            Navigator.pop(context);
                           },
                           child: buttonContainer(context, "Continue"),
                         ),

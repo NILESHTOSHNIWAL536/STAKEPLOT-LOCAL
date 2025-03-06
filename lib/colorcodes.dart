@@ -176,7 +176,7 @@ Map<String, String> imageMapForHistory = {
     "alcohol": Categories.alcohal,
     "personal care": Categories.personalCare,//
     "services": Categories.services,
-    "pet care": Categories.petCare,
+   
     "current": Categories.current,
     "children": Categories.children,
     "commerce": Categories.commerce,
