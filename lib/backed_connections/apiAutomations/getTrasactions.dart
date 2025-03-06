@@ -114,56 +114,63 @@ void getAutoMationsTransactionsWeekly() async {
 void getAutoMationsTransactionsCustom(date, context,
     [weekORmonth = 'month', String? endDate]) async {
   if (accountId.value.trim().toString() == "") return;
+  
   String urlPath = endDate != null && weekORmonth == 'Custom'
       ? "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date,${getNextDay(endDate)}"
       : "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date";
-
+  
+  print("urlPath");
+  print(urlPath);
   var response = await getDataApiCall(urlPath);
 
   trasactionsDataDebitWeekly.clear();
 
-  List<String> labelsLocal = weekORmonth == 'Custom' ? List.from(labels) : [];
+  List<String> labelsLocal = [];
   List<double> debitList = [];
   List<double> creditList = [];
 
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
-
     transactionChatGraph.clear();
-    if (weekORmonth != 'Custom') {
-      labels.clear();
-    }
 
     try {
       Map data = his['data']['transactions'];
-      totalDebitValue.value =
-          double.parse((his['data']['totalCredit']).toString());
+      totalDebitValue.value = double.parse((his['data']['totalCredit']).toString());
       print("totalDebitValue");
       print(totalDebitValue);
-      maxYValue.value =
-          double.parse((his['data']['maxAmount'] ?? 500.0).toString());
+      maxYValue.value = double.parse((his['data']['maxAmount'] ?? 500.0).toString());
 
       if (maxYValue.value == 0) maxYValue.value = 500.0;
 
       if (weekORmonth == 'Custom' && endDate != null) {
         DateTime startDate = DateTime.parse(date);
         DateTime end = DateTime.parse(endDate);
-        debitList = List.filled(labelsLocal.length, 0.0);
-        creditList = List.filled(labelsLocal.length, 0.0);
+        
+        // Generate date labels in "MMM d" format
+        labelsLocal = [];
+        int daysDiff = end.difference(startDate).inDays;
+        debitList = List.filled(daysDiff + 1, 0.0);
+        creditList = List.filled(daysDiff + 1, 0.0);
+
+        for (int i = 0; i <= daysDiff; i++) {
+          DateTime currentDate = startDate.add(Duration(days: i));
+          String formattedDate = DateFormat('MMM d').format(currentDate);
+          labelsLocal.add(formattedDate);
+        }
 
         data.forEach((key, value) {
           DateTime txDate = DateTime.parse(key);
-          String dayStr = txDate.day.toString().padLeft(2, '0');
-          int index = labelsLocal.indexOf(dayStr);
-
-          if (index != -1 &&
-              txDate.isAfter(startDate.subtract(Duration(days: 1))) &&
+          if (txDate.isAfter(startDate.subtract(Duration(days: 1))) &&
               txDate.isBefore(end.add(Duration(days: 1)))) {
-            debitList[index] = getDouble(value['debit']);
-            creditList[index] = getDouble(value['credit']);
-          } else {}
+            int index = txDate.difference(startDate).inDays;
+            if (index >= 0 && index < debitList.length) {
+              debitList[index] = getDouble(value['debit']);
+              creditList[index] = getDouble(value['credit']);
+            }
+          }
         });
       } else {
+        // Keep original logic for non-custom cases
         data.forEach((key, value) {
           String label = weekORmonth == 'Custom'
               ? key.toString()
@@ -174,15 +181,25 @@ void getAutoMationsTransactionsCustom(date, context,
         });
       }
     } catch (e) {
-     
       maxYValue.value = 500.0;
-      debitList = List.filled(labelsLocal.length, 0.0);
-      creditList = List.filled(labelsLocal.length, 0.0);
-      //transactionChatGraph['totalDebit'] = 0.0;
-      //totalDebit = 0.0;
       if (labelsLocal.isEmpty) {
-        labelsLocal =
-            weekORmonth == 'Week' ? getWeekDays() : getDaysInMonth(date);
+        if (weekORmonth == 'Custom' && endDate != null) {
+          DateTime startDate = DateTime.parse(date);
+          DateTime end = DateTime.parse(endDate);
+          int daysDiff = end.difference(startDate).inDays;
+          debitList = List.filled(daysDiff + 1, 0.0);
+          creditList = List.filled(daysDiff + 1, 0.0);
+          
+          for (int i = 0; i <= daysDiff; i++) {
+            DateTime currentDate = startDate.add(Duration(days: i));
+            String formattedDate = DateFormat('MMM d').format(currentDate);
+            labelsLocal.add(formattedDate);
+          }
+        } else {
+          labelsLocal = weekORmonth == 'Week' ? getWeekDays() : getDaysInMonth(date);
+          debitList = List.filled(labelsLocal.length, 0.0);
+          creditList = List.filled(labelsLocal.length, 0.0);
+        }
       }
     }
 
@@ -196,24 +213,30 @@ void getAutoMationsTransactionsCustom(date, context,
       }
     }
 
-    // Corrected assignment
-    transactionChatGraph['debited'] = debitList; // Debits go to debitedData
-    transactionChatGraph['credited'] = creditList; // Credits go to creditedDat
+    transactionChatGraph['debited'] = debitList;
+    transactionChatGraph['credited'] = creditList;
 
     labels.assignAll(labelsLocal);
     getGraphData.value = true;
   } else {
-    if (weekORmonth == 'Custom') {
-      debitList = List.filled(labels.length, 0.0);
-      creditList = List.filled(labels.length, 0.0);
+    if (weekORmonth == 'Custom' && endDate != null) {
+      DateTime startDate = DateTime.parse(date);
+      DateTime end = DateTime.parse(endDate);
+      int daysDiff = end.difference(startDate).inDays;
+      debitList = List.filled(daysDiff + 1, 0.0);
+      creditList = List.filled(daysDiff + 1, 0.0);
+      
+      for (int i = 0; i <= daysDiff; i++) {
+        DateTime currentDate = startDate.add(Duration(days: i));
+        String formattedDate = DateFormat('MMM d').format(currentDate);
+        labelsLocal.add(formattedDate);
+      }
       transactionChatGraph['debited'] = debitList;
       transactionChatGraph['credited'] = creditList;
-      //totalDebit = 0.0;
     }
     getGraphData.value = true;
   }
 }
-
 String getNextDay(String endDate) {
   // Parse the input date string
   DateTime date = DateTime.parse(endDate);
@@ -322,7 +345,7 @@ void updateTheTagOfTarnsactions(
         "Authorization": "$accessToken",
       },
     );
-  
+
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
       var obj = his['data'];
@@ -394,7 +417,7 @@ void addTransaction(String amount, String subCategory, String categories,
     },
     body: jsonEncode(body),
   );
-  
+
   if (response.statusCode == 200) {
     final body = json.decode(response.body);
     if (!isSplit) snackBarCalled(context, "Added Trasactions!", Colors.black);
