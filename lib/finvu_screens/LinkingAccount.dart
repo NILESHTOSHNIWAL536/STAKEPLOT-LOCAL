@@ -644,7 +644,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
       _otpCode.value = "";
       _isOtpValid.value = false;
     } catch (e) {
-      print(e);
+     
       snackBarCalled(context,
           "Error while Linking verify Otp/ Or Already Linked...", Colors.red);
     }
@@ -875,7 +875,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                          }else{
                              seletedAccountIds.add(fipId); 
                          }
-                         print(seletedAccountIds);
+                       
                          addAccount.value= !addAccount.value;
                  }),
         ),
