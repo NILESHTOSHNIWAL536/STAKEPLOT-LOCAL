@@ -6,10 +6,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:get/get.dart';
 
-
-
 bool flag = true;
-String portNo = flag ? "192.168.1.9" : "localhost";
+String portNo = flag ? "192.168.1.3" : "localhost";
 String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 

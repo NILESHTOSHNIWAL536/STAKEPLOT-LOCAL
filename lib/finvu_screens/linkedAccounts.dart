@@ -175,8 +175,7 @@ void ConsentFromAndToRequest(
   final SharedPreferences _pref = await SharedPreferences.getInstance();
 
   if (_pref.containsKey("from") && _pref.containsKey("to")) {
-     print(_pref.getString("from"));
-     print(_pref.getString("to"));
+   
     FIRequest(context, accessToken, ConsentHandleId, custId,
         _pref.getString("from"), _pref.getString("to"), consentId);
   } else {
@@ -191,8 +190,7 @@ void ConsentFromAndToRequest(
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
-      // print('ConsentDetail-----------');
-      // print(body);
+    
       String from = body['body']['ConsentDetail']['FIDataRange']['from'];
       String to = body['body']['ConsentDetail']['FIDataRange']['to'];
       _pref.setString("from", from);
@@ -237,8 +235,7 @@ void FIRequest(
       FIRequestStatus(context, accessToken, consentHandleId, custId, from, to,
           consentId, sessionId);
     } else {
-      // print(error);
-      print(" error..............");
+    
     }
   }
 }
@@ -264,8 +261,7 @@ void FIRequestStatus(context, accessToken, consentHandleId, custId, from, to,
 void FetchData(context, accessToken, consentHandleId, custId, from, to,
     consentId, sessionId) async {
   String urlFetch  = "${baseUrl}/FIFetch/${custId}/${consentId}/${sessionId}";
-  print("FetchData..............");
-  print(urlFetch);
+
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   final response = await http.get(
     Uri.parse('${urlFetch}'),
@@ -290,8 +286,7 @@ Future<void> storeDataOfTransactions(context, data, consentHandleId, from, to,
   fetchedTrsacntionList.clear();
   fetchedTrsacntionList.add([data.toString()]);
   fetchedTrsacntionList.refresh();
-  print("storeDataOfTransactions.....");
-  print(data);
+ 
 
 //  String accessToken="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UxMjBhNzVhYWZiYWMyNTQ2NGFkNCIsImlhdCI6MTczODc1Nzc3OSwiZXhwIjoxNzQzOTQxNzc5fQ.5XeQtIM2CmFdyrfXiCcA5neACgSRuYScFa5ArcYhe34";
 //    final SharedPreferences pref = await SharedPreferences.getInstance();
@@ -312,15 +307,13 @@ Future<void> storeDataOfTransactions(context, data, consentHandleId, from, to,
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-   
-    print("body added--------------------");
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.remove("sessionId");
       Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
   } else {}
   }catch(e){
-       print("Error : ");
-       print(e);
+     
+      
   }
 }
 
@@ -376,9 +369,9 @@ try{
  _pref.remove("consentId");
  _pref.remove("ConsentHandleId");
  await finvuManager.logout(); 
-   print("Logout user...");
+ 
   }catch(e){
-         print(e);
+       
   } 
     debugPrint('getConsentHandleStatus');
   }

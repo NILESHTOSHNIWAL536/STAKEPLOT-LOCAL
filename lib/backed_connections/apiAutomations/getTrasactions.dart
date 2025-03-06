@@ -180,8 +180,7 @@ void getAutoMationsTransactionsCustom(date, context,
       //transactionChatGraph['totalDebit'] = 0.0; 
        //totalDebit = 0.0; 
       if (labelsLocal.isEmpty) {
-        labelsLocal =
-            weekORmonth == 'Week' ? getWeekDays() : getDaysInMonth(date);
+        labelsLocal = weekORmonth == 'Week' ? getWeekDays() : getDaysInMonth(date);
       }
       
     }
