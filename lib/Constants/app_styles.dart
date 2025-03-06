@@ -30,8 +30,8 @@ class Categories {
   static String health = "Health.svg";
   static String hobbies = "Hobbies.svg";
   static String insurance = "Insurance.svg";
-  static String personalCare = "Personal_care.svg";
-  static String petCare = "Pet_care.svg";
+  static String personalCare = "Personalcare.svg";
+  static String petCare = "Petcare.svg";
   static String services = "Services.svg";
   static String shopping = "Shopping.svg";
   static String snacks = "Snacks.svg";
@@ -39,7 +39,13 @@ class Categories {
   static String subscription = "Subscripition.svg";
   static String support = "Support.svg";
   static String travel = "Travel.svg";
-  static String default_image = "Travel.svg";
+static String current = "TDS.svg";
+
+
+  static String education = "Education.svg";
+  static String commerce = "Commerce.svg";
+
+
 
   static List<String> categoriesList = [
     alcohal,
@@ -230,28 +236,264 @@ class BudgetCategories {
     "Bills": Categories.bills,
     "Subscriptions": Categories.subscription,
     "Events": Categories.events,
-    "Personal Care": Categories.personalCare,
+    "Personal Care": Categories.personalCare,//
     "Services": Categories.services,
     "Emi": Categories.emi,
+      "Investments": Categories.bills,
     "Insurance": Categories.insurance,
     "Support": Categories.support,
+     "Current": Categories.current,
     "Children": Categories.children,
     "Pet Care": Categories.petCare,
     "Sports": Categories.sports,
     "Alcohol": Categories.alcohal,
     "Hobbies": Categories.hobbies,
-    "snacks": Categories.snacks,
-    "Entertainment": Categories.entertainment,
-    // "Investments": Categories.Investments,
-    // "Current": Categories.current,
-    // "Education": Categories.,
-    // "Commerce": Categories.commerce
+    "Education": Categories.education,
+     "Commerce": Categories.commerce,
+    "snacks": Categories.snacks,//
+    "Entertainment": Categories.entertainment,//
+   
+     
+     
+    
   };
 
   static List<String> categories =
       listofCategories.keys.map((key) => key.toString()).toList();
 }
 
+
+
+class BudgetSubCategories {
+  static const String connect = "assets/icons/subCategoryIcons/";
+  static final Map<String, String> listofSubCategories = {
+    // Food
+    "Swiggy": "${connect}swiggy.svg",
+    "Zomato": "${connect}zomato.svg",
+    "Restaurant": "${connect}restaurant.svg",
+    "Cafe": "${connect}cafe.svg",
+    "Pizza": "${connect}Pizza.svg",
+    "Dairy": "${connect}dairy.svg",
+    "Tea": "${connect}Tea.svg",
+    "Chai": "${connect}Tea.svg",
+    "canteen": "${connect}Canteen.svg",
+    "Bistro": "${connect}Bistro.svg",
+    "Mcdonalds": "${connect}mcdonalds.svg",
+    "kfc": "${connect}KFC.svg",
+    "subway": "${connect}subway.svg",
+    "dominos": "${connect}Dominos.svg",
+    "Dhaba": "${connect}dhaba.svg",
+    "Chicken": "${connect}Chicken.svg",
+    "Italia": "${connect}Italia.svg",
+    "bawarchi": "${connect}Bawarchi.svg",
+    "Tiffin": "${connect}tiffin.svg",
+    "meals": "${connect}meal.svg", // Note: "mea" was "meals" in your code
+    "Vegetables": "${connect}vegetables.svg",
+    "udupi": "${connect}udupi.svg",
+    "coffee": "${connect}coffee.svg",
+    "eats": "${connect}eats.svg",
+    "Frankie": "${connect}Frankie.svg",
+    "kirana": "${connect}kirana.svg",
+    "Store": "${connect}Store.svg",
+    "General Store": "${connect}general_store.svg",
+    "rasoi": "${connect}rasoi.svg",
+    "fish": "${connect}fish.svg",
+    "milk": "${connect}milk.svg",
+
+    // Shopping
+    "Shoppers": "${connect}shoppers.svg",
+    "Mart": "${connect}mart.svg",
+    "WestSide": "${connect}westside.svg",
+    "Electronics": "${connect}electronics.svg",
+    "Supermarket": "${connect}Supermarket.svg",
+    "Amazon": "${connect}amazon-1.svg",
+    "Flipkart": "${connect}flipkart.svg",
+    "Fashion": "${connect}fashion.svg",
+    "Fabrics": "${connect}fabric.svg",
+    "kart": "${connect}kart.svg",
+    "shopping": "${connect}Shopping.svg",
+    "ratnadeep": "${connect}ratnadeep.svg",
+    "Mobiles": "${connect}Mobile.svg",
+    "lifestyle": "${connect}lifestyle.svg",
+    "market": "${connect}Market.svg",
+    "more": "${connect}more.svg",
+    "shop": "${connect}Shop.svg",
+    "max": "${connect}max.svg",
+    "zudio": "${connect}zudio.svg",
+    "centro": "${connect}centro.svg",
+
+    // Travel
+    "Fuel": "${connect}fuel.svg",
+    "Petrol": "${connect}petrol.svg",
+    "Ola": "${connect}ola.svg",
+    "Uber": "${connect}uber.svg",
+    "Metro": "${connect}metro.svg",
+    "Traffic polic": "${connect}traffic_police.svg",
+    "puncture": "${connect}puncture.svg",
+    "Mobility": "${connect}mobility.svg",
+    "Travels": "${connect}travells.svg",
+    "Transport": "${connect}transport.svg",
+    "Filling": "${connect}filling.svg",
+    "Rapido": "${connect}rapido.svg",
+    "Tgsrtc": "${connect}tgsrtc.svg", // Note: "Tsrtc" was "Tgsrtc" in your code
+    "irctc": "${connect}irctc.svg",
+
+    // Health
+    "Medical": "${connect}medical.svg",
+    "Pharmacy": "${connect}pharmacy.svg",
+    "Hospital": "${connect}hospital.svg",
+    "Medplus": "${connect}medplus.svg",
+
+    // Bills
+    "Electricity": "${connect}Electricity.svg",
+    "Water": "${connect}Water.svg",
+    "Gas": "${connect}GasCylinder.svg",
+    "Internet": "${connect}Internet.svg",
+    "Mobile Recharge": "${connect}Mobilerecharge.svg",
+    "Rent": "${connect}rent.svg",
+    "DTH": "${connect}dth.svg",
+    "AIRTEL": "${connect}airtel.svg",
+    "JIO": "${connect}Jio.svg",
+    "Solutions": "${connect}solutions.svg",
+    "godaddy": "${connect}Godaddy.svg",
+    "hostinger": "${connect}Hostinger.svg",
+    "bpcl": "${connect}BPL.svg",
+
+    // Subscriptions
+    "Netflix": "${connect}Netflix.svg",
+    "PrimeVideo": "${connect}Primevideo.svg",
+    "Spotify": "${connect}Spotify.svg",
+    "Jio Hotstar": "${connect}Jio_hotstar.svg", // Note: "Hotstar" was "Jio Hotstar" in your code
+    "appleServices": "${connect}appleservices.svg",
+    "disney": "${connect}Disney.svg",
+
+    // Events
+    "Weddings": "${connect}wedding.svg",
+    "Birthday": "${connect}BirthdayParties.svg",
+    "Festival": "${connect}FestivalCelebrations.svg",
+    "Anniversary": "${connect}anniversary.svg",
+    "Flowers": "${connect}Flowers.svg",
+    "pubs": "${connect}Pub.svg",
+    "Gift": "${connect}Gift.svg",
+
+    // Personal Care
+    "Salon": "${connect}salon.svg",
+    "Spa": "${connect}Spa.svg",
+    "Haircare": "${connect}haircare.svg",
+    "Skincare": "${connect}Skincare.svg",
+
+    // Services
+    "Housemaid": "${connect}Maid.svg",
+    "Carpenter": "${connect}Carpenter.svg",
+    "Electrician": "${connect}Electrician.svg",
+    "Plumber": "${connect}plumber.svg",
+    "Bike/Car Service": "${connect}Bike/Car_service.svg", // Fixed path separator
+    "Events": "${connect}Events.svg",
+    "Service": "${connect}Service.svg",
+    "Bike": "${connect}Bike.svg",
+    "Auto": "${connect}Auto.svg",
+    "hardware": "${connect}Hardware.svg",
+    "sanitary": "${connect}Sanitary.svg",
+    "communications": "${connect}communications.svg",
+    "traders": "${connect}Traders.svg",
+    "Enterprises": "${connect}enterprises.svg",
+    "solutions": "${connect}solutions.svg",
+
+    // Emi
+    "Eazypay": "${connect}Eazypay.svg",
+    "slice": "${connect}slice.svg",
+    "postpaid": "${connect}Postpaid.svg",
+
+    // Investments
+    "MutualFund": "${connect}mutualfunds.svg",
+    "Stocks": "${connect}Stocks.svg",
+    "Gold": "${connect}Gold.svg",
+
+    // Insurance
+    "Life Insurance": "${connect}life_insurance.svg",
+    "Vehicle Insurance": "${connect}vehicle_insurance.svg",
+    "POLICYBAZAAR": "${connect}Policybazaar.svg",
+
+    // Support
+    "Charity": "${connect}charity.svg",
+
+    // Current
+    "TDS": "${connect}TDS.svg",
+
+    // Children
+    "School Fees": "${connect}school_fees.svg",
+    "Tuitions": "${connect}tutions.svg",
+    "Baby store": "${connect}baby_store.svg",
+    "miniklub": "${connect}miniklub.svg",
+    "uniforms": "${connect}uniforms.svg",
+    "baby care": "${connect}baby_care.svg",
+    "children": "${connect}children.svg",
+
+    // Pet Care
+    "Pet": "${connect}pet.svg",
+
+    // Sports
+    "Gym Membership": "${connect}gym_membership.svg",
+    "Sports Equipment": "${connect}sportsequipment.svg",
+    "Snooker": "${connect}Snooker.svg",
+    "cricket": "${connect}Cricket.svg",
+    "box": "${connect}Box.svg",
+
+    // Alcohol
+    "Liquor": "${connect}liquor.svg",
+    "Wine": "${connect}vine.svg",
+    "Cigarettes": "${connect}cigarettes.svg",
+
+    // Hobbies
+    "Photography": "${connect}Photography.svg",
+    "Gardening": "${connect}Gardening.svg",
+
+    // Education
+    "Stationary": "${connect}stationary.svg",
+    "Fees": "${connect}fee.svg",
+    "institute": "${connect}Institute.svg",
+    "college": "${connect}college.svg",
+
+    // Commerce
+    "Myntra": "${connect}myntra.svg",
+    "Nykaa": "${connect}nykaa.svg",
+    "Blinkit": "${connect}blinkit.svg",
+    "zepto": "${connect}zepto.svg",
+    "Grofers": "${connect}grofers.svg",
+    "Bluedart": "${connect}blueDart.svg",
+    "ekart": "${connect}ekart.svg",
+
+    // snacks
+    "juice": "${connect}Juice.svg",
+    "Sweets": "${connect}sweets.svg",
+    "Biscuit": "${connect}Biscuits.svg",
+    "Thickshake": "${connect}thickshake.svg",
+    "chocolate": "${connect}chocolate.svg",
+    "Ice cream": "${connect}icecream.svg",
+    "chat": "${connect}chat.svg",
+    "mithai": "${connect}Mithai.svg",
+    "Bakes": "${connect}Bakes.svg",
+    "Bakery": "${connect}Bakery.svg",
+    "Cakes": "${connect}cake.svg",
+    "chips": "${connect}chips.svg",
+    "confectioners": "${connect}confectioners.svg",
+    "cool drink": "${connect}Cooldrinks.svg",
+
+    // Entertainment
+    "Bookmyshow": "${connect}Bookmyshow.svg",
+    "district": "${connect}district.svg",
+    "gokarting": "${connect}gokarting.svg",
+    "gaming": "${connect}Games.svg",
+    // "Entertainment": "${connect}entertainment.svg", // Commented out in your code
+    "pvr": "${connect}pvr.svg",
+    "cinepolis": "${connect}Cinipolis.svg",
+    "imax": "${connect}Imax.svg",
+    "Escape": "${connect}escape.svg",
+    "Adventures": "${connect}adventures.svg",
+  };
+
+  static final List<String> categories = listofSubCategories.keys.toList();
+}
 class BudgetCategories2 {
   static Map<String, dynamic> listofCategories = {
     "Food": Categories.food,
@@ -274,9 +516,9 @@ class BudgetCategories2 {
     "Snacks": Categories.snacks,
     "Entertainment": Categories.entertainment,
     // "Investments": Categories.Investments,
-    // "Current": Categories.current,
+     "Current": Categories.current,//
     // "Education": Categories.,
-    // "Commerce": Categories.commerce
+     "Commerce": Categories.commerce
   };
 
   static List<String> categories =

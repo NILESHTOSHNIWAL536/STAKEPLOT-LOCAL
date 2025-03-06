@@ -171,10 +171,10 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               // Bank Account Container
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.27,
+                height: MediaQuery.of(context).size.height * 0.25,
                 child: NumberPickerScreen(),
               ),
-              const SizedBox(height: 10),
+             // const SizedBox(height: 10),
 
               // Finance Chart
               SizedBox(

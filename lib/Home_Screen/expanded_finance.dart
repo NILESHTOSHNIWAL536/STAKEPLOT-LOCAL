@@ -94,6 +94,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
    
       var response = await getDataApiCall(endpoint);
 
+
     
       if (response.statusCode == 200 || response.statusCode == 201) {
         try {
@@ -123,7 +124,9 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                 });
 
                 currentChartData.value = yearlyData;
-                maxYValue.value = data['data']['maxAmount']?.toDouble() ?? 500.0;
+                maxYValue.value =
+                    data['data']['maxAmount']?.toDouble() ?? 500.0;
+                    totalExpandedValue.value= data['data']['totalCredit']?.toDouble() ?? 500.0;
                 if (maxYValue.value == 0) maxYValue.value = 500.0;
               } else {
              
@@ -210,6 +213,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
 
           currentChartData.value = monthlyData;
           maxYValue.value = data['data']['maxAmount']?.toDouble() ?? 500.0;
+          totalExpandedValue.value=data['data']['totalCredit']?.toDouble() ?? 500.0;
           if (maxYValue.value == 0) maxYValue.value = 500.0;
         } catch (e) {
           
@@ -373,13 +377,13 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
         SizedBox(height: 10),
         Row(
           children: [
-            // Text(
-            //   '₹${totalSpent.toStringAsFixed(2)}',
-            //   style: FontManager().getTextStyle(context,
-            //       lWeight: FontWeight.bold,
-            //       fontSize: fontSizeFactor * 4,
-            //       color: AppColors.accentColor),
-            // ),
+            Text(
+              '₹$totalExpandedValue',
+              style: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.bold,
+                  fontSize: fontSizeFactor * 4,
+                  color: AppColors.accentColor),
+            ),
             SizedBox(width: screenWidth * 0.02),
             Text(
               'This week',

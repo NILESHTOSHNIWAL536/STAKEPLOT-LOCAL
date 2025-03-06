@@ -729,7 +729,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
     // Assuming currentId, userName, and userAvatar are available globally from ApisConnect
     String currentUserId = currentId.value; // Current user's ID
     String currentUserName = userName.value; // Current user's name
-    String? currentUserAvatar = userAvatar; // Current user's avatar
+    String? currentUserAvatar = avatar.value; // Current user's avatar
 
     // Check if the current user is already in addedMembers to avoid duplicates
     if (!addedMembers.any((member) => member['id'] == currentUserId)) {

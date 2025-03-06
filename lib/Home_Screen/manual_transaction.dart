@@ -134,199 +134,87 @@ class ModalContent extends StatefulWidget {
 class _ModalContentState extends State<ModalContent>
     with SingleTickerProviderStateMixin {
   final Map<String, List<String>> categories = {
-    "Food": [
-      "Swiggy",
-      "Zomato",
-      "Restaurant",
-      "Cafe",
-      "Pizza",
-      "Dairy",
-      "Tea",
-      "Chai",
-      "canteen",
-      "Bistro",
-      "Mcdonalds",
-      "kfc",
-      "subway",
-      "dominos",
-      "Dhaba",
-      "Chicken",
-      "Italia",
-      "bawarchi",
-      "cafe",
-      "Tiffin",
-      "mea",
-      "Vegetables",
-      "udupi",
-      "coffee",
-      "eats",
-      "Frankie",
-      "kirana",
-      "Store",
-      "General Store",
-      "rasoi",
-      "fish",
-      "milk"
-    ],
-    "Shopping": [
-      "Shoppers",
-      "Mart",
-      "WestSide",
-      "Electronics",
-      "Supermarket",
-      "Amazon",
-      "Flipkart",
-      "Fashion",
-      "Fabrics",
-      "kart",
-      "Electronics",
-      "shopping",
-      "ratnadeep",
-      "Mobiles",
-      "lifestyle",
-      "market",
-      "more",
-      "supermarket",
-      "shop",
-      "max",
-      "zudio",
-      "centro"
-    ],
-    "Travel": [
-      "Fuel",
-      "Petrol",
-      "Ola",
-      "Uber",
-      "Metro",
-      "Traffic polic",
-      "puncture",
-      "Mobility",
-      "Travels",
-      "Transport",
-      "Filling",
-      "Rapido",
-      "Tsrtc",
-      "irctc"
-    ],
-    "Health": ["Medical", "Pharmacy", "Hospital", "Medplus"],
-    "Bills": [
-      "Electricity",
-      "Water",
-      "Gas",
-      "Internet",
-      "Mobile Recharge",
-      "Rent",
-      "DTH",
-      "AIRTEL",
-      "JIO",
-      "ELECTRICITY",
-      "Solutions",
-      "godaddy",
-      "hostinger",
-      "bpcl"
-    ],
-    "Subscriptions": [
-      "Netflix",
-      "PrimeVideo",
-      "Spotify",
-      "Hotstar",
-      "appleServices",
-      "disney"
-    ],
-    "Events": [
-      "Weddings",
-      "Birthday",
-      "Festival",
-      "Anniversary",
-      "Flowers",
-      "pubs",
-      "Gift"
-    ],
-    "Personal Care": ["Salon", "Spa", "Haircare", "Skincare"],
-    "Services": [
-      "Housemaid",
-      "Carpenter",
-      "Electrician",
-      "Plumber",
-      "Bike/Car Service",
-      "Hardware/sanitary Workshop",
-      "Events",
-      "Service",
-      "Bike",
-      "Auto",
-      "hardware",
-      "sanitary",
-      "communications",
-      "traders",
-      "Enterprises",
-      "solutions"
-    ],
-    "Emi": ["Eazypay", "slice", "postpaid"],
-    "Investments": ["MutualFund", "Stocks", "Gold"],
-    "Insurance": ["Life Insurance", "Vehicle Insurance", "POLICYBAZAAR"],
-    "Support": ["Charity"],
-    "Current": ["TDS"],
-    "Children": [
-      "School Fees",
-      "Tuitions",
-      "Baby store",
-      "miniklub",
-      "uniforms",
-      "baby care",
-      "children"
-    ],
-    "Pet Care": ["Pet"],
-    "Sports": [
-      "Gym Membership",
-      "Sports Equipment",
-      "Snooker",
-      "cricket",
-      "box"
-    ],
-    "Alcohol": ["Liquor", "Wine", "Cigarettes"],
-    "Hobbies": ["Photography", "Gardening"],
-    "Education": ["Stationary", "Fees", "institute", "college"],
-    "Commerce": [
-      "Amazon",
-      "Flipkart",
-      "Myntra",
-      "Nykaa",
-      "Blinkit",
-      "zepto",
-      "Grofers",
-      "Bluedart",
-      "ekart"
-    ],
-    "snacks": [
-      "juice",
-      "Sweets",
-      "Chai",
-      "Biscuit",
-      "Thickshake",
-      "chocolate",
-      "Ice cream",
-      "chat",
-      "mithai",
-      "Bakes",
-      "Bakery",
-      "Cakes",
-      "Tea",
-      "chips",
-      "confectioners",
-      "cool drink"
-    ],
-    "Entertainment": [
-      "Bookmyshow",
-      "district",
-      "gokarting",
-      "gaming",
-      "Entertainment",
-      "pvr",
-      "cinepolis",
-      "imax",
-      "Escape",
-      "Adventures"
-    ]
+   "Food": [
+            "Swiggy", "Zomato", "Restaurant", "Cafe", "Pizza", "Dairy", "Tea", "Chai",
+            "canteen", "Bistro", "Mcdonalds", "kfc", "subway", "dominos", "Dhaba",
+            "Chicken", "Italia", "bawarchi", "cafe", "Tiffin", "meals", "Vegetables",
+            "udupi", "coffee", "eats", "Frankie", "kirana", "Store", "General Store",
+            "rasoi", "fish", "milk"
+        ],
+        "Shopping": [
+            "Shoppers", "Mart", "WestSide", "Electronics", "Supermarket", "Amazon", "Flipkart",
+            "Fashion", "Fabrics", "kart", 
+            "shopping", "ratnadeep", "Mobiles", "lifestyle",
+            "market", "more", "shop",
+            "max", "zudio", "centro"
+        ],
+        "Travel": [
+            "Fuel", "Petrol", "Ola", "Uber", "Metro",
+            "Traffic polic", "puncture", "Mobility",
+            "Travels", "Transport", "Filling",
+            "Rapido", "Tgsrtc", "irctc"
+        ],
+        "Health": ["Medical", "Pharmacy", "Hospital", "Medplus"],
+        "Bills": [
+            "Electricity", "Water", "Gas", "Internet", "Mobile Recharge", "Rent",
+            "DTH", "AIRTEL", "JIO",
+             "Solutions", "godaddy",
+            "hostinger", "bpcl"
+        ],
+        "Subscriptions": [
+            "Netflix", "PrimeVideo", "Spotify", "Jio Hotstar",
+            "appleServices", "disney"
+        ],
+        "Events": [
+            "Weddings", "Birthday", "Festival", "Anniversary",
+            "Flowers", "pubs", "Gift"
+        ],
+        "Personal Care": ["Salon", "Spa", "Haircare", "Skincare"],
+        "Services": [
+            "Housemaid", "Carpenter", "Electrician", "Plumber",
+            "Bike/Car Service", "Hardware/sanitary Workshop", "Events",
+            "Service", "Bike", "Auto",
+            "hardware", "sanitary", "communications",
+            "traders", "Enterprises", "solutions"
+        ],
+        "Emi": ["Eazypay", "slice", "postpaid"],
+        "Investments": ["MutualFund", "Stocks", "Gold"],
+        "Insurance": ["Life Insurance", "Vehicle Insurance", "POLICYBAZAAR"],
+        "Support": ["Charity"],
+        "Current": ["TDS"],
+        "Children": [
+            "School Fees", "Tuitions",
+            "Baby store", "miniklub", "uniforms",
+            "baby care", "children"
+        ],
+        "Pet Care": [
+            "Pet"
+        ],
+        "Sports": [
+            "Gym Membership", "Sports Equipment",
+            "Snooker", "cricket", "box"
+        ],
+        "Alcohol": ["Liquor", "Wine", "Cigarettes"],
+        "Hobbies": ["Photography", "Gardening"],
+        "Education": [
+            "Stationary", "Fees",
+            "institute", "college"
+        ],
+        "Commerce": [
+            "Amazon", "Flipkart", "Myntra", "Nykaa",
+            "Blinkit", "zepto", "Grofers", "Bluedart", "ekart"
+        ],
+        "snacks": [
+            "juice", "Sweets", "Chai", "Biscuit", "Thickshake",
+            "chocolate", "Ice cream", "chat", "mithai",
+            "Bakes", "Bakery", "Cakes", "Tea", "chips",
+            "confectioners", "cool drink"
+        ],
+        "Entertainment": [
+            "Bookmyshow", "district", "gokarting", "gaming",
+            "Entertainment", "pvr", "cinepolis", "imax",
+            "Escape", "Adventures"
+        ]
   };
 
   String? selectedCategory;
@@ -444,59 +332,62 @@ class _ModalContentState extends State<ModalContent>
                   curve: Curves.easeOut,
                   child: Container(
                     color: AppColors.backgroundColor,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Title
-                        Text(
-                          selectedSubCategory == null
-                              ? selectedCategory == null
-                                  ? 'Manual Transactions'
-                                  : ''
-                              : 'Manual Transactions',
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: AppColors.accentColor),
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Enter Amount Field (Only shown if no category is selected)
-
-                        if (selectedCategory == null &&
-                            selectedSubCategory == null) ...[
-                          AmountWidget(),
-                          const SizedBox(height: 16),
-                        ],
-
-                        if (amount != null) ...[
-                          categoryWidget(),
-                        ],
-                        const SizedBox(height: 8),
-                        if (isCategoryFieldExpanded) ...[
-                          categoryExpandedWidget(),
-                        ],
-
-                        // Subcategories List (Visible after category is selected)
-                        if (selectedCategory != null &&
-                            selectedSubCategory == null) ...[
-                          Text('$selectedCategory',
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.normal,
-                                  fontSize: 16,
-                                  color: AppColors.accentColor)),
-                          SizedBox(
-                            height: 5,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Title
+                          Text(
+                            selectedSubCategory == null
+                                ? selectedCategory == null
+                                    ? 'Manual Transactions'
+                                    : ''
+                                : 'Manual Transactions',
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: AppColors.accentColor),
                           ),
-                          subcategoryWidget(),
+                          const SizedBox(height: 16),
+                      
+                          // Enter Amount Field (Only shown if no category is selected)
+                      
+                          if (selectedCategory == null &&
+                              selectedSubCategory == null) ...[
+                            AmountWidget(),
+                            const SizedBox(height: 16),
+                          ],
+                      
+                          if (amount != null) ...[
+                            categoryWidget(),
+                          ],
+                          const SizedBox(height: 8),
+                          if (isCategoryFieldExpanded) ...[
+                            categoryExpandedWidget(),
+                          ],
+                      
+                          // Subcategories List (Visible after category is selected)
+                          if (selectedCategory != null &&
+                              selectedSubCategory == null) ...[
+                            Text('$selectedCategory',
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.normal,
+                                    fontSize: 16,
+                                    color: AppColors.accentColor)),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            subcategoryWidget(),
+                          ],
+                      
+                          if (fin != null) ...[
+                            buttonsWidget(),
+                            continueButton(),
+                          ],
                         ],
-
-                        if (fin != null) ...[
-                          buttonsWidget(),
-                          continueButton(),
-                        ],
-                      ],
+                      ),
                     ),
                   ),
                 ),
@@ -681,9 +572,12 @@ class _ModalContentState extends State<ModalContent>
 
   Widget subcategoryWidget() {
     return Wrap(
-      spacing: 8.0, // Horizontal spacing between chips
-      runSpacing: 8.0, // Vertical spacing between rows
+      spacing: 4.0, // Horizontal spacing between chips
+      runSpacing: 2.0, // Vertical spacing between rows
       children: categories[selectedCategory]!.map((subCategory) {
+        // Get the URL path for the subcategory's icon from BudgetSubCategories
+        String urlPath = BudgetSubCategories.listofSubCategories[subCategory] ??"assets/icons/subCategoryIcons/default.svg";
+            
         return GestureDetector(
           onTap: () {
             setState(() {
@@ -691,24 +585,25 @@ class _ModalContentState extends State<ModalContent>
               selectedSubCategory2 = subCategory;
               categoryFieldController.text =
                   '$selectedCategory ($selectedSubCategory)';
-              //isSplitbill = true;
+              // isSplitbill = true; // Uncomment if needed
               fin = '$selectedCategory ($selectedSubCategory)';
               selectedCategory2 = selectedCategory;
               resetToInitialScreen();
             });
           },
           child: Chip(
-            avatar: Icon(
-              Icons.category, // Replace with a relevant icon
-              color: Colors.blue, // Icon color
-              size: 18, // Adjust size to fit within the chip
+            avatar: ProfileImage(
+              url: urlPath,
+              
             ),
             label: Text(
               subCategory,
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.normal,
-                  fontSize: 14,
-                  color: AppColors.accentColor),
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.normal,
+                fontSize: 14,
+                color: AppColors.accentColor,
+              ),
             ),
             backgroundColor: AppColors.button,
             shape: RoundedRectangleBorder(
@@ -933,7 +828,7 @@ class _ModalContentState extends State<ModalContent>
           totalAmount: totalAmount,
           userId: currentId.value,
           userName: userName.value,
-          userAvatar: userAvatarProfile.value,
+          userAvatar: avatar.value,
           isLendMode: isLendMode,
         );
       },

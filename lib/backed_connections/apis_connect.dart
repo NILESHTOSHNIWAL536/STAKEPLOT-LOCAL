@@ -172,6 +172,8 @@ RxBool getHiddenHistory = false.obs;
 RxBool isYearView = false.obs;
 RxBool loadChatdataOnChnage = false.obs;
 RxList  transactionsHistory = <dynamic>[].obs;
+RxDouble totalDebitValue = 0.0.obs;
+RxDouble totalExpandedValue = 0.0.obs;
 class Message {
   Message(
       {this.text,
