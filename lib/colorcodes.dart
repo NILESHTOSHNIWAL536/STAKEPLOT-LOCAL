@@ -139,7 +139,6 @@ Map<String, String> imageMapForHistory = {
   "support": Categories.support,
   "sports": Categories.sports,
   "household": "household.svg",
-  "education": "education.svg",
   "smoke": SubCategories.tobacco,
   "gifting": "gifts.svg",
   "bills": Categories.bills,
@@ -171,7 +170,17 @@ Map<String, String> imageMapForHistory = {
   "miscellaneous": "b-miscellaneous.svg",
   "untagged": "b-miscellaneous.svg",
   "accessories": "b-accessories.svg",
-  "investments": "b-investments.svg",
+  // "investments": "b-investments.svg",
+    "investments": Categories.bills,
+    "education": Categories.education,
+    "alcohol": Categories.alcohal,
+    "personal care": Categories.personalCare,//
+    "services": Categories.services,
+    "pet care": Categories.petCare,
+    "current": Categories.current,
+    "children": Categories.children,
+    "commerce": Categories.commerce,
+    "entertainment": Categories.entertainment,//
 };
 
 class StringConstant {

@@ -239,7 +239,7 @@ class BudgetCategories {
     "Personal Care": Categories.personalCare,//
     "Services": Categories.services,
     "Emi": Categories.emi,
-      "Investments": Categories.bills,
+    "Investments": Categories.bills,
     "Insurance": Categories.insurance,
     "Support": Categories.support,
      "Current": Categories.current,
@@ -253,9 +253,6 @@ class BudgetCategories {
     "snacks": Categories.snacks,//
     "Entertainment": Categories.entertainment,//
    
-     
-     
-    
   };
 
   static List<String> categories =
