@@ -332,59 +332,62 @@ class _ModalContentState extends State<ModalContent>
                   curve: Curves.easeOut,
                   child: Container(
                     color: AppColors.backgroundColor,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Title
-                        Text(
-                          selectedSubCategory == null
-                              ? selectedCategory == null
-                                  ? 'Manual Transactions'
-                                  : ''
-                              : 'Manual Transactions',
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: AppColors.accentColor),
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Enter Amount Field (Only shown if no category is selected)
-
-                        if (selectedCategory == null &&
-                            selectedSubCategory == null) ...[
-                          AmountWidget(),
-                          const SizedBox(height: 16),
-                        ],
-
-                        if (amount != null) ...[
-                          categoryWidget(),
-                        ],
-                        const SizedBox(height: 8),
-                        if (isCategoryFieldExpanded) ...[
-                          categoryExpandedWidget(),
-                        ],
-
-                        // Subcategories List (Visible after category is selected)
-                        if (selectedCategory != null &&
-                            selectedSubCategory == null) ...[
-                          Text('$selectedCategory',
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.normal,
-                                  fontSize: 16,
-                                  color: AppColors.accentColor)),
-                          SizedBox(
-                            height: 5,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Title
+                          Text(
+                            selectedSubCategory == null
+                                ? selectedCategory == null
+                                    ? 'Manual Transactions'
+                                    : ''
+                                : 'Manual Transactions',
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: AppColors.accentColor),
                           ),
-                          subcategoryWidget(),
+                          const SizedBox(height: 16),
+                      
+                          // Enter Amount Field (Only shown if no category is selected)
+                      
+                          if (selectedCategory == null &&
+                              selectedSubCategory == null) ...[
+                            AmountWidget(),
+                            const SizedBox(height: 16),
+                          ],
+                      
+                          if (amount != null) ...[
+                            categoryWidget(),
+                          ],
+                          const SizedBox(height: 8),
+                          if (isCategoryFieldExpanded) ...[
+                            categoryExpandedWidget(),
+                          ],
+                      
+                          // Subcategories List (Visible after category is selected)
+                          if (selectedCategory != null &&
+                              selectedSubCategory == null) ...[
+                            Text('$selectedCategory',
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.normal,
+                                    fontSize: 16,
+                                    color: AppColors.accentColor)),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            subcategoryWidget(),
+                          ],
+                      
+                          if (fin != null) ...[
+                            buttonsWidget(),
+                            continueButton(),
+                          ],
                         ],
-
-                        if (fin != null) ...[
-                          buttonsWidget(),
-                          continueButton(),
-                        ],
-                      ],
+                      ),
                     ),
                   ),
                 ),
@@ -569,13 +572,12 @@ class _ModalContentState extends State<ModalContent>
 
   Widget subcategoryWidget() {
     return Wrap(
-      spacing: 8.0, // Horizontal spacing between chips
-      runSpacing: 8.0, // Vertical spacing between rows
+      spacing: 4.0, // Horizontal spacing between chips
+      runSpacing: 2.0, // Vertical spacing between rows
       children: categories[selectedCategory]!.map((subCategory) {
         // Get the URL path for the subcategory's icon from BudgetSubCategories
         String urlPath = BudgetSubCategories.listofSubCategories[subCategory] ??"assets/icons/subCategoryIcons/default.svg";
-            print("urlPath------------------------------------------");
-        print(urlPath);
+            
         return GestureDetector(
           onTap: () {
             setState(() {

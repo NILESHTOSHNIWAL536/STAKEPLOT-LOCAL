@@ -71,12 +71,7 @@ final Map<String, TextEditingController> _controllers = {
             // Profile Picture
             Column(
               children: [
-                // CircleAvatar(
-                //   radius: 50,
-                //   backgroundImage: _image != null
-                //       ? FileImage(_image!)
-                //       : ,
-                // ),
+                
                Obx(()=> AvatarProfileImage(url: changeAvater.value,width: 10,height: 10,)),
 
                 GestureDetector(
