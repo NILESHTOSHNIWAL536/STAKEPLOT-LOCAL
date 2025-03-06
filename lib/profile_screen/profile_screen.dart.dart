@@ -127,10 +127,9 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                         child: Column(
                           children: [
                             _buildOption(
-                                AvatarProfileImage(
+                            ProfileImage(
                                   url: ProfileIcons.communityProf,
-                                  height: 24,
-                                  width: 24,
+                                 
                                 ),
                                 'Community profile',
                                 'Check your community profile', onTap: () {
@@ -143,10 +142,10 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                             }),
                             Divider(),
                             _buildOption(
-                                AvatarProfileImage(
+                                ProfileImage(
                                   url: ProfileIcons.friends,
-                                  height: 20,
-                                  width: 20,
+                                  // height: 20,
+                                  // width: 20,
                                 ),
                                 'Friends list',
                                 'Check your friends list here', onTap: () {
@@ -180,10 +179,10 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                   );
                                 },
                                 child: _buildOption(
-                                    AvatarProfileImage(
+                                    ProfileImage(
                                       url: ProfileIcons.support,
-                                      height: 20,
-                                      width: 20,
+                                      // height: 20,
+                                      // width: 20,
                                     ),
                                     'History archives ',
                                     'Find your hidden history here'),
@@ -200,10 +199,10 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                   );
                                 },
                                 child: _buildOption(
-                                    AvatarProfileImage(
+                                    ProfileImage(
                                       url: ProfileIcons.terms,
-                                      height: 20,
-                                      width: 20,
+                                      // height: 20,
+                                      // width: 20,
                                     ),
                                     'Terms & conditions',
                                     'Please follow our terms and conditions'),
@@ -278,10 +277,10 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                               padding:
                                   const EdgeInsets.fromLTRB(10, 14, 14, 14),
                               child: _buildOption(
-                                  AvatarProfileImage(
+                                  ProfileImage(
                                     url: ProfileIcons.logout,
-                                    height: 22,
-                                    width: 22,
+                                    // height: 22,
+                                    // width: 22,
                                   ),
                                   'Log out',
                                   'You can login and log out from your account',

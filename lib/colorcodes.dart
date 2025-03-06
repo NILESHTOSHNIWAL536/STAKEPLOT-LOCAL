@@ -286,9 +286,9 @@ Widget textStyleDesign(String str, color, double size, context) {
   );
 }
 
-String doubleToFixed(String s) {
+String doubleToFixed(String s,[int f=0]) {
   try {
-    return ((double.parse(s)).toStringAsFixed(0)).toString();
+    return ((double.parse(s)).toStringAsFixed(f)).toString();
   } catch (e) {
     return s;
   }

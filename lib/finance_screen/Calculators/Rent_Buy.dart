@@ -232,8 +232,8 @@ void calculateRentVsBuy({
 
   Widget graph() {
     return PieChartGraph(title: "Rent vs Buy Details:", graphData: [
-      {'title': 'total buy cost\n₹${(buying).toString()}', 'value': buying},
-      {'title': 'total renting cost\n₹${(rentingCost).toString()}', 'value': rentingCost},
+      {'title': 'total buy cost : ₹${(buying).toString()}', 'value': buying},
+      {'title': 'total renting cost : ₹${(rentingCost).toString()}', 'value': rentingCost},
     ], graphDisc: [
       {
         'title': 'Total cost of renting:',

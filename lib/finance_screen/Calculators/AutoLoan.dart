@@ -179,9 +179,9 @@ double depreciationValue = 0; // Depreciation value after 4 years
     return PieChartGraph(
       title: "Auto Loan Details:",
       graphData: [
-        {'title': 'Total Loan Cost\n₹${totalLoanCost.toStringAsFixed(2)}', 'value': totalLoanCost},
-        {'title': 'Annual Maintenance\n₹${annualMaintenanceCost.toStringAsFixed(2)}', 'value': annualMaintenanceCost},
-        {'title': 'Depreciation Value\n₹${depreciationValue.toStringAsFixed(2)}', 'value': depreciationValue},
+        {'title': 'Total Loan Cost : ₹${totalLoanCost.toStringAsFixed(2)}', 'value': totalLoanCost},
+        {'title': 'Annual Maintenance : ₹${annualMaintenanceCost.toStringAsFixed(2)}', 'value': annualMaintenanceCost},
+        {'title': 'Depreciation Value : ₹${depreciationValue.toStringAsFixed(2)}', 'value': depreciationValue},
       ],
       graphDisc: [
         {'title': 'Monthly Loan Payment:', 'amount': "₹ ${monthlyLoanPayment.toStringAsFixed(2)}"},

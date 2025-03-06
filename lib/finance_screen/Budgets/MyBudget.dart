@@ -550,7 +550,7 @@ class PieChartSample extends StatelessWidget {
             return PieChartSectionData(
               color: _getColor(entry.key),
               value: entry.value,
-              title: '${entry.key}\n${percentage.toStringAsFixed(1)}%',
+              title: '${entry.key} : ${percentage.toStringAsFixed(1)}%',
               radius: 50,
               badgePositionPercentageOffset: 1.7,
               titleStyle: TextStyle(

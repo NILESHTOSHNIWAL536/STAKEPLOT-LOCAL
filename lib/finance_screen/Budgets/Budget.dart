@@ -191,7 +191,7 @@ class _BudgetState extends State<Budget> {
     if (nameController.text == "" ||
         amountController.text == "" ||
         period.value == "") {
-      snackBarCalled(context, "Please Enter All Fields...", Colorcodes.red);
+      snackBarCalled(context, "Please Enter All Fields", Colorcodes.red);
       return;
     }
     Navigator.push(
@@ -242,3 +242,23 @@ Widget textStyleOnly(
     overflow: TextOverflow.ellipsis,
   );
 }
+// Create a new file, e.g., `lib/utils/text_utils.dart`
+
+ Widget textStyleOnly2({
+    required BuildContext context,
+    required String text, // Made text required and explicitly typed
+    required double fontsize, // No default, must be specified
+    required Color color, // No default, must be specified
+   required FontWeight fontWeight, // Keep default for fontWeight
+  }) {
+    return Text(
+      text,
+      style: FontManager().getTextStyle(
+        context,
+        lWeight: fontWeight,
+        fontSize: fontsize,
+        color: color,
+      ),
+      overflow: TextOverflow.ellipsis,
+    );
+  }

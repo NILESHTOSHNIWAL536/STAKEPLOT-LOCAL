@@ -45,10 +45,11 @@ class _CreditCardState extends State<CreditCard> {
 
   
 
-  // Callback function to update slider values and recalculate payoff details
+  
   void updateSliderValue(int index, double newValue) {
     setState(() {
-      slidersList[index]['value'] = newValue;
+      
+      slidersList[index]['value'] = newValue..toStringAsFixed(0);
       slidersList[index]['controller'].text = newValue.toStringAsFixed(0);
 
       cardBalance = slidersList[0]['value'];
@@ -139,8 +140,8 @@ class _CreditCardState extends State<CreditCard> {
     return PieChartGraph(
       title: "Breakdown",
       graphData: [
-        {'title': 'Principal\n₹${(cardBalance).toStringAsFixed(2)}', 'value': cardBalance},
-        {'title': 'Interest\n₹${(totalInterestPaid).toStringAsFixed(2)}', 'value': totalInterestPaid},
+        {'title': 'Principal : ₹${(cardBalance).toStringAsFixed(2)}', 'value': cardBalance},
+        {'title': 'Interest : ₹${(totalInterestPaid).toStringAsFixed(2)}', 'value': totalInterestPaid},
       ],
       graphDisc: [
        

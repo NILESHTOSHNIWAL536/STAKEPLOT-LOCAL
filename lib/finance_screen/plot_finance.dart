@@ -311,6 +311,7 @@ Widget budgetAndDebtCalulator(){
       'controller': controller,
       'symbol':symbol,
       'flag':flag,
+      
     };
   }
 

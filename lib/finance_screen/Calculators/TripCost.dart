@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/expansionTile.dart';
@@ -163,14 +164,17 @@ void calculateTripCost() {
     return PieChartGraph(
       title: "Trip Cost Breakdown:",
       graphData: [
-        {'title': 'Travel Cost\n₹$travelCost', 'value': travelCost},
+        {'title': 'Travel Cost :₹${doubleToFixed(travelCost.toString())}',
+         'value': travelCost},
         {
-          'title': 'Accommodation Cost\n₹${accommodationCostPerDay * numberOfDays}',
+          'title': 'Accommodation Cost: ₹${doubleToFixed((accommodationCostPerDay * numberOfDays).toString())}',
           'value': accommodationCostPerDay * numberOfDays
         },
-        {'title': 'Daily Expenses\n₹${dailyExpenses * numberOfDays}', 'value': dailyExpenses * numberOfDays},
+        {'title': 'Daily Expenses: ₹${doubleToFixed((dailyExpenses * numberOfDays).toString())}',
+         'value': dailyExpenses * numberOfDays
+         },
         {
-          'title': 'Entertainment Budget\n₹$entertainmentBudget',
+          'title': 'Entertainment Budget: ₹${doubleToFixed(entertainmentBudget.toString())}',
           'value': entertainmentBudget
         },
       ],
