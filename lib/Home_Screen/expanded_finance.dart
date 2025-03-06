@@ -86,7 +86,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
 
   Future<void> _fetchYearlyData(int year) async {
     try {
-      isLoading.value = true;
+      // isLoading.value = true;
       String yearString = year.toString().padLeft(4, '0');
       String endpoint =
           "${url}/transactionauto/getAllCustomTransactions/${accountId.value}/year/$yearString";
@@ -124,10 +124,9 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                 });
 
                 currentChartData.value = yearlyData;
-                maxYValue.value =
-                    data['data']['maxAmount']?.toDouble() ?? 500.0;
-                    totalExpandedValue.value= data['data']['totalCredit']?.toDouble() ?? 500.0;
+                maxYValue.value = data['data']['maxAmount']?.toDouble() ?? 500.0;totalExpandedValue.value= data['data']['totalCredit']?.toDouble() ?? 500.0;
                 if (maxYValue.value == 0) maxYValue.value = 500.0;
+                
               } else {
              
                 throw Exception('Invalid data structure received from API');
@@ -180,7 +179,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
 
   Future<void> _fetchMonthlyData(int year, int month) async {
     try {
-      isLoading.value = true;
+      // isLoading.value = true;
       String formattedDate =
           DateFormat('yyyy-MM').format(DateTime(year, month));
       var response = await getDataApiCall(
@@ -479,7 +478,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                   if (isLoading.value)
                     Center(child: CircularProgressIndicator())
                   else
-                    Container(
+                   Obx(()=> Container(
                       height: screenHeight / 2.6,
                       child: LineChartWidget(
                         chartData: currentChartData.value,
@@ -491,7 +490,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                                 selectedYear.value, selectedMonth.value),
                         isExpandedView: true,
                       ),
-                    ),
+                    )),
                   SizedBox(
                     height: 10,
                   ),

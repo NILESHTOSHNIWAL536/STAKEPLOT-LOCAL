@@ -12,6 +12,7 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart';
 import 'package:get/get_rx/get_rx.dart';
 // import 'package:getwidget/components/image/gf_image_overlay.dart';
 import 'package:page_transition/page_transition.dart';
@@ -30,20 +31,6 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 
 late IO.Socket socket;
-
-// // Model for messages
-// class Message {
-//   String? text;
-//   File? url;
-//   String type;//["image","text","Poll",'post']
-//   final bool isMe;
-//   var question;
-//   String image;
-//   var poll;
-//   var post;
-//   var split;
-//   Message({ this.text, required this.isMe,this.url,required this.type,this.question,this.image="",this.poll="",this.post="",this.split=""});
-// }
 
 class Chat extends StatefulWidget {
   var data;
@@ -377,153 +364,102 @@ class _ChatState extends State<Chat> {
         getChatLoader();
         return true;
       },
-      child: SafeArea(
-        child: Scaffold(
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundColor,
+        appBar: AppBar(
           backgroundColor: AppColors.backgroundColor,
-          appBar: AppBar(
-            backgroundColor: AppColors.backgroundColor,
-            // leading:
-            automaticallyImplyLeading: false,
-            centerTitle: false,
-            title: ValueListenableBuilder<bool>(
-                valueListenable: onlineUser,
-                builder: (context, snapshot, child) {
-                  return Container(
-                    color: AppColors.backgroundColor,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            clearChatData();
-                            getChatLoader();
-                          },
-                          child: Icon(Icons.arrow_back),
-                        ),
-                        GestureDetector(
-                            onTap: () {
-                              pushDetails();
-                            },
-                            child: AvatarProfileImage(
-                                url:
-                                    data['avatar'] ?? "assets/avatar/menp3.svg",
-                                width: 8,
-                                height: 17)),
-                        GestureDetector(
+          // leading:
+          automaticallyImplyLeading: false,
+          centerTitle: false,
+          title: ValueListenableBuilder<bool>(
+              valueListenable: onlineUser,
+              builder: (context, snapshot, child) {
+                return Container(
+                  // color: AppColors.backgroundColor,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          clearChatData();
+                          getChatLoader();
+                        },
+                        child: Icon(Icons.arrow_back),
+                      ),
+                      GestureDetector(
                           onTap: () {
                             pushDetails();
                           },
-                          child: Container(
-                            width: MediaQuery.of(context).size.width / 1.7,
-                            child: Text(
-                              data['name'],
-                              style: FontManager().getTextStyle(context,
-                                  fontSize: 18, lWeight: FontWeight.bold),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
+                          child: AvatarProfileImage(
+                              url:
+                                  data['avatar'] ?? "assets/avatar/menp3.svg",
+                              width: 8,
+                              height: 17)),
+                      GestureDetector(
+                        onTap: () {
+                          pushDetails();
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width / 1.7,
+                          child: Text(
+                            data['name'],
+                            style: FontManager().getTextStyle(context,
+                                fontSize: 18, lWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
                         ),
-                        PopupMenuButton<String>(
-                          onSelected: (value) {
-                            // Perform actions based on the selected value
-                            if (value == 'Report') {
-                              // Handle Report action
-                            } else if (value == 'Block user') {
-                              // Handle Block action
-                            } else if (value == 'Mute notification') {
-                              // Handle Mute notification action
-                            } else if (value == 'Clear chat') {
-                              // Handle Clear chat action
-                            }
-                          },
-                          itemBuilder: (BuildContext context) {
-                            return [
-                              PopupMenuItem(
-                                value: 'Report',
-                                child: Text('Report',
-                                    style: FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.normal,
-                                        fontSize: 14,
-                                        color: AppColors.primaryColor)),
-                              ),
-                              PopupMenuItem(
-                                value: 'Block user',
-                                child: Text('Block user',
-                                    style: FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.normal,
-                                        fontSize: 14,
-                                        color: AppColors.primaryColor)),
-                              ),
-                              PopupMenuItem(
-                                value: 'Mute notification',
-                                child: Text('Mute notification',
-                                    style: FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.normal,
-                                        fontSize: 14,
-                                        color: AppColors.primaryColor)),
-                              ),
-                              PopupMenuItem(
-                                value: 'Clear chat',
-                                child: Text('Clear chat',
-                                    style: FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.normal,
-                                        fontSize: 14,
-                                        color: AppColors.primaryColor)),
-                              ),
-                            ];
-                          },
-                          child: Icon(Icons
-                              .more_vert), // Replace this with your desired icon
-                        )
-                      ],
-                    ),
-                  );
-                }),
-          ),
-          body: Container(
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              children: [
-                //  height: MediaQuery.of(context).size.height/1.28,
-                // List of messages
-                Obx(() => Expanded(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        reverse: true,
-                        itemCount: messages.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return _buildMessage(messages[index]);
-                        },
                       ),
-                    )),
-                // Text input and send button
-                Container(
-                  // margin: EdgeInsets.all(8.0),
-
-                  decoration: BoxDecoration(
-                    color: AppColors.button,
-                    borderRadius: BorderRadius.circular(24),
+                    
+                    ],
                   ),
-                  //       decoration: InputDecoration(
-                  //   prefixIcon: Icon(Icons.search),
-                  //   // prefixIconColor: Colorcodes.budgetDarkGreen,
-                  //   filled: true,
-
-                  //   fillColor: AppColors.button,
-                  //   border: InputBorder.none,
-                  // ),
-                  child:
-                      InputDate("write message..", TextInputType.name, search),
+                );
+              }),
+        ),
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            children: [
+              //  height: MediaQuery.of(context).size.height/1.28,
+              // List of messages
+              Obx(() => Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      reverse: true,
+                      itemCount: messages.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return _buildMessage(messages[index]);
+                      },
+                    ),
+                  )),
+              // Text input and send button
+              Container(
+                // margin: EdgeInsets.all(8.0),
+      
+                decoration: BoxDecoration(
+                  color: AppColors.button,
+                  borderRadius: BorderRadius.circular(24),
                 ),
-              ],
-            ),
+                //       decoration: InputDecoration(
+                //   prefixIcon: Icon(Icons.search),
+                //   // prefixIconColor: Colorcodes.budgetDarkGreen,
+                //   filled: true,
+      
+                //   fillColor: AppColors.button,
+                //   border: InputBorder.none,
+                // ),
+                child:
+                    InputDate("write message..", TextInputType.name, search),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
+
+  
 
   void clearChatData() {
     socket.close();
@@ -1292,6 +1228,62 @@ class _ChatState extends State<Chat> {
     );
   }
 
+  Widget popupMenuItemList()
+  {
+     return   PopupMenuButton<String>(
+                        onSelected: (value) {
+                          // Perform actions based on the selected value
+                          if (value == 'Report') {
+                            // Handle Report action
+                          } else if (value == 'Block user') {
+                            // Handle Block action
+                          } else if (value == 'Mute notification') {
+                            // Handle Mute notification action
+                          } else if (value == 'Clear chat') {
+                            // Handle Clear chat action
+                          }
+                        },
+                        itemBuilder: (BuildContext context) {
+                          return [
+                            PopupMenuItem(
+                              value: 'Report',
+                              child: Text('Report',
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.normal,
+                                      fontSize: 14,
+                                      color: AppColors.primaryColor)),
+                            ),
+                            PopupMenuItem(
+                              value: 'Block user',
+                              child: Text('Block user',
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.normal,
+                                      fontSize: 14,
+                                      color: AppColors.primaryColor)),
+                            ),
+                            PopupMenuItem(
+                              value: 'Mute notification',
+                              child: Text('Mute notification',
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.normal,
+                                      fontSize: 14,
+                                      color: AppColors.primaryColor)),
+                            ),
+                            PopupMenuItem(
+                              value: 'Clear chat',
+                              child: Text('Clear chat',
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.normal,
+                                      fontSize: 14,
+                                      color: AppColors.primaryColor)),
+                            ),
+                          ];
+                        },
+                        child: Icon(Icons
+                            .more_vert), // Replace this with your desired icon
+     );
+  }
+
   Widget pieChart(item) {
     final List<ChartData> chartData = [];
 
@@ -1337,11 +1329,12 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  void pushDetails() {
+  void pushDetails() 
+  {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => UserDetails(data: data, ids: ids),
+        builder: (context) => CommunityUserProfile(data: data, ids: ids),
       ),
     );
   }

@@ -68,6 +68,7 @@ class Colorcodes {
   static Color saveButton = Color.fromRGBO(35, 74, 130, 1);
   static Color redDeleteIcon = Color.fromRGBO(239, 98, 111, 1);
   static Color barGraphOrange = Color.fromRGBO(239, 189, 96, 1);
+  static Color barGraphOrange3 = Color.fromRGBO(248, 236, 216, 1);
   static Color barGraphOrange2 = Color.fromRGBO(86, 135, 242, 1);
   static Color services = Color.fromRGBO(124, 87, 255, 1);
   static Color graphYaxis = Color.fromRGBO(109, 182, 254, 1);
@@ -168,7 +169,7 @@ Map<String, String> imageMapForHistory = {
   "trips": "b-trips.svg",
   "insurance":Categories.insurance,
   "miscellaneous": "b-miscellaneous.svg",
-  "untagged": "b-miscellaneous.svg",
+  "untagged": BudgetSubCategories.listofSubCategories['Mcdonalds'] ?? "b-miscellaneous.svg",
   "accessories": "b-accessories.svg",
   // "investments": "b-investments.svg",
     "investments": Categories.bills,

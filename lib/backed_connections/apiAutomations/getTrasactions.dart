@@ -119,8 +119,6 @@ void getAutoMationsTransactionsCustom(date, context,
       ? "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date,${getNextDay(endDate)}"
       : "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date";
   
-  print("urlPath");
-  print(urlPath);
   var response = await getDataApiCall(urlPath);
 
   trasactionsDataDebitWeekly.clear();
@@ -216,6 +214,7 @@ void getAutoMationsTransactionsCustom(date, context,
     transactionChatGraph['debited'] = debitList;
     transactionChatGraph['credited'] = creditList;
 
+    getGraphData.value = false;
     labels.assignAll(labelsLocal);
     getGraphData.value = true;
   } else {

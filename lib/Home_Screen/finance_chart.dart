@@ -71,9 +71,7 @@ class _FinancePageState extends State<FinancePage> {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      body: Obx(() => !getGraphData.value
-          ? Center(child: Spinner())
-          : Padding(
+      body: Padding(
               padding: EdgeInsets.all(0),
               child: Column(
                 
@@ -91,14 +89,14 @@ class _FinancePageState extends State<FinancePage> {
                     children: [
                       Row(
                         children: [
-                          Text(
-                            '₹$totalDebitValue',
+                         Obx(()=> Text(
+                            getGraphData.value? '₹$totalDebitValue':'₹$totalDebitValue',
                             //  '₹${transactionChatGraph['totalDebit']?.toString() ?? '0'}',
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.bold,
                                 fontSize: fontSizeFactor * 4,
                                 color: AppColors.accentColor),
-                          ),
+                         )),
                           SizedBox(width: screenWidth * 0.02),
                           Text(
                             'This week',
@@ -127,20 +125,27 @@ class _FinancePageState extends State<FinancePage> {
                     ],
                   ),
                   SizedBox(height: screenHeight * 0.01),
-                  getMonthWeekCustom(fontSizeFactor, screenWidth),
-                  LineChartWidget(
+              Obx(()=>  getGraphData.value? getMonthWeekCustom(fontSizeFactor, screenWidth) :  getMonthWeekCustom(fontSizeFactor, screenWidth)),
+                Obx(() => !getGraphData.value
+          ? Container(
+            width: MediaQuery.of(context).size.width/1.3,
+            height: MediaQuery.of(context).size.height / 2.6,
+            child: Center(child: Spinner()),
+          )
+          :    LineChartWidget(
                     chartData: transactionChatGraph,
                     days: labels,
                     selectedButton: selectedButton,
+                    shouldBeNavigate: true,
                     daysInMonth: selectedButton == "Week"
                         ? 7
                         : selectedButton == "Month"
                             ? _getDaysInCurrentMonth()
                             : labels.length,
-                  ),
+                  )),
                 ],
               ),
-            )),
+            ),
     );
   }
 
@@ -159,7 +164,7 @@ class _FinancePageState extends State<FinancePage> {
           children: [
             GestureDetector(
               onTap: () {
-                getGraphData.value = false;
+                // getGraphData.value = false;
                 selectedButton.value = 'Month';
                 getAutoMationsTransactionsCustom(getFormattedDate(), context);
               },
@@ -187,7 +192,7 @@ class _FinancePageState extends State<FinancePage> {
             GestureDetector(
               onTap: () {
                 selectedButton.value = 'Week';
-                getGraphData.value = false;
+                // getGraphData.value = false;
                 getAutoMationsTransactionsCustom(
                     getCurrentWeek(), context, 'Week');
               },
@@ -249,6 +254,7 @@ class LineChartWidget extends StatefulWidget {
   final RxString selectedButton;
   final int daysInMonth;
   final bool isExpandedView;
+  final bool shouldBeNavigate;
 
   const LineChartWidget({
     super.key,
@@ -257,6 +263,7 @@ class LineChartWidget extends StatefulWidget {
     required this.selectedButton,
     required this.daysInMonth,
     this.isExpandedView = false,
+    this.shouldBeNavigate = false,
   });
 
   @override
@@ -302,17 +309,18 @@ int getCurrentDateIndex(List<String> labels) {
       maxYValue = 1000.0;
     }
   }
+  ValueNotifier<bool> isTooltipVisible = ValueNotifier<bool>(false);
+
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double fontSizeFactor = screenWidth * 0.01;
-
     return getGraphLineScroll(fontSizeFactor, screenWidth);
   }
 
   Widget getGraphLineScroll(double fontSizeFactor, double screenWidth) {
-    return Container(
+    return  Container(
       height: MediaQuery.of(context).size.height / 2.6,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -322,11 +330,11 @@ int getCurrentDateIndex(List<String> labels) {
           // Fixed Y-axis labels
           if (!widget.isExpandedView)
             Container(
-              width: screenWidth * 0.14,
+              // width: screenWidth * 0.14,
               child: _buildYAxisLabels(fontSizeFactor),
             ),
           // Scrollable chart area
-          Expanded(
+        Expanded(
             child: widget.selectedButton.value != 'Week'
                 ? SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
@@ -340,18 +348,7 @@ int getCurrentDateIndex(List<String> labels) {
   }
 
   Widget getContainerOfGraph(double screenWidth, double fontSizeFactor) {
-    // List<ChartData> creditedData = widget.chartData["credited"]!
-    //     .asMap()
-    //     .entries
-    //     .map((entry) => ChartData(widget.days[entry.key], entry.value))
-    //     .toList();
-    //     print("..........................................");
-    // print(creditedData.toList());
-    // List<ChartData> debitedData = widget.chartData["debited"]!
-    //     .asMap()
-    //     .entries
-    //     .map((entry) => ChartData(widget.days[entry.key], entry.value))
-    //     .toList();
+   
     int dataLength;
     List<String> labels;
 
@@ -386,45 +383,28 @@ int getCurrentDateIndex(List<String> labels) {
       return ChartData(labels[index], value);
     });
 
-    // print("..........................................");
-    //print("Labels: $labels");
-    // print(creditedData);
-    //print(debitedData);
-    //   print("getContainerOfGraph - dataLength: $dataLength, labels: $labels");
-    // print("CreditedData: ${creditedData.map((d) => '(${d.x}, ${d.y})').toList()}");
-    // print("DebitedData: ${debitedData.map((d) => '(${d.x}, ${d.y})').toList()}");
     double labelWidth = widget.selectedButton.value == 'Week' ? 50.0 : 40.0;
     double chartWidth = dataLength * labelWidth;
-    return GestureDetector(
-      // Handle taps outside the chart lines
-
-      behavior: HitTestBehavior.opaque,
-      onTap: () {
-        if (widget.selectedButton.value == 'Month') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ExpandedChartView(
-                chartData: widget.chartData,
-                days: widget.days,
-                selectedButton: widget.selectedButton.value,
-                selectedYear: DateTime.now().year,
-                selectedMonth: DateTime.now().month,
-              ),
-            ),
-          );
-        }
-      },
-      child: SizedBox(
-          // width: screenWidth * (widget.selectedButton.value == 'Week' ? 1 : 2),
-          width: widget.selectedButton.value == 'Week'
-              ? screenWidth * 0.85 // Fixed width for Week
-              : max(chartWidth, screenWidth * 0.85),
-          height: MediaQuery.of(context).size.height / 2.6,
+    return Container(
+    
+        width: widget.selectedButton.value == 'Week'
+            ? screenWidth * 0.85 // Fixed width for Week
+            : max(chartWidth, screenWidth * 0.85),
+        height: MediaQuery.of(context).size.height / 2.6,
+        child: Transform.translate(
+          offset: Offset(-20, 0),
           child: SfCartesianChart(
+            onChartTouchInteractionUp: (tapArgs) {
+              // if(widget.shouldBeNavigate ) 
+              // {
+              //     if(!isTooltipVisible.value)navToExpanded();
+              // }
+            },
             borderWidth: 0,
             plotAreaBorderWidth: 0,
+            
             primaryXAxis: CategoryAxis(
+              
               labelStyle: FontManager().getTextStyle(context,
                   lWeight: FontWeight.bold,
                   fontSize: fontSizeFactor * 3,
@@ -442,6 +422,7 @@ int getCurrentDateIndex(List<String> labels) {
               maximumLabels: dataLength, // Ensure all labels are considered
             ),
             primaryYAxis: NumericAxis(
+              
               isVisible: false,
               labelStyle: FontManager().getTextStyle(context,
                   lWeight: FontWeight.normal,
@@ -463,25 +444,19 @@ int getCurrentDateIndex(List<String> labels) {
                   int pointIndex, int seriesIndex) {
                 final ChartData chartData = data as ChartData;
                 String label = seriesIndex == 0 ? 'Debited' : 'Credited';
+                 isTooltipVisible.value = true;
+          
+                 Future.delayed(Duration(seconds: 2), () {
+                      isTooltipVisible.value = false;
+                    });
+          
                 return GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {
-                    currentPage=1;
-                    transactionsHistory.clear();
-                    // Use a slight delay to ensure point taps are processed first
-                    if (widget.selectedButton.value == 'Month') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ExpandedChartView(
-                            chartData: widget.chartData,
-                            days: widget.days,
-                            selectedButton: widget.selectedButton.value,
-                            selectedYear: DateTime.now().year,
-                            selectedMonth: DateTime.now().month,
-                          ),
-                        ),
-                      );
+                    if (widget.selectedButton.value == 'Month' &&  widget.shouldBeNavigate) {
+                         currentPage=1;
+                        transactionsHistory.clear();
+                        navToExpanded();
                     }
                   },
                   child: Container(
@@ -551,8 +526,25 @@ int getCurrentDateIndex(List<String> labels) {
                   fontSize: fontSizeFactor * 3,
                   color: AppColors.accentColor),
             ),
-          )),
-    );
+            
+          ),
+        ));
+  }
+
+  void navToExpanded(){
+    
+     Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ExpandedChartView(
+                chartData: widget.chartData,
+                days: widget.days,
+                selectedButton: widget.selectedButton.value,
+                selectedYear: DateTime.now().year,
+                selectedMonth: DateTime.now().month,
+              ),
+            ),
+          );
   }
 
   bool isTapOnLine(Offset tapPosition) {
@@ -571,7 +563,7 @@ int getCurrentDateIndex(List<String> labels) {
       labels.add(
         Expanded(
           child: Align(
-            alignment: Alignment.centerRight,
+            alignment: Alignment.center,
             child: Text(
               '₹${formatNumberString(value.toString())}',
               style: FontManager().getTextStyle(
@@ -595,13 +587,13 @@ int getCurrentDateIndex(List<String> labels) {
   String formatNumberString(String value) {
     double numValue = double.tryParse(value) ?? 0;
     if (numValue >= 10000000) {
-      return '${(numValue / 10000000).toStringAsFixed(2)} Cr';
+      return '${(numValue / 10000000).toStringAsFixed(0)} Cr';
     } else if (numValue >= 100000) {
-      return '${(numValue / 100000).toStringAsFixed(2)} L';
+      return '${(numValue / 100000).toStringAsFixed(0)} L';
     } else if (numValue >= 1000) {
-      return '${(numValue / 1000).toStringAsFixed(2)} K';
+      return '${(numValue / 1000).toStringAsFixed(0)} K';
     } else {
-      return value;
+      return doubleToFixed(value);
     }
   }
 }

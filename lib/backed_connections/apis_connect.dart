@@ -7,7 +7,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.
 import 'package:get/get.dart';
 
 bool flag = true;
-String portNo = flag ? "192.168.1.3" : "localhost";
+String portNo = flag ? "192.168.1.9" : "localhost";
 String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 
@@ -151,6 +151,7 @@ RxBool getGraphData=false.obs;
 RxBool loadBanks=true.obs;
 RxBool isSplit = false.obs;
   RxBool isLend = false.obs;
+  RxBool stopTonavigate = true.obs;
 final ScrollController scrollController = ScrollController();
 final GlobalKey targetKey = GlobalKey(); // Key to identify the target widget
 

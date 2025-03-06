@@ -1,7 +1,7 @@
 class NavBarIcons {
   //nav bar
   static String home = "assets/icons/Navigation_bar/Home.svg";
-  static String home1 = "assets/icons/Navigation_bar/home(2).svg";
+  static String home1 = "assets/icons/Navigation_bar/home (2).svg";
   static String community = "assets/icons/Navigation_bar/Community.svg";
   static String community1 = "assets/icons/Navigation_bar/Community1.svg";
   static String screen2 = "assets/icons/Navigation_bar/screen2.svg";
@@ -39,9 +39,7 @@ class Categories {
   static String subscription = "Subscripition.svg";
   static String support = "Support.svg";
   static String travel = "Travel.svg";
-static String current = "TDS.svg";
-
-
+  static String current = "TDS.svg";
   static String education = "Education.svg";
   static String commerce = "Commerce.svg";
 

@@ -11,6 +11,7 @@ import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/tabBarUser.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -159,7 +160,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bg5,
-      // bottomNavigationBar: BottomNavigations(data: 4),
+      // appBar: AppBar(),
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -170,129 +171,20 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
            
             const SizedBox(height: 60),
             
-            Column(
-              children: [
-                Text(widget.data['name'].toString(),
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.w600,
-                        //fontSize: MediaQuery.of(context).size.width * 0.04,
-                        //fontSize: 12,
-                        color: AppColors.bg1)),
-                Text((widget.data['email'] ?? "").toString(),
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.w400,
-                        //fontSize: MediaQuery.of(context).size.width * 0.04,
-                        //fontSize: 12,
-                        color: AppColors.userName)),
-        
-                DefaultTabController(
-                  length: 3, // Number of tabs
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-                        child: DecoratedBox(
-                          decoration: const BoxDecoration(),
-                          child: TabBar(
-                            indicator: BoxDecoration(
-                              // Rounded corners
-        
-                              color: AppColors.tab,
-        
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            // Padding for labels
-                            labelColor: AppColors
-                                .primaryColor, // Text color for selected tab
-                            unselectedLabelColor: AppColors
-                                .bg1, // Text color for unselected tabs
-        
-                            tabs: const [
-                              Tab(child: Text('Posts')),
-                              Tab(text: 'Polls'),
-                              // Tab(text: 'Exploria'),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height/1.609, // Adjust as needed for TabBarView
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 12.0),
-                          child: TabBarView(
-                            children: [
-                              Center(child: feedWidgets("post")),
-                              Center(child: pollWidgets("poll")),
-                             
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                
-              ],
-            ),
-            const SizedBox(height: 20),
+            Text(widget.data['name'].toString(),
+                style: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.w600,
+                    //fontSize: MediaQuery.of(context).size.width * 0.04,
+                    //fontSize: 12,
+                    color: AppColors.bg1)),
+            
+              TabBarUser(userPostList: getTrendingData),
+           
           ],
         ),
       ),
     );
   }
-
-  Widget feedWidgets(String type) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            child: Column(
-              children: findData?[Spinner()] : getTrendingData.length == 0
-              ? [Center(
-                  child: Text("No Post Yet",
-                      style: FontManager().getTextStyle(context)))]
-              :   getTrendingData.map((item) => (item['isPoll'] ?? false)? const SizedBox.shrink(): PostCard(data: item)).toList(),
-            ),
-          ),
-          SizedBox(
-            height: 100,
-          ),
-        ],
-      ),
-    );
-  }
-
-
-
-  Widget pollWidgets(String type) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          // Container(
-          //     child: Wrap(
-          //         children: getTrendingData
-          //             .map((item) => (item['isPoll'] ?? false)
-          //                 ? PostCard(data: item)
-          //                 : SizedBox.shrink())
-          //             .toList())),
-          Container(
-            child: Column(
-              children: findData?[Spinner()] : getTrendingData.length == 0
-              ? [Center(
-                  child: Text("No Post Yet",
-                      style: FontManager().getTextStyle(context)))]
-              :   getTrendingData.map((item) => !(item['isPoll'] ?? false)? const SizedBox.shrink(): PostCard(data: item)).toList(),
-            ),
-          ),
-          SizedBox(
-            height: 100,
-          ),
-        ],
-      ),
-    );
-  }
-
-
 
 
   Widget topUserProfile(data){

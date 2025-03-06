@@ -531,10 +531,14 @@ class _BottomNavigationsState extends State<BottomNavigations> {
       iconPath = url; 
     
     } else if (url == svgIconPath.bottom4) {
-      iconPath = url; 
+      iconPath = avatar.value; 
     }
 
-    return SvgPicture.asset(
+    return iconPath == avatar.value? SvgPicture.asset(
+      iconPath,
+      width: Colorcodes.paddingSize * 1.6,
+      height: Colorcodes.paddingSize * 1.6
+      ):SvgPicture.asset(
       iconPath,
       width: Colorcodes.paddingSize * 1.6,
       height: Colorcodes.paddingSize * 1.6,

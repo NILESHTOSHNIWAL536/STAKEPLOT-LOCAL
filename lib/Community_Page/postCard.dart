@@ -13,6 +13,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/readmore.dart';
 import 'package:flutter_application_code_stakeplot/userAvatar.dart';
@@ -146,15 +147,12 @@ class _PostCardState extends State<PostCard> {
                             ],
                           ),
                         ),
-                        // Icon(
-                        //   Icons.more_vert_outlined,
-                        //   size: 25,
-                        //   color: Colors.black,
-                        // ),
+                    
                         Row(
                           children: [
                             flag ? saved() : SizedBox.shrink(),
-                            popUpBox(dataObj['_id'], context),
+                            popUpBox(dataObj['_id'], context,dataObj["author"]['name']),
+                            const SizedBox(width: 20,),
                           ],
                         ),
                       ],
@@ -312,10 +310,10 @@ class _PostCardState extends State<PostCard> {
     }
   }
 
-  Widget popUpBox(id, context) {
+  Widget popUpBox(id, context,userId) {
     return PopupMenuButton(
       initialValue: 2,
-      color: AppColors.bg3,
+      color:  Colorcodes.white,
       child: Center(
           child: Icon(
         Icons.more_vert_outlined,
@@ -338,19 +336,32 @@ class _PostCardState extends State<PostCard> {
         }
       },
       itemBuilder: (context) {
-        return [
-          const PopupMenuItem(
+        return userId==userName.value? [
+             PopupMenuItem(
             value: 0,
-            child: Text("Hide"),
+            child: getTextMenuItem(context: context,text: "Delete",color: Colorcodes.red,),
           ),
-          const PopupMenuItem(
+
+        ]:[
+           PopupMenuItem(
+            value: 0,
+            child: getTextMenuItem(context: context,text: "Hide"),
+          ),
+           PopupMenuItem(
             value: 1,
-            child: Text("Report"),
+            child: getTextMenuItem(context: context,text: "Report"),
           ),
         ];
       },
     );
   }
+
+ Widget getTextMenuItem({required BuildContext context,
+    text,
+    Color color = AppColors.bg1,
+  }){
+   return textStyle(context: context,text:text,c:color,fontWeight: FontWeight.bold);
+ }
 
   Widget barGraph(item) {
     List<SalesData> chartData = <SalesData>[];

@@ -423,11 +423,11 @@ void clearGetX() {
   graphTransaction.value=false;
   isSplit.value=false;
   isLend.value=false;
-  bankAccountLinkedList.clear();
   accountName.value = "";
   accountNo.value = "0";
   balance.value = "0";
   selectedBank.value="";
+  bankAccountLinkedList.clear();
 }
 
 // void oneSignalApis(context) async {
