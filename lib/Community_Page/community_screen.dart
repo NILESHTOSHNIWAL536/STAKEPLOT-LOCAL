@@ -330,7 +330,6 @@ class _CommunityState extends State<Community> {
                                     return ImageScreen(
                                       userInfo: post,
                                       onPostCreated: (newPost) {
-                                      
                                         setState(() {
                                           posts.add(newPost);
                                         });

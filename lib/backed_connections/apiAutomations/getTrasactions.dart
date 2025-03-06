@@ -119,8 +119,6 @@ void getAutoMationsTransactionsCustom(date, context,
       ? "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date,${getNextDay(endDate)}"
       : "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date";
   
-  print("urlPath");
-  print(urlPath);
   var response = await getDataApiCall(urlPath);
 
   trasactionsDataDebitWeekly.clear();
@@ -216,6 +214,7 @@ void getAutoMationsTransactionsCustom(date, context,
     transactionChatGraph['debited'] = debitList;
     transactionChatGraph['credited'] = creditList;
 
+    getGraphData.value = false;
     labels.assignAll(labelsLocal);
     getGraphData.value = true;
   } else {
@@ -793,16 +792,21 @@ void pickCustomDateRange(BuildContext context) async {
     lastDate: DateTime.now(),
     builder: (BuildContext context, Widget? child) {
       return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
+         
           //  elevation: 8,
           child: Container(
-            width: 380, // Fixed width for consistency
-            height: 580, // Constrained height for better control
-            padding: const EdgeInsets.all(8.0),
-            child: Expanded(
-              child: child!,
+            width: 420, // Fixed width for consistency
+            height: 580, 
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(24)
+            ),// Constrained height for better control
+            
+            child: Container(
+              color: Colors.red,
+              child: Expanded(
+                child: child!,
+              ),
             ),
           ));
     },

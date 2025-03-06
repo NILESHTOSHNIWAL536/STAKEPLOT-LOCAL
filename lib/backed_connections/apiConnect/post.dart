@@ -460,7 +460,6 @@ void createPost(
 
   final response2 = await request.send();
 
-// //print(response2);
 
   if (response2.statusCode == 200) {
     final responseData = await response2.stream.toBytes();
@@ -474,19 +473,9 @@ void createPost(
     var body = {
       'title': title,
       'description': {'message': description},
-      'image':
-          urlPath, // base,//"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA5CAYAAABqMUjBAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADDSURBVHgB7dnLCcJAFEbh/44WYCm+3amlaAVqB3YgVqC1uHMhWIKNyDW+CnCERG/OB5NkE4bDwMAwEgAAAAD8qu5gvOkXQxVoqgJmtvTn50olS6oZgqMjODqCoyM4OoKjq12wKVNvNF4Uv7eVwzV7zb5XFj+fjoetMuSfltzWxbOlb7zDP/ZYp3KDr8k66aqpMpj57v52t7kypIYu+ie94cTvQxVgl46O4OgIjo7g6AiOjuDoKrlM85R3SgIAAACA0twANp8cFnCd2FoAAAAASUVORK5CYII=",
-      'fileName': 'file7'
+      'image':urlPath, 
+      'fileName': ''
     };
-
-    // final bytes = io.File(imageFile.path).readAsBytesSync();
-
-    // String base64Image = base64Encode(bytes);
-
-    // String fileExtension = p.extension(imageFile.path);
-    // fileExtension = fileExtension.substring(1);
-    // data:image/png;base64,
-    // String base ="data:image/${fileExtension};base64," + base64Image.toString();
 
     final response = await http.post(
       Uri.parse('${urlp}'),
@@ -498,16 +487,16 @@ void createPost(
     );
 
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-       posting.value=false;
-      store(response);
-  
-    } else {
-      
-    }
-      posting.value=false;
-    getPost();
-    getTrending();
+    if (response.statusCode == 200 || response.statusCode == 201)
+     {
+      var his = jsonDecode(response.body);
+      getTrendingData.insert(0, his);
+      getPosted.value = ! getPosted.value;
+      postCount[his["_id"]] = 0;
+      postCommentCount[his["_id"]] = 0;   
+    } 
+
+    posting.value=false;
     postDis.value = false;
   } else {
     snackBarCalled(context, "server error", Colors.red);
@@ -547,17 +536,14 @@ void createPostWithOutImage(context, String title, String description) async {
       'isPoll': false,
     }),
   );
-  if (response.statusCode == 200 || response.statusCode == 201) {
-          store(response);
-          snackBarCalled(context, 'Post Uploaded successfully....');
-  } else {}
-
-   posting.value=false;
-  postDis.value = false;
-  getPost();
-  getTrending();
-  getPosted.value = ! getPosted.value;
-  //  Navigator.pop(context);
+  if (response.statusCode == 200 || response.statusCode == 201) 
+  {
+        var his = jsonDecode(response.body);
+        getTrendingData.insert(0, his);
+        getPosted.value = ! getPosted.value;
+        postCount[his["_id"]] = 0;
+        postCommentCount[his["_id"]] = 0;   
+  } 
 }
 
 void createPollOfCommunity(context, String title, String description) async {
@@ -581,10 +567,13 @@ void createPollOfCommunity(context, String title, String description) async {
   );
 
   if (response.statusCode == 200 || response.statusCode == 201) {
-  } else {}
+      var his = jsonDecode(response.body);
+      getTrendingData.insert(0, his);
+      getPosted.value = ! getPosted.value;
+      postCount[his["_id"]] = 0;
+      postCommentCount[his["_id"]] = 0;   
 
-  getPost();
-  getTrending();
+  } else {}
   postDis.value = false;
 }
 
@@ -606,11 +595,9 @@ void getTrending() async {
 
     getTrendingData.clear();
     getTrendingData.addAll(obj);
-    //  print(getTrendingData);
 
     getTrendingData.forEach((element) {
-      postCount[element["_id"]] =
-          element['upvotes'] < 0 ? 0 : element['upvotes'];
+      postCount[element["_id"]] =element['upvotes'] < 0 ? 0 : element['upvotes'];
     });
   } else {}
 }
@@ -635,12 +622,11 @@ void getPost() async {
     historyListData.addAll(obj);
     getTrendingData.clear();
     getTrendingData.addAll(obj);
-
     historyListData.forEach((element) {
       postCount[element["_id"]] = element['upvotes'];
       postCommentCount[element["_id"]] = element['comments'];
     });
-    //  print(historyListData);
+   
   } else {}
 }
 
@@ -648,7 +634,6 @@ void savePostData(context, data) async {
   var urlPath = Uri.parse('${url}/post/save');
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
-
   final response = await http.post(
     Uri.parse('${urlPath}'),
     headers: <String, String>{
@@ -677,7 +662,6 @@ void savePostData(context, data) async {
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     snackBarCalled(context, 'Post saved successfully');
-    // Navigator.pushNamed(context, '/TribeHome');
   } else {
     snackBarCalled(context, 'Failed To Save Post...!', Colors.red);
   }

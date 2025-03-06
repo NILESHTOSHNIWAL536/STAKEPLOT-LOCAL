@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/number_picker.dar
 import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/NavigatorScreens/userNavigator.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
@@ -137,7 +138,11 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           Row(
             children: [
-              UserAvatar(url: avatar.value, width: 15, height: 15),
+              GestureDetector(
+                onTap: (){
+                   navigatorToMyOwnPage(context);
+                },
+                child: UserAvatar(url: avatar.value, width: 15, height: 15)),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -178,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               // Finance Chart
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.5,
+                height: MediaQuery.of(context).size.height * 0.51,
                 child: FinancePage(
                   scrollController: scrollController,
                   transactionHistoryKey:_transactionHistoryKey ,

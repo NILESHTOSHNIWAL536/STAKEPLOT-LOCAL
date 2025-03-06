@@ -151,6 +151,7 @@ RxBool getGraphData=false.obs;
 RxBool loadBanks=true.obs;
 RxBool isSplit = false.obs;
   RxBool isLend = false.obs;
+  RxBool stopTonavigate = true.obs;
 final ScrollController scrollController = ScrollController();
 final GlobalKey targetKey = GlobalKey(); // Key to identify the target widget
 

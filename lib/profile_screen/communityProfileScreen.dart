@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/tabBarUser.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
@@ -48,163 +49,42 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
   }
 
   @override
-  void initState() {
+  void initState()
+   {
     getuserPost(widget.id);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bg5,
-      // bottomNavigationBar: BottomNavigations(data: 4),
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: Column(
           children: [
-            // Top Cover and Profile Picture
+          
             topUserProfile(),
-
+    
             const SizedBox(height: 60),
-
+    
             Column(
               children: [
                 Text(userName.value.toString(),
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w600, color: AppColors.bg1)),
-                Text(email.value.toString(),
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.w400,
-                        //fontSize: MediaQuery.of(context).size.width * 0.04,
-                        //fontSize: 12,
-                        color: AppColors.userName)),
+               
                         const SizedBox(height: 10),
-                DefaultTabController(
-                  length: 2, // Number of tabs
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: TabBar(
-                          indicatorPadding:
-                              EdgeInsets.zero, // Ensures no extra spacing
-                          labelPadding:
-                              EdgeInsets.zero, // Controls padding inside tabs
-                          indicator: BoxDecoration(
-                            color: AppColors.tab, // Background for selected tab
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          labelColor: AppColors
-                              .primaryColor, // Text color for selected tab
-                          unselectedLabelColor:
-                              AppColors.bg1, // Text color for unselected tabs
-                          indicatorSize: TabBarIndicatorSize
-                              .tab, // Indicator fills the tab
-                          tabs: [
-                            Tab(
-                              child: AnimatedContainer(
-                                duration: Duration(milliseconds: 200),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4), // Adjusted for smaller size
-                                decoration: BoxDecoration(
-                                  color: Colors
-                                      .transparent, // No background when unselected
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Text('Posts',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500)),
-                              ),
-                            ),
-                            Tab(
-                              child: AnimatedContainer(
-                                duration: Duration(milliseconds: 200),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4), // Smaller padding
-                                decoration: BoxDecoration(
-                                  color: Colors
-                                      .transparent, // No background when unselected
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Text('Polls',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500)),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height / 1.67,
-                        // Adjust as needed for TabBarView
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 0, horizontal: 12.0),
-                          child: TabBarView(
-                            children: [
-                              Center(child: feedWidgets("post")),
-                              Center(child: pollWidgets("poll")),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                   TabBarUser(userPostList: myPostList)
               ],
             ),
-            const SizedBox(height: 20),
+           
           ],
         ),
       ),
     );
   }
 
-  Widget feedWidgets(String type) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            child: Column(
-              children: myPostList
-                  .map((item) => (item['isPoll'] ?? false)
-                      ? const SizedBox.shrink()
-                      : PostCard(data: item))
-                  .toList(),
-            ),
-          ),
-          SizedBox(
-            height: 100,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget pollWidgets(String type) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-              child: Wrap(
-                  children: myPostList
-                      .map((item) => (item['isPoll'] ?? false)
-                          ? PostCard(data: item)
-                          : SizedBox.shrink())
-                      .toList())),
-          SizedBox(
-            height: 100,
-          ),
-        ],
-      ),
-    );
-  }
-
+ 
   Widget topUserProfile() {
     return Stack(
       clipBehavior: Clip.none,

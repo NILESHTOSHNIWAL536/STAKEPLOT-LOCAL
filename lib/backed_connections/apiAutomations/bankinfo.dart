@@ -68,7 +68,7 @@ void storeImageinMapFinvu(context)async
 
   void calledFunctionToFetchData(context) async {
 
-    if( accountId.value.isEmpty){
+    if(accountId.value.isEmpty){
         getGraphData.value=false;
         await getBankAccounts();
     }

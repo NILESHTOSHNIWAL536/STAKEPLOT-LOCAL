@@ -377,6 +377,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_application_code_stakeplot/animated/bankSlider.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
@@ -434,7 +435,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
             child: SizedBox(
                 width: width,
                 height: height > 0 ? height / 2.5 : 100, // Fallback height
-                child: Obx(()=> loadBanks.value ? Spinner(size: 50.0,):avatarSlider2()))));
+                child: Obx(()=> loadBanks.value ? BankSlider():avatarSlider2()))));
   }
 
   Widget avatarSlider2() {
@@ -454,7 +455,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
       ).toList(),
       onPageChanged: (index) {
         if(bankAccountLinkedList.isEmpty)return;
-        accountId.value = bankAccountLinkedList[index]['accountId'] ?? "";
+         accountId.value = bankAccountLinkedList[index]['accountId'] ?? "";
          calledFunctionToFetchData(context);
       },
     );
