@@ -848,6 +848,7 @@ class NewFriendsUi extends StatefulWidget {
   final bool isLendMode;
   final String? category;
   final String? subcategory;
+  final bool flag;
   const NewFriendsUi({
     Key? key,
     this.showContinueButton = true,
@@ -858,6 +859,7 @@ class NewFriendsUi extends StatefulWidget {
     this.isLendMode = false,
     this.category,
     this.subcategory,
+    this.flag=false,
   }) : super(key: key);
 
   @override
@@ -999,22 +1001,18 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                             widget.category ?? 'Uncategorized',
                             widget.subcategory ?? 'General',
                           );
-                         
+
                           if (amounts != null) {
                             Navigator.pop(context,
                                 amounts); // Return amounts to TransactionHistory
                           }
                           ;
                           if (amounts != null) {
-                           
                             Navigator.pop(
                                 context, amounts); // Return amounts for split
-                          } else {
-                          
-                          }
+                          } else {}
                         }
                       } else {
-                       
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content:
@@ -1052,6 +1050,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
           userAvatar: widget.userAvatar,
           cate: category,
           subcate: subcategory,
+          flag: widget.flag,
         );
       },
     );
@@ -1082,7 +1081,6 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                       child: Column(
                         children: [
                           GestureDetector(
-                            
                             onTap: () {
                               setState(() {
                                 if (addedUser.contains(values)) {
@@ -1101,7 +1099,6 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                     'avatar': frdsList[index]['avatar'],
                                     "balance": 200,
                                   });
-                                 
                                 } else {
                                   addedUser.add(values);
                                   addedMembers.add({
@@ -1189,7 +1186,6 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
               setState(() {
                 frdsList.clear();
                 frdsList.addAll(filteredList);
-              
               });
             }
           },
@@ -1234,7 +1230,7 @@ class AmountEntryModal extends StatefulWidget {
       required this.userId,
       required this.userName,
       required this.userAvatar,
-      this.flag=true,
+      this.flag = true,
       this.cate,
       this.subcate})
       : super(key: key);
@@ -1261,13 +1257,13 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
       text: initialEqualAmount.toStringAsFixed(2),
     );
     isModified[widget.userId] = false;
-   
+
     widget.selectedFriends.forEach((friend) {
       amountControllers[friend['id']] = TextEditingController(
         text: initialEqualAmount.toStringAsFixed(2),
       );
       isModified[friend['id']] = false;
-     });
+    });
     socket = IO.io(urlWithLocallHost,
         IO.OptionBuilder().setTransports(['websocket']).build());
     setUpSocketListener();
@@ -1299,21 +1295,18 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         controller.text = amount.toStringAsFixed(2);
       }
       currentTotal += amount;
- 
     });
     leftoverAmount = widget.totalAmount - currentTotal;
-   
+
     setState(() {});
   }
 
   void settleLeftover() {
     if (leftoverAmount == 0) {
-     
       return;
     }
 
     if (leftoverAmount < 0) {
-     
       // Adjust amounts to fit totalAmount
       double overage = -leftoverAmount;
       List<String> adjustableParticipants = [];
@@ -1333,7 +1326,6 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         double newAmount =
             (currentAmount - reductionPerPerson).clamp(0, widget.totalAmount);
         amountControllers[id]!.text = newAmount.toStringAsFixed(2);
-       
       }
     } else {
       // Distribute positive leftover among unchanged participants
@@ -1346,10 +1338,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
 
       if (unchangedParticipants.isEmpty) {
         unchangedParticipants = amountControllers.keys.toList();
-       
-      } else {
-       
-      }
+      } else {}
 
       double leftoverPerPerson = leftoverAmount / unchangedParticipants.length;
 
@@ -1360,12 +1349,10 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         double newAmount =
             (currentAmount + leftoverPerPerson).clamp(0, widget.totalAmount);
         amountControllers[id]!.text = newAmount.toStringAsFixed(2);
-       
       }
     }
 
     calculateTotal();
-   
   }
 
   @override
@@ -1555,60 +1542,64 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                   onTap: settleLeftover,
                   child: buttonContainer(context, "Settle"),
                 ),
-                widget.flag
-                    ? Center(
-                        child: InkWell(
-                          onTap: () {
-                            if (leftoverAmount != 0) {
-                              // Shows a snackbar and returns
-                              return;
-                            }
-                            Map<String, double> amounts = {};
-                            amountControllers.forEach((id, controller) {
-                              amounts[id] = double.tryParse(
-                                      controller.text.replaceAll(',', '')) ??
-                                  0.0;
-                            });
-                            splitUserAmount(
-                              context,
-                              widget.totalAmount.toString(),
-                              addedMembers,
-                              widget.cate ?? 'Uncategorized',
-                              widget.subcate ?? 'General',
-                              amounts: amounts,
-                            );
-                          // Navigator.pop(context,amounts);
-                            Navigator.pop(context);
-                          },
-                          child: buttonContainer(context, "Continue"),
-                        ),
-                      )
-                    : InkWell(
-                       onTap: () {
-                    if (leftoverAmount != 0) {
-                      
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            leftoverAmount > 0
-                                ? 'Please distribute the remaining ₹${leftoverAmount.toStringAsFixed(2)}'
-                                : 'Total exceeds by ₹${(-leftoverAmount).toStringAsFixed(2)}',
-                          ),
-                        ),
-                      );
-                      return;
-                    }
-                    Map<String, double> amounts = {};
-                    amountControllers.forEach((id, controller) {
-                      amounts[id] = double.tryParse(controller.text) ?? 0.0;
-                    });
 
-               
-                    Navigator.pop(context, amounts);
-                  },
-                  child: buttonContainer(context, "Confirm"),
-                ),
-                       
+                Center(
+                  child: InkWell(
+                    onTap: () {
+                      if (widget.flag) {
+                        print("tappeddddddd"); // Debug print when flag is true
+                        if (leftoverAmount != 0) {
+                          // Shows a snackbar and returns (assuming this is handled elsewhere)
+                          return;
+                        }
+                        Map<String, double> amounts = {};
+                        amountControllers.forEach((id, controller) {
+                          amounts[id] = double.tryParse(
+                                  controller.text.replaceAll(',', '')) ??
+                              0.0;
+                        });
+                        splitUserAmount(
+                          context,
+                          widget.totalAmount.toString(),
+                          addedMembers,
+                          widget.cate ?? 'Uncategorized',
+                          widget.subcate ?? 'General',
+                          amounts: amounts,
+                        );
+                        Navigator.pop(
+                            context); // Pop after processing when flag is true
+                      } else {
+                        Navigator.pop(context); // Just pop when flag is false
+                      }
+                    },
+                    child: buttonContainer(context, "Continue"),
+                  ),
+                )
+                // : InkWell(
+                //     onTap: () {
+                //       print("not tappeddddddd");
+                //       if (leftoverAmount != 0) {
+                //         ScaffoldMessenger.of(context).showSnackBar(
+                //           SnackBar(
+                //             content: Text(
+                //               leftoverAmount > 0
+                //                   ? 'Please distribute the remaining ₹${leftoverAmount.toStringAsFixed(2)}'
+                //                   : 'Total exceeds by ₹${(-leftoverAmount).toStringAsFixed(2)}',
+                //             ),
+                //           ),
+                //         );
+                //         return;
+                //       }
+                //       Map<String, double> amounts = {};
+                //       amountControllers.forEach((id, controller) {
+                //         amounts[id] =
+                //             double.tryParse(controller.text) ?? 0.0;
+                //       });
+
+                //       Navigator.pop(context, amounts);
+                //     },
+                //     child: buttonContainer(context, "Confirm"),
+                //   ),
               ],
             ),
             SizedBox(
@@ -1621,51 +1612,49 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
   }
 
   void addSocketMessage(
-  List addedUser,
-  String amount,
-  String splitName,
-  String splitID,
-  double parsedTotalAmount,
-) {
-  if (addedUser.isEmpty) {
-  
-    return;
-  }
+    List addedUser,
+    String amount,
+    String splitName,
+    String splitID,
+    double parsedTotalAmount,
+  ) {
+    if (addedUser.isEmpty) {
+      return;
+    }
 
-  for (var rec in addedUser) {
-    String room1 = rec['name'] + userName.value;
-    String room2 = userName.value + rec['name'];
-    String roomId = (room1.compareTo(room2) <= 0) ? room1 : room2;
+    for (var rec in addedUser) {
+      String room1 = rec['name'] + userName.value;
+      String room2 = userName.value + rec['name'];
+      String roomId = (room1.compareTo(room2) <= 0) ? room1 : room2;
 
-    var jsonData = {
-      "messageType": "split",
-      "receiver": rec['id'],
-      "sender": currentId.value,
-      "message": null,
-      "image": null,
-      "poll": null,
-      "post": null,
-      "split": {
-        "BillName": splitName,
-        "Amount": parsedTotalAmount,
-        "Share": amount,
-        "isPaid": false,
-        "splitId": splitID,
-      },
-      "roomId": roomId,
-    };
+      var jsonData = {
+        "messageType": "split",
+        "receiver": rec['id'],
+        "sender": currentId.value,
+        "message": null,
+        "image": null,
+        "poll": null,
+        "post": null,
+        "split": {
+          "BillName": splitName,
+          "Amount": parsedTotalAmount,
+          "Share": amount,
+          "isPaid": false,
+          "splitId": splitID,
+        },
+        "roomId": roomId,
+      };
 
-    try {
-      socket.emit("joinRoom", roomId);
-      socket.emit("message", jsonData);
-      String userToSend = rec['name'] + rec['name']; // Fix concatenation if needed
-      socket.emit("LoadCharts", {"roomId": userToSend});
-    
-    } catch (e) {
-     
+      try {
+        socket.emit("joinRoom", roomId);
+        socket.emit("message", jsonData);
+        String userToSend =
+            rec['name'] + rec['name']; // Fix concatenation if needed
+        socket.emit("LoadCharts", {"roomId": userToSend});
+      } catch (e) {}
     }
   }
-}
+
   void splitUserAmount(
     BuildContext context,
     String totalAmount,
@@ -1676,17 +1665,14 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
   }) async {
     double? parsedTotalAmount = double.tryParse(totalAmount);
     if (parsedTotalAmount == null || parsedTotalAmount <= 0) {
-    
       snackBarCalled(context, "Invalid amount entered!", Colors.red);
       return;
     }
-    
 
     if (members.isEmpty) {
       snackBarCalled(context, "No members selected!", Colors.red);
       return;
     }
-    
 
     // Prepare paymentStatus list with individual amounts
     List<Map<String, dynamic>> nameList = [];
@@ -1728,7 +1714,6 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         'amount': amountPerPerson,
       });
       calculatedTotal += amountPerPerson;
-      
     }
 
     // Verify total matches
@@ -1752,7 +1737,6 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         "Authorization": "$accessToken",
       },
       body: jsonEncode({
-        "name": category,
         "subcategory": subcategory,
         "category": category,
         "amount": calculatedTotal,

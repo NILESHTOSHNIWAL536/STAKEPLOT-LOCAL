@@ -276,7 +276,6 @@
 //     );
 //   }
 // }
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -368,7 +367,7 @@ class _SliderPageState extends State<SliderPage> {
         data['name'] == "Annual interest rate(%)" ||
         data['name'] == "Loan interest rate(%)" ||
         data['name'] == "Property tax rate(%)" ||
-        data['name'] == "Maintenance cost (% per year)" ||
+        data['name'] == "Maintenance Cost (% per year)" ||
         data['name'] == "Home Appreciation Rate (% per year)" ||
         data['name'] == "Rent Increase Rate (% per year)";
 
@@ -386,7 +385,8 @@ class _SliderPageState extends State<SliderPage> {
           ),
         ),
         SizedBox(
-          width: 100,
+          width: 80,
+          height: 40,
           child: TextField(
             controller: data['controller'],
             keyboardType: TextInputType.numberWithOptions(decimal: isFloatField),
@@ -400,13 +400,28 @@ class _SliderPageState extends State<SliderPage> {
               prefixText: data['flag'] ? data['symbol'] : null,
               suffixText: data['flag'] ? null : data['symbol'],
               contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
               filled: true,
-              fillColor: Colorcodes.greyLight,
+              fillColor: AppColors.button,
             ),
             onSubmitted: (value) {
               double? newValue = double.tryParse(value);
+              double min = data['min'];
+              double max = data['max'];
               if (newValue != null) {
+                if (newValue < min || newValue > max) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        "${data['name']} must be between $min and $max",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      backgroundColor: Colors.red,
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                  newValue = newValue.clamp(min, max); // Clamp before passing
+                }
                 if (!isFloatField) {
                   newValue = newValue.roundToDouble();
                 }
@@ -430,7 +445,7 @@ class _SliderPageState extends State<SliderPage> {
         data['name'] == "Annual interest rate(%)" ||
         data['name'] == "Loan interest rate(%)" ||
         data['name'] == "Property tax rate(%)" ||
-        data['name'] == "Maintenance cost (% per year)" ||
+        data['name'] == "Maintenance Cost (% per year)" ||
         data['name'] == "Home Appreciation Rate (% per year)" ||
         data['name'] == "Rent Increase Rate (% per year)";
 
@@ -447,7 +462,7 @@ class _SliderPageState extends State<SliderPage> {
         value: data['value'],
         min: data['min'],
         max: data['max'],
-        divisions: isFloatField ? ((data['max'] - data['min']) * 10).toInt() : 100, // 0.1 steps for float fields
+        divisions: isFloatField ? ((data['max'] - data['min']) * 10).toInt() : 100,
         label: isFloatField ? data['value'].toStringAsFixed(1) : data['value'].toStringAsFixed(0),
         onChanged: (newValue) {
           widget.onSliderValueChanged(index, newValue);

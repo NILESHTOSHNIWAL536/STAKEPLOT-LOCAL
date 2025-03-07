@@ -191,6 +191,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                 top: 25,
                 child: GestureDetector(
                   onTap: () async {
+
                     // final result = await showCustomFriendsModal(
                     //     context, amount, false, category, subcategory);
                     final result = await showCustomFriendsModal(
@@ -319,7 +320,10 @@ class _TransactionHistoryState extends State<TransactionHistory> {
             userAvatar: avatar.value,
             isLendMode: isLendMode,
             category: category,
-            subcategory: subcategory);
+            subcategory: subcategory,
+            flag: true,
+
+            );
       },
     );
   }
@@ -329,8 +333,8 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     final subcategory = transaction['subcategory']?.toString() ?? 'General';
     final amount = transaction['amount']?.toString() ?? '0';
     final formattedDate = date != null ? formatDate(date) : 'Unknown Date';
-    print(Categories.link +
-        (imageMapForHistory[category.toLowerCase()] ?? 'default_image.png'));
+    // print(Categories.link +
+    //     (imageMapForHistory[category.toLowerCase()] ?? 'default_image.png'));
     return Container(
       width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.symmetric(vertical: 5),

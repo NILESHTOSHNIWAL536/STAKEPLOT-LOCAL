@@ -134,87 +134,196 @@ class ModalContent extends StatefulWidget {
 class _ModalContentState extends State<ModalContent>
     with SingleTickerProviderStateMixin {
   final Map<String, List<String>> categories = {
-   "Food": [
-            "Swiggy", "Zomato", "Restaurant", "Cafe", "Pizza", "Dairy", "Tea", "Chai",
-            "canteen", "Bistro", "Mcdonalds", "kfc", "subway", "dominos", "Dhaba",
-            "Chicken", "Italia", "bawarchi", "cafe", "Tiffin", "meals", "Vegetables",
-            "udupi", "coffee", "eats", "Frankie", "kirana", "Store", "General Store",
-            "rasoi", "fish", "milk"
-        ],
-        "Shopping": [
-            "Shoppers", "Mart", "WestSide", "Electronics", "Supermarket", "Amazon", "Flipkart",
-            "Fashion", "Fabrics", "kart", 
-            "shopping", "ratnadeep", "Mobiles", "lifestyle",
-            "market", "more", "shop",
-            "max", "zudio", "centro"
-        ],
-        "Travel": [
-            "Fuel", "Petrol", "Ola", "Uber", "Metro",
-            "Traffic polic", "puncture", "Mobility",
-            "Travels", "Transport", "Filling",
-            "Rapido", "Tgsrtc", "irctc"
-        ],
-        "Health": ["Medical", "Pharmacy", "Hospital", "Medplus"],
-        "Bills": [
-            "Electricity", "Water", "Gas", "Internet", "Mobile Recharge", "Rent",
-            "DTH", "AIRTEL", "JIO",
-             "Solutions", "godaddy",
-            "hostinger", "bpcl"
-        ],
-        "Subscriptions": [
-            "Netflix", "PrimeVideo", "Spotify", "Jio Hotstar",
-            "appleServices", "disney"
-        ],
-        "Events": [
-            "Weddings", "Birthday", "Festival", "Anniversary",
-            "Flowers", "pubs", "Gift"
-        ],
-        "Personal Care": ["Salon", "Spa", "Haircare", "Skincare"],
-        "Services": [
-            "Housemaid", "Carpenter", "Electrician", "Plumber",
-            "Bike/Car Service", "Hardware/sanitary Workshop", "Events",
-            "Service", "Bike", "Auto",
-            "hardware", "sanitary", "communications",
-            "traders", "Enterprises", "solutions"
-        ],
-        "Emi": ["Eazypay", "slice", "postpaid"],
-        "Investments": ["MutualFund", "Stocks", "Gold"],
-        "Insurance": ["Life Insurance", "Vehicle Insurance", "POLICYBAZAAR"],
-        "Support": ["Charity"],
-        "Current": ["TDS"],
-        "Children": [
-            "School Fees", "Tuitions",
-            "Baby store", "miniklub", "uniforms",
-            "baby care", "children"
-        ],
-        "Pet Care": [
-            "Pet"
-        ],
-        "Sports": [
-            "Gym Membership", "Sports Equipment",
-            "Snooker", "cricket", "box"
-        ],
-        "Alcohol": ["Liquor", "Wine", "Cigarettes"],
-        "Hobbies": ["Photography", "Gardening"],
-        "Education": [
-            "Stationary", "Fees",
-            "institute", "college"
-        ],
-        "Commerce": [
-            "Amazon", "Flipkart", "Myntra", "Nykaa",
-            "Blinkit", "zepto", "Grofers", "Bluedart", "ekart"
-        ],
-        "snacks": [
-            "juice", "Sweets", "Chai", "Biscuit", "Thickshake",
-            "chocolate", "Ice cream", "chat", "mithai",
-            "Bakes", "Bakery", "Cakes", "Tea", "chips",
-            "confectioners", "cool drink"
-        ],
-        "Entertainment": [
-            "Bookmyshow", "district", "gokarting", "gaming",
-            "Entertainment", "pvr", "cinepolis", "imax",
-            "Escape", "Adventures"
-        ]
+    "Food": [
+      "Swiggy",
+      "Zomato",
+      "Restaurant",
+      "Cafe",
+      "Pizza",
+      "Dairy",
+      "Tea",
+      "Chai",
+      "canteen",
+      "Bistro",
+      "Mcdonalds",
+      "kfc",
+      "subway",
+      "dominos",
+      "Dhaba",
+      "Chicken",
+      "Italia",
+      "bawarchi",
+      "cafe",
+      "Tiffin",
+      "meals",
+      "Vegetables",
+      "udupi",
+      "coffee",
+      "eats",
+      "Frankie",
+      "kirana",
+      "Store",
+      "General Store",
+      "rasoi",
+      "fish",
+      "milk"
+    ],
+    "Shopping": [
+      "Shoppers",
+      "Mart",
+      "WestSide",
+      "Electronics",
+      "Supermarket",
+      "Amazon",
+      "Flipkart",
+      "Fashion",
+      "Fabrics",
+      "kart",
+      "shopping",
+      "ratnadeep",
+      "Mobiles",
+      "lifestyle",
+      "market",
+      "more",
+      "shop",
+      "max",
+      "zudio",
+      "centro"
+    ],
+    "Travel": [
+      "Fuel",
+      "Petrol",
+      "Ola",
+      "Uber",
+      "Metro",
+      "Traffic polic",
+      "puncture",
+      "Mobility",
+      "Travels",
+      "Transport",
+      "Filling",
+      "Rapido",
+      "Tgsrtc",
+      "irctc"
+    ],
+    "Health": ["Medical", "Pharmacy", "Hospital", "Medplus"],
+    "Bills": [
+      "Electricity",
+      "Water",
+      "Gas",
+      "Internet",
+      "Mobile Recharge",
+      "Rent",
+      "DTH",
+      "AIRTEL",
+      "JIO",
+      "Solutions",
+      "godaddy",
+      "hostinger",
+      "bpcl"
+    ],
+    "Subscriptions": [
+      "Netflix",
+      "PrimeVideo",
+      "Spotify",
+      "Jio Hotstar",
+      "appleServices",
+      "disney"
+    ],
+    "Events": [
+      "Weddings",
+      "Birthday",
+      "Festival",
+      "Anniversary",
+      "Flowers",
+      "pubs",
+      "Gift"
+    ],
+    "Personal Care": ["Salon", "Spa", "Haircare", "Skincare"],
+    "Services": [
+      "Housemaid",
+      "Carpenter",
+      "Electrician",
+      "Plumber",
+      "Bike/Car Service",
+      "Hardware/sanitary Workshop",
+      "Events",
+      "Service",
+      "Bike",
+      "Auto",
+      "hardware",
+      "sanitary",
+      "communications",
+      "traders",
+      "Enterprises",
+      "solutions"
+    ],
+    "Emi": ["Eazypay", "slice", "postpaid"],
+    "Investments": ["MutualFund", "Stocks", "Gold"],
+    "Insurance": ["Life Insurance", "Vehicle Insurance", "POLICYBAZAAR"],
+    "Support": ["Charity"],
+    "Current": ["TDS"],
+    "Children": [
+      "School Fees",
+      "Tuitions",
+      "Baby store",
+      "miniklub",
+      "uniforms",
+      "baby care",
+      "children"
+    ],
+    "Pet Care": ["Pet"],
+    "Sports": [
+      "Gym Membership",
+      "Sports Equipment",
+      "Snooker",
+      "cricket",
+      "box"
+    ],
+    "Alcohol": ["Liquor", "Wine", "Cigarettes"],
+    "Hobbies": ["Photography", "Gardening"],
+    "Education": ["Stationary", "Fees", "institute", "college"],
+    "Commerce": [
+      "Amazon",
+      "Flipkart",
+      "Myntra",
+      "Nykaa",
+      "Blinkit",
+      "zepto",
+      "Grofers",
+      "Bluedart",
+      "ekart"
+    ],
+    "snacks": [
+      "juice",
+      "Sweets",
+      "Chai",
+      "Biscuit",
+      "Thickshake",
+      "chocolate",
+      "Ice cream",
+      "chat",
+      "mithai",
+      "Bakes",
+      "Bakery",
+      "Cakes",
+      "Tea",
+      "chips",
+      "confectioners",
+      "cool drink"
+    ],
+    "Entertainment": [
+      "Bookmyshow",
+      "district",
+      "gokarting",
+      "gaming",
+      "Entertainment",
+      "pvr",
+      "cinepolis",
+      "imax",
+      "Escape",
+      "Adventures"
+    ]
   };
 
   String? selectedCategory;
@@ -351,15 +460,15 @@ class _ModalContentState extends State<ModalContent>
                                 color: AppColors.accentColor),
                           ),
                           const SizedBox(height: 16),
-                      
+
                           // Enter Amount Field (Only shown if no category is selected)
-                      
+
                           if (selectedCategory == null &&
                               selectedSubCategory == null) ...[
                             AmountWidget(),
                             const SizedBox(height: 16),
                           ],
-                      
+
                           if (amount != null) ...[
                             categoryWidget(),
                           ],
@@ -367,7 +476,7 @@ class _ModalContentState extends State<ModalContent>
                           if (isCategoryFieldExpanded) ...[
                             categoryExpandedWidget(),
                           ],
-                      
+
                           // Subcategories List (Visible after category is selected)
                           if (selectedCategory != null &&
                               selectedSubCategory == null) ...[
@@ -381,7 +490,7 @@ class _ModalContentState extends State<ModalContent>
                             ),
                             subcategoryWidget(),
                           ],
-                      
+
                           if (fin != null) ...[
                             buttonsWidget(),
                             continueButton(),
@@ -576,8 +685,9 @@ class _ModalContentState extends State<ModalContent>
       runSpacing: 2.0, // Vertical spacing between rows
       children: categories[selectedCategory]!.map((subCategory) {
         // Get the URL path for the subcategory's icon from BudgetSubCategories
-        String urlPath = BudgetSubCategories.listofSubCategories[subCategory] ??"assets/icons/subCategoryIcons/default.svg";
-            
+        String urlPath = BudgetSubCategories.listofSubCategories[subCategory] ??
+            "assets/icons/subCategoryIcons/default.svg";
+
         return GestureDetector(
           onTap: () {
             setState(() {
@@ -594,7 +704,6 @@ class _ModalContentState extends State<ModalContent>
           child: Chip(
             avatar: ProfileImage(
               url: urlPath,
-              
             ),
             label: Text(
               subCategory,
@@ -914,15 +1023,7 @@ class _ModalContentState extends State<ModalContent>
     }
 
     // Verify total matches (optional, for debugging)
-    double calculatedTotal =
-        nameList.fold(0.0, (sum, item) => sum + item['amount']);
-    // print("splitUserAmount: Calculated total from nameList: $calculatedTotal, Expected: $parsedTotalAmount");
-    // if (calculatedTotal != parsedTotalAmount) {
-    //   print("splitUserAmount: Total mismatch detected!");
-    //   snackBarCalled(context, "Total amount mismatch!", Colors.red);
-    //   return;
-    // }
-
+    double calculatedTotal = nameList.fold(0.0, (sum, item) => sum + item['amount']);
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
     // print("splitUserAmount: Access token retrieved: ${accessToken != null ? 'Yes' : 'No'}");
@@ -934,7 +1035,6 @@ class _ModalContentState extends State<ModalContent>
         "Authorization": "$accessToken",
       },
       body: jsonEncode({
-        "name": name,
         "subcategory": subCategories,
         "category": name,
         "amount": calculatedTotal,
@@ -1005,17 +1105,18 @@ class _ModalContentState extends State<ModalContent>
         "Authorization": "$accessToken",
       },
       body: jsonEncode({
-        "name": name,
-        "amount": amount,
-        "billReceiverId": members[0]['id'],
-        "subcategory": 'Lend Money',
-        "Avatar": members[0]['avatar'],
         "userName": members[0]['name'],
-        'dueDate': getCurrentFormattedDate(),
+        "avatarType": members[0]['avatar'],
+        "billReceiverId": members[0]['id'],
+        "category": name,
+        "subcategory": subCategories,
+        "type": "Lend Money",
+        "amount": amount,
+        // 'dueDate': getCurrentFormattedDate(),
       }),
     );
-    
-    if (response.statusCode == 200 || response.statusCode == 201) {
+
+  if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
       members.forEach((e) {
         sendNotificationsToDevice(e['id'], context,

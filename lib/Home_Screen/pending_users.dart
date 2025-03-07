@@ -206,7 +206,7 @@ Widget _buildListTile(
           children: [
             Flexible(
               child: Text(
-                data["billName"] ?? "Untagged",
+                data["category"] ?? "Untagged",
                 style: FontManager().getTextStyle(context,
                     lWeight: FontWeight.bold,
                     fontSize: 10,
@@ -271,10 +271,10 @@ Widget _buildListTile(
 
 String formatDateTime(String dateString) {
   DateTime dateTime = DateTime.parse(dateString).toLocal();
-  print("dateString");
-  print(dateString);
+  // print("dateString");
+  // print(dateString);
   String formattedDate = DateFormat("dd MMM yyyy hh:mm a").format(dateTime);
-  print(formattedDate);
+  //print(formattedDate);
   return formattedDate;
 }
 
