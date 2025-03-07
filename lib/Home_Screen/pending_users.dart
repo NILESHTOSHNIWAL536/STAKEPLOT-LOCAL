@@ -254,15 +254,24 @@ Widget _buildListTile(
           ),
         ),
         SizedBox(height: 10),
-        Text(
-          DateFormat('dd MMM yyyy hh:mm a').format(DateTime.parse(
-              data["createdAt"] ?? DateTime.now().toIso8601String())),
+        Text( formatDateTime(data["createdAt"]),
           style: FontManager().getTextStyle(context,
               lWeight: FontWeight.w300, fontSize: 8, color: Colors.green),
+        // Text(
+        //   DateFormat('dd MMM yyyy hh:mm a').format(DateTime.parse(
+        //       data["createdAt"] ?? DateTime.now().toIso8601String())),
+        //   style: FontManager().getTextStyle(context,
+        //       lWeight: FontWeight.w300, fontSize: 8, color: Colors.green),
         ),
       ],
     ),
   );
+}
+
+String formatDateTime(String dateString) {
+  DateTime dateTime = DateTime.parse(dateString);
+  String formattedDate = DateFormat("dd MMM yyyy hh:mm a").format(dateTime);
+  return formattedDate;
 }
 
 Future<String?> getToken() async {

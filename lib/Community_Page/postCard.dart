@@ -322,10 +322,11 @@ class _PostCardState extends State<PostCard> {
       )),
       onSelected: (value) {
         if (value == 1) {
-          // showModalBottomSheet(context: context,
-          //      builder: (context){
-          //            return showModel(context,id,widget.flag);
-          //   },);
+          print(value);
+          showModalBottomSheet(context: context,
+               builder: (context){
+                     return showModel(context,id,widget.flag);
+            },);
         } else {
           reportPost(context, id, "hide post");
           if (widget.flag) {

@@ -1738,7 +1738,7 @@ Widget textStyleModel(context, str, id, [flag = false]) {
         context,
         fontSize: f ? 18 : 15,
         lWeight: f ? FontWeight.bold : FontWeight.w500,
-        color: Colorcodes.budgetDarkGreen,
+        color: AppColors.primaryColor,
         lineHeight: 1.3,
         //  fontStyle: FontStyle.italic
       ),
@@ -1749,7 +1749,7 @@ Widget textStyleModel(context, str, id, [flag = false]) {
 Widget showModel(context, id, [flag = false]) {
   return Container(
     width: MediaQuery.of(context).size.width,
-    height: MediaQuery.of(context).size.height / 2.5,
+    height: MediaQuery.of(context).size.height / 2.3,
     decoration: BoxDecoration(
         color: Colorcodes.white,
         borderRadius: const BorderRadius.only(
@@ -1770,8 +1770,10 @@ Widget showModel(context, id, [flag = false]) {
         const SizedBox(
           height: 20,
         ),
-        textStyleModel(context,
-            "Helps us to understand the issue, and look into it.", id, flag),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: textStyleModel(context,"Helps us to understand the issue, and look into it.", id, flag),
+        ),
         const SizedBox(
           height: 20,
         ),
@@ -1793,9 +1795,9 @@ Widget showModel(context, id, [flag = false]) {
 
 Widget dividerCalled() {
   return Divider(
-    thickness: 2,
-    endIndent: 20,
-    indent: 20,
+    thickness: .3,
+    endIndent: 10,
+    indent: 10,
     color: Colorcodes.black,
   );
 }

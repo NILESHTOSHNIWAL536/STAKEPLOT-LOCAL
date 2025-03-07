@@ -67,7 +67,7 @@ class _CommunityState extends State<Community> {
               Obx(() => getTrendingData.length == 0 && findTranding
                   ? Loader()
                   : !findTranding && getTrendingData.length == 0
-                      ? Text("No Post yet")
+                      ?  noFriend(context,"Make friends to see their posts")
                       : Obx(()=> getPosted.value? getPostListview()  :getPostListview()),
                     )
       

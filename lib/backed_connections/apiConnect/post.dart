@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'dart:io' as io;
 import 'package:http/http.dart' as http;
@@ -595,6 +596,9 @@ void getTrending() async {
 
     getTrendingData.clear();
     getTrendingData.addAll(obj);
+    print("object");
+    print(obj);
+    if(getTrendingData.length==0){findTranding=false;}
 
     getTrendingData.forEach((element) {
       postCount[element["_id"]] =element['upvotes'] < 0 ? 0 : element['upvotes'];

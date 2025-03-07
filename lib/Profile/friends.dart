@@ -4,6 +4,7 @@ import "package:flutter_application_code_stakeplot/Community_Page/postCard.dart"
 import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
+import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
 import "package:flutter_application_code_stakeplot/Tribe/userDetails.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends.dart";
@@ -99,13 +100,7 @@ class _FriendsState extends State<Friends> {
                   ),
                   SizedBox(height: 20,),
                   Obx(() => friendsList.isEmpty
-                      ? Center(
-                          child: AvatarProfileImage(
-                            url: ProfileIcons.emptyFrnds,
-                            height: 4,
-                            width: 4,
-                          ),
-                        )
+                      ? noFriend(context)
                       : Column(
                           children: friendsList
                               .map((d) =>

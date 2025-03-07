@@ -63,7 +63,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
   }
 
   Widget getBudgetUiScreen(double height, double width) {
-    print('Categories to display: $categoriesDividedList');
+   
     return Container(
       width: width,
       height: height,
