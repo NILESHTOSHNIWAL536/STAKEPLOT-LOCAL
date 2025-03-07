@@ -551,7 +551,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
 
     return InkWell(
       onLongPress: () {
-         if (i == 2 && widget.data != i) pushName(TribeChats());
+         if (i == 2 && widget.data != i) pushName(TribeChats(),true);
         if (i == 0) {
           // Handle long press for index 0
         } else if (i == 2 && widget.data != i) {
@@ -586,16 +586,27 @@ class _BottomNavigationsState extends State<BottomNavigations> {
     );
   }
 
-  void pushName(widgetName) {
-    // Get.to(widgetName)
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => widgetName,
-      ),
-    );
+  void pushName(widgetName,[bool flag=false]) {
+    
+    if(flag){
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => widgetName,
+            ),
+          );
+    }else{
+
+          Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => widgetName,
+            ),
+          );
+
+
+    }
     //  Navigator.push(
     //       context,
 

@@ -118,8 +118,8 @@ class _SavingsState extends State<Savings> {
 
  Widget graph() {
     return PieChartGraph(title: "Savings goal progress:", graphData: [
-      {'title': 'Remaining amount\n₹${remainingAmount.toStringAsFixed(2)}', 'value': remainingAmount},
-      {'title': 'Current savings\n₹${currentSavings.toStringAsFixed(2)}', 'value': currentSavings},
+      {'title': 'Remaining amount : ₹${remainingAmount.toStringAsFixed(0)}', 'value': remainingAmount},
+      {'title': 'Current savings: ₹${currentSavings.toStringAsFixed(0)}', 'value': currentSavings},
     ], graphDisc:  [
       {
         'title': 'End balance:', 

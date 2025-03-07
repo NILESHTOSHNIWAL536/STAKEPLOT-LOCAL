@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
@@ -33,18 +35,18 @@ class _EditDetailsState extends State<EditDetails> {
       });
     }
   }
-final Map<String, TextEditingController> _controllers = {
+
+  final Map<String, TextEditingController> _controllers = {
     'name': TextEditingController(text: userName.value),
     'Email': TextEditingController(text: email.value),
     'dob': TextEditingController(text: dob.value),
     'Number': TextEditingController(text: number.value),
   };
 
-
-    @override
+  @override
   void initState() {
     super.initState();
-    changeAvater.value=avatar.value;
+    changeAvater.value = avatar.value;
   }
 
   @override
@@ -53,12 +55,19 @@ final Map<String, TextEditingController> _controllers = {
     _controllers.forEach((_, controller) => controller.dispose());
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
-        title: const Text("Edit Profile"),
+        title: textStyleOnly2(
+          context: context,
+          text: "Edit Profile",
+          fontsize: 18,
+          color: AppColors.accentColor,
+          fontWeight: FontWeight.bold,
+        ),
         backgroundColor: AppColors.backgroundColor,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
@@ -71,36 +80,53 @@ final Map<String, TextEditingController> _controllers = {
             // Profile Picture
             Column(
               children: [
-                
-               Obx(()=> AvatarProfileImage(url: changeAvater.value,width: 10,height: 10,)),
-
+                Obx(() => AvatarProfileImage(
+                      url: changeAvater.value,
+                      width: 10,
+                      height: 10,
+                    )),
                 GestureDetector(
-                  onTap: (){
-                          var data={
-                            'name':userName.value,
-                            'email':email.value,
-                          };
-                          showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  context: context,
-                                  builder: (context) {
-                                    return  Avatar(data: data,isEdit: true,);
-                                  },
-                                );
-
+                  onTap: () {
+                    var data = {
+                      'name': userName.value,
+                      'email': email.value,
+                    };
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      context: context,
+                      builder: (context) {
+                        return Avatar(
+                          data: data,
+                          isEdit: true,
+                        );
+                      },
+                    );
                   },
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      'Change Profile Picture',
-                      style: TextStyle(color: Colors.blue),
+                    child: textStyleOnly2(
+                      context: context,
+                      text: "Change Profile Picture",
+                      fontsize: 14,
+                      color: AppColors.bg3,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 20),
-
+            Align(
+              alignment: Alignment.topLeft,
+              child: textStyleOnly2(
+                context: context,
+                text: "Personal details",
+                fontsize: 16,
+                color: AppColors.bg3,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            const SizedBox(height: 20),
             Container(
               decoration: BoxDecoration(
                 color: AppColors.mt,
@@ -109,16 +135,12 @@ final Map<String, TextEditingController> _controllers = {
               child: Column(
                 children: [
                   _buildNonEditableField(Icons.email, "Email", email.value),
-                      Divider(),
-                  _buildEditableField(
-                      Icons.person, "name", userName.value
-                  ),
-                      Divider(),
-                  _buildEditableField(
-                      Icons.phone, "Number", number.value),
-                      Divider(),
-                  _buildEditableField(
-                      Icons.calendar_today, "dob",dob.value ),
+                  Divider(),
+                  _buildEditableField(Icons.person, "name", userName.value),
+                  Divider(),
+                  _buildEditableField(Icons.phone, "Number", number.value),
+                  Divider(),
+                  _buildEditableField(Icons.calendar_today, "dob", dob.value),
                   // Divider(),
                   // _buildEditableField(Icons.location_on, "Address",
                   //     "6-10-128/3/A/5/A, Budwel, Telangana"),
@@ -131,59 +153,71 @@ final Map<String, TextEditingController> _controllers = {
             const SizedBox(height: 10),
             Align(
               alignment: Alignment.topLeft,
-              child: textStyle(text: 'Account Details',context: context,fontWeight: FontWeight.bold,fontsize: 12),
+              child: textStyle(
+                  text: 'Account Details',
+                  context: context,
+                  fontWeight: FontWeight.bold,
+                  fontsize: 14),
             ),
             // Account Details
             const SizedBox(height: 20),
             getListOfBankConnected(),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                      
-                      editUserDetails(context,_controllers);
-              },
-              child: const Text("Save Changes"),
-            )
+
+            InkWell(
+                onTap: () {
+                  editUserDetails(context, _controllers);
+                },
+                child: getButton(context, "Save Changes"))
           ],
         ),
       ),
     );
   }
 
-
-  Widget getListOfBankConnected(){
-      return Container(
-          child: Column(
-            children: [
-              Column(
-                  children:  bankAccountLinkedList.map((e){
-                       return   _buildAccountDetails(e['bankName'],e['fipId'],e);
-                  }).toList(),
-              ),
-              const SizedBox(height: 10,),
-              
-              Align(
-                  alignment: Alignment.bottomRight,
-                  child: InkWell(
-                    onTap: (){
-                      number.value=Phone.value;
-                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MobileNumber(flag: true,),
-                        ),
-                    );
-                    },
-                    child: textStyle(text: '+ Add Bank',context: context,fontWeight: FontWeight.bold,fontsize: 16)),
-              ),
-              const SizedBox(height: 10,),
-            ],
+  Widget getListOfBankConnected() {
+    return Container(
+      child: Column(
+        children: [
+          Column(
+            children: bankAccountLinkedList.map((e) {
+              return _buildAccountDetails(e['bankName'], e['fipId'], e);
+            }).toList(),
           ),
-      );
+          const SizedBox(
+            height: 10,
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: InkWell(
+                onTap: () {
+                  number.value = Phone.value;
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MobileNumber(
+                        flag: true,
+                      ),
+                    ),
+                  );
+                },
+                child: textStyle(
+                    text: '+ Add Bank',
+                    context: context,
+                    fontWeight: FontWeight.bold,
+                    fontsize: 16)),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildEditableField(IconData icon, String label, String value) {
-    final controller = _controllers[label] ?? TextEditingController(text: value);
+    final controller =
+        _controllers[label] ?? TextEditingController(text: value);
 
     return Container(
       padding: EdgeInsets.symmetric(vertical: 0),
@@ -192,13 +226,24 @@ final Map<String, TextEditingController> _controllers = {
         child: TextFormField(
           controller: controller, // Use the controller to manage the text
           decoration: InputDecoration(
-           contentPadding: EdgeInsets.symmetric(vertical: 10),
-            prefixIcon: Icon(icon, color: Colors.blueGrey),
+            contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+            //prefixIcon: Icon(icon, color: Colors.blueGrey),
+           prefixIcon: Padding(
+             padding: const EdgeInsets.all(6.0),
+             child: Container(
+              
+                
+                decoration: BoxDecoration(
+                  color: AppColors.button,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(icon, color: AppColors.primaryColor)),
+           ),
             hintText: value,
             border: InputBorder.none,
             enabledBorder: InputBorder.none,
             focusedBorder: InputBorder.none,
-            suffixIcon: const Icon(Icons.edit, color: Colors.blueGrey),
+            suffixIcon: const Icon(Icons.edit, color: AppColors.primaryColor),
           ),
         ),
       ),
@@ -214,8 +259,18 @@ final Map<String, TextEditingController> _controllers = {
           enabled: false,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 10),
-            prefixIcon: Icon(icon, color: Colors.blueGrey),
-            //labelText: value,
+            // prefixIcon: Icon(icon, color: Colors.blueGrey),
+             prefixIcon: Padding(
+             padding: const EdgeInsets.all(6.0),
+             child: Container(
+              
+                
+                decoration: BoxDecoration(
+                  color: AppColors.button,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(icon, color: AppColors.primaryColor)),
+           ),
             border: InputBorder.none, // No border
             enabledBorder: InputBorder.none, // No border when not focused
             focusedBorder: InputBorder.none,
@@ -226,18 +281,29 @@ final Map<String, TextEditingController> _controllers = {
     );
   }
 
-  Widget _buildAccountDetails(String bankName, String accountNumber,var data) {
-   
+  Widget _buildAccountDetails(String bankName, String accountNumber, var data) {
     return Card(
-      //elevation: 2,
+      //shape: ,
+      elevation: 2,
+      color: AppColors.mt,
       child: ListTile(
         //  leading: AvatarProfileImage(url:  bankImagemap[bankName] ?? avatarUser.value, width: 10, height: 10),
-        title: Text(bankName),
-        subtitle: Text(accountNumber),
+        title: textStyleOnly2(
+          context: context,
+          text: bankName,
+          fontsize: 14,
+          color: AppColors.bg2,
+          fontWeight: FontWeight.w600,
+        ),
+
+        subtitle: textStyleOnly2(
+          context: context,
+          text: accountNumber,
+          fontsize: 14,
+          color: AppColors.bg3,
+          fontWeight: FontWeight.w400,
+        ),
       ),
     );
   }
-  
-
-
 }

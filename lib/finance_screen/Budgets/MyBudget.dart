@@ -22,7 +22,8 @@ class MyBudgetScreen extends StatefulWidget {
 class _MyBudgetScreenState extends State<MyBudgetScreen> {
   List<FlSpot> monthlyBudgetData = [];
   Map<String, double> categories = {};
-  List graphObj = [];
+   List graphObj = [];
+  //List<Map<String, dynamic>> graphObj=[];
   List<_ChartData> budgetSpentData = [];
   String budgetType = 'monthly';
   List<dynamic> transactions = []; // Store raw transactions from API
@@ -42,11 +43,11 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     final String budgetId =
         widget.data['_id']?.toString() ?? '679b6ea12af555d641c5da61';
     final String apiUrl = '$url/budget/get-insights/$budgetId';
-   // print('Fetching insights with budgetId: $budgetId');
-   // print('API URL: $apiUrl');
+    // print('Fetching insights with budgetId: $budgetId');
+    // print('API URL: $apiUrl');
     try {
       var response = await getDataApiCall(apiUrl);
-    //  print('Insights API Response: ${response.body}');
+      //  print('Insights API Response: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -55,10 +56,10 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
           insightsData = data; // Store insights data in state
         });
       } else {
-      //  print('Failed to fetch insights: ${response.statusCode}');
+        //  print('Failed to fetch insights: ${response.statusCode}');
       }
     } catch (e) {
-     // print('Error fetching insights: $e');
+      // print('Error fetching insights: $e');
     }
   }
 
@@ -281,12 +282,10 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
             Colors.black,
           ),
           SizedBox(height: 8),
-         
           _buildRow2(
             'Over spent',
             '₹ ${(totalSpent - (widget.data['amount'] as num)).clamp(0, double.infinity)}',
             Colors.red,
-            
           ),
         ],
       ),
@@ -303,9 +302,9 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
             fontSize: 18, fontWeight: FontWeight.w500),
       ],
     );
-
   }
-   Widget _buildRow2(String title, String value, Color textColor) {
+
+  Widget _buildRow2(String title, String value, Color textColor) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -315,9 +314,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
             fontSize: 18, fontWeight: FontWeight.w500),
       ],
     );
-
   }
-   
 
   Widget _buildText(String text, Color color,
       {double fontSize = 16, FontWeight fontWeight = FontWeight.normal}) {
@@ -409,7 +406,6 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     );
   }
 
-  
   Widget graph() {
     return PieChartGraph(
         title: "Categories", graphData: graphObj, graphDisc: []);
@@ -469,8 +465,9 @@ class LineChartSample extends StatelessWidget {
             interval: 1,
             labelRotation: labelRotation.toInt(),
             maximumLabels: budgetData.length,
-             axisLine: AxisLine(width: 0),
-             majorTickLines: const MajorTickLines(size: 0), // Hide major tick marks if desired
+            axisLine: AxisLine(width: 0),
+            majorTickLines: const MajorTickLines(
+                size: 0), // Hide major tick marks if desired
             minorTickLines: const MinorTickLines(size: 0),
           ),
           primaryYAxis: NumericAxis(
@@ -478,12 +475,13 @@ class LineChartSample extends StatelessWidget {
             labelStyle: TextStyle(color: AppColors.accentColor),
             majorGridLines: MajorGridLines(width: 0),
             minorGridLines: MinorGridLines(width: 0),
-             axisLine: AxisLine(width: 0),
+            axisLine: AxisLine(width: 0),
             minimum: 0,
             maximum: budgetData.isNotEmpty
                 ? budgetData.map((e) => e.y).reduce(math.max) * 1.2
                 : 1000.0,
-                 majorTickLines: const MajorTickLines(size: 0), // Hide major tick marks if desired
+            majorTickLines: const MajorTickLines(
+                size: 0), // Hide major tick marks if desired
             minorTickLines: const MinorTickLines(size: 0),
           ),
           series: <ChartSeries>[
@@ -552,7 +550,7 @@ class PieChartSample extends StatelessWidget {
             return PieChartSectionData(
               color: _getColor(entry.key),
               value: entry.value,
-              title: '${entry.key}\n${percentage.toStringAsFixed(1)}%',
+              title: '${entry.key} : ${percentage.toStringAsFixed(1)}%',
               radius: 50,
               badgePositionPercentageOffset: 1.7,
               titleStyle: TextStyle(

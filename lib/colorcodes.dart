@@ -161,7 +161,7 @@ Map<String, String> imageMapForHistory = {
   "subscriptions": Categories.subscription,
   "skin care": "b-skincare.svg",
   "restaurants": "b-restaurants.svg",
-  "pet": Categories.petCare,
+  "pet care": Categories.petCare,
   "emi": Categories.emi,
   "food": Categories.food,
   "health":Categories.health,
@@ -177,7 +177,7 @@ Map<String, String> imageMapForHistory = {
     "alcohol": Categories.alcohal,
     "personal care": Categories.personalCare,//
     "services": Categories.services,
-    "pet care": Categories.petCare,
+   
     "current": Categories.current,
     "children": Categories.children,
     "commerce": Categories.commerce,
@@ -287,9 +287,9 @@ Widget textStyleDesign(String str, color, double size, context) {
   );
 }
 
-String doubleToFixed(String s) {
+String doubleToFixed(String s,[int f=0]) {
   try {
-    return ((double.parse(s)).toStringAsFixed(0)).toString();
+    return ((double.parse(s)).toStringAsFixed(f)).toString();
   } catch (e) {
     return s;
   }

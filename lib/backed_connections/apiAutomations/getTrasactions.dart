@@ -236,6 +236,109 @@ void getAutoMationsTransactionsCustom(date, context,
     getGraphData.value = true;
   }
 }
+// void getAutoMationsTransactionsCustom(date, context,
+//     [weekORmonth = 'month', String? endDate]) async {
+//   if (accountId.value.trim().toString() == "") return;
+//   String urlPath = endDate != null && weekORmonth == 'Custom'
+//       ? "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date,${getNextDay(endDate)}"
+//       : "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date";
+//   print("urlPath");
+//   print(urlPath);
+//   var response = await getDataApiCall(urlPath);
+
+//   trasactionsDataDebitWeekly.clear();
+
+//   List<String> labelsLocal = weekORmonth == 'Custom' ? List.from(labels) : [];
+//   List<double> debitList = [];
+//   List<double> creditList = [];
+
+//   if (getFlagOfResponse(response)) {
+//     var his = jsonDecode(response.body);
+
+//     transactionChatGraph.clear();
+//     if (weekORmonth != 'Custom') {
+//       labels.clear();
+//     }
+
+//     try {
+//       Map data = his['data']['transactions'];
+//       totalDebitValue.value =
+//           double.parse((his['data']['totalCredit']).toString());
+//       print("totalDebitValue");
+//       print(totalDebitValue);
+//       maxYValue.value =
+//           double.parse((his['data']['maxAmount'] ?? 500.0).toString());
+
+//       if (maxYValue.value == 0) maxYValue.value = 500.0;
+
+//       if (weekORmonth == 'Custom' && endDate != null) {
+//         DateTime startDate = DateTime.parse(date);
+//         DateTime end = DateTime.parse(endDate);
+//         debitList = List.filled(labelsLocal.length, 0.0);
+//         creditList = List.filled(labelsLocal.length, 0.0);
+
+//         data.forEach((key, value) {
+//           DateTime txDate = DateTime.parse(key);
+//           String dayStr = txDate.day.toString().padLeft(2, '0');
+//           int index = labelsLocal.indexOf(dayStr);
+
+//           if (index != -1 &&
+//               txDate.isAfter(startDate.subtract(Duration(days: 1))) &&
+//               txDate.isBefore(end.add(Duration(days: 1)))) {
+//             debitList[index] = getDouble(value['debit']);
+//             creditList[index] = getDouble(value['credit']);
+//           } else {}
+//         });
+//       } else {
+//         data.forEach((key, value) {
+//           String label = weekORmonth == 'Custom'
+//               ? key.toString()
+//               : key.toString().substring(key.toString().length - 2);
+//           labelsLocal.add(label);
+//           debitList.add(getDouble(value['debit']));
+//           creditList.add(getDouble(value['credit']));
+//         });
+//       }
+//     } catch (e) {
+//       maxYValue.value = 500.0;
+//       debitList = List.filled(labelsLocal.length, 0.0);
+//       creditList = List.filled(labelsLocal.length, 0.0);
+//       //transactionChatGraph['totalDebit'] = 0.0;
+//       //totalDebit = 0.0;
+//       if (labelsLocal.isEmpty) {
+//         labelsLocal =
+//             weekORmonth == 'Week' ? getWeekDays() : getDaysInMonth(date);
+//       }
+//     }
+
+//     if (selectedButton.value == 'Week') {
+//       labelsLocal = getWeekDays();
+//       if (debitList.length < 7) {
+//         debitList = List.filled(7, 0.0)
+//           ..setRange(0, debitList.length, debitList);
+//         creditList = List.filled(7, 0.0)
+//           ..setRange(0, creditList.length, creditList);
+//       }
+//     }
+
+//     // Corrected assignment
+//     transactionChatGraph['debited'] = debitList; // Debits go to debitedData
+//     transactionChatGraph['credited'] = creditList; // Credits go to creditedDat
+
+//     labels.assignAll(labelsLocal);
+//     getGraphData.value = true;
+//   } else {
+//     if (weekORmonth == 'Custom') {
+//       debitList = List.filled(labels.length, 0.0);
+//       creditList = List.filled(labels.length, 0.0);
+//       transactionChatGraph['debited'] = debitList;
+//       transactionChatGraph['credited'] = creditList;
+//       //totalDebit = 0.0;
+//     }
+//     getGraphData.value = true;
+//   }
+// }
+
 String getNextDay(String endDate) {
   // Parse the input date string
   DateTime date = DateTime.parse(endDate);

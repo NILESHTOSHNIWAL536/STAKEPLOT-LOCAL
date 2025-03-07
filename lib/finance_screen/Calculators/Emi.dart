@@ -142,9 +142,9 @@ double emi = 0.0;
   Widget graph() {
     return PieChartGraph(
       title: "EMI Details", graphData: [
-      {'title': "Principal\n₹${(loanAmount.toStringAsFixed(2))}", 'value': loanAmount},
+      {'title': "Principal : ₹${(loanAmount.toStringAsFixed(2))}", 'value': loanAmount},
       {
-        'title': 'Interest\n₹${(totalInterestPaid.toStringAsFixed(2))}',
+        'title': 'Interest : ₹${(totalInterestPaid.toStringAsFixed(0))}',
         'value': totalInterestPaid
       },
     ], graphDisc: [
@@ -154,7 +154,7 @@ double emi = 0.0;
       },
       {
         'title': 'Total interest paid:',
-        'amount': "₹ ${totalInterestPaid.toStringAsFixed(2)}"
+        'amount': "₹ ${totalInterestPaid.toStringAsFixed(0)}"
       }
     ]);
   }
