@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/bill.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
@@ -23,6 +24,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
 
 
+RxBool reloadHistory=false.obs;
 
 class TransactionHistory extends StatefulWidget {
   /// Optional
@@ -109,7 +111,7 @@ void dispose() {
                 Obx(() => Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 13,vertical: 10),
-                        child: getlist(),
+                        child: reloadHistory.value?  getlist():getlist(),
                       )
                 )), // Wrapped in Obx for reactivity
               ],
@@ -135,7 +137,7 @@ void dispose() {
               ],
             ),
             const SizedBox(height: 20),
-             Obx(() => getlist()), // Wrapped in Obx for reactivity
+             Obx(() =>reloadHistory.value?  getlist():getlist()), // Wrapped in Obx for reactivity
           ],
         ),
       ),
@@ -208,8 +210,7 @@ void dispose() {
                 offset: Offset(swipeOffsets[index] ?? 0.0, 0),
                 child: Container(
                   decoration: getBoxDecoration(index),
-                  child: historyTransactions(transaction,transaction['transactionTimestamp']?.toString(), // Ensure this is a String or null
-                ),
+                  child: historyTransactions(transaction,transaction['transactionTimestamp']?.toString(),index), // Ensure this is a String or null),
                 ),
               ),
             ),
@@ -317,96 +318,111 @@ void dispose() {
     );
   }
 
-  Widget historyTransactions(Map<String, dynamic> transaction, String? date) {
+  Widget historyTransactions(Map<String, dynamic> transaction, String? date,int index) {
    final category = transaction['category']?.toString() ?? 'Uncategorized';
   final subcategory = transaction['subcategory']?.toString() ?? 'General';
   final amount = transaction['amount']?.toString() ?? '0';
   final formattedDate = date != null ? formatDate(date) : 'Unknown Date';
   
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colorcodes.greyLight, width: 0.6),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            flex: 3,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    margin: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colorcodes.greyLight,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: AvatarProfileImage(
-                      url: Categories.link +(imageMapForHistory[category.toLowerCase()] ?? 'default_image.png'),
-                      height: 16,
-                      width: 20,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 5),
-                Expanded(
-                  flex: 2,
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: " $category",
-                          style: FontManager().getTextStyle(
-                            context,
-                            lWeight: FontWeight.w600,
-                            fontSize: 14,
-                            lineHeight: 2.14,
-                            color: AppColors.accentColor,
-                          ),
-                        ),
-                        TextSpan(
-                          text: " ($subcategory)",
-                          style: FontManager().getTextStyle(
-                            context,
-                            lWeight: FontWeight.w400,
-                            fontSize: 12,
-                            lineHeight: 1.14,
-                            color: AppColors.accentColor,
-                          ),
-                        ),
-                      ],
+    return GestureDetector(
+      onTap: () {
+      tagName.value= category;
+      showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+              ),
+                  builder: (context) {
+                    return TagShowmodal(data: transaction,index: index,);
+                  },
+        );
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colorcodes.greyLight, width: 0.6),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              flex: 3,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colorcodes.greyLight,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: AvatarProfileImage(
+                        url: Categories.link +(imageMapForHistory[category.toLowerCase()] ?? 'default_image.png'),
+                        height: 16,
+                        width: 20,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 5),
+                  Expanded(
+                    flex: 2,
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: " $category",
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w600,
+                              fontSize: 14,
+                              lineHeight: 2.14,
+                              color: AppColors.accentColor,
+                            ),
+                          ),
+                          TextSpan(
+                            text: " ($subcategory)",
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w400,
+                              fontSize: 12,
+                              lineHeight: 1.14,
+                              color: AppColors.accentColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Column(
-              children: [
-                textStyle(
-                  text: '₹$amount',
-                  context: context,
-                  fontWeight: FontWeight.bold,
-                  fontsize: 15,
-                ),
-                const SizedBox(height: 6),
-                textStyle(
-                  text: formattedDate,
-                  context: context,
-                  fontWeight: FontWeight.w300,
-                  fontsize: 11,
-                ),
-              ],
+            Expanded(
+              flex: 1,
+              child: Column(
+                children: [
+                  textStyle(
+                    text: '₹$amount',
+                    context: context,
+                    fontWeight: FontWeight.bold,
+                    fontsize: 15,
+                  ),
+                  const SizedBox(height: 6),
+                  textStyle(
+                    text: formattedDate,
+                    context: context,
+                    fontWeight: FontWeight.w300,
+                    fontsize: 11,
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

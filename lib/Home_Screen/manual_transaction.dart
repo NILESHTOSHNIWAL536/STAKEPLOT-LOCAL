@@ -131,91 +131,9 @@ class ModalContent extends StatefulWidget {
   _ModalContentState createState() => _ModalContentState();
 }
 
-class _ModalContentState extends State<ModalContent>
-    with SingleTickerProviderStateMixin {
-  final Map<String, List<String>> categories = {
-   "Food": [
-            "Swiggy", "Zomato", "Restaurant", "Cafe", "Pizza", "Dairy", "Tea", "Chai",
-            "canteen", "Bistro", "Mcdonalds", "kfc", "subway", "dominos", "Dhaba",
-            "Chicken", "Italia", "bawarchi", "cafe", "Tiffin", "meals", "Vegetables",
-            "udupi", "coffee", "eats", "Frankie", "kirana", "Store", "General Store",
-            "rasoi", "fish", "milk"
-        ],
-        "Shopping": [
-            "Shoppers", "Mart", "WestSide", "Electronics", "Supermarket", "Amazon", "Flipkart",
-            "Fashion", "Fabrics", "kart", 
-            "shopping", "ratnadeep", "Mobiles", "lifestyle",
-            "market", "more", "shop",
-            "max", "zudio", "centro"
-        ],
-        "Travel": [
-            "Fuel", "Petrol", "Ola", "Uber", "Metro",
-            "Traffic polic", "puncture", "Mobility",
-            "Travels", "Transport", "Filling",
-            "Rapido", "Tgsrtc", "irctc"
-        ],
-        "Health": ["Medical", "Pharmacy", "Hospital", "Medplus"],
-        "Bills": [
-            "Electricity", "Water", "Gas", "Internet", "Mobile Recharge", "Rent",
-            "DTH", "AIRTEL", "JIO",
-             "Solutions", "godaddy",
-            "hostinger", "bpcl"
-        ],
-        "Subscriptions": [
-            "Netflix", "PrimeVideo", "Spotify", "Jio Hotstar",
-            "appleServices", "disney"
-        ],
-        "Events": [
-            "Weddings", "Birthday", "Festival", "Anniversary",
-            "Flowers", "pubs", "Gift"
-        ],
-        "Personal Care": ["Salon", "Spa", "Haircare", "Skincare"],
-        "Services": [
-            "Housemaid", "Carpenter", "Electrician", "Plumber",
-            "Bike/Car Service", "Hardware/sanitary Workshop", "Events",
-            "Service", "Bike", "Auto",
-            "hardware", "sanitary", "communications",
-            "traders", "Enterprises", "solutions"
-        ],
-        "Emi": ["Eazypay", "slice", "postpaid"],
-        "Investments": ["MutualFund", "Stocks", "Gold"],
-        "Insurance": ["Life Insurance", "Vehicle Insurance", "POLICYBAZAAR"],
-        "Support": ["Charity"],
-        "Current": ["TDS"],
-        "Children": [
-            "School Fees", "Tuitions",
-            "Baby store", "miniklub", "uniforms",
-            "baby care", "children"
-        ],
-        "Pet Care": [
-            "Pet"
-        ],
-        "Sports": [
-            "Gym Membership", "Sports Equipment",
-            "Snooker", "cricket", "box"
-        ],
-        "Alcohol": ["Liquor", "Wine", "Cigarettes"],
-        "Hobbies": ["Photography", "Gardening"],
-        "Education": [
-            "Stationary", "Fees",
-            "institute", "college"
-        ],
-        "Commerce": [
-            "Amazon", "Flipkart", "Myntra", "Nykaa",
-            "Blinkit", "zepto", "Grofers", "Bluedart", "ekart"
-        ],
-        "snacks": [
-            "juice", "Sweets", "Chai", "Biscuit", "Thickshake",
-            "chocolate", "Ice cream", "chat", "mithai",
-            "Bakes", "Bakery", "Cakes", "Tea", "chips",
-            "confectioners", "cool drink"
-        ],
-        "Entertainment": [
-            "Bookmyshow", "district", "gokarting", "gaming",
-            "Entertainment", "pvr", "cinepolis", "imax",
-            "Escape", "Adventures"
-        ]
-  };
+class _ModalContentState extends State<ModalContent>with SingleTickerProviderStateMixin {
+
+ 
 
   String? selectedCategory;
   String? selectedSubCategory;
