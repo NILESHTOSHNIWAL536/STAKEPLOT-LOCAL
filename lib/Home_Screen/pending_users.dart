@@ -64,7 +64,7 @@ class _UserListScreenState extends State<UserListScreen> {
             ],
           ),
         ),
-        Obx(() => getlendUsers.value ? getUser() : getUser2())
+        Obx(() => !getlendUsers.value ? getUser() : getUser2())
       ],
     );
   }
@@ -80,11 +80,11 @@ class _UserListScreenState extends State<UserListScreen> {
               .take(2)
               .map((data) => _buildListTile(context, data, false))
               .toList(),
-              
         ),
       ),
     );
   }
+
   Widget getUser2() {
     return Visibility(
       visible: dueAmountRemainders.isNotEmpty,
@@ -96,7 +96,6 @@ class _UserListScreenState extends State<UserListScreen> {
               .take(2)
               .map((data) => _buildListTile(context, data, true))
               .toList(),
-              
         ),
       ),
     );
@@ -255,14 +254,28 @@ Widget _buildListTile(
         ),
         SizedBox(height: 10),
         Text(
-          DateFormat('dd MMM yyyy hh:mm a').format(DateTime.parse(
-              data["createdAt"] ?? DateTime.now().toIso8601String())),
+          formatDateTime(data["createdAt"]),
           style: FontManager().getTextStyle(context,
               lWeight: FontWeight.w300, fontSize: 8, color: Colors.green),
-        ),
+        )
+        // Text(
+        //   DateFormat('dd MMM yyyy hh:mm a').format(DateTime.parse(
+        //       data["createdAt"] ?? DateTime.now().toIso8601String())),
+        //   style: FontManager().getTextStyle(context,
+        //       lWeight: FontWeight.w300, fontSize: 8, color: Colors.green),
+        // ),
       ],
     ),
   );
+}
+
+String formatDateTime(String dateString) {
+  DateTime dateTime = DateTime.parse(dateString).toLocal();
+  print("dateString");
+  print(dateString);
+  String formattedDate = DateFormat("dd MMM yyyy hh:mm a").format(dateTime);
+  print(formattedDate);
+  return formattedDate;
 }
 
 Future<String?> getToken() async {
@@ -288,7 +301,7 @@ Future<http.Response> updateDataApiCall(String url) async {
     );
     return response;
   } catch (error) {
-  //  print("Error in updateDataApiCall: $error");
+    //  print("Error in updateDataApiCall: $error");
     rethrow;
   }
 }
@@ -299,7 +312,7 @@ void duesPaid(BuildContext context, int index) async {
   final type = due['type'];
 
   if (dueId == null) {
-  //  print("Error: Transaction ID is null");
+    //  print("Error: Transaction ID is null");
     return;
   }
 
@@ -311,15 +324,14 @@ void duesPaid(BuildContext context, int index) async {
       dueAmountRemainders.removeAt(index);
       // This triggers the UI update automatically
       snackBarCalled(context, "Due settled successfully");
-      
     } else {
-    //  print("Failed to settle due: ${response.statusCode} - ${response.body}");
-      
-      snackBarCalled(context, "Failed to settle due: ${response.statusCode} - ${response.body}");
+      //  print("Failed to settle due: ${response.statusCode} - ${response.body}");
+
+      snackBarCalled(context,
+          "Failed to settle due: ${response.statusCode} - ${response.body}");
     }
   } catch (e) {
-   
     snackBarCalled(context, "Error settling due");
-   // print("Error in duesPaid: $e");
+    // print("Error in duesPaid: $e");
   }
 }

@@ -1,6 +1,4 @@
-
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -8,7 +6,6 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Au
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/expansionTile.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
-// import 'package:flutter_application_code_stakeplot/finance_screen/creditCard.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
 
 class RentBuy extends StatefulWidget {
@@ -21,225 +18,204 @@ class RentBuy extends StatefulWidget {
 class _RentBuyState extends State<RentBuy> {
   late List slidersList;
 
-  double rentingCost = 46000.0;
-  double buying = 9946.0;
-  double interest = 0;
-  double principal = 0;
+  double homePrice = 2000000.0;
+  double downPayment = 20.0; // Percentage
+  double loanInterestRate = 4.0; // Percentage
+  double loanTenure = 240.0; // Months
+  double propertyTaxRate = 1.0; // Percentage
+  double maintenanceCost = 2.0; // Percentage per year
+  double homeAppreciationRate = 3.0; // Percentage per year
+  double monthlyRent = 10000.0;
+  double rentIncreaseRate = 2.0; // Percentage per year
+
+  double totalRentingCost = 0.0;
+  double totalBuyingCost = 0.0;
 
   @override
   void initState() {
+    super.initState();
     getslidersList();
+    calculateRentVsBuy(); // Initial calculation
   }
 
   void getslidersList() {
     slidersList = [
-      getJsonBodyObj("Home price", 2000000, 2000000, 100000000, (value) {
+      getJsonBodyObj("Home price", 2000000.0, 2000000.0, 100000000.0, (value) {
         updateSliderValue(0, value);
-      }, TextEditingController(text: '2')),
-      getJsonBodyObj("Down payment(%)", 4, 0, 100, (value) {
+      }, TextEditingController(text: '2000000')),
+      getJsonBodyObj("Down payment(%)", 20.0, 0.0, 100.0, (value) {
         updateSliderValue(1, value);
-      }, TextEditingController(text: '332'), false, "%"),
-      getJsonBodyObj("Loan interest rate(%)", 4, 1, 20, (value) {
+      }, TextEditingController(text: '20'), false, "%"),
+      getJsonBodyObj("Loan interest rate(%)", 4.0, 1.0, 20.0, (value) {
         updateSliderValue(2, value);
-      }, TextEditingController(text: '2332'), false, "%"),
-      getJsonBodyObj("Loan tenure(months)", 14, 12, 360, (value) {
+      }, TextEditingController(text: '4.0'), false, "%"),
+      getJsonBodyObj("Loan tenure(months)", 240.0, 12.0, 360.0, (value) {
         updateSliderValue(3, value);
-      }, TextEditingController(text: '2332'), false, "Months"),
-      getJsonBodyObj("Property tax rate(%)", 4, 0, 5, (value) {
+      }, TextEditingController(text: '240'), false, "Months"),
+      getJsonBodyObj("Property tax rate(%)", 1.0, 0.0, 5.0, (value) {
         updateSliderValue(4, value);
-      }, TextEditingController(text: '2332'), false, "%"),
-      getJsonBodyObj("Maintenance Cost (% per year)", 4, 0, 10, (value) {
+      }, TextEditingController(text: '1.0'), false, "%"),
+      getJsonBodyObj("Maintenance Cost (% per year)", 2.0, 0.0, 10.0, (value) {
         updateSliderValue(5, value);
-      }, TextEditingController(text: '2332'), false, "%"),
-      getJsonBodyObj("Home Appreciation Rate (% per year)", 4, 0, 20, (value) {
+      }, TextEditingController(text: '2.0'), false, "%"),
+      getJsonBodyObj("Home Appreciation Rate (% per year)", 3.0, 0.0, 20.0, (value) {
         updateSliderValue(6, value);
-      }, TextEditingController(text: '2332'), false, "%"),
-      getJsonBodyObj("Monthly Rent", 10000, 5000, 100000, (value) {
+      }, TextEditingController(text: '3.0'), false, "%"),
+      getJsonBodyObj("Monthly Rent", 10000.0, 5000.0, 100000.0, (value) {
         updateSliderValue(7, value);
-      }, TextEditingController(text: '2332')),
-      getJsonBodyObj("Rent Increase Rate (% per year)", 4, 0, 10, (value) {
+      }, TextEditingController(text: '10000')),
+      getJsonBodyObj("Rent Increase Rate (% per year)", 2.0, 0.0, 10.0, (value) {
         updateSliderValue(8, value);
-      }, TextEditingController(text: '2332'), false, "%"),
+      }, TextEditingController(text: '2.0'), false, "%"),
     ];
   }
-void calculateRentVsBuy({
-  required double homePrice,
-  required double downPayment,
-  required double loanInterestRate,
-  required double loanTenure, // in months
-  required double propertyTaxRate,
-  required double maintenanceCost,
-  required double homeAppreciationRate,
-  required double rent,
-  required double rentIncreaseRate,
-}) {
-  // Convert annual interest rate to monthly
-  double monthlyInterestRate = loanInterestRate / 12 / 100;
-  
-  // Calculate down payment amount
-  double downPaymentAmount = (downPayment / 100) * homePrice;
 
-  // Loan amount
-  double loanAmount = homePrice - downPaymentAmount;
+  void calculateRentVsBuy() {
+    double monthlyInterestRate = loanInterestRate / 12 / 100;
+    double downPaymentAmount = (downPayment / 100) * homePrice;
+    double loanAmount = homePrice - downPaymentAmount;
 
-  // Calculate EMI
-  double emi = loanAmount *
-      monthlyInterestRate *
-      (pow(1 + monthlyInterestRate, loanTenure) /
-          (pow(1 + monthlyInterestRate, loanTenure) - 1));
+    double emi = 0;
+    if (monthlyInterestRate > 0 && loanTenure > 0) {
+      emi = loanAmount *
+          monthlyInterestRate *
+          (pow(1 + monthlyInterestRate, loanTenure) /
+              (pow(1 + monthlyInterestRate, loanTenure) - 1));
+    }
+    double totalLoanCost = emi * loanTenure;
 
-  double totalLoanCost = emi * loanTenure;
+    double totalPropertyTax = (propertyTaxRate / 100) * homePrice * (loanTenure / 12);
+    double totalMaintenanceCost = (maintenanceCost / 100) * homePrice * (loanTenure / 12);
+    double appreciatedValue = homePrice * pow(1 + (homeAppreciationRate / 100), loanTenure / 12);
+    totalBuyingCost = downPaymentAmount + totalLoanCost + totalPropertyTax + totalMaintenanceCost - appreciatedValue;
 
-  // Calculate total property tax
-  double totalPropertyTax =
-      (propertyTaxRate / 100) * homePrice * (loanTenure / 12);
-
-  // Calculate total maintenance cost
-  double totalMaintenanceCost =
-      (maintenanceCost / 100) * homePrice * (loanTenure / 12);
-
-  // Calculate home appreciation
-  double appreciatedValue =
-      homePrice * pow(1 + (homeAppreciationRate / 100), loanTenure / 12);
-
-  // Calculate total buying cost
-  double totalBuyCost = downPaymentAmount +
-      totalLoanCost +
-      totalPropertyTax +
-      totalMaintenanceCost -
-      appreciatedValue;
-
-  // Calculate total rent cost
-  double totalRent = 0;
-  double currentRent = rent;
-  
-  for (int i = 0; i < loanTenure / 12; i++) {
-    totalRent += currentRent * 12;
-    currentRent *= 1 + (rentIncreaseRate / 100);
+    totalRentingCost = 0;
+    double currentRent = monthlyRent;
+    for (int i = 0; i < loanTenure / 12; i++) {
+      totalRentingCost += currentRent * 12;
+      currentRent *= 1 + (rentIncreaseRate / 100);
+    }
   }
 
-  // Update the UI using setState
-  setState(() {
-    buying = totalBuyCost.roundToDouble();
-    rentingCost = totalRent.roundToDouble();
-  });
-}
-
   void updateSliderValue(int index, double newValue) {
-  setState(() {
-    slidersList[index]['value'] = newValue;
-    slidersList[index]['controller'].text = newValue.toStringAsFixed(0);
-  });
+    double min = slidersList[index]['min'];
+    double max = slidersList[index]['max'];
+    newValue = newValue.clamp(min, max);
 
-  // Trigger Calculation
-  calculateRentVsBuy(
-    homePrice: slidersList[0]['value'],
-    downPayment: slidersList[1]['value'],
-    loanInterestRate: slidersList[2]['value'],
-    loanTenure: slidersList[3]['value'],
-    propertyTaxRate: slidersList[4]['value'],
-    maintenanceCost: slidersList[5]['value'],
-    homeAppreciationRate: slidersList[6]['value'],
-    rent: slidersList[7]['value'],
-    rentIncreaseRate: slidersList[8]['value'],
-  );
-}
+    setState(() {
+      // Float fields: 2, 4, 5, 6, 8 (interest rates and percentages)
+      if (index != 2 && index != 4 && index != 5 && index != 6 && index != 8) {
+        newValue = newValue.roundToDouble(); // Integer for non-float fields
+      }
+      slidersList[index]['value'] = newValue;
+      slidersList[index]['controller'].text =
+          (index == 2 || index == 4 || index == 5 || index == 6 || index == 8)
+              ? newValue.toStringAsFixed(1)
+              : newValue.toStringAsFixed(0);
 
+      homePrice = slidersList[0]['value'];
+      downPayment = slidersList[1]['value'];
+      loanInterestRate = slidersList[2]['value'];
+      loanTenure = slidersList[3]['value'];
+      propertyTaxRate = slidersList[4]['value'];
+      maintenanceCost = slidersList[5]['value'];
+      homeAppreciationRate = slidersList[6]['value'];
+      monthlyRent = slidersList[7]['value'];
+      rentIncreaseRate = slidersList[8]['value'];
+
+      calculateRentVsBuy();
+    });
+  }
 
   final List<ListItemModel> howToUseContent = [
     ListItemModel(
-        title: "Home Price",
-        description:
-            "Adjust the slider to set the price of the home you are considering to buy."),
+        title: "Home Price:",
+        description: "Adjust the slider to set the price of the home (e.g., ₹2,000,000)."),
     ListItemModel(
-        title: "Down Payment (%)",
-        description:
-            "Use the slider to set the percentage of the home price you plan to pay upfront as a down payment."),
+        title: "Down Payment (%):",
+        description: "Set the percentage of the home price for the down payment (e.g., 20%)."),
     ListItemModel(
-        title: "Loan Interest Rate (%)",
-        description:
-            "Set the annual interest rate for the loan using the slider."),
+        title: "Loan Interest Rate (%):",
+        description: "Set the annual loan interest rate (e.g., 4.5%)."),
     ListItemModel(
-        title: "Loan Tenure (Months)",
-        description:
-            "Adjust the slider to set the loan tenure in months (1-360 months)."),
+        title: "Loan Tenure (Months):",
+        description: "Set the loan tenure in months (e.g., 240 months)."),
     ListItemModel(
-        title: "Property Tax Rate (%)",
-        description:
-            "Use the slider to set the annual property tax rate as a percentage of the home price."),
+        title: "Property Tax Rate (%):",
+        description: "Set the annual property tax rate (e.g., 1.0%)."),
     ListItemModel(
-        title: "Maintenance Cost (% per year)",
-        description:
-            "Set the annual maintenance cost as a percentage of the home price using the slider."),
+        title: "Maintenance Cost (% per year):",
+        description: "Set the annual maintenance cost percentage (e.g., 2.0%)."),
     ListItemModel(
-        title: "Home Appreciation Rate (% per year)",
-        description:
-            "Adjust the slider to set the expected annual appreciation rate of the home’s value."),
+        title: "Home Appreciation Rate (% per year):",
+        description: "Set the annual home appreciation rate (e.g., 3.0%)."),
     ListItemModel(
-        title: "Monthly Rent",
-        description: "Use the slider to set the current monthly rent."),
+        title: "Monthly Rent:",
+        description: "Set the current monthly rent (e.g., ₹10,000)."),
     ListItemModel(
-        title: "Rent Increase Rate (% per year)",
-        description: "Adjust the slider to set the annual rent increase rate."),
+        title: "Rent Increase Rate (% per year):",
+        description: "Set the annual rent increase rate (e.g., 2.0%)."),
   ];
 
-  // Example data for "How it works?"
   final List<ListItemModel> howItWorksContent = [
     ListItemModel(
-        title: "EMI Calculation",
-        description:
-            "The calculator determines the Equated Monthly Installment (EMI) based on the home price, down payment, loan interest rate, and loan tenure."),
+        title: "EMI Calculation:",
+        description: "Calculates monthly loan payment using the formula EMI = P × r × (1 + r)ⁿ / ((1 + r)ⁿ - 1)."),
     ListItemModel(
-        title: "Total Buy Cost Calculation",
-        description:
-            "This includes the down payment, total loan cost (EMI x loan tenure), property tax, and maintenance cost over the loan tenure. "
-            "The appreciated value of the home over the loan tenure is subtracted from the total buy cost to account for the potential increase in home value."),
+        title: "Total Buy Cost:",
+        description: "Includes down payment, loan cost, property tax, maintenance, minus home appreciation."),
     ListItemModel(
-        title: "Total Rent Cost Calculation",
-        description:
-            "The total rent paid over the loan tenure is calculated by accounting for the initial rent and the annual rent increase rate."),
+        title: "Total Rent Cost:",
+        description: "Sums annual rent costs with yearly increases over the loan tenure."),
     ListItemModel(
-        title: "Comparison",
-        description:
-            "The calculator compares the total cost of buying and renting over the specified period. "
-            "The results are displayed in a doughnut chart, visually representing the costs of both options."),
+        title: "Comparison:",
+        description: "Compares total buying vs. renting costs in a pie chart."),
   ];
-
-  // Callback function to update the slider values
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: appbarHeader("Rent vs Buy Calculator", context),
-        body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SliderPage(
-                      slidersList: slidersList,
-                      onSliderValueChanged: updateSliderValue),
-                  graph(),
-                  CustomExpansionTile(
-                    howToUseContent: howToUseContent,
-                    howItWorksContent: howItWorksContent,
-                  ),
-                ],
+      appBar: appbarHeader("Rent vs Buy Calculator", context),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SliderPage(
+                slidersList: slidersList,
+                onSliderValueChanged: updateSliderValue,
               ),
-            )));
+              graph(),
+              CustomExpansionTile(
+                howToUseContent: howToUseContent,
+                howItWorksContent: howItWorksContent,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget graph() {
-    return PieChartGraph(title: "Rent vs Buy Details:", graphData: [
-      {'title': 'total buy cost : ₹${(buying).toString()}', 'value': buying},
-      {'title': 'total renting cost : ₹${(rentingCost).toString()}', 'value': rentingCost},
-    ], graphDisc: [
-      {
-        'title': 'Total cost of renting:',
-        'amount': "₹ ${(rentingCost).toString()}",
-      },
-      {'title': 'Total cost of buying:', 'amount': "₹ ${(buying).toString()}"}
-    ]);
+    return PieChartGraph(
+      title: "Rent vs Buy Details:",
+      graphData: [
+        {'title': 'Total Buy Cost: ₹${totalBuyingCost.toStringAsFixed(0)}', 'value': totalBuyingCost},
+        {'title': 'Total Renting Cost: ₹${totalRentingCost.toStringAsFixed(0)}', 'value': totalRentingCost},
+      ],
+      graphDisc: [
+        {'title': 'Total Cost of Renting:', 'amount': "₹${totalRentingCost.toStringAsFixed(0)}"},
+        {'title': 'Total Cost of Buying:', 'amount': "₹${totalBuyingCost.toStringAsFixed(0)}"},
+      ],
+    );
   }
+}
+
+PreferredSizeWidget appbarHeader(String title, BuildContext context) {
+  return AppBar(
+    centerTitle: true,
+    title: Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+  );
 }

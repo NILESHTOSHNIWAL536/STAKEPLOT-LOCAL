@@ -42,22 +42,23 @@ void approveBill(context, id, type, notifyId) async {
 void getRemainders(context) async {
   String urlPath = "${url}/reminders";
   var responce = await getDataApiCall(urlPath);
-
+  //print(responce.body);
   if (getFlagOfResponse(responce)) {
     var his = jsonDecode(responce.body);
-    var userDue = his['data']['billsPayable'];
-    var userDue2 = his['data']['billsOwed'];
-    var userDue3 = his['data']['splitsPayable'];
-    var userDue4 = his['data']['splitsOwed'];
+    // var userDue = his['data']['billsPayable'];
+    // var userDue2 = his['data']['billsOwed'];
+    // var userDue3 = his['data']['splitsPayable'];
+    // var userDue4 = his['data']['splitsOwed'];
+    var userDue = his['data']['payables'];
+    var userDue2 = his['data']['owed'];
 
     dueAmountRemainders.clear();
     lendAmountRemainders.clear();
 
     dueAmountRemainders.addAll(userDue);
     lendAmountRemainders.addAll(userDue2);
-    dueAmountRemainders.addAll(userDue3);
-    lendAmountRemainders.addAll(userDue4);
- 
+
+// print(lendAmountRemainders);
     getdueUsers.value = !getdueUsers.value;
   }
 }
@@ -168,7 +169,7 @@ void getUserInfomations() async {
 
     aboutMe.value = (obj['aboutMe'] == "Hello");
     aboutUS.value = obj['aboutMe'];
-    selectedBank.value = obj['selectedBank']??"";
+    selectedBank.value = obj['selectedBank'] ?? "";
 
     List s = obj['accounts'];
     income.value = 0;
@@ -188,7 +189,7 @@ void getUserInfomations() async {
     currency.value = data['currency'];
     score.value = data['score'].toString();
     coin = data['coins'].toString();
-    dob.value = data['dob'].toString().substring(0,10);
+    dob.value = data['dob'].toString().substring(0, 10);
     expenses.value = data['expense'].toString();
     isBankAccountLink.value = data['isBankAccountLinked'] ?? false;
     cupertinoPin.value = data['cupertino_pin']; //?? '0';
@@ -277,7 +278,7 @@ void addLendUserAmount(
 
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
- 
+
   final response = await http.post(
     Uri.parse('${url}/bill'),
     headers: <String, String>{
@@ -294,7 +295,7 @@ void addLendUserAmount(
       'dueDate': getCurrentFormattedDate(),
     }),
   );
-  
+
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     snackBarCalled(context, "Lend Amount send to users!", Colors.black);
@@ -348,7 +349,7 @@ void splitUserAmount(context, String amount, List members, String name) async {
     final body = json.decode(response.body);
 
     splitID.value = body['id']['_id'];
-   
+
     members.forEach((e) {
       sendNotificationsToDevice(e['id'], context,
           "${userName.value} Has Send U a Split Bill..Of ${name} Of ${amount}");
@@ -388,7 +389,7 @@ void aboutuser(context, String about) async {
       "aboutMe": about,
     }),
   );
-  
+
   if (response.statusCode == 200 || response.statusCode == 201) {
     snackBarCalled(context, "Updated users Info!", Colors.black);
   } else {
@@ -415,52 +416,48 @@ void addAccount(context, String account, String money) async {
   if (response.statusCode == 200 || response.statusCode == 201) {
     snackBarCalled(context, "Account Added...!");
     Navigator.pushNamed(context, '/home');
-  } else {
-    
-  }
+  } else {}
 }
 
-
-
-
-void editUserDetails(context, Map<String, TextEditingController> controller) async {
+void editUserDetails(
+    context, Map<String, TextEditingController> controller) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
- try{
-  final response = await http.post(
-    Uri.parse('${url}/user/updateprofile'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
-      "name":controller['name']!.text.toString() ,
-       "phone":controller['Number']!.text.toString() ,
-      "dob":controller['dob']!.text.toString() ,
-      "avatarType":(changeAvater.value =="Loading..." || changeAvater.value =="")?avatar.value:changeAvater.value ,
-    }),
-  );
-  
-   var responce = jsonDecode(response.body);
-   
+  try {
+    final response = await http.post(
+      Uri.parse('${url}/user/updateprofile'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Authorization": "$accessToken",
+      },
+      body: jsonEncode({
+        "name": controller['name']!.text.toString(),
+        "phone": controller['Number']!.text.toString(),
+        "dob": controller['dob']!.text.toString(),
+        "avatarType":
+            (changeAvater.value == "Loading..." || changeAvater.value == "")
+                ? avatar.value
+                : changeAvater.value,
+      }),
+    );
+
+    var responce = jsonDecode(response.body);
+
     bool boolvar = responce['success'];
-     if (!boolvar) {
+    if (!boolvar) {
       snackBarCalled(context, responce['error']['explanation'], Colors.red);
       return;
     }
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    snackBarCalled(context, "Updated users Info!", Colors.black);
-    // getUserInfomations();
-    avatar.value=changeAvater.value;
-    userName.value=controller['name']!.text.toString();
-    Phone.value=controller['Number']!.text.toString();
-    number.value=controller['Number']!.text.toString();
-    dob.value=controller['dob']!.text.toString();
-  } else {
-    
-    // snackBarCalled(context, "can't edit User Info error!", Colors.red);
-  }
- }catch(e){
-    
- }
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      snackBarCalled(context, "Updated users Info!", Colors.black);
+      // getUserInfomations();
+      avatar.value = changeAvater.value;
+      userName.value = controller['name']!.text.toString();
+      Phone.value = controller['Number']!.text.toString();
+      number.value = controller['Number']!.text.toString();
+      dob.value = controller['dob']!.text.toString();
+    } else {
+      // snackBarCalled(context, "can't edit User Info error!", Colors.red);
+    }
+  } catch (e) {}
 }

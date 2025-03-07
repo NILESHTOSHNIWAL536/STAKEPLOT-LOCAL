@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -19,10 +20,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 
 void clearStack(BuildContext context) {
-  try{
-  Navigator.of(context)
-      .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-  }catch(e){   
+  try {
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+  } catch (e) {
     Navigator.of(context)
         .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
   }
@@ -41,19 +42,16 @@ void expire(responce, BuildContext context) {
 
 void check(context, String flag) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
-  if (!_pref.containsKey("accessToken")) 
-  {
+  if (!_pref.containsKey("accessToken")) {
     if (flag != "loginuser") Navigator.pushReplacementNamed(context, '/');
   }
-
 }
 
 Future<void> loginUser(TextEditingController emailController,
     TextEditingController passwordController, BuildContext context,
     [bool flag = false]) async {
-      
   final SharedPreferences _pref = await SharedPreferences.getInstance();
-  
+
   final response = await http.post(
     Uri.parse('${url}/user/login'),
     headers: <String, String>{
@@ -68,14 +66,17 @@ Future<void> loginUser(TextEditingController emailController,
     final body = json.decode(response.body);
 
     String accessToken = body['data']['accessToken'];
+    print("accessToken");
+    print(accessToken);
     _pref.setString("accessToken", "Bearer " + accessToken);
     await getBankAccounts();
     storeinmap(body, _pref, passwordController.text);
     currentId.value = body['data']['_id'];
     Phone.value = body['data']['phone'];
+    number.value = body['data']['phone'];
     isBankAccountLink.value = body['data']['isBankAccountLinked'];
-     
-    await  initializeOneSignal(context);
+
+    await initializeOneSignal(context);
     if (flag) return;
 
     // isBankAccountLink.value ?  getUserInfoBackDetails(context): loginToAutoTractions(context, Phone.value);
@@ -85,7 +86,6 @@ Future<void> loginUser(TextEditingController emailController,
     acceptReset.value = false;
     // Navigator.popAndPushNamed(context, '/home');
   } else {
-
     acceptReset.value = false;
     var snackBar = SnackBar(
       duration: Durations.medium4,
@@ -263,7 +263,7 @@ void resendOpt(context, email, name) async {
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    acceptReset.value=false;
+    acceptReset.value = false;
     snackBarCalled(context, "ReSended Otp To Email Id...!", Colors.black);
   } else {
     snackBarCalled(context, "can't send opt!", Colors.red);
@@ -414,67 +414,64 @@ void clearGetX() {
   addedMembers.clear();
   addedUser.clear();
   isBankAccountLink.value = false;
-  cupertinoPin.value='0';
-  balance.value="";
-  accountName.value="";
+  cupertinoPin.value = '0';
+  balance.value = "";
+  accountName.value = "";
   transactionChatGraph.clear();
   labels.clear();
-  selectedButton.value="Month";
-  graphTransaction.value=false;
-  isSplit.value=false;
-  isLend.value=false;
+  selectedButton.value = "Month";
+  graphTransaction.value = false;
+  isSplit.value = false;
+  isLend.value = false;
   accountName.value = "";
   accountNo.value = "0";
   balance.value = "0";
-  selectedBank.value="";
+  selectedBank.value = "";
   bankAccountLinkedList.clear();
 }
 
 // void oneSignalApis(context) async {
-  // String appId = "ff897875-4bac-4b0c-9bb6-a371998d4d1c";
+// String appId = "ff897875-4bac-4b0c-9bb6-a371998d4d1c";
 
-  // await OneSignal.shared.setAppId(appId);
+// await OneSignal.shared.setAppId(appId);
 
-  // OneSignal().promptUserForPushNotificationPermission().then((granted) {
-  //   if (granted) {
-  //     print("Notification permission granted");
-  //   } else {
-  //     print("Notification permission not granted");
-  //   }
-  // });
-  // var status = await OneSignal.shared.getDeviceState();
-  // String? userDeviceId = status?.userId;
-  // print("userDeviceId"); // Get us the device Unique Id
-  // print(userDeviceId); // Get us the device Unique Id
-  // await getDeviceInfo(userDeviceId!, context);
+// OneSignal().promptUserForPushNotificationPermission().then((granted) {
+//   if (granted) {
+//     print("Notification permission granted");
+//   } else {
+//     print("Notification permission not granted");
+//   }
+// });
+// var status = await OneSignal.shared.getDeviceState();
+// String? userDeviceId = status?.userId;
+// print("userDeviceId"); // Get us the device Unique Id
+// print(userDeviceId); // Get us the device Unique Id
+// await getDeviceInfo(userDeviceId!, context);
 
-  // OneSignal.shared
-  //     .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-  //   print("Notification Opened: ${result.notification.additionalData}");
+// OneSignal.shared
+//     .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+//   print("Notification Opened: ${result.notification.additionalData}");
 
-  //   String? screen = result.notification.additionalData?['screen'];
-  //   print("Screen to Navigate To: $screen");
-  //   // var data=await  getDeviceInfo();
+//   String? screen = result.notification.additionalData?['screen'];
+//   print("Screen to Navigate To: $screen");
+//   // var data=await  getDeviceInfo();
 
-  //   if (screen != null) {
-  //     Navigator.pushNamed(context, screen); // Navigate to the screen
-  //   } else {
-  //     print("No screen specified in additional data.");
-  //   }
-  // });
+//   if (screen != null) {
+//     Navigator.pushNamed(context, screen); // Navigate to the screen
+//   } else {
+//     print("No screen specified in additional data.");
+//   }
+// });
 
-  // var data=await  getDeviceInfo();
-  // print(data);
+// var data=await  getDeviceInfo();
+// print(data);
 // }
 
-
 Future<void> initializeOneSignal(BuildContext context) async {
- 
-   oneSignalInit();
+  oneSignalInit();
 
   String? userDeviceId = OneSignal.User.pushSubscription.id;
   if (userDeviceId != null) {
-   
     await getDeviceInfo(userDeviceId, context);
   } else {
     print("Failed to retrieve user device ID");
@@ -482,7 +479,7 @@ Future<void> initializeOneSignal(BuildContext context) async {
 
   OneSignal.Notifications.addClickListener((event) {
     print("Notification Opened: \${event.notification.additionalData}");
-    
+
     String? screen = event.notification.additionalData?['screen'];
     if (screen != null) {
       Navigator.pushNamed(context, screen);
@@ -492,14 +489,12 @@ Future<void> initializeOneSignal(BuildContext context) async {
   });
 }
 
-
- void oneSignalInit() {
+void oneSignalInit() {
   String appId = "66bc1852-d40b-4ad0-8a11-5e3d0da698a2";
   OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
   OneSignal.initialize(appId);
   OneSignal.Notifications.requestPermission(true);
 }
-
 
 Future<void> getDeviceInfo(String playerId, context) async {
   final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();

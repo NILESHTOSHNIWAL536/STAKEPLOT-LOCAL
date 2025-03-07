@@ -14,6 +14,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import 'package:week_of_year/week_of_year.dart';
+import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 
 double getDouble(data) {
   return double.parse(data.toString());
@@ -780,56 +781,96 @@ Future postDataApiCall(String urlPath, Map body) async {
 //     );
 //   }
 // }
-void pickCustomDateRange(BuildContext context) async {
-  // Show the date range picker with custom styling
-  DateTimeRange? picked = await showDateRangePicker(
-    context: context,
-    initialDateRange: DateTimeRange(
-      start: DateTime.now().subtract(Duration(days: 7)),
-      end: DateTime.now(),
-    ),
-    firstDate: DateTime(2020),
-    lastDate: DateTime.now(),
-    builder: (BuildContext context, Widget? child) {
-      return Dialog(
+// void pickCustomDateRange(BuildContext context) async {
+//   // Show the date range picker with custom styling
+//   DateTimeRange? picked = await showDateRangePicker(
+//     context: context,
+//     initialDateRange: DateTimeRange(
+//       start: DateTime.now().subtract(Duration(days: 7)),
+//       end: DateTime.now(),
+//     ),
+//     firstDate: DateTime(2020),
+//     lastDate: DateTime.now(),
+//     builder: (BuildContext context, Widget? child) {
+//       return Dialog(
          
-          //  elevation: 8,
-          child: Container(
-            width: 420, // Fixed width for consistency
-            height: 580, 
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.circular(24)
-            ),// Constrained height for better control
+//           //  elevation: 8,
+//           child: Container(
+//             width: 420, // Fixed width for consistency
+//             height: 580, 
+//             decoration: BoxDecoration(
+             
+//               borderRadius: BorderRadius.circular(24)
+//             ),// Constrained height for better control
             
-            child: Container(
-              color: Colors.red,
-              child: Expanded(
-                child: child!,
-              ),
-            ),
-          ));
-    },
-  );
+//             child: Expanded(
+//               child: child!,
+//             ),
+//           ));
+//     },
+//   );
 
-  if (picked != null) {
+//   if (picked != null) {
+//     selectedButton.value = 'Custom';
+//     getGraphData.value = false;
+
+//     List<String> customDays = [];
+//     for (int i = 0; i <= picked.end.difference(picked.start).inDays; i++) {
+//       String day = (picked.start.day + i).toString().padLeft(2, '0');
+//       customDays.add(day);
+//     }
+
+//     labels.assignAll(customDays);
+
+//     String startDate = picked.start.toIso8601String().split('T')[0];
+//     String endDate = picked.end.toIso8601String().split('T')[0];
+//     getAutoMationsTransactionsCustom(startDate, context, 'Custom', endDate);
+//   }
+// }
+
+
+void pickCustomDateRange(BuildContext context) async {
+  List<DateTime?> picked = await showCalendarDatePicker2Dialog(
+    context: context,
+    config: CalendarDatePicker2WithActionButtonsConfig(
+      calendarType: CalendarDatePicker2Type.range,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+      selectableDayPredicate: (day) => true,
+       selectedDayHighlightColor: Colors.blueAccent, // Selected range color
+      controlsTextStyle: TextStyle(color: Colors.black), // Header text color
+      dayTextStyle: TextStyle(color: Colors.black), // Default day text color
+      selectedDayTextStyle: TextStyle(color: Colors.black), // Selected day text color
+      weekdayLabelTextStyle: TextStyle(color: Colors.black),
+    ),
+    dialogSize: const Size(400, 400),
+    value: [
+      DateTime.now().subtract(const Duration(days: 7)),
+      DateTime.now(),
+    ],
+    borderRadius: BorderRadius.circular(24),
+  ) ?? [];
+
+  if (picked.length == 2 && picked[0] != null && picked[1] != null) {
+    DateTime start = picked[0]!;
+    DateTime end = picked[1]!;
+
     selectedButton.value = 'Custom';
     getGraphData.value = false;
 
     List<String> customDays = [];
-    for (int i = 0; i <= picked.end.difference(picked.start).inDays; i++) {
-      String day = (picked.start.day + i).toString().padLeft(2, '0');
+    for (int i = 0; i <= end.difference(start).inDays; i++) {
+      String day = (start.day + i).toString().padLeft(2, '0');
       customDays.add(day);
     }
 
     labels.assignAll(customDays);
 
-    String startDate = picked.start.toIso8601String().split('T')[0];
-    String endDate = picked.end.toIso8601String().split('T')[0];
+    String startDate = start.toIso8601String().split('T')[0];
+    String endDate = end.toIso8601String().split('T')[0];
     getAutoMationsTransactionsCustom(startDate, context, 'Custom', endDate);
   }
 }
-
 void getWeekDate() {
   //   if (selectedButton == 'Week') {
   //   final currentWeek = weekData[0]!;
