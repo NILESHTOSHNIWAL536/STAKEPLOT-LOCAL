@@ -123,8 +123,7 @@ class _MyAppState extends State<MyApp> {
       '/VegNonveg':(context) => VegNonVegCalculator(),
       '/FetchTransaction':(context) => FetchTransaction() ,
       '/ForgotPassword':(context) => ForgotPassword() ,
-
-     
+      
     });
   }
 }

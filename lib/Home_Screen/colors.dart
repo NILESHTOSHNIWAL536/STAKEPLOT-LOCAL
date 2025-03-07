@@ -20,6 +20,7 @@ class AppColors {
       static const Color rbi2 = Color(0xFFEBFFEE);
       static const Color uncoloredPie = Color(0xFFD1D6E0);
       static const Color bottomBarColor = Color(0xFF111111);
+      static const Color green = Color.fromARGB(255, 88, 241, 49);
 
 
 

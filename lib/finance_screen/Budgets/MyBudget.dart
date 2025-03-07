@@ -196,8 +196,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
       double percentage = totalAmount > 0 ? (amount / totalAmount) * 100 : 0;
       categories[list[i]['category']] = percentage;
       graphObj.add({
-        'title':
-            list[i]['category'] + "\n" + percentage.toStringAsFixed(1) + "%",
+        'title': list[i]['category'] +" "+ percentage.toStringAsFixed(1) + "%",
         'value': percentage,
       });
     }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/donut_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 // import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -430,38 +431,33 @@ void getUserBankData(context) async {
   }
 }
 
-void updateTheTagOfTarnsactions(
-    source_category, destination_category, transactionId, context) async {
-  //  updateTransaction/:source_category/:destination_category/:transactionId
-  String urlPath =
-      "${url}/transactionauto/updateTransaction/${source_category}/${destination_category}/${transactionId}";
+void updateTheTagOfTarnsactions( category,subCategory, transactionId, context,index) async {
+ 
+  String urlPath = "${url}/transactionauto/updateTransaction/${transactionId}";
+  
 
-  var responce = await getDataApiCall(urlPath);
+  final SharedPreferences _pref = await SharedPreferences.getInstance();
+  var accessToken = _pref.getString("accessToken");
 
-  void getTransaction(context) async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-    final response = await http.get(
-      Uri.parse('${url}/transaction/history'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-    );
 
-    if (response.statusCode == 200) {
-      var his = jsonDecode(response.body);
-      var obj = his['data'];
+ final response = await http.patch(
+    Uri.parse('${urlPath}'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      "Authorization": "$accessToken",
+    },
+    body: jsonEncode({
+       'category': category,
+       'subcategory': subCategory,
+    }),
+  );
+   printData(response);
+   if(getFlagOfResponse(response)){
+        Navigator.pop(context);
+        reloadHistory.value = !reloadHistory.value;
+   }else{
+   }
 
-      // trasactionsHistory.clear();
-      // trasactionsHistory.addAll(obj);
-    } else {}
-  }
-
-  if (getFlagOfResponse(responce)) {
-    getAutoMationsTransactions();
-    Navigator.pop(context);
-  }
 }
 
 void hideTransactions(
