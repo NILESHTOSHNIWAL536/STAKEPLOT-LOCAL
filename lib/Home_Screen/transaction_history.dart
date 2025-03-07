@@ -897,8 +897,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     );
   }
 
-  Future<dynamic> showCustomFriendsModal(
-    BuildContext context,
+  Future<dynamic> showCustomFriendsModal(BuildContext context,
     double amount,
     bool isLendMode,
     String category,
