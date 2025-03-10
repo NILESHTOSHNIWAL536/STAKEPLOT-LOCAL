@@ -102,7 +102,6 @@ class _TribeSearchState extends State<TribeChats> {
 
   @override
   Widget build(BuildContext context) {
-    List data = ["Nilesh", "Sai Teja", "Manaish", "Kamlesh", "Krishna"];
 
     return Scaffold(
       bottomNavigationBar: BottomNavigations(data: sizeRoom ? 3 : 2),
@@ -175,9 +174,6 @@ class _TribeSearchState extends State<TribeChats> {
   Widget InputDate2(lableText, keyBoard, Textcontroller) {
     return Center(
       child: Container(
-        // margin: EdgeInsets.symmetric(vertical: 5),
-        // color:  Color.fromRGBO(246, 246, 246, 1),
-        // height: 50,
         width: MediaQuery.of(context).size.width / 1.1,
         child: Center(
           child: TextFormField(
@@ -266,13 +262,14 @@ class _TribeSearchState extends State<TribeChats> {
           getChatLoader();
           getChats(item);
           clear(item);
+
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  Chat(data: item, myId: myId, myprofile: myprofile),
+              builder: (context) => Chat(data: item, myId: myId, myprofile: myprofile),
             ),
           );
+
         },
         child: Column(
           children: [

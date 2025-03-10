@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/multipleLogins.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/reset.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/resetPas.dart';
 import 'package:get/get.dart';
@@ -66,8 +67,7 @@ Future<void> loginUser(TextEditingController emailController,
     final body = json.decode(response.body);
 
     String accessToken = body['data']['accessToken'];
-    print("accessToken");
-    print(accessToken);
+ 
     _pref.setString("accessToken", "Bearer " + accessToken);
     await getBankAccounts();
     storeinmap(body, _pref, passwordController.text);
@@ -78,7 +78,7 @@ Future<void> loginUser(TextEditingController emailController,
 
     await initializeOneSignal(context);
     if (flag) return;
-
+    UserStorage.storeUserDetails(currentId.value, body['data']['name'], body['data']['avatarType'], ("Bearer " + accessToken));
     // isBankAccountLink.value ?  getUserInfoBackDetails(context): loginToAutoTractions(context, Phone.value);
     storeImageinMapFinvu(context);
     Navigator.of(context)

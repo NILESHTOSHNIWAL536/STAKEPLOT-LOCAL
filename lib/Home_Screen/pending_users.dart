@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -178,11 +179,11 @@ Widget usersDuelist() {
 // Reusable method to build ListTile for both Userslist and UsersDuelist
 Widget _buildListTile(
     BuildContext context, Map<String, dynamic> data, bool isDue) {
-  print("data----");
-  print(data);
+ 
   return ListTile(
-    leading: CircleAvatar(
-      backgroundColor: Colorcodes.budgetLightGreen,
+    leading: Container(
+      height: MediaQuery.of(context).size.height/15,
+      width: MediaQuery.of(context).size.width/7,
       child: UserAvatar(
         url:  data['avatarType'] ?? 'assets/avatar/menp4.svg',
         width: 1,
@@ -216,11 +217,11 @@ Widget _buildListTile(
               ),
             ),
             SizedBox(width: 10),
-            // Text(
-            //   '${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(data["amount"] ?? 0)}',
-            //   style: FontManager().getTextStyle(context,
-            //       lWeight: FontWeight.bold, fontSize: 12, color: Colors.green),
-            // )
+            Text(
+              '${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(data["amount"] ?? 0)}',
+              style: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.bold, fontSize: 12, color: Colors.green),
+            )
           ],
         ),
       ],

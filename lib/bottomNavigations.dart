@@ -431,6 +431,7 @@ import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart";
 import "package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/profile_screen.dart.dart";
+import "package:flutter_application_code_stakeplot/signInOut/multipleLogins.dart";
 import "package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart";
 
 import "package:get/get.dart";
@@ -550,12 +551,29 @@ class _BottomNavigationsState extends State<BottomNavigations> {
         widget.data == i; // Check if the current index is selected
 
     return InkWell(
-      onLongPress: () {
-         if (i == 2 && widget.data != i) pushName(TribeChats(),true);
-        if (i == 0) {
+      onLongPress: () async{
+       if (i == 2 && widget.data != i) pushName(TribeChats(),true);
+       else if (i == 0) {
           // Handle long press for index 0
-        } else if (i == 2 && widget.data != i) {
-          // Handle long press for index 2
+        } else if (i == 3 && widget.data != i) {
+        
+          // List<Map<String, dynamic>> users = await UserStorage.getAllUsers();
+         
+        //   showModalBottomSheet(
+        //   context: context,
+        //   isScrollControlled: true,
+
+        //   shape: const RoundedRectangleBorder(
+
+        //     borderRadius: BorderRadius.only(
+        //       topLeft: Radius.circular(30),
+        //       topRight: Radius.circular(30),
+        //     ),
+        //   ),
+        //   builder: (context) {
+        //     return MultipleLogins(users: users,);
+        //   },
+        // );
         }
       },
       onTap: () {
@@ -794,27 +812,19 @@ Widget logoutWidget(context, [flag = false]) {
           InkWell(
             onTap: () async {
               //  home
-              final SharedPreferences _pref =
+              clearServarData(context);
+               final SharedPreferences _pref =
                   await SharedPreferences.getInstance();
 
-              await _pref.remove("accessToken");
-              await _pref.remove("token");
-              await _pref.remove("ConsentHandleId");
-              await _pref.remove("consentId");
-              await _pref.remove("from");
-              await _pref.remove("to");
-              await _pref.remove("sessionId");
-
-              _pref.remove("accessToken").then((_) {
+                _pref.remove("accessToken").then((_) {
                 // Code to execute after token removal
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     '/', (Route<dynamic> route) => false);
                 Navigator.pushReplacementNamed(context, '/');
-                //  Navigator.pushReplacementNamed(context, '/');
+
               }).catchError((error) {
                 // Error handling if token removal fails
               });
-
               clearGetX();
             },
             child: Container(
@@ -838,6 +848,21 @@ Widget logoutWidget(context, [flag = false]) {
       ),
     ),
   );
+}
+
+
+void clearServarData(context)async{
+      final SharedPreferences _pref =await SharedPreferences.getInstance();
+              await _pref.remove("accessToken");
+              await _pref.remove("token");
+              await _pref.remove("ConsentHandleId");
+              await _pref.remove("consentId");
+              await _pref.remove("from");
+              await _pref.remove("to");
+              await _pref.remove("sessionId");
+
+            
+
 }
 
 

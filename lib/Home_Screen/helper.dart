@@ -33,3 +33,27 @@ String getCurrentWeekNumber() {
   int year = now.year;
   return '$year-W${weekNumber.toString().padLeft(2, '0')}';
 }
+
+
+
+String formatWhatsAppDate(DateTime date) {
+  date = date.toLocal(); // Ensure local timezone
+  DateTime now = DateTime.now().toLocal();
+  DateTime today = DateTime(now.year, now.month, now.day);
+  DateTime yesterday = today.subtract(Duration(days: 1));
+  DateTime weekStart = today.subtract(Duration(days: today.weekday)); // Start of the week
+
+  String timeFormat = DateFormat('h:mm a').format(date); // Format time as "10:30 AM"
+
+  if (date.isAfter(today)) {
+    return "Today, $timeFormat";
+  } else if (date.isAfter(yesterday)) {
+    return "Yesterday, $timeFormat";
+  } else if (date.isAfter(weekStart)) {
+    return "${DateFormat('EEE').format(date)}, $timeFormat"; // Mon, 10:30 AM
+  } else if (date.year == now.year) {
+    return "${DateFormat('d MMM').format(date)}, $timeFormat"; // 10 Mar, 10:30 AM
+  } else {
+    return "${DateFormat('d MMM y').format(date)}, $timeFormat"; // 10 Mar 2024, 10:30 AM
+  }
+}
