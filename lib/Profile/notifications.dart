@@ -481,6 +481,7 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Widget messageChannelProfile(name, id, avatar) {
+   
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
       child: Center(
