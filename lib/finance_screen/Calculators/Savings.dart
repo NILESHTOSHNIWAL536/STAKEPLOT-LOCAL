@@ -5,7 +5,6 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Au
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/expansionTile.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
-// import 'package:flutter_application_code_stakeplot/finance_screen/creditCard.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
 
 class Savings extends StatefulWidget {
@@ -18,150 +17,69 @@ class Savings extends StatefulWidget {
 class _SavingsState extends State<Savings> {
   late List slidersList;
 
-
-  double targetAmount = 2300;
-  double currentSavings = 400;
-  double monthlyContribution = 400;
+  double targetAmount = 2300.0;
+  double currentSavings = 400.0;
+  double monthlyContribution = 400.0;
   int timeframe = 4;
-  double interestRate = 4;
+  double interestRate = 4.0;
 
-  double endBalance = 0;
-  double interestEarned = 0;
-  double goalProgress = 0;
-   double remainingAmount = 0;
+  double endBalance = 0.0;
+  double interestEarned = 0.0;
+  double goalProgress = 0.0;
+  double remainingAmount = 0.0;
   List<double> savingsData = [];
 
   @override
   void initState() {
+    super.initState();
     getslidersList();
+    calculateSavings(); // Initial calculation
   }
 
   void getslidersList() {
     slidersList = [
-      getJsonBodyObj("Target amount", 2300, 1000, 100000, (value) {},
-          TextEditingController(text: '2')),
-      getJsonBodyObj("Current savings", 4, 0, 100000, (value) {},
-          TextEditingController(text: '332')),
-      getJsonBodyObj("Monthly contribution", 400, 100, 10000, (value) {},
-          TextEditingController(text: '2332')),
-      getJsonBodyObj("Timeframe(months)", 4, 1, 360, (value) {},
-          TextEditingController(text: '2332'),false,"Months"),
-      getJsonBodyObj("Interest rate (%)", 4, 0, 10, (value) {},
-          TextEditingController(text: '2332'),false,"%"),
+      getJsonBodyObj("Target amount", 2300.0, 1000.0, 100000.0, (value) {
+        updateSliderValue(0, value);
+      }, TextEditingController(text: '2300')),
+      getJsonBodyObj("Current savings", 400.0, 0.0, 100000.0, (value) {
+        updateSliderValue(1, value);
+      }, TextEditingController(text: '400')),
+      getJsonBodyObj("Monthly contribution", 400.0, 100.0, 10000.0, (value) {
+        updateSliderValue(2, value);
+      }, TextEditingController(text: '400')),
+      getJsonBodyObj("Timeframe(months)", 4.0, 1.0, 360.0, (value) {
+        updateSliderValue(3, value);
+      }, TextEditingController(text: '4'), false, "Months"),
+      getJsonBodyObj("Interest rate(%)", 4.0, 0.0, 10.0, (value) {
+        updateSliderValue(4, value);
+      }, TextEditingController(text: '4.0'), false, "%"),
     ];
   }
 
-  final List<ListItemModel> howToUseContent = [
-    ListItemModel(
-        title: "Target Amount",
-        description:
-            "Adjust the slider to set the desired savings goal amount."),
-    ListItemModel(
-        title: "Current Savings",
-        description:
-            "Use the slider to set the current amount of savings you have accumulated."),
-    ListItemModel(
-        title: "Monthly Contribution",
-        description:
-            "Set the monthly amount you plan to contribute towards your savings goal."),
-    ListItemModel(
-        title: "Timeframe (Months)",
-        description:
-            "Adjust the slider to set the duration in months over which you aim to achieve your savings goal."),
-    ListItemModel(
-        title: "Interest Rate (%)",
-        description: "Set the expected annual interest rate for your savings."),
-  ];
+  void updateSliderValue(int index, double newValue) {
+    double min = slidersList[index]['min'];
+    double max = slidersList[index]['max'];
+    newValue = newValue.clamp(min, max);
 
-  // Example data for "How it works?"
-  final List<ListItemModel> howItWorksContent = [
-    ListItemModel(
-        title: "Monthly Savings Calculation",
-        description:
-            "The calculator determines the total savings by adding your monthly contributions and the interest earned each month."),
-    ListItemModel(
-        title: "End Balance Calculation",
-        description:
-            "This represents the projected total savings at the end of the specified timeframe, considering both contributions and accrued interest."),
-    ListItemModel(
-        title: "Interest Earned Calculation",
-        description:
-            "The calculator estimates the total interest earned over the savings period based on the interest rate and contributions."),
-    ListItemModel(
-        title: "Goal Progress Tracking",
-        description:
-            "The progress towards your savings goal is displayed as a percentage, indicating how close you are to reaching your target amount."),
-  ];
-
-  
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: appbarHeader("Savings goal calculator ", context),
-        body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SliderPage(slidersList: slidersList,onSliderValueChanged: updateSliderValue),
-                  graph(),
-                  CustomExpansionTile(
-                    howToUseContent: howToUseContent,
-                    howItWorksContent: howItWorksContent,
-                  ),
-                ],
-              ),
-            )));
-  }
-
- Widget graph() {
-    return PieChartGraph(title: "Savings goal progress:", graphData: [
-      {'title': 'Remaining amount : ₹${remainingAmount.toStringAsFixed(0)}', 'value': remainingAmount},
-      {'title': 'Current savings: ₹${currentSavings.toStringAsFixed(0)}', 'value': currentSavings},
-    ], graphDisc:  [
-      {
-        'title': 'End balance:', 
-        'amount': "₹ ${endBalance.toStringAsFixed(2)}"
-      },
-      {'title': 'Interest earned:', 'amount': "₹ ${interestEarned.toStringAsFixed(2)}"},
-      {'title': 'Progress:', 'amount': "${goalProgress.toStringAsFixed(2)}%"},
-    ]);
-  }
-
-
-
-
-
-     // Callback function to update the slider values
-  void updateSliderValue(int index, double newValue)
-  {
     setState(() {
-      slidersList[index]['value'] = newValue;
-      slidersList[index]['controller'].text = newValue.toStringAsFixed(0);
-      switch (index) {
-        case 0:
-          targetAmount = newValue;
-          break;
-        case 1:
-          currentSavings = newValue;
-          break;
-        case 2:
-          monthlyContribution = newValue;
-          break;
-        case 3:
-          timeframe = newValue.toInt();
-          break;
-        case 4:
-          interestRate = newValue;
-          break;
+      if (index != 4) {
+        newValue = newValue.roundToDouble(); // Integer for non-interest fields
       }
+      slidersList[index]['value'] = newValue;
+      slidersList[index]['controller'].text =
+          (index == 4) ? newValue.toStringAsFixed(1) : newValue.toStringAsFixed(0);
+
+      targetAmount = slidersList[0]['value'];
+      currentSavings = slidersList[1]['value'];
+      monthlyContribution = slidersList[2]['value'];
+      timeframe = slidersList[3]['value'].toInt();
+      interestRate = slidersList[4]['value'];
+
       calculateSavings();
     });
   }
 
-   void calculateSavings() {
+  void calculateSavings() {
     double totalSavings = currentSavings;
     double monthlyRate = interestRate / 100 / 12;
     savingsData.clear();
@@ -176,11 +94,86 @@ class _SavingsState extends State<Savings> {
     remainingAmount = targetAmount - totalSavings;
     remainingAmount = remainingAmount < 0 ? 0 : remainingAmount;
 
-    setState(() {
-      endBalance = totalSavings;
-      interestEarned = totalInterest;
-      goalProgress = ((currentSavings / targetAmount) * 100).clamp(0, 100);
-    });
+    endBalance = totalSavings;
+    interestEarned = totalInterest;
+    goalProgress = ((totalSavings / targetAmount) * 100).clamp(0, 100); // Updated to use totalSavings
   }
 
+  final List<ListItemModel> howToUseContent = [
+    ListItemModel(
+        title: "Target Amount:",
+        description: "Adjust the slider to set your savings goal (e.g., ₹2300)."),
+    ListItemModel(
+        title: "Current Savings:",
+        description: "Set your current savings amount (e.g., ₹400)."),
+    ListItemModel(
+        title: "Monthly Contribution:",
+        description: "Set your monthly savings contribution (e.g., ₹400)."),
+    ListItemModel(
+        title: "Timeframe (Months):",
+        description: "Set the duration in months (e.g., 4 months)."),
+    ListItemModel(
+        title: "Interest Rate (%):",
+        description: "Set the annual interest rate (e.g., 4.5%)."),
+  ];
+
+  final List<ListItemModel> howItWorksContent = [
+    ListItemModel(
+        title: "Monthly Savings Calculation:",
+        description: "Adds monthly contributions and interest earned each month."),
+    ListItemModel(
+        title: "End Balance Calculation:",
+        description: "Projects total savings after timeframe, including interest."),
+    ListItemModel(
+        title: "Interest Earned Calculation:",
+        description: "Estimates total interest based on rate and contributions."),
+    ListItemModel(
+        title: "Goal Progress Tracking:",
+        description: "Shows progress as a percentage of the target amount."),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: appbarHeader("Savings Goal Calculator", context),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SliderPage(slidersList: slidersList, onSliderValueChanged: updateSliderValue),
+              graph(),
+              CustomExpansionTile(
+                howToUseContent: howToUseContent,
+                howItWorksContent: howItWorksContent,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget graph() {
+    return PieChartGraph(
+      title: "Savings Goal Progress:",
+      graphData: [
+        {'title': 'Remaining Amount: ₹${remainingAmount.toStringAsFixed(0)}', 'value': remainingAmount},
+        {'title': 'Current Savings: ₹${endBalance.toStringAsFixed(0)}', 'value': endBalance}, // Updated to use endBalance
+      ],
+      graphDisc: [
+        {'title': 'End Balance:', 'amount': "₹${endBalance.toStringAsFixed(2)}"},
+        {'title': 'Interest Earned:', 'amount': "₹${interestEarned.toStringAsFixed(2)}"},
+        {'title': 'Progress:', 'amount': "${goalProgress.toStringAsFixed(2)}%"},
+      ],
+    );
+  }
+}
+
+PreferredSizeWidget appbarHeader(String title, BuildContext context) {
+  return AppBar(
+    centerTitle: true,
+    title: Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+  );
 }

@@ -64,7 +64,7 @@ class _UserListScreenState extends State<UserListScreen> {
             ],
           ),
         ),
-        Obx(() => getlendUsers.value ? getUser() : getUser2())
+        Obx(() => !getlendUsers.value ? getUser() : getUser2())
       ],
     );
   }
@@ -80,11 +80,11 @@ class _UserListScreenState extends State<UserListScreen> {
               .take(2)
               .map((data) => _buildListTile(context, data, false))
               .toList(),
-              
         ),
       ),
     );
   }
+
   Widget getUser2() {
     return Visibility(
       visible: dueAmountRemainders.isNotEmpty,
@@ -96,7 +96,6 @@ class _UserListScreenState extends State<UserListScreen> {
               .take(2)
               .map((data) => _buildListTile(context, data, true))
               .toList(),
-              
         ),
       ),
     );
@@ -179,11 +178,13 @@ Widget usersDuelist() {
 // Reusable method to build ListTile for both Userslist and UsersDuelist
 Widget _buildListTile(
     BuildContext context, Map<String, dynamic> data, bool isDue) {
+  print("data----");
+  print(data);
   return ListTile(
     leading: CircleAvatar(
       backgroundColor: Colorcodes.budgetLightGreen,
       child: UserAvatar(
-        url: data['Avatar'] ?? 'assets/avatar/menp4.svg',
+        url:  data['avatarType'] ?? 'assets/avatar/menp4.svg',
         width: 1,
         height: 1,
       ),
@@ -194,7 +195,7 @@ Widget _buildListTile(
         Row(
           children: [
             Text(
-              !isDue ? data["name"] : data["name"],
+            (  !isDue ? data["name"] : data["name"]) ?? data['userName'] ?? "",
               style: FontManager().getTextStyle(context,
                   lWeight: FontWeight.bold,
                   fontSize: 16,
@@ -207,7 +208,7 @@ Widget _buildListTile(
           children: [
             Flexible(
               child: Text(
-                data["billName"] ?? "Untagged",
+                data["category"] ?? "Untagged",
                 style: FontManager().getTextStyle(context,
                     lWeight: FontWeight.bold,
                     fontSize: 10,
@@ -215,11 +216,11 @@ Widget _buildListTile(
               ),
             ),
             SizedBox(width: 10),
-            Text(
-              '${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(data["amount"] ?? 0)}',
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.bold, fontSize: 12, color: Colors.green),
-            )
+            // Text(
+            //   '${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(data["amount"] ?? 0)}',
+            //   style: FontManager().getTextStyle(context,
+            //       lWeight: FontWeight.bold, fontSize: 12, color: Colors.green),
+            // )
           ],
         ),
       ],
@@ -230,8 +231,7 @@ Widget _buildListTile(
         InkWell(
           onTap: () {
             if (isDue) {
-              int index = dueAmountRemainders
-                  .indexWhere((element) => element['_id'] == data['_id']);
+              int index = dueAmountRemainders.indexWhere((element) => element['_id'] == data['_id']);
               if (index != -1) {
                 duesPaid(context, index);
               }
@@ -254,15 +254,12 @@ Widget _buildListTile(
           ),
         ),
         SizedBox(height: 10),
-        Text( formatDateTime(data["createdAt"]),
+        Text(
+          formatDateTime(data["createdAt"]),
           style: FontManager().getTextStyle(context,
               lWeight: FontWeight.w300, fontSize: 8, color: Colors.green),
-        // Text(
-        //   DateFormat('dd MMM yyyy hh:mm a').format(DateTime.parse(
-        //       data["createdAt"] ?? DateTime.now().toIso8601String())),
-        //   style: FontManager().getTextStyle(context,
-        //       lWeight: FontWeight.w300, fontSize: 8, color: Colors.green),
-        ),
+        )
+        
       ],
     ),
   );
@@ -270,7 +267,10 @@ Widget _buildListTile(
 
 String formatDateTime(String dateString) {
   DateTime dateTime = DateTime.parse(dateString).toLocal();
+  // print("dateString");
+  // print(dateString);
   String formattedDate = DateFormat("dd MMM yyyy hh:mm a").format(dateTime);
+  //print(formattedDate);
   return formattedDate;
 }
 
@@ -297,7 +297,7 @@ Future<http.Response> updateDataApiCall(String url) async {
     );
     return response;
   } catch (error) {
-  //  print("Error in updateDataApiCall: $error");
+    //  print("Error in updateDataApiCall: $error");
     rethrow;
   }
 }
@@ -308,7 +308,7 @@ void duesPaid(BuildContext context, int index) async {
   final type = due['type'];
 
   if (dueId == null) {
-  //  print("Error: Transaction ID is null");
+    //  print("Error: Transaction ID is null");
     return;
   }
 
@@ -320,15 +320,14 @@ void duesPaid(BuildContext context, int index) async {
       dueAmountRemainders.removeAt(index);
       // This triggers the UI update automatically
       snackBarCalled(context, "Due settled successfully");
-      
     } else {
-    //  print("Failed to settle due: ${response.statusCode} - ${response.body}");
-      
-      snackBarCalled(context, "Failed to settle due: ${response.statusCode} - ${response.body}");
+      //  print("Failed to settle due: ${response.statusCode} - ${response.body}");
+
+      snackBarCalled(context,
+          "Failed to settle due: ${response.statusCode} - ${response.body}");
     }
   } catch (e) {
-   
     snackBarCalled(context, "Error settling due");
-   // print("Error in duesPaid: $e");
+    // print("Error in duesPaid: $e");
   }
 }

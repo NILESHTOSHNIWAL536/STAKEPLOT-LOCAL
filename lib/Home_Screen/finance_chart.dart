@@ -392,7 +392,7 @@ int getCurrentDateIndex(List<String> labels) {
             : max(chartWidth, screenWidth * 0.85),
         height: MediaQuery.of(context).size.height / 2.6,
         child: Transform.translate(
-          offset: Offset(-20, 0),
+          offset: Offset(-15, 0),
           child: SfCartesianChart(
             onChartTouchInteractionUp: (tapArgs) {
               // if(widget.shouldBeNavigate ) 

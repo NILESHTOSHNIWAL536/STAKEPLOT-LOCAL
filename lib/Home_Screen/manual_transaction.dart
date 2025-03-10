@@ -269,15 +269,15 @@ class _ModalContentState extends State<ModalContent>with SingleTickerProviderSta
                                 color: AppColors.accentColor),
                           ),
                           const SizedBox(height: 16),
-                      
+
                           // Enter Amount Field (Only shown if no category is selected)
-                      
+
                           if (selectedCategory == null &&
                               selectedSubCategory == null) ...[
                             AmountWidget(),
                             const SizedBox(height: 16),
                           ],
-                      
+
                           if (amount != null) ...[
                             categoryWidget(),
                           ],
@@ -285,7 +285,7 @@ class _ModalContentState extends State<ModalContent>with SingleTickerProviderSta
                           if (isCategoryFieldExpanded) ...[
                             categoryExpandedWidget(),
                           ],
-                      
+
                           // Subcategories List (Visible after category is selected)
                           if (selectedCategory != null &&
                               selectedSubCategory == null) ...[
@@ -299,7 +299,7 @@ class _ModalContentState extends State<ModalContent>with SingleTickerProviderSta
                             ),
                             subcategoryWidget(),
                           ],
-                      
+
                           if (fin != null) ...[
                             buttonsWidget(),
                             continueButton(),
@@ -494,8 +494,9 @@ class _ModalContentState extends State<ModalContent>with SingleTickerProviderSta
       runSpacing: 2.0, // Vertical spacing between rows
       children: categories[selectedCategory]!.map((subCategory) {
         // Get the URL path for the subcategory's icon from BudgetSubCategories
-        String urlPath = BudgetSubCategories.listofSubCategories[subCategory] ??"assets/icons/subCategoryIcons/default.svg";
-            
+        String urlPath = BudgetSubCategories.listofSubCategories[subCategory] ??
+            "assets/icons/subCategoryIcons/default.svg";
+
         return GestureDetector(
           onTap: () {
             setState(() {
@@ -512,7 +513,6 @@ class _ModalContentState extends State<ModalContent>with SingleTickerProviderSta
           child: Chip(
             avatar: ProfileImage(
               url: urlPath,
-              
             ),
             label: Text(
               subCategory,
@@ -832,15 +832,7 @@ class _ModalContentState extends State<ModalContent>with SingleTickerProviderSta
     }
 
     // Verify total matches (optional, for debugging)
-    double calculatedTotal =
-        nameList.fold(0.0, (sum, item) => sum + item['amount']);
-    // print("splitUserAmount: Calculated total from nameList: $calculatedTotal, Expected: $parsedTotalAmount");
-    // if (calculatedTotal != parsedTotalAmount) {
-    //   print("splitUserAmount: Total mismatch detected!");
-    //   snackBarCalled(context, "Total amount mismatch!", Colors.red);
-    //   return;
-    // }
-
+    double calculatedTotal = nameList.fold(0.0, (sum, item) => sum + item['amount']);
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
     // print("splitUserAmount: Access token retrieved: ${accessToken != null ? 'Yes' : 'No'}");
@@ -852,7 +844,6 @@ class _ModalContentState extends State<ModalContent>with SingleTickerProviderSta
         "Authorization": "$accessToken",
       },
       body: jsonEncode({
-        "name": name,
         "subcategory": subCategories,
         "category": name,
         "amount": calculatedTotal,
@@ -923,38 +914,27 @@ class _ModalContentState extends State<ModalContent>with SingleTickerProviderSta
         "Authorization": "$accessToken",
       },
       body: jsonEncode({
-        "name": name,
-        "amount": amount,
-        "billReceiverId": members[0]['id'],
-        "subcategory": 'Lend Money',
-        "Avatar": members[0]['avatar'],
         "userName": members[0]['name'],
-        'dueDate': getCurrentFormattedDate(),
+        "avatarType": members[0]['avatar'],
+        "billReceiverId": members[0]['id'],
+        "category": name,
+        "subcategory": subCategories,
+        "type": "Lend Money",
+        "amount": amount,
+        // 'dueDate': getCurrentFormattedDate(),
       }),
     );
-    
-    if (response.statusCode == 200 || response.statusCode == 201) {
+
+  if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
       members.forEach((e) {
         sendNotificationsToDevice(e['id'], context,
             "${userName.value} has sent u a lend bill..Of ${name} Of ${amount}");
       });
-
       snackBarCalled(context, "Lend amount sent to users!", Colors.black);
-      addTransaction(
-          amount, "Lend Bill (${subCategories})", name, context, 'cash', true);
-      // addSocketMessage(addedMembers,amount.toString(),selectedCategory2.toString()+"Lend Bill (${subCategories})", splitID.value);
+      addTransaction( amount, "Lend Bill (${subCategories})", name, context, 'cash', true);
       getUserLend(context);
-      // Navigator.push(
-      //   context,
-      //   PageTransition(
-      //     type: PageTransitionType.fade,
-      //     duration: Durations.long1,
-      //     child: HomePage(),
-      //     isIos: true,
-      //   ),
-      // );
-      // }
+      
     } else {
       snackBarCalled(context, "can't split ,error!", Colors.red);
     }

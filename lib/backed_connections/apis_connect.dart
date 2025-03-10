@@ -7,7 +7,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.
 import 'package:get/get.dart';
 
 bool flag = true;
-String portNo = flag ? "192.168.1.6" : "localhost";
+String portNo = flag ? "192.168.1.5" : "localhost";
 String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 
@@ -285,7 +285,7 @@ void snackBarAllFeilds2(context, text, [Color colors = Colors.red]) {
 List getSearchData(String val, List data) {
   List findOne = [];
   data.forEach((element) {
-    if (element['name'].toString().contains(val)) {
+    if (element['name'].toString().toLowerCase().contains(val.toLowerCase())) {
       findOne.add(element);
     }
   });
@@ -295,7 +295,7 @@ List getSearchData(String val, List data) {
 RxList getSearchDataRx(String val, List data) {
   RxList findOne = [].obs;
   data.forEach((element) {
-    if (element['name'].toString().contains(val)) {
+    if (element['name'].toString().toLowerCase().contains(val.toLowerCase())) {
       findOne.add(element);
     }
   });

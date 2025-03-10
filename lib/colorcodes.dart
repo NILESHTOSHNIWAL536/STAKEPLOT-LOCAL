@@ -169,7 +169,7 @@ Map<String, String> imageMapForHistory = {
   "trips": "b-trips.svg",
   "insurance":Categories.insurance,
   "miscellaneous": "b-miscellaneous.svg",
-  "untagged": BudgetSubCategories.listofSubCategories['Mcdonalds'] ?? "b-miscellaneous.svg",
+  "untagged": Categories.hobbies?? "b-miscellaneous.svg",
   "accessories": "b-accessories.svg",
   // "investments": "b-investments.svg",
     "investments": Categories.bills,

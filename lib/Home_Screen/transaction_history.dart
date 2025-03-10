@@ -23,8 +23,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
 
-
-RxBool reloadHistory=false.obs;
+RxBool reloadHistory = false.obs;
 
 class TransactionHistory extends StatefulWidget {
   /// Optional
@@ -32,12 +31,11 @@ class TransactionHistory extends StatefulWidget {
   final bool? isflag;
   bool pageTransition;
 
-   TransactionHistory({
-    this.isflag = false,
-    this.isYearView = false,
-    this.pageTransition = false,
-    super.key
-  });
+  TransactionHistory(
+      {this.isflag = false,
+      this.isYearView = false,
+      this.pageTransition = false,
+      super.key});
   // const TransactionHistory({super.key});
 
   @override
@@ -58,12 +56,15 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     _stableContext = context;
     // getAllTransactionHistory(context, widget.isflag!, widget.isYearView!);
     _scrollController2.addListener(() {
-    if (_scrollController2.position.pixels >= _scrollController2.position.maxScrollExtent - 100) {
-      getAllTransactionHistory(context, widget.isflag!, widget.isYearView!); // Fetch next page
-    }
-  });
-  currentPage=1;
-  getAllTransactionHistory(context, widget.isflag!, widget.isYearView!, isRefreshing: true); 
+      if (_scrollController2.position.pixels >=
+          _scrollController2.position.maxScrollExtent - 100) {
+        getAllTransactionHistory(
+            context, widget.isflag!, widget.isYearView!); // Fetch next page
+      }
+    });
+    currentPage = 1;
+    getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,
+        isRefreshing: true);
   }
 
   @override
@@ -73,159 +74,169 @@ class _TransactionHistoryState extends State<TransactionHistory> {
   }
 
   @override
-void dispose() {
-  _scrollController2.dispose();
-  super.dispose();
-}
-
+  void dispose() {
+    _scrollController2.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return widget.pageTransition  ?
-   WillPopScope(
-      onWillPop: ()async
-      {
-        changeTheBool();
-        return true;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          leading: InkWell(
-            onTap: (){
-                 changeTheBool();
+    return widget.pageTransition
+        ? WillPopScope(
+            onWillPop: () async {
+              changeTheBool();
+              return true;
             },
-            child: Icon(Icons.arrow_back_ios)),
-          title:Text(
-                    'Transaction History',
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: AppColors.accentColor),
-                  ), 
-        ),
-        body: SingleChildScrollView(
-          child: Container(
-            height: MediaQuery.of(context).size.height/1.1,
-            child: Column(
-              children: [
-                Obx(() => Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 13,vertical: 10),
-                        child: reloadHistory.value?  getlist():getlist(),
-                      )
-                )), // Wrapped in Obx for reactivity
-              ],
-            ),
-          ),
-        ),
-      ),
-    ):SingleChildScrollView(
-      child: Container(
-        // color: AppColors.backgroundColor,
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
+            child: Scaffold(
+              appBar: AppBar(
+                leading: InkWell(
+                    onTap: () {
+                      changeTheBool();
+                    },
+                    child: Icon(Icons.arrow_back_ios)),
+                title: Text(
                   'Transaction History',
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.bold,
                       fontSize: 18,
                       color: AppColors.accentColor),
                 ),
-              ],
+              ),
+              body: SingleChildScrollView(
+                child: Container(
+                  height: MediaQuery.of(context).size.height / 1.1,
+                  child: Column(
+                    children: [
+                      Obx(() => Expanded(
+                              child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 13, vertical: 10),
+                            child: reloadHistory.value ? getlist() : getlist(),
+                          ))), // Wrapped in Obx for reactivity
+                    ],
+                  ),
+                ),
+              ),
             ),
-            const SizedBox(height: 20),
-             Obx(() =>reloadHistory.value?  getlist():getlist()), // Wrapped in Obx for reactivity
-          ],
-        ),
-      ),
-    );
+          )
+        : SingleChildScrollView(
+            child: Container(
+              // color: AppColors.backgroundColor,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Transaction History',
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: AppColors.accentColor),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Obx(() => reloadHistory.value
+                      ? getlist()
+                      : getlist()), // Wrapped in Obx for reactivity
+                ],
+              ),
+            ),
+          );
   }
 
-  void changeTheBool(){
-    sectionReached.value=true;
-   Navigator.pop(context);
+  void changeTheBool() {
+    sectionReached.value = true;
+    Navigator.pop(context);
   }
 
   Widget getlist() {
     return ListView.builder(
-      itemCount: transactionsHistory.length+1,
-     controller: _scrollController2, // Attach ScrollControlle
-    shrinkWrap: true,
+      itemCount: transactionsHistory.length + 1,
+      controller: _scrollController2, // Attach ScrollControlle
+      shrinkWrap: true,
       itemBuilder: (context, index) {
-         if (index < transactionsHistory.length) {
-        final transaction = transactionsHistory[index];
-        double amount = (transaction['amount'] is int)? (transaction['amount'] as int).toDouble(): (transaction['amount'] as double? ?? 0.0);
-        String category = transaction['category']?.toString() ?? 'Uncategorized'; // Fixed typo and added null check
-        String subcategory = transaction['subcategory']?.toString() ?? 'General';
-      
-        return Stack(
-          children: [
-            Positioned(
-              left: 0,
-              right: 0,
-              child: Container(
-                height: 80,
-                color: AppColors.primaryColor,
-              ),
-            ),
-            Positioned(
-              right: 10,
-              top: 25,
-              child: GestureDetector(
-                onTap: () {
-                  hideTransaction(index);
-                },
-                child: const Icon(
-                  Icons.visibility_off,
-                  color: Colors.white,
-                  size: 30,
-                ),
-              ),
-            ),
-            Positioned(
-              right: 50,
-              top: 25,
-              child: GestureDetector(
-                onTap: () async {
-                  // final result = await showCustomFriendsModal(
-                  //     context, amount, false, category, subcategory);
-                  final result = await showCustomFriendsModal(
-                      context, amount, false,category, subcategory );
+        if (index < transactionsHistory.length) {
+          final transaction = transactionsHistory[index];
+          double amount = (transaction['amount'] is int)
+              ? (transaction['amount'] as int).toDouble()
+              : (transaction['amount'] as double? ?? 0.0);
+          String category = transaction['category']?.toString() ??
+              'Uncategorized'; // Fixed typo and added null check
+          String subcategory =
+              transaction['subcategory']?.toString() ?? 'General';
 
-                  // showCustomFriendsModal2(context, transaction);
-                },
-                child: const Icon(
-                  Icons.person_add,
-                  color: Colors.white,
-                  size: 30,
-                ),
-              ),
-            ),
-            GestureDetector(
-              onHorizontalDragUpdate: (details) {scrollLeft(details, index);},
-              child: Transform.translate(
-                offset: Offset(swipeOffsets[index] ?? 0.0, 0),
+          return Stack(
+            children: [
+              Positioned(
+                left: 0,
+                right: 0,
                 child: Container(
-                  decoration: getBoxDecoration(index),
-                  child: historyTransactions(transaction,transaction['transactionTimestamp']?.toString(),index), // Ensure this is a String or null),
+                  height: 80,
+                  color: AppColors.primaryColor,
                 ),
               ),
-            ),
-          ],
-        );
-         }else{
-            return isLoadingMore.value
-            ? Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: const Center(
-                  child: CircularProgressIndicator(),
+              Positioned(
+                right: 10,
+                top: 25,
+                child: GestureDetector(
+                  onTap: () {
+                    hideTransaction(index);
+                  },
+                  child: const Icon(
+                    Icons.visibility_off,
+                    color: Colors.white,
+                    size: 30,
+                  ),
                 ),
-            )
-            : const SizedBox.shrink();
-         }
+              ),
+              Positioned(
+                right: 50,
+                top: 25,
+                child: GestureDetector(
+                  onTap: () async {
+                    // final result = await showCustomFriendsModal(
+                    //     context, amount, false, category, subcategory);
+                    final result = await showCustomFriendsModal(
+                        context, amount, false, category, subcategory);
+
+                    // showCustomFriendsModal2(context, transaction);
+                  },
+                  child: const Icon(
+                    Icons.person_add,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onHorizontalDragUpdate: (details) {
+                  scrollLeft(details, index);
+                },
+                child: Transform.translate(
+                  offset: Offset(swipeOffsets[index] ?? 0.0, 0),
+                  child: Container(
+                    decoration: getBoxDecoration(index),
+                    child: historyTransactions(
+                        transaction,
+                        transaction['transactionTimestamp']?.toString(),
+                        index), // Ensure this is a String or null),
+                  ),
+                ),
+              ),
+            ],
+          );
+        } else {
+          return isLoadingMore.value
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              : const SizedBox.shrink();
+        }
       },
     );
   }
@@ -291,12 +302,11 @@ void dispose() {
     );
   }
 
-  Future<dynamic> showCustomFriendsModal(
-    BuildContext context,
+  Future<dynamic> showCustomFriendsModal(BuildContext context,
     double amount,
     bool isLendMode,
-     String category,
-     String subcategory,
+    String category,
+    String subcategory,
   ) async {
     return await showModalBottomSheet<dynamic>(
       context: context,
@@ -306,36 +316,41 @@ void dispose() {
       ),
       builder: (BuildContext context) {
         return NewFriendsUi(
-            totalAmount: amount.toDouble(),
-            userId: currentId.value,
-            userName: userName.value,
-            userAvatar: avatar.value,
-            isLendMode: isLendMode,
-             category: category,
-             subcategory: subcategory
-            );
+          totalAmount: amount.toDouble(),
+          userId: currentId.value,
+          userName: userName.value,
+          userAvatar: avatar.value,
+          isLendMode: isLendMode,
+          category: category,
+          subcategory: subcategory,
+          flag: true,
+        );
       },
     );
   }
 
-  Widget historyTransactions(Map<String, dynamic> transaction, String? date,int index) {
-   final category = transaction['category']?.toString() ?? 'Uncategorized';
-  final subcategory = transaction['subcategory']?.toString() ?? 'General';
-  final amount = transaction['amount']?.toString() ?? '0';
-  final formattedDate = date != null ? formatDate(date) : 'Unknown Date';
-  
+  Widget historyTransactions(
+      Map<String, dynamic> transaction, String? date, int index) {
+    final category = transaction['category']?.toString() ?? 'Uncategorized';
+    final subcategory = transaction['subcategory']?.toString() ?? 'General';
+    final amount = transaction['amount']?.toString() ?? '0';
+    final formattedDate = date != null ? formatDate(date) : 'Unknown Date';
+
     return GestureDetector(
       onTap: () {
-      tagName.value= category;
-      showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
-              ),
-                  builder: (context) {
-                    return TagShowmodal(data: transaction,index: index,);
-                  },
+        tagName.value = category;
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+          ),
+          builder: (context) {
+            return TagShowmodal(
+              data: transaction,
+              index: index,
+            );
+          },
         );
       },
       child: Container(
@@ -362,7 +377,9 @@ void dispose() {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: AvatarProfileImage(
-                        url: Categories.link +(imageMapForHistory[category.toLowerCase()] ?? 'default_image.png'),
+                        url: Categories.link +
+                            (imageMapForHistory[category.toLowerCase()] ??
+                                'default_image.png'),
                         height: 16,
                         width: 20,
                       ),
@@ -459,8 +476,6 @@ void dispose() {
     });
   }
 
-
-
   static Future<String?> getToken() async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     var accessToken = pref.getString("accessToken");
@@ -488,7 +503,6 @@ void dispose() {
       );
       return response;
     } catch (e) {
-    
       rethrow;
     }
   }
@@ -539,20 +553,22 @@ void dispose() {
   }
 
   void getTransactionByYear(List obj, int y) {
-  obj.forEach((ele) {
-    if (ele is Map<String, dynamic> && isCurrentYear(ele['transactionTimestamp']?.toString() ?? '', y)) {
-      transactionsHistory.add(ele);
-    }
-  });
-}
+    obj.forEach((ele) {
+      if (ele is Map<String, dynamic> &&
+          isCurrentYear(ele['transactionTimestamp']?.toString() ?? '', y)) {
+        transactionsHistory.add(ele);
+      }
+    });
+  }
 
   void getTransactionByMonth(List obj, int m) {
-  obj.forEach((ele) {
-    if (ele is Map<String, dynamic> && isCurrentMonth(ele['transactionTimestamp']?.toString() ?? '', m)) {
-      transactionsHistory.add(ele);
-    }
-  });
-}
+    obj.forEach((ele) {
+      if (ele is Map<String, dynamic> &&
+          isCurrentMonth(ele['transactionTimestamp']?.toString() ?? '', m)) {
+        transactionsHistory.add(ele);
+      }
+    });
+  }
 
   bool isCurrentYear(String date, int y) {
     try {
@@ -562,7 +578,6 @@ void dispose() {
       return false; // Return false if parsing fails
     }
   }
-
 }
 
 
