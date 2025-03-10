@@ -26,6 +26,7 @@ String getFormattedDate() {
   return "${now.year}-${now.month.toString().padLeft(2, '0')}";
 }
 
+
 String getCurrentWeekNumber() {
 
   DateTime now = DateTime.now();

@@ -7,7 +7,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.
 import 'package:get/get.dart';
 
 bool flag = true;
-String portNo = flag ? "192.168.1.6" : "localhost";
+String portNo = flag ? "192.168.1.5" : "localhost";
 String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 
@@ -155,7 +155,7 @@ RxBool isSplit = false.obs;
 final ScrollController scrollController = ScrollController();
 final GlobalKey targetKey = GlobalKey(); // Key to identify the target widget
 
-
+RxString selectedButton2 = 'Month'.obs; 
  RxString selectedButton = 'Month'.obs; // Default view is "Month"
   DateTimeRange? selectedDateRange; // Default view is "Month"
   int selectedDay = 1;
@@ -167,6 +167,7 @@ final GlobalKey targetKey = GlobalKey(); // Key to identify the target widget
    RxMap<String, List<double>> transactionChatGraph=new RxMap();
    RxBool graphTransaction=false.obs;
      List<String> labels=[];
+     List<String> labels2=[];
     RxDouble maxYValue = 0.0.obs;
 RxList hiddentrasactionsHistory = [].obs;
 RxBool getHiddenHistory = false.obs;
@@ -175,6 +176,10 @@ RxBool loadChatdataOnChnage = false.obs;
 RxList  transactionsHistory = <dynamic>[].obs;
 RxDouble totalDebitValue = 0.0.obs;
 RxDouble totalExpandedValue = 0.0.obs;
+List<double> trasactionsDataDebitWeeklyoverall = [];
+RxMap<String, List<double>> transactionChatGraphoverall=new RxMap();
+RxDouble maxYValueoverall = 0.0.obs;
+RxBool getGraphDataoverall=false.obs;
 class Message {
   Message(
       {this.text,

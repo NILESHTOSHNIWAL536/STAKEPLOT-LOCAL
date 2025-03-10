@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/number_picker.dar
 import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/transactions_graph.dart';
 import 'package:flutter_application_code_stakeplot/NavigatorScreens/userNavigator.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
@@ -193,6 +194,10 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.16,
                 child: Manualtransaction(),
+              ),
+               SizedBox(
+                height: MediaQuery.of(context).size.height * 0.46,
+                child: TransactionGraph(),
               ),
               
               UserListScreen(),

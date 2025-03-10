@@ -42,7 +42,7 @@ void approveBill(context, id, type, notifyId) async {
 void getRemainders(context) async {
   String urlPath = "${url}/reminders";
   var responce = await getDataApiCall(urlPath);
-  print(responce.body);
+ // print(responce.body);
   if (getFlagOfResponse(responce)) {
     var his = jsonDecode(responce.body);
     // var userDue = his['data']['billsPayable'];
@@ -58,8 +58,8 @@ void getRemainders(context) async {
     dueAmountRemainders.addAll(userDue);//payables 
     lendAmountRemainders.addAll(userDue2); //owed
 
-print("lendAmountRemainders: $lendAmountRemainders");
-print("dueAmountRemainders: $dueAmountRemainders");
+// print("lendAmountRemainders: $lendAmountRemainders");
+// print("dueAmountRemainders: $dueAmountRemainders");
     getdueUsers.value = !getdueUsers.value;
   }
 }

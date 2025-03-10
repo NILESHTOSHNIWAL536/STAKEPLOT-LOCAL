@@ -109,8 +109,8 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
             try {
               //   print('Processing yearly data for year: $year');
               if (data['data'] != null &&
-                  data['data']['transactions'] != null) {
-                data['data']['transactions'].forEach((key, value) {
+                  data['data']['result'] != null) {
+                data['data']['result'].forEach((key, value) {
                   int monthIndex = monthNameToIndex[key] ?? -1;
                 
                   if (monthIndex >= 0 && monthIndex < 12) {
@@ -195,7 +195,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
 
         try {
         
-          data['data']['transactions'].forEach((key, value) {
+          data['data']['result'].forEach((key, value) {
             try {
               int dayIndex = int.parse(key.split('-')[2]) - 1;
               

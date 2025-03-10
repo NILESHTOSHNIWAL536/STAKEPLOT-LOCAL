@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/onboarding_screens/onboarding_screen.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/communityProfileScreen.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_Details.dart';
@@ -202,6 +203,25 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                     ),
                                     'Terms & conditions',
                                     'Please follow our terms and conditions'),
+                              ),
+                              InkWell(
+                                onTap: (){
+                                  
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>OnboardingScreen(),
+                                    ),
+                                  );
+                                },
+                                child: _buildOption(
+                                    ProfileImage(
+                                      url: ProfileIcons.terms,
+                                      // height: 20,
+                                      // width: 20,
+                                    ),
+                                    'Terms & conditions',
+                                    'onboarding.'),
                               ),
                               // Divider(),
                               // _buildOption(

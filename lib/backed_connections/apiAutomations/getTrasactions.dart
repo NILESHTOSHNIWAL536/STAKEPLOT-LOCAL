@@ -116,13 +116,14 @@ void getAutoMationsTransactionsWeekly() async {
 void getAutoMationsTransactionsCustom(date, context,
     [weekORmonth = 'month', String? endDate]) async {
   if (accountId.value.trim().toString() == "") return;
-  
+
   String urlPath = endDate != null && weekORmonth == 'Custom'
       ? "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date,${getNextDay(endDate)}"
       : "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date";
-  
+  print("URL Path: $urlPath");
   var response = await getDataApiCall(urlPath);
-
+  print("Response Status Code: ${response.statusCode}");
+  print("Response Body: ${response.body}");
   trasactionsDataDebitWeekly.clear();
 
   List<String> labelsLocal = [];
@@ -132,20 +133,24 @@ void getAutoMationsTransactionsCustom(date, context,
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     transactionChatGraph.clear();
+    print("Parsed Response: $his");
 
     try {
-      Map data = his['data']['transactions'];
-      totalDebitValue.value = double.parse((his['data']['totalCredit']).toString());
-      print("totalDebitValue");
-      print(totalDebitValue);
-      maxYValue.value = double.parse((his['data']['maxAmount'] ?? 500.0).toString());
+      Map data = his['data']['result'];
+      totalDebitValue.value =
+          double.parse((his['data']['totalCredit']).toString());
+      print("Total Debit Value: ${totalDebitValue.value}");
+      maxYValue.value =
+          double.parse((his['data']['maxAmount'] ?? 500.0).toString());
+      print("Max Y Value: ${maxYValue.value}");
 
       if (maxYValue.value == 0) maxYValue.value = 500.0;
 
       if (weekORmonth == 'Custom' && endDate != null) {
         DateTime startDate = DateTime.parse(date);
         DateTime end = DateTime.parse(endDate);
-        
+        print("Start Date: $startDate, End Date: $end");
+
         // Generate date labels in "MMM d" format
         labelsLocal = [];
         int daysDiff = end.difference(startDate).inDays;
@@ -156,6 +161,7 @@ void getAutoMationsTransactionsCustom(date, context,
           DateTime currentDate = startDate.add(Duration(days: i));
           String formattedDate = DateFormat('MMM d').format(currentDate);
           labelsLocal.add(formattedDate);
+          print("Label for Day $i: $formattedDate");
         }
 
         data.forEach((key, value) {
@@ -166,6 +172,8 @@ void getAutoMationsTransactionsCustom(date, context,
             if (index >= 0 && index < debitList.length) {
               debitList[index] = getDouble(value['debit']);
               creditList[index] = getDouble(value['credit']);
+              print(
+                  "Debit for $key: ${debitList[index]}, Credit: ${creditList[index]}");
             }
           }
         });
@@ -178,9 +186,12 @@ void getAutoMationsTransactionsCustom(date, context,
           labelsLocal.add(label);
           debitList.add(getDouble(value['debit']));
           creditList.add(getDouble(value['credit']));
+          print(
+              "Non-Custom - Label: $label, Debit: ${debitList.last}, Credit: ${creditList.last}");
         });
       }
     } catch (e) {
+      print("Error parsing response: $e");
       maxYValue.value = 500.0;
       if (labelsLocal.isEmpty) {
         if (weekORmonth == 'Custom' && endDate != null) {
@@ -189,14 +200,15 @@ void getAutoMationsTransactionsCustom(date, context,
           int daysDiff = end.difference(startDate).inDays;
           debitList = List.filled(daysDiff + 1, 0.0);
           creditList = List.filled(daysDiff + 1, 0.0);
-          
+
           for (int i = 0; i <= daysDiff; i++) {
             DateTime currentDate = startDate.add(Duration(days: i));
             String formattedDate = DateFormat('MMM d').format(currentDate);
             labelsLocal.add(formattedDate);
           }
         } else {
-          labelsLocal = weekORmonth == 'Week' ? getWeekDays() : getDaysInMonth(date);
+          labelsLocal =
+              weekORmonth == 'Week' ? getWeekDays() : getDaysInMonth(date);
           debitList = List.filled(labelsLocal.length, 0.0);
           creditList = List.filled(labelsLocal.length, 0.0);
         }
@@ -220,13 +232,14 @@ void getAutoMationsTransactionsCustom(date, context,
     labels.assignAll(labelsLocal);
     getGraphData.value = true;
   } else {
+    print("Response was not valid.");
     if (weekORmonth == 'Custom' && endDate != null) {
       DateTime startDate = DateTime.parse(date);
       DateTime end = DateTime.parse(endDate);
       int daysDiff = end.difference(startDate).inDays;
       debitList = List.filled(daysDiff + 1, 0.0);
       creditList = List.filled(daysDiff + 1, 0.0);
-      
+
       for (int i = 0; i <= daysDiff; i++) {
         DateTime currentDate = startDate.add(Duration(days: i));
         String formattedDate = DateFormat('MMM d').format(currentDate);
@@ -238,108 +251,6 @@ void getAutoMationsTransactionsCustom(date, context,
     getGraphData.value = true;
   }
 }
-// void getAutoMationsTransactionsCustom(date, context,
-//     [weekORmonth = 'month', String? endDate]) async {
-//   if (accountId.value.trim().toString() == "") return;
-//   String urlPath = endDate != null && weekORmonth == 'Custom'
-//       ? "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date,${getNextDay(endDate)}"
-//       : "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date";
-//   print("urlPath");
-//   print(urlPath);
-//   var response = await getDataApiCall(urlPath);
-
-//   trasactionsDataDebitWeekly.clear();
-
-//   List<String> labelsLocal = weekORmonth == 'Custom' ? List.from(labels) : [];
-//   List<double> debitList = [];
-//   List<double> creditList = [];
-
-//   if (getFlagOfResponse(response)) {
-//     var his = jsonDecode(response.body);
-
-//     transactionChatGraph.clear();
-//     if (weekORmonth != 'Custom') {
-//       labels.clear();
-//     }
-
-//     try {
-//       Map data = his['data']['transactions'];
-//       totalDebitValue.value =
-//           double.parse((his['data']['totalCredit']).toString());
-//       print("totalDebitValue");
-//       print(totalDebitValue);
-//       maxYValue.value =
-//           double.parse((his['data']['maxAmount'] ?? 500.0).toString());
-
-//       if (maxYValue.value == 0) maxYValue.value = 500.0;
-
-//       if (weekORmonth == 'Custom' && endDate != null) {
-//         DateTime startDate = DateTime.parse(date);
-//         DateTime end = DateTime.parse(endDate);
-//         debitList = List.filled(labelsLocal.length, 0.0);
-//         creditList = List.filled(labelsLocal.length, 0.0);
-
-//         data.forEach((key, value) {
-//           DateTime txDate = DateTime.parse(key);
-//           String dayStr = txDate.day.toString().padLeft(2, '0');
-//           int index = labelsLocal.indexOf(dayStr);
-
-//           if (index != -1 &&
-//               txDate.isAfter(startDate.subtract(Duration(days: 1))) &&
-//               txDate.isBefore(end.add(Duration(days: 1)))) {
-//             debitList[index] = getDouble(value['debit']);
-//             creditList[index] = getDouble(value['credit']);
-//           } else {}
-//         });
-//       } else {
-//         data.forEach((key, value) {
-//           String label = weekORmonth == 'Custom'
-//               ? key.toString()
-//               : key.toString().substring(key.toString().length - 2);
-//           labelsLocal.add(label);
-//           debitList.add(getDouble(value['debit']));
-//           creditList.add(getDouble(value['credit']));
-//         });
-//       }
-//     } catch (e) {
-//       maxYValue.value = 500.0;
-//       debitList = List.filled(labelsLocal.length, 0.0);
-//       creditList = List.filled(labelsLocal.length, 0.0);
-//       //transactionChatGraph['totalDebit'] = 0.0;
-//       //totalDebit = 0.0;
-//       if (labelsLocal.isEmpty) {
-//         labelsLocal =
-//             weekORmonth == 'Week' ? getWeekDays() : getDaysInMonth(date);
-//       }
-//     }
-
-//     if (selectedButton.value == 'Week') {
-//       labelsLocal = getWeekDays();
-//       if (debitList.length < 7) {
-//         debitList = List.filled(7, 0.0)
-//           ..setRange(0, debitList.length, debitList);
-//         creditList = List.filled(7, 0.0)
-//           ..setRange(0, creditList.length, creditList);
-//       }
-//     }
-
-//     // Corrected assignment
-//     transactionChatGraph['debited'] = debitList; // Debits go to debitedData
-//     transactionChatGraph['credited'] = creditList; // Credits go to creditedDat
-
-//     labels.assignAll(labelsLocal);
-//     getGraphData.value = true;
-//   } else {
-//     if (weekORmonth == 'Custom') {
-//       debitList = List.filled(labels.length, 0.0);
-//       creditList = List.filled(labels.length, 0.0);
-//       transactionChatGraph['debited'] = debitList;
-//       transactionChatGraph['credited'] = creditList;
-//       //totalDebit = 0.0;
-//     }
-//     getGraphData.value = true;
-//   }
-// }
 
 String getNextDay(String endDate) {
   // Parse the input date string
@@ -414,6 +325,13 @@ String getCurrentWeek() {
   return s;
 }
 
+String getCurrentWeekoverall() {
+  final now = DateTime.now();
+  final year = now.year;
+  String s = '$year-W${now.weekOfYear.toString().padLeft(2, '0')}';
+  return s;
+}
+
 // Function to calculate the week number
 int _getWeekNumber(DateTime date) {
   final firstDayOfYear = DateTime(date.year, 1, 1);
@@ -431,33 +349,29 @@ void getUserBankData(context) async {
   }
 }
 
-void updateTheTagOfTarnsactions( category,subCategory, transactionId, context,index) async {
- 
+void updateTheTagOfTarnsactions(
+    category, subCategory, transactionId, context, index) async {
   String urlPath = "${url}/transactionauto/updateTransaction/${transactionId}";
-  
 
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
 
-
- final response = await http.patch(
+  final response = await http.patch(
     Uri.parse('${urlPath}'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       "Authorization": "$accessToken",
     },
     body: jsonEncode({
-       'category': category,
-       'subcategory': subCategory,
+      'category': category,
+      'subcategory': subCategory,
     }),
   );
-   printData(response);
-   if(getFlagOfResponse(response)){
-        Navigator.pop(context);
-        reloadHistory.value = !reloadHistory.value;
-   }else{
-   }
-
+  printData(response);
+  if (getFlagOfResponse(response)) {
+    Navigator.pop(context);
+    reloadHistory.value = !reloadHistory.value;
+  } else {}
 }
 
 void hideTransactions(
@@ -595,257 +509,31 @@ Future postDataApiCall(String urlPath, Map body) async {
   return response;
 }
 
-// void pickCustomDateRange(BuildContext context) async {
-//   DateTimeRange? picked = await showDialog<DateTimeRange>(
-//     context: context,
-//     builder: (BuildContext context) {
-//       return DateRangePickerDialog();
-//     },
-//   );
-
-//   if (picked != null) {
-//     selectedButton.value = 'Custom';
-//     getGraphData.value = false;
-
-//     List<String> customDays = [];
-//     for (int i = 0; i <= picked.end.difference(picked.start).inDays; i++) {
-//       String day = (picked.start.day + i).toString().padLeft(2, '0');
-//       customDays.add(day);
-//     }
-
-//     labels.assignAll(customDays); // Assuming labels is RxList
-
-//     String startDate =
-//         picked.start.toIso8601String().split('T')[0]; // YYYY-MM-DD
-//     String endDate = picked.end.toIso8601String().split('T')[0]; // YYYY-MM-DD
-//     print("Calling getAutoMations with start: $startDate, end: $endDate");
-//     getAutoMationsTransactionsCustom(startDate, context, 'Custom', endDate);
-//   }
-// }
-
-// // New StatefulWidget for the dialog content
-// class DateRangePickerDialog extends StatefulWidget {
-//   @override
-//   _DateRangePickerDialogState createState() => _DateRangePickerDialogState();
-// }
-
-// class _DateRangePickerDialogState extends State<DateRangePickerDialog> {
-//   DateTime? startDate =
-//       DateTime.now().subtract(Duration(days: 7)); // Default start
-//   DateTime? endDate = DateTime.now(); // Default end
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Dialog(
-//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-//       child: Container(
-//         width: 300, // Compact width
-//         padding: const EdgeInsets.all(16),
-//         child: Column(
-//           mainAxisSize: MainAxisSize.min, // Keeps the dialog compact
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             textStyle(
-//               text: "Select Date Range",
-//               context: context,
-//               fontWeight: FontWeight.bold,
-//               fontsize: 16,
-//             ),
-//             // Text(
-//             //   "Select Date Range",
-//             //   style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-//             // ),
-//             const SizedBox(height: 16),
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               children: [
-//                 // Start Date Picker
-//                 Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     textStyle(
-//                       text: "Start Date",
-//                       context: context,
-//                       fontWeight: FontWeight.w400,
-//                       fontsize: 14,
-//                     ),
-//                     const SizedBox(height: 8),
-//                     ElevatedButton(
-//                       onPressed: () async {
-//                         final DateTime? picked = await showDatePicker(
-//                           context: context,
-//                           initialDate: startDate ?? DateTime.now(),
-//                           firstDate: DateTime(2020),
-//                           lastDate: DateTime.now(),
-//                         );
-//                         if (picked != null && picked != startDate) {
-//                           setState(() {
-//                             startDate = picked;
-//                             // Ensure end date isn’t before start date
-//                             if (endDate != null &&
-//                                 endDate!.isBefore(startDate!)) {
-//                               endDate = startDate;
-//                             }
-//                           });
-//                         }
-//                       },
-//                       child: Text(
-//                         startDate != null
-//                             ? "${startDate!.day}/${startDate!.month}/${startDate!.year}"
-//                             : "Select",
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//                 // End Date Picker
-//                 Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     textStyle(
-//                       text: "End Date",
-//                       context: context,
-//                       fontWeight: FontWeight.w400,
-//                       fontsize: 14,
-//                     ),
-//                     const SizedBox(height: 8),
-//                     ElevatedButton(
-//                       onPressed: () async {
-//                         final DateTime? picked = await showDatePicker(
-//                           context: context,
-//                           initialDate: endDate ?? DateTime.now(),
-//                           firstDate: startDate ??
-//                               DateTime(2020), // Prevent end before start
-//                           lastDate: DateTime.now(),
-//                         );
-//                         if (picked != null && picked != endDate) {
-//                           setState(() {
-//                             endDate = picked;
-//                           });
-//                         }
-//                       },
-//                       child: Text(
-//                         endDate != null
-//                             ? "${endDate!.day}/${endDate!.month}/${endDate!.year}"
-//                             : "Select",
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ],
-//             ),
-//             const SizedBox(height: 20),
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.end,
-//               children: [
-//                 TextButton(
-//                   onPressed: () {
-//                     Navigator.pop(context); // Cancel
-//                   },
-//                   child: textStyle(
-//                     text: "Cancel",
-//                     context: context,
-//                     fontWeight: FontWeight.w400,
-//                     fontsize: 14,
-//                   ),
-//                 ),
-//                 const SizedBox(width: 8),
-//                 ElevatedButton(
-//                   onPressed: () {
-//                     if (startDate != null && endDate != null) {
-//                       Navigator.pop(context,
-//                           DateTimeRange(start: startDate!, end: endDate!));
-//                     } else {
-//                       ScaffoldMessenger.of(context).showSnackBar(
-//                         SnackBar(
-//                             content:
-//                                 Text("Please select both start and end dates")),
-//                       );
-//                     }
-//                   },
-//                   child: textStyle(
-//                     text: "OK",
-//                     context: context,
-//                     fontWeight: FontWeight.w400,
-//                     fontsize: 14,
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-// void pickCustomDateRange(BuildContext context) async {
-//   // Show the date range picker with custom styling
-//   DateTimeRange? picked = await showDateRangePicker(
-//     context: context,
-//     initialDateRange: DateTimeRange(
-//       start: DateTime.now().subtract(Duration(days: 7)),
-//       end: DateTime.now(),
-//     ),
-//     firstDate: DateTime(2020),
-//     lastDate: DateTime.now(),
-//     builder: (BuildContext context, Widget? child) {
-//       return Dialog(
-         
-//           //  elevation: 8,
-//           child: Container(
-//             width: 420, // Fixed width for consistency
-//             height: 580, 
-//             decoration: BoxDecoration(
-             
-//               borderRadius: BorderRadius.circular(24)
-//             ),// Constrained height for better control
-            
-//             child: Expanded(
-//               child: child!,
-//             ),
-//           ));
-//     },
-//   );
-
-//   if (picked != null) {
-//     selectedButton.value = 'Custom';
-//     getGraphData.value = false;
-
-//     List<String> customDays = [];
-//     for (int i = 0; i <= picked.end.difference(picked.start).inDays; i++) {
-//       String day = (picked.start.day + i).toString().padLeft(2, '0');
-//       customDays.add(day);
-//     }
-
-//     labels.assignAll(customDays);
-
-//     String startDate = picked.start.toIso8601String().split('T')[0];
-//     String endDate = picked.end.toIso8601String().split('T')[0];
-//     getAutoMationsTransactionsCustom(startDate, context, 'Custom', endDate);
-//   }
-// }
-
-
 void pickCustomDateRange(BuildContext context) async {
   List<DateTime?> picked = await showCalendarDatePicker2Dialog(
-    context: context,
-    config: CalendarDatePicker2WithActionButtonsConfig(
-      calendarType: CalendarDatePicker2Type.range,
-      firstDate: DateTime(2020),
-      lastDate: DateTime.now(),
-      selectableDayPredicate: (day) => true,
-       selectedDayHighlightColor: Colors.blueAccent, // Selected range color
-      controlsTextStyle: TextStyle(color: Colors.black), // Header text color
-      dayTextStyle: TextStyle(color: Colors.black), // Default day text color
-      selectedDayTextStyle: TextStyle(color: Colors.black), // Selected day text color
-      weekdayLabelTextStyle: TextStyle(color: Colors.black),
-    ),
-    dialogSize: const Size(400, 400),
-    value: [
-      DateTime.now().subtract(const Duration(days: 7)),
-      DateTime.now(),
-    ],
-    borderRadius: BorderRadius.circular(24),
-  ) ?? [];
+        context: context,
+        config: CalendarDatePicker2WithActionButtonsConfig(
+          calendarType: CalendarDatePicker2Type.range,
+          firstDate: DateTime(2020),
+          lastDate: DateTime.now(),
+          selectableDayPredicate: (day) => true,
+          selectedDayHighlightColor: Colors.blueAccent, // Selected range color
+          controlsTextStyle:
+              TextStyle(color: Colors.black), // Header text color
+          dayTextStyle:
+              TextStyle(color: Colors.black), // Default day text color
+          selectedDayTextStyle:
+              TextStyle(color: Colors.black), // Selected day text color
+          weekdayLabelTextStyle: TextStyle(color: Colors.black),
+        ),
+        dialogSize: const Size(400, 400),
+        value: [
+          DateTime.now().subtract(const Duration(days: 7)),
+          DateTime.now(),
+        ],
+        borderRadius: BorderRadius.circular(24),
+      ) ??
+      [];
 
   if (picked.length == 2 && picked[0] != null && picked[1] != null) {
     DateTime start = picked[0]!;
@@ -867,60 +555,6 @@ void pickCustomDateRange(BuildContext context) async {
     getAutoMationsTransactionsCustom(startDate, context, 'Custom', endDate);
   }
 }
-void getWeekDate() {
-  //   if (selectedButton == 'Week') {
-  //   final currentWeek = weekData[0]!;
-  //   chartData = {
-  //     "credited": currentWeek.values.toList(),
-  //     "debited": currentWeek.values
-  //         .map((e) => e * 0.8)
-  //         .toList(), // Debited is 80% of credited
-  //   };
-  //   labels = currentWeek.keys.toList();
-  // } else if (selectedButton == 'Month') {
-  //   chartData = {
-  //     "credited": List.generate(
-  //       30,
-  //       (index) => creditedData[index + 1]?.reduce((a, b) => a + b) ?? 0.0,
-  //     ),
-  //     "debited": List.generate(
-  //       30,
-  //       (index) => debitedData[index + 1]?.reduce((a, b) => a + b) ?? 0.0,
-  //     ),
-  //   };
-  //   labels = List.generate(30, (index) => (index + 1).toString());
-  // } else if (selectedButton == 'Custom' && selectedDateRange != null) {
-  //   final startDate = selectedDateRange!.start;
-  //   final endDate = selectedDateRange!.end;
-
-  //   // Filter data for the selected range
-  //   chartData = {
-  //     "credited": List.generate(
-  //       endDate.difference(startDate).inDays + 1,
-  //       (index) => creditedData[startDate.add(Duration(days: index)).day]!
-  //           .reduce((a, b) => a + b),
-  //     ),
-  //     "debited": List.generate(
-  //       endDate.difference(startDate).inDays + 1,
-  //       (index) => debitedData[startDate.add(Duration(days: index)).day]!
-  //           .reduce((a, b) => a + b),
-  //     ),
-  //   };
-
-  //   // Generate labels for the selected date range
-  //   labels = List.generate(
-  //     endDate.difference(startDate).inDays + 1,
-  //     (index) => (startDate.add(Duration(days: index))).day.toString(),
-  //   );
-  // } else {
-  //   // Default case
-  //   chartData = {
-  //     "credited": [],
-  //     "debited": [],
-  //   };
-  //   labels = [];
-  // }
-}
 
 //double totalSpent = calculateTotal(chartData);
 //  totalSpent =chartData["credited"]!.isNotEmpty && chartData["debited"]!.isNotEmpty? calculateTotal(chartData): 0.0;
@@ -928,4 +562,250 @@ void getWeekDate() {
 double calculateTotal(Map<String, List<double>> data) {
   return data["credited"]!.reduce((a, b) => a + b) -
       data["debited"]!.reduce((a, b) => a + b);
+}
+
+void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'month', String? endDate]) async {
+  String urlPath = endDate != null && weekORmonths == 'custom'
+      ? "$url/transactionauto/getWholeTransactionsGraph/${weekORmonths.toLowerCase()}/$date,${getNextDay(endDate)}"
+      : "$url/transactionauto/getWholeTransactionsGraph/${weekORmonths.toLowerCase()}/$date";
+  print(urlPath);
+  print("Starting getAutoMationsTransactionsCustomoverall with date: $date, weekORmonths: $weekORmonths, endDate: $endDate");
+
+  var response = await getDataApiCall(urlPath);
+  print("API URL: $urlPath");
+  print("Response for thisssss: ${response.body}");
+
+  trasactionsDataDebitWeeklyoverall.clear();
+  print("Cleared transactions data.");
+
+  List<String> labelsLocal = [];
+  List<double> debitList = [];
+
+  if (getFlagOfResponse(response)) {
+    print("Response is valid.");
+    var his = jsonDecode(response.body);
+    transactionChatGraphoverall.clear();
+    print("Decoded response body.");
+
+    // Declare dataoverall outside the try block
+    Map dataoverall = his['data']['result'];
+
+    try {
+      List<double> debitValues = dataoverall.values.map((value) => getDouble(value['debit'])).toList();
+      totalDebitValue.value = debitValues.reduce((a, b) => a + b); // Calculate total debit
+      if (debitValues.isNotEmpty) {
+        maxYValueoverall.value = debitValues.reduce((a, b) => a > b ? a : b);
+      } else {
+        maxYValueoverall.value = 500.0;
+      }
+
+      if (weekORmonths == 'custom' && endDate != null) {
+        print("Processing custom date range.");
+        DateTime startDate = DateTime.parse(date);
+        DateTime end = DateTime.parse(endDate);
+
+        labelsLocal = [];
+        int daysDiff = end.difference(startDate).inDays;
+        debitList = List.filled(daysDiff + 1, 0.0);
+
+        for (int i = 0; i <= daysDiff; i++) {
+          DateTime currentDate = startDate.add(Duration(days: i));
+          String formattedDate = DateFormat('MMM d').format(currentDate);
+          labelsLocal.add(formattedDate);
+        }
+
+        dataoverall.forEach((key, value) {
+          DateTime txDate = DateTime.parse(key);
+          if (txDate.isAfter(startDate.subtract(Duration(days: 1))) && txDate.isBefore(end.add(Duration(days: 1)))) {
+            int index = txDate.difference(startDate).inDays;
+            if (index >= 0 && index < debitList.length) {
+              debitList[index] = getDouble(value['debit']);
+            }
+          }
+        });
+      } else if (weekORmonths == 'week') {
+        print("Processing weekly data.");
+        labelsLocal = getWeekDays(); // ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+        debitList = List.filled(7, 0.0);
+
+        // Parse the week string (e.g., "2025-W10")
+        final weekParts = date.split('-W');
+        final year = int.parse(weekParts[0]);
+        final weekNumber = int.parse(weekParts[1]);
+        DateTime weekStart = _getWeekStartDate(year, weekNumber);
+
+        dataoverall.forEach((key, value) {
+          DateTime txDate = DateTime.parse(key);
+          int index = txDate.difference(weekStart).inDays;
+          if (index >= 0 && index < 7) {
+            debitList[index] = getDouble(value['debit']);
+          }
+        });
+      } else {
+        print("Processing monthly data.");
+        DateTime startDate = DateTime.parse("$date-01"); // Ensure full date for month
+        int daysInMonth = DateTime(startDate.year, startDate.month + 1, 0).day;
+        labelsLocal = List.generate(daysInMonth, (i) => (i + 1).toString().padLeft(2, '0'));
+        debitList = List.filled(daysInMonth, 0.0);
+
+        dataoverall.forEach((key, value) {
+          DateTime txDate = DateTime.parse(key);
+          if (txDate.month == startDate.month && txDate.year == startDate.year) {
+            int index = txDate.day - 1;
+            if (index >= 0 && index < debitList.length) {
+              debitList[index] = getDouble(value['debit']);
+            }
+          }
+        });
+      }
+    } catch (e) {
+      print("Error: $e");
+      maxYValueoverall.value = 500.0;
+      if (labelsLocal.isEmpty) {
+        if (weekORmonths == 'custom' && endDate != null) {
+          DateTime startDate = DateTime.parse(date);
+          DateTime end = DateTime.parse(endDate);
+          int daysDiff = end.difference(startDate).inDays;
+          debitList = List.filled(daysDiff + 1, 0.0);
+          for (int i = 0; i <= daysDiff; i++) {
+            DateTime currentDate = startDate.add(Duration(days: i));
+            String formattedDate = DateFormat('MMM d').format(currentDate);
+            labelsLocal.add(formattedDate);
+          }
+          dataoverall.forEach((key, value) {
+            DateTime txDate = DateTime.parse(key);
+            if (txDate.isAfter(startDate.subtract(Duration(days: 1))) && txDate.isBefore(end.add(Duration(days: 1)))) {
+              int index = txDate.difference(startDate).inDays;
+              if (index >= 0 && index < debitList.length) {
+                debitList[index] = getDouble(value['debit']);
+              }
+            }
+          });
+        } else if (weekORmonths == 'week') {
+          labelsLocal = getWeekDays();
+          debitList = List.filled(7, 0.0);
+          // Process week data using dataoverall
+          final weekParts = date.split('-W');
+          final year = int.parse(weekParts[0]);
+          final weekNumber = int.parse(weekParts[1]);
+          DateTime weekStart = _getWeekStartDate(year, weekNumber);
+          dataoverall.forEach((key, value) {
+            DateTime txDate = DateTime.parse(key);
+            int index = txDate.difference(weekStart).inDays;
+            if (index >= 0 && index < 7) {
+              debitList[index] = getDouble(value['debit']);
+            }
+          });
+        } else {
+          DateTime startDate = DateTime.parse("$date-01");
+          int daysInMonth = DateTime(startDate.year, startDate.month + 1, 0).day;
+          labelsLocal = List.generate(daysInMonth, (i) => (i + 1).toString().padLeft(2, '0'));
+          debitList = List.filled(daysInMonth, 0.0);
+          dataoverall.forEach((key, value) {
+            DateTime txDate = DateTime.parse(key);
+            if (txDate.month == startDate.month && txDate.year == startDate.year) {
+              int index = txDate.day - 1;
+              if (index >= 0 && index < debitList.length) {
+                debitList[index] = getDouble(value['debit']);
+              }
+            }
+          });
+        }
+      }
+    }
+
+    transactionChatGraphoverall['debited'] = debitList;
+    print("Transaction data for debited: $debitList");
+
+    getGraphDataoverall.value = false;
+    labels2.assignAll(labelsLocal);
+    getGraphDataoverall.value = true;
+  } else {
+    print("Response is invalid.");
+    if (weekORmonths == 'custom' && endDate != null) {
+      DateTime startDate = DateTime.parse(date);
+      DateTime end = DateTime.parse(endDate);
+      int daysDiff = end.difference(startDate).inDays;
+      debitList = List.filled(daysDiff + 1, 0.0);
+      for (int i = 0; i <= daysDiff; i++) {
+        DateTime currentDate = startDate.add(Duration(days: i));
+        String formattedDate = DateFormat('MMM d').format(currentDate);
+        labelsLocal.add(formattedDate);
+      }
+    } else if (weekORmonths == 'week') {
+      labelsLocal = getWeekDays();
+      debitList = List.filled(7, 0.0);
+    } else {
+      DateTime startDate = DateTime.parse("$date-01");
+      int daysInMonth = DateTime(startDate.year, startDate.month + 1, 0).day;
+      labelsLocal = List.generate(daysInMonth, (i) => (i + 1).toString().padLeft(2, '0'));
+      debitList = List.filled(daysInMonth, 0.0);
+    }
+    transactionChatGraphoverall['debited'] = debitList;
+    getGraphDataoverall.value = true;
+  }
+}
+
+// Helper function to calculate the start date of a week (Sunday)
+DateTime _getWeekStartDate(int year, int weekNumber) {
+  DateTime jan1 = DateTime(year, 1, 1);
+  int daysOffset = jan1.weekday; // 1 = Monday, 7 = Sunday
+  DateTime firstSunday = jan1.subtract(Duration(days: daysOffset % 7));
+  DateTime weekStart = firstSunday.add(Duration(days: (weekNumber - 1) * 7));
+  return weekStart;
+}
+// Helper functions
+
+String getFormattedDateoverall() {
+  final now = DateTime.now();
+  return "${now.year}-${now.month.toString().padLeft(2, '0')}";
+}
+
+
+void pickCustomDateRangeoverall(BuildContext context) async {
+  List<DateTime?> picked = await showCalendarDatePicker2Dialog(
+        context: context,
+        config: CalendarDatePicker2WithActionButtonsConfig(
+          calendarType: CalendarDatePicker2Type.range,
+          firstDate: DateTime(2020),
+          lastDate: DateTime.now(),
+          selectableDayPredicate: (day) => true,
+          selectedDayHighlightColor: Colors.blueAccent,
+          controlsTextStyle: TextStyle(color: Colors.black),
+          dayTextStyle: TextStyle(color: Colors.black),
+          selectedDayTextStyle: TextStyle(color: Colors.black),
+          weekdayLabelTextStyle: TextStyle(color: Colors.black),
+        ),
+        dialogSize: const Size(400, 400),
+        value: [
+          DateTime.now().subtract(const Duration(days: 7)),
+          DateTime.now(),
+        ],
+        borderRadius: BorderRadius.circular(24),
+      ) ??
+      [];
+
+  if (picked.length == 2 && picked[0] != null && picked[1] != null) {
+    DateTime start = picked[0]!;
+    DateTime end = picked[1]!;
+
+    selectedButton2.value = 'custom';
+    getGraphDataoverall.value = false;
+
+    List<String> customDays2 = [];
+    for (int i = 0; i <= end.difference(start).inDays; i++) {
+      String day = (start.day + i).toString().padLeft(2, '0');
+      customDays2.add(day);
+    }
+
+    labels2.assignAll(customDays2);
+
+    String startDate = start.toIso8601String().split('T')[0];
+    String endDate = end.toIso8601String().split('T')[0];
+    getAutoMationsTransactionsCustomoverall(startDate, context, 'custom', endDate);
+  }
+}
+
+void overallTransactions(BuildContext context) {
+  getAutoMationsTransactionsCustomoverall(getFormattedDateoverall(), context);
 }
