@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -58,7 +59,7 @@ Widget child;
                      Container(
                        padding: EdgeInsets.all(8),
                        decoration: BoxDecoration(
-                          color: Colorcodes.white,
+                          color: AppColors.button,
                           borderRadius: BorderRadius.circular(10)
                        ),
                        child: InkWell(

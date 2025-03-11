@@ -66,6 +66,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       body: PageView(
         controller: _pageController,
         onPageChanged: _onPageChanged,
@@ -75,28 +76,28 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
             subtitle: 'Your go-to tool for hassle-free expense management.',
             baseImage: OnboardingImages.page11,
             baseSize: const Size(15, 15),
-            baseOffset: const Offset(40, 40),
+            baseOffset: const Offset(40, 60),
             animatedImages: [
               AnimatedImage(
                 path: OnboardingImages.page12,
                 size: const Size(135, 135),
-                initialOffset: const Offset(0, 300.0),
-                finalOffset: const Offset(30, 100),
-                duration: const Duration(milliseconds: 500), // Faster
+                initialOffset: const Offset(0, 1.0),
+                finalOffset: const Offset(30, 150),
+                duration: const Duration(milliseconds: 600), // Faster
               ),
               AnimatedImage(
                 path: OnboardingImages.page13,
                 size: const Size(40, 40),
-                initialOffset: const Offset(-100, 0),
-                finalOffset: const Offset(50, 100),
-                duration: const Duration(milliseconds: 900), // Medium
+                initialOffset: const Offset(-1, 0),
+                finalOffset: const Offset(50, 150),
+                duration: const Duration(milliseconds: 1200), // Medium
               ),
               AnimatedImage(
                 path: OnboardingImages.page14,
                 size: const Size(40, 40),
-                initialOffset: const Offset(100, 0),
-                finalOffset: const Offset(180, 230),
-                duration: const Duration(milliseconds: 1300), // Slower
+                initialOffset: const Offset(1, 0),
+                finalOffset: const Offset(180, 280),
+                duration: const Duration(milliseconds: 1500), // Slower
               ),
             ],
             isLastPage: false,
@@ -182,11 +183,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       margin: const EdgeInsets.only(right: 5),
-      height: 8,
-      width: _currentPage == index ? 20 : 8,
+      height: 12,
+      width: _currentPage == index ? 20 : 12,
       decoration: BoxDecoration(
         color: _currentPage == index ? AppColors.primaryColor : AppColors.button,
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(8),
       ),
     );
   }
@@ -328,7 +329,7 @@ class _OnboardingPageState extends State<OnboardingPage> with TickerProviderStat
                 ),
 const SizedBox(height: 20),
         Container(
-          height: 400,
+          height: 350,
           decoration: const BoxDecoration(
             color: AppColors.accentColor,
             borderRadius: BorderRadius.only(
@@ -370,13 +371,13 @@ const SizedBox(height: 20),
                 children: [
                   if (!widget.isLastPage) // Only show progress indicator for non-last pages
                     SizedBox(
-                      width: 60,
-                      height: 60,
+                      width: 80,
+                      height: 80,
                       child: CircularProgressIndicator(
-                        value: _onboardingScreenState._currentPage == 0 ? 0.5 : 1.0,
+                        value: _onboardingScreenState._currentPage == 0 ? 0.25 : 0.5,
                         strokeWidth: 4,
-                        backgroundColor: Colors.black,
-                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
+                        backgroundColor: AppColors.accentColor,
+                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
                       ),
                     ),
                   GestureDetector(
@@ -397,27 +398,33 @@ const SizedBox(height: 20),
                         shape: BoxShape.circle,
                         color: Colors.white,
                       ),
-                      child: Center(
-                        child:  const Icon(
+                      child: const Center(
+                        child:   Icon(
                                 Icons.arrow_forward,
                                 color: Colors.black,
                                 size: 24,
                               ),
                       ),
-                    ):getButton(context, 'Let\'s Go')
+                    ):Padding(
+                      padding: const EdgeInsets.only(top:17,bottom: 30),
+                      child: getButton(context, 'Let\'s Go'),
+                    )
                     
                   ),
                 ],
               ),
-              const SizedBox(height: 50),
-               Text(
-                'By moving forward, you consent to our TERMS OF SERVICE & PRIVACY POLICY',
-                textAlign: TextAlign.center,
-                 style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.w300,
-                                fontSize: 12,
-                                color: AppColors.backgroundColor),
-              ),
+              
+               Padding(
+                 padding: const EdgeInsets.symmetric(vertical: 30),
+                 child: Text(
+                  'By moving forward, you consent to our TERMS OF SERVICE & PRIVACY POLICY',
+                  textAlign: TextAlign.center,
+                   style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.w300,
+                                  fontSize: 12,
+                                  color: AppColors.backgroundColor),
+                               ),
+               ),
             ],
           ),
         ),
