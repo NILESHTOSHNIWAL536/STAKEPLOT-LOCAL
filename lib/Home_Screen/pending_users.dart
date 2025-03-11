@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -178,11 +179,13 @@ Widget usersDuelist() {
 // Reusable method to build ListTile for both Userslist and UsersDuelist
 Widget _buildListTile(
     BuildContext context, Map<String, dynamic> data, bool isDue) {
+ 
   return ListTile(
-    leading: CircleAvatar(
-      backgroundColor: Colorcodes.budgetLightGreen,
+    leading: Container(
+      height: MediaQuery.of(context).size.height/15,
+      width: MediaQuery.of(context).size.width/7,
       child: UserAvatar(
-        url: data['Avatar'] ?? 'assets/avatar/menp4.svg',
+        url:  data['avatarType'] ?? 'assets/avatar/menp4.svg',
         width: 1,
         height: 1,
       ),
@@ -193,7 +196,7 @@ Widget _buildListTile(
         Row(
           children: [
             Text(
-              !isDue ? data["name"] : data["name"],
+            (  !isDue ? data["name"] : data["name"]) ?? data['userName'] ?? "",
               style: FontManager().getTextStyle(context,
                   lWeight: FontWeight.bold,
                   fontSize: 16,
@@ -229,8 +232,7 @@ Widget _buildListTile(
         InkWell(
           onTap: () {
             if (isDue) {
-              int index = dueAmountRemainders
-                  .indexWhere((element) => element['_id'] == data['_id']);
+              int index = dueAmountRemainders.indexWhere((element) => element['_id'] == data['_id']);
               if (index != -1) {
                 duesPaid(context, index);
               }
@@ -258,12 +260,7 @@ Widget _buildListTile(
           style: FontManager().getTextStyle(context,
               lWeight: FontWeight.w300, fontSize: 8, color: Colors.green),
         )
-        // Text(
-        //   DateFormat('dd MMM yyyy hh:mm a').format(DateTime.parse(
-        //       data["createdAt"] ?? DateTime.now().toIso8601String())),
-        //   style: FontManager().getTextStyle(context,
-        //       lWeight: FontWeight.w300, fontSize: 8, color: Colors.green),
-        // ),
+        
       ],
     ),
   );

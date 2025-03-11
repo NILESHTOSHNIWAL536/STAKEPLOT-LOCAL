@@ -931,22 +931,10 @@ class _ModalContentState extends State<ModalContent>with SingleTickerProviderSta
         sendNotificationsToDevice(e['id'], context,
             "${userName.value} has sent u a lend bill..Of ${name} Of ${amount}");
       });
-
       snackBarCalled(context, "Lend amount sent to users!", Colors.black);
-      addTransaction(
-          amount, "Lend Bill (${subCategories})", name, context, 'cash', true);
-      // addSocketMessage(addedMembers,amount.toString(),selectedCategory2.toString()+"Lend Bill (${subCategories})", splitID.value);
+      addTransaction( amount, "Lend Bill (${subCategories})", name, context, 'cash', true);
       getUserLend(context);
-      // Navigator.push(
-      //   context,
-      //   PageTransition(
-      //     type: PageTransitionType.fade,
-      //     duration: Durations.long1,
-      //     child: HomePage(),
-      //     isIos: true,
-      //   ),
-      // );
-      // }
+      
     } else {
       snackBarCalled(context, "can't split ,error!", Colors.red);
     }

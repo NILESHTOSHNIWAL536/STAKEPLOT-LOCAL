@@ -4,6 +4,7 @@ import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
+import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends.dart";
@@ -155,6 +156,7 @@ class _NotificationsState extends State<Notifications> {
 
   Widget getContainer(e) {
     var notifyId = e['_id'];
+    var time = e['createdAt'] ?? "";
     String type = e['notificationMessage']['type'];
     e = e['notificationMessage'];
     index++;
@@ -164,41 +166,51 @@ class _NotificationsState extends State<Notifications> {
       return messageChannelProfile(
           "${e['from_name']} accepted your friend request",
           e['from_id'].toString(),
-          e['avatarType'] ?? "");
+          e['avatarType'] ?? "",time);
     }
     if (type == "friendRequest") {
       return friends(
-          e['from_name'], e['from_id'].toString(), e['avatarType'], e, index,notifyId);
+          e['from_name'], e['from_id'].toString(), e['avatarType'], e, index,notifyId,time);
     } else if (type == "split") {
       return messageChannelProfile(
           "${e['username']}, has shared the bill of ${e['billname']} of ₹${e['amount'] ?? "400"}",
           e['id'].toString(),
-          e['avatarType'] ?? "");
+          e['avatarType'] ?? "",time);
     } else if (type == "roomBill") {
       return messageChannelProfile(
           "${e['from_name']}, has shared the bill in Room",
           e['from_id'].toString(),
-          e['avatarType'] ?? "");
+          e['avatarType'] ?? "",time);
     } else if (type == "room") {
       return messageChannelProfile(
           "${e['from_name']}, has added in the room  ${e['roomName']}",
           e['from_id'].toString(),
-          e['avatarType'] ?? "");
+          e['avatarType'] ?? "",time);
     } else if (type == "comment") {
       return messageChannelProfile(
           "${e['username']} has commented on your post",
           e['id'].toString(),
-          e['avatarType'] ?? "");
+          e['avatarType'] ?? "",time);
     } else if (type == "lendRequest") {
       return lendRequest(e['from_name'], e['from_id'].toString(),
-          e['avatarType'], e, index, e['name'] ?? "", notifyId);
+          e['avatarType'], e, index, e['name'] ?? "", notifyId,time);
     } else if (type == "lendAccepted" || type == "rejectedLend") {
       type = type == "lendAccepted" ? "Accepted" : "Rejected";
 
       return messageChannelProfile(
           "${e['username']} ${type} your Lended Request of ${e['name']} of worth ..₹${e['amount'] ?? '400'}",
           e['from_id'].toString(),
-          e['avatarType'] ?? "");
+          e['avatarType'] ?? "",time);
+    }else if(type=="lendSettled"){
+       return   messageChannelProfile(
+          "${e['from_name']} has settled your loan of ${e['amount']} for the item: ${e['name']}.",
+          e['id'].toString(),
+          e['avatarType'] ?? "",time);
+    }else if(type=="splitSettled"){
+       return   messageChannelProfile(
+          "${e['from_name']} has settled your Split of ${e['amount']} for the item: ${e['name']}.",
+          e['id'].toString(),
+          e['avatarType'] ?? "",time);
     }
 
     return SizedBox(
@@ -207,7 +219,7 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Widget lendRequest(String name, String id, String avatar, e, int index,
-      String itemName, String notifyId) {
+      String itemName, String notifyId,time) {
     // Get the screen width
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -235,13 +247,8 @@ class _NotificationsState extends State<Notifications> {
                   CrossAxisAlignment.start, // Align items at the top
               children: [
                 // Avatar with a fixed width
-                SizedBox(
-                  width: avatarWidth,
-                  height: 50, // Adjust height as needed
-                  child: getAvatarh(avatar),
-                ),
+                getAvatarh(avatar),
                 const SizedBox(width: spacingBetweenAvatarAndContent),
-
                 // Content area with calculated width
                 Container(
                   width: contentWidth,
@@ -254,7 +261,7 @@ class _NotificationsState extends State<Notifications> {
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.w600,
-                          fontSize: 14,
+                          fontSize: 13,
                           lineHeight: 1.3,
                           color: AppColors.bg1,
                         ),
@@ -324,7 +331,7 @@ class _NotificationsState extends State<Notifications> {
                 ),
               ],
             ),
-            divider(),
+            divider(time),
           ],
         ),
       ),
@@ -336,7 +343,7 @@ class _NotificationsState extends State<Notifications> {
        deleteNotification(notifyId);
   }
 
-  Widget friends(String name, String id, String avatar, e, int index,String notifyId) {
+  Widget friends(String name, String id, String avatar, e, int index,String notifyId,time) {
     double screenWidth = MediaQuery.of(context).size.width;
     const double avatarWidth = 60.0;
     const double horizontalPadding = 10.0;
@@ -353,8 +360,7 @@ class _NotificationsState extends State<Notifications> {
           children: [
             Row(
               children: [
-                SizedBox(
-                    width: avatarWidth, height: 50, child: getAvatarh(avatar)),
+                getAvatarh(avatar),
                 const SizedBox(width: spacingBetweenAvatarAndContent),
                 Container(
                   width: contentWidth,
@@ -368,7 +374,7 @@ class _NotificationsState extends State<Notifications> {
                             "$name",
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.w800,
-                                fontSize: 14,
+                                fontSize: 13,
                                 color: Colors.black),
                           ),
                           const SizedBox(width: 5),
@@ -431,22 +437,26 @@ class _NotificationsState extends State<Notifications> {
                 ),
               ],
             ),
-            divider(),
+            divider(time),
           ],
         ),
       ),
     );
   }
 
-  Widget divider() {
-    return Divider(
-        // thickness: 2,
-        // indent: 10,
-        // color: Colorcodes.budgetDarkGreen,
-        );
+  Widget divider(time) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+         textStyle(text:formatWhatsAppDate(DateTime.parse(time)), context: context,fontsize: 10,fontWeight: FontWeight.bold,c: AppColors.message),
+        Divider(
+        ),
+      ],
+    );
   }
 
-  Widget messageChannel(name, id) {
+  Widget messageChannel(name, id,time) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
       child: Center(
@@ -472,7 +482,7 @@ class _NotificationsState extends State<Notifications> {
               const SizedBox(
                 height: 5,
               ),
-              divider()
+              divider(time)
             ],
           ),
         ),
@@ -480,7 +490,8 @@ class _NotificationsState extends State<Notifications> {
     );
   }
 
-  Widget messageChannelProfile(name, id, avatar) {
+  Widget messageChannelProfile(name, id, avatar,time) {
+   
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
       child: Center(
@@ -509,8 +520,8 @@ class _NotificationsState extends State<Notifications> {
                           (name),
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.w600,
-                              fontSize: 14,
-                              lineHeight: 1.3,
+                              fontSize: 13,
+                              lineHeight: 1.1,
                               color: Colors.black),
                           // maxLines: 1,
                           // overflow: TextOverflow.ellipsis,
@@ -521,7 +532,7 @@ class _NotificationsState extends State<Notifications> {
                   ),
                 ],
               ),
-              divider()
+              divider(time)
             ],
           ),
         ),
@@ -611,6 +622,6 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Widget getAvatarh(avatar) {
-    return UserAvatar(url: avatar, width: 12, height: 18);
+    return UserAvatar(url: avatar, width: 15, height: 20);
   }
 }

@@ -77,12 +77,7 @@ class _ChatState extends State<Chat> {
     // socket=SocketIOManager().createSocketIO(
     //     urlWithLocallHost, '/',
     //     query: 'chatID=${data['_id']}');
-    socket = IO.io(
-        "https://stakeplot.in/",
-        IO.OptionBuilder()
-            .setTransports(['websocket'])
-            .enableForceNewConnection()
-            .build());
+    // socket = IO.io("https://stakeplot.in/",IO.OptionBuilder().setTransports(['websocket']).enableForceNewConnection().build());
     // if (socket.connected) {
     //     socket.disconnect();
     //     socket.close();
@@ -95,6 +90,7 @@ class _ChatState extends State<Chat> {
     // socket=IO.io(url,IO.OptionBuilder().setTransports(['websocket']).setPath("/io").disableAutoConnect().build());
 
     // initFunt();
+     socket = IO.io(urlWithLocallHost,IO.OptionBuilder().setTransports(['websocket']).build());
     socket.connect();
     setUpSocketListener();
   }
