@@ -24,7 +24,8 @@ void initFinvuManager(BuildContext context) async {
     FinvuConfig(
       // finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
       finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
-      certificatePins: [
+      certificatePins: 
+      [
              "R6wXZnQsKKyg56qFKQNytvygyr/o4Mkq1VXL5LenBYI=",
              "bdrBhpj38ffhxpubzkINl0rG+UyossdhcBYj+Zx2fcc="
       ],
@@ -93,9 +94,6 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
     final String custId ="${number.value}@finvu"; // Replace with dynamic value if needed
     
     String? handleId = prefs.getString("consentHandleId");
-    // String? custId = prefs.getString("custId");
-
-    
 
     if (handleId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -105,8 +103,8 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
     }
 
    final SharedPreferences pref = await SharedPreferences.getInstance();
-   String accessToken=pref.getString("accessToken").toString() ; //"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NmU0YWU0NDc2YjY4YWRhMDYwNmUyNSIsImlhdCI6MTc0MDM5NTkxNywiZXhwIjoxNzQ1NTc5OTE3fQ.WcQrVTWR257Q4jLl3R5hb_qMnPt6WHhLhY9aHjTaINU";
-  //  pref.setString("accessToken",accessToken);
+   String accessToken=pref.getString("accessToken").toString() ; 
+  
      
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -115,14 +113,13 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
         "token": "",
         "handleId": handleId,
         "custId": custId,
- 
       }),
     );
    
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
    
-      sessionId.value=true;
+      // sessionId.value=true;
       // Store values in SharedPreferences for later use
       prefs.setString("sessionId", data["sessionId"]);
       prefs.setString("from", data["from"]);
@@ -130,22 +127,23 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
       prefs.setString("custId", data["custId"]);
       prefs.setString("consentId", data["consentId"]);
 
-      fetchedTrsacntionList.clear();
-      fetchedTrsacntionList.add([data.toString()]);
-      fetchedTrsacntionList.refresh();
+      // fetchedTrsacntionList.clear();
+      // fetchedTrsacntionList.add([data.toString()]);
+      // fetchedTrsacntionList.refresh();
 
-      String accessToken="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UxMjBhNzVhYWZiYWMyNTQ2NGFkNCIsImlhdCI6MTczODc1Nzc3OSwiZXhwIjoxNzQzOTQxNzc5fQ.5XeQtIM2CmFdyrfXiCcA5neACgSRuYScFa5ArcYhe34";
-      final SharedPreferences pref = await SharedPreferences.getInstance();
-      pref.setString("accessToken",accessToken);
+      // String accessToken="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UxMjBhNzVhYWZiYWMyNTQ2NGFkNCIsImlhdCI6MTczODc1Nzc3OSwiZXhwIjoxNzQzOTQxNzc5fQ.5XeQtIM2CmFdyrfXiCcA5neACgSRuYScFa5ArcYhe34";
+      // final SharedPreferences pref = await SharedPreferences.getInstance();
+      // pref.setString("accessToken",accessToken);
 
-      // await storeDataOfTransactions(context, data, handleId, data["from"],
-      //     data["to"], "", custId, data["custId"], data["sessionId"]);
 
-      sessionId.value=false;
+      // sessionId.value=false;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Data fetched successfully....!")),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text("Data fetched successfully....!")),
+      // );
+      
+
+      
       
     } else {
     
@@ -160,9 +158,11 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
       SnackBar(content: Text("Bank server issue detected. We'll notify you once your data is retrieved")),
     );
   }
-    // clearStack(context);
-    // clearStackLocalInfo();
-    // Navigator.pushNamed(context, "/");
+
+  // /OnboardingScreen
+  clearStackShared(context);
+   Navigator.pushNamed(context, "/OnboardingScreen"); 
+
 }
 
 Future<void> FetchTransactionBysessionId(BuildContext context,String sessionId) async {

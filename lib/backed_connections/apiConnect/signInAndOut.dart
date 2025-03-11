@@ -30,6 +30,16 @@ void clearStack(BuildContext context) {
   }
 }
 
+void clearStackShared(BuildContext context) {
+  try {
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/ShareAccountLogin', (Route<dynamic> route) => false);
+  } catch (e) {
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+  }
+}
+
 void expire(responce, BuildContext context) {
   try {
     var body = json.decode(responce.body);
@@ -387,6 +397,7 @@ void clearGetX() {
   friendsListDetails.clear();
   chatOfUserList.clear();
   chatOfUserListData.clear();
+  consentAndHandleDetails.clear();
   aboutMe = false.obs;
   sizeRoom = false;
   fontSize = 20;

@@ -41,6 +41,8 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
+import 'onboarding_screens/onboarding_screen.dart';
+
 FinvuManager finvuManager = FinvuManager();
 
 void main()async {
@@ -125,6 +127,7 @@ class _MyAppState extends State<MyApp> {
       '/VegNonveg':(context) => VegNonVegCalculator(),
       '/FetchTransaction':(context) => FetchTransaction() ,
       '/ForgotPassword':(context) => ForgotPassword() ,
+      '/OnboardingScreen':(context) => OnboardingScreen() ,
       
     });
   }

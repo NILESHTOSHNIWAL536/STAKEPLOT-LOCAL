@@ -211,7 +211,12 @@ class _NotificationsState extends State<Notifications> {
           "${e['from_name']} has settled your Split of ${e['amount'].toStringAsFixed(1)} for the item: ${e['name']}.",
           e['id'].toString(),
           e['avatarType'] ?? "",time);
-    }
+    }else if (type == "FetchedData") {
+      return messageChannelProfile(
+          "${e['message']}",
+          "",
+          "",time);
+    } 
 
     return SizedBox(
       child: Text("hello"),
@@ -505,7 +510,7 @@ class _NotificationsState extends State<Notifications> {
             children: [
               Row(
                 children: [
-                  getAvatarh(avatar),
+                avatar!="" ? getAvatarh(avatar):SizedBox.shrink(),
                   const SizedBox(
                     width: 2,
                   ),

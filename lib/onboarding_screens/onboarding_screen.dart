@@ -2,8 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 // Placeholder for OnboardingImages class (replace with your actual implementation)
 
@@ -19,6 +28,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   late Animation<double> _fadeAnimation;
   late AnimationController _progressController;
   late Animation<double> _progressAnimation;
+   late IO.Socket socket;
 
   @override
   void initState() {
@@ -37,7 +47,32 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
     _progressAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_progressController);
     _animationController.forward();
     _updateProgress();
+ socket = IO.io(urlWithLocallHost,IO.OptionBuilder().setTransports(['websocket']).build());
+     fetchedTrsacntionList.clear();
+     setUpSocketListener();
   }
+
+  setUpSocketListener(){
+     socket.onConnect((_) {
+       flagToFetchData.value=false;
+      socket.emit("registerUser", '${number.value}@finvu');
+    });
+
+     socket.on("registerUser",(data) => {
+
+            flagToFetchData.value=true,
+            fetchedData.value =true,
+            fetchedTrsacntionList.clear(),
+            fetchedTrsacntionList.addAll(data['data']['data']),
+            
+        });
+
+    socket.onConnectError((data) {
+       print("error-----------");
+       print(data);
+    });
+  }
+
 
   void _updateProgress() {
     _progressController.value = _currentPage / 2;
@@ -67,112 +102,133 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: _onPageChanged,
+      body: Stack(
         children: [
-          OnboardingPage(
-            title: 'A powerful tool for expense tracking.',
-            subtitle: 'Your go-to tool for hassle-free expense management.',
-            baseImage: OnboardingImages.page11,
-            baseSize: const Size(15, 15),
-            baseOffset: const Offset(40, 60),
-            animatedImages: [
-              AnimatedImage(
-                path: OnboardingImages.page12,
-                size: const Size(135, 135),
-                initialOffset: const Offset(0, 1.0),
-                finalOffset: const Offset(30, 150),
-                duration: const Duration(milliseconds: 600), // Faster
+          
+          PageView(
+            controller: _pageController,
+            onPageChanged: _onPageChanged,
+            children: [
+              OnboardingPage(
+                title: 'A powerful tool for expense tracking.',
+                subtitle: 'Your go-to tool for hassle-free expense management.',
+                baseImage: OnboardingImages.page11,
+                baseSize: const Size(15, 15),
+                baseOffset: const Offset(40, 60),
+                animatedImages: [
+                  AnimatedImage(
+                    path: OnboardingImages.page12,
+                    size: const Size(135, 135),
+                    initialOffset: const Offset(0, 1.0),
+                    finalOffset: const Offset(30, 150),
+                    duration: const Duration(milliseconds: 600), // Faster
+                  ),
+                  AnimatedImage(
+                    path: OnboardingImages.page13,
+                    size: const Size(40, 40),
+                    initialOffset: const Offset(-1, 0),
+                    finalOffset: const Offset(50, 150),
+                    duration: const Duration(milliseconds: 1200), // Medium
+                  ),
+                  AnimatedImage(
+                    path: OnboardingImages.page14,
+                    size: const Size(40, 40),
+                    initialOffset: const Offset(1, 0),
+                    finalOffset: const Offset(180, 280),
+                    duration: const Duration(milliseconds: 1500), // Slower
+                  ),
+                ],
+                isLastPage: false,
               ),
-              AnimatedImage(
-                path: OnboardingImages.page13,
-                size: const Size(40, 40),
-                initialOffset: const Offset(-1, 0),
-                finalOffset: const Offset(50, 150),
-                duration: const Duration(milliseconds: 1200), // Medium
+              OnboardingPage(
+                title: 'Connect with the unique community.',
+                subtitle: 'Connect and engage with a community like no other.',
+                baseImage: OnboardingImages.page21,
+                baseSize: const Size(260, 260),
+                baseOffset: const Offset(64, 45),
+                animatedImages: [
+                  AnimatedImage(
+                    path: OnboardingImages.page22,
+                    size: const Size(40, 40),
+                    initialOffset: const Offset(-1.0, -1.0),
+                   finalOffset: const Offset(30, 60),
+                    duration: const Duration(milliseconds: 600), // Very fast
+                  ),
+                  AnimatedImage(
+                    path: OnboardingImages.page23,
+                    size: const Size(40, 40),
+                     initialOffset: const Offset(1.0, -1.0),
+                    finalOffset: const Offset(140, 250),
+                    duration: const Duration(milliseconds: 1000), // Fast
+                  ),
+                 
+                  
+                 
+                ],
+                isLastPage: false,
               ),
-              AnimatedImage(
-                path: OnboardingImages.page14,
-                size: const Size(40, 40),
-                initialOffset: const Offset(1, 0),
-                finalOffset: const Offset(180, 280),
-                duration: const Duration(milliseconds: 1500), // Slower
+              OnboardingPage(
+                title: 'We look after your budgets and debts.',
+                subtitle: 'We manage your budgets and debts with care.',
+                baseImage: OnboardingImages.page41,
+                baseSize: const Size(260, 260),
+                baseOffset: const Offset(15, 40),
+                animatedImages: [
+                  AnimatedImage(
+                    path: OnboardingImages.page42,
+                    size: const Size(30, 30),
+                    initialOffset: const Offset(-1.0, -1.0),
+                   finalOffset: const Offset(30, 100),
+                    duration: const Duration(milliseconds: 500), // Fast
+                  ),
+                  AnimatedImage(
+                    path: OnboardingImages.page43,
+                    size: const Size(30, 30),
+                    initialOffset: const Offset(1.0, -1.0),
+                    finalOffset: const Offset(30, 150),
+                    duration: const Duration(milliseconds: 900), // Medium
+                  ),
+                  AnimatedImage(
+                    path: OnboardingImages.page44,
+                    size: const Size(30, 30),
+                    initialOffset: const Offset(-1.0, 0.0),
+                      finalOffset: const Offset(30, 200),
+                    duration: const Duration(milliseconds: 1300), // Medium-slow
+                  ),
+                  AnimatedImage(
+                    path: OnboardingImages.page45,
+                    size: const Size(30, 30),
+                    initialOffset: const Offset(1.0, 0.0),
+                     finalOffset: const Offset(30, 250),
+                    duration: const Duration(milliseconds: 1700), // Slow
+                  ),
+                  AnimatedImage(
+                    path: OnboardingImages.page46,
+                    size: const Size(120, 160),
+                    initialOffset: const Offset(0.0, 1.0),
+                    finalOffset: const Offset(217, 130),
+                    duration: const Duration(milliseconds: 1200), // Very slow
+                  ),
+                ],
+                isLastPage: true,
               ),
             ],
-            isLastPage: false,
           ),
-          OnboardingPage(
-            title: 'Connect with the unique community.',
-            subtitle: 'Connect and engage with a community like no other.',
-            baseImage: OnboardingImages.page21,
-            baseSize: const Size(260, 260),
-            baseOffset: const Offset(64, 45),
-            animatedImages: [
-              AnimatedImage(
-                path: OnboardingImages.page22,
-                size: const Size(40, 40),
-                initialOffset: const Offset(-1.0, -1.0),
-               finalOffset: const Offset(30, 60),
-                duration: const Duration(milliseconds: 600), // Very fast
-              ),
-              AnimatedImage(
-                path: OnboardingImages.page23,
-                size: const Size(40, 40),
-                 initialOffset: const Offset(1.0, -1.0),
-                finalOffset: const Offset(140, 250),
-                duration: const Duration(milliseconds: 1000), // Fast
-              ),
-             
-              
-             
-            ],
-            isLastPage: false,
-          ),
-          OnboardingPage(
-            title: 'We look after your budgets and debts.',
-            subtitle: 'We manage your budgets and debts with care.',
-            baseImage: OnboardingImages.page41,
-            baseSize: const Size(260, 260),
-            baseOffset: const Offset(15, 40),
-            animatedImages: [
-              AnimatedImage(
-                path: OnboardingImages.page42,
-                size: const Size(30, 30),
-                initialOffset: const Offset(-1.0, -1.0),
-               finalOffset: const Offset(30, 100),
-                duration: const Duration(milliseconds: 500), // Fast
-              ),
-              AnimatedImage(
-                path: OnboardingImages.page43,
-                size: const Size(30, 30),
-                initialOffset: const Offset(1.0, -1.0),
-                finalOffset: const Offset(30, 150),
-                duration: const Duration(milliseconds: 900), // Medium
-              ),
-              AnimatedImage(
-                path: OnboardingImages.page44,
-                size: const Size(30, 30),
-                initialOffset: const Offset(-1.0, 0.0),
-                  finalOffset: const Offset(30, 200),
-                duration: const Duration(milliseconds: 1300), // Medium-slow
-              ),
-              AnimatedImage(
-                path: OnboardingImages.page45,
-                size: const Size(30, 30),
-                initialOffset: const Offset(1.0, 0.0),
-                 finalOffset: const Offset(30, 250),
-                duration: const Duration(milliseconds: 1700), // Slow
-              ),
-              AnimatedImage(
-                path: OnboardingImages.page46,
-                size: const Size(120, 160),
-                initialOffset: const Offset(0.0, 1.0),
-                finalOffset: const Offset(217, 130),
-                duration: const Duration(milliseconds: 1200), // Very slow
-              ),
-            ],
-            isLastPage: true,
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 40,horizontal: 30),
+            child: Obx(()=> !flagToFetchData.value?Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 30,
+                  height: 30,
+                  child: Spinner(size: 30,)),
+                const SizedBox(width: 20,),
+                Text("Data is Not Yet Fetched"),
+              ],
+            ):Container(
+                child: Text("Featched data successfully..."),
+           )),
           ),
         ],
       ),
@@ -380,10 +436,38 @@ const SizedBox(height: 20),
                         valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
                       ),
                     ),
-                  GestureDetector(
+                 
+                ],
+              ),
+             Obx(()=> flagToFetchData.value ?getGestTap(_onboardingScreenState):getGestTap(_onboardingScreenState)),
+               Padding(
+                 padding: const EdgeInsets.symmetric(vertical: 30),
+                 child: Text(
+                  'By moving forward, you consent to our TERMS OF SERVICE & PRIVACY POLICY',
+                  textAlign: TextAlign.center,
+                   style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.w300,
+                                  fontSize: 12,
+                                  color: AppColors.backgroundColor),
+                               ),
+               ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+
+  Widget getGestTap(_onboardingScreenState){
+     return  GestureDetector(
                     onTap: () {
                       if (_onboardingScreenState._currentPage == 2) {
-                        Navigator.pushReplacementNamed(context, '/home');
+                        // Navigator.pushReplacementNamed(context, '/home');
+                         if(flagToFetchData.value){
+                              clearStack(context);
+                              Navigator.pushNamed(context, "/home");
+                         }
                       } else {
                         _onboardingScreenState._pageController.nextPage(
                           duration: const Duration(milliseconds: 300),
@@ -407,28 +491,9 @@ const SizedBox(height: 20),
                       ),
                     ):Padding(
                       padding: const EdgeInsets.only(top:17,bottom: 30),
-                      child: getButton(context, 'Let\'s Go'),
+                      child: flagToFetchData.value? Center(child: getButton(context, 'Let\'s Go')) :getButton(context, 'Let\'s Go',Colorcodes.greyLight,Colorcodes.black),
                     )
                     
-                  ),
-                ],
-              ),
-              
-               Padding(
-                 padding: const EdgeInsets.symmetric(vertical: 30),
-                 child: Text(
-                  'By moving forward, you consent to our TERMS OF SERVICE & PRIVACY POLICY',
-                  textAlign: TextAlign.center,
-                   style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.w300,
-                                  fontSize: 12,
-                                  color: AppColors.backgroundColor),
-                               ),
-               ),
-            ],
-          ),
-        ),
-      ],
-    );
+                  );
   }
 }
