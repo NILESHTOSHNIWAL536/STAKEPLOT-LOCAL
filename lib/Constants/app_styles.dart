@@ -618,3 +618,31 @@ class Expansioncalculator {
             "Escape", "Adventures"
         ]
   };
+
+  class OnboardingImages {
+  static String connection = "assets/onboarding/";
+  static String page11 = "assets/onboarding/page11.svg";
+  static String page12 = "assets/onboarding/page12.svg";
+  static String page13 = "assets/onboarding/page13.svg";
+  static String page14 = "assets/onboarding/page14.svg";
+   static String page21 = "assets/onboarding/page21.svg";
+    static String page22 = "assets/onboarding/page22.svg";
+     static String page23 = "assets/onboarding/page23.svg";
+
+  //static String page31 = "assets/onboarding/page31.svg";
+  static String page32 = "assets/onboarding/page32.svg";
+  static String page33 = "assets/onboarding/page33.svg";
+  static String page34 = "assets/onboarding/page34.svg";
+  static String page35 = "assets/onboarding/page35.svg";
+  static String page36 = "assets/onboarding/page36.svg";
+  static String page41 = "assets/onboarding/page41.svg";
+  
+  static String page42 = "assets/onboarding/page42.svg";
+  static String page43 = "assets/onboarding/page43.svg";
+  static String page44 = "assets/onboarding/page44.svg";
+  static String page45 = "assets/onboarding/page45.svg";
+  static String page46 = "assets/onboarding/page46.svg";
+
+  static String manualTransaction =
+      "assets/icons/likeComment/manualTransaction.svg";
+}

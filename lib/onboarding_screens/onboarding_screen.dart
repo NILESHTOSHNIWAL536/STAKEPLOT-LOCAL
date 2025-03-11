@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
+// Placeholder for OnboardingImages class (replace with your actual implementation)
 
 class OnboardingScreen extends StatefulWidget {
   @override
@@ -34,7 +38,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   }
 
   void _updateProgress() {
-    _progressController.value = _currentPage / 2; // Adjust based on total pages (e.g., 2 steps)
+    _progressController.value = _currentPage / 2;
   }
 
   @override
@@ -67,19 +71,104 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
           OnboardingPage(
             title: 'A powerful tool for expense tracking.',
             subtitle: 'Your go-to tool for hassle-free expense management.',
-            image: 'assets/screen1.png', // Replace with your image path
+            baseImage: OnboardingImages.page11,
+            baseSize: const Size(15, 15),
+            baseOffset: const Offset(40, 40),
+            animatedImages: [
+              AnimatedImage(
+                path: OnboardingImages.page12,
+                size: const Size(135, 135),
+                initialOffset: const Offset(0, 300.0),
+                finalOffset: const Offset(30, 100),
+                duration: const Duration(milliseconds: 500), // Faster
+              ),
+              AnimatedImage(
+                path: OnboardingImages.page13,
+                size: const Size(40, 40),
+                initialOffset: const Offset(-100, 0),
+                finalOffset: const Offset(50, 100),
+                duration: const Duration(milliseconds: 900), // Medium
+              ),
+              AnimatedImage(
+                path: OnboardingImages.page14,
+                size: const Size(40, 40),
+                initialOffset: const Offset(100, 0),
+                finalOffset: const Offset(180, 230),
+                duration: const Duration(milliseconds: 1300), // Slower
+              ),
+            ],
             isLastPage: false,
           ),
           OnboardingPage(
             title: 'Connect with the unique community.',
             subtitle: 'Connect and engage with a community like no other.',
-            image: 'assets/screen3.png', // Replace with your image path
+            baseImage: OnboardingImages.page21,
+            baseSize: const Size(260, 260),
+            baseOffset: const Offset(64, 45),
+            animatedImages: [
+              AnimatedImage(
+                path: OnboardingImages.page22,
+                size: const Size(40, 40),
+                initialOffset: const Offset(-1.0, -1.0),
+               finalOffset: const Offset(30, 60),
+                duration: const Duration(milliseconds: 600), // Very fast
+              ),
+              AnimatedImage(
+                path: OnboardingImages.page23,
+                size: const Size(40, 40),
+                 initialOffset: const Offset(1.0, -1.0),
+                finalOffset: const Offset(140, 250),
+                duration: const Duration(milliseconds: 1000), // Fast
+              ),
+             
+              
+             
+            ],
             isLastPage: false,
           ),
           OnboardingPage(
             title: 'We look after your budgets and debts.',
             subtitle: 'We manage your budgets and debts with care.',
-            image: 'assets/screen2.png', // Replace with your image path
+            baseImage: OnboardingImages.page41,
+            baseSize: const Size(260, 260),
+            baseOffset: const Offset(15, 40),
+            animatedImages: [
+              AnimatedImage(
+                path: OnboardingImages.page42,
+                size: const Size(30, 30),
+                initialOffset: const Offset(-1.0, -1.0),
+               finalOffset: const Offset(30, 100),
+                duration: const Duration(milliseconds: 500), // Fast
+              ),
+              AnimatedImage(
+                path: OnboardingImages.page43,
+                size: const Size(30, 30),
+                initialOffset: const Offset(1.0, -1.0),
+                finalOffset: const Offset(30, 150),
+                duration: const Duration(milliseconds: 900), // Medium
+              ),
+              AnimatedImage(
+                path: OnboardingImages.page44,
+                size: const Size(30, 30),
+                initialOffset: const Offset(-1.0, 0.0),
+                  finalOffset: const Offset(30, 200),
+                duration: const Duration(milliseconds: 1300), // Medium-slow
+              ),
+              AnimatedImage(
+                path: OnboardingImages.page45,
+                size: const Size(30, 30),
+                initialOffset: const Offset(1.0, 0.0),
+                 finalOffset: const Offset(30, 250),
+                duration: const Duration(milliseconds: 1700), // Slow
+              ),
+              AnimatedImage(
+                path: OnboardingImages.page46,
+                size: const Size(120, 160),
+                initialOffset: const Offset(0.0, 1.0),
+                finalOffset: const Offset(217, 130),
+                duration: const Duration(milliseconds: 1200), // Very slow
+              ),
+            ],
             isLastPage: true,
           ),
         ],
@@ -94,32 +183,94 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
       height: 8,
       width: _currentPage == index ? 20 : 8,
       decoration: BoxDecoration(
-        color: _currentPage == index ? Colors.white : Colors.grey,
+        color: _currentPage == index ? AppColors.primaryColor : Colors.grey,
         borderRadius: BorderRadius.circular(4),
       ),
     );
   }
 }
 
-class OnboardingPage extends StatelessWidget {
+class AnimatedImage {
+  final String path;
+  final Size size;
+  final Offset initialOffset;
+  final Offset finalOffset;
+  final Duration duration; // Individual animation speed
+
+  AnimatedImage({
+    required this.path,
+    required this.size,
+    required this.initialOffset,
+    required this.finalOffset,
+    required this.duration,
+  });
+}
+
+class OnboardingPage extends StatefulWidget {
   final String title;
   final String subtitle;
-  final String image;
+  final String baseImage;
+  final Size baseSize;
+  final Offset baseOffset;
+  final List<AnimatedImage> animatedImages;
   final bool isLastPage;
 
   OnboardingPage({
     required this.title,
     required this.subtitle,
-    required this.image,
+    required this.baseImage,
+    required this.baseSize,
+    required this.baseOffset,
+    required this.animatedImages,
     required this.isLastPage,
   });
+
+  @override
+  _OnboardingPageState createState() => _OnboardingPageState();
+}
+
+class _OnboardingPageState extends State<OnboardingPage> with TickerProviderStateMixin {
+  late List<AnimationController> _svgAnimationControllers;
+  late List<Animation<Offset>> _svgAnimations;
+
+  @override
+  void initState() {
+    super.initState();
+    _svgAnimationControllers = widget.animatedImages.map((animatedImage) {
+      return AnimationController(
+        vsync: this,
+        duration: animatedImage.duration, // Use individual duration
+      )..forward(); // Start animation immediately
+    }).toList();
+
+    _svgAnimations = widget.animatedImages.asMap().entries.map((entry) {
+      int idx = entry.key;
+      AnimatedImage animatedImage = entry.value;
+      return Tween<Offset>(
+        begin: animatedImage.initialOffset,
+        end: Offset.zero,
+      ).animate(
+        CurvedAnimation(
+          parent: _svgAnimationControllers[idx],
+          curve: Curves.easeInOut,
+        ),
+      );
+    }).toList();
+  }
+
+  @override
+  void dispose() {
+    for (var controller in _svgAnimationControllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final _onboardingScreenState = context.findAncestorStateOfType<_OnboardingScreenState>()!;
     return Column(
       children: [
-        // First Container: Dots and Animation/Image
         Expanded(
           flex: 2,
           child: Container(
@@ -127,19 +278,41 @@ class OnboardingPage extends StatelessWidget {
             padding: const EdgeInsets.only(top: 20),
             child: Column(
               children: [
-                // Dots (Page Indicator) above animation
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(3, (index) => _onboardingScreenState.buildDot(index)),
-                ),
+               
                 const SizedBox(height: 20),
-                // Animation/Image
                 Expanded(
                   child: Center(
-                    child: Image.asset(
-                      image,
-                      height: 250, // Adjust based on your design
-                      fit: BoxFit.contain,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Positioned(
+                          left: widget.baseOffset.dx,
+                          top: widget.baseOffset.dy,
+                          child: SvgPicture.asset(
+                            widget.baseImage,
+                            width: widget.baseSize.width,
+                            height: widget.baseSize.height,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                        ...widget.animatedImages.asMap().entries.map((entry) {
+                          int idx = entry.key;
+                          AnimatedImage animatedImage = entry.value;
+                          return Positioned(
+                            left: animatedImage.finalOffset.dx,
+                            top: animatedImage.finalOffset.dy,
+                            child: SlideTransition(
+                              position: _svgAnimations[idx],
+                              child: SvgPicture.asset(
+                                animatedImage.path,
+                                width: animatedImage.size.width,
+                                height: animatedImage.size.height,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ],
                     ),
                   ),
                 ),
@@ -147,7 +320,11 @@ class OnboardingPage extends StatelessWidget {
             ),
           ),
         ),
-        // Second Container: Text and Button
+         Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(3, (index) => _onboardingScreenState.buildDot(index)),
+                ),
+
         Expanded(
           flex: 2,
           child: Container(
@@ -162,12 +339,11 @@ class OnboardingPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 10), // Space for layout
-                // Title
+                const SizedBox(height: 10),
                 FadeTransition(
                   opacity: _onboardingScreenState._fadeAnimation,
                   child: Text(
-                    title,
+                    widget.title,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 24,
@@ -177,11 +353,10 @@ class OnboardingPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                // Subtitle
                 FadeTransition(
                   opacity: _onboardingScreenState._fadeAnimation,
                   child: Text(
-                    subtitle,
+                    widget.subtitle,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 16,
@@ -190,7 +365,6 @@ class OnboardingPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Circular Progress Button with "Next" or "Let's Go"
                 Stack(
                   alignment: Alignment.center,
                   children: [
@@ -209,7 +383,6 @@ class OnboardingPage extends StatelessWidget {
                     GestureDetector(
                       onTap: () {
                         if (_onboardingScreenState._currentPage == 2) {
-                          // Navigate to home screen or login
                           Navigator.pushReplacementNamed(context, '/home');
                         } else {
                           _onboardingScreenState._pageController.nextPage(
@@ -225,22 +398,16 @@ class OnboardingPage extends StatelessWidget {
                           shape: BoxShape.circle,
                           color: Colors.transparent,
                         ),
-                        child: Center(
-                          child: Text(
-                            _onboardingScreenState._currentPage == 2 ? 'Let\'s Go' : 'Next',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                        child: const Icon(
+                          Icons.arrow_forward,
+                          color: Colors.white,
+                          size: 24,
                         ),
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 10),
-                // Terms and Privacy Policy Text
                 const Text(
                   'By moving forward, you consent to our TERMS OF SERVICE & PRIVACY POLICY',
                   textAlign: TextAlign.center,
