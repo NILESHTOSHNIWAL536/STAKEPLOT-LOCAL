@@ -69,13 +69,13 @@ class _TransactionGraphState extends State<TransactionGraph> {
               children: [
                 Row(
                   children: [
-                    Text(
-                      'Transactions',
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.normal,
-                          fontSize: fontSizeFactor * 2.5,
-                          color: AppColors.accentColor),
-                    ),
+                    // Text(
+                    //   'Transactions',
+                    //   style: FontManager().getTextStyle(context,
+                    //       lWeight: FontWeight.normal,
+                    //       fontSize: fontSizeFactor * 2.5,
+                    //       color: AppColors.accentColor),
+                    // ),
                     
                   ],
                 ),
@@ -113,8 +113,8 @@ class _TransactionGraphState extends State<TransactionGraph> {
         Text(
           'Overall Transactions',
           style: FontManager().getTextStyle(context,
-              lWeight: FontWeight.normal,
-              fontSize: fontSizeFactor * 3.4,
+              lWeight: FontWeight.w600,
+              fontSize: fontSizeFactor * 4.0,
               color: AppColors.bg1),
         ),
         Row(
@@ -618,7 +618,7 @@ void pickCustomDateRangeoverall(BuildContext context) async {
           firstDate: DateTime(2020),
           lastDate: DateTime.now(),
           selectableDayPredicate: (day) => true,
-          selectedDayHighlightColor: Colors.blueAccent,
+          selectedDayHighlightColor: AppColors.primaryColor,
           controlsTextStyle: TextStyle(color: Colors.black),
           dayTextStyle: TextStyle(color: Colors.black),
           selectedDayTextStyle: TextStyle(color: Colors.black),
