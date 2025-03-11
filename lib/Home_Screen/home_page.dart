@@ -16,6 +16,7 @@ import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
@@ -176,6 +177,8 @@ class _HomeScreenState extends State<HomeScreen> {
             // controller: _scrollController,
             children: [
               // Bank Account Container
+              Nextfetch(),
+              
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.25,
                 child: NumberPickerScreen(),

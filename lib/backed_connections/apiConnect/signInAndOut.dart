@@ -387,6 +387,7 @@ void clearGetX() {
   friendsListDetails.clear();
   chatOfUserList.clear();
   chatOfUserListData.clear();
+  consentAndHandleDetails.clear();
   aboutMe = false.obs;
   sizeRoom = false;
   fontSize = 20;

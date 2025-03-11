@@ -579,7 +579,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
       onTap: () {
         if (i == 0 && widget.data != i) pushName(HomePage());
          else if (i == 1 && widget.data != i) pushName(PlotFinance());
-        // if (i == 1 && widget.data != i) pushName(ProfileScreenDart());
+        // if (i == 1 && widget.data != i) pushName(AnimatedImagesScreen());
 
         if (!sizeRoom) {
           if (i == 2 && widget.data != i)pushName(Community());

@@ -17,22 +17,63 @@ import 'package:intl/intl.dart';
 RxString tagName="".obs;
 RxBool loadAgain=false.obs;
 
-class TagShowmodal extends StatelessWidget {
+class TagShowmodal extends StatefulWidget {
 var data;
 int index;
  TagShowmodal({ Key? key ,required this.data,required  this.index }) : super(key: key);
+
+  @override
+  State<TagShowmodal> createState() => _TagShowmodalState();
+}
+
+class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderStateMixin {
+
+   late AnimationController _controller;
+  late Animation<Offset> _animation;
+  double opacity = 0.0;
+
+
+  @override
+  void initState() {
+    super.initState();
+      _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 1000),
+    );
+    
+    _animation = Tween<Offset>(
+      begin: Offset(0, 3),  // Start from below
+      end: Offset(0, 0),    // Move to normal position
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOut,
+    ));
+
+    // Start animation
+    _controller.forward();
+
+    // Delay opacity animation
+    Future.delayed(Duration(milliseconds: 1000), () {
+      setState(() {
+        opacity = 1.0;
+      });
+    });
+  }
 
 
   @override
   Widget build(BuildContext context)
   {
     return Container(
+      // duration: Duration(milliseconds: 300),
+      // curve: Curves.easeInOut,
+      // padding: EdgeInsets.all(16),
       padding: EdgeInsets.symmetric(horizontal: 5,vertical: 10),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height/1.5,
-      decoration:const BoxDecoration(
-        color: AppColors.backgroundColor,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: Colorcodes.white,
+        borderRadius:const BorderRadius.only(
           topLeft:Radius.circular(20), 
           topRight:Radius.circular(20), 
         )
@@ -70,9 +111,9 @@ int index;
               onTap: (){
                   //  Change Tag
 
-                   updateTheTagOfTarnsactions(data['category'], data['subcategory'], data['_id'], context,index);
-                    transactionsHistory[index]['category']=data['category'];
-                    transactionsHistory[index]['subcategory']=data['subcategory'];
+                   updateTheTagOfTarnsactions(widget.data['category'], widget.data['subcategory'], widget.data['_id'], context,widget.index);
+                    transactionsHistory[widget.index]['category']=widget.data['category'];
+                    transactionsHistory[widget.index]['subcategory']=widget.data['subcategory'];
                     transactionsHistory.refresh();
 
               },
@@ -87,33 +128,7 @@ int index;
     );
  }
 
-
 //  Widget getListOfCat(context){
-//      return Column(
-//         children: categories.entries.map((e){
-//             return Container(
-//                padding: EdgeInsets.symmetric(horizontal: 5,vertical: 10),
-//                margin: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
-//                 decoration: BoxDecoration(
-//                   borderRadius: BorderRadius.circular(15),
-//                   border: Border.all(
-//                     width: .5,
-//                     color: AppColors.primaryColor
-//                   )
-//                 ),
-//               child: Column(
-//                  children: [
-//                     mainCategory(context, e.key, e.value),
-//                     const SizedBox(height: 10,),
-//                     subCategory(context, e.key, e.value),
-//                 ],
-//               ),
-//             );
-//         }).toList(),
-//      );
-//  }
-
-
 Widget getListOfCat(BuildContext context) {
   List<MapEntry<String, dynamic>> categoryList = categories.entries.toList();
 
@@ -149,7 +164,6 @@ Widget getListOfCat(BuildContext context) {
   );
 }
 
-
  Widget mainCategory(context,String s,List subCategories){
     
      return Row(
@@ -160,8 +174,8 @@ Widget getListOfCat(BuildContext context) {
               activeColor: AppColors.primaryColor,
               onChanged: (value) {
                   tagName.value = value!;
-                  data['category']=value;
-                  data['subcategory']="";
+                  widget.data['category']=value;
+                  widget.data['subcategory']="";
                   loadAgain.value=!loadAgain.value;  
               },
             )),
@@ -178,14 +192,21 @@ Widget getListOfCat(BuildContext context) {
      );
  }
 
-
   Widget selectedItem(context){
-      return Container(
-              child: historyTransactions(data,data['transactionTimestamp'], context),
+      return  SlideTransition(
+      position: _animation,
+        child: Hero(
+           tag: "Nilesh",
+          child: AnimatedOpacity(
+            duration: Duration(milliseconds: 500),
+            opacity: opacity,
+                      child: Container(
+                child: historyTransactions(widget.data,widget.data['transactionTimestamp'], context),
+                      ),
+                    ),
+        ),
       );
   }
-
-
 
  Widget subCategory(context,String main,List subCategories){
     
@@ -208,8 +229,8 @@ Widget getListOfCat(BuildContext context) {
       // bool f=data['subcategory']==s;
       return InkWell(
         onTap: (){
-             data['category']=main;
-             data['subcategory']=s;
+             widget.data['category']=main;
+             widget.data['subcategory']=s;
               tagName.value = main!;
              loadAgain.value=!loadAgain.value;
         },
@@ -224,15 +245,14 @@ Widget getListOfCat(BuildContext context) {
                     ),
                     const SizedBox(height: 5,),
                    Obx(()=> loadAgain.value?
-                     textStyle(context: context,text:s,fontsize: data['subcategory']==s?13:11,fontWeight: FontWeight.bold,c: data['subcategory']==s?AppColors.bg2:AppColors.primaryColor):
-                     textStyle(context: context,text:s,fontsize: data['subcategory']==s?13:11,fontWeight: FontWeight.bold,c: data['subcategory']==s?AppColors.bg2:AppColors.primaryColor)),
+                     textStyle(context: context,text:s,fontsize: widget.data['subcategory']==s?13:11,fontWeight: FontWeight.bold,c: widget.data['subcategory']==s?AppColors.bg2:AppColors.primaryColor):
+                     textStyle(context: context,text:s,fontsize: widget.data['subcategory']==s?13:11,fontWeight: FontWeight.bold,c: widget.data['subcategory']==s?AppColors.bg2:AppColors.primaryColor)),
                     const SizedBox(height: 5,),
              ],
           ),
         ),
       );
  }
-
 
   Widget historyTransactions(Map<String, dynamic> transaction, String? date,context) {
   final category = transaction['category']?.toString() ?? 'Uncategorized';
@@ -332,10 +352,8 @@ Widget getListOfCat(BuildContext context) {
     );
   }
 
-
  String formatDate(String dateString) {
     DateTime date = DateTime.parse(dateString);
     return DateFormat("dd MMM yyyy").format(date);
   }
-
 }
