@@ -30,6 +30,16 @@ void clearStack(BuildContext context) {
   }
 }
 
+void clearStackShared(BuildContext context) {
+  try {
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/ShareAccountLogin', (Route<dynamic> route) => false);
+  } catch (e) {
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+  }
+}
+
 void expire(responce, BuildContext context) {
   try {
     var body = json.decode(responce.body);

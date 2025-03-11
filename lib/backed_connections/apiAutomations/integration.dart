@@ -119,7 +119,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
    
-      sessionId.value=true;
+      // sessionId.value=true;
       // Store values in SharedPreferences for later use
       prefs.setString("sessionId", data["sessionId"]);
       prefs.setString("from", data["from"]);
@@ -127,20 +127,23 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
       prefs.setString("custId", data["custId"]);
       prefs.setString("consentId", data["consentId"]);
 
-      fetchedTrsacntionList.clear();
-      fetchedTrsacntionList.add([data.toString()]);
-      fetchedTrsacntionList.refresh();
+      // fetchedTrsacntionList.clear();
+      // fetchedTrsacntionList.add([data.toString()]);
+      // fetchedTrsacntionList.refresh();
 
-      String accessToken="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UxMjBhNzVhYWZiYWMyNTQ2NGFkNCIsImlhdCI6MTczODc1Nzc3OSwiZXhwIjoxNzQzOTQxNzc5fQ.5XeQtIM2CmFdyrfXiCcA5neACgSRuYScFa5ArcYhe34";
-      final SharedPreferences pref = await SharedPreferences.getInstance();
-      pref.setString("accessToken",accessToken);
+      // String accessToken="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UxMjBhNzVhYWZiYWMyNTQ2NGFkNCIsImlhdCI6MTczODc1Nzc3OSwiZXhwIjoxNzQzOTQxNzc5fQ.5XeQtIM2CmFdyrfXiCcA5neACgSRuYScFa5ArcYhe34";
+      // final SharedPreferences pref = await SharedPreferences.getInstance();
+      // pref.setString("accessToken",accessToken);
 
 
-      sessionId.value=false;
+      // sessionId.value=false;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Data fetched successfully....!")),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text("Data fetched successfully....!")),
+      // );
+      
+
+      
       
     } else {
     
@@ -155,7 +158,11 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
       SnackBar(content: Text("Bank server issue detected. We'll notify you once your data is retrieved")),
     );
   }
-  
+
+  // /OnboardingScreen
+  clearStackShared(context);
+   Navigator.pushNamed(context, "/OnboardingScreen"); 
+
 }
 
 Future<void> FetchTransactionBysessionId(BuildContext context,String sessionId) async {
