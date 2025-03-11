@@ -56,11 +56,26 @@ class _UserListScreenState extends State<UserListScreen> {
                     ),
                   );
                 },
-                child: Text('more',
+                
+                child: Container(
+                height: 30,
+                width: MediaQuery.sizeOf(context).width * 0.12,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color:
+                       AppColors.button
+                      
+                ),
+                child: Center(
+                  child: Text(
+                    'more',
                     style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
+                        lWeight: FontWeight.w500,
                         fontSize: 14,
-                        color: AppColors.primaryColor)),
+                        color: AppColors.primaryColor),
+                  ),
+                ),
+              ),
               ),
             ],
           ),

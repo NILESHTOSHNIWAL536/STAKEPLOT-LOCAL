@@ -173,7 +173,7 @@ class _NotificationsState extends State<Notifications> {
           e['from_name'], e['from_id'].toString(), e['avatarType'], e, index,notifyId,time);
     } else if (type == "split") {
       return messageChannelProfile(
-          "${e['username']}, has shared the bill of ${e['billname']} of ₹${e['amount'] ?? "400"}",
+          "${e['username']} has shared the bill for ${e['billname']} of ₹${e['amount'] ?? "400"}",
           e['id'].toString(),
           e['avatarType'] ?? "",time);
     } else if (type == "roomBill") {
@@ -195,10 +195,10 @@ class _NotificationsState extends State<Notifications> {
       return lendRequest(e['from_name'], e['from_id'].toString(),
           e['avatarType'], e, index, e['name'] ?? "", notifyId,time);
     } else if (type == "lendAccepted" || type == "rejectedLend") {
-      type = type == "lendAccepted" ? "Accepted" : "Rejected";
+      type = type == "lendAccepted" ? "accepted" : "rejected";
 
       return messageChannelProfile(
-          "${e['username']} ${type} your Lended Request of ${e['name']} of worth ..₹${e['amount'] ?? '400'}",
+          "${e['username']} ${type} your Lent request for ${e['name']}, worth ₹${e['amount'] ?? '400'}",
           e['from_id'].toString(),
           e['avatarType'] ?? "",time);
     }else if(type=="lendSettled"){
@@ -208,7 +208,7 @@ class _NotificationsState extends State<Notifications> {
           e['avatarType'] ?? "",time);
     }else if(type=="splitSettled"){
        return   messageChannelProfile(
-          "${e['from_name']} has settled your Split of ${e['amount']} for the item: ${e['name']}.",
+          "${e['from_name']} has settled your Split of ${e['amount'].toStringAsFixed(1)} for the item: ${e['name']}.",
           e['id'].toString(),
           e['avatarType'] ?? "",time);
     }
@@ -449,7 +449,7 @@ class _NotificationsState extends State<Notifications> {
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-         textStyle(text:formatWhatsAppDate(DateTime.parse(time)), context: context,fontsize: 10,fontWeight: FontWeight.bold,c: AppColors.message),
+         textStyle(text:formatWhatsAppDate(DateTime.parse(time)), context: context,fontsize: 10,fontWeight: FontWeight.bold,c: AppColors.accentColor),
         Divider(
         ),
       ],
