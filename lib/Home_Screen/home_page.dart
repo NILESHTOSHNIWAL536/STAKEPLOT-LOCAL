@@ -127,6 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+     
       bottomNavigationBar: BottomNavigations(
         data: 0,
       ),
@@ -136,6 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // }, icon: Icon(Icons.add,color: AppColors.primaryColor,)) ,
       appBar: AppBar(
         backgroundColor: AppColors.backgroundColor,
+        
         automaticallyImplyLeading: false,
         actions: [
           Row(

@@ -120,10 +120,9 @@ void getAutoMationsTransactionsCustom(date, context,
   String urlPath = endDate != null && weekORmonth == 'Custom'
       ? "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date,${getNextDay(endDate)}"
       : "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date";
-  print("URL Path: $urlPath");
+ 
   var response = await getDataApiCall(urlPath);
-  print("Response Status Code: ${response.statusCode}");
-  print("Response Body: ${response.body}");
+ 
   trasactionsDataDebitWeekly.clear();
 
   List<String> labelsLocal = [];
@@ -133,23 +132,23 @@ void getAutoMationsTransactionsCustom(date, context,
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     transactionChatGraph.clear();
-    print("Parsed Response: $his");
+   
 
     try {
       Map data = his['data']['result'];
       totalDebitValue.value =
-          double.parse((his['data']['totalCredit']).toString());
-      print("Total Debit Value: ${totalDebitValue.value}");
+          double.parse((his['data']['totalDebit']).toString());
+     // print("Total Debit Value: ${totalDebitValue.value}");
       maxYValue.value =
           double.parse((his['data']['maxAmount'] ?? 500.0).toString());
-      print("Max Y Value: ${maxYValue.value}");
+     // print("Max Y Value: ${maxYValue.value}");
 
       if (maxYValue.value == 0) maxYValue.value = 500.0;
 
       if (weekORmonth == 'Custom' && endDate != null) {
         DateTime startDate = DateTime.parse(date);
         DateTime end = DateTime.parse(endDate);
-        print("Start Date: $startDate, End Date: $end");
+      
 
         // Generate date labels in "MMM d" format
         labelsLocal = [];
@@ -161,7 +160,7 @@ void getAutoMationsTransactionsCustom(date, context,
           DateTime currentDate = startDate.add(Duration(days: i));
           String formattedDate = DateFormat('MMM d').format(currentDate);
           labelsLocal.add(formattedDate);
-          print("Label for Day $i: $formattedDate");
+          
         }
 
         data.forEach((key, value) {
@@ -172,8 +171,7 @@ void getAutoMationsTransactionsCustom(date, context,
             if (index >= 0 && index < debitList.length) {
               debitList[index] = getDouble(value['debit']);
               creditList[index] = getDouble(value['credit']);
-              print(
-                  "Debit for $key: ${debitList[index]}, Credit: ${creditList[index]}");
+             
             }
           }
         });
@@ -186,12 +184,11 @@ void getAutoMationsTransactionsCustom(date, context,
           labelsLocal.add(label);
           debitList.add(getDouble(value['debit']));
           creditList.add(getDouble(value['credit']));
-          print(
-              "Non-Custom - Label: $label, Debit: ${debitList.last}, Credit: ${creditList.last}");
+          
         });
       }
     } catch (e) {
-      print("Error parsing response: $e");
+     
       maxYValue.value = 500.0;
       if (labelsLocal.isEmpty) {
         if (weekORmonth == 'Custom' && endDate != null) {
@@ -232,7 +229,7 @@ void getAutoMationsTransactionsCustom(date, context,
     labels.assignAll(labelsLocal);
     getGraphData.value = true;
   } else {
-    print("Response was not valid.");
+   
     if (weekORmonth == 'Custom' && endDate != null) {
       DateTime startDate = DateTime.parse(date);
       DateTime end = DateTime.parse(endDate);

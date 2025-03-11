@@ -322,6 +322,7 @@ int getCurrentDateIndex(List<String> labels) {
   Widget getGraphLineScroll(double fontSizeFactor, double screenWidth) {
     return  Container(
       height: MediaQuery.of(context).size.height / 2.6,
+      
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
        // mainAxisAlignment: MainAxisAlignment.start,
@@ -385,6 +386,7 @@ int getCurrentDateIndex(List<String> labels) {
 
     double labelWidth = widget.selectedButton.value == 'Week' ? 50.0 : 40.0;
     double chartWidth = dataLength * labelWidth;
+    
     return Container(
     
         width: widget.selectedButton.value == 'Week'
@@ -443,7 +445,7 @@ int getCurrentDateIndex(List<String> labels) {
               builder: (dynamic data, dynamic point, dynamic series,
                   int pointIndex, int seriesIndex) {
                 final ChartData chartData = data as ChartData;
-                String label = seriesIndex == 0 ? 'Debited' : 'Credited';
+                String label = seriesIndex == 0 ? 'Credited' : 'Debited';
                  isTooltipVisible.value = true;
           
                  Future.delayed(Duration(seconds: 2), () {
@@ -501,7 +503,7 @@ int getCurrentDateIndex(List<String> labels) {
                 dataSource: debitedData,
                 xValueMapper: (ChartData data, _) => data.x,
                 yValueMapper: (ChartData data, _) => data.y,
-                color: const Color.fromARGB(255, 244, 58, 58),
+                color: AppColors.bg1,
                 width: 3,
                 enableTooltip: true,
                 name: 'Debited',
