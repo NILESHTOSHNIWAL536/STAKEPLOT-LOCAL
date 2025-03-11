@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 // Placeholder for OnboardingImages class (replace with your actual implementation)
@@ -183,7 +185,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
       height: 8,
       width: _currentPage == index ? 20 : 8,
       decoration: BoxDecoration(
-        color: _currentPage == index ? AppColors.primaryColor : Colors.grey,
+        color: _currentPage == index ? AppColors.primaryColor : AppColors.button,
         borderRadius: BorderRadius.circular(4),
       ),
     );
@@ -324,100 +326,99 @@ class _OnboardingPageState extends State<OnboardingPage> with TickerProviderStat
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(3, (index) => _onboardingScreenState.buildDot(index)),
                 ),
-
-        Expanded(
-          flex: 2,
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(22),
-                topRight: Radius.circular(22),
-              ),
+const SizedBox(height: 20),
+        Container(
+          height: 400,
+          decoration: const BoxDecoration(
+            color: AppColors.accentColor,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(22),
+              topRight: Radius.circular(22),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 10),
-                FadeTransition(
-                  opacity: _onboardingScreenState._fadeAnimation,
-                  child: Text(
-                    widget.title,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 10),
+              FadeTransition(
+                opacity: _onboardingScreenState._fadeAnimation,
+                child: Text(
+                  widget.title,
+                  textAlign: TextAlign.center,
+                  style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.bold,
+                                fontSize: 22,
+                                color: AppColors.backgroundColor),
                 ),
-                const SizedBox(height: 10),
-                FadeTransition(
-                  opacity: _onboardingScreenState._fadeAnimation,
-                  child: Text(
-                    widget.subtitle,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
-                    ),
-                  ),
+              ),
+              const SizedBox(height: 10),
+              FadeTransition(
+                opacity: _onboardingScreenState._fadeAnimation,
+                child: Text(
+                  widget.subtitle,
+                  textAlign: TextAlign.center,
+                   style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.w200,
+                                fontSize: 14,
+                                color: AppColors.backgroundColor),
                 ),
-                const SizedBox(height: 20),
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
+              ),
+              const SizedBox(height: 50),
+               Stack(
+                alignment: Alignment.center,
+                children: [
+                  if (!widget.isLastPage) // Only show progress indicator for non-last pages
                     SizedBox(
                       width: 60,
                       height: 60,
                       child: CircularProgressIndicator(
-                        value: _onboardingScreenState._currentPage < 2
-                            ? _onboardingScreenState._progressAnimation.value
-                            : 1.0,
+                        value: _onboardingScreenState._currentPage == 0 ? 0.5 : 1.0,
                         strokeWidth: 4,
-                        backgroundColor: Colors.grey[300],
-                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                        backgroundColor: Colors.black,
+                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        if (_onboardingScreenState._currentPage == 2) {
-                          Navigator.pushReplacementNamed(context, '/home');
-                        } else {
-                          _onboardingScreenState._pageController.nextPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                        }
-                      },
-                      child: Container(
-                        width: 60,
-                        height: 60,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.transparent,
-                        ),
-                        child: const Icon(
-                          Icons.arrow_forward,
-                          color: Colors.white,
-                          size: 24,
-                        ),
+                  GestureDetector(
+                    onTap: () {
+                      if (_onboardingScreenState._currentPage == 2) {
+                        Navigator.pushReplacementNamed(context, '/home');
+                      } else {
+                        _onboardingScreenState._pageController.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                      }
+                    },
+                    child:  !widget.isLastPage?Container(
+                      width: 60,
+                      height: 60,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  'By moving forward, you consent to our TERMS OF SERVICE & PRIVACY POLICY',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
+                      child: Center(
+                        child:  const Icon(
+                                Icons.arrow_forward,
+                                color: Colors.black,
+                                size: 24,
+                              ),
+                      ),
+                    ):getButton(context, 'Let\'s Go')
+                    
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
+              const SizedBox(height: 50),
+               Text(
+                'By moving forward, you consent to our TERMS OF SERVICE & PRIVACY POLICY',
+                textAlign: TextAlign.center,
+                 style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.w300,
+                                fontSize: 12,
+                                color: AppColors.backgroundColor),
+              ),
+            ],
           ),
         ),
       ],
