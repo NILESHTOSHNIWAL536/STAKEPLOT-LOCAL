@@ -402,24 +402,21 @@ void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'mon
   String urlPath = endDate != null && weekORmonths == 'custom'
       ? "$url/transactionauto/getWholeTransactionsGraph/${weekORmonths.toLowerCase()}/$date,${getNextDay(endDate)}"
       : "$url/transactionauto/getWholeTransactionsGraph/${weekORmonths.toLowerCase()}/$date";
-  print(urlPath);
-  print("Starting getAutoMationsTransactionsCustomoverall with date: $date, weekORmonths: $weekORmonths, endDate: $endDate");
-
+ 
   var response = await getDataApiCall(urlPath);
-  print("API URL: $urlPath");
-  print("Response for thisssss: ${response.body}");
+ 
 
   trasactionsDataDebitWeeklyoverall.clear();
-  print("Cleared transactions data.");
+ 
 
   List<String> labelsLocal = [];
   List<double> debitList = [];
 
   if (getFlagOfResponse(response)) {
-    print("Response is valid.");
+   
     var his = jsonDecode(response.body);
     transactionChatGraphoverall.clear();
-    print("Decoded response body.");
+   
 
     // Declare dataoverall outside the try block
     Map dataoverall = his['data']['result'];
@@ -434,7 +431,7 @@ void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'mon
       }
 
       if (weekORmonths == 'custom' && endDate != null) {
-        print("Processing custom date range.");
+       
         DateTime startDate = DateTime.parse(date);
         DateTime end = DateTime.parse(endDate);
 
@@ -458,7 +455,7 @@ void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'mon
           }
         });
       } else if (weekORmonths == 'week') {
-        print("Processing weekly data.");
+      
         labelsLocal = getWeekDays(); // ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
         debitList = List.filled(7, 0.0);
 
@@ -476,7 +473,7 @@ void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'mon
           }
         });
       } else {
-        print("Processing monthly data.");
+       
         DateTime startDate = DateTime.parse("$date-01"); // Ensure full date for month
         int daysInMonth = DateTime(startDate.year, startDate.month + 1, 0).day;
         labelsLocal = List.generate(daysInMonth, (i) => (i + 1).toString().padLeft(2, '0'));
@@ -493,7 +490,7 @@ void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'mon
         });
       }
     } catch (e) {
-      print("Error: $e");
+    
       maxYValueoverall.value = 500.0;
       if (labelsLocal.isEmpty) {
         if (weekORmonths == 'custom' && endDate != null) {
@@ -549,13 +546,13 @@ void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'mon
     }
 
     transactionChatGraphoverall['debited'] = debitList;
-    print("Transaction data for debited: $debitList");
+   
 
     getGraphDataoverall.value = false;
     labels2.assignAll(labelsLocal);
     getGraphDataoverall.value = true;
   } else {
-    print("Response is invalid.");
+   
     if (weekORmonths == 'custom' && endDate != null) {
       DateTime startDate = DateTime.parse(date);
       DateTime end = DateTime.parse(endDate);
