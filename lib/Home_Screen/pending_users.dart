@@ -143,6 +143,9 @@ class ShowAllUsersScreen extends StatelessWidget {
               child: TabBar(
                 labelColor: AppColors.primaryColor,
                 unselectedLabelColor: AppColors.bg1,
+                indicatorColor: AppColors.primaryColor,
+                
+
                 tabs: const [Tab(text: 'Payable'), Tab(text: 'Owed')],
               ),
             ),
@@ -227,7 +230,7 @@ Widget _buildListTile(
                 data["category"] ?? "Untagged",
                 style: FontManager().getTextStyle(context,
                     lWeight: FontWeight.bold,
-                    fontSize: 10,
+                    fontSize: 8,
                     color: AppColors.accentColor),
               ),
             ),
@@ -235,7 +238,7 @@ Widget _buildListTile(
             Text(
               '${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(data["amount"] ?? 0)}',
               style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.bold, fontSize: 12, color: Colors.green),
+                  lWeight: FontWeight.bold, fontSize: 10, color: Colors.green),
             )
           ],
         ),

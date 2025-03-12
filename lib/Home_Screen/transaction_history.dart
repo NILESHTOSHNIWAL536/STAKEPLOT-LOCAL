@@ -328,7 +328,119 @@ class _TransactionHistoryState extends State<TransactionHistory> {
       },
     );
   }
+// Widget historyTransactions(
+//     Map<String, dynamic> transaction, String? date, int index) {
+//   final category = transaction['category']?.toString() ?? 'Uncategorized';
+//   final subcategory = transaction['subcategory']?.toString() ?? 'General';
+//   final amount = transaction['amount']?.toString() ?? '0';
+//   final formattedDate = date != null ? formatDate(date) : 'Unknown Date';
 
+//   return Hero(
+//     tag: "Nilesh",
+//     child: GestureDetector(
+//       onTap: () {
+//         tagName.value = category;
+//         showModalBottomSheet(
+//           context: context,
+//           isScrollControlled: true,
+//           shape: const RoundedRectangleBorder(
+//             borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+//           ),
+//           builder: (context) {
+//             return TagShowmodal(
+//               data: transaction,
+//               index: index,
+//             );
+//           },
+//         );
+//       },
+//       child: Container(
+//         width: MediaQuery.of(context).size.width,
+//        // margin: const EdgeInsets.symmetric(vertical: 5),
+//         decoration: BoxDecoration(
+//           borderRadius: BorderRadius.circular(12),
+//         ),
+//         child: Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//           children: [
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.start,
+//               crossAxisAlignment: CrossAxisAlignment.center,
+//               children: [
+//                 Container(
+//                   margin: const EdgeInsets.all(10),
+//                   width: 40, // Fixed width for consistency
+//                   height: 40, // Fixed height for consistency
+//                   decoration: BoxDecoration(
+//                     color: AppColors.button,
+//                     borderRadius: BorderRadius.circular(10),
+//                   ),
+//                   child: Center(
+//                     child: AvatarProfileImage(
+//                       url: Categories.link +
+//                           (imageMapForHistory[category.toLowerCase()] ??
+//                               'default_image.png'),
+//                       height: 32, // Slightly smaller than container to fit padding
+//                       width: 32,  // Consistent size for all icons
+//                        // Ensure the image scales uniformly
+//                     ),
+//                   ),
+//                 ),
+//                 const SizedBox(width: 5),
+//                 RichText(
+//                   overflow: TextOverflow.ellipsis, // Prevent overflow
+//                   maxLines: 2,
+//                   text: TextSpan(
+//                     children: [
+//                       TextSpan(
+//                         text: " $category",
+//                         style: FontManager().getTextStyle(
+//                           context,
+//                           lWeight: FontWeight.w600,
+//                           fontSize: 14,
+//                           lineHeight: 2.14,
+//                           color: AppColors.accentColor,
+//                         ),
+//                       ),
+//                       TextSpan(
+//                         text: " ($subcategory)",
+//                         style: FontManager().getTextStyle(
+//                           context,
+//                           lWeight: FontWeight.w400,
+//                           fontSize: 12,
+//                           lineHeight: 1.14,
+//                           color: AppColors.accentColor,
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ],
+//             ),
+//             Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 textStyle(
+//                   text: '₹$amount',
+//                   context: context,
+//                   fontWeight: FontWeight.bold,
+//                   fontsize: 12,
+//                 ),
+//                 const SizedBox(height: 6),
+//                 textStyle(
+//                   text: formattedDate,
+//                   context: context,
+//                   fontWeight: FontWeight.w300,
+//                   fontsize: 10,
+//                 ),
+//               ],
+//             ),
+//           ],
+//         ),
+//       ),
+//     ),
+//   );
+// }
   Widget historyTransactions(
       Map<String, dynamic> transaction, String? date, int index) {
     final category = transaction['category']?.toString() ?? 'Uncategorized';
@@ -359,7 +471,8 @@ class _TransactionHistoryState extends State<TransactionHistory> {
           width: MediaQuery.of(context).size.width,
           margin: const EdgeInsets.symmetric(vertical: 5),
           decoration: BoxDecoration(
-            border: Border.all(color: Colorcodes.greyLight, width: 0.6),
+            borderRadius: BorderRadius.circular(12),
+            //border: Border.all(color: Colorcodes.greyLight, width: 0.3),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -375,7 +488,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                       child: Container(
                         margin: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: Colorcodes.greyLight,
+                          color: AppColors.button,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: AvatarProfileImage(
@@ -464,20 +577,32 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     );
   }
 
-  void scrollLeft(DragUpdateDetails details, int index) {
-    setState(() {
-      swipeOffsets.forEach((key, value) {
-        if (key != index) {
-          swipeOffsets[key] = 0.0;
-        }
-      });
+  // void scrollLeft(DragUpdateDetails details, int index) {
+  //   setState(() {
+  //     swipeOffsets.forEach((key, value) {
+  //       if (key != index) {
+  //         swipeOffsets[key] = 0.0;
+  //       }
+  //     });
 
-      double offset = swipeOffsets[index] ?? 0.0;
-      offset += details.delta.dx;
-      offset = offset.clamp(-90.0, 0.0);
-      swipeOffsets[index] = offset;
+  //     double offset = swipeOffsets[index] ?? 0.0;
+  //     offset += details.delta.dx;
+  //     offset = offset.clamp(-90.0, 0.0);
+  //     swipeOffsets[index] = offset;
+  //   });
+  // }
+  void scrollLeft(DragUpdateDetails details, int index) {
+  setState(() {
+    swipeOffsets.forEach((key, value) {
+      if (key != index) {
+        swipeOffsets[key] = 0.0;
+      }
     });
-  }
+
+    double offset = details.delta.dx < 0 ? -90.0 : 0.0;
+    swipeOffsets[index] = offset;
+  });
+}
 
   static Future<String?> getToken() async {
     final SharedPreferences pref = await SharedPreferences.getInstance();

@@ -89,6 +89,7 @@ dependencies:
   
   # sms_otp_auto_verify: ^2.2.0
   infinite_scroll_pagination: ^5.0.0
+  image_cropper: ^9.0.0
 
 dev_dependencies:
   flutter_test:

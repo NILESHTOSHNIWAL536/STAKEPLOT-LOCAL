@@ -212,7 +212,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
 
           currentChartData.value = monthlyData;
           maxYValue.value = data['data']['maxAmount']?.toDouble() ?? 500.0;
-          totalExpandedValue.value=data['data']['totalCredit']?.toDouble() ?? 500.0;
+          totalExpandedValue.value=data['data']['totalDebit']?.toDouble() ?? 500.0;
           if (maxYValue.value == 0) maxYValue.value = 500.0;
         } catch (e) {
           
@@ -288,7 +288,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                    color: AppColors.button,
+                    color:  AppColors.button, 
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
@@ -340,7 +340,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                   height: 20,
                   width: 40,
                   decoration: BoxDecoration(
-                    color: AppColors.button,
+                     color: AppColors.button,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Center(
@@ -350,7 +350,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.normal,
                           fontSize: 16,
-                          color: AppColors.accentColor),
+                           color: AppColors.accentColor),
                     ),
                   ),
                 ),
@@ -422,7 +422,9 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.normal,
                                 fontSize: fontSizeFactor * 3.4,
-                                color: AppColors.accentColor),
+                                 color: !isYearView.value
+                                  ? AppColors.primaryColor // Contrast text color for highlight
+                                  : AppColors.accentColor),
                           )),
                     ),
                   ),
@@ -436,7 +438,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                     width: screenWidth * 0.2,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
-                      color: AppColors.button,
+                      color:  AppColors.button,
                     ),
                     child: Center(
                       child: Obx(() => Text(
@@ -444,7 +446,9 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.normal,
                                 fontSize: fontSizeFactor * 3.4,
-                                color: AppColors.accentColor),
+                               color: isYearView.value
+                                  ? AppColors.primaryColor // Contrast text color for highlight
+                                  : AppColors.accentColor),
                           )),
                     ),
                   ),
@@ -480,6 +484,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                   else
                    Obx(()=> Container(
                       height: screenHeight / 2.6,
+                      
                       child: LineChartWidget(
                         chartData: currentChartData.value,
                         days: isYearView.value ? monthLabels : currentDays,

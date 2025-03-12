@@ -447,17 +447,31 @@ void processChartData() {
   double newTotalValue = 0.0;
 
   Map<String, Color> categoryColors = {
-    "Food": Color.fromARGB(255, 198, 172, 245),
-    "Shopping": Color.fromARGB(255, 103, 133, 146),
-    "Travel": Color.fromARGB(255, 206, 231, 243),
-    "Health": Color.fromARGB(255, 130, 175, 167),
-    "Subscriptions": Color.fromARGB(255, 132, 203, 119),
-    "Entertainment": Color.fromARGB(255, 193, 118, 175),
-    "Insurance": Color(0xFF0288D1),
-    "Emi": Color(0xFFFFC107),
-    "Investments": Color.fromARGB(255, 247, 114, 114),
-    "Untagged": Color.fromARGB(255, 74, 117, 139),
-  };
+  "Food": Color(0xFFE74C3C), // Red
+  "Shopping": Color(0xFF8E44AD), // Purple
+  "Travel": Color(0xFF3498DB), // Blue
+  "Health": Color(0xFF2ECC71), // Green
+  "Subscriptions": Color(0xFFF1C40F), // Yellow
+  "Entertainment": Color(0xFFE67E22), // Orange
+  "Insurance": Color(0xFF1ABC9C), // Teal
+  "Emi": Color(0xFFD35400), // Dark Orange
+  "Investments": Color(0xFF9B59B6), // Dark Purple
+  "Untagged": Color(0xFF34495E), // Dark Gray-Blue
+  "Bills": Color(0xFF16A085), // Dark Teal
+  "Events": Color(0xFF27AE60), // Green
+  "Personal Care": Color(0xFF2980B9), // Dark Blue
+  "Services": Color(0xFFC0392B), // Dark Red
+  "Current": Color(0xFF7D3C98), // Violet
+  "Children": Color(0xFFF39C12), // Bright Yellow
+  "Pet Care": Color(0xFF52BE80), // Soft Green
+  "Sports": Color(0xFF5DADE2), // Sky Blue
+  "Alcohol": Color(0xFFCD6155), // Soft Red
+  "Hobbies": Color(0xFFAF7AC5), // Light Purple
+  "Education": Color(0xFF45B39D), // Turquoise
+  "Commerce": Color(0xFFDC7633), // Copper Orange
+  "snacks": Color(0xFF5D6D7E), // Muted Blue-Gray
+};
+
 
   for (var item in categoriesList) {
     String category = item["category"];
@@ -514,7 +528,7 @@ void pickCustomDateRange(BuildContext context) async {
           firstDate: DateTime(2020),
           lastDate: DateTime.now(),
           selectableDayPredicate: (day) => true,
-          selectedDayHighlightColor: Colors.blueAccent, // Selected range color
+          selectedDayHighlightColor: AppColors.primaryColor, // Selected range color
           controlsTextStyle:
               TextStyle(color: Colors.black), // Header text color
           dayTextStyle:
@@ -523,7 +537,7 @@ void pickCustomDateRange(BuildContext context) async {
               TextStyle(color: Colors.black), // Selected day text color
           weekdayLabelTextStyle: TextStyle(color: Colors.black),
         ),
-        dialogSize: const Size(400, 400),
+        dialogSize: const Size(300, 300),
         value: [
           DateTime.now().subtract(const Duration(days: 7)),
           DateTime.now(),
@@ -773,7 +787,7 @@ void pickCustomDateRangeoverall(BuildContext context) async {
           selectedDayTextStyle: TextStyle(color: Colors.black),
           weekdayLabelTextStyle: TextStyle(color: Colors.black),
         ),
-        dialogSize: const Size(400, 400),
+        dialogSize: const Size(300, 300),
         value: [
           DateTime.now().subtract(const Duration(days: 7)),
           DateTime.now(),

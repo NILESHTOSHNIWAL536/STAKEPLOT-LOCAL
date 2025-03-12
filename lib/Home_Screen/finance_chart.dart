@@ -320,34 +320,58 @@ int getCurrentDateIndex(List<String> labels) {
   }
 
   Widget getGraphLineScroll(double fontSizeFactor, double screenWidth) {
-    return  Container(
-      height: MediaQuery.of(context).size.height / 2.6,
-      
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-       // mainAxisAlignment: MainAxisAlignment.start,
-       //mainAxisSize: MainAxisSize.min,
-        children: [
-          // Fixed Y-axis labels
-          if (!widget.isExpandedView)
-            Container(
-              // width: screenWidth * 0.14,
-              child: _buildYAxisLabels(fontSizeFactor),
+  return Container(
+    height: MediaQuery.of(context).size.height / 2.6,
+    child: Stack(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Fixed Y-axis labels
+            if (!widget.isExpandedView)
+              Container(
+                child: _buildYAxisLabels(fontSizeFactor),
+              ),
+            // Scrollable chart area
+            Expanded(
+              child: widget.selectedButton.value != 'Week'
+                  ? SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: getContainerOfGraph(screenWidth, fontSizeFactor),
+                    )
+                  : getContainerOfGraph(screenWidth, fontSizeFactor),
             ),
-          // Scrollable chart area
-        Expanded(
-            child: widget.selectedButton.value != 'Week'
-                ? SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: getContainerOfGraph(screenWidth, fontSizeFactor),
-                  )
-                : getContainerOfGraph(screenWidth, fontSizeFactor),
+          ],
+        ),
+        // Icon button for navigation to ExpandedChartView (only in non-expanded view)
+        if (!widget.isExpandedView)
+          Positioned(
+            top: 8, // Adjust as needed
+            right: 8, // Adjust as needed
+            child: GestureDetector(
+               behavior: HitTestBehavior.opaque,
+              onTap: () {
+                
+                navToExpanded(); // Navigate to ExpandedChartView
+              },
+              child: Container(
+                padding: EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: AppColors.button, // Background for visibility
+                  shape: BoxShape.circle,
+                ),
+                child:  AvatarProfileImage(
+                    url:  Sign.maximise,
+                    width: 36,
+                    height: 36,
+                  ),
+              ),
+            ),
           ),
-        ],
-      ),
-    );
-  }
-
+      ],
+    ),
+  );
+}
   Widget getContainerOfGraph(double screenWidth, double fontSizeFactor) {
    
     int dataLength;
@@ -448,34 +472,48 @@ int getCurrentDateIndex(List<String> labels) {
                 String label = seriesIndex == 0 ? 'Credited' : 'Debited';
                  isTooltipVisible.value = true;
           
-                 Future.delayed(Duration(seconds: 2), () {
-                      isTooltipVisible.value = false;
-                    });
-          
-                return GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    if (widget.selectedButton.value == 'Month' &&  widget.shouldBeNavigate) {
-                         currentPage=1;
-                        transactionsHistory.clear();
-                        navToExpanded();
-                    }
-                  },
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.black54,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      '$label: ₹${chartData.y.toStringAsFixed(2)}',
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.normal,
-                          fontSize: fontSizeFactor * 2.5,
-                          color: Colors.white),
-                    ),
+                //  Future.delayed(Duration(seconds: 2), () {
+                //       isTooltipVisible.value = false;
+                //     });
+                return Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.black54,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    '$label: ₹${chartData.y.toStringAsFixed(2)}',
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.normal,
+                        fontSize: fontSizeFactor * 2.5,
+                        color: Colors.white),
                   ),
                 );
+          
+                // return GestureDetector(
+                //   behavior: HitTestBehavior.opaque,
+                //   onTap: () {
+                //     if (widget.selectedButton.value == 'Month' &&  widget.shouldBeNavigate) {
+                //          currentPage=1;
+                //         transactionsHistory.clear();
+                //         navToExpanded();
+                //     }
+                //   },
+                //   child: Container(
+                //     padding: EdgeInsets.all(8),
+                //     decoration: BoxDecoration(
+                //       color: Colors.black54,
+                //       borderRadius: BorderRadius.circular(4),
+                //     ),
+                //     child: Text(
+                //       '$label: ₹${chartData.y.toStringAsFixed(2)}',
+                //       style: FontManager().getTextStyle(context,
+                //           lWeight: FontWeight.normal,
+                //           fontSize: fontSizeFactor * 2.5,
+                //           color: Colors.white),
+                //     ),
+                //   ),
+                // );
               },
             ),
             series: <ChartSeries>[
