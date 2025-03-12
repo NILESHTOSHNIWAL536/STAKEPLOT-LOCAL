@@ -215,10 +215,10 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                   );
                                 },
                                 child: _buildOption(
-                                    ProfileImage(
-                                      url: ProfileIcons.terms,
-                                      // height: 20,
-                                      // width: 20,
+                                    AvatarProfileImage(
+                                      url:OnboardingImages.page323 ,
+                                       height: 20,
+                                       width: 20,
                                     ),
                                     'Terms & conditions',
                                     'onboarding.'),

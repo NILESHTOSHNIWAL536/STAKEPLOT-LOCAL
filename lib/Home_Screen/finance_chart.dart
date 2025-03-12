@@ -347,7 +347,7 @@ int getCurrentDateIndex(List<String> labels) {
         if (!widget.isExpandedView)
           Positioned(
             top: 8, // Adjust as needed
-            right: 8, // Adjust as needed
+            right: 2, // Adjust as needed
             child: GestureDetector(
                behavior: HitTestBehavior.opaque,
               onTap: () {

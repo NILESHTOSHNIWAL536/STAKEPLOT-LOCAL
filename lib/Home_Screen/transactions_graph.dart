@@ -336,7 +336,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
             xValueMapper: (ChartData data, _) => data.x,
             yValueMapper: (ChartData data, _) => data.y,
             color: AppColors.primaryColor,
-            width: 0.9,
+            width: 0.6,
             spacing: 0.2,
             enableTooltip: true,
             borderRadius: BorderRadius.vertical(

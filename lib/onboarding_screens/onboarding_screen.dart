@@ -167,6 +167,55 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                 ],
                 isLastPage: false,
               ),
+              //third screen
+              OnboardingPage(
+                title: 'Connect with the unique community.',
+                subtitle: 'Connect and engage with a community like no other.',
+                baseImage: OnboardingImages.page311,
+                baseSize: const Size(160, 160),
+                baseOffset: const Offset(20, 85),
+                animatedImages: [
+                  AnimatedImage(
+                    path: OnboardingImages.page322,
+                    size: const Size(30, 30),
+                    initialOffset: const Offset(-1.0, -1.0),
+                   finalOffset: const Offset(20, 100),
+                    duration: const Duration(milliseconds: 600), // Very fast
+                  ),
+                  AnimatedImage(
+                    path: OnboardingImages.page323,
+                    size: const Size(40, 40),
+                     initialOffset: const Offset(1.0, -1.0),
+                    finalOffset: const Offset(140, 250),
+                    duration: const Duration(milliseconds: 1000), // Fast
+                  ),
+                  AnimatedImage(
+                    path: OnboardingImages.page324,
+                    size: const Size(40, 40),
+                     initialOffset: const Offset(1.0, -1.0),
+                    finalOffset: const Offset(140, 250),
+                    duration: const Duration(milliseconds: 1000), // Fast
+                  ),
+                  AnimatedImage(
+                    path: OnboardingImages.page325,
+                    size: const Size(40, 40),
+                     initialOffset: const Offset(1.0, -1.0),
+                    finalOffset: const Offset(140, 250),
+                    duration: const Duration(milliseconds: 1000), // Fast
+                  ),
+                  AnimatedImage(
+                    path: OnboardingImages.page326,
+                    size: const Size(40, 40),
+                     initialOffset: const Offset(1.0, -1.0),
+                    finalOffset: const Offset(140, 250),
+                    duration: const Duration(milliseconds: 1000), // Fast
+                  ),
+                 
+                  
+                 
+                ],
+                isLastPage: false,
+              ),
               OnboardingPage(
                 title: 'We look after your budgets and debts.',
                 subtitle: 'We manage your budgets and debts with care.',
@@ -381,7 +430,7 @@ class _OnboardingPageState extends State<OnboardingPage> with TickerProviderStat
         ),
          Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(3, (index) => _onboardingScreenState.buildDot(index)),
+                  children: List.generate(4, (index) => _onboardingScreenState.buildDot(index)),
                 ),
 const SizedBox(height: 20),
         Container(

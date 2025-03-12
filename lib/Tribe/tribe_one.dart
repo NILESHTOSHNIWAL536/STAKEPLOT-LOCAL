@@ -5,6 +5,7 @@ import "dart:convert";
 import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_application_code_stakeplot/Community_Page/postCard.dart";
+import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_search.dart";
@@ -406,10 +407,10 @@ class _TribeHomeState extends State<TribeUnique> {
                   margin: EdgeInsets.only(bottom: 10),
                   decoration: BoxDecoration(
                       //  color: Colorcodes.budgetLightGreen,
+                      borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                          width: .5, color: Colorcodes.budgetDarkGreen)),
+                          width: .5, color: AppColors.accentColor)),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Column(
@@ -669,8 +670,8 @@ class _TribeHomeState extends State<TribeUnique> {
                                         style: FontManager().getTextStyle(
                                             context,
                                             lWeight: FontWeight.w500,
-                                            fontSize: 18,
-                                            color: Colorcodes.reply)),
+                                            fontSize: 13,
+                                            color: AppColors.message)),
                                   ),
                                 ),
                               ],
@@ -828,11 +829,13 @@ class _TribeHomeState extends State<TribeUnique> {
               filled: true,
               suffixIcon: suffixcomment(Textcontroller, postId),
               hintText: lableText,
+              hintStyle:  FontManager().getTextStyle(context,
+                            lWeight: FontWeight.w400,
+                            fontSize: 14,
+                            color: AppColors.bg2),
               enabledBorder: const OutlineInputBorder(
                   // borderRadius: BorderRadius.circular(40),
-                  borderSide: BorderSide(color: Colors.white
-                      // color: Color.fromRGBO(249, 246, 238, 1)
-                      )),
+                  ),
               focusedBorder: const OutlineInputBorder(
                   // borderRadius: BorderRadius.circular(40),
                   borderSide:
@@ -898,7 +901,7 @@ class _TribeHomeState extends State<TribeUnique> {
           height: 10,
           width: 10,
           child: AvatarProfileImage(
-            url: svgIconPath.sendMsg,
+            url: LikeComment.share,
             height: 10,
             width: 10,
           )),
@@ -921,7 +924,7 @@ class _TribeHomeState extends State<TribeUnique> {
           height: 10,
           width: 10,
           child: AvatarProfileImage(
-            url: svgIconPath.sendMsg,
+            url: LikeComment.share,
             height: 10,
             width: 10,
           )),

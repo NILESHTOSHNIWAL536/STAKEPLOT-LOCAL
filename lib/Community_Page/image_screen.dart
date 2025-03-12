@@ -71,14 +71,14 @@ class _ImageScreenState extends State<ImageScreen> {
                                 //   backgroundImage: NetworkImage(widget.userInfo['profilePic'].toString()),
                                 //   radius: 24,
                                 // ),
-                                 AvatarProfileImage(url:  avatar.value, width: 5, height: 10),
+                                 AvatarProfileImage(url:  avatar.value, width: 20, height: 20),
                                 const SizedBox(width: 8),
                                 Column(
                                   children: [
                                     Text(userName.value.toString(),
                                         style: FontManager().getTextStyle(context,
                                             lWeight: FontWeight.w600,
-                                            fontSize: 18,
+                                            fontSize: 16,
                                             color: AppColors.bg1)),
                                     Text('New post',
                                         style: FontManager().getTextStyle(context,

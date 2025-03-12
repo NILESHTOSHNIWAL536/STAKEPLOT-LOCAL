@@ -49,7 +49,7 @@ class _SavingsState extends State<Savings> {
       }, TextEditingController(text: '400')),
       getJsonBodyObj("Timeframe(months)", 4.0, 1.0, 360.0, (value) {
         updateSliderValue(3, value);
-      }, TextEditingController(text: '4'), false, "Months"),
+      }, TextEditingController(text: '4'), false, "mts"),
       getJsonBodyObj("Interest rate(%)", 4.0, 0.0, 10.0, (value) {
         updateSliderValue(4, value);
       }, TextEditingController(text: '4.0'), false, "%"),
@@ -80,23 +80,31 @@ class _SavingsState extends State<Savings> {
   }
 
   void calculateSavings() {
+    // Exact same logic as React useEffect
     double totalSavings = currentSavings;
-    double monthlyRate = interestRate / 100 / 12;
+    final double monthlyRate = interestRate / 100 / 12;
     savingsData.clear();
 
+    // Calculate savings progression
     for (int i = 0; i < timeframe; i++) {
       totalSavings += monthlyContribution;
       totalSavings += totalSavings * monthlyRate;
       savingsData.add(totalSavings);
     }
 
-    double totalInterest = totalSavings - (currentSavings + monthlyContribution * timeframe);
-    remainingAmount = targetAmount - totalSavings;
-    remainingAmount = remainingAmount < 0 ? 0 : remainingAmount;
-
-    endBalance = totalSavings;
-    interestEarned = totalInterest;
-    goalProgress = ((totalSavings / targetAmount) * 100).clamp(0, 100); // Updated to use totalSavings
+    // Calculate metrics matching React
+    final double totalInterest = totalSavings - (currentSavings + monthlyContribution * timeframe);
+    //remainingAmount = targetAmount - currentSavings; // Match React's doughnut data
+    
+    setState(() {
+      endBalance = double.parse(totalSavings.toStringAsFixed(2));
+      interestEarned = double.parse(totalInterest.toStringAsFixed(2));
+      goalProgress = double.parse(((currentSavings / targetAmount) * 100).toStringAsFixed(2));
+      print(currentSavings);
+      remainingAmount = targetAmount - currentSavings;
+      remainingAmount = remainingAmount < 0 ? 0 : remainingAmount;
+      print(remainingAmount);
+    });
   }
 
   final List<ListItemModel> howToUseContent = [
@@ -160,7 +168,7 @@ class _SavingsState extends State<Savings> {
       title: "Savings Goal Progress:",
       graphData: [
         {'title': 'Remaining Amount: ₹${remainingAmount.toStringAsFixed(0)}', 'value': remainingAmount},
-        {'title': 'Current Savings: ₹${endBalance.toStringAsFixed(0)}', 'value': endBalance}, // Updated to use endBalance
+        {'title': 'Current Savings: ₹${currentSavings.toStringAsFixed(0)}', 'value': currentSavings}, // Updated to use endBalance
       ],
       graphDisc: [
         {'title': 'End Balance:', 'amount': "₹${endBalance.toStringAsFixed(2)}"},

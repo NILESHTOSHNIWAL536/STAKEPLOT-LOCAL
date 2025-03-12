@@ -55,13 +55,15 @@ class _TextScreenState extends State<TextScreen> {
   void _adjustHeight() {
     setState(() {
       if (_titleFocusNode.hasFocus || _contentFocusNode.hasFocus) {
-        // Adjust height based on showImage when keyboard appears
+        // Adjust height based on keyboard presence
         modalHeight = showImage
-            ? MediaQuery.of(context).size.height * 0.6 // Larger height with image
-            : MediaQuery.of(context).size.height * 0.36; // Smaller height without image
+            ? MediaQuery.of(context).size.height * 0.6 // With image and keyboard
+            : MediaQuery.of(context).size.height * 0.36; // Without image, with keyboard
       } else {
-        // Return to normal height when keyboard dismisses
-        modalHeight = 300;
+        // Adjust height based on content (no keyboard)
+        modalHeight = showImage
+            ? 500 // Larger height for image when no keyboard
+            : 300; // Default height without image or keyboard
       }
     });
   }
@@ -99,92 +101,96 @@ class _TextScreenState extends State<TextScreen> {
       child: postSubmitted
           ? const SuccessPost()
           : SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: modalHeight, // Limit scrollable height
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              AvatarProfileImage(url: avatar.value, width: 20, height: 20),
-                              const SizedBox(width: 8),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    userName.value.toString(),
-                                    style: FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.w600, fontSize: 18, color: AppColors.bg1),
-                                  ),
-                                  Text(
-                                    'New post',
-                                    style: FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.w400, fontSize: 12, color: AppColors.bg1),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Stack(
-                            children: [
-                              DecoratedContainer(
-                                borderRadius: 10,
-                                child: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      showImage = !showImage;
-                                      _adjustHeight(); // Adjust height when toggling showImage
-                                    });
-                                  },
-                                  icon: FaIcon(FontAwesomeIcons.images),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            AvatarProfileImage(url: avatar.value, width: 20, height: 20),
+                            const SizedBox(width: 8),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  userName.value.toString(),
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.w600,
+                                      fontSize: 18,
+                                      color: AppColors.bg1),
                                 ),
-                              ),
-                              const Positioned(
-                                top: 10,
-                                right: 2,
-                                child: Icon(Icons.add),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      TextField(
-                        controller: titleController,
-                        focusNode: _titleFocusNode,
-                        decoration: InputDecoration(
-                          hintText: 'Enter title',
-                          hintStyle: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.w700, fontSize: 18, color: AppColors.bg1),
-                          border: InputBorder.none,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      if (showImage)
-                        GestureDetector(
-                          onTap: pickImage,
-                          child: Container(
-                            height: 200,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(8),
+                                Text(
+                                  'New post',
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.w400,
+                                      fontSize: 12,
+                                      color: AppColors.bg1),
+                                ),
+                              ],
                             ),
-                            child: selectedImage != null
-                                ? Image.file(selectedImage!, fit: BoxFit.cover)
-                                : const Icon(Icons.add_photo_alternate, size: 50, color: Colors.grey),
-                          ),
+                          ],
                         ),
-                      const SizedBox(height: 10),
-                      TextField(
+                        Stack(
+                          children: [
+                            DecoratedContainer(
+                              borderRadius: 10,
+                              child: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    showImage = !showImage;
+                                    _adjustHeight(); // Adjust height when toggling showImage
+                                  });
+                                },
+                                icon: FaIcon(FontAwesomeIcons.images),
+                              ),
+                            ),
+                            const Positioned(
+                              top: 10,
+                              right: 2,
+                              child: Icon(Icons.add),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: titleController,
+                      focusNode: _titleFocusNode,
+                      decoration: InputDecoration(
+                        hintText: 'Enter title',
+                        hintStyle: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.w700,
+                            fontSize: 18,
+                            color: AppColors.bg1),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    if (showImage)
+                      GestureDetector(
+                        onTap: pickImage,
+                        child: Container(
+                          height: 200,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: selectedImage != null
+                              ? Image.file(selectedImage!, fit: BoxFit.cover)
+                              : const Icon(Icons.add_photo_alternate,
+                                  size: 50, color: Colors.grey),
+                        ),
+                      ),
+                    if (showImage) const SizedBox(height: 10),
+                    Flexible(
+                      child: TextField(
                         controller: contentController,
                         focusNode: _contentFocusNode,
                         maxLines: null,
@@ -192,66 +198,73 @@ class _TextScreenState extends State<TextScreen> {
                           hintText: 'Add your thoughts',
                           border: InputBorder.none,
                           hintStyle: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.normal, fontSize: 14, color: AppColors.bg1),
+                              lWeight: FontWeight.normal,
+                              fontSize: 14,
+                              color: AppColors.bg1),
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      GestureDetector(
-                        onTap: () {
-                          if (contentController.text.isNotEmpty) {
-                            if (showImage && selectedImage == null) {
-                              snackBarAllFeilds2(context, "Please Upload Image...");
-                              return;
-                            }
-
-                            if (posting.value) return;
-                            posting.value = true;
-
-                            if (titleController.text.trim().isEmpty || contentController.text.trim().isEmpty) {
-                              snackBarAllFeilds(context);
-                              posting.value = false;
-                              return;
-                            }
-
-                            if (selectedImage != null && showImage) {
-                              createPost(context, titleController.text, contentController.text, selectedImage!);
-                            } else {
-                              createPostWithOutImage(context, titleController.text, contentController.text);
-                            }
-
-                            Navigator.pop(context);
+                    ),
+                    const SizedBox(height: 20),
+                    GestureDetector(
+                      onTap: () {
+                        if (contentController.text.isNotEmpty) {
+                          if (showImage && selectedImage == null) {
+                            snackBarAllFeilds2(context, "Please Upload Image...");
+                            return;
                           }
-                        },
-                        child: Container(
-                          width: MediaQuery.of(context).size.width / 1.1,
-                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
-                          decoration: BoxDecoration(
-                            color: titleController.text.isNotEmpty && contentController.text.isNotEmpty
-                                ? AppColors.primaryColor
-                                : AppColors.button,
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          child: Center(
-                            child: Obx(
-                              () => posting.value
-                                  ? Spinner(size: 30, color: Colorcodes.white)
-                                  : Text(
-                                      'Continue',
-                                      style: FontManager().getTextStyle(
-                                        context,
-                                        lWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                        color: titleController.text.isNotEmpty && contentController.text.isNotEmpty
-                                            ? Colors.white
-                                            : Colors.black,
-                                      ),
+
+                          if (posting.value) return;
+                          posting.value = true;
+
+                          if (titleController.text.trim().isEmpty ||
+                              contentController.text.trim().isEmpty) {
+                            snackBarAllFeilds(context);
+                            posting.value = false;
+                            return;
+                          }
+
+                          if (selectedImage != null && showImage) {
+                            createPost(context, titleController.text,
+                                contentController.text, selectedImage!);
+                          } else {
+                            createPostWithOutImage(
+                                context, titleController.text, contentController.text);
+                          }
+
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 1.1,
+                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                        decoration: BoxDecoration(
+                          color: titleController.text.isNotEmpty &&
+                                  contentController.text.isNotEmpty
+                              ? AppColors.primaryColor
+                              : AppColors.button,
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        child: Center(
+                          child: Obx(
+                            () => posting.value
+                                ? Spinner(size: 30, color: Colorcodes.white)
+                                : Text(
+                                    'Continue',
+                                    style: FontManager().getTextStyle(
+                                      context,
+                                      lWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                      color: titleController.text.isNotEmpty &&
+                                              contentController.text.isNotEmpty
+                                          ? Colors.white
+                                          : Colors.black,
                                     ),
-                            ),
+                                  ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
