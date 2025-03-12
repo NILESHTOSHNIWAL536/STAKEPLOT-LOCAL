@@ -47,7 +47,7 @@ Future<void> loginWithServer(context) async {
       "${number.value}@finvu"; // Replace with dynamic value if needed
   
    final SharedPreferences _pref = await SharedPreferences.getInstance();
-   String token = "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMwYWZiZmNiMTcxMDc2NWFiOGU5MCIsImlhdCI6MTc0MTc3NjU5MCwiZXhwIjoxNzQ2OTYwNTkwfQ.dm6hkBDE1xAY48hAOMLckjL0wXcCh54TpWf3wZXQ6Uc";
+   String token = "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMwYWZiZmNiMTcxMDc2NWFiOGU5MCIsImlhdCI6MTc0MTc4MDUyMSwiZXhwIjoxNzQ2OTY0NTIxfQ.H4J6ofa870hDbTT6UEgl49JozaJZPVLpZ4ih2lHydsY";
   _pref.setString("accessToken", token);
    var accessToken = _pref.getString("accessToken");
 

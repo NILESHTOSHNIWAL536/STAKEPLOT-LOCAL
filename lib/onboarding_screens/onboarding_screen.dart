@@ -142,8 +142,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 isLastPage: false,
               ),
               OnboardingPage(
-                title: 'Connect with the unique community.',
-                subtitle: 'Connect and engage with a community like no other.',
+                title: 'Plot your finances with our calculators',
+                subtitle: 'Use our EMI, Credit and 5+ calculators',
                 baseImage: OnboardingImages.page21,
                 baseSize: const Size(260, 260),
                 baseOffset: const Offset(64, 45),
@@ -175,7 +175,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 baseOffset: const Offset(20, 85),
                 animatedImages: [
                   AnimatedImage(
-                    path: OnboardingImages.page322,
+                    path: OnboardingImages.p1,
                     size: const Size(30, 30),
                     initialOffset:
                         const Offset(-1.0, -1.0), // Start from top-left
@@ -184,7 +184,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                     duration: const Duration(milliseconds: 600),
                   ),
                   AnimatedImage(
-                    path: OnboardingImages.page323,
+                    path: OnboardingImages.p2,
                     size: const Size(40, 40),
                     initialOffset:
                         const Offset(1.0, -1.0), // Start from top-right
@@ -193,21 +193,21 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                     duration: const Duration(milliseconds: 1000),
                   ),
                   AnimatedImage(
-                    path: OnboardingImages.page324,
+                    path: OnboardingImages.p3,
                     size: const Size(40, 40),
                     initialOffset: const Offset(1.0, -1.0),
                     finalOffset: const Offset(0.5, 0.7), // Unique position
                     duration: const Duration(milliseconds: 1000),
                   ),
                   AnimatedImage(
-                    path: OnboardingImages.page325,
+                    path: OnboardingImages.p4,
                     size: const Size(40, 40),
                     initialOffset: const Offset(1.0, -1.0),
                     finalOffset: const Offset(0.6, 0.8), // Unique position
                     duration: const Duration(milliseconds: 1000),
                   ),
                   AnimatedImage(
-                    path: OnboardingImages.page326,
+                    path: OnboardingImages.p5,
                     size: const Size(40, 40),
                     initialOffset: const Offset(1.0, -1.0),
                     finalOffset: const Offset(0.7, 0.9), // Unique position
@@ -508,7 +508,13 @@ class _OnboardingPageState extends State<OnboardingPage>
           width: 80,
           height: 80,
           child: CircularProgressIndicator(
-            value: _onboardingScreenState._currentPage == 0 ? 0.25 : 0.5,
+             value: _onboardingScreenState._currentPage == 0 
+          ? 0.25 
+          : _onboardingScreenState._currentPage == 1 
+              ? 0.5 
+              : _onboardingScreenState._currentPage == 2 
+                  ? 0.75 
+                  : 0.0,
             strokeWidth: 4,
             backgroundColor: AppColors.accentColor,
             valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
