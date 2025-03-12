@@ -19,8 +19,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
   String custId="${number.value}@finvu";
   RxString mobileNo="".obs;
-  RxString handleId="0393a738-3d64-4860-b5ca-ea687ac74d18".obs;
-  RxString consentUserId="0393a738-3d64-4860-b5ca-ea687ac74d18".obs;
+  RxString handleId="".obs;
+  RxString consentUserId="".obs;
   RxBool fetchedData=false.obs;
   late FinvuConsentRequestDetailInfo finvuConsentRequestDetailInfo;
   late List<FinvuLinkedAccountDetailsInfo> finvuLinkedAccountDetailsInfo;

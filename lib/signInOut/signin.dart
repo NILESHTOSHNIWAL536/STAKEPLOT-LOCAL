@@ -17,6 +17,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class Signin extends StatefulWidget {
@@ -195,8 +196,11 @@ Widget signinWith(){
                 ),
                 const SizedBox(height: 10,),
                 InkWell(
-                          onTap: () {
-                            
+                          onTap: ()async {
+                           final SharedPreferences _pref = await SharedPreferences.getInstance();
+                            String token = "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMwYWZiZmNiMTcxMDc2NWFiOGU5MCIsImlhdCI6MTc0MTc3NjU5MCwiZXhwIjoxNzQ2OTYwNTkwfQ.dm6hkBDE1xAY48hAOMLckjL0wXcCh54TpWf3wZXQ6Uc";
+                            _pref.setString("accessToken", token);
+
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(

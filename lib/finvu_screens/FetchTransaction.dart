@@ -33,7 +33,6 @@ class _FetchTransactionState extends State<FetchTransaction> {
   @override
   void initState() {
     super.initState();
-    getSess();
   }
 
   @override
@@ -52,7 +51,7 @@ class _FetchTransactionState extends State<FetchTransaction> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // const Spacer(),
+            
                 Center(
                   child: Text(
                     ("Fetch Bank Transactions"),
@@ -120,11 +119,7 @@ class _FetchTransactionState extends State<FetchTransaction> {
         ),
       );
   }
-  
-void getSess() async{
-       SharedPreferences prefs = await SharedPreferences.getInstance();  
-      sessionId.value = prefs.containsKey("sessionId");
-  }  
+
 }
 
 // class FetchTransaction extends StatelessWidget {

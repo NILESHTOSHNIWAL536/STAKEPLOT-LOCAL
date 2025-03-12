@@ -1,11 +1,21 @@
 import 'dart:async';
+import 'dart:io';
+// import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:http/http.dart' as http;
+// import 'package:workmanager/workmanager.dart';
+// import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
+
+
+String convertToIso8601(String date) {
+  DateTime dateTime = DateTime.parse("${date}T00:00:00.000Z"); // Convert to DateTime
+  String isoString = dateTime.toUtc().toIso8601String(); // Convert to ISO 8601 format
+  return isoString;
+}
 
 class Nextfetch extends StatefulWidget {
   @override
@@ -36,8 +46,60 @@ class _RotatingIconState extends State<Nextfetch> with SingleTickerProviderState
          currentTime.value=getTime();
     });
 
-    checkAndFetchData(); 
+
+  //   if (Platform.isAndroid) {
+  //   await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
+  //   await scheduleAndroidTask();
+  // } else if (Platform.isIOS) {
+  //   await configureBackgroundFetch();
+  // }
+
+     checkAndFetchData(); 
   }
+
+
+//  void callbackDispatcher() {
+//   Workmanager().executeTask((task, inputData) async {
+//     if (task == "fetchDataTask") {
+//       await checkAndFetchData();
+//     }
+//     return Future.value(true);
+//   });
+// }
+
+// Future<void> scheduleAndroidTask() async {
+//   await Workmanager().registerPeriodicTask(
+//     "uniqueFetchTask",
+//     "fetchDataTask",
+//     frequency: Duration(days: 1),
+//   );
+// }
+
+// // Background Fetch for iOS
+// Future<void> configureBackgroundFetch() async {
+//   await BackgroundFetch.configure(
+//     BackgroundFetchConfig(
+//       minimumFetchInterval: 15, // Runs every 15 minutes in the background
+//       stopOnTerminate: false,
+//       enableHeadless: true,
+//       startOnBoot: true,
+//     ),
+//     (String taskId) async {
+//       if (DateTime.now().hour == 9) {
+//         await checkAndFetchData();
+//       }
+//       BackgroundFetch.finish(taskId);
+//     },
+//     (String taskId) async {
+//       BackgroundFetch.finish(taskId);
+//     },
+//   );
+// }
+
+
+
+
+
 
    void checkAndFetchData()async {
     DateTime now = DateTime.now();
@@ -53,8 +115,8 @@ class _RotatingIconState extends State<Nextfetch> with SingleTickerProviderState
                             item["consendHandleId"],
                             item["sessionId"], 
                             item["custId"],  
-                            "2024-08-05",
-                             "2026-02-05"
+                            convertToIso8601("2025-01-05"),  
+                            convertToIso8601("2025-03-05"),
                             );  
                });
           }  

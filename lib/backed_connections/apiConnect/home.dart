@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/number_picker.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -124,8 +125,8 @@ void seletedBankUpdateInfo(id, context) async {
 
 
 void getAllTransaction(context) async {
-  var response =
-      await getDataApiCall("${url}/transactionauto/getTransactions/1");
+  var response =await getDataApiCall("${url}/transactionauto/getTransactions/1");
+   expire(response, context);
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];

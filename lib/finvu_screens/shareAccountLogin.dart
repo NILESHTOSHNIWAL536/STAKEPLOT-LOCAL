@@ -145,28 +145,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
               child:
                   AvatarProfileImage(url: Sign.transform, width: 4, height: 4),
             ),
-    //       !widget.flag?  Padding(
-    //           padding: const EdgeInsets.symmetric(vertical: 40),
-    //           child:
-    //               AvatarProfileImage(url: Sign.transform, width: 4, height: 4),
-    //         ):Center(
-    //         child: SizedBox(
-    //           width: 150,
-    //           height: 150,
-    //           child: LiquidCircularProgressIndicator(
-    //             value: 0.5, // Fill level, adjust as needed.
-    //             valueColor: AlwaysStoppedAnimation(Colors.black), // Liquid color.
-    //             backgroundColor: AppColors.backgroundColor, // Background color.
-    //             //borderColor: Colors.black, // Border color.
-    //             //borderWidth: 5.0, // Border width.
-    //             direction: Axis.vertical, // Liquid movement direction.
-               
-    //           ),
-    //         ),
-          
-          
-    // ),
-            //padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+    
             Text(
               "Transform your money habits",
               style: FontManager().getTextStyle(context,

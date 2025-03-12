@@ -195,16 +195,13 @@ Widget getListOfCat(BuildContext context) {
   Widget selectedItem(context){
       return  SlideTransition(
       position: _animation,
-        child: Hero(
-           tag: "Nilesh",
-          child: AnimatedOpacity(
-            duration: Duration(milliseconds: 500),
-            opacity: opacity,
-                      child: Container(
-                child: historyTransactions(widget.data,widget.data['transactionTimestamp'], context),
-                      ),
+        child: AnimatedOpacity(
+          duration: Duration(milliseconds: 500),
+          opacity: opacity,
+                    child: Container(
+              child: historyTransactions(widget.data,widget.data['transactionTimestamp'], context),
                     ),
-        ),
+                  ),
       );
   }
 

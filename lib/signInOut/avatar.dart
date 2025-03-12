@@ -307,14 +307,14 @@ Widget avatarSlider(){
 
 
  void storeData(context,data,String opt,Avatarurl)async{
-
+   
    String name=data['name'];
    String email=data['email'];
    String password=data['userpassword'];
    String conform=data['confirmPassword'];
-   String phone=data['phone'];
    String dob=data['dob'];
 
+ 
 
     // if(name=="" || email=="" || password=="" || conform=="" || phone=="" || dob==""){
     //     snackBarCalled(context, "pls enter all feilds",Colors.red);
@@ -346,7 +346,6 @@ Widget avatarSlider(){
             'email': email,
             'userpassword':password,
             'confirmPassword':conform,
-            // 'phone':"9000902345",
             'dob':dob,
             'avatarType':Avatarurl,
             'otp':opt
@@ -376,17 +375,7 @@ try{
     _pref.setString("accessToken", "Bearer " + accessToken);
    snackBarCalled(context,"User Registered Successfully...!",Colors.green);
    clearStack(context);
-   mobileNo.value=phone;
    Navigator.pushReplacementNamed(context, '/ShareAccountLogin'); 
-
-    
-
-    // Navigator.pushReplacement(
-    //                   context,
-    //                   MaterialPageRoute(
-    //                     builder: (context) => LinkedBackAccount(email: email,Password: password,),
-    //                   ),
-    // );
 
 }catch(e){
        snackBarCalled(context,"InValid Otp...!",Colors.red);

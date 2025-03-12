@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
@@ -20,6 +21,7 @@ Future<void> getBankAccounts()async
 {
     var response=await getDataApiCall("${url}/transactionauto/get-banks-linked/");
     printData(response);
+    
     if(getFlagOfResponse(response))
     {
             var his = jsonDecode(response.body);
@@ -64,6 +66,7 @@ Future<void> getBankAccounts()async
 
 void getWeeklyfetchData(consentId,consendHandleId,sessionId, custId,from,to)async
 {
+    print("------------------------------------");
    final String apiUrl ="${url}/finvu/fetchWeekly";
    final SharedPreferences pref = await SharedPreferences.getInstance();
    String accessToken=pref.getString("accessToken").toString() ; 

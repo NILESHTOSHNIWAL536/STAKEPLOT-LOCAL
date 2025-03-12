@@ -89,6 +89,7 @@ dependencies:
   
   # sms_otp_auto_verify: ^2.2.0
   infinite_scroll_pagination: ^5.0.0
+  workmanager: ^0.5.2
 
 dev_dependencies:
   flutter_test:

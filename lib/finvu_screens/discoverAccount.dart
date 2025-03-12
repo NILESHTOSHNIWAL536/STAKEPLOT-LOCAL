@@ -14,7 +14,6 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 
-
 class DiscoverAccount extends StatefulWidget {
   const DiscoverAccount({Key? key}) : super(key: key);
 
@@ -69,7 +68,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                     ),
                   ),
                 ),
-                // SizedBox(height: 5),
+               
                 InputDate("Search for banks", TextInputType.name, search),
                 Obx(() => getBanks.value
                     ? getListOfFinvuBanks()
@@ -96,7 +95,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   Widget getListOfFinvuBanks() {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 1.43,
+      height: MediaQuery.of(context).size.height / 1.47,
       child: ListView.builder(
         itemCount: fipDis.length,
         itemBuilder: (context, index) {
@@ -147,7 +146,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                 width: 50,
                 height: 50,
                 child: Image.network(
-                  bankData.productIconUri.toString(),
+                 (bankData.productIconUri.toString().isNotEmpty && bankData.productIconUri !=null )?   bankData.productIconUri.toString():bankImage,
                   fit: BoxFit.contain,
                 ),
               ),

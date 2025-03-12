@@ -70,8 +70,8 @@ class _FinvuAccountState extends State<FinvuAccount> {
       FinvuConfig(
         finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
         certificatePins: [
-          // "3RbasfbYK4UP0GTgGKLV9ggrHbdiwzNDJ4s73Mx8AQM=",
-          // "bdrBhpj38ffhxpubzkINl0rG+UyossdhcBYj+Zx2fcc="
+          "3RbasfbYK4UP0GTgGKLV9ggrHbdiwzNDJ4s73Mx8AQM=",
+          "bdrBhpj38ffhxpubzkINl0rG+UyossdhcBYj+Zx2fcc="
         ],
       ),
     );
