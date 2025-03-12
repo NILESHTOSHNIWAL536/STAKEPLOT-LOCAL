@@ -21,14 +21,15 @@ class OnboardingScreen extends StatefulWidget {
   _OnboardingScreenState createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> with TickerProviderStateMixin {
+class _OnboardingScreenState extends State<OnboardingScreen>
+    with TickerProviderStateMixin {
   final PageController _pageController = PageController();
   int _currentPage = 0;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late AnimationController _progressController;
   late Animation<double> _progressAnimation;
-   late IO.Socket socket;
+  late IO.Socket socket;
 
   @override
   void initState() {
@@ -44,35 +45,36 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    _progressAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_progressController);
+    _progressAnimation =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_progressController);
     _animationController.forward();
     _updateProgress();
- socket = IO.io(urlWithLocallHost,IO.OptionBuilder().setTransports(['websocket']).build());
-     fetchedTrsacntionList.clear();
-     setUpSocketListener();
+    socket = IO.io(urlWithLocallHost,
+        IO.OptionBuilder().setTransports(['websocket']).build());
+    fetchedTrsacntionList.clear();
+    setUpSocketListener();
   }
 
-  setUpSocketListener(){
-     socket.onConnect((_) {
-       flagToFetchData.value=false;
+  setUpSocketListener() {
+    socket.onConnect((_) {
+      flagToFetchData.value = false;
       socket.emit("registerUser", '${number.value}@finvu');
     });
 
-     socket.on("registerUser",(data) => {
-
-            flagToFetchData.value=true,
-            fetchedData.value =true,
-            fetchedTrsacntionList.clear(),
-            fetchedTrsacntionList.addAll(data['data']['data']),
-            
-        });
+    socket.on(
+        "registerUser",
+        (data) => {
+              flagToFetchData.value = true,
+              fetchedData.value = true,
+              fetchedTrsacntionList.clear(),
+              fetchedTrsacntionList.addAll(data['data']['data']),
+            });
 
     socket.onConnectError((data) {
-       print("error-----------");
-       print(data);
+      print("error-----------");
+      print(data);
     });
   }
-
 
   void _updateProgress() {
     _progressController.value = _currentPage / 2;
@@ -104,7 +106,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
       backgroundColor: AppColors.backgroundColor,
       body: Stack(
         children: [
-          
           PageView(
             controller: _pageController,
             onPageChanged: _onPageChanged,
@@ -151,23 +152,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     path: OnboardingImages.page22,
                     size: const Size(40, 40),
                     initialOffset: const Offset(-1.0, -1.0),
-                   finalOffset: const Offset(30, 60),
+                    finalOffset: const Offset(30, 60),
                     duration: const Duration(milliseconds: 600), // Very fast
                   ),
                   AnimatedImage(
                     path: OnboardingImages.page23,
                     size: const Size(40, 40),
-                     initialOffset: const Offset(1.0, -1.0),
+                    initialOffset: const Offset(1.0, -1.0),
                     finalOffset: const Offset(140, 250),
                     duration: const Duration(milliseconds: 1000), // Fast
                   ),
-                 
-                  
-                 
                 ],
                 isLastPage: false,
               ),
               //third screen
+              // Update the third OnboardingPage in the PageView
               OnboardingPage(
                 title: 'Connect with the unique community.',
                 subtitle: 'Connect and engage with a community like no other.',
@@ -178,41 +177,42 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   AnimatedImage(
                     path: OnboardingImages.page322,
                     size: const Size(30, 30),
-                    initialOffset: const Offset(-1.0, -1.0),
-                   finalOffset: const Offset(20, 100),
-                    duration: const Duration(milliseconds: 600), // Very fast
+                    initialOffset:
+                        const Offset(-1.0, -1.0), // Start from top-left
+                    finalOffset: const Offset(
+                        0.1, 0.3), // Relative position (fraction of size)
+                    duration: const Duration(milliseconds: 600),
                   ),
                   AnimatedImage(
                     path: OnboardingImages.page323,
                     size: const Size(40, 40),
-                     initialOffset: const Offset(1.0, -1.0),
-                    finalOffset: const Offset(140, 250),
-                    duration: const Duration(milliseconds: 1000), // Fast
+                    initialOffset:
+                        const Offset(1.0, -1.0), // Start from top-right
+                    finalOffset:
+                        const Offset(0.4, 0.6), // Slightly different position
+                    duration: const Duration(milliseconds: 1000),
                   ),
                   AnimatedImage(
                     path: OnboardingImages.page324,
                     size: const Size(40, 40),
-                     initialOffset: const Offset(1.0, -1.0),
-                    finalOffset: const Offset(140, 250),
-                    duration: const Duration(milliseconds: 1000), // Fast
+                    initialOffset: const Offset(1.0, -1.0),
+                    finalOffset: const Offset(0.5, 0.7), // Unique position
+                    duration: const Duration(milliseconds: 1000),
                   ),
                   AnimatedImage(
                     path: OnboardingImages.page325,
                     size: const Size(40, 40),
-                     initialOffset: const Offset(1.0, -1.0),
-                    finalOffset: const Offset(140, 250),
-                    duration: const Duration(milliseconds: 1000), // Fast
+                    initialOffset: const Offset(1.0, -1.0),
+                    finalOffset: const Offset(0.6, 0.8), // Unique position
+                    duration: const Duration(milliseconds: 1000),
                   ),
                   AnimatedImage(
                     path: OnboardingImages.page326,
                     size: const Size(40, 40),
-                     initialOffset: const Offset(1.0, -1.0),
-                    finalOffset: const Offset(140, 250),
-                    duration: const Duration(milliseconds: 1000), // Fast
+                    initialOffset: const Offset(1.0, -1.0),
+                    finalOffset: const Offset(0.7, 0.9), // Unique position
+                    duration: const Duration(milliseconds: 1000),
                   ),
-                 
-                  
-                 
                 ],
                 isLastPage: false,
               ),
@@ -227,7 +227,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     path: OnboardingImages.page42,
                     size: const Size(30, 30),
                     initialOffset: const Offset(-1.0, -1.0),
-                   finalOffset: const Offset(30, 100),
+                    finalOffset: const Offset(30, 100),
                     duration: const Duration(milliseconds: 500), // Fast
                   ),
                   AnimatedImage(
@@ -241,14 +241,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     path: OnboardingImages.page44,
                     size: const Size(30, 30),
                     initialOffset: const Offset(-1.0, 0.0),
-                      finalOffset: const Offset(30, 200),
+                    finalOffset: const Offset(30, 200),
                     duration: const Duration(milliseconds: 1300), // Medium-slow
                   ),
                   AnimatedImage(
                     path: OnboardingImages.page45,
                     size: const Size(30, 30),
                     initialOffset: const Offset(1.0, 0.0),
-                     finalOffset: const Offset(30, 250),
+                    finalOffset: const Offset(30, 250),
                     duration: const Duration(milliseconds: 1700), // Slow
                   ),
                   AnimatedImage(
@@ -264,20 +264,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
             ],
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 40,horizontal: 30),
-            child: Obx(()=> !flagToFetchData.value?Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 30,
-                  height: 30,
-                  child: Spinner(size: 30,)),
-                const SizedBox(width: 20,),
-                Text("Data is Not Yet Fetched"),
-              ],
-            ):Container(
-                child: Text("Featched data successfully..."),
-           )),
+            padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 30),
+            child: Obx(() => !flagToFetchData.value
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                          width: 30,
+                          height: 30,
+                          child: Spinner(
+                            size: 30,
+                          )),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      Text("Data is Not Yet Fetched"),
+                    ],
+                  )
+                : Container(
+                    child: Text("Featched data successfully..."),
+                  )),
           ),
         ],
       ),
@@ -291,7 +297,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
       height: 12,
       width: _currentPage == index ? 20 : 12,
       decoration: BoxDecoration(
-        color: _currentPage == index ? AppColors.primaryColor : AppColors.button,
+        color:
+            _currentPage == index ? AppColors.primaryColor : AppColors.button,
         borderRadius: BorderRadius.circular(8),
       ),
     );
@@ -337,7 +344,8 @@ class OnboardingPage extends StatefulWidget {
   _OnboardingPageState createState() => _OnboardingPageState();
 }
 
-class _OnboardingPageState extends State<OnboardingPage> with TickerProviderStateMixin {
+class _OnboardingPageState extends State<OnboardingPage>
+    with TickerProviderStateMixin {
   late List<AnimationController> _svgAnimationControllers;
   late List<Animation<Offset>> _svgAnimations;
 
@@ -376,7 +384,8 @@ class _OnboardingPageState extends State<OnboardingPage> with TickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    final _onboardingScreenState = context.findAncestorStateOfType<_OnboardingScreenState>()!;
+    final _onboardingScreenState =
+        context.findAncestorStateOfType<_OnboardingScreenState>()!;
     return Column(
       children: [
         Expanded(
@@ -386,7 +395,6 @@ class _OnboardingPageState extends State<OnboardingPage> with TickerProviderStat
             padding: const EdgeInsets.only(top: 20),
             child: Column(
               children: [
-               
                 const SizedBox(height: 20),
                 Expanded(
                   child: Center(
@@ -428,11 +436,12 @@ class _OnboardingPageState extends State<OnboardingPage> with TickerProviderStat
             ),
           ),
         ),
-         Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(4, (index) => _onboardingScreenState.buildDot(index)),
-                ),
-const SizedBox(height: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(
+              4, (index) => _onboardingScreenState.buildDot(index)),
+        ),
+        const SizedBox(height: 20),
         Container(
           height: 350,
           decoration: const BoxDecoration(
@@ -453,9 +462,9 @@ const SizedBox(height: 20),
                   widget.title,
                   textAlign: TextAlign.center,
                   style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.bold,
-                                fontSize: 22,
-                                color: AppColors.backgroundColor),
+                      lWeight: FontWeight.bold,
+                      fontSize: 22,
+                      color: AppColors.backgroundColor),
                 ),
               ),
               const SizedBox(height: 10),
@@ -464,26 +473,27 @@ const SizedBox(height: 20),
                 child: Text(
                   widget.subtitle,
                   textAlign: TextAlign.center,
-                   style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.w200,
-                                fontSize: 14,
-                                color: AppColors.backgroundColor),
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.w200,
+                      fontSize: 14,
+                      color: AppColors.backgroundColor),
                 ),
               ),
               const SizedBox(height: 50),
-              
-             Obx(()=> flagToFetchData.value ?getGestTap(_onboardingScreenState):getGestTap(_onboardingScreenState)),
-               Padding(
-                 padding: const EdgeInsets.symmetric(vertical: 30),
-                 child: Text(
+              Obx(() => flagToFetchData.value
+                  ? getGestTap(_onboardingScreenState)
+                  : getGestTap(_onboardingScreenState)),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 30),
+                child: Text(
                   'By moving forward, you consent to our TERMS OF SERVICE & PRIVACY POLICY',
                   textAlign: TextAlign.center,
-                   style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.w300,
-                                  fontSize: 12,
-                                  color: AppColors.backgroundColor),
-                               ),
-               ),
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.w300,
+                      fontSize: 12,
+                      color: AppColors.backgroundColor),
+                ),
+              ),
             ],
           ),
         ),
@@ -491,64 +501,58 @@ const SizedBox(height: 20),
     );
   }
 
-
-  Widget getGestTap(_onboardingScreenState){
-     return  Stack(
-       alignment: Alignment.center,
-      children: [
-       
-                
-                
-                  if (!widget.isLastPage) // Only show progress indicator for non-last pages
-                    SizedBox(
-                      width: 80,
-                      height: 80,
-                      child: CircularProgressIndicator(
-                        value: _onboardingScreenState._currentPage == 0 ? 0.25 : 0.5,
-                        strokeWidth: 4,
-                        backgroundColor: AppColors.accentColor,
-                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
+  Widget getGestTap(_onboardingScreenState) {
+    return Stack(alignment: Alignment.center, children: [
+      if (!widget.isLastPage) // Only show progress indicator for non-last pages
+        SizedBox(
+          width: 80,
+          height: 80,
+          child: CircularProgressIndicator(
+            value: _onboardingScreenState._currentPage == 0 ? 0.25 : 0.5,
+            strokeWidth: 4,
+            backgroundColor: AppColors.accentColor,
+            valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+          ),
+        ),
+      GestureDetector(
+          onTap: () {
+            if (_onboardingScreenState._currentPage == 2) {
+              // Navigator.pushReplacementNamed(context, '/home');
+              if (flagToFetchData.value) {
+                clearStack(context);
+                Navigator.pushNamed(context, "/home");
+              }
+            } else {
+              _onboardingScreenState._pageController.nextPage(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            }
+          },
+          child: !widget.isLastPage
+              ? Container(
+                  width: 60,
+                  height: 60,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: const Center(
+                    child: Icon(
+                      Icons.arrow_forward,
+                      color: Colors.black,
+                      size: 24,
                     ),
-                 
-                
-              
-        GestureDetector(
-                      onTap: () {
-                        if (_onboardingScreenState._currentPage == 2) {
-                          // Navigator.pushReplacementNamed(context, '/home');
-                           if(flagToFetchData.value){
-                                clearStack(context);
-                                Navigator.pushNamed(context, "/home");
-                           }
-                        } else {
-                          _onboardingScreenState._pageController.nextPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                        }
-                      },
-                      child:  !widget.isLastPage?Container(
-                        width: 60,
-                        height: 60,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                        ),
-                        child: const Center(
-                          child:   Icon(
-                                  Icons.arrow_forward,
-                                  color: Colors.black,
-                                  size: 24,
-                                ),
-                        ),
-                      ):Padding(
-                        padding: const EdgeInsets.only(top:17,bottom: 30),
-                        child: flagToFetchData.value? Center(child: getButton(context, 'Let\'s Go')) :getButton(context, 'Let\'s Go',Colorcodes.greyLight,Colorcodes.black),
-                      )
-                      
-                    ),]
-     );
+                  ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.only(top: 17, bottom: 30),
+                  child: flagToFetchData.value
+                      ? Center(child: getButton(context, 'Let\'s Go'))
+                      : getButton(context, 'Let\'s Go', Colorcodes.greyLight,
+                          Colorcodes.black),
+                )),
+    ]);
   }
 }
 
