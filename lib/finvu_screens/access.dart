@@ -174,22 +174,27 @@ class _AccessState extends State<Access> {
 
 
   Widget accountLikedInfo(){
-    print(seletedAccountInfomations.length);
+   
     return Column(
          children: seletedAccountInfomations.map((data)=>accountInfoDetailsUi(data)).toList(),
     );
   }
 
   Widget accountInfoDetailsUi(FinvuLinkedAccountDetailsInfo data){
-     return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-                textStyle(data.fipName),
-                const SizedBox(width: 5,),  
-                textStyle(data.accountType),
-                const SizedBox(width: 5,),  
-                textStyle(data.maskedAccountNumber),
-        ],
+     return Container(
+      // color: Colorcodes.billBody,
+      width: MediaQuery.of(context).size.width/1.5,
+       child: Wrap(
+           runAlignment: WrapAlignment.spaceAround,
+          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+                  textStyle(data.fipName),
+                  const SizedBox(width: 5,),  
+                  textStyle(data.accountType),
+                  const SizedBox(width: 5,),  
+                  textStyle(data.maskedAccountNumber),
+          ],
+       ),
      ); 
   }
 
@@ -598,7 +603,7 @@ class _AccessState extends State<Access> {
           Icon(Icons.info_outline, color: Colors.grey),
           SizedBox(width: 10),
           Container(
-            width: MediaQuery.of(context).size.width/1.1,
+            width: MediaQuery.of(context).size.width/1.2,
             child: Text(
               "You can pause or cancel sharing anytime via your Finvu app.",
               style: FontManager().getTextStyle(
@@ -648,7 +653,7 @@ class _AccessState extends State<Access> {
 
              try{
                 finvuManager.denyConsentRequest(consentInfo);
-                 clearStack(context);
+                clearStack(context);
                 snackBarCalled(context, "Successfully disApproved request....");
                 Navigator.pushNamed(context, "/ShareAccountLogin");
              }catch(e){
@@ -681,42 +686,31 @@ class _AccessState extends State<Access> {
 
   void approveConsentRequest() async {
     try {
-      FinvuConsentRequestDetailInfo finvuConsentRequestDetailInfo =
-          await finvuManager.getConsentRequestDetails(handleId.value);
+      FinvuConsentRequestDetailInfo finvuConsentRequestDetailInfo = await finvuManager.getConsentRequestDetails(handleId.value);
      
       if(seletedAccountIds.isEmpty){
            snackBarCalled(context, "Account did not seleted..pls add account to approve consent..");
             return;
         }
-        // fetchAccountData.forEach((FinvuLinkedAccountDetailsInfo finvuInfo){
-        //          try{
-        //           if(seletedAccountIds.contains(finvuInfo.accountReferenceNumber)){
-        //               seletedAccountInfomations.add(finvuInfo);
-        //           }
-        //         }
-        //           catch(e){}
-        // });
+        
        
         
       FinvuProcessConsentRequestResponse response =
           await finvuManager.approveConsentRequest(
               finvuConsentRequestDetailInfo, seletedAccountInfomations);
-      // FinvuProcessConsentRequestResponse response =
-      //     await finvuManager.approveConsentRequest(
-      //         finvuConsentRequestDetailInfo, fetchAccountData);
+    
 
       snackBarCalled(context, "approved ConsentRequest");
+
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => FetchTransaction(),
         ),
       );
+
     } catch (e) {   
-      print("Error while approving ConsentRequest");
-      print(e);
       snackBarCalled(context, "Error while approving ConsentRequest");
-      print("d.consentIntentId error");
     }
     debugPrint('approveConsentRequest');
   }

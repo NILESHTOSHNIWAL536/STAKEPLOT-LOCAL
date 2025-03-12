@@ -30,17 +30,11 @@ Future<http.Response> loginToAutoTractionsGetData(context) async {
 
 void login(handleId,context) async {
   try{
-  print("Login inside........................");
-  print(handleId);
-  print("${number.value}@finvu");
-  print(number.value);
-  
   var login = await finvuManager.loginWithUsernameOrMobileNumberAndConsentHandle(
     '${number.value}@finvu',
     '${number.value}',
     handleId,
   );
- print('login After .........................');
   otpReference = login.reference;
   debugPrint('LoggedIn');
   }catch(e){

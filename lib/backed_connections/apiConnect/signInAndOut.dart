@@ -4,6 +4,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
+import 'package:flutter_application_code_stakeplot/animated/userLoginedAlready.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -58,10 +59,14 @@ void check(context, String flag) async {
   }
 }
 
+
+
+
 Future<void> loginUser(TextEditingController emailController,
     TextEditingController passwordController, BuildContext context,
     [bool flag = false]) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
+   await initializeOneSignal(context);
 
   final response = await http.post(
     Uri.parse('${url}/user/login'),
@@ -71,8 +76,23 @@ Future<void> loginUser(TextEditingController emailController,
     body: jsonEncode({
       'email': emailController.text.toString(),
       'userpassword': passwordController.text.toString(),
+      'deviceInfo': deviceData,
     }),
   );
+  if(response.statusCode == 409)
+  {
+      //  final body = json.decode(response.body);
+       showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+            ),
+            builder: (context) {
+              return UserLoginedAlready(data: response.body);
+            },
+          );                  
+  }
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
 
@@ -80,19 +100,19 @@ Future<void> loginUser(TextEditingController emailController,
  
     _pref.setString("accessToken", "Bearer " + accessToken);
     await getBankAccounts();
+    await addThisDeviceToBackend(deviceData, context);
     storeinmap(body, _pref, passwordController.text);
     currentId.value = body['data']['_id'];
     Phone.value = body['data']['phone'];
     number.value = body['data']['phone'];
     isBankAccountLink.value = body['data']['isBankAccountLinked'];
 
-    await initializeOneSignal(context);
+   
     if (flag) return;
     UserStorage.storeUserDetails(currentId.value, body['data']['name'], body['data']['avatarType'], ("Bearer " + accessToken));
-    // isBankAccountLink.value ?  getUserInfoBackDetails(context): loginToAutoTractions(context, Phone.value);
+  
     storeImageinMapFinvu(context);
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
     acceptReset.value = false;
     // Navigator.popAndPushNamed(context, '/home');
   } else {
@@ -151,6 +171,7 @@ void getOTP(context, String name, String email) async {
     body: jsonEncode({
       'email': email,
       'name': name,
+      'deviceInfo': deviceData
     }),
   );
   if (response.statusCode == 200 || response.statusCode == 201) {
@@ -297,6 +318,7 @@ void resendOptUser(context, email, name) async {
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
+    acceptReset.value=false;
     snackBarCalled(context, "ReSended Otp To Email Id...!", Colors.black);
   } else {
     snackBarCalled(context, "can't send opt!", Colors.red);
@@ -509,7 +531,7 @@ void oneSignalInit() {
 
 Future<void> getDeviceInfo(String playerId, context) async {
   final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-  Map<String, String> deviceData = {};
+  deviceData.value = {};
 
   try {
     if (Platform.isAndroid) {
@@ -517,28 +539,26 @@ Future<void> getDeviceInfo(String playerId, context) async {
       final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       // print(androidInfo);
       // print(androidInfo.device);
-      deviceData = {
+      deviceData.value = {
         'deviceId': playerId,
-        'deviceName': androidInfo.device,
-        // 'manufacturer': androidInfo.manufacturer ?? 'Unknown',
+        'brand': androidInfo.brand,
+        'device': androidInfo.device,
+        'model': androidInfo.model,
         'os': 'Android',
-        'osVersion': androidInfo.version.release,
       };
     } else if (Platform.isIOS) {
       // For iOS devices
       final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      deviceData = {
+      deviceData.value = {
         'deviceId': playerId,
         'deviceName': iosInfo.name,
-        // 'manufacturer': 'Apple',
         'os': 'iOS',
         'osVersion': iosInfo.systemVersion
       };
     } else {
-      deviceData = {
+      deviceData.value = {
         'deviceId': playerId,
         'deviceName': 'Unknown',
-        // 'manufacturer': 'Unknown',
         'os': 'Unknown',
         'osVersion': 'Unknown',
       };
@@ -547,12 +567,15 @@ Future<void> getDeviceInfo(String playerId, context) async {
     print('Error getting device info: $e');
   }
 
-  await addThisDeviceToBackend(deviceData, context);
+  // await addThisDeviceToBackend(deviceData, context);
 }
 
 Future<void> addThisDeviceToBackend(deviceData, context) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
+
+  print(deviceData);
+  print(accessToken);
 
   final response = await http.post(
     Uri.parse('${url}/notify/addDeviceToNotify/'),
@@ -562,11 +585,12 @@ Future<void> addThisDeviceToBackend(deviceData, context) async {
     },
     body: jsonEncode(deviceData),
   );
-  if (response.statusCode == 200 || response.statusCode == 201) {
+  printData(response);
+  if (response.statusCode == 200 || response.statusCode == 201)
+  {
     final body = json.decode(response.body);
-    // print(body);
-    // snackBarCalled(context, "user device login...!", Colors.black);
-  } else {
-    snackBarCalled(context, "can't send opt!", Colors.red);
+
+  } else{
+    
   }
 }

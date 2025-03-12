@@ -123,25 +123,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                     );
                   },
                   child: getButton(context, "Authorise")),
-              // listofLinkedAccount.isNotEmpty
-              //     ? Column(
-              //         children: [
-              //           const SizedBox(
-              //             height: 5,
-              //           ),
-              //           InkWell(
-              //               onTap: () {
-              //                 showModalBottomSheet(
-              //                   context: context,
-              //                   builder: (context) {
-              //                     return fetchDataOfLinkedAccount();
-              //                   },
-              //                 );
-              //               },
-              //               child: getButton(context, "Fetch Now")),
-              //         ],
-              //       )
-              //     : SizedBox.shrink(),
+              
             ],
           ),
         ),

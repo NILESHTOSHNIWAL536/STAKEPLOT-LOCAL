@@ -455,26 +455,8 @@ class _BottomNavigationsState extends State<BottomNavigations> {
   @override
   void initState() {
     super.initState();
-    getRoom();
   }
-
-  void getRoom() async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-    final response = await http.get(
-      Uri.parse('${url}/room/find'),
-      // Uri.parse('https://stakeplot.in/api/v1/post/all'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-    );
-
-    if (response.statusCode == 200) {
-      var his = jsonDecode(response.body);
-      var obj = his['data'];
-    } else {}
-  }
+  
 
   @override
   Widget build(BuildContext context) {

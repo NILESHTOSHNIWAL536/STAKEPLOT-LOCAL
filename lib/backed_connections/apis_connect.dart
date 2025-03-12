@@ -7,25 +7,21 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.
 import 'package:get/get.dart';
 
 bool flag = true;
-String portNo = flag ? "192.168.1.5" : "localhost";
-String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String portNo = flag ? "192.168.1.6" : "localhost";
+String urlWithLocallHost = flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
-
 String valid = "Please Enter All Feilds";
 RxString expenses = "Loading....".obs;
 RxString aboutUS = "".obs;
-
 RxString avatar = "assets/avatar/menp1.svg".obs;
 RxString avatarUser = "assets/avatar/menp1.svg".obs;
-
+RxMap deviceData={}.obs;
 RxList frdsList = [].obs;
 RxList frdsListOrigin = [].obs;
 RxBool isBankAccountLink = false.obs;
 RxInt income = 0.obs;
-
 double maxDC = 0;
 double minDC = 0;
-
 RxList notificationList = [].obs;
 RxList<String> listofLinkedAccount = <String>[].obs;
 RxList trasactionsData = [].obs;

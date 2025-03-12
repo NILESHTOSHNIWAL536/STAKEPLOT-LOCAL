@@ -26,14 +26,13 @@ void initFinvuManager(BuildContext context) async {
       finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
       certificatePins: 
       [
-             "R6wXZnQsKKyg56qFKQNytvygyr/o4Mkq1VXL5LenBYI=",
-             "bdrBhpj38ffhxpubzkINl0rG+UyossdhcBYj+Zx2fcc="
+            //  "R6wXZnQsKKyg56qFKQNytvygyr/o4Mkq1VXL5LenBYI=",
+            //  "bdrBhpj38ffhxpubzkINl0rG+UyossdhcBYj+Zx2fcc="
       ],
     ),
   );
 
   await finvuManager.connect();
-   snackBarCalled(context,finvuManager.connect().toString());
   var isConnected = await finvuManager.isConnected();
 
   if (!isConnected) {
@@ -48,19 +47,22 @@ Future<void> loginWithServer(context) async {
       "${number.value}@finvu"; // Replace with dynamic value if needed
   
    final SharedPreferences _pref = await SharedPreferences.getInstance();
+   String token = "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMwYWZiZmNiMTcxMDc2NWFiOGU5MCIsImlhdCI6MTc0MTc3NjU5MCwiZXhwIjoxNzQ2OTYwNTkwfQ.dm6hkBDE1xAY48hAOMLckjL0wXcCh54TpWf3wZXQ6Uc";
+  _pref.setString("accessToken", token);
    var accessToken = _pref.getString("accessToken");
-  
+
 
   try {
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "$accessToken",
+        "Authorization": "$token",
       },
       body: jsonEncode({"custId": custId,'number':number.value}),
     );
-    
+
+     printData(response);
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       String token = "";//data["token"];
@@ -69,17 +71,16 @@ Future<void> loginWithServer(context) async {
 
       // Store token and consentHandleId in SharedPreferences
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString("tokenFinvu", token);
-      await prefs.setString("consentHandleId", consentHandleId);
+      // await prefs.setString("tokenFinvu", token);
+      // await prefs.setString("consentHandleId", consentHandleId);
 
     
    
       handleId.value = consentHandleId;
+      print(handleId.value);
       snackBarCalled(context, consentHandleId);
       login(handleId.value,context);
 
-      // Proceed with next steps, e.g., calling another API
-      // ConsentStatus(context, token, consentHandleId, custId);
     } else {
     
     }
@@ -93,9 +94,9 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
     final String apiUrl ="${url}/finvu/fetchData"; // Change to your actual server URL
     final String custId ="${number.value}@finvu"; // Replace with dynamic value if needed
     
-    String? handleId = prefs.getString("consentHandleId");
+    // String? handleId2 = handleId.value;
 
-    if (handleId == null) {
+    if (handleId.value == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Missing required credentials!")),
       );
@@ -111,39 +112,13 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
       headers: {"Content-Type": "application/json", "Authorization": "$accessToken",},
       body: jsonEncode({
         "token": "",
-        "handleId": handleId,
+        "handleId": handleId.value,
         "custId": custId,
       }),
     );
    
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-   
-      // sessionId.value=true;
-      // Store values in SharedPreferences for later use
-      prefs.setString("sessionId", data["sessionId"]);
-      prefs.setString("from", data["from"]);
-      prefs.setString("to", data["to"]);
-      prefs.setString("custId", data["custId"]);
-      prefs.setString("consentId", data["consentId"]);
-
-      // fetchedTrsacntionList.clear();
-      // fetchedTrsacntionList.add([data.toString()]);
-      // fetchedTrsacntionList.refresh();
-
-      // String accessToken="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3N2UxMjBhNzVhYWZiYWMyNTQ2NGFkNCIsImlhdCI6MTczODc1Nzc3OSwiZXhwIjoxNzQzOTQxNzc5fQ.5XeQtIM2CmFdyrfXiCcA5neACgSRuYScFa5ArcYhe34";
-      // final SharedPreferences pref = await SharedPreferences.getInstance();
-      // pref.setString("accessToken",accessToken);
-
-
-      // sessionId.value=false;
-
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(content: Text("Data fetched successfully....!")),
-      // );
-      
-
-      
       
     } else {
     
@@ -159,8 +134,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
     );
   }
 
-  // /OnboardingScreen
-  clearStackShared(context);
+   clearStackShared(context);
    Navigator.pushNamed(context, "/OnboardingScreen"); 
 
 }
@@ -171,8 +145,7 @@ Future<void> FetchTransactionBysessionId(BuildContext context,String sessionId) 
     final String apiUrl ="${url}/finvu/session/${sessionId}"; 
    
     var response=await getDataApiCall(apiUrl);
-   
-   
+  
     if (response.statusCode == 200) {
         final data = json.decode(response.body);
         

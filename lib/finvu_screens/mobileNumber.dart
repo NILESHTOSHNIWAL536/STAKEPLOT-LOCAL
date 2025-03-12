@@ -263,17 +263,7 @@ late final WebViewController controller ;
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(vertical: 10),
-            //   child: Center(
-            //       child: textStyle("Securely authorize each selected account", 14,
-            //           Colorcodes.black, FontWeight.bold)),
-            // ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 20),
-            //   child: textStyle(
-            //       "OTP Verification", 20, AppColors.bg1, FontWeight.bold),
-            // ),
+            
             Padding(
               padding: const EdgeInsets.only(top:25,left: 20,right: 20),
               child: textStyle(
@@ -318,7 +308,9 @@ late final WebViewController controller ;
                 onChanged: (value) {
                   _otpCode.value = value;
                   _isOtpValid.value = value.length == _otpCodeLength;
-                 
+                  if( _isOtpValid.value){
+                        checkOtp();
+                  }
                 },
               ),
             ),

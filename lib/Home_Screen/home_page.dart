@@ -52,10 +52,12 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
     initializeData();
   }
 
-  void initializeData() {
+  void initializeData()   
+  {
    
     check(context, "homeScreen");
     getBankAccounts();
@@ -72,6 +74,7 @@ class _HomePageState extends State<HomePage> {
     getRemainders(context);
     getNotifications(context);
     sectionReached.value=false;
+
   }
 
   @override
