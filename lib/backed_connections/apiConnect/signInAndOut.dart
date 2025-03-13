@@ -183,7 +183,7 @@ void getOTP(context, String name, String email) async {
     snackBarCalled(context, "can't send opt!", Colors.red);
   }
 }
-void  forceLogoutUser( sessionId, email, userpassword, deviceInfo ,context,id) async {
+void  forceLogoutUser( sessionId, email, userpassword ,context,id) async {
 final SharedPreferences _pref = await SharedPreferences.getInstance();
  try{
   final response = await http.post(
@@ -195,7 +195,7 @@ final SharedPreferences _pref = await SharedPreferences.getInstance();
       "sessionId":sessionId, 
       "email":email, 
       "userpassword":userpassword,
-      "deviceInfo":deviceInfo 
+      "deviceInfo":deviceData 
     }),
   );
  
@@ -203,15 +203,15 @@ final SharedPreferences _pref = await SharedPreferences.getInstance();
    final body = json.decode(response.body);
     String accessToken = body['data']['accessToken'];
     _pref.setString("accessToken", "Bearer " + accessToken);
-
+     currentId.value = body['data']['_id'];
     try{
-    sendNotificationsToDevice(id, context, "Your Are Logout From the StakePlot");
+    sendNotificationsToDevice( currentId.value, context, "Your Are Logout From the StakePlot");
     }catch(e){}
 
     await getBankAccounts();
     await addThisDeviceToBackend(deviceData, context);
     storeinmap(body, _pref,userpassword);
-    currentId.value = body['data']['_id'];
+   
     Phone.value = body['data']['phone'];
     number.value = body['data']['phone'];
     isBankAccountLink.value = body['data']['isBankAccountLinked'];

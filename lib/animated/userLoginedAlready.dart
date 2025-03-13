@@ -35,7 +35,7 @@ class UserLoginedAlready extends StatelessWidget {
         children: [
                Container(
                 width: MediaQuery.of(context).size.width/2,
-                height: MediaQuery.of(context).size.height/2.4,
+                height: MediaQuery.of(context).size.height/5,
                 child: AvatarProfileImage(url: "assets/icons/lock.svg", width: 10, height: 10)
               ),
                getContainer(context, body['message']),
@@ -46,7 +46,7 @@ class UserLoginedAlready extends StatelessWidget {
                InkWell(
                 onTap: ()
                 {
-                    forceLogoutUser(body['existingSessionId'], email, userpassword, deviceData, context,body['loggedInDevice']['deviceId']);
+                    forceLogoutUser(body['existingSessionId'], email, userpassword, context,body['loggedInDevice']['deviceId']);
                 },
                 child: getButton(context, "Logout User"))
       ],),
