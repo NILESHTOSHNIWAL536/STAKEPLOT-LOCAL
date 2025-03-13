@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
 import 'package:flutter_application_code_stakeplot/animated/userLoginedAlready.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -66,8 +67,8 @@ Future<void> loginUser(TextEditingController emailController,
     TextEditingController passwordController, BuildContext context,
     [bool flag = false]) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
-   await initializeOneSignal(context);
-
+  print(deviceData);
+  print(deviceData.value);
   final response = await http.post(
     Uri.parse('${url}/user/login'),
     headers: <String, String>{
@@ -79,6 +80,7 @@ Future<void> loginUser(TextEditingController emailController,
       'deviceInfo': deviceData,
     }),
   );
+  printData(response);
   if(response.statusCode == 409)
   {
       //  final body = json.decode(response.body);
@@ -89,7 +91,7 @@ Future<void> loginUser(TextEditingController emailController,
               borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
             ),
             builder: (context) {
-              return UserLoginedAlready(data: response.body);
+              return UserLoginedAlready(data: response.body,email: emailController.text,userpassword: passwordController.text);
             },
           );                  
   }
@@ -110,11 +112,10 @@ Future<void> loginUser(TextEditingController emailController,
    
     if (flag) return;
     UserStorage.storeUserDetails(currentId.value, body['data']['name'], body['data']['avatarType'], ("Bearer " + accessToken));
-  
     storeImageinMapFinvu(context);
     Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
     acceptReset.value = false;
-    // Navigator.popAndPushNamed(context, '/home');
+  
   } else {
     acceptReset.value = false;
     var snackBar = SnackBar(
@@ -181,6 +182,48 @@ void getOTP(context, String name, String email) async {
   } else {
     snackBarCalled(context, "can't send opt!", Colors.red);
   }
+}
+void  forceLogoutUser( sessionId, email, userpassword, deviceInfo ,context,id) async {
+final SharedPreferences _pref = await SharedPreferences.getInstance();
+ try{
+  final response = await http.post(
+    Uri.parse('${url}/user/force-login'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode({
+      "sessionId":sessionId, 
+      "email":email, 
+      "userpassword":userpassword,
+      "deviceInfo":deviceInfo 
+    }),
+  );
+ 
+  if (response.statusCode == 200 || response.statusCode == 201) {
+   final body = json.decode(response.body);
+    String accessToken = body['data']['accessToken'];
+    _pref.setString("accessToken", "Bearer " + accessToken);
+
+    try{
+    sendNotificationsToDevice(id, context, "Your Are Logout From the StakePlot");
+    }catch(e){}
+
+    await getBankAccounts();
+    await addThisDeviceToBackend(deviceData, context);
+    storeinmap(body, _pref,userpassword);
+    currentId.value = body['data']['_id'];
+    Phone.value = body['data']['phone'];
+    number.value = body['data']['phone'];
+    isBankAccountLink.value = body['data']['isBankAccountLinked'];
+    clearStack(context);
+    Navigator.pushNamed(context, "/home");
+    acceptReset.value = false;
+  } else {
+    snackBarCalled(context, "can't send opt!", Colors.red);
+  }
+ }catch(e){
+    print(e);
+ }
 }
 
 void getforgotPassword(context, String name, String email) async {
@@ -539,13 +582,15 @@ Future<void> getDeviceInfo(String playerId, context) async {
       final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       // print(androidInfo);
       // print(androidInfo.device);
-      deviceData.value = {
+      deviceData.value =
+      {
         'deviceId': playerId,
         'brand': androidInfo.brand,
         'device': androidInfo.device,
         'model': androidInfo.model,
         'os': 'Android',
       };
+
     } else if (Platform.isIOS) {
       // For iOS devices
       final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
@@ -566,16 +611,13 @@ Future<void> getDeviceInfo(String playerId, context) async {
   } catch (e) {
     print('Error getting device info: $e');
   }
-
+   print(deviceData);
   // await addThisDeviceToBackend(deviceData, context);
 }
 
 Future<void> addThisDeviceToBackend(deviceData, context) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
-
-  print(deviceData);
-  print(accessToken);
 
   final response = await http.post(
     Uri.parse('${url}/notify/addDeviceToNotify/'),

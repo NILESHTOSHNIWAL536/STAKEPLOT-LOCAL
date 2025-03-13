@@ -254,7 +254,7 @@ Widget siginButton(){
                             borderRadius: BorderRadius.circular(
                                 Colorcodes.borderRadius30)),
                         child: InkWell(
-                          onTap: () {
+                          onTap: ()async {
                             
                             if (acceptReset.value) return;
 
@@ -264,7 +264,7 @@ Widget siginButton(){
                             }
                             
                             acceptReset.value = true;
-                            
+                             await initializeOneSignal(context);
                             loginUser(emailController, passwordController, context);
                            
                           },
