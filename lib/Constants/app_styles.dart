@@ -175,6 +175,8 @@ class LikeComment {
   static String share = "assets/icons/likeComment/Send.svg";
   static String plus = "assets/icons/likeComment/Plus.svg";
   static String message = "assets/icons/likeComment/Messagecircle.svg";
+  static String likeIcon = "assets/icons/likeComment/likeIcon.svg";
+  static String likeIcon2 = "assets/icons/likeComment/likeIcon2.svg";
 
   static String manualTransaction =
       "assets/icons/likeComment/manualTransaction.svg";

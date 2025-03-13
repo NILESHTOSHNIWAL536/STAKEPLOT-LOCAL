@@ -100,9 +100,18 @@ class _BudgetState extends State<Budget> {
           ),
           textStyle(
               context: context,
-              text: "Budget Calculator",
+              text: "Budget Planner",
               fontsize: 20,
               fontWeight: FontWeight.bold),
+               SizedBox(
+            height: Colorcodes.paddingSize / 4,
+          ),
+               textStyle(
+              context: context,
+              text: "Plan and manage your budget effectively",
+              fontsize: 12,
+              fontWeight: FontWeight.w300,
+              c: AppColors.bg3),
           SizedBox(
             height: Colorcodes.paddingSize / 2,
           ),

@@ -207,14 +207,14 @@ Widget vote(context, dataObj, data) {
 // Helper function to get the appropriate SVG based on like status
 Widget likeIcon(BuildContext context, bool isLiked) {
   return isLiked
-      ? Icon(
-          Icons.favorite,
-          color: Colorcodes.red,
-          size: 25,
-        )
+      ?SvgPicture.asset(
+      LikeComment.likeIcon2, // Path to your outlined heart SVG
+      //color: Colors.white,
+      height: 25,
+    )
        
   : SvgPicture.asset(
-      LikeComment.likes, // Path to your outlined heart SVG
+      LikeComment.likeIcon, // Path to your outlined heart SVG
       //color: Colors.white,
       height: 25,
     );

@@ -251,54 +251,94 @@ class _ChatState extends State<Chat> {
   }
 
   Widget spliData(Message message) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      width: MediaQuery.of(context).size.width / 2,
+  return Card(
+    elevation: 2,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: Container(
+      padding: const EdgeInsets.all(10),
+      width: MediaQuery.of(context).size.width / 1.8,
       decoration: BoxDecoration(
-          //  color: Colorcodes.appBarColor,
-          // border: Border.all(width: .5),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(width: .5, color: AppColors.primaryColor)),
+        color:AppColors.backgroundColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(width: 1, color: AppColors.primaryColor),
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(
-            height: 6,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Icon(Icons.receipt, color: AppColors.primaryColor, size: 24),
+              SizedBox(width:10),
+              Text(
+                message.split['BillName'],
+                style: FontManager().getTextStyle(context,
+                    fontSize: 16,
+                    lWeight: FontWeight.bold,
+                    color: AppColors.bg1),
+              ),
+            ],
           ),
-          Text(message.split['BillName'],
-              style: FontManager().getTextStyle(context,
-                  fontSize: 18,
-                  lWeight: FontWeight.bold,
-                  color: AppColors.bg1)),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10.0),
-            child: Text(
-                "Amount: " + doubleToFixed(message.split['Amount'].toString()),
-                style: FontManager()
-                    .getTextStyle(context, fontSize: 16, color: AppColors.bg2)),
+          const SizedBox(height: 3),
+          Column(
+           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    "₹", // Rupee symbol
+                    style: TextStyle(color: AppColors.bg2, fontSize: 16),
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    "Total expense: " + doubleToFixed(message.split['Amount'].toString()),
+                    style: FontManager()
+                        .getTextStyle(context, fontSize: 12, color: AppColors.bg2),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Icon(Icons.group, color: AppColors.bg2, size: 20),
+                  const SizedBox(width: 5),
+                  Text(
+                    "Share: " + doubleToFixed(message.split['Share'].toString()).toString(),
+                    style: FontManager()
+                        .getTextStyle(context, fontSize: 12, color: AppColors.bg2),
+                  ),
+                ],
+              ),
+            ],
           ),
-          Text(
-              "Share:  " +
-                  doubleToFixed(message.split['Share'].toString()).toString(),
-              style: FontManager()
-                  .getTextStyle(context, fontSize: 16, color: AppColors.bg2)),
-          const SizedBox(height: 4),
+          const SizedBox(height: 5),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 6.0),
-            child: Text(message.split['isPaid'] ? "Paid..!" : "Pending..!",
-                style: FontManager().getTextStyle(context,
-                    fontSize: 18,
-                    lWeight: FontWeight.bold,
-                    color: (message.split['isPaid']
-                        ? Colorcodes.poll1
-                        : Colorcodes.greyLight))),
+            child: Row(
+              children: [
+                Icon(
+                  message.split['isPaid'] ? Icons.check_circle : Icons.pending,
+                  color: message.split['isPaid'] ? Colors.green : Colors.red,
+                  size: 20,
+                ),
+                const SizedBox(width: 5),
+                Text(
+                  message.split['isPaid'] ? "Settled Successfully" : "Pending",
+                  style: FontManager().getTextStyle(context,
+                      fontSize: 12,
+                      lWeight: FontWeight.w400,
+                      color: message.split['isPaid'] ? Colors.green : Colors.red),
+                ),
+              ],
+            ),
           ),
         ],
       ),
-    );
-  }
-
+    ),
+  );
+}
   void getImage() async {
     final _picker = ImagePicker();
     final imageData = await _picker.pickImage(source: ImageSource.gallery);
@@ -435,7 +475,7 @@ class _ChatState extends State<Chat> {
       
                 decoration: BoxDecoration(
                   color: AppColors.button,
-                  borderRadius: BorderRadius.circular(24),
+                  //borderRadius: BorderRadius.circular(24),
                 ),
                 //       decoration: InputDecoration(
                 //   prefixIcon: Icon(Icons.search),

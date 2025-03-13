@@ -42,12 +42,15 @@ class TransactionHistory extends StatefulWidget {
   State<TransactionHistory> createState() => _TransactionHistoryState();
 }
 
-class _TransactionHistoryState extends State<TransactionHistory> {
+class _TransactionHistoryState extends State<TransactionHistory> with SingleTickerProviderStateMixin {
   final Map<int, double> swipeOffsets = {};
   final _scrollController2 = ScrollController();
   final List<Map<String, dynamic>> hiddenTransactions = [];
   final targetKey = GlobalKey();
   BuildContext? _stableContext;
+   late AnimationController _animationController; // For smooth animations
+  late Animation<double> _swipeAnimation; // Animation for swipe offset
+  int? _currentSwipedIndex; 
 
   @override
   void initState() {
@@ -65,6 +68,10 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     currentPage = 1;
     getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,
         isRefreshing: true);
+         _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200), // Animation duration
+    );
   }
 
   @override
@@ -75,6 +82,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
 
   @override
   void dispose() {
+    _animationController.dispose();
     _scrollController2.dispose();
     super.dispose();
   }
@@ -560,49 +568,69 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     );
   }
 
-  BoxDecoration getBoxDecoration(int index) {
+   BoxDecoration getBoxDecoration(int index) {
+    double swipeOffset = (swipeOffsets[index] ?? 0.0).abs(); // Absolute value of offset
+    double totalSwipeDistance = 90.0; // Total swipe distance
+    double mixStart = totalSwipeDistance * 0.7; // Start mixing at 70% (63.0)
+    double swipeProgress;
+
+    if (swipeOffset <= mixStart) {
+      // Before the last 30%, no mixing (fully opaque)
+      swipeProgress = 0.0;
+    } else {
+      // In the last 30%, calculate progress from mixStart (63.0) to totalSwipeDistance (90.0)
+      swipeProgress = (swipeOffset - mixStart) / (totalSwipeDistance - mixStart);
+      swipeProgress = swipeProgress.clamp(0.0, 1.0); // Ensure it stays between 0 and 1
+    }
+
     return BoxDecoration(
       gradient: LinearGradient(
         begin: Alignment.centerLeft,
         end: Alignment.centerRight,
-        stops: [
-          (1.0 - ((swipeOffsets[index] ?? 0.0).abs() / 200)).clamp(0.0, 1.0),
-          1.0,
-        ],
+        stops: const [0.0, 0.7, 1.0], // Gradient stops: 0% to 70% solid, 70% to 100% mixing
         colors: [
-          AppColors.backgroundColor,
-          AppColors.backgroundColor.withOpacity(0.0),
+          AppColors.backgroundColor, // Solid color up to 70%
+          AppColors.backgroundColor, // Still solid at 70%
+          AppColors.backgroundColor.withOpacity(1.0 - swipeProgress), // Mixing in last 30%
         ],
       ),
     );
   }
 
-  // void scrollLeft(DragUpdateDetails details, int index) {
-  //   setState(() {
-  //     swipeOffsets.forEach((key, value) {
-  //       if (key != index) {
-  //         swipeOffsets[key] = 0.0;
-  //       }
-  //     });
+  
+   void scrollLeft(DragUpdateDetails details, int index) {
+    setState(() {
+      // Reset other items' offsets
+      swipeOffsets.forEach((key, value) {
+        if (key != index) {
+          swipeOffsets[key] = 0.0;
+        }
+      });
 
-  //     double offset = swipeOffsets[index] ?? 0.0;
-  //     offset += details.delta.dx;
-  //     offset = offset.clamp(-90.0, 0.0);
-  //     swipeOffsets[index] = offset;
-  //   });
-  // }
-  void scrollLeft(DragUpdateDetails details, int index) {
-  setState(() {
-    swipeOffsets.forEach((key, value) {
-      if (key != index) {
-        swipeOffsets[key] = 0.0;
-      }
+      // Determine target offset based on drag direction
+      double targetOffset = details.delta.dx < 0 ? -90.0 : 0.0;
+      animateSwipe(index, targetOffset);
     });
+  }
+  void animateSwipe(int index, double targetOffset) {
+    _currentSwipedIndex = index;
+    double currentOffset = swipeOffsets[index] ?? 0.0;
 
-    double offset = details.delta.dx < 0 ? -90.0 : 0.0;
-    swipeOffsets[index] = offset;
-  });
-}
+    _swipeAnimation = Tween<double>(begin: currentOffset, end: targetOffset)
+        .animate(CurvedAnimation(
+          parent: _animationController,
+          curve: Curves.easeInOut, // Smooth easing curve
+        ))
+      ..addListener(() {
+        setState(() {
+          if (_currentSwipedIndex == index) {
+            swipeOffsets[index] = _swipeAnimation.value;
+          }
+        });
+      });
+
+    _animationController.forward(from: 0.0);
+  }
 
   static Future<String?> getToken() async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
