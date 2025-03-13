@@ -37,11 +37,9 @@ class _NotificationsState extends State<Notifications> {
   }
 
   void getTransaction() async {
-   
-    String urlPath='${url}/user/myNotifications';
-    var response=await getDataApiCall(urlPath);
+    String urlPath = '${url}/user/myNotifications';
+    var response = await getDataApiCall(urlPath);
     if (response.statusCode == 200) {
-     
       if (response.body.isEmpty) {
         snackBarCalled(context, "No Notifications");
         return;
@@ -52,23 +50,19 @@ class _NotificationsState extends State<Notifications> {
       notificationList.forEach((req) {
         String type = req['notificationMessage']['type'];
         var e = req['notificationMessage'];
-        if (type == "friendRequest")
-        {
+        if (type == "friendRequest") {
           friendRequestList.add(e['from_id']);
         }
       });
       flag.value = false;
       hasGetNewNotifications.value = false;
       myNotificationBool.value != myNotificationBool.value;
-    } else {
-      
-    }
+    } else {}
   }
 
-  Future<void> deleteNotification(String notifyId) async
-  {
-    String urlPath='${url}/user/deleteNotifications/${notifyId}';
-    var response=await getDataApiCall(urlPath);
+  Future<void> deleteNotification(String notifyId) async {
+    String urlPath = '${url}/user/deleteNotifications/${notifyId}';
+    var response = await getDataApiCall(urlPath);
     if (response.statusCode != 200) {
       snackBarCalled(context, "Failed to delete notification");
     } else {
@@ -133,14 +127,10 @@ class _NotificationsState extends State<Notifications> {
                 children: notificationList.map((e) {
                   var notifyId = e['_id'];
                   return Dismissible(
-                    key: Key(notifyId), 
-                    direction:
-                        DismissDirection.endToStart, 
-                    onDismissed: (direction)
-                    {
-                        delete(notifyId);
-                      
-                     
+                    key: Key(notifyId),
+                    direction: DismissDirection.endToStart,
+                    onDismissed: (direction) {
+                      delete(notifyId);
                     },
                     background: Container(
                       color: Colors.red,
@@ -166,57 +156,62 @@ class _NotificationsState extends State<Notifications> {
       return messageChannelProfile(
           "${e['from_name']} accepted your friend request",
           e['from_id'].toString(),
-          e['avatarType'] ?? "",time);
+          e['avatarType'] ?? "",
+          time);
     }
     if (type == "friendRequest") {
-      return friends(
-          e['from_name'], e['from_id'].toString(), e['avatarType'], e, index,notifyId,time);
+      return friends(e['from_name'], e['from_id'].toString(), e['avatarType'],
+          e, index, notifyId, time);
     } else if (type == "split") {
       return messageChannelProfile(
-          "${e['username']} has shared the bill for ${e['billname']} of ₹${e['amount'] ?? "400"}",
+          "${e['username']} has shared the bill for ${e['billname']} of ₹${(double.tryParse(e['amount'].toString()) ?? 400).toStringAsFixed(1)}",
           e['id'].toString(),
-          e['avatarType'] ?? "",time);
+          e['avatarType'] ?? "",
+          time);
     } else if (type == "roomBill") {
       return messageChannelProfile(
           "${e['from_name']}, has shared the bill in Room",
           e['from_id'].toString(),
-          e['avatarType'] ?? "",time);
+          e['avatarType'] ?? "",
+          time);
     } else if (type == "room") {
       return messageChannelProfile(
           "${e['from_name']}, has added in the room  ${e['roomName']}",
           e['from_id'].toString(),
-          e['avatarType'] ?? "",time);
+          e['avatarType'] ?? "",
+          time);
     } else if (type == "comment") {
       return messageChannelProfile(
           "${e['username']} has commented on your post",
           e['id'].toString(),
-          e['avatarType'] ?? "",time);
+          e['avatarType'] ?? "",
+          time);
     } else if (type == "lendRequest") {
       return lendRequest(e['from_name'], e['from_id'].toString(),
-          e['avatarType'], e, index, e['name'] ?? "", notifyId,time);
+          e['avatarType'], e, index, e['name'] ?? "", notifyId, time);
     } else if (type == "lendAccepted" || type == "rejectedLend") {
       type = type == "lendAccepted" ? "accepted" : "rejected";
 
       return messageChannelProfile(
           "${e['username']} ${type} your Lent request for ${e['name']}, worth ₹${e['amount'] ?? '400'}",
           e['from_id'].toString(),
-          e['avatarType'] ?? "",time);
-    }else if(type=="lendSettled"){
-       return   messageChannelProfile(
+          e['avatarType'] ?? "",
+          time);
+    } else if (type == "lendSettled") {
+      return messageChannelProfile(
           "${e['from_name']} has settled your loan of ${e['amount']} for the item: ${e['name']}.",
           e['id'].toString(),
-          e['avatarType'] ?? "",time);
-    }else if(type=="splitSettled"){
-       return   messageChannelProfile(
+          e['avatarType'] ?? "",
+          time);
+    } else if (type == "splitSettled") {
+      return messageChannelProfile(
           "${e['from_name']} has settled your Split of ${e['amount'].toStringAsFixed(1)} for the item: ${e['name']}.",
           e['id'].toString(),
-          e['avatarType'] ?? "",time);
-    }else if (type == "FetchedData") {
-      return messageChannelProfile(
-          "${e['message']}",
-          "",
-          "",time);
-    } 
+          e['avatarType'] ?? "",
+          time);
+    } else if (type == "FetchedData") {
+      return messageChannelProfile("${e['message']}", "", "", time);
+    }
 
     return SizedBox(
       child: Text("hello"),
@@ -224,7 +219,7 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Widget lendRequest(String name, String id, String avatar, e, int index,
-      String itemName, String notifyId,time) {
+      String itemName, String notifyId, time) {
     // Get the screen width
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -279,11 +274,9 @@ class _NotificationsState extends State<Notifications> {
                         children: [
                           InkWell(
                             onTap: () {
-                           
-                              approveBill(context, e['bill_id'] ?? "", "accept",notifyId);
+                              approveBill(context, e['bill_id'] ?? "", "accept",
+                                  notifyId);
                               delete(notifyId);
-                            
-                             
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(
@@ -307,7 +300,8 @@ class _NotificationsState extends State<Notifications> {
                           InkWell(
                             onTap: () {
                               // Optimistic update
-                              approveBill(context, e['bill_id'] ?? "", "reject",notifyId);
+                              approveBill(context, e['bill_id'] ?? "", "reject",
+                                  notifyId);
                               delete(notifyId);
                             },
                             child: Container(
@@ -343,12 +337,13 @@ class _NotificationsState extends State<Notifications> {
     );
   }
 
-  void delete(notifyId){
-      notificationList.removeWhere((item) =>item['_id'] ==notifyId);
-       deleteNotification(notifyId);
+  void delete(notifyId) {
+    notificationList.removeWhere((item) => item['_id'] == notifyId);
+    deleteNotification(notifyId);
   }
 
-  Widget friends(String name, String id, String avatar, e, int index,String notifyId,time) {
+  Widget friends(String name, String id, String avatar, e, int index,
+      String notifyId, time) {
     double screenWidth = MediaQuery.of(context).size.width;
     const double avatarWidth = 60.0;
     const double horizontalPadding = 10.0;
@@ -400,7 +395,6 @@ class _NotificationsState extends State<Notifications> {
                             onTap: () {
                               addUserAsFrd(id, context);
                               delete(notifyId);
-                             
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(
@@ -454,14 +448,18 @@ class _NotificationsState extends State<Notifications> {
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-         textStyle(text:formatWhatsAppDate(DateTime.parse(time)), context: context,fontsize: 10,fontWeight: FontWeight.bold,c: AppColors.accentColor),
-        Divider(
-        ),
+        textStyle(
+            text: formatWhatsAppDate(DateTime.parse(time)),
+            context: context,
+            fontsize: 10,
+            fontWeight: FontWeight.bold,
+            c: AppColors.accentColor),
+        Divider(),
       ],
     );
   }
 
-  Widget messageChannel(name, id,time) {
+  Widget messageChannel(name, id, time) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
       child: Center(
@@ -495,8 +493,7 @@ class _NotificationsState extends State<Notifications> {
     );
   }
 
-  Widget messageChannelProfile(name, id, avatar,time) {
-   
+  Widget messageChannelProfile(name, id, avatar, time) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
       child: Center(
@@ -510,7 +507,7 @@ class _NotificationsState extends State<Notifications> {
             children: [
               Row(
                 children: [
-                avatar!="" ? getAvatarh(avatar):SizedBox.shrink(),
+                  avatar != "" ? getAvatarh(avatar) : SizedBox.shrink(),
                   const SizedBox(
                     width: 2,
                   ),

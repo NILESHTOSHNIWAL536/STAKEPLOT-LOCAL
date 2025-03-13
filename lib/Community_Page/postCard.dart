@@ -213,10 +213,10 @@ class _PostCardState extends State<PostCard> {
                                           // color: AppColors.rbi1,
                                           borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
                                           image: NetworkImage(dataObj['image']),
-                                          colorFilter:ColorFilter.mode(Colors.black.withOpacity(0.0),
-                                          BlendMode.exclusion
+                                          //colorFilter:ColorFilter.mode(Colors.black.withOpacity(0.0),
+                                         // BlendMode.exclusion
                                           
-                                        ),
+                                      //  ),
                                     ),
                             ),
                         )

@@ -446,40 +446,101 @@ void sn(res, context) {
 // }else{
 //     snackBarCalled(context, "server error",Colors.red);
 // }
+// this code is without future
+// void createPost(
+//     context, String title, String description, File imageFile) async {
+//   var urlp = Uri.parse('${url}/post');
+//   final SharedPreferences _pref = await SharedPreferences.getInstance();
+//   var accessToken = _pref.getString("accessToken");
 
-void createPost(
-    context, String title, String description, File imageFile) async {
-  var urlp = Uri.parse('${url}/post');
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
+//   final url2 = Uri.parse('https://api.cloudinary.com/v1_1/deus5rcgl/upload');
 
-  final url2 = Uri.parse('https://api.cloudinary.com/v1_1/deus5rcgl/upload');
+//   final request = http.MultipartRequest('POST', url2)
+//     ..fields['upload_preset'] = 'zu3td0li'
+//     ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
 
-  final request = http.MultipartRequest('POST', url2)
-    ..fields['upload_preset'] = 'zu3td0li'
-    ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
-
-  final response2 = await request.send();
+//   final response2 = await request.send();
 
 
-  if (response2.statusCode == 200) {
+//   if (response2.statusCode == 200) {
+//     final responseData = await response2.stream.toBytes();
+
+//     final responseString = String.fromCharCodes(responseData);
+
+//     final jsonMap = jsonDecode(responseString);
+
+//     String urlPath = jsonMap['secure_url'];
+
+//     var body = {
+//       'title': title,
+//       'description': {'message': description},
+//       'image':urlPath, 
+//       'fileName': ''
+//     };
+
+//     final response = await http.post(
+//       Uri.parse('${urlp}'),
+//       headers: <String, String>{
+//         'Content-Type': 'application/json; charset=UTF-8',
+//         "Authorization": "$accessToken",
+//       },
+//       body: jsonEncode(body),
+//     );
+
+
+//     if (response.statusCode == 200 || response.statusCode == 201)
+//      {
+//       var his = jsonDecode(response.body);
+//       getTrendingData.insert(0, his);
+//       getPosted.value = ! getPosted.value;
+//       postCount[his["_id"]] = 0;
+//       postCommentCount[his["_id"]] = 0;   
+//     } 
+
+//     posting.value=false;
+//     postDis.value = false;
+//   } else {
+//     snackBarCalled(context, "server error", Colors.red);
+//   }
+
+// }
+Future<Map<String, dynamic>> createPost(
+    BuildContext context, String title, String description, File imageFile) async {
+  try {
+    // Cloudinary upload URL
+    final url2 = Uri.parse('https://api.cloudinary.com/v1_1/deus5rcgl/upload');
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    var accessToken = pref.getString("accessToken");
+    
+    // Upload image to Cloudinary
+    final request = http.MultipartRequest('POST', url2)
+      ..fields['upload_preset'] = 'zu3td0li'
+      ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
+
+    final response2 = await request.send();
+
+    if (response2.statusCode != 200) {
+      snackBarCalled(context, "Image upload failed", Colors.red);
+      return {'success': false, 'error': 'Image upload failed'};
+    }
+
     final responseData = await response2.stream.toBytes();
-
     final responseString = String.fromCharCodes(responseData);
-
     final jsonMap = jsonDecode(responseString);
-
     String urlPath = jsonMap['secure_url'];
 
+    // Prepare post data
     var body = {
       'title': title,
       'description': {'message': description},
-      'image':urlPath, 
+      'image': urlPath,
       'fileName': ''
     };
 
+    // Make post request
+    final urlp = Uri.parse('${url}/post'); // Make sure 'url' is defined somewhere
     final response = await http.post(
-      Uri.parse('${urlp}'),
+      urlp,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Authorization": "$accessToken",
@@ -487,22 +548,36 @@ void createPost(
       body: jsonEncode(body),
     );
 
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var postData = jsonDecode(response.body);
+      
+      // Update local state
+      getTrendingData.insert(0, postData);
+      getPosted.value = !getPosted.value;
+      postCount[postData["_id"]] = 0;
+      postCommentCount[postData["_id"]] = 0;
+      
+      posting.value = false;
+      postDis.value = false;
 
-    if (response.statusCode == 200 || response.statusCode == 201)
-     {
-      var his = jsonDecode(response.body);
-      getTrendingData.insert(0, his);
-      getPosted.value = ! getPosted.value;
-      postCount[his["_id"]] = 0;
-      postCommentCount[his["_id"]] = 0;   
-    } 
-
-    posting.value=false;
-    postDis.value = false;
-  } else {
-    snackBarCalled(context, "server error", Colors.red);
+      return {
+        'success': true,
+        'data': postData,
+      };
+    } else {
+      snackBarCalled(context, "Server error: ${response.statusCode}", Colors.red);
+      return {
+        'success': false,
+        'error': 'Server error: ${response.statusCode}',
+      };
+    }
+  } catch (e) {
+    snackBarCalled(context, "Error creating post: $e", Colors.red);
+    return {
+      'success': false,
+      'error': e.toString(),
+    };
   }
-
 }
 
 // Send a multipart request

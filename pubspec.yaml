@@ -91,6 +91,9 @@ dependencies:
   infinite_scroll_pagination: ^5.0.0
   image_cropper: ^9.0.0
   workmanager: ^0.5.2
+  crop_your_image: ^2.0.0
+  path_provider: ^2.1.5
+  custom_image_crop: ^0.1.1
 
 dev_dependencies:
   flutter_test:
