@@ -282,20 +282,24 @@ class _ImageScreenState extends State<ImageScreen> {
 
       final Uint8List bytes = byteData.buffer.asUint8List();
       final tempDir = await getTemporaryDirectory();
-      final file = await File('${tempDir.path}/cropped_${DateTime.now().millisecondsSinceEpoch}.png')
+      final file = await File(
+              '${tempDir.path}/cropped_${DateTime.now().millisecondsSinceEpoch}.png')
           .writeAsBytes(bytes);
-      
+
       return file;
     } catch (e) {
-      print('Error cropping image: $e'); // Log error instead of showing snackbar
+      print(
+          'Error cropping image: $e'); // Log error instead of showing snackbar
       return null;
     }
   }
 
-  Future<ByteData?> _imageProviderToByteData(ImageProvider imageProvider) async {
+  Future<ByteData?> _imageProviderToByteData(
+      ImageProvider imageProvider) async {
     final completer = Completer<ByteData?>();
-    final ImageStream stream = imageProvider.resolve(const ImageConfiguration());
-    
+    final ImageStream stream =
+        imageProvider.resolve(const ImageConfiguration());
+
     ImageStreamListener? listener;
     listener = ImageStreamListener(
       (ImageInfo info, bool synchronousCall) {
@@ -310,7 +314,7 @@ class _ImageScreenState extends State<ImageScreen> {
         stream.removeListener(listener!);
       },
     );
-    
+
     stream.addListener(listener);
     return completer.future;
   }
@@ -320,8 +324,8 @@ class _ImageScreenState extends State<ImageScreen> {
     return Container(
       child: Expanded(
         child: AnimatedPadding(
-          padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom),
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           duration: const Duration(milliseconds: 100),
           child: SingleChildScrollView(
             child: Padding(
@@ -334,27 +338,24 @@ class _ImageScreenState extends State<ImageScreen> {
                     children: [
                       Row(
                         children: [
-                          AvatarProfileImage(url: avatar.value, width: 20, height: 20),
+                          AvatarProfileImage(
+                              url: avatar.value, width: 20, height: 20),
                           const SizedBox(width: 8),
                           Column(
                             children: [
                               Text(
                                 userName.value.toString(),
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                  color: AppColors.bg1
-                                ),
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                    color: AppColors.bg1),
                               ),
                               Text(
                                 'New post',
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.w400,
-                                  fontSize: 12,
-                                  color: AppColors.bg1
-                                ),
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.w400,
+                                    fontSize: 12,
+                                    color: AppColors.bg1),
                               ),
                             ],
                           ),
@@ -377,9 +378,13 @@ class _ImageScreenState extends State<ImageScreen> {
                               image: FileImage(selectedImage!),
                               cropController: _cropController,
                               shape: CustomCropShape.Square,
+                             outlineStrokeWidth:0.0,
+                           //  ratio: Ratio(16, 9),
+                            // forceInsideCropArea:true,
+                           
                               overlayColor: Colors.black.withOpacity(0.5),
                               cropPercentage: 0.92, // Increased crop size
-                              
+                              // Increased crop size
                             )
                           : const Icon(
                               Icons.add_photo_alternate,
@@ -393,12 +398,10 @@ class _ImageScreenState extends State<ImageScreen> {
                     controller: titleController,
                     decoration: InputDecoration(
                       hintText: 'Enter title',
-                      hintStyle: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: AppColors.bg1
-                      ),
+                      hintStyle: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w600,
+                          fontSize: 18,
+                          color: AppColors.bg1),
                       border: InputBorder.none,
                     ),
                   ),
@@ -407,12 +410,10 @@ class _ImageScreenState extends State<ImageScreen> {
                     controller: textController,
                     decoration: InputDecoration(
                       hintText: 'Add your thoughts',
-                      hintStyle: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.normal,
-                        fontSize: 14,
-                        color: AppColors.bg1
-                      ),
+                      hintStyle: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.normal,
+                          fontSize: 14,
+                          color: AppColors.bg1),
                       border: InputBorder.none,
                     ),
                   ),
@@ -423,7 +424,7 @@ class _ImageScreenState extends State<ImageScreen> {
                         return;
                       }
 
-                      if (titleController.text.trim().isEmpty || 
+                      if (titleController.text.trim().isEmpty ||
                           textController.text.trim().isEmpty) {
                         snackBarAllFeilds(context);
                         return;
@@ -433,7 +434,7 @@ class _ImageScreenState extends State<ImageScreen> {
 
                       try {
                         posting.value = true;
-                        
+
                         final croppedImageFile = await _cropAndSaveImage();
                         if (croppedImageFile == null) {
                           posting.value = false;
@@ -446,13 +447,14 @@ class _ImageScreenState extends State<ImageScreen> {
                           textController.text,
                           croppedImageFile,
                         );
-                        
+
                         if (mounted) {
                           Navigator.pop(context);
                           Get.to(() => const SuccessPost());
                         }
                       } catch (e) {
-                        print('Error posting: $e'); // Log error instead of showing snackbar
+                        print(
+                            'Error posting: $e'); // Log error instead of showing snackbar
                       } finally {
                         if (mounted) {
                           posting.value = false;
@@ -461,7 +463,8 @@ class _ImageScreenState extends State<ImageScreen> {
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width / 1.1,
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 14),
                       decoration: BoxDecoration(
                         color: titleController.text.isNotEmpty &&
                                 textController.text.isNotEmpty

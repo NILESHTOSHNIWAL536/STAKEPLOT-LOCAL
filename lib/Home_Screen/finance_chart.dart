@@ -35,33 +35,30 @@ class _FinancePageState extends State<FinancePage> {
   @override
   void initState() {
     super.initState();
-    getGraphData.value=false;
+    getGraphData.value = false;
     calledFunctionToFetchData(context);
   }
 
-
   void _scrollToTransactionHistory() {
-    final RenderObject? renderObject =widget.transactionHistoryKey.currentContext?.findRenderObject();
+    final RenderObject? renderObject =
+        widget.transactionHistoryKey.currentContext?.findRenderObject();
     if (renderObject != null && renderObject is RenderBox) {
       final position = renderObject.localToGlobal(Offset.zero);
       final scrollOffset = widget.scrollController.offset;
-      final targetOffset = position.dy - scrollOffset-MediaQuery.of(context).size.height/6.9;
+      final targetOffset =
+          position.dy - scrollOffset - MediaQuery.of(context).size.height / 6.9;
       widget.scrollController.animateTo(
         targetOffset > 0 ? targetOffset : 0,
         duration: Duration(milliseconds: 500),
         curve: Curves.easeInOut,
       );
-    } else {
-
-    }
+    } else {}
   }
 
   int _getDaysInCurrentMonth() {
     final now = DateTime.now();
     return DateTime(now.year, now.month + 1, 0).day;
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -72,67 +69,117 @@ class _FinancePageState extends State<FinancePage> {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       body: Padding(
-              padding: EdgeInsets.all(0),
-              child: Column(
-                
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Weekly spending and cash flow',
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.w300,
-                        fontSize: fontSizeFactor * 4.0,
-                        color: AppColors.accentColor),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
+        padding: EdgeInsets.all(0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Spending and cash flow',
+              style: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.w300,
+                  fontSize: fontSizeFactor * 4.0,
+                  color: AppColors.accentColor),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Obx(() => Text(
+                          getGraphData.value
+                              ? (selectedButton.value == 'Week'
+                                  ? '₹$totalDebitValue'
+                                  : selectedButton.value == 'Month'
+                                      ? '₹$totalDebitValue'
+                                      : '₹$totalDebitValue')
+                              : '₹$totalDebitValue',
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.bold,
+                              fontSize: fontSizeFactor * 4,
+                              color: AppColors.accentColor),
+                        )),
+                    SizedBox(width: screenWidth * 0.02),
+                    Obx(() {
+                      String displayText = '';
+                      if (selectedButton.value == 'Week') {
+                        displayText = 'This week';
+                      } else if (selectedButton.value == 'Month') {
+                        displayText = 'This month';
+                      }
+                      return Text(
+                        displayText,
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.normal,
+                            fontSize: fontSizeFactor * 2.5,
+                            color: AppColors.accentColor),
+                      );
+                    }),
+                    SizedBox(width: screenWidth * 0.02),
+                    Obx(() {
+                      if (selectedButton.value == 'Custom') {
+                        return SizedBox
+                            .shrink(); // Do not show anything for Custom
+                      }
+                      // Determine the arrow icon and color based on the value
+                      final isPositive = totalDebitValuePercent >= 0;
+                      final arrowIcon = isPositive
+                          ? Icons.arrow_upward
+                          : Icons.arrow_downward;
+                      final arrowColor = isPositive ? Colors.red : Colors.green;
+                      final formattedValue = totalDebitValuePercent
+                          .toStringAsFixed(1); // Round to one decimal place
+                      final textColor = isPositive
+                          ? Colors.red
+                          : Colors.green; // Change text color based on value
+
+                      return Row(
                         children: [
-                         Obx(()=> Text(
-                            getGraphData.value? '₹$totalDebitValue':'₹$totalDebitValue',
-                            //  '₹${transactionChatGraph['totalDebit']?.toString() ?? '0'}',
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.bold,
-                                fontSize: fontSizeFactor * 4,
-                                color: AppColors.accentColor),
-                         )),
-                          SizedBox(width: screenWidth * 0.02),
                           Text(
-                            'This week',
+                            '$formattedValue%',
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.normal,
                                 fontSize: fontSizeFactor * 2.5,
-                                color: AppColors.accentColor),
+                                color:
+                                    textColor), // Set text color based on value
+                          ),
+                          SizedBox(width: screenWidth * 0.01),
+                          Icon(
+                            arrowIcon,
+                            color: arrowColor,
+                            size: fontSizeFactor * 2.5, // Adjust size as needed
                           ),
                         ],
-                      ),
-                      CustomButton(
-                        onTap: () {
-                      
-                          _scrollToTransactionHistory();
-                        },
-                        text: 'History',
-                        fontSize: fontSizeFactor * 2.8,
-                        height: 1.7,
-                        width: 5.0,
-                        icon: AvatarProfileImage(
-                          url: HomePageIcons.history,
-                          width: 36,
-                          height: 36,
-                        ),
-                      ),
-                    ],
+                      );
+                    }),
+                  ],
+                ),
+                CustomButton(
+                  onTap: () {
+                    _scrollToTransactionHistory();
+                  },
+                  text: 'History',
+                  fontSize: fontSizeFactor * 2.8,
+                  height: 1.7,
+                  width: 5.0,
+                  icon: AvatarProfileImage(
+                    url: HomePageIcons.history,
+                    width: 36,
+                    height: 36,
                   ),
-                  SizedBox(height: screenHeight * 0.01),
-              Obx(()=>  getGraphData.value? getMonthWeekCustom(fontSizeFactor, screenWidth) :  getMonthWeekCustom(fontSizeFactor, screenWidth)),
-                Obx(() => !getGraphData.value
-          ? Container(
-            width: MediaQuery.of(context).size.width/1.3,
-            height: MediaQuery.of(context).size.height / 2.6,
-            child: Center(child: Spinner()),
-          )
-          :    LineChartWidget(
+                ),
+              ],
+            ),
+            SizedBox(height: screenHeight * 0.01),
+            Obx(() => getGraphData.value
+                ? getMonthWeekCustom(fontSizeFactor, screenWidth)
+                : getMonthWeekCustom(fontSizeFactor, screenWidth)),
+            Obx(() => !getGraphData.value
+                ? Container(
+                    width: MediaQuery.of(context).size.width / 1.3,
+                    height: MediaQuery.of(context).size.height / 2.6,
+                    child: Center(child: Spinner()),
+                  )
+                : LineChartWidget(
                     chartData: transactionChatGraph,
                     days: labels,
                     selectedButton: selectedButton,
@@ -143,9 +190,9 @@ class _FinancePageState extends State<FinancePage> {
                             ? _getDaysInCurrentMonth()
                             : labels.length,
                   )),
-                ],
-              ),
-            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -272,7 +319,7 @@ class LineChartWidget extends StatefulWidget {
 
 class _LineChartWidgetState extends State<LineChartWidget> {
   double maxYValue = 10000;
-int getCurrentDateIndex(List<String> labels) {
+  int getCurrentDateIndex(List<String> labels) {
     final now = DateTime.now();
     if (widget.selectedButton.value == 'Week') {
       return now.weekday % 7; // 0 for Sunday, 1 for Monday, etc.
@@ -309,8 +356,8 @@ int getCurrentDateIndex(List<String> labels) {
       maxYValue = 1000.0;
     }
   }
-  ValueNotifier<bool> isTooltipVisible = ValueNotifier<bool>(false);
 
+  ValueNotifier<bool> isTooltipVisible = ValueNotifier<bool>(false);
 
   @override
   Widget build(BuildContext context) {
@@ -320,60 +367,59 @@ int getCurrentDateIndex(List<String> labels) {
   }
 
   Widget getGraphLineScroll(double fontSizeFactor, double screenWidth) {
-  return Container(
-    height: MediaQuery.of(context).size.height / 2.6,
-    child: Stack(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Fixed Y-axis labels
-            if (!widget.isExpandedView)
-              Container(
-                child: _buildYAxisLabels(fontSizeFactor),
-              ),
-            // Scrollable chart area
-            Expanded(
-              child: widget.selectedButton.value != 'Week'
-                  ? SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: getContainerOfGraph(screenWidth, fontSizeFactor),
-                    )
-                  : getContainerOfGraph(screenWidth, fontSizeFactor),
-            ),
-          ],
-        ),
-        // Icon button for navigation to ExpandedChartView (only in non-expanded view)
-        if (!widget.isExpandedView)
-          Positioned(
-            top: 8, // Adjust as needed
-            right: 2, // Adjust as needed
-            child: GestureDetector(
-               behavior: HitTestBehavior.opaque,
-              onTap: () {
-                
-                navToExpanded(); // Navigate to ExpandedChartView
-              },
-              child: Container(
-                padding: EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: AppColors.button, // Background for visibility
-                  shape: BoxShape.circle,
+    return Container(
+      height: MediaQuery.of(context).size.height / 2.6,
+      child: Stack(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Fixed Y-axis labels
+              if (!widget.isExpandedView)
+                Container(
+                  child: _buildYAxisLabels(fontSizeFactor),
                 ),
-                child:  AvatarProfileImage(
-                    url:  Sign.maximise,
+              // Scrollable chart area
+              Expanded(
+                child: widget.selectedButton.value != 'Week'
+                    ? SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: getContainerOfGraph(screenWidth, fontSizeFactor),
+                      )
+                    : getContainerOfGraph(screenWidth, fontSizeFactor),
+              ),
+            ],
+          ),
+          // Icon button for navigation to ExpandedChartView (only in non-expanded view)
+          if (!widget.isExpandedView)
+            Positioned(
+              top: 8, // Adjust as needed
+              right: 2, // Adjust as needed
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  navToExpanded(); // Navigate to ExpandedChartView
+                },
+                child: Container(
+                  padding: EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: AppColors.button, // Background for visibility
+                    shape: BoxShape.circle,
+                  ),
+                  child: AvatarProfileImage(
+                    url: Sign.maximise,
                     width: 36,
                     height: 36,
                   ),
+                ),
               ),
             ),
-          ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
+
   Widget getContainerOfGraph(double screenWidth, double fontSizeFactor) {
-   
     int dataLength;
     List<String> labels;
 
@@ -410,9 +456,8 @@ int getCurrentDateIndex(List<String> labels) {
 
     double labelWidth = widget.selectedButton.value == 'Week' ? 50.0 : 40.0;
     double chartWidth = dataLength * labelWidth;
-    
+
     return Container(
-    
         width: widget.selectedButton.value == 'Week'
             ? screenWidth * 0.85 // Fixed width for Week
             : max(chartWidth, screenWidth * 0.85),
@@ -421,16 +466,14 @@ int getCurrentDateIndex(List<String> labels) {
           offset: Offset(-15, 0),
           child: SfCartesianChart(
             onChartTouchInteractionUp: (tapArgs) {
-              // if(widget.shouldBeNavigate ) 
+              // if(widget.shouldBeNavigate )
               // {
               //     if(!isTooltipVisible.value)navToExpanded();
               // }
             },
             borderWidth: 0,
             plotAreaBorderWidth: 0,
-            
             primaryXAxis: CategoryAxis(
-              
               labelStyle: FontManager().getTextStyle(context,
                   lWeight: FontWeight.bold,
                   fontSize: fontSizeFactor * 3,
@@ -439,16 +482,16 @@ int getCurrentDateIndex(List<String> labels) {
               minorGridLines:
                   MinorGridLines(width: 0), // Ensure no minor grid lines
               axisLine: AxisLine(width: 0),
-               majorTickLines: const MajorTickLines(size: 0), // Hide major tick marks if desired
-            minorTickLines: const MinorTickLines(size: 0),
+              majorTickLines: const MajorTickLines(
+                  size: 0), // Hide major tick marks if desired
+              minorTickLines: const MinorTickLines(size: 0),
               interval: 1,
-              
+
               // labelRotation: widget.selectedButton.value == 'Week' ? 0 : -45,
               // edgeLabelPlacement: EdgeLabelPlacement.shift,
               maximumLabels: dataLength, // Ensure all labels are considered
             ),
             primaryYAxis: NumericAxis(
-              
               isVisible: false,
               labelStyle: FontManager().getTextStyle(context,
                   lWeight: FontWeight.normal,
@@ -458,8 +501,9 @@ int getCurrentDateIndex(List<String> labels) {
               minorGridLines:
                   MinorGridLines(width: 0), // Ensure no minor grid lines
               axisLine: AxisLine(width: 0),
-               majorTickLines: const MajorTickLines(size: 0), // Hide major tick marks if desired
-            minorTickLines: const MinorTickLines(size: 0),
+              majorTickLines: const MajorTickLines(
+                  size: 0), // Hide major tick marks if desired
+              minorTickLines: const MinorTickLines(size: 0),
               labelFormat: '₹{value}',
               minimum: 0,
               maximum: maxYValue * 1.2,
@@ -470,8 +514,8 @@ int getCurrentDateIndex(List<String> labels) {
                   int pointIndex, int seriesIndex) {
                 final ChartData chartData = data as ChartData;
                 String label = seriesIndex == 0 ? 'Credited' : 'Debited';
-                 isTooltipVisible.value = true;
-          
+                isTooltipVisible.value = true;
+
                 //  Future.delayed(Duration(seconds: 2), () {
                 //       isTooltipVisible.value = false;
                 //     });
@@ -489,7 +533,7 @@ int getCurrentDateIndex(List<String> labels) {
                         color: Colors.white),
                   ),
                 );
-          
+
                 // return GestureDetector(
                 //   behavior: HitTestBehavior.opaque,
                 //   onTap: () {
@@ -566,25 +610,23 @@ int getCurrentDateIndex(List<String> labels) {
                   fontSize: fontSizeFactor * 3,
                   color: AppColors.accentColor),
             ),
-            
           ),
         ));
   }
 
-  void navToExpanded(){
-    
-     Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ExpandedChartView(
-                chartData: widget.chartData,
-                days: widget.days,
-                selectedButton: widget.selectedButton.value,
-                selectedYear: DateTime.now().year,
-                selectedMonth: DateTime.now().month,
-              ),
-            ),
-          );
+  void navToExpanded() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ExpandedChartView(
+          chartData: widget.chartData,
+          days: widget.days,
+          selectedButton: widget.selectedButton.value,
+          selectedYear: DateTime.now().year,
+          selectedMonth: DateTime.now().month,
+        ),
+      ),
+    );
   }
 
   bool isTapOnLine(Offset tapPosition) {

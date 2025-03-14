@@ -176,6 +176,7 @@ List<double> trasactionsDataDebitWeeklyoverall = [];
 RxMap<String, List<double>> transactionChatGraphoverall=new RxMap();
 RxDouble maxYValueoverall = 0.0.obs;
 RxBool getGraphDataoverall=false.obs;
+RxDouble totalDebitValuePercent = 0.0.obs;
 class Message {
   Message(
       {this.text,

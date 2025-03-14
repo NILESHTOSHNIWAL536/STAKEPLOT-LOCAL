@@ -136,6 +136,7 @@ void getAutoMationsTransactionsCustom(date, context,
 
     try {
       Map data = his['data']['result'];
+      totalDebitValuePercent.value=double.parse((his['data']['debitChangePercentage']).toString());
       totalDebitValue.value =
           double.parse((his['data']['totalDebit']).toString());
      // print("Total Debit Value: ${totalDebitValue.value}");

@@ -951,11 +951,11 @@ class _ChatState extends State<Chat> {
         return Center(
           child: Container(
             width: MediaQuery.of(context).size.width / 1.2,
-            height: MediaQuery.of(context).size.height / 3,
+            height: MediaQuery.of(context).size.height / 3.2,
             padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
             decoration: BoxDecoration(
                 color: Colorcodes.white,
-                borderRadius: BorderRadius.circular(5)),
+                borderRadius: BorderRadius.circular(12)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -981,13 +981,13 @@ class _ChatState extends State<Chat> {
 
                 //  const SizedBox(height: 30,),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    textStyleColor("Cancel", Colorcodes.red, data, imageData),
+                    textStyleColor("Cancel", AppColors.accentColor, data, imageData),
                     const SizedBox(
                       width: 5,
                     ),
-                    textStyleColor(" Send ", Colorcodes.blue, data, imageData),
+                    textStyleColor(" Send ", AppColors.primaryColor, data, imageData),
                   ],
                 ),
               ],
@@ -1023,11 +1023,11 @@ class _ChatState extends State<Chat> {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           decoration: BoxDecoration(
-              color: color, borderRadius: BorderRadius.circular(5)),
+              color: color, borderRadius: BorderRadius.circular(12)),
           child: Text(
             str,
             style: FontManager().getTextStyle(context,
-                fontSize: 17, lWeight: FontWeight.w500, color: Colorcodes.white
+                fontSize: 14, lWeight: FontWeight.w500, color: Colorcodes.white
                 //  fontStyle: FontStyle.italic
                 ),
           ),
