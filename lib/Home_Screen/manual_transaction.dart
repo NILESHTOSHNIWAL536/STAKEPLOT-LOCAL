@@ -260,7 +260,7 @@ class _ModalContentState extends State<ModalContent>with SingleTickerProviderSta
                           Text(
                             selectedSubCategory == null
                                 ? selectedCategory == null
-                                    ? 'Manual Transactions'
+                                    ? 'Manual Transaction'
                                     : ''
                                 : 'Manual Transactions',
                             style: FontManager().getTextStyle(context,
@@ -364,7 +364,7 @@ class _ModalContentState extends State<ModalContent>with SingleTickerProviderSta
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.currency_rupee),
-        hintText: 'Enter the amount',
+        hintText: 'Enter amount',
         fillColor: AppColors.button,
         filled: true,
         hintStyle: FontManager().getTextStyle(context,
@@ -408,7 +408,7 @@ class _ModalContentState extends State<ModalContent>with SingleTickerProviderSta
         controller: categoryFieldController,
         readOnly: false,
         decoration: InputDecoration(
-          hintText: 'Categories',
+          hintText: 'Select Category',
           fillColor: AppColors.button,
           filled: true,
           hintStyle: FontManager().getTextStyle(context,

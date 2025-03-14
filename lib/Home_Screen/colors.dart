@@ -16,13 +16,12 @@ class AppColors {
   static const Color border = Color(0xFFEBEBEB);
   static const Color userName = Color(0xFF898989);
   static const Color tab = Color(0xFFD9D9D9);
-    static const Color rbi1 = Color(0xFFEBEEF9);
-      static const Color rbi2 = Color(0xFFEBFFEE);
-      static const Color uncoloredPie = Color(0xFFD1D6E0);
-      static const Color bottomBarColor = Color(0xFF111111);
-      static const Color green = Color.fromARGB(255, 88, 241, 49);
-
-
+  static const Color rbi1 = Color(0xFFEBEEF9);
+  static const Color rbi2 = Color(0xFFEBFFEE);
+  static const Color uncoloredPie = Color(0xFFD1D6E0);
+  static const Color bottomBarColor = Color(0xFF111111);
+  static const Color green = Color.fromARGB(255, 88, 241, 49);
+  static const Color chatcolor = Color(0xFFF0EBEB);
 
   static const Color likesharecommentCount = Color(0xFF454545);
 }

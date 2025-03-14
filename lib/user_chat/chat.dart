@@ -90,7 +90,8 @@ class _ChatState extends State<Chat> {
     // socket=IO.io(url,IO.OptionBuilder().setTransports(['websocket']).setPath("/io").disableAutoConnect().build());
 
     // initFunt();
-     socket = IO.io(urlWithLocallHost,IO.OptionBuilder().setTransports(['websocket']).build());
+    socket = IO.io(urlWithLocallHost,
+        IO.OptionBuilder().setTransports(['websocket']).build());
     socket.connect();
     setUpSocketListener();
   }
@@ -142,7 +143,7 @@ class _ChatState extends State<Chat> {
                             ? data2['post']['postLocation']
                             : ""
                         // post:  postData,//data2['messageType']=="post"? (data2['post']['postLocation'])??"":"",
-                      )),
+                        )),
               unSeenChat(context, data['_id']),
               getChatLoader(),
               getChats(widget.data),
@@ -182,7 +183,6 @@ class _ChatState extends State<Chat> {
     socket.emit("LoadCharts", {
       "roomId": data['name'] + "" + data['name'],
     });
-
   }
 
   Widget getDataWidget(Message message) {
@@ -251,94 +251,104 @@ class _ChatState extends State<Chat> {
   }
 
   Widget spliData(Message message) {
-  return Card(
-    elevation: 2,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(20),
-    ),
-    child: Container(
-      padding: const EdgeInsets.all(10),
-      width: MediaQuery.of(context).size.width / 1.8,
-      decoration: BoxDecoration(
-        color:AppColors.backgroundColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(width: 1, color: AppColors.primaryColor),
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Icon(Icons.receipt, color: AppColors.primaryColor, size: 24),
-              SizedBox(width:10),
-              Text(
-                message.split['BillName'],
-                style: FontManager().getTextStyle(context,
-                    fontSize: 16,
-                    lWeight: FontWeight.bold,
-                    color: AppColors.bg1),
-              ),
-            ],
-          ),
-          const SizedBox(height: 3),
-          Column(
-           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    "₹", // Rupee symbol
-                    style: TextStyle(color: AppColors.bg2, fontSize: 16),
-                  ),
-                  const SizedBox(width: 5),
-                  Text(
-                    "Total expense: " + doubleToFixed(message.split['Amount'].toString()),
-                    style: FontManager()
-                        .getTextStyle(context, fontSize: 12, color: AppColors.bg2),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Icon(Icons.group, color: AppColors.bg2, size: 20),
-                  const SizedBox(width: 5),
-                  Text(
-                    "Share: " + doubleToFixed(message.split['Share'].toString()).toString(),
-                    style: FontManager()
-                        .getTextStyle(context, fontSize: 12, color: AppColors.bg2),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 5),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6.0),
-            child: Row(
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        width: MediaQuery.of(context).size.width / 1.8,
+        decoration: BoxDecoration(
+          color: AppColors.backgroundColor,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(width: 1, color: AppColors.primaryColor),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Icon(
-                  message.split['isPaid'] ? Icons.check_circle : Icons.pending,
-                  color: message.split['isPaid'] ? Colors.green : Colors.red,
-                  size: 20,
-                ),
-                const SizedBox(width: 5),
+                Icon(Icons.receipt, color: AppColors.primaryColor, size: 24),
+                SizedBox(width: 10),
                 Text(
-                  message.split['isPaid'] ? "Settled Successfully" : "Pending",
+                  message.split['BillName'],
                   style: FontManager().getTextStyle(context,
-                      fontSize: 12,
-                      lWeight: FontWeight.w400,
-                      color: message.split['isPaid'] ? Colors.green : Colors.red),
+                      fontSize: 16,
+                      lWeight: FontWeight.bold,
+                      color: AppColors.bg1),
                 ),
               ],
             ),
-          ),
-        ],
+            const SizedBox(height: 3),
+            Column(
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      "₹", // Rupee symbol
+                      style: TextStyle(color: AppColors.bg2, fontSize: 16),
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      "Total expense: " +
+                          doubleToFixed(message.split['Amount'].toString()),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 12, color: AppColors.bg2),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Icon(Icons.group, color: AppColors.bg2, size: 20),
+                    const SizedBox(width: 5),
+                    Text(
+                      "Share: " +
+                          doubleToFixed(message.split['Share'].toString())
+                              .toString(),
+                      style: FontManager().getTextStyle(context,
+                          fontSize: 12, color: AppColors.bg2),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 5),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6.0),
+              child: Row(
+                children: [
+                  Icon(
+                    message.split['isPaid']
+                        ? Icons.check_circle
+                        : Icons.pending,
+                    color: message.split['isPaid'] ? Colors.green : Colors.red,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    message.split['isPaid']
+                        ? "Settled Successfully"
+                        : "Pending",
+                    style: FontManager().getTextStyle(context,
+                        fontSize: 12,
+                        lWeight: FontWeight.w400,
+                        color: message.split['isPaid']
+                            ? Colors.green
+                            : Colors.red),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
+
   void getImage() async {
     final _picker = ImagePicker();
     final imageData = await _picker.pickImage(source: ImageSource.gallery);
@@ -428,8 +438,7 @@ class _ChatState extends State<Chat> {
                             pushDetails();
                           },
                           child: AvatarProfileImage(
-                              url:
-                                  data['avatar'] ?? "assets/avatar/menp3.svg",
+                              url: data['avatar'] ?? "assets/avatar/menp3.svg",
                               width: 8,
                               height: 17)),
                       GestureDetector(
@@ -447,7 +456,6 @@ class _ChatState extends State<Chat> {
                           ),
                         ),
                       ),
-                    
                     ],
                   ),
                 );
@@ -472,21 +480,20 @@ class _ChatState extends State<Chat> {
               // Text input and send button
               Container(
                 // margin: EdgeInsets.all(8.0),
-      
+
                 decoration: BoxDecoration(
-                  color: AppColors.button,
-                  //borderRadius: BorderRadius.circular(24),
-                ),
+                    //color: AppColors.chatcolor,
+                    //borderRadius: BorderRadius.circular(24),
+                    ),
                 //       decoration: InputDecoration(
                 //   prefixIcon: Icon(Icons.search),
                 //   // prefixIconColor: Colorcodes.budgetDarkGreen,
                 //   filled: true,
-      
+
                 //   fillColor: AppColors.button,
                 //   border: InputBorder.none,
                 // ),
-                child:
-                    InputDate("write message..", TextInputType.name, search),
+                child: InputDate("Message", TextInputType.name, search),
               ),
             ],
           ),
@@ -494,8 +501,6 @@ class _ChatState extends State<Chat> {
       ),
     );
   }
-
-  
 
   void clearChatData() {
     socket.close();
@@ -636,7 +641,6 @@ class _ChatState extends State<Chat> {
   }
 
   Widget profilepath(boolFlag) {
-  
     return chatAvatartImage(
         url: boolFlag ? path : data['avatar'], width: 20, height: 20);
   }
@@ -652,10 +656,10 @@ class _ChatState extends State<Chat> {
         decoration: BoxDecoration(
           color: isme ? AppColors.primaryColor : null,
           borderRadius: BorderRadius.only(
-            bottomRight: isme? Radius.zero :Radius.circular(10),
+            bottomRight: isme ? Radius.zero : Radius.circular(10),
             topLeft: Radius.circular(10.0),
             topRight: Radius.circular(10.0),
-            bottomLeft: !isme? Radius.zero :Radius.circular(10),
+            bottomLeft: !isme ? Radius.zero : Radius.circular(10),
           ),
           gradient: !isme
               ? LinearGradient(
@@ -683,110 +687,83 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  Widget InputDate(String labelText, TextInputType keyboardType,
-      TextEditingController textController) {
-    return Center(
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        // decoration: BoxDecoration(
-        //   borderRadius: BorderRadius.circular(24),
-        // ),
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget InputDate(
+    String labelText,
+    TextInputType keyboardType,
+    TextEditingController textController,
+  ) {
+    return Container(
+      color: AppColors.chatcolor,
+      width: MediaQuery.of(context).size.width,
+      child: TextField(
+        keyboardType: keyboardType,
+        focusNode: myFocusNode,
+        controller: textController,
+        maxLines: null, // Allow multiple lines
+        maxLength: 150,
+        onSubmitted: (value) {
+          if (value.isNotEmpty) {
+            _handleSubmitted(value);
+          } else {
+            snackBarCalled(context, "Please enter message");
+          }
+          textController.clear();
+          getChatLoader();
+          myFocusNode.requestFocus();
+        },
+        decoration: InputDecoration(
+          hintText: labelText,
+          filled: true,
+          prefixIcon: IconButton(
+            icon: Icon(
+              Icons.emoji_emotions,
+              size: 25,
+              color: AppColors.primaryColor,
+            ),
+            onPressed: () {
+              // Implement emoji picker or logic here
+            },
+          ),
+          suffixIcon: Row(
+            mainAxisSize: MainAxisSize.min, // Takes minimum space needed
             children: [
-              Expanded(
-                flex: 2,
-                child: Container(
-                  // decoration: BoxDecoration(
-                  //   borderRadius: BorderRadius.circular(24),
-                  // ),
-                  child: TextField(
-                    keyboardType: keyboardType,
-                    focusNode: myFocusNode,
-                    controller: textController,
-                    onSubmitted: (value) {
-                      if (value.isNotEmpty) {
-                        _handleSubmitted(value);
-                      } else {
-                        snackBarCalled(context, "Please enter valid data");
-                      }
-                      textController.clear();
-                      getChatLoader();
-                      myFocusNode.requestFocus();
-                    },
-                    decoration: InputDecoration(
-                      hintText: labelText,
-                      filled: true,
-                      prefixIcon: IconButton(
-                        // Added prefix icon for emoji
-                        icon: Icon(Icons.emoji_emotions),
-                        onPressed: () {
-                          // Implement emoji picker or logic here
-                
-                        },
-                      ),
-                      fillColor: AppColors.button,
-                      contentPadding: EdgeInsets.zero,
-                      border: InputBorder.none,
-                      enabledBorder: OutlineInputBorder(
-                        // borderRadius: BorderRadius.circular(24),
-                        borderSide: BorderSide(color: Colors.transparent),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        // borderRadius: BorderRadius.circular(24),
-                        borderSide: BorderSide(color: Colors.transparent),
-                      ),
-                    ),
-                  ),
+              IconButton(
+                icon: Icon(
+                  Icons.image,
+                  color: AppColors.primaryColor,
+                  size: 25,
                 ),
+                onPressed: getImage,
               ),
-              Expanded(
-                flex: 1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.image, size: 30),
-                      onPressed: getImage,
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.send, size: 30),
-                      onPressed: () {
-                        String value = textController.text;
-                        if (value.isNotEmpty) {
-                          _handleSubmitted(value);
-                        } else {
-                          snackBarCalled(context, "Please enter valid data");
-                        }
-                        textController.clear();
-                        getChatLoader();
-                        myFocusNode.requestFocus();
-                      },
-                    ),
-
-                    // Uncomment or adjust the following for the poll feature if needed
-                    // InkWell(
-                    //   onTap: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       PageTransition(
-                    //         type: PageTransitionType.bottomToTop,
-                    //         duration: Durations.long1,
-                    //         child: ChatPoll(data: widget.data),
-                    //         isIos: true,
-                    //       ),
-                    //     );
-                    //   },
-                    //   child: Container(
-                    //     height: 35,
-                    //     child: ProfileImage(url: "assets/images/poll.svg"),
-                    //   ),
-                    // ),
-                  ],
+              IconButton(
+                icon: Icon(
+                  Icons.send,
+                  color: AppColors.primaryColor,
+                  size: 25,
                 ),
+                onPressed: () {
+                  String value = textController.text;
+                  if (value.isNotEmpty) {
+                    _handleSubmitted(value);
+                  } else {
+                    snackBarCalled(context, "Please enter valid data");
+                  }
+                  textController.clear();
+                  getChatLoader();
+                  myFocusNode.requestFocus();
+                },
               ),
             ],
+          ),
+          counterText: "",
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          border: InputBorder.none,
+          enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.transparent),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.transparent),
           ),
         ),
       ),
@@ -858,7 +835,6 @@ class _ChatState extends State<Chat> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: options.map((op) {
-                 
                   s++;
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -985,11 +961,11 @@ class _ChatState extends State<Chat> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "Do You Want To Send...!?",
+                  "Do you want to send this?",
                   style: FontManager().getTextStyle(
                     context,
-                    fontSize: 18,
-                    color: Colorcodes.black,
+                    fontSize: 14,
+                    color: AppColors.bg1,
                     lWeight: FontWeight.bold,
                     //  fontFamily: AutofillHints.birthdayDay
                   ),
@@ -1264,60 +1240,58 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  Widget popupMenuItemList()
-  {
-     return   PopupMenuButton<String>(
-                        onSelected: (value) {
-                          // Perform actions based on the selected value
-                          if (value == 'Report') {
-                            // Handle Report action
-                          } else if (value == 'Block user') {
-                            // Handle Block action
-                          } else if (value == 'Mute notification') {
-                            // Handle Mute notification action
-                          } else if (value == 'Clear chat') {
-                            // Handle Clear chat action
-                          }
-                        },
-                        itemBuilder: (BuildContext context) {
-                          return [
-                            PopupMenuItem(
-                              value: 'Report',
-                              child: Text('Report',
-                                  style: FontManager().getTextStyle(context,
-                                      lWeight: FontWeight.normal,
-                                      fontSize: 14,
-                                      color: AppColors.primaryColor)),
-                            ),
-                            PopupMenuItem(
-                              value: 'Block user',
-                              child: Text('Block user',
-                                  style: FontManager().getTextStyle(context,
-                                      lWeight: FontWeight.normal,
-                                      fontSize: 14,
-                                      color: AppColors.primaryColor)),
-                            ),
-                            PopupMenuItem(
-                              value: 'Mute notification',
-                              child: Text('Mute notification',
-                                  style: FontManager().getTextStyle(context,
-                                      lWeight: FontWeight.normal,
-                                      fontSize: 14,
-                                      color: AppColors.primaryColor)),
-                            ),
-                            PopupMenuItem(
-                              value: 'Clear chat',
-                              child: Text('Clear chat',
-                                  style: FontManager().getTextStyle(context,
-                                      lWeight: FontWeight.normal,
-                                      fontSize: 14,
-                                      color: AppColors.primaryColor)),
-                            ),
-                          ];
-                        },
-                        child: Icon(Icons
-                            .more_vert), // Replace this with your desired icon
-     );
+  Widget popupMenuItemList() {
+    return PopupMenuButton<String>(
+      onSelected: (value) {
+        // Perform actions based on the selected value
+        if (value == 'Report') {
+          // Handle Report action
+        } else if (value == 'Block user') {
+          // Handle Block action
+        } else if (value == 'Mute notification') {
+          // Handle Mute notification action
+        } else if (value == 'Clear chat') {
+          // Handle Clear chat action
+        }
+      },
+      itemBuilder: (BuildContext context) {
+        return [
+          PopupMenuItem(
+            value: 'Report',
+            child: Text('Report',
+                style: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.normal,
+                    fontSize: 14,
+                    color: AppColors.primaryColor)),
+          ),
+          PopupMenuItem(
+            value: 'Block user',
+            child: Text('Block user',
+                style: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.normal,
+                    fontSize: 14,
+                    color: AppColors.primaryColor)),
+          ),
+          PopupMenuItem(
+            value: 'Mute notification',
+            child: Text('Mute notification',
+                style: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.normal,
+                    fontSize: 14,
+                    color: AppColors.primaryColor)),
+          ),
+          PopupMenuItem(
+            value: 'Clear chat',
+            child: Text('Clear chat',
+                style: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.normal,
+                    fontSize: 14,
+                    color: AppColors.primaryColor)),
+          ),
+        ];
+      },
+      child: Icon(Icons.more_vert), // Replace this with your desired icon
+    );
   }
 
   Widget pieChart(item) {
@@ -1365,8 +1339,7 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  void pushDetails() 
-  {
+  void pushDetails() {
     Navigator.push(
       context,
       MaterialPageRoute(
