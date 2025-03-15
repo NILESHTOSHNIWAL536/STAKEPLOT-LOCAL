@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
@@ -359,7 +360,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.mt,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -387,6 +388,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
                       decoration: BoxDecoration(
                         color: Colors.blue.shade50, // Light blue background
                         borderRadius: BorderRadius.circular(8),
+                        // border: Border.all(color: Colors.blue.shade200),
                         border: Border.all(color: Colors.blue.shade200),
                       ),
                       // child: Text(

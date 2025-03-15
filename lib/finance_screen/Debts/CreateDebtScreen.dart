@@ -150,7 +150,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
             child: Column(
               children: [
                 CustomFormField(
-                  hintText: 'Enter your name',
+                  hintText: 'Enter debt name',
                   onChanged: (value) => setState(() => _name = value),
                   validator: (value) {
                     if (value == null || value.isEmpty) {

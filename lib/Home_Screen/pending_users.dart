@@ -56,11 +56,26 @@ class _UserListScreenState extends State<UserListScreen> {
                     ),
                   );
                 },
-                child: Text('more',
+                
+                child: Container(
+                height: 30,
+                width: MediaQuery.sizeOf(context).width * 0.12,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color:
+                       AppColors.button
+                      
+                ),
+                child: Center(
+                  child: Text(
+                    'more',
                     style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
+                        lWeight: FontWeight.w500,
                         fontSize: 14,
-                        color: AppColors.primaryColor)),
+                        color: AppColors.primaryColor),
+                  ),
+                ),
+              ),
               ),
             ],
           ),
@@ -128,6 +143,9 @@ class ShowAllUsersScreen extends StatelessWidget {
               child: TabBar(
                 labelColor: AppColors.primaryColor,
                 unselectedLabelColor: AppColors.bg1,
+                indicatorColor: AppColors.primaryColor,
+                
+
                 tabs: const [Tab(text: 'Payable'), Tab(text: 'Owed')],
               ),
             ),
@@ -212,7 +230,7 @@ Widget _buildListTile(
                 data["category"] ?? "Untagged",
                 style: FontManager().getTextStyle(context,
                     lWeight: FontWeight.bold,
-                    fontSize: 10,
+                    fontSize: 8,
                     color: AppColors.accentColor),
               ),
             ),
@@ -220,7 +238,7 @@ Widget _buildListTile(
             Text(
               '${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(data["amount"] ?? 0)}',
               style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.bold, fontSize: 12, color: Colors.green),
+                  lWeight: FontWeight.bold, fontSize: 10, color: Colors.green),
             )
           ],
         ),

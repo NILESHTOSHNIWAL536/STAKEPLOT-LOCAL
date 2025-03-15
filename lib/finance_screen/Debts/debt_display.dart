@@ -59,7 +59,7 @@ class DebtDetailsScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Icon(Icons.more_horiz),
+                        
                       ],
                     ),
                     Container(

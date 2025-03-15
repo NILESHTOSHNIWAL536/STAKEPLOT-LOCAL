@@ -146,7 +146,7 @@ class _RotatingIconState extends State<Nextfetch> with SingleTickerProviderState
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: textStyle(context: context,text: "Your Next Fetch Starts in : ",fontWeight: FontWeight.bold,c: AppColors.bg1,fontsize: 13),
+            child: textStyle(context: context,text: "Your Next Fetch Starts in :",fontWeight: FontWeight.bold,c: AppColors.bg1,fontsize: 13),
           ),
         Obx(()=>  textStyle(context: context,text: currentTime.value ,fontWeight: FontWeight.bold,c: AppColors.primaryColor,fontsize: 13)),
         ],

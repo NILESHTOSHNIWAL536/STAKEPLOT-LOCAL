@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 
 bool flag = true;
 String portNo = flag ? "192.168.1.42" : "localhost";
-String urlWithLocallHost = flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Feilds";
 RxString expenses = "Loading....".obs;
@@ -176,6 +176,7 @@ List<double> trasactionsDataDebitWeeklyoverall = [];
 RxMap<String, List<double>> transactionChatGraphoverall=new RxMap();
 RxDouble maxYValueoverall = 0.0.obs;
 RxBool getGraphDataoverall=false.obs;
+RxDouble totalDebitValuePercent = 0.0.obs;
 class Message {
   Message(
       {this.text,

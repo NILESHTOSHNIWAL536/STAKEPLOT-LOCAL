@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -336,7 +337,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
             xValueMapper: (ChartData data, _) => data.x,
             yValueMapper: (ChartData data, _) => data.y,
             color: AppColors.primaryColor,
-            width: 0.9,
+            width: 0.6,
             spacing: 0.2,
             enableTooltip: true,
             borderRadius: BorderRadius.vertical(
@@ -621,7 +622,7 @@ void pickCustomDateRangeoverall(BuildContext context) async {
           selectedDayTextStyle: TextStyle(color: Colors.black),
           weekdayLabelTextStyle: TextStyle(color: Colors.black),
         ),
-        dialogSize: const Size(400, 400),
+        dialogSize: const Size(300, 300),
         value: [
           DateTime.now().subtract(const Duration(days: 7)),
           DateTime.now(),

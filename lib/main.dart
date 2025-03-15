@@ -92,10 +92,12 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         scaffoldBackgroundColor: AppColors.backgroundColor,
         // useMaterial3: true,
       ),
+      
       debugShowCheckedModeBanner: false,
        initialRoute: '/splash', 
       // home:  SplashScreen(),

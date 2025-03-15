@@ -42,12 +42,15 @@ class TransactionHistory extends StatefulWidget {
   State<TransactionHistory> createState() => _TransactionHistoryState();
 }
 
-class _TransactionHistoryState extends State<TransactionHistory> {
+class _TransactionHistoryState extends State<TransactionHistory> with SingleTickerProviderStateMixin {
   final Map<int, double> swipeOffsets = {};
   final _scrollController2 = ScrollController();
   final List<Map<String, dynamic>> hiddenTransactions = [];
   final targetKey = GlobalKey();
   BuildContext? _stableContext;
+   late AnimationController _animationController; // For smooth animations
+  late Animation<double> _swipeAnimation; // Animation for swipe offset
+  int? _currentSwipedIndex; 
 
   @override
   void initState() {
@@ -65,6 +68,10 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     currentPage = 1;
     getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,
         isRefreshing: true);
+         _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200), // Animation duration
+    );
   }
 
   @override
@@ -75,6 +82,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
 
   @override
   void dispose() {
+    _animationController.dispose();
     _scrollController2.dispose();
     super.dispose();
   }
@@ -328,7 +336,119 @@ class _TransactionHistoryState extends State<TransactionHistory> {
       },
     );
   }
+// Widget historyTransactions(
+//     Map<String, dynamic> transaction, String? date, int index) {
+//   final category = transaction['category']?.toString() ?? 'Uncategorized';
+//   final subcategory = transaction['subcategory']?.toString() ?? 'General';
+//   final amount = transaction['amount']?.toString() ?? '0';
+//   final formattedDate = date != null ? formatDate(date) : 'Unknown Date';
 
+//   return Hero(
+//     tag: "Nilesh",
+//     child: GestureDetector(
+//       onTap: () {
+//         tagName.value = category;
+//         showModalBottomSheet(
+//           context: context,
+//           isScrollControlled: true,
+//           shape: const RoundedRectangleBorder(
+//             borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+//           ),
+//           builder: (context) {
+//             return TagShowmodal(
+//               data: transaction,
+//               index: index,
+//             );
+//           },
+//         );
+//       },
+//       child: Container(
+//         width: MediaQuery.of(context).size.width,
+//        // margin: const EdgeInsets.symmetric(vertical: 5),
+//         decoration: BoxDecoration(
+//           borderRadius: BorderRadius.circular(12),
+//         ),
+//         child: Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//           children: [
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.start,
+//               crossAxisAlignment: CrossAxisAlignment.center,
+//               children: [
+//                 Container(
+//                   margin: const EdgeInsets.all(10),
+//                   width: 40, // Fixed width for consistency
+//                   height: 40, // Fixed height for consistency
+//                   decoration: BoxDecoration(
+//                     color: AppColors.button,
+//                     borderRadius: BorderRadius.circular(10),
+//                   ),
+//                   child: Center(
+//                     child: AvatarProfileImage(
+//                       url: Categories.link +
+//                           (imageMapForHistory[category.toLowerCase()] ??
+//                               'default_image.png'),
+//                       height: 32, // Slightly smaller than container to fit padding
+//                       width: 32,  // Consistent size for all icons
+//                        // Ensure the image scales uniformly
+//                     ),
+//                   ),
+//                 ),
+//                 const SizedBox(width: 5),
+//                 RichText(
+//                   overflow: TextOverflow.ellipsis, // Prevent overflow
+//                   maxLines: 2,
+//                   text: TextSpan(
+//                     children: [
+//                       TextSpan(
+//                         text: " $category",
+//                         style: FontManager().getTextStyle(
+//                           context,
+//                           lWeight: FontWeight.w600,
+//                           fontSize: 14,
+//                           lineHeight: 2.14,
+//                           color: AppColors.accentColor,
+//                         ),
+//                       ),
+//                       TextSpan(
+//                         text: " ($subcategory)",
+//                         style: FontManager().getTextStyle(
+//                           context,
+//                           lWeight: FontWeight.w400,
+//                           fontSize: 12,
+//                           lineHeight: 1.14,
+//                           color: AppColors.accentColor,
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ],
+//             ),
+//             Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 textStyle(
+//                   text: '₹$amount',
+//                   context: context,
+//                   fontWeight: FontWeight.bold,
+//                   fontsize: 12,
+//                 ),
+//                 const SizedBox(height: 6),
+//                 textStyle(
+//                   text: formattedDate,
+//                   context: context,
+//                   fontWeight: FontWeight.w300,
+//                   fontsize: 10,
+//                 ),
+//               ],
+//             ),
+//           ],
+//         ),
+//       ),
+//     ),
+//   );
+// }
   Widget historyTransactions(
       Map<String, dynamic> transaction, String? date, int index) {
     final category = transaction['category']?.toString() ?? 'Uncategorized';
@@ -359,7 +479,8 @@ class _TransactionHistoryState extends State<TransactionHistory> {
           width: MediaQuery.of(context).size.width,
           margin: const EdgeInsets.symmetric(vertical: 5),
           decoration: BoxDecoration(
-            border: Border.all(color: Colorcodes.greyLight, width: 0.6),
+            borderRadius: BorderRadius.circular(12),
+            //border: Border.all(color: Colorcodes.greyLight, width: 0.3),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -375,7 +496,7 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                       child: Container(
                         margin: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: Colorcodes.greyLight,
+                          color: AppColors.button,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: AvatarProfileImage(
@@ -447,36 +568,68 @@ class _TransactionHistoryState extends State<TransactionHistory> {
     );
   }
 
-  BoxDecoration getBoxDecoration(int index) {
+   BoxDecoration getBoxDecoration(int index) {
+    double swipeOffset = (swipeOffsets[index] ?? 0.0).abs(); // Absolute value of offset
+    double totalSwipeDistance = 90.0; // Total swipe distance
+    double mixStart = totalSwipeDistance * 0.7; // Start mixing at 70% (63.0)
+    double swipeProgress;
+
+    if (swipeOffset <= mixStart) {
+      // Before the last 30%, no mixing (fully opaque)
+      swipeProgress = 0.0;
+    } else {
+      // In the last 30%, calculate progress from mixStart (63.0) to totalSwipeDistance (90.0)
+      swipeProgress = (swipeOffset - mixStart) / (totalSwipeDistance - mixStart);
+      swipeProgress = swipeProgress.clamp(0.0, 1.0); // Ensure it stays between 0 and 1
+    }
+
     return BoxDecoration(
       gradient: LinearGradient(
         begin: Alignment.centerLeft,
         end: Alignment.centerRight,
-        stops: [
-          (1.0 - ((swipeOffsets[index] ?? 0.0).abs() / 200)).clamp(0.0, 1.0),
-          1.0,
-        ],
+        stops: const [0.0, 0.7, 1.0], // Gradient stops: 0% to 70% solid, 70% to 100% mixing
         colors: [
-          AppColors.backgroundColor,
-          AppColors.backgroundColor.withOpacity(0.0),
+          AppColors.backgroundColor, // Solid color up to 70%
+          AppColors.backgroundColor, // Still solid at 70%
+          AppColors.backgroundColor.withOpacity(1.0 - swipeProgress), // Mixing in last 30%
         ],
       ),
     );
   }
 
-  void scrollLeft(DragUpdateDetails details, int index) {
+  
+   void scrollLeft(DragUpdateDetails details, int index) {
     setState(() {
+      // Reset other items' offsets
       swipeOffsets.forEach((key, value) {
         if (key != index) {
           swipeOffsets[key] = 0.0;
         }
       });
 
-      double offset = swipeOffsets[index] ?? 0.0;
-      offset += details.delta.dx;
-      offset = offset.clamp(-90.0, 0.0);
-      swipeOffsets[index] = offset;
+      // Determine target offset based on drag direction
+      double targetOffset = details.delta.dx < 0 ? -90.0 : 0.0;
+      animateSwipe(index, targetOffset);
     });
+  }
+  void animateSwipe(int index, double targetOffset) {
+    _currentSwipedIndex = index;
+    double currentOffset = swipeOffsets[index] ?? 0.0;
+
+    _swipeAnimation = Tween<double>(begin: currentOffset, end: targetOffset)
+        .animate(CurvedAnimation(
+          parent: _animationController,
+          curve: Curves.easeInOut, // Smooth easing curve
+        ))
+      ..addListener(() {
+        setState(() {
+          if (_currentSwipedIndex == index) {
+            swipeOffsets[index] = _swipeAnimation.value;
+          }
+        });
+      });
+
+    _animationController.forward(from: 0.0);
   }
 
   static Future<String?> getToken() async {

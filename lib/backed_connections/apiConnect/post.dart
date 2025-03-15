@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'dart:io' as io;
 import 'package:http/http.dart' as http;
@@ -17,26 +19,14 @@ void store(response) {
 }
 
 void addReply(context, String data, String postId) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.post(
-    Uri.parse('${url}/reply/'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
+  var body={
       'commentId': postId,
       'replyText': data,
-    }),
-  );
-  
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
-  } else {
-    snackBarCalled(context, "can't Add reply...!", Colors.red);
-  }
+    };
+  var response=await postDataApiCall('${url}/reply/',body);
+  if (!getFlagOfResponse(response)) {
+     snackBarCalled(context, "can't Add reply...!", Colors.red);
+   }
 }
 
 void addPost2(context, String title, String description, File obj) async {
@@ -446,40 +436,101 @@ void sn(res, context) {
 // }else{
 //     snackBarCalled(context, "server error",Colors.red);
 // }
+// this code is without future
+// void createPost(
+//     context, String title, String description, File imageFile) async {
+//   var urlp = Uri.parse('${url}/post');
+//   final SharedPreferences _pref = await SharedPreferences.getInstance();
+//   var accessToken = _pref.getString("accessToken");
 
-void createPost(
-    context, String title, String description, File imageFile) async {
-  var urlp = Uri.parse('${url}/post');
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
+//   final url2 = Uri.parse('https://api.cloudinary.com/v1_1/deus5rcgl/upload');
 
-  final url2 = Uri.parse('https://api.cloudinary.com/v1_1/deus5rcgl/upload');
+//   final request = http.MultipartRequest('POST', url2)
+//     ..fields['upload_preset'] = 'zu3td0li'
+//     ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
 
-  final request = http.MultipartRequest('POST', url2)
-    ..fields['upload_preset'] = 'zu3td0li'
-    ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
-
-  final response2 = await request.send();
+//   final response2 = await request.send();
 
 
-  if (response2.statusCode == 200) {
+//   if (response2.statusCode == 200) {
+//     final responseData = await response2.stream.toBytes();
+
+//     final responseString = String.fromCharCodes(responseData);
+
+//     final jsonMap = jsonDecode(responseString);
+
+//     String urlPath = jsonMap['secure_url'];
+
+//     var body = {
+//       'title': title,
+//       'description': {'message': description},
+//       'image':urlPath, 
+//       'fileName': ''
+//     };
+
+//     final response = await http.post(
+//       Uri.parse('${urlp}'),
+//       headers: <String, String>{
+//         'Content-Type': 'application/json; charset=UTF-8',
+//         "Authorization": "$accessToken",
+//       },
+//       body: jsonEncode(body),
+//     );
+
+
+//     if (response.statusCode == 200 || response.statusCode == 201)
+//      {
+//       var his = jsonDecode(response.body);
+//       getTrendingData.insert(0, his);
+//       getPosted.value = ! getPosted.value;
+//       postCount[his["_id"]] = 0;
+//       postCommentCount[his["_id"]] = 0;   
+//     } 
+
+//     posting.value=false;
+//     postDis.value = false;
+//   } else {
+//     snackBarCalled(context, "server error", Colors.red);
+//   }
+
+// }
+Future<Map<String, dynamic>> createPost(
+    BuildContext context, String title, String description, File imageFile) async {
+  try {
+    // Cloudinary upload URL
+    final url2 = Uri.parse('https://api.cloudinary.com/v1_1/deus5rcgl/upload');
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    var accessToken = pref.getString("accessToken");
+    
+    // Upload image to Cloudinary
+    final request = http.MultipartRequest('POST', url2)
+      ..fields['upload_preset'] = 'zu3td0li'
+      ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
+
+    final response2 = await request.send();
+
+    if (response2.statusCode != 200) {
+      snackBarCalled(context, "Image upload failed", Colors.red);
+      return {'success': false, 'error': 'Image upload failed'};
+    }
+
     final responseData = await response2.stream.toBytes();
-
     final responseString = String.fromCharCodes(responseData);
-
     final jsonMap = jsonDecode(responseString);
-
     String urlPath = jsonMap['secure_url'];
 
+    // Prepare post data
     var body = {
       'title': title,
       'description': {'message': description},
-      'image':urlPath, 
+      'image': urlPath,
       'fileName': ''
     };
 
+    // Make post request
+    final urlp = Uri.parse('${url}/post'); // Make sure 'url' is defined somewhere
     final response = await http.post(
-      Uri.parse('${urlp}'),
+      urlp,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Authorization": "$accessToken",
@@ -487,22 +538,36 @@ void createPost(
       body: jsonEncode(body),
     );
 
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var postData = jsonDecode(response.body);
+      
+      // Update local state
+      getTrendingData.insert(0, postData);
+      getPosted.value = !getPosted.value;
+      postCount[postData["_id"]] = 0;
+      postCommentCount[postData["_id"]] = 0;
+      
+      posting.value = false;
+      postDis.value = false;
 
-    if (response.statusCode == 200 || response.statusCode == 201)
-     {
-      var his = jsonDecode(response.body);
-      getTrendingData.insert(0, his);
-      getPosted.value = ! getPosted.value;
-      postCount[his["_id"]] = 0;
-      postCommentCount[his["_id"]] = 0;   
-    } 
-
-    posting.value=false;
-    postDis.value = false;
-  } else {
-    snackBarCalled(context, "server error", Colors.red);
+      return {
+        'success': true,
+        'data': postData,
+      };
+    } else {
+      snackBarCalled(context, "Server error: ${response.statusCode}", Colors.red);
+      return {
+        'success': false,
+        'error': 'Server error: ${response.statusCode}',
+      };
+    }
+  } catch (e) {
+    snackBarCalled(context, "Error creating post: $e", Colors.red);
+    return {
+      'success': false,
+      'error': e.toString(),
+    };
   }
-
 }
 
 // Send a multipart request
@@ -520,24 +585,16 @@ void createPost(
 // }
 
 void createPostWithOutImage(context, String title, String description) async {
-  var urlPath = Uri.parse('${url}/post/withOutImage');
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  final response = await http.post(
-    Uri.parse('${urlPath}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
+  var urlPath = '${url}/post/withOutImage';
+  var body={
       'title': title,
       'description': {
         'message': description,
       },
       'isPoll': false,
-    }),
-  );
-  if (response.statusCode == 200 || response.statusCode == 201) 
+    };
+   var response=await postDataApiCall(urlPath, body);
+  if (getFlagOfResponse(response)) 
   {
         var his = jsonDecode(response.body);
         getTrendingData.insert(0, his);
@@ -548,56 +605,35 @@ void createPostWithOutImage(context, String title, String description) async {
 }
 
 void createPollOfCommunity(context, String title, String description) async {
-  var urlPath = Uri.parse('${url}/createPollPost');
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.post(
-    Uri.parse('${urlPath}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
+  var urlPath = '${url}/createPollPost';
+  var body={
       'title': title,
       'description': {
         'message': description,
       },
       'isPoll': true,
-    }),
-  );
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
+    };
+  var response=await postDataApiCall(urlPath, body);
+  if (getFlagOfResponse(response)) 
+  {
       var his = jsonDecode(response.body);
       getTrendingData.insert(0, his);
       getPosted.value = ! getPosted.value;
       postCount[his["_id"]] = 0;
       postCommentCount[his["_id"]] = 0;   
-
   } else {}
-  postDis.value = false;
+   postDis.value = false;
 }
 
 void getTrending() async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  final response = await http.get(
-    Uri.parse('${url}/post/feed'),
-    // Uri.parse('https://stakeplot.in/api/v1/post/all'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
 
-  if (response.statusCode == 200) {
+  var response=await getDataApiCall('${url}/post/feed');
+
+  if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-
     getTrendingData.clear();
     getTrendingData.addAll(obj);
-    print("object");
-    print(obj);
     if(getTrendingData.length==0){findTranding=false;}
 
     getTrendingData.forEach((element) {
@@ -607,19 +643,8 @@ void getTrending() async {
 }
 
 void getPost() async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  // https://stakeplot.in/api/v1/post/feed
-  final response = await http.get(
-    Uri.parse('${url}/post/feed'),
-    // Uri.parse('https://stakeplot.in/api/v1/post/all'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
-
-  if (response.statusCode == 200) {
+  var response=await getDataApiCall('${url}/post/feed');
+  if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
     historyListData.clear();
@@ -635,36 +660,15 @@ void getPost() async {
 }
 
 void savePostData(context, data) async {
-  var urlPath = Uri.parse('${url}/post/save');
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  final response = await http.post(
-    Uri.parse('${urlPath}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
-      "postId": data['_id'],
+  var urlPath = "${url}/post/save";
+  var  body={
+      "postId": data['_id']
+    };
 
-      // "author": data['author'],
-      // "title":  data['title'],
-      // "description":{ 'message':data['description']},
-      // "image": data['image'],
-      // "postType": data['postType'],
-      // "isItenary": data['isItenary'],
-      // "chartType": data['chartType'],
-      // "comments": data['comments'],
-      // "upvotes": data['upvotes'],
-      // "downvotes": data['downvotes'],
-      // "createdAt": data['createdAt'],
-      // "updatedAt": data['updatedAt'],
-      //  "_id": data['_id'],
-      // "__v": 0
-    }),
-  );
+   var response=await postDataApiCall(urlPath, body);
 
-  if (response.statusCode == 200 || response.statusCode == 201) {
+  if (getFlagOfResponse(response))
+  {
     snackBarCalled(context, 'Post saved successfully');
   } else {
     snackBarCalled(context, 'Failed To Save Post...!', Colors.red);
@@ -672,36 +676,17 @@ void savePostData(context, data) async {
 }
 
 void postItenary(title, s, type, context) async {
-  var urlPath = Uri.parse('${url}/post');
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
+  var urlPath ="${url}/post";
   var body = {
     "title": title,
     "description": {"itemlist": s},
     "chartType": type,
   };
-
-//  //print(body);
-//  //print(body);
-
-  final response = await http.post(
-    Uri.parse('${urlPath}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
-      "title": title,
-      "description": {"itemlist": s},
-      "chartType": type.toString().toLowerCase(),
-    }),
-  );
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
+  var response =await postDataApiCall(urlPath, body);
+  if (getFlagOfResponse(response))
+  {
     store(response);
     snackBarCalled(context, 'Post created successfully');
-    // Navigator.pushNamed(context, '/TribeHome');
   } else {
     snackBarCalled(context, 'Failed To Save Post...!', Colors.red);
   }
@@ -814,4 +799,15 @@ Future<String> addImageToCloud(
     );
   }
   return imageNameUrl;
+}
+
+
+void deletePost(id,context)async{
+   var responce=await deleteDataApiCall("${url}/post/delete/${id}");
+   if(getFlagOfResponse(responce))
+   {
+       snackBarCalled(context, "Deleted Post...");    
+   }else{
+       snackBarCalled(context, "Error while Deleting Post...");    
+   }
 }

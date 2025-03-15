@@ -306,6 +306,9 @@ class _PostCardState extends State<PostCard> {
         color: AppColors.bg2,
       )),
       onSelected: (value) {
+        if(value==0 && userId==userName.value){
+              deletePost(id,context);
+        }
         if (value == 1) {
           print(value);
           showModalBottomSheet(context: context,

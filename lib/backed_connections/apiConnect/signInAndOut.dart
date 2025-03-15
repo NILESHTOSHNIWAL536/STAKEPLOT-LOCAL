@@ -67,8 +67,7 @@ Future<void> loginUser(TextEditingController emailController,
     TextEditingController passwordController, BuildContext context,
     [bool flag = false]) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
-  print(deviceData);
-  print(deviceData.value);
+
   final response = await http.post(
     Uri.parse('${url}/user/login'),
     headers: <String, String>{
@@ -77,7 +76,7 @@ Future<void> loginUser(TextEditingController emailController,
     body: jsonEncode({
       'email': emailController.text.toString(),
       'userpassword': passwordController.text.toString(),
-      'deviceInfo': deviceData,
+      'deviceInfo': {},
     }),
   );
   printData(response);

@@ -23,10 +23,6 @@ void   addUserAsFrd(id,context)async
             'Content-Type': 'application/json; charset=UTF-8',
             "Authorization": "$accessToken",
         },
-      //   body: jsonEncode({
-      //        'friendId':id,
-      //  }),
-
   );
       
       if(response.statusCode==200 || response.statusCode==201){

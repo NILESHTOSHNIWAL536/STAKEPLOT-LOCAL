@@ -175,6 +175,8 @@ class LikeComment {
   static String share = "assets/icons/likeComment/Send.svg";
   static String plus = "assets/icons/likeComment/Plus.svg";
   static String message = "assets/icons/likeComment/Messagecircle.svg";
+  static String likeIcon = "assets/icons/likeComment/likeIcon.svg";
+  static String likeIcon2 = "assets/icons/likeComment/likeIcon2.svg";
 
   static String manualTransaction =
       "assets/icons/likeComment/manualTransaction.svg";
@@ -628,15 +630,19 @@ class Expansioncalculator {
    static String page21 = "assets/onboarding/page21.svg";
     static String page22 = "assets/onboarding/page22.svg";
      static String page23 = "assets/onboarding/page23.svg";
+static String p1 = "assets/onboarding/p1.svg";
+static String p2 = "assets/onboarding/p2.svg";
+static String p3 = "assets/onboarding/p3.svg";
+static String p4 = "assets/onboarding/p4.svg";
+static String p5 = "assets/onboarding/p5.svg";
+  static String page311 = "assets/onboarding/page311.svg";
+  static String page322 = "assets/onboarding/page322.svg";
+  static String page323 = "assets/onboarding/page323.svg";
+  static String page324 = "assets/onboarding/page324.svg";
+  static String page325 = "assets/onboarding/page325.svg";
+  static String page326 = "assets/onboarding/page326.svg";
 
-  //static String page31 = "assets/onboarding/page31.svg";
-  static String page32 = "assets/onboarding/page32.svg";
-  static String page33 = "assets/onboarding/page33.svg";
-  static String page34 = "assets/onboarding/page34.svg";
-  static String page35 = "assets/onboarding/page35.svg";
-  static String page36 = "assets/onboarding/page36.svg";
   static String page41 = "assets/onboarding/page41.svg";
-  
   static String page42 = "assets/onboarding/page42.svg";
   static String page43 = "assets/onboarding/page43.svg";
   static String page44 = "assets/onboarding/page44.svg";
