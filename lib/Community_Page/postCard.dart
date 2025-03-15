@@ -206,30 +206,15 @@ class _PostCardState extends State<PostCard> {
                           padding:  EdgeInsets.symmetric(vertical: Colorcodes.borderRadius),
                           child: Center(
                               child: GFImageOverlay(
-                                          width: MediaQuery.of(context).size.width / 1.3,
-                                          height: MediaQuery.of(context).size.height/3,
-                                          shape: BoxShape.rectangle,
-                                          boxFit: BoxFit.fill,
-                                          // color: AppColors.rbi1,
+                                          width: MediaQuery.of(context).size.width / 1.2,
+                                          height: MediaQuery.of(context).size.height/2.7,
+                                           boxFit: BoxFit.fill,
                                           borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
                                           image: NetworkImage(dataObj['image']),
-                                          colorFilter:ColorFilter.mode(Colors.black.withOpacity(0.0),
-                                          BlendMode.exclusion
-                                          
-                                        ),
                                     ),
                             ),
                         )
-                        //  child: GFImageOverlay(
-                        //           width: MediaQuery.of(context).size.width / 1.3,
-                        //           height: MediaQuery.of(context).size.height/3,
-                        //           shape: BoxShape.rectangle,
-                        //           borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
-                        //           image: NetworkImage(dataObj['image']),
-                        //           colorFilter:ColorFilter.mode(Colors.black.withOpacity(0.0),
-                        //           BlendMode.exclusion),
-                        //      ),
-
+              
                         : SizedBox.shrink(),
 
                     // const SizedBox(

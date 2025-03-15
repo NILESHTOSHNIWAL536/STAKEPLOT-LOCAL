@@ -46,7 +46,7 @@ class UserLoginedAlready extends StatelessWidget {
                InkWell(
                 onTap: ()
                 {
-                    forceLogoutUser(body['existingSessionId'], email, userpassword, context,body['loggedInDevice']['deviceId']);
+                    forceLogoutUser(body['existingSessionId'], email, userpassword, context,body['loggedInDevice']['deviceId'], body['loggedInDevice']['brand']+" "+body['loggedInDevice']['device']);
                 },
                 child: getButton(context, "Logout User"))
       ],),

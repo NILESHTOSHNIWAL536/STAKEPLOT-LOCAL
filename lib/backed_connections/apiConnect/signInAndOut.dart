@@ -183,7 +183,7 @@ void getOTP(context, String name, String email) async {
     snackBarCalled(context, "can't send opt!", Colors.red);
   }
 }
-void  forceLogoutUser( sessionId, email, userpassword ,context,id) async {
+void  forceLogoutUser( sessionId, email, userpassword ,context,id,deviceName) async {
 final SharedPreferences _pref = await SharedPreferences.getInstance();
  try{
   final response = await http.post(
@@ -205,7 +205,7 @@ final SharedPreferences _pref = await SharedPreferences.getInstance();
     _pref.setString("accessToken", "Bearer " + accessToken);
      currentId.value = body['data']['_id'];
     try{
-    sendNotificationsToDevice( currentId.value, context, "Your Are Logout From the StakePlot");
+    sendNotificationsToDevice( currentId.value, context,"You have been logged out from StakePlot. Your account was logged in on ${deviceName}");
     }catch(e){}
 
     await getBankAccounts();
