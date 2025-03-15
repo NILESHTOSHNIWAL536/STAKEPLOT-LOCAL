@@ -12,86 +12,25 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 void getAck() async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  // https://stakeplot.in/api/v1/post/feed
-  final response = await http.get(
-    Uri.parse('${url}/user/newNotifications'),
-    // Uri.parse('https://stakeplot.in/api/v1/post/all'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
-  if (response.statusCode == 200) {
+  var response =await getDataApiCall('${url}/user/newNotifications'); 
+  if (getFlagOfResponse(response))
+  {
     var his = jsonDecode(response.body);
     var obj = his['data'];
     hasGetNewNotifications.value = obj != 0;
-  } else {}
-}
-
-void getTraget() async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  final response = await http.get(
-    Uri.parse('https://stakeplot.in/api/v1/target/insights'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
-
-  if (response.statusCode == 200) {
-    var his = jsonDecode(response.body);
-    var obj = his['data'];
-
-    targetString.value = obj;
-  } else {}
-}
-
-void addTargets(context, String aim, String amount, String targetDate) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.post(
-    Uri.parse('${url}/target/'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
-      'aim': aim.toString(),
-      'amount': amount,
-      'targetDate': targetDate.toString(),
-    }),
-  );
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
-    snackBarCalled(context, " Add Traget!", Colors.black);
-    getTraget();
-    Navigator.pushNamed(context, '/home');
-  } else {
-    snackBarCalled(context, "can't Add Traget!", Colors.red);
   }
 }
 
+
+
+
 void setPasswordApiCalled(context, String password) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.post(
-    Uri.parse('${url}/user/cupertino/'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
+  var urlPath='${url}/user/cupertino/';
+   final response = await postDataApiCall(urlPath, {
       'pin': password.toString(),
-    }),
-  );
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
+    });
+  if (getFlagOfResponse(response))
+  {
     cupertinoPin.value = password;
     snackBarCalled(context, " Pin set successfully!", Colors.black);
   } else {
@@ -139,13 +78,10 @@ void getAllTransaction(context) async {
 
 void getInsights(context,String id) async {
  
-  var response = await getDataApiCall(
-    //String t="679b6ea12af555d641c5da61";
-      "${url}/budget/get-insights/$id");
+  var response = await getDataApiCall("${url}/budget/get-insights/$id");
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-
     inSights.clear();
     inSights.addAll(obj);
     getHistory.value = !getHistory.value;
@@ -153,8 +89,7 @@ void getInsights(context,String id) async {
 }
 
 void getHiddenTransactions(context) async {
-  var response =
-      await getDataApiCall("${url}/transactionauto/get-hide-transactions");
+  var response =await getDataApiCall("${url}/transactionauto/get-hide-transactions");
   if (response.statusCode == 200) {
     var her = jsonDecode(response.body);
     var obj = her['data'];
@@ -163,39 +98,6 @@ void getHiddenTransactions(context) async {
     getHiddenHistory.value = !getHiddenHistory.value;
   } else {}
 }
-
-// List<dynamic> transactionsHistory = [];
-
-
-// void getAllTransactionHistory( BuildContext context, bool flag, bool isYearView) async {
-//   try {
-//     var response = await getDataApiCall(flag
-//         ? "${url}/transactionauto/getTransactions/2"
-//         : "${url}/transactionauto/getTransactions/1");
-//     if (response.statusCode == 200) {
-//       var his = jsonDecode(response.body);
-
-//       var obj = his['data'];
-
-//       transactionsHistory.clear();
-//       if (obj != null && obj is List<dynamic>) {
-//         if (flag) {
-//           extractTransaction(isYearView, obj);
-//         } else {
-//           transactionsHistory.addAll(obj);
-//         }
-
-//         getHistory.value = !getHistory.value;
-//       } else {
-
-//         snackBarCalled(context, "No transaction data available");
-//       }
-//     } else {}
-//   } catch (e) {
-   
-//   }
-// }
-
 
 Future<void> getAllTransactionHistory(BuildContext context,bool flag,bool  isYearView,{bool isRefreshing = false}) async {
   if (isLoadingMore.value) return; // Prevent multiple API calls

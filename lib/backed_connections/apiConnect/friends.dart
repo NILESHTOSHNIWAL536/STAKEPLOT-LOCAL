@@ -1,150 +1,80 @@
 
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-
-
-
-
 
 void   addUserAsFrd(id,context)async
 {
-      final SharedPreferences _pref = await SharedPreferences.getInstance();
-     var  accessToken=_pref.getString("accessToken");
-     
-    final response = await http.post(
-    Uri.parse('${url}/user/friend/add/${id}'),
-        headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-            "Authorization": "$accessToken",
-        },
-  );
-      
-      if(response.statusCode==200 || response.statusCode==201){
-            final body = json.decode(response.body);
+    var urlPath='${url}/user/friend/add/${id}';
+    var response=await postDataApiCall(urlPath, {});
+      if(getFlagOfResponse(response))
+      {
             sendNotificationsToDevice(id,context,"${userName.value} Has Accepted Friend Request..");
-            snackBarCalled(context,"Adding user As Friend...!",Colors.black);
-            
+            snackBarCalled(context,"Adding user As Friend...!",Colors.black);      
       }else{
-          //  snackBarCalled(context,"can't Add Friend!",Colors.red);
-}
+           snackBarCalled(context,"can't Add Friend!",Colors.red);
+      }
 }
 
 void  rejectFrdRequest(body,context)async
 {
-    
-      final SharedPreferences _pref = await SharedPreferences.getInstance();
-     var  accessToken=_pref.getString("accessToken");
-   
-    final response = await http.post(
-    Uri.parse('${url}/user/friend/rejectRequest'),
-        headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          "Authorization": "$accessToken",
-        },
-        body: jsonEncode(body),
-
-  );
-   
-      if(response.statusCode==200 || response.statusCode==201){
-            final body = json.decode(response.body);
-            
-      }else{
+  var urlPath='${url}/user/friend/rejectRequest';
+  var response=await postDataApiCall(urlPath, {});
+      if(!getFlagOfResponse(response))
+      {
           snackBarCalled(context,"can't Reject error Friend!",Colors.red);
-}
-
+      }
 }
 
 
 void   addUsersendRequest(id,name,context)async
 {
    
-      final SharedPreferences _pref = await SharedPreferences.getInstance();
-     var  accessToken=_pref.getString("accessToken");
-     
-    final response = await http.post(
-    Uri.parse('${url}/user/friend/sendRequest'),
-    headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-       "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
+   var urlPath='${url}/user/friend/sendRequest';
+   var body={
              'userName':name,
              'friendUserId':id,
-       }),
-  );
-     
-      if(response.statusCode==200 || response.statusCode==201){
+       };
+  var response=await postDataApiCall(urlPath, body);
+      if(getFlagOfResponse(response))
+      {
             sendNotificationsToDevice(id,context,"${userName.value} Has Send U a Friend Request..");
             snackBarCalled(context,"Sending Friend Request...!",Colors.black);
-
-            //  Navigator.pop(context); 
-            //  Navigator.pushNamed(context, '/TribeHome'); 
-            
       }else{
-
            snackBarCalled(context,"can't Add Request!",Colors.red);
-}
+      }
 }
 
 void  removeRequest(id,name,context)async
 {
-   
-      final SharedPreferences _pref = await SharedPreferences.getInstance();
-     var  accessToken=_pref.getString("accessToken");
-     
-    final response = await http.post(
-    Uri.parse('${url}/user/friend/unsendRequest'),
-    headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-       "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
+      
+    var urlPath='${url}/user/friend/unsendRequest';
+    var body={
              'userName':name,
              'friendUserId':id,
-       }),
-  );
-      
-      if(response.statusCode==200 || response.statusCode==201){
+       };  
+      var response=await postDataApiCall(urlPath, body);
+      if(getFlagOfResponse(response))
+      {
             snackBarCalled(context,"Removed Friend Request...!",Colors.black);
-
-            //  Navigator.pop(context); 
-            //  Navigator.pushNamed(context, '/TribeHome'); 
-            
       }else{
-
            snackBarCalled(context,"can't remove Request!",Colors.red);
-}
+      }
 }
 
 
 
   void  getRemoveFrds(context,id)async
-{
-    
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var  accessToken=_pref.getString("accessToken");
-     
-     final response = await http.post(
-    Uri.parse('${url}/user/friend/remove/${id}'),
-    headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-       "Authorization": "$accessToken",
-    },
-  );
-
-      if(response.statusCode==200 || response.statusCode==201)
+{   
+    var urlPath='${url}/user/friend/remove/${id}';
+    var response=await postDataApiCall(urlPath, {});
+      if(getFlagOfResponse(response))
       {
                   snackBarCalled(context,"Removed Friend...!",Colors.black);
                   getUserInfomations();  
-      }
-      else{
-          
       }
 }
 
