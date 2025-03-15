@@ -282,31 +282,6 @@ void addBillTranscations(
       snackBarCalled(context, "Add Bill!", Colors.black);
       getBills();
       Navigator.pop(context);
-      //  Navigator.pop(context);
-
-      //   Navigator.pushReplacement(
-      //                         context,
-      //                         PageTransition(
-      //                           type: PageTransitionType.bottomToTop,
-      //                           alignment: Alignment.bottomRight,
-      //                           duration: Durations.long1,
-
-      //                           child:const Budget(),
-      //                           isIos: true,
-      //  ));
-
-      //  Navigator.push(
-      //                         context,
-      //                         PageTransition(
-      //                           type: PageTransitionType.bottomToTop,
-      //                           alignment: Alignment.bottomRight,
-      //                           duration: Durations.long1,
-
-      // child:const AddBillAmoutDisplay(),
-      //                           isIos: true,
-      //  ));
-      // // Navigator.pushNamed(context, '/AddBillAmoutDisplay');
-      // // Navigator.pop(context);
     } else {
       snackBarCalled(context, "can't add Bill!", Colors.red);
     }
@@ -444,17 +419,6 @@ void deleteBudget(context, String id) async {
   );
   if (response.statusCode == 200 || response.statusCode == 201) {
     snackBarCalled(context, "Deleting Budget.....!", Colors.red);
-
-    //  Navigator.pop(context);
-    //   Navigator.push(
-    //   context,
-    //   PageTransition(
-    //     type: PageTransitionType.fade,
-    //      duration: Durations.long1,
-    //     child: BudgetCheck(),
-    //     isIos: true,
-    //   ),
-    // );
   } else {
     snackBarCalled(context, "Deleted Budget error!", Colors.red);
   }
@@ -514,29 +478,6 @@ void getNewBudget() async {
   } else {}
 }
 
-void getDebts2() async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.get(
-    Uri.parse('${url}/debt/'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    var his = jsonDecode(response.body);
-    var obj = his['data'];
-
-    // // setState(() {
-    //    debtsList.clear();
-    //    debtsList.addAll(obj);
-    //    getdata=false;
-    // // });
-  } else {}
-}
 
 void getUserLend(context) async {
   String urlPath = "${url}/bill/lend";
@@ -593,18 +534,3 @@ Future<String?> getToken() async {
   }
 }
 
-class ApiService {
-  Future<http.Response> patchRequest(
-      String url, Map<String, dynamic> body) async {
-    var accessToken = await getToken();
-    final response = await http.patch(
-      Uri.parse(url),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': '$accessToken',
-      },
-      body: json.encode(body),
-    );
-    return response;
-  }
-}
