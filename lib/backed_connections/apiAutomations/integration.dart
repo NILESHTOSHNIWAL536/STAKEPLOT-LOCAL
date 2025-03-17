@@ -48,46 +48,28 @@ Future<void> getConsentHandleId(context) async
   final String custId ="${number.value}@finvu"; // Replace with dynamic value if needed
 
    final SharedPreferences _pref = await SharedPreferences.getInstance();
-   String token = "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMwYWZiZmNiMTcxMDc2NWFiOGU5MCIsImlhdCI6MTc0MTc4MDUyMSwiZXhwIjoxNzQ2OTY0NTIxfQ.H4J6ofa870hDbTT6UEgl49JozaJZPVLpZ4ih2lHydsY";
-  _pref.setString("accessToken", token);
    var accessToken = _pref.getString("accessToken");
-//  final SharedPreferences _pref = await SharedPreferences.getInstance();
-                            // String token = "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMwYWZiZmNiMTcxMDc2NWFiOGU5MCIsImlhdCI6MTc0MTc3NjU5MCwiZXhwIjoxNzQ2OTYwNTkwfQ.dm6hkBDE1xAY48hAOMLckjL0wXcCh54TpWf3wZXQ6Uc";
-                            _pref.setString("accessToken", token);
+
   try {
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "$token",
+        "Authorization": "$accessToken",
       },
       body: jsonEncode({"custId": custId,'number':number.value}),
     );
-     print("Vlogi with server is called");
-     printData(response);
+
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      String token = "";//data["token"];
-      // number.value="8459177562@finvu";
       String consentHandleId = data["consentHandleId"];
-
-      // Store token and consentHandleId in SharedPreferences
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      // await prefs.setString("tokenFinvu", token);
-      // await prefs.setString("consentHandleId", consentHandleId);
-
-    
-   
       handleId.value = consentHandleId;
-      print(handleId.value);
       snackBarCalled(context, consentHandleId);
       login(handleId.value,context);
 
-    } else {
-    
-    }
+    } 
   } catch (error) {
-   
+       snackBarCalled(context, error.toString());
   }
 }
 Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
@@ -95,9 +77,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final String apiUrl ="${url}/finvu/fetchData"; // Change to your actual server URL
     final String custId ="${number.value}@finvu"; // Replace with dynamic value if needed
-    
-    // String? handleId2 = handleId.value;
-
+  
     if (handleId.value == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Missing required credentials!")),
@@ -106,9 +86,8 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
     }
 
    final SharedPreferences pref = await SharedPreferences.getInstance();
-   String accessToken=pref.getString("accessToken").toString() ; 
-  
-     
+   String accessToken=pref.getString("accessToken").toString(); 
+
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {"Content-Type": "application/json", "Authorization": "$accessToken",},
@@ -118,7 +97,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
         "custId": custId,
       }),
     );
-    
+
     if (response.statusCode == 200) 
     {
       final data = json.decode(response.body);
@@ -139,39 +118,6 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
    clearStackShared(context);
    Navigator.pushNamed(context, "/OnboardingScreen"); 
 
-}
-
-Future<void> FetchTransactionBysessionId(BuildContext context,String sessionId) async {
-  try {
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String apiUrl ="${url}/finvu/session/${sessionId}"; 
-   
-    var response=await getDataApiCall(apiUrl);
-  
-    if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        
-    
-      await storeDataOfTransactions(context, data['data'], data['handleId'], data["from"],
-          data["to"], "",  data["custId"],data['consentId'], data["sessionId"]);
-   
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Data fetched successfully!")),
-      );
-
-    } else {
-     
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to fetch data")),
-      );
-    }
-  } catch (e) {
-  
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("An error occurred")),
-    );
-  }
 }
 
 

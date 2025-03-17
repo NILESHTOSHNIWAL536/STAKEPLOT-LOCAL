@@ -794,11 +794,9 @@ Future<String> addImageToCloud(
 
 
 void deletePost(id,context)async{
-   var responce=await deleteDataApiCall("${url}/post/${id}");
-   printData(responce);
+   var responce=await deleteDataApiCall("${url}/post/delete/${id}");
    if(getFlagOfResponse(responce))
-   {  
-       getTrending();
+   {
        snackBarCalled(context, "Deleted Post...");    
    }else{
        snackBarCalled(context, "Error while Deleting Post...");    
