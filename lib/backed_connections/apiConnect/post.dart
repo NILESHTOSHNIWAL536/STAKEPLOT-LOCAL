@@ -635,7 +635,6 @@ void getTrending() async {
     getTrendingData.clear();
     getTrendingData.addAll(obj);
     if(getTrendingData.length==0){findTranding=false;}
-
     getTrendingData.forEach((element) {
       postCount[element["_id"]] =element['upvotes'] < 0 ? 0 : element['upvotes'];
     });
@@ -803,9 +802,11 @@ Future<String> addImageToCloud(
 
 
 void deletePost(id,context)async{
-   var responce=await deleteDataApiCall("${url}/post/delete/${id}");
+   var responce=await deleteDataApiCall("${url}/post/${id}");
+   printData(responce);
    if(getFlagOfResponse(responce))
-   {
+   {  
+       getTrending();
        snackBarCalled(context, "Deleted Post...");    
    }else{
        snackBarCalled(context, "Error while Deleting Post...");    

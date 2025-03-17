@@ -67,6 +67,7 @@ Future<void> loginUser(TextEditingController emailController,
     TextEditingController passwordController, BuildContext context,
     [bool flag = false]) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
+  var data=jsonDecode(_pref.getString("deviceInfo")??"{}");
 
   final response = await http.post(
     Uri.parse('${url}/user/login'),
@@ -76,7 +77,7 @@ Future<void> loginUser(TextEditingController emailController,
     body: jsonEncode({
       'email': emailController.text.toString(),
       'userpassword': passwordController.text.toString(),
-      'deviceInfo': {},
+      'deviceInfo': data,
     }),
   );
   printData(response);
@@ -98,20 +99,15 @@ Future<void> loginUser(TextEditingController emailController,
     final body = json.decode(response.body);
 
     String accessToken = body['data']['accessToken'];
- 
     _pref.setString("accessToken", "Bearer " + accessToken);
-    await getBankAccounts();
-    await addThisDeviceToBackend(deviceData, context);
+    addThisDeviceToBackendDevice(_pref,context);
     storeinmap(body, _pref, passwordController.text);
     currentId.value = body['data']['_id'];
     Phone.value = body['data']['phone'];
     number.value = body['data']['phone'];
     isBankAccountLink.value = body['data']['isBankAccountLinked'];
-
    
     if (flag) return;
-    UserStorage.storeUserDetails(currentId.value, body['data']['name'], body['data']['avatarType'], ("Bearer " + accessToken));
-    storeImageinMapFinvu(context);
     Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
     acceptReset.value = false;
   
@@ -208,9 +204,8 @@ final SharedPreferences _pref = await SharedPreferences.getInstance();
     }catch(e){}
 
     await getBankAccounts();
-    await addThisDeviceToBackend(deviceData, context);
+    addThisDeviceToBackendDevice(_pref,context);
     storeinmap(body, _pref,userpassword);
-   
     Phone.value = body['data']['phone'];
     number.value = body['data']['phone'];
     isBankAccountLink.value = body['data']['isBankAccountLinked'];
@@ -320,6 +315,11 @@ void changePassword(context, email, p1, p2) async {
   } else {
     snackBarCalled(context, "Can't change...!", Colors.red);
   }
+}
+
+
+void addThisDeviceToBackendDevice(SharedPreferences _pref,context)async{
+  await addThisDeviceToBackend(jsonDecode(_pref.getString("deviceInfo")??"{}"), context);
 }
 
 void resendOpt(context, email, name) async {
@@ -542,39 +542,48 @@ void clearGetX() {
 // print(data);
 // }
 
-Future<void> initializeOneSignal(BuildContext context) async {
-  oneSignalInit();
+void initializeOneSignal(BuildContext context,TextEditingController emailController,TextEditingController passwordController) async {
+   final SharedPreferences pref = await SharedPreferences.getInstance();
+   String key="deviceInfo";
+   if(!pref.containsKey(key)){
+         await oneSignalInit();
+        String? userDeviceId =await OneSignal.User.pushSubscription.id;
+        if(userDeviceId!=null)await getDeviceInfo(userDeviceId.toString(), context,pref);
+   }
+     navigateScreen(context);
+    loginUser(emailController, passwordController, context);
+}
 
-  String? userDeviceId = OneSignal.User.pushSubscription.id;
-  if (userDeviceId != null) {
-    await getDeviceInfo(userDeviceId, context);
-  } else {
-    print("Failed to retrieve user device ID");
-  }
 
-  OneSignal.Notifications.addClickListener((event) {
-    print("Notification Opened: \${event.notification.additionalData}");
-
+void navigateScreen(context)
+{
+  OneSignal.Notifications.addClickListener((event){
     String? screen = event.notification.additionalData?['screen'];
-    if (screen != null) {
+    if (screen != null)
+    {
       Navigator.pushNamed(context, screen);
-    } else {
+    } else{
       print("No screen specified in additional data.");
     }
   });
+
 }
 
-void oneSignalInit() {
+Future<void> oneSignalInit() async
+{
+  try{
   String appId = "66bc1852-d40b-4ad0-8a11-5e3d0da698a2";
   OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
   OneSignal.initialize(appId);
   OneSignal.Notifications.requestPermission(true);
+  }catch(e){
+      print(e);
+  }
 }
 
-Future<void> getDeviceInfo(String playerId, context) async {
+Future<void> getDeviceInfo(String playerId, context,SharedPreferences pref) async {
   final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   deviceData.value = {};
-
   try {
     if (Platform.isAndroid) {
       // For Android devices
@@ -610,8 +619,7 @@ Future<void> getDeviceInfo(String playerId, context) async {
   } catch (e) {
     print('Error getting device info: $e');
   }
-   print(deviceData);
-  // await addThisDeviceToBackend(deviceData, context);
+    pref.setString("deviceInfo", jsonEncode(deviceData));
 }
 
 Future<void> addThisDeviceToBackend(deviceData, context) async {
