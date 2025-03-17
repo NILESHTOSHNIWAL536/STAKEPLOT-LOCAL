@@ -36,7 +36,6 @@ Future<http.Response> updateDataApiCall(urlPath) async {
 
 Future<http.Response> getDataApiCall(urlPath) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
-  //VCJ9.eyJpZCI6IjY3NWMwYWZiZmNiMTcxMDc2NWFiOGU5MCIsImlhdCI6MTczNzcwMzU3NCwiZXhwIjoxNzQyODg3NTc0fQ.zYUUmoy_xlaZwdvM8r4KDOZNADlLyxPirqDm0avEUXg");
   var accessToken = pref.getString("accessToken");
   final response = await http.get(
     Uri.parse(urlPath),
@@ -49,7 +48,7 @@ Future<http.Response> getDataApiCall(urlPath) async {
 }
 
 Future<http.Response> deleteDataApiCall(urlPath) async {
-  final SharedPreferences pref = await SharedPreferences.getInstance();
+    final SharedPreferences pref = await SharedPreferences.getInstance();
   var accessToken = pref.getString("accessToken");
   final response = await http.delete(
     Uri.parse(urlPath),

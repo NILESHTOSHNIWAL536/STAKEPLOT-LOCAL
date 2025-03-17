@@ -264,8 +264,7 @@ Widget siginButton(){
                             }
                             
                             acceptReset.value = true;
-                             await initializeOneSignal(context);
-                            loginUser(emailController, passwordController, context);
+                            initializeOneSignal(context,emailController,passwordController);
                            
                           },
                           child: Obx(() => Center(

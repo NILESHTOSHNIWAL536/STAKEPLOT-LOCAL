@@ -58,7 +58,6 @@ class _HomePageState extends State<HomePage> {
 
   void initializeData()   
   {
-   
     check(context, "homeScreen");
     getBankAccounts();
     getAllTransaction(context);

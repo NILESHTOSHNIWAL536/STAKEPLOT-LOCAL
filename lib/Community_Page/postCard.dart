@@ -42,7 +42,7 @@ class ChartData {
 class PostCard extends StatefulWidget {
   var data;
   bool flag = false;
-  PostCard({Key? key, required this.data, this.flag = false}) : super(key: key);
+  PostCard({Key? key, required this.data, this.flag = false,}) : super(key: key);
 
   @override
   _PostCardState createState() => _PostCardState();

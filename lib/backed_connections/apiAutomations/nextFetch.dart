@@ -104,12 +104,16 @@ class _RotatingIconState extends State<Nextfetch> with SingleTickerProviderState
    void checkAndFetchData()async {
     DateTime now = DateTime.now();
 
-    if ((now.hour == 9 && now.minute == 0 )) {
+    if (!(now.hour == 9 && now.minute == 0 )) {
             await getBankAccounts();
+            
           if( consentAndHandleDetails.isNotEmpty)
           {
+              bool  f=false;
                consentAndHandleDetails.forEach((item)
                {
+                        if(f){}
+                        else
                            getWeeklyfetchData(
                              item[ "consentId"],
                             item["consendHandleId"],
@@ -118,17 +122,14 @@ class _RotatingIconState extends State<Nextfetch> with SingleTickerProviderState
                             convertToIso8601("2025-01-05"),  
                             convertToIso8601("2025-03-05"),
                             );  
+                            f=true;
+                            
+                          
                });
           }  
     }
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    _timer.cancel();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
