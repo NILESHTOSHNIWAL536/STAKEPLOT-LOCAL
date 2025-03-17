@@ -131,10 +131,8 @@ class ModalContent extends StatefulWidget {
   _ModalContentState createState() => _ModalContentState();
 }
 
-class _ModalContentState extends State<ModalContent>with SingleTickerProviderStateMixin {
-
- 
-
+class _ModalContentState extends State<ModalContent>
+    with SingleTickerProviderStateMixin {
   String? selectedCategory;
   String? selectedSubCategory;
   final TextEditingController _amountController = TextEditingController();
@@ -674,7 +672,7 @@ class _ModalContentState extends State<ModalContent>with SingleTickerProviderSta
       return;
     }
     if (addedMembers.length <= 0) {
-      snackBarCalled(context, "Please add members....!", Colors.red);
+      snackBarCalled(context, "Please add members to proceed!", Colors.red);
       return;
     }
 
@@ -832,7 +830,8 @@ class _ModalContentState extends State<ModalContent>with SingleTickerProviderSta
     }
 
     // Verify total matches (optional, for debugging)
-    double calculatedTotal = nameList.fold(0.0, (sum, item) => sum + item['amount']);
+    double calculatedTotal =
+        nameList.fold(0.0, (sum, item) => sum + item['amount']);
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
     // print("splitUserAmount: Access token retrieved: ${accessToken != null ? 'Yes' : 'No'}");
@@ -888,12 +887,16 @@ class _ModalContentState extends State<ModalContent>with SingleTickerProviderSta
       }
 
       // print("splitUserAmount: Split successful, showing celebration");
-      snackBarCalled(context, "Split amount sent to users!", Colors.black);
+      snackBarCalled(
+          context,
+          "The split amount has been successfully sent to users!",
+          Colors.black);
       Navigator.pop(context);
       _showCelebration();
     } else {
       // print("splitUserAmount: API error - Status: ${response.statusCode}, Body: ${response.body}");
-      snackBarCalled(context, "Can't split, error!", Colors.red);
+      snackBarCalled(context,
+          "An error occurred while trying to split the bill!", Colors.red);
     }
 
     acceptReset.value = false;
@@ -925,18 +928,20 @@ class _ModalContentState extends State<ModalContent>with SingleTickerProviderSta
       }),
     );
 
-  if (response.statusCode == 200 || response.statusCode == 201) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
       members.forEach((e) {
         sendNotificationsToDevice(e['id'], context,
             "${userName.value} has sent u a lend bill..Of ${name} Of ${amount}");
       });
-      snackBarCalled(context, "Lend amount sent to users!", Colors.black);
-      addTransaction( amount, "Lend Bill (${subCategories})", name, context, 'cash', true);
+      snackBarCalled(context,
+          "Lend amount has been successfully sent to users!", Colors.black);
+      addTransaction(
+          amount, "Lend Bill (${subCategories})", name, context, 'cash', true);
       getUserLend(context);
-      
     } else {
-      snackBarCalled(context, "can't split ,error!", Colors.red);
+      snackBarCalled(
+          context, "An error occurred while trying to lend money!", Colors.red);
     }
     acceptReset.value = false;
   }

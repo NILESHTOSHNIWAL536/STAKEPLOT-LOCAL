@@ -271,10 +271,10 @@ class _PostCardState extends State<PostCard> {
           onTap: () {
             if (!fill.value) {
               savePostData(context, widget.data);
-              snackBarCalled(context, "Saved post successfully...!!");
+              snackBarCalled(context, "Saved post successfully!!");
               fill.value = true;
             } else
-              snackBarCalled(context, "You have already saved the post..!!");
+              snackBarCalled(context, "You have already saved the post!!");
           },
           child: Obx(() => SvgPicture.asset(
                 fill.value

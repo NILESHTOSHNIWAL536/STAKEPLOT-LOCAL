@@ -19,14 +19,14 @@ void store(response) {
 }
 
 void addReply(context, String data, String postId) async {
-  var body={
-      'commentId': postId,
-      'replyText': data,
-    };
-  var response=await postDataApiCall('${url}/reply/',body);
+  var body = {
+    'commentId': postId,
+    'replyText': data,
+  };
+  var response = await postDataApiCall('${url}/reply/', body);
   if (!getFlagOfResponse(response)) {
-     snackBarCalled(context, "can't Add reply...!", Colors.red);
-   }
+    snackBarCalled(context, "Unable to add reply.", Colors.red);
+  }
 }
 
 void addPost2(context, String title, String description, File obj) async {
@@ -68,7 +68,7 @@ void addPost2(context, String title, String description, File obj) async {
       final snackBar = SnackBar(
         duration: Duration(seconds: 4),
         content: Text(
-          'Failed to upload image: ${streamedResponse.reasonPhrase}',
+          'Failed to upload the image: ${streamedResponse.reasonPhrase}.',
           style: FontManager().getTextStyle(context, color: Colors.white),
         ),
         backgroundColor: Colors.red,
@@ -81,7 +81,7 @@ void addPost2(context, String title, String description, File obj) async {
     final snackBar = SnackBar(
       duration: Duration(seconds: 4),
       content: Text(
-        'Error uploading image: $e',
+        'An error occurred while uploading the image: $e.',
         style: FontManager().getTextStyle(context, color: Colors.white),
       ),
       backgroundColor: Colors.red,
@@ -103,7 +103,6 @@ void addPost(context, String title, String description, File obj) async {
   var imageBytes = obj.readAsBytesSync();
   // var base64Image = compressImage(imageBytes);
   var base64Image = base64Encode(imageBytes);
- 
 
   final response = await http.post(
     Uri.parse('${url}/post'),
@@ -119,13 +118,13 @@ void addPost(context, String title, String description, File obj) async {
       'fileName': 'file7'
     }),
   );
- 
+
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     var snackBar = SnackBar(
       duration: Durations.long1,
       content: Text(
-        'Added Budget!',
+        'Budget added successfully!',
         style: FontManager().getTextStyle(
           context,
           color: Colors.white,
@@ -143,7 +142,7 @@ void addPost(context, String title, String description, File obj) async {
     var snackBar = SnackBar(
       duration: Durations.medium4,
       content: Text(
-        'invalid credentials!',
+        'Invalid credentials provided.',
         style: FontManager().getTextStyle(
           context,
           color: Colors.white,
@@ -174,13 +173,13 @@ void reportPost(context, String id, String spam) async {
     snackBarCalled(
         context,
         spam == "hide post"
-            ? "Post is hidden From You"
-            : "Reported Successfully...!",
+            ? "The post has been hidden from you."
+            : "Reported successfully.",
         Colors.green);
     // Navigator.pop(context);
     // Get.back();
   } else {
-    snackBarCalled(context, "error while Reporting...!", Colors.red);
+    snackBarCalled(context, "An error occurred while reporting.", Colors.red);
   }
 
   getPost();
@@ -210,7 +209,8 @@ void createPostCopy(
     body: jsonEncode({
       'title': title,
       'description': {'message': description},
-      'imageBase64':base, //"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA5CAYAAABqMUjBAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADDSURBVHgB7dnLCcJAFEbh/44WYCm+3amlaAVqB3YgVqC1uHMhWIKNyDW+CnCERG/OB5NkE4bDwMAwEgAAAAD8qu5gvOkXQxVoqgJmtvTn50olS6oZgqMjODqCoyM4OoKjq12wKVNvNF4Uv7eVwzV7zb5XFj+fjoetMuSfltzWxbOlb7zDP/ZYp3KDr8k66aqpMpj57v52t7kypIYu+ie94cTvQxVgl46O4OgIjo7g6AiOjuDoKrlM85R3SgIAAACA0twANp8cFnCd2FoAAAAASUVORK5CYII=",
+      'imageBase64':
+          base, //"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA5CAYAAABqMUjBAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADDSURBVHgB7dnLCcJAFEbh/44WYCm+3amlaAVqB3YgVqC1uHMhWIKNyDW+CnCERG/OB5NkE4bDwMAwEgAAAAD8qu5gvOkXQxVoqgJmtvTn50olS6oZgqMjODqCoyM4OoKjq12wKVNvNF4Uv7eVwzV7zb5XFj+fjoetMuSfltzWxbOlb7zDP/ZYp3KDr8k66aqpMpj57v52t7kypIYu+ie94cTvQxVgl46O4OgIjo7g6AiOjuDoKrlM85R3SgIAAACA0twANp8cFnCd2FoAAAAASUVORK5CYII=",
       'fileName': 'file7'
     }),
   );
@@ -409,7 +409,6 @@ void sn(res, context) {
 //     body: jsonEncode(body),
 //   );
 
-
 //   if (response.statusCode == 200 || response.statusCode==201) {
 //             store(response);
 //     // //print('Post created successfully');
@@ -451,7 +450,6 @@ void sn(res, context) {
 
 //   final response2 = await request.send();
 
-
 //   if (response2.statusCode == 200) {
 //     final responseData = await response2.stream.toBytes();
 
@@ -464,7 +462,7 @@ void sn(res, context) {
 //     var body = {
 //       'title': title,
 //       'description': {'message': description},
-//       'image':urlPath, 
+//       'image':urlPath,
 //       'fileName': ''
 //     };
 
@@ -477,15 +475,14 @@ void sn(res, context) {
 //       body: jsonEncode(body),
 //     );
 
-
 //     if (response.statusCode == 200 || response.statusCode == 201)
 //      {
 //       var his = jsonDecode(response.body);
 //       getTrendingData.insert(0, his);
 //       getPosted.value = ! getPosted.value;
 //       postCount[his["_id"]] = 0;
-//       postCommentCount[his["_id"]] = 0;   
-//     } 
+//       postCommentCount[his["_id"]] = 0;
+//     }
 
 //     posting.value=false;
 //     postDis.value = false;
@@ -494,14 +491,14 @@ void sn(res, context) {
 //   }
 
 // }
-Future<Map<String, dynamic>> createPost(
-    BuildContext context, String title, String description, File imageFile) async {
+Future<Map<String, dynamic>> createPost(BuildContext context, String title,
+    String description, File imageFile) async {
   try {
     // Cloudinary upload URL
     final url2 = Uri.parse('https://api.cloudinary.com/v1_1/deus5rcgl/upload');
     final SharedPreferences pref = await SharedPreferences.getInstance();
     var accessToken = pref.getString("accessToken");
-    
+
     // Upload image to Cloudinary
     final request = http.MultipartRequest('POST', url2)
       ..fields['upload_preset'] = 'zu3td0li'
@@ -528,7 +525,8 @@ Future<Map<String, dynamic>> createPost(
     };
 
     // Make post request
-    final urlp = Uri.parse('${url}/post'); // Make sure 'url' is defined somewhere
+    final urlp =
+        Uri.parse('${url}/post'); // Make sure 'url' is defined somewhere
     final response = await http.post(
       urlp,
       headers: <String, String>{
@@ -540,13 +538,13 @@ Future<Map<String, dynamic>> createPost(
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       var postData = jsonDecode(response.body);
-      
+
       // Update local state
       getTrendingData.insert(0, postData);
       getPosted.value = !getPosted.value;
       postCount[postData["_id"]] = 0;
       postCommentCount[postData["_id"]] = 0;
-      
+
       posting.value = false;
       postDis.value = false;
 
@@ -555,7 +553,8 @@ Future<Map<String, dynamic>> createPost(
         'data': postData,
       };
     } else {
-      snackBarCalled(context, "Server error: ${response.statusCode}", Colors.red);
+      snackBarCalled(
+          context, "Server error: ${response.statusCode}", Colors.red);
       return {
         'success': false,
         'error': 'Server error: ${response.statusCode}',
@@ -586,64 +585,64 @@ Future<Map<String, dynamic>> createPost(
 
 void createPostWithOutImage(context, String title, String description) async {
   var urlPath = '${url}/post/withOutImage';
-  var body={
-      'title': title,
-      'description': {
-        'message': description,
-      },
-      'isPoll': false,
-    };
-   var response=await postDataApiCall(urlPath, body);
-  if (getFlagOfResponse(response)) 
-  {
-        var his = jsonDecode(response.body);
-        getTrendingData.insert(0, his);
-        getPosted.value = ! getPosted.value;
-        postCount[his["_id"]] = 0;
-        postCommentCount[his["_id"]] = 0;   
-  } 
+  var body = {
+    'title': title,
+    'description': {
+      'message': description,
+    },
+    'isPoll': false,
+  };
+  var response = await postDataApiCall(urlPath, body);
+  if (getFlagOfResponse(response)) {
+    var his = jsonDecode(response.body);
+    getTrendingData.insert(0, his);
+    getPosted.value = !getPosted.value;
+    postCount[his["_id"]] = 0;
+    postCommentCount[his["_id"]] = 0;
+  }
 }
 
 void createPollOfCommunity(context, String title, String description) async {
   var urlPath = '${url}/createPollPost';
-  var body={
-      'title': title,
-      'description': {
-        'message': description,
-      },
-      'isPoll': true,
-    };
-  var response=await postDataApiCall(urlPath, body);
-  if (getFlagOfResponse(response)) 
-  {
-      var his = jsonDecode(response.body);
-      getTrendingData.insert(0, his);
-      getPosted.value = ! getPosted.value;
-      postCount[his["_id"]] = 0;
-      postCommentCount[his["_id"]] = 0;   
+  var body = {
+    'title': title,
+    'description': {
+      'message': description,
+    },
+    'isPoll': true,
+  };
+  var response = await postDataApiCall(urlPath, body);
+  if (getFlagOfResponse(response)) {
+    var his = jsonDecode(response.body);
+    getTrendingData.insert(0, his);
+    getPosted.value = !getPosted.value;
+    postCount[his["_id"]] = 0;
+    postCommentCount[his["_id"]] = 0;
   } else {}
-   postDis.value = false;
+  postDis.value = false;
 }
 
 void getTrending() async {
-
-  var response=await getDataApiCall('${url}/post/feed');
+  var response = await getDataApiCall('${url}/post/feed');
 
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
     getTrendingData.clear();
     getTrendingData.addAll(obj);
-    if(getTrendingData.length==0){findTranding=false;}
+    if (getTrendingData.length == 0) {
+      findTranding = false;
+    }
 
     getTrendingData.forEach((element) {
-      postCount[element["_id"]] =element['upvotes'] < 0 ? 0 : element['upvotes'];
+      postCount[element["_id"]] =
+          element['upvotes'] < 0 ? 0 : element['upvotes'];
     });
   } else {}
 }
 
 void getPost() async {
-  var response=await getDataApiCall('${url}/post/feed');
+  var response = await getDataApiCall('${url}/post/feed');
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
@@ -655,38 +654,33 @@ void getPost() async {
       postCount[element["_id"]] = element['upvotes'];
       postCommentCount[element["_id"]] = element['comments'];
     });
-   
   } else {}
 }
 
 void savePostData(context, data) async {
   var urlPath = "${url}/post/save";
-  var  body={
-      "postId": data['_id']
-    };
+  var body = {"postId": data['_id']};
 
-   var response=await postDataApiCall(urlPath, body);
+  var response = await postDataApiCall(urlPath, body);
 
-  if (getFlagOfResponse(response))
-  {
-    snackBarCalled(context, 'Post saved successfully');
+  if (getFlagOfResponse(response)) {
+    snackBarCalled(context, 'Post saved successfully.');
   } else {
-    snackBarCalled(context, 'Failed To Save Post...!', Colors.red);
+    snackBarCalled(context, 'Failed to save the post.', Colors.red);
   }
 }
 
 void postItenary(title, s, type, context) async {
-  var urlPath ="${url}/post";
+  var urlPath = "${url}/post";
   var body = {
     "title": title,
     "description": {"itemlist": s},
     "chartType": type,
   };
-  var response =await postDataApiCall(urlPath, body);
-  if (getFlagOfResponse(response))
-  {
+  var response = await postDataApiCall(urlPath, body);
+  if (getFlagOfResponse(response)) {
     store(response);
-    snackBarCalled(context, 'Post created successfully');
+    snackBarCalled(context, 'Post created successfully.');
   } else {
     snackBarCalled(context, 'Failed To Save Post...!', Colors.red);
   }
@@ -801,13 +795,11 @@ Future<String> addImageToCloud(
   return imageNameUrl;
 }
 
-
-void deletePost(id,context)async{
-   var responce=await deleteDataApiCall("${url}/post/delete/${id}");
-   if(getFlagOfResponse(responce))
-   {
-       snackBarCalled(context, "Deleted Post...");    
-   }else{
-       snackBarCalled(context, "Error while Deleting Post...");    
-   }
+void deletePost(id, context) async {
+  var responce = await deleteDataApiCall("${url}/post/delete/${id}");
+  if (getFlagOfResponse(responce)) {
+    snackBarCalled(context, "Deleted the post successfully.");
+  } else {
+    snackBarCalled(context, "An error occurred while deleting the post.");
+  }
 }

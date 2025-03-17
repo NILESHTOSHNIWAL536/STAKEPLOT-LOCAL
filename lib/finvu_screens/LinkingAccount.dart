@@ -21,30 +21,28 @@ import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-
-RxMap<String, List<FinvuDiscoveredAccountInfo>> listOfAccountAdded = <String, List<FinvuDiscoveredAccountInfo>>{}.obs;
-RxMap<String, FinvuFIPDetails> FinvuFIPDetailsList =<String, FinvuFIPDetails>{}.obs;
-RxMap<String, int> accountCountList=<String, int>{}.obs;
+RxMap<String, List<FinvuDiscoveredAccountInfo>> listOfAccountAdded =
+    <String, List<FinvuDiscoveredAccountInfo>>{}.obs;
+RxMap<String, FinvuFIPDetails> FinvuFIPDetailsList =
+    <String, FinvuFIPDetails>{}.obs;
+RxMap<String, int> accountCountList = <String, int>{}.obs;
 RxList accountAdded = [].obs;
 RxList accountLinked = [].obs;
 RxInt count = 0.obs;
 List<FinvuFIPInfo> fipDis = [];
 List<FinvuFIPInfo> fipDisOrginal = [];
 RxList isSeletedBankAccout = [].obs;
-RxMap<String,String> bankImageAndid=RxMap();
+RxMap<String, String> bankImageAndid = RxMap();
 RxList<FinvuFIPInfo> listOfBankAccount = <FinvuFIPInfo>[].obs;
 // RxBool getBanks=false.obs;
 RxBool addBank = false.obs;
-List<FinvuLinkedAccountDetailsInfo> fetchAccountData=[];
-List<FinvuLinkedAccountDetailsInfo> seletedAccountInfomations=[];
-List<String> seletedAccountIds=[];
-RxBool getBanks=false.obs;
+List<FinvuLinkedAccountDetailsInfo> fetchAccountData = [];
+List<FinvuLinkedAccountDetailsInfo> seletedAccountInfomations = [];
+List<String> seletedAccountIds = [];
+RxBool getBanks = false.obs;
 RxBool addAccount = false.obs;
-RxBool getFetch=false.obs;
-RxBool directFetch=false.obs;
-
-
-
+RxBool getFetch = false.obs;
+RxBool directFetch = false.obs;
 
 class LinkingAccount extends StatefulWidget {
   List<FinvuFIPInfo> listOfBankAccount;
@@ -66,15 +64,15 @@ class _LinkingAccountState extends State<LinkingAccount> {
     count.value = 0;
     getData();
     getinfo();
-    getFetch.value = false; 
-  
+    getFetch.value = false;
   }
 
-  void getinfo()async{
-       finvuConsentRequestDetailInfo = await finvuManager.getConsentRequestDetails(handleId.value);
+  void getinfo() async {
+    finvuConsentRequestDetailInfo =
+        await finvuManager.getConsentRequestDetails(handleId.value);
   }
 
-   void getData() async {
+  void getData() async {
     fipDis = await finvuManager.fipsAllFIPOptions();
     fipDisOrginal.clear();
     fipDisOrginal.addAll(fipDis);
@@ -123,7 +121,6 @@ class _LinkingAccountState extends State<LinkingAccount> {
                     );
                   },
                   child: getButton(context, "Authorise")),
-              
             ],
           ),
         ),
@@ -134,8 +131,8 @@ class _LinkingAccountState extends State<LinkingAccount> {
   Widget accountLinkedUi() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height:  MediaQuery.of(context).size.height / 3,
-        child: seletedAccountIds.length==0
+        height: MediaQuery.of(context).size.height / 3,
+        child: seletedAccountIds.length == 0
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -143,7 +140,8 @@ class _LinkingAccountState extends State<LinkingAccount> {
                   const SizedBox(
                     height: 20,
                   ),
-                  textStyle("Please tap on 'Link Now' to link your bank account", 14),
+                  textStyle(
+                      "Please tap on 'Link Now' to link your bank account", 14),
                   const SizedBox(
                     height: 20,
                   ),
@@ -195,9 +193,9 @@ class _LinkingAccountState extends State<LinkingAccount> {
                     height: 20,
                   ),
                   InkWell(
-                      onTap: ()async {
-                         directFetch.value=false;
-                        await  getAccountShared();
+                      onTap: () async {
+                        directFetch.value = false;
+                        await getAccountShared();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -209,7 +207,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                   const SizedBox(
                     height: 20,
                   ),
-                  textStyle("We will fetch this account transactions",8),
+                  textStyle("We will fetch this account transactions", 8),
                 ],
               ));
   }
@@ -217,10 +215,10 @@ class _LinkingAccountState extends State<LinkingAccount> {
   Widget fetchDataOfLinkedAccount() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: seletedAccountIds.length==0
+        height: seletedAccountIds.length == 0
             ? MediaQuery.of(context).size.height / 3.5
             : MediaQuery.of(context).size.height / 3,
-        child: seletedAccountIds.length==0
+        child: seletedAccountIds.length == 0
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -259,12 +257,9 @@ class _LinkingAccountState extends State<LinkingAccount> {
                     height: 10,
                   ),
                   InkWell(
-                      onTap: ()async {
-                       
-                    
-
-                           Navigator.pop(context);
-                           directFetch.value=true;
+                      onTap: () async {
+                        Navigator.pop(context);
+                        directFetch.value = true;
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -374,7 +369,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
               children: [
                 // Display bank name and image before calling linkedaccoutnData
                 getBankNameAndImage(account),
-        
+
                 FutureBuilder<Widget>(
                   future: linkedaccoutnData(account),
                   builder: (context, snapshot) {
@@ -407,12 +402,16 @@ class _LinkingAccountState extends State<LinkingAccount> {
           );
   }
 
-  void LinkingBank(FinvuFIPDetails fipDetails, String fipId, FinvuFIPInfo info) async {
+  void LinkingBank(
+      FinvuFIPDetails fipDetails, String fipId, FinvuFIPInfo info) async {
     try {
       List<FinvuDiscoveredAccountInfo> bankData =
           listOfAccountAdded[fipId] ?? [];
       if (bankData.isEmpty) {
-        snackBarCalled(context, "Account has been added for linking.", Colorcodes.red);
+        snackBarCalled(
+            context,
+            "The account has been successfully added for linking.",
+            Colorcodes.red);
         return;
       }
       FinvuAccountLinkingRequestReference linkingReference =
@@ -426,15 +425,15 @@ class _LinkingAccountState extends State<LinkingAccount> {
         },
       );
     } catch (e) {
-      snackBarCalled(context, "Added check has Some Linked Account....");
+      snackBarCalled(context, "Added check has Some Linked Account");
     }
   }
 
   Widget verify(linkingReference, fid, FinvuFIPDetails fipDetails,
       FinvuFIPInfo info, context) {
-    
     return AnimatedPadding(
-      padding: MediaQuery.of(context).viewInsets,// Adjusts padding when keyboard appears
+      padding: MediaQuery.of(context)
+          .viewInsets, // Adjusts padding when keyboard appears
       duration: const Duration(milliseconds: 100),
       curve: Curves.easeOut,
       child: Container(
@@ -504,23 +503,23 @@ class _LinkingAccountState extends State<LinkingAccount> {
             //   ),
             // ),
             Padding(
-  padding: const EdgeInsets.symmetric(horizontal: 20),
-  child: TextField(
-    controller: otpController,
-    keyboardType: TextInputType.number,
-    decoration: InputDecoration(
-      hintText: 'Enter OTP',
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Colors.black12)
-      ),
-    ),
-    onChanged: (value) {
-      _otpCode.value = value;
-      _isOtpValid.value = value.isNotEmpty; // Or some other validation logic
-    },
-  ),
-),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: TextField(
+                controller: otpController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  hintText: 'Enter OTP',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.black12)),
+                ),
+                onChanged: (value) {
+                  _otpCode.value = value;
+                  _isOtpValid.value =
+                      value.isNotEmpty; // Or some other validation logic
+                },
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 4, 0, 10),
               child: Row(
@@ -611,24 +610,25 @@ class _LinkingAccountState extends State<LinkingAccount> {
     try {
       FinvuConfirmAccountLinkingInfo data =
           await finvuManager.confirmAccountLinking(linkingReference!, otp);
-      snackBarCalled(context, "Linked Bank SuccessFully...");
+      snackBarCalled(context, "Linked Bank account Successfully...");
       Navigator.pop(context);
-      
-         data.linkedAccounts.forEach((finvu) {
-           listofLinkedAccount.add(finvu.accountReferenceNumber.toString());
-         });
-        //  listOfAccountAdded.containsKey(bankData.fipId)
-         listOfAccountAdded.remove(fid);
-         listofLinkedAccount.refresh();
-       
+
+      data.linkedAccounts.forEach((finvu) {
+        listofLinkedAccount.add(finvu.accountReferenceNumber.toString());
+      });
+      //  listOfAccountAdded.containsKey(bankData.fipId)
+      listOfAccountAdded.remove(fid);
+      listofLinkedAccount.refresh();
+
       accountLinked.add(fid);
       otpController = TextEditingController();
       _otpCode.value = "";
       _isOtpValid.value = false;
     } catch (e) {
-     
-      snackBarCalled(context,
-          "Error while Linking verify Otp/ Or Already Linked...", Colors.red);
+      snackBarCalled(
+          context,
+          "Error while verifying OTP or the account is already linked.",
+          Colors.red);
     }
   }
 
@@ -643,13 +643,17 @@ class _LinkingAccountState extends State<LinkingAccount> {
         child: Row(
           children: [
             Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                     formatMaskedAccount(bankData),
-                     const SizedBox(height: 2,),
-                    Obx(()=> listofLinkedAccount.contains(id)?textStyle("Linked",13,Colorcodes.graphColor2):SizedBox.shrink())
-                ],
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                formatMaskedAccount(bankData),
+                const SizedBox(
+                  height: 2,
+                ),
+                Obx(() => listofLinkedAccount.contains(id)
+                    ? textStyle("Linked", 13, Colorcodes.graphColor2)
+                    : SizedBox.shrink())
+              ],
             ),
             const Spacer(),
             checkBoxForAccountLink(bankData, fipDetails, id),
@@ -675,7 +679,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
   Widget checkBoxForAccountLink(bankData, fipDetails, id) {
     return Obx(() => listofLinkedAccount.contains(id)
-        ? Obx(()=>  addAccount.value? getcheckBox(id) :getcheckBox(id))
+        ? Obx(() => addAccount.value ? getcheckBox(id) : getcheckBox(id))
         : Checkbox(
             value: accountAdded.contains(bankData.accountReferenceNumber),
             onChanged: (b) {
@@ -687,7 +691,6 @@ class _LinkingAccountState extends State<LinkingAccount> {
               borderRadius: BorderRadius.circular(4), // Apply border radius
             ),
           ));
-
   }
 
   Widget textStyle(text,
@@ -776,7 +779,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                       AppColors.bg1, FontWeight.bold)),
             ],
           ),
-        Obx(()=> ( !listOfAccountAdded.containsKey(bankData.fipId) || !flag)
+          Obx(() => (!listOfAccountAdded.containsKey(bankData.fipId) || !flag)
               ? SizedBox.shrink()
               : InkWell(
                   onTap: () {
@@ -833,53 +836,43 @@ class _LinkingAccountState extends State<LinkingAccount> {
     accountAdded.refresh();
   }
 
+  Widget getcheckBox(String fipId) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10.0),
+      child: Container(
+        width: 50,
+        height: 50,
+        child: Checkbox(
+            value: seletedAccountIds.contains(fipId),
+            // checkColor: AppColors.primaryColor,
+            activeColor: AppColors.primaryColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4), // Apply border radius
+            ),
+            onChanged: (value) {
+              if (seletedAccountIds.contains(fipId)) {
+                seletedAccountIds.remove(fipId);
+              } else {
+                seletedAccountIds.add(fipId);
+              }
 
-   Widget getcheckBox(String fipId)
- {
-      return Padding(
-        padding: const EdgeInsets.only(left: 10.0),
-        child: Container(
-          width: 50,
-          height: 50,
-          
-          child: Checkbox(value: seletedAccountIds.contains(fipId), 
-                  // checkColor: AppColors.primaryColor,
-                  activeColor: AppColors.primaryColor,
-                  shape: RoundedRectangleBorder(
-                         borderRadius: BorderRadius.circular(4), // Apply border radius
-                    ),
-                  onChanged: (value)
-                 {
-                        
-                         if(seletedAccountIds.contains(fipId))
-                         {
-                             seletedAccountIds.remove(fipId); 
-                         }else{
-                             seletedAccountIds.add(fipId); 
-                         }
-                       
-                         addAccount.value= !addAccount.value;
-                 }),
-        ),
-      );
- }
-
-
-
-  Future<void> getAccountShared() async
-  {
-      
-       fetchAccountData = await finvuManager.fetchLinkedAccounts();
-       finvuConsentRequestDetailInfo = await finvuManager.getConsentRequestDetails(handleId.value);
-       seletedAccountInfomations.clear();
-       fetchAccountData.forEach((FinvuLinkedAccountDetailsInfo finvuInfo){
-                 try{
-                  if(seletedAccountIds.contains(finvuInfo.accountReferenceNumber)){
-                      seletedAccountInfomations.add(finvuInfo);
-                  }
-                }
-                  catch(e){}
-        });
+              addAccount.value = !addAccount.value;
+            }),
+      ),
+    );
   }
 
+  Future<void> getAccountShared() async {
+    fetchAccountData = await finvuManager.fetchLinkedAccounts();
+    finvuConsentRequestDetailInfo =
+        await finvuManager.getConsentRequestDetails(handleId.value);
+    seletedAccountInfomations.clear();
+    fetchAccountData.forEach((FinvuLinkedAccountDetailsInfo finvuInfo) {
+      try {
+        if (seletedAccountIds.contains(finvuInfo.accountReferenceNumber)) {
+          seletedAccountInfomations.add(finvuInfo);
+        }
+      } catch (e) {}
+    });
+  }
 }

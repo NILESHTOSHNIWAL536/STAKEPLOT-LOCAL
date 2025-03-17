@@ -13,6 +13,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart';
+import 'package:flutter_application_code_stakeplot/user_chat/fullScreen.dart';
 import 'package:get/get_rx/get_rx.dart';
 // import 'package:getwidget/components/image/gf_image_overlay.dart';
 import 'package:page_transition/page_transition.dart';
@@ -769,39 +770,72 @@ class _ChatState extends State<Chat> {
       ),
     );
   }
-
   Widget image(url) {
     if (url == "" || url == "None") return SizedBox.shrink();
 
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-
-        // border: Border.all(
-        //    width: .5,
-        //    color: Colorcodes.poll1
-        // )
       ),
       padding: const EdgeInsets.symmetric(vertical: 3.0),
-      child: Image.network(
-        url,
-        width: MediaQuery.of(context).size.width / 2,
-        height: MediaQuery.of(context).size.height / 5,
-        fit: BoxFit.cover,
-        color: Colors.black.withOpacity(0.0),
-        colorBlendMode: BlendMode.exclusion,
+      child: GestureDetector(
+        onTap: () {
+          // Navigate to full image screen
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => FullImageScreen(imageUrl: url),
+            ),
+          );
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Image.network(
+            url,
+            width: MediaQuery.of(context).size.width / 2,
+            height: MediaQuery.of(context).size.height / 5,
+            
+            fit: BoxFit.cover,
+            color: Colors.black.withOpacity(0.0),
+            colorBlendMode: BlendMode.exclusion,
+          ),
+        ),
       ),
-      // child: GFImageOverlay(
-      //                   width: MediaQuery.of(context).size.width / 1.5,
-      //                   height: MediaQuery.of(context).size.height/3.5,
-      //                   // shape: BoxShape.values,
-      //                   image: NetworkImage(url!),
-      //                   borderRadius:BorderRadius.circular(10),
-      //                   colorFilter:ColorFilter.mode(Colors.black.withOpacity(0.0),
-      //                   BlendMode.exclusion),
-      //              ),
     );
   }
+
+  // Widget image(url) {
+  //   if (url == "" || url == "None") return SizedBox.shrink();
+
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //       borderRadius: BorderRadius.circular(20),
+
+  //       // border: Border.all(
+  //       //    width: .5,
+  //       //    color: Colorcodes.poll1
+  //       // )
+  //     ),
+  //     padding: const EdgeInsets.symmetric(vertical: 3.0),
+  //     child: Image.network(
+  //       url,
+  //       width: MediaQuery.of(context).size.width / 2,
+  //       height: MediaQuery.of(context).size.height / 5,
+  //       fit: BoxFit.cover,
+  //       color: Colors.black.withOpacity(0.0),
+  //       colorBlendMode: BlendMode.exclusion,
+  //     ),
+  //     // child: GFImageOverlay(
+  //     //                   width: MediaQuery.of(context).size.width / 1.5,
+  //     //                   height: MediaQuery.of(context).size.height/3.5,
+  //     //                   // shape: BoxShape.values,
+  //     //                   image: NetworkImage(url!),
+  //     //                   borderRadius:BorderRadius.circular(10),
+  //     //                   colorFilter:ColorFilter.mode(Colors.black.withOpacity(0.0),
+  //     //                   BlendMode.exclusion),
+  //     //              ),
+  //   );
+  // }
 
   Widget poll(e) {
     List options = e['options'] ?? [];

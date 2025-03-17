@@ -44,9 +44,7 @@ class _AccessState extends State<Access> {
     try {
       // fetchAccountData = await finvuManager.fetchLinkedAccounts();
       // finvuConsentRequestDetailInfo = await finvuManager.getConsentRequestDetails(handleId.value);
-    } catch (e) {
-    }
-
+    } catch (e) {}
   }
 
   // void getAccountShared() async
@@ -120,7 +118,7 @@ class _AccessState extends State<Access> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        bottomNavigationBar: BottomBar(),
+          bottomNavigationBar: BottomBar(),
           backgroundColor: AppColors.backgroundColor,
           body: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(10.0, 16, 16, 0),
@@ -166,36 +164,38 @@ class _AccessState extends State<Access> {
           padding: const EdgeInsets.symmetric(vertical: 10),
           child: viewMore(),
         ),
-       
-        
       ],
     );
   }
 
-
-  Widget accountLikedInfo(){
-   
+  Widget accountLikedInfo() {
     return Column(
-         children: seletedAccountInfomations.map((data)=>accountInfoDetailsUi(data)).toList(),
+      children: seletedAccountInfomations
+          .map((data) => accountInfoDetailsUi(data))
+          .toList(),
     );
   }
 
-  Widget accountInfoDetailsUi(FinvuLinkedAccountDetailsInfo data){
-     return Container(
+  Widget accountInfoDetailsUi(FinvuLinkedAccountDetailsInfo data) {
+    return Container(
       // color: Colorcodes.billBody,
-      width: MediaQuery.of(context).size.width/1.5,
-       child: Wrap(
-           runAlignment: WrapAlignment.spaceAround,
-          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-                  textStyle(data.fipName),
-                  const SizedBox(width: 5,),  
-                  textStyle(data.accountType),
-                  const SizedBox(width: 5,),  
-                  textStyle(data.maskedAccountNumber),
-          ],
-       ),
-     ); 
+      width: MediaQuery.of(context).size.width / 1.5,
+      child: Wrap(
+        runAlignment: WrapAlignment.spaceAround,
+        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          textStyle(data.fipName),
+          const SizedBox(
+            width: 5,
+          ),
+          textStyle(data.accountType),
+          const SizedBox(
+            width: 5,
+          ),
+          textStyle(data.maskedAccountNumber),
+        ],
+      ),
+    );
   }
 
   Widget viewMore() {
@@ -440,7 +440,9 @@ class _AccessState extends State<Access> {
                   overflow: TextOverflow.clip,
                 ),
               ),
-              title == "Accounts Shared" ?  accountLikedInfo() : SizedBox.shrink()
+              title == "Accounts Shared"
+                  ? accountLikedInfo()
+                  : SizedBox.shrink()
             ],
           ),
         ],
@@ -474,7 +476,7 @@ class _AccessState extends State<Access> {
     );
   }
 
-  Widget accountInfo(){
+  Widget accountInfo() {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 3,
@@ -534,7 +536,9 @@ class _AccessState extends State<Access> {
                         width: 5,
                       ),
                       textStyle(e.maskedAccountNumber),
-                      Obx(()=>  addAccount.value? getcheckBox(e.accountReferenceNumber) :getcheckBox(e.accountReferenceNumber))
+                      Obx(() => addAccount.value
+                          ? getcheckBox(e.accountReferenceNumber)
+                          : getcheckBox(e.accountReferenceNumber))
                     ],
                   ),
                 );
@@ -546,29 +550,26 @@ class _AccessState extends State<Access> {
     );
   }
 
-
-  Widget getcheckBox(String fipId)
- {
-      return Padding(
-        padding: const EdgeInsets.only(left: 10.0),
-        child: Container(
-          width: 50,
-          height: 50,
-          child: Checkbox(value: seletedAccountIds.contains(fipId), onChanged: (value)
-                 {
-                        
-                         if(seletedAccountIds.contains(fipId))
-                         {
-                             seletedAccountIds.remove(fipId); 
-                         }else{
-                             seletedAccountIds.add(fipId); 
-                         }
-                         print(seletedAccountIds);
-                         addAccount.value= !addAccount.value;
-                 }),
-        ),
-      );
- }
+  Widget getcheckBox(String fipId) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10.0),
+      child: Container(
+        width: 50,
+        height: 50,
+        child: Checkbox(
+            value: seletedAccountIds.contains(fipId),
+            onChanged: (value) {
+              if (seletedAccountIds.contains(fipId)) {
+                seletedAccountIds.remove(fipId);
+              } else {
+                seletedAccountIds.add(fipId);
+              }
+              print(seletedAccountIds);
+              addAccount.value = !addAccount.value;
+            }),
+      ),
+    );
+  }
 
   Widget textStyle(text,
       [double fontsize = 12,
@@ -603,7 +604,7 @@ class _AccessState extends State<Access> {
           Icon(Icons.info_outline, color: Colors.grey),
           SizedBox(width: 10),
           Container(
-            width: MediaQuery.of(context).size.width/1.2,
+            width: MediaQuery.of(context).size.width / 1.2,
             child: Text(
               "You can pause or cancel sharing anytime via your Finvu app.",
               style: FontManager().getTextStyle(
@@ -647,18 +648,18 @@ class _AccessState extends State<Access> {
           ),
         ),
         InkWell(
-          onTap: () async{
+          onTap: () async {
             FinvuConsentRequestDetailInfo consentInfo =
-          await finvuManager.getConsentRequestDetails(handleId.value);
+                await finvuManager.getConsentRequestDetails(handleId.value);
 
-             try{
-                finvuManager.denyConsentRequest(consentInfo);
-                clearStack(context);
-                snackBarCalled(context, "Successfully disApproved request....");
-                Navigator.pushNamed(context, "/ShareAccountLogin");
-             }catch(e){
-                  snackBarCalled(context, "can't Disapprove request..");
-             }
+            try {
+              finvuManager.denyConsentRequest(consentInfo);
+              clearStack(context);
+              snackBarCalled(context, "Successfully disapproved the request.");
+              Navigator.pushNamed(context, "/ShareAccountLogin");
+            } catch (e) {
+              snackBarCalled(context, "Unable to disapprove the request.");
+            }
           },
           child: Container(
             width: MediaQuery.of(context).size.width / 1.1,
@@ -686,21 +687,20 @@ class _AccessState extends State<Access> {
 
   void approveConsentRequest() async {
     try {
-      FinvuConsentRequestDetailInfo finvuConsentRequestDetailInfo = await finvuManager.getConsentRequestDetails(handleId.value);
-     
-      if(seletedAccountIds.isEmpty){
-           snackBarCalled(context, "Account did not seleted..pls add account to approve consent..");
-            return;
-        }
-        
-       
-        
+      FinvuConsentRequestDetailInfo finvuConsentRequestDetailInfo =
+          await finvuManager.getConsentRequestDetails(handleId.value);
+
+      if (seletedAccountIds.isEmpty) {
+        snackBarCalled(context,
+            "No accounts were selected. Please add an account to approve the consent.");
+        return;
+      }
+
       FinvuProcessConsentRequestResponse response =
           await finvuManager.approveConsentRequest(
               finvuConsentRequestDetailInfo, seletedAccountInfomations);
-    
 
-      snackBarCalled(context, "approved ConsentRequest");
+      snackBarCalled(context, "Consent request approved successfully.");
 
       Navigator.push(
         context,
@@ -708,38 +708,31 @@ class _AccessState extends State<Access> {
           builder: (context) => FetchTransaction(),
         ),
       );
-
-    } catch (e) {   
-      snackBarCalled(context, "Error while approving ConsentRequest");
+    } catch (e) {
+      snackBarCalled(
+          context, "An error occurred while approving the consent request.");
     }
     debugPrint('approveConsentRequest');
   }
 
-
-   Widget getcheckBox2(String fipId)
- {
-      return Padding(
-        padding: const EdgeInsets.only(left: 10.0),
-        child: Container(
-          width: 50,
-          height: 50,
-          child: Checkbox(value: seletedAccountIds.contains(fipId), onChanged: (value)
-                 {
-                        
-                         if(seletedAccountIds.contains(fipId))
-                         {
-                             seletedAccountIds.remove(fipId); 
-                         }else{
-                             seletedAccountIds.add(fipId); 
-                         }
-                         print(seletedAccountIds);
-                         addAccount.value= !addAccount.value;
-                 }),
-        ),
-      );
- }
-
-
+  Widget getcheckBox2(String fipId) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10.0),
+      child: Container(
+        width: 50,
+        height: 50,
+        child: Checkbox(
+            value: seletedAccountIds.contains(fipId),
+            onChanged: (value) {
+              if (seletedAccountIds.contains(fipId)) {
+                seletedAccountIds.remove(fipId);
+              } else {
+                seletedAccountIds.add(fipId);
+              }
+              print(seletedAccountIds);
+              addAccount.value = !addAccount.value;
+            }),
+      ),
+    );
+  }
 }
-
-

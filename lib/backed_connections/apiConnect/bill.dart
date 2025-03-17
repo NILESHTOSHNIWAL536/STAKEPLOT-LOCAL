@@ -54,14 +54,14 @@ void splitUserAmount(context, String amount, List members, String name,
 
     nameList.forEach((e) {
       sendNotificationsToDevice(e['id'], context,
-          "${userName.value} has send u a Split Bill..Of ${name} Of ${e['amount']}");
+          "${userName.value} has shared a split bill..Of ${name} totaling ${e['amount']}");
     });
 
-    snackBarCalled(context, "Split amount sent to users!", Colors.black);
+    snackBarCalled(context, "Split amount successfully dispatched!", Colors.black);
     // addTransaction(amount, "Split Bill (${subCategories})", name, context, 'cash', true);
     Navigator.pop(context);
   } else {
-    snackBarCalled(context, "can't split error!", Colors.red);
+    snackBarCalled(context, "Failed to split the amount!" , Colors.red);
   }
   acceptReset.value = false;
 }

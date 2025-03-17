@@ -250,7 +250,7 @@ class _AutoLoanState extends State<AutoLoan> {
       }, TextEditingController(text: '7.0'), false, "%"),
       getJsonBodyObj("Loan Tenure(Months)", 60.0, 12.0, 120.0, (value) {
         updateSliderValue(3, value);
-      }, TextEditingController(text: '60'), false, "Months"),
+      }, TextEditingController(text: '60'), false, "Mts"),
       getJsonBodyObj("Annual maintenance cost", 3.0, 1.0, 10.0, (value) {
         updateSliderValue(4, value);
       }, TextEditingController(text: '3.0'), false, "%"),

@@ -34,8 +34,8 @@ void clearStack(BuildContext context) {
 
 void clearStackShared(BuildContext context) {
   try {
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/ShareAccountLogin', (Route<dynamic> route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        '/ShareAccountLogin', (Route<dynamic> route) => false);
   } catch (e) {
     Navigator.of(context)
         .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
@@ -60,9 +60,6 @@ void check(context, String flag) async {
   }
 }
 
-
-
-
 Future<void> loginUser(TextEditingController emailController,
     TextEditingController passwordController, BuildContext context,
     [bool flag = false]) async {
@@ -80,25 +77,27 @@ Future<void> loginUser(TextEditingController emailController,
     }),
   );
   printData(response);
-  if(response.statusCode == 409)
-  {
-      //  final body = json.decode(response.body);
-       showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
-            ),
-            builder: (context) {
-              return UserLoginedAlready(data: response.body,email: emailController.text,userpassword: passwordController.text);
-            },
-          );                  
+  if (response.statusCode == 409) {
+    //  final body = json.decode(response.body);
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+      ),
+      builder: (context) {
+        return UserLoginedAlready(
+            data: response.body,
+            email: emailController.text,
+            userpassword: passwordController.text);
+      },
+    );
   }
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
 
     String accessToken = body['data']['accessToken'];
- 
+
     _pref.setString("accessToken", "Bearer " + accessToken);
     await getBankAccounts();
     await addThisDeviceToBackend(deviceData, context);
@@ -108,19 +107,19 @@ Future<void> loginUser(TextEditingController emailController,
     number.value = body['data']['phone'];
     isBankAccountLink.value = body['data']['isBankAccountLinked'];
 
-   
     if (flag) return;
-    UserStorage.storeUserDetails(currentId.value, body['data']['name'], body['data']['avatarType'], ("Bearer " + accessToken));
+    UserStorage.storeUserDetails(currentId.value, body['data']['name'],
+        body['data']['avatarType'], ("Bearer " + accessToken));
     storeImageinMapFinvu(context);
-    Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
     acceptReset.value = false;
-  
   } else {
     acceptReset.value = false;
     var snackBar = SnackBar(
       duration: Durations.medium4,
       content: Text(
-        'invalid credentials!',
+        'Invalid credentials. Please try again.',
         style: FontManager().getTextStyle(
           context,
           color: Colors.white,
@@ -168,61 +167,63 @@ void getOTP(context, String name, String email) async {
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
-    body: jsonEncode({
-      'email': email,
-      'name': name,
-      'deviceInfo': deviceData
-    }),
+    body: jsonEncode({'email': email, 'name': name, 'deviceInfo': deviceData}),
   );
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
 
-    snackBarCalled(context, "Sended Otp To Email Id...!", Colors.black);
+    snackBarCalled(
+        context, "An OTP has been sent to your email address.", Colors.black);
   } else {
-    snackBarCalled(context, "can't send opt!", Colors.red);
+    snackBarCalled(
+        context, "Unable to send the OTP. Please try again.", Colors.red);
   }
 }
-void  forceLogoutUser( sessionId, email, userpassword ,context,id,deviceName) async {
-final SharedPreferences _pref = await SharedPreferences.getInstance();
- try{
-  final response = await http.post(
-    Uri.parse('${url}/user/force-login'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode({
-      "sessionId":sessionId, 
-      "email":email, 
-      "userpassword":userpassword,
-      "deviceInfo":deviceData 
-    }),
-  );
- 
-  if (response.statusCode == 200 || response.statusCode == 201) {
-   final body = json.decode(response.body);
-    String accessToken = body['data']['accessToken'];
-    _pref.setString("accessToken", "Bearer " + accessToken);
-     currentId.value = body['data']['_id'];
-    try{
-    sendNotificationsToDevice( currentId.value, context,"You have been logged out from StakePlot. Your account was logged in on ${deviceName}");
-    }catch(e){}
 
-    await getBankAccounts();
-    await addThisDeviceToBackend(deviceData, context);
-    storeinmap(body, _pref,userpassword);
-   
-    Phone.value = body['data']['phone'];
-    number.value = body['data']['phone'];
-    isBankAccountLink.value = body['data']['isBankAccountLinked'];
-    clearStack(context);
-    Navigator.pushNamed(context, "/home");
-    acceptReset.value = false;
-  } else {
-    snackBarCalled(context, "can't send opt!", Colors.red);
-  }
- }catch(e){
+void forceLogoutUser(
+    sessionId, email, userpassword, context, id, deviceName) async {
+  final SharedPreferences _pref = await SharedPreferences.getInstance();
+  try {
+    final response = await http.post(
+      Uri.parse('${url}/user/force-login'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "sessionId": sessionId,
+        "email": email,
+        "userpassword": userpassword,
+        "deviceInfo": deviceData
+      }),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final body = json.decode(response.body);
+      String accessToken = body['data']['accessToken'];
+      _pref.setString("accessToken", "Bearer " + accessToken);
+      currentId.value = body['data']['_id'];
+      try {
+        sendNotificationsToDevice(currentId.value, context,
+            "You have been logged out from StakePlot. Your account was logged in on ${deviceName}");
+      } catch (e) {}
+
+      await getBankAccounts();
+      await addThisDeviceToBackend(deviceData, context);
+      storeinmap(body, _pref, userpassword);
+
+      Phone.value = body['data']['phone'];
+      number.value = body['data']['phone'];
+      isBankAccountLink.value = body['data']['isBankAccountLinked'];
+      clearStack(context);
+      Navigator.pushNamed(context, "/home");
+      acceptReset.value = false;
+    } else {
+      snackBarCalled(
+          context, "Unable to send the OTP. Please try again.", Colors.red);
+    }
+  } catch (e) {
     print(e);
- }
+  }
 }
 
 void getforgotPassword(context, String name, String email) async {
@@ -242,7 +243,8 @@ void getforgotPassword(context, String name, String email) async {
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
 
-    snackBarCalled(context, "Sended Otp To Email Id...!", Colors.black);
+    snackBarCalled(
+        context, "An OTP has been sent to your email address.", Colors.black);
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -253,7 +255,8 @@ void getforgotPassword(context, String name, String email) async {
       ),
     );
   } else {
-    snackBarCalled(context, "Email Id Not Valid!", Colors.red);
+    snackBarCalled(
+        context, "The email address provided is not valid.", Colors.red);
   }
 }
 
@@ -274,7 +277,7 @@ void checkEmail(context, email, otp, name) async {
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    snackBarCalled(context, "Accepted Opt...!", Colors.black);
+    snackBarCalled(context, "Accepted OTP!", Colors.black);
     // Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
     // Navigator.pushNamed(context, "/");
     acceptReset.value = false;
@@ -292,7 +295,7 @@ void checkEmail(context, email, otp, name) async {
         ));
   } else {
     acceptReset.value = false;
-    snackBarCalled(context, "Invalid Opt...!", Colors.red);
+    snackBarCalled(context, "Invalid OTP!", Colors.red);
   }
 }
 
@@ -313,12 +316,13 @@ void changePassword(context, email, p1, p2) async {
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    snackBarCalled(context, "Password change...!", Colors.black);
+    snackBarCalled(
+        context, "Your password has been successfully changed.", Colors.black);
     Navigator.of(context)
         .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
     Navigator.pushNamed(context, "/");
   } else {
-    snackBarCalled(context, "Can't change...!", Colors.red);
+    snackBarCalled(context, "Unable to change!", Colors.red);
   }
 }
 
@@ -337,9 +341,11 @@ void resendOpt(context, email, name) async {
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     acceptReset.value = false;
-    snackBarCalled(context, "ReSended Otp To Email Id...!", Colors.black);
+    snackBarCalled(
+        context, "An OTP has been resent to your email address.", Colors.black);
   } else {
-    snackBarCalled(context, "can't send opt!", Colors.red);
+    snackBarCalled(
+        context, "Unable to send the OTP. Please try again.", Colors.red);
   }
 }
 
@@ -360,10 +366,12 @@ void resendOptUser(context, email, name) async {
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    acceptReset.value=false;
-    snackBarCalled(context, "ReSended Otp To Email Id...!", Colors.black);
+    acceptReset.value = false;
+    snackBarCalled(
+        context, "An OTP has been resent to your email address.", Colors.black);
   } else {
-    snackBarCalled(context, "can't send opt!", Colors.red);
+    snackBarCalled(
+        context, "Unable to send the OTP. Please try again.", Colors.red);
   }
 }
 
@@ -394,7 +402,7 @@ void loginUser2(TextEditingController emailController,
     var snackBar = SnackBar(
       duration: Durations.medium4,
       content: Text(
-        'invalid credentials!',
+        'Invalid credentials. Please try again.',
         style: FontManager().getTextStyle(
           context,
           color: Colors.white,
@@ -581,15 +589,13 @@ Future<void> getDeviceInfo(String playerId, context) async {
       final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       // print(androidInfo);
       // print(androidInfo.device);
-      deviceData.value =
-      {
+      deviceData.value = {
         'deviceId': playerId,
         'brand': androidInfo.brand,
         'device': androidInfo.device,
         'model': androidInfo.model,
         'os': 'Android',
       };
-
     } else if (Platform.isIOS) {
       // For iOS devices
       final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
@@ -610,7 +616,7 @@ Future<void> getDeviceInfo(String playerId, context) async {
   } catch (e) {
     print('Error getting device info: $e');
   }
-   print(deviceData);
+  print(deviceData);
   // await addThisDeviceToBackend(deviceData, context);
 }
 
@@ -627,11 +633,7 @@ Future<void> addThisDeviceToBackend(deviceData, context) async {
     body: jsonEncode(deviceData),
   );
   printData(response);
-  if (response.statusCode == 200 || response.statusCode == 201)
-  {
+  if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-
-  } else{
-    
-  }
+  } else {}
 }
