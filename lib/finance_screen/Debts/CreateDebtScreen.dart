@@ -288,15 +288,15 @@ class Debt {
     required this.durationMonths,
   });
   factory Debt.fromJson(Map<String, dynamic> json) {
-    return Debt(
-      name: json['name'],
-      type: json['type'],
-      amount: (json['principalAmount'] as num).toDouble(),
-      interest: (json['interestRate'] as num).toDouble(),
-      durationMonths: json['durationMonths'] as int,
-      date: DateTime.parse(json['startDate']),
-    );
-  }
+  return Debt(
+    name: json['name'],
+    type: json['type'],
+    amount: (json['principalAmount'] as num).toDouble(),
+    interest: (json['interestRate'] as num).toDouble(),
+    durationMonths: json['durationMonths'] as int,
+    date: DateTime.parse(json['startDate']),
+  );
+}
 
   @override
   String toString() {

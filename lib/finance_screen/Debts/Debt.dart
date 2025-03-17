@@ -51,7 +51,7 @@ class _DebtListScreenState extends State<DebtListScreen> {
 
     if (newDebt != null) {
       setState(() {
-        debts.add(newDebt);
+         debts.insert(0, newDebt);
       });
     }
   }

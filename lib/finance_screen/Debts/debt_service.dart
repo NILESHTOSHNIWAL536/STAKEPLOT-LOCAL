@@ -1,9 +1,7 @@
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
-
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DebtService {
@@ -22,8 +20,7 @@ class DebtService {
     }
   }
 
-  static Future<Map<String, dynamic>?> createDebt(
-      Map<dynamic, dynamic> debtData) async {
+  static Future<Map<String, dynamic>?> createDebt(Map<dynamic, dynamic> debtData) async {
     try {
       var accessToken = await getToken();
       if (accessToken == null) {
@@ -57,7 +54,8 @@ class DebtService {
     try {
       var accessToken = await getToken();
       if (accessToken == null) {
-        print("Error: No access token available");
+     //   print("Error: No access token available");
+        return [];
       }
 
       final response = await http.get(
@@ -69,19 +67,17 @@ class DebtService {
       );
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> body =
-            jsonDecode(response.body); // Decode full JSON
-        List<dynamic> data = body['data']; // Extract 'data' list
-        List<Debt> debts = data
-            .map((item) => Debt.fromJson(item))
-            .toList(); // Convert list items to Debt objects
-
+        List<dynamic> body = jsonDecode(response.body); // Decode as a list
+       // print('Raw response body: $body'); // Debug the response
+        List<Debt> debts = body
+            .map((item) => Debt.fromJson(item as Map<String, dynamic>))
+            .toList(); // Convert each item to a Debt object
         return debts;
       } else {
-        throw Exception('Failed to load debts');
+        throw Exception('Failed to load debts: ${response.statusCode} - ${response.body}');
       }
     } catch (error) {
-      print('Error fetching debts: $error');
+    //  print('Error fetching debts: $error');
       return [];
     }
   }
