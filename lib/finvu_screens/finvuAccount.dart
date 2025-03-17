@@ -37,7 +37,7 @@ void verify(String otp, context) async {
                   
   } catch (e) {
    
-    snackBarCalled(context, "Invalid Otp/Number...");
+    snackBarCalled(context, "Invalid OTP/Number...");
   }
 }
 

@@ -15,7 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 void getChats(data) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
-  
+
   final response = await http.get(
     Uri.parse('${url}/chat/${data['_id']}'),
     headers: <String, String>{
@@ -65,12 +65,12 @@ void upvote(context, String str, String objectId) async {
       'objectId': objectId,
     }),
   );
- 
+
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    snackBarCalled(context, "Liked!", Colors.black);
+    snackBarCalled(context, "You liked this!", Colors.black);
   } else {
-    snackBarCalled(context, "error while Liked!", Colors.red);
+    snackBarCalled(context, "An error occurred while liking!", Colors.red);
   }
 }
 
@@ -89,12 +89,12 @@ void downvote(context, String str, String objectId) async {
       'objectId': objectId,
     }),
   );
- 
+
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    snackBarCalled(context, "DisLiked!", Colors.black);
+    snackBarCalled(context, "You disliked this!", Colors.black);
   } else {
-    snackBarCalled(context, "error while DisLiked!", Colors.red);
+    snackBarCalled(context, "An error occurred while disliking!", Colors.red);
   }
 }
 
@@ -112,19 +112,19 @@ void mute(context, String type, String id) async {
       'id': id,
     }),
   );
-  
+
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    snackBarCalled(context, "Muted...!", Colors.black);
+    snackBarCalled(context, "You have muted this user.", Colors.black);
   } else {
-    snackBarCalled(context, "error while muting...!", Colors.red);
+    snackBarCalled(context, "An error occurred while muting!", Colors.red);
   }
 }
 
 void exitRoom(context, String id) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
- 
+
   final response = await http.patch(
     Uri.parse('${url}/room/exit/${id}'),
     headers: <String, String>{
@@ -136,11 +136,12 @@ void exitRoom(context, String id) async {
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    
+
     getUserInfomations();
-    snackBarCalled(context, "exited from room...!", Colors.black);
+    snackBarCalled(context, "You have exited the room.", Colors.black);
   } else {
-    snackBarCalled(context, "error while exiting...!", Colors.red);
+    snackBarCalled(
+        context, "An error occurred while exiting the room!", Colors.red);
   }
 }
 
@@ -169,7 +170,8 @@ void createRoom(context, List expenses, List user, String name) async {
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    snackBarCalled(context, "Room Is Created!", Colors.black);
+    snackBarCalled(
+        context, "The room has been created successfully!", Colors.black);
 
     //  Navigator.pop(context);
     //   Navigator.push(
@@ -214,7 +216,7 @@ void createPoll(context, String question, List options, roomDetails, members,
     var snackBar = SnackBar(
       duration: Durations.long1,
       content: Text(
-        'sending polls to Friends..!!',
+        'Sending polls to friends...!!',
         style: FontManager().getTextStyle(
           context,
           color: Colors.white,
@@ -248,7 +250,7 @@ void createPoll(context, String question, List options, roomDetails, members,
     var snackBar = SnackBar(
       duration: Durations.medium4,
       content: Text(
-        'error while uploading...!',
+        'An error occurred while uploading...!',
         style: FontManager().getTextStyle(
           context,
           color: Colors.white,
@@ -293,7 +295,7 @@ void createPollOfCommunityPost(context, String question, List options,
     var snackBar = SnackBar(
       duration: Durations.long1,
       content: Text(
-        'sending polls to Friends..!!',
+        'Sending polls to friends...!!',
         style: FontManager().getTextStyle(
           context,
           color: Colors.white,
@@ -310,11 +312,10 @@ void createPollOfCommunityPost(context, String question, List options,
     getPost();
     Navigator.pop(context);
   } else {
- 
     var snackBar = SnackBar(
       duration: Durations.medium4,
       content: Text(
-        'error while uploading...!',
+        'An error occurred while uploading...!',
         style: FontManager().getTextStyle(
           context,
           color: Colors.white,
@@ -346,7 +347,7 @@ void votePoll(context, String id, int index) async {
     var snackBar = SnackBar(
       duration: Durations.long1,
       content: Text(
-        'Added Your Vote...!',
+        'Your vote has been added!',
         style: FontManager().getTextStyle(
           context,
           color: Colors.white,
@@ -374,16 +375,15 @@ void votePollInPost(context, String id, int index) async {
   );
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-  
-    var data=body['data'];
-      for (int i = 0; i < getTrendingData.length; i++) {
-            if (getTrendingData[i]['_id'] == data['_id']) {
-              getTrendingData[i] = data;
-              getPosted.value = !getPosted.value;
-              break; // Stops loop after update
-            }
-        }
-    
+
+    var data = body['data'];
+    for (int i = 0; i < getTrendingData.length; i++) {
+      if (getTrendingData[i]['_id'] == data['_id']) {
+        getTrendingData[i] = data;
+        getPosted.value = !getPosted.value;
+        break; // Stops loop after update
+      }
+    }
   } else {}
 }
 
@@ -408,9 +408,11 @@ void updateRoom(
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    snackBarCalled(context, "Room Is Updated!", Colors.black);
+    snackBarCalled(
+        context, "The room has been updated successfully!", Colors.black);
   } else {
-    snackBarCalled(context, "can't update  room error!", Colors.red);
+    snackBarCalled(
+        context, "An error occurred while updating the room!", Colors.red);
   }
 }
 
@@ -426,16 +428,13 @@ void getChatLoader() async {
     },
   );
 
-
   if (response.statusCode == 200 || response.statusCode == 201) {
     var his = jsonDecode(response.body);
     List obj = his['data'];
-   
 
     chatList.clear();
     chatListOriginal.clear();
     obj.forEach((element) {
-    
       try {
         var userInfo = element['chats']['details']['_id'];
         String key = userInfo['sender'] == currentId.value
@@ -496,10 +495,7 @@ void addMessage(
   );
 
   if (response.statusCode == 200 || response.statusCode == 201) {
-   
-  } else {
-    
-  }
+  } else {}
 }
 
 void addChatSplitAmount(
@@ -535,16 +531,10 @@ void addChatSplitAmount(
       },
       body: jsonEncode(jsonData),
     );
-   
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-     
-    } else {
-      
-    }
-  } catch (e) {
-    
-  }
+    } else {}
+  } catch (e) {}
 }
 
 // Future<String> addImageToCloud(imageFile)async
@@ -654,8 +644,6 @@ void addMessageImage(context, String messageType, String messageObj, String id,
   );
 
   if (response.statusCode == 200 || response.statusCode == 201) {
-    
-
     messages.insert(
         0,
         Message(
@@ -679,7 +667,7 @@ void addMessageImage(context, String messageType, String messageObj, String id,
 void getChats2(data, key) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
-  
+
   final response = await http.get(
     Uri.parse('${url}/chat/${data['_id']}'),
     headers: <String, String>{
@@ -691,7 +679,6 @@ void getChats2(data, key) async {
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     List obj = his['data'];
-
 
     messagesTemp.clear();
     //  messages.clear();
@@ -713,7 +700,6 @@ void getChats2(data, key) async {
     });
 
     chatOfUserListData[key] = messagesTemp;
-  
   } else {}
 }
 
@@ -729,7 +715,6 @@ void unSeenChat(context, String id) async {
     },
     body: jsonEncode({}),
   );
- 
 }
 
 void getPolls(id) async {

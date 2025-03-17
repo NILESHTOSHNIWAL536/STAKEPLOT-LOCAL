@@ -40,7 +40,7 @@ class _EmiState extends State<Emi> {
       }, TextEditingController(text: '4.0'), true, ""),
       getJsonBodyObj("Loan tenure(months)", 4.0, 1.0, 360.0, (value) {
         updateSliderValue(2, value);
-      }, TextEditingController(text: '4'), false, "Months"),
+      }, TextEditingController(text: '4'), false, "Mts"),
     ];
   }
 

@@ -416,7 +416,7 @@ void addTransaction(String amount, String subCategory, String categories,
 
   if (response.statusCode == 200) {
     final body = json.decode(response.body);
-    if (!isSplit) snackBarCalled(context, "Added Trasactions!", Colors.black);
+    if (!isSplit) snackBarCalled(context, "Transaction has been successfully saved!", AppColors.pollSelected);
     getAllTransaction(context);
     getCategoryData();
     setDonectChat.value = !setDonectChat.value;
@@ -424,7 +424,7 @@ void addTransaction(String amount, String subCategory, String categories,
     getAutoMationsTransactionsCustom(getFormattedDate(), context);
     Navigator.pop(context);
   } else {
-    snackBarCalled(context, "can't Add Trasactions!", Colors.red);
+    snackBarCalled(context, "Failed to add transaction!", Colors.red);
   }
 }
 

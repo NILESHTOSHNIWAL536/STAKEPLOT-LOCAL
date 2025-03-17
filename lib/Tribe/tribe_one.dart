@@ -80,7 +80,8 @@ class _TribeHomeState extends State<TribeUnique> {
       String postName, String name) async {
     if (data == "") {
       FocusScope.of(context).requestFocus(_replyFocusNode);
-      snackBarCalled(context, "Can't Add Empty Data....!");
+      snackBarCalled(context,
+          "You cannot add empty data. Please enter a comment.", Colors.red);
       return;
     }
 
@@ -147,6 +148,7 @@ class _TribeHomeState extends State<TribeUnique> {
       //   commentList.add(obj);
       obj.sId = id;
       postCount[id] = 0;
+      snackBarCalled(context, "Comment added successfully!", Colors.black);
       //  return obj;
 
       //  snackBarCalled(context,"Added Comment...!",Colors.black);
@@ -154,7 +156,8 @@ class _TribeHomeState extends State<TribeUnique> {
       //  Navigator.pop(context);
       //  Navigator.pushNamed(context, '/home');
     } else {
-      snackBarCalled(context, "can't Add comment!", Colors.red);
+      snackBarCalled(
+          context, "Unable to add comment. Please try again.", Colors.red);
     }
   }
 
@@ -273,7 +276,7 @@ class _TribeHomeState extends State<TribeUnique> {
       bottomNavigationBar: BottomNavigations(data: sizeRoom ? 3 : 2),
       extendBody: true,
       appBar: AppBar(
-        backgroundColor: AppColors.backgroundColor,
+          backgroundColor: AppColors.backgroundColor,
           centerTitle: true,
           automaticallyImplyLeading: false,
           title: Container(
@@ -315,13 +318,13 @@ class _TribeHomeState extends State<TribeUnique> {
                       padding: const EdgeInsets.only(left: 10.0),
                       child: GestureDetector(
                         onTap: () {
-                         Navigator.push(
+                          Navigator.push(
                             context,
                             PageTransition(
-                                  type: PageTransitionType.fade,
-                                  duration: Durations.long1,
-                                  child:TribeChats(),
-                                  isIos: true,
+                              type: PageTransitionType.fade,
+                              duration: Durations.long1,
+                              child: TribeChats(),
+                              isIos: true,
                             ),
                           );
                         },
@@ -408,8 +411,8 @@ class _TribeHomeState extends State<TribeUnique> {
                   decoration: BoxDecoration(
                       //  color: Colorcodes.budgetLightGreen,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                          width: .5, color: AppColors.accentColor)),
+                      border:
+                          Border.all(width: .5, color: AppColors.accentColor)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -521,46 +524,49 @@ class _TribeHomeState extends State<TribeUnique> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       GestureDetector(
-                                        onTap: () {
-                                          upvote2(
-                                              context,
-                                              "Comment",
-                                              data.sId!,
-                                              data,
-                                              historyListData,
-                                              data,
-                                              index);
+                                          onTap: () {
+                                            upvote2(
+                                                context,
+                                                "Comment",
+                                                data.sId!,
+                                                data,
+                                                historyListData,
+                                                data,
+                                                index);
 
-                                          String l1 = "liked" + idData;
-                                          bool liked = likedList.contains(l1);
+                                            String l1 = "liked" + idData;
+                                            bool liked = likedList.contains(l1);
 
-                                          String l2 = "disliked" + idData;
-                                          bool disliked =
-                                              likedList.contains(l2);
-                                          // upvoteGlobal(context,"Post",dataObj["_id"],dataObj);
-                                          // likedList.remove("liked"+dataObj["_id"])  :likedList.add("liked"+dataObj["_id"]);
+                                            String l2 = "disliked" + idData;
+                                            bool disliked =
+                                                likedList.contains(l2);
+                                            // upvoteGlobal(context,"Post",dataObj["_id"],dataObj);
+                                            // likedList.remove("liked"+dataObj["_id"])  :likedList.add("liked"+dataObj["_id"]);
 
-                                          if (liked) {
-                                            likedList.remove(l1);
-                                            postCount[idData] =
-                                                postCount[idData]! - 1;
-                                            if (postCount[idData]! < 0) {
-                                              postCount[idData] = 0;
+                                            if (liked) {
+                                              likedList.remove(l1);
+                                              postCount[idData] =
+                                                  postCount[idData]! - 1;
+                                              if (postCount[idData]! < 0) {
+                                                postCount[idData] = 0;
+                                              }
+                                            } else {
+                                              likedList.add(l1);
+                                              postCount[idData] =
+                                                  postCount[idData]! + 1;
                                             }
-                                          } else {
-                                            likedList.add(l1);
-                                            postCount[idData] =
-                                                postCount[idData]! + 1;
-                                          }
-                                          likedList.remove(l2);
-                                          reRender.value = !reRender.value;
-                                        },
-                                        // child: const Icon(
-                                        //   Icons.arrow_drop_up_outlined,
-                                        //   size: 35,
-                                        //   color: Colors.black,
-                                        // ),
-                                        child: likeIcon(context, likedList.contains("liked" + data.sId.toString()))),
+                                            likedList.remove(l2);
+                                            reRender.value = !reRender.value;
+                                          },
+                                          // child: const Icon(
+                                          //   Icons.arrow_drop_up_outlined,
+                                          //   size: 35,
+                                          //   color: Colors.black,
+                                          // ),
+                                          child: likeIcon(
+                                              context,
+                                              likedList.contains("liked" +
+                                                  data.sId.toString()))),
                                       //   child: likedList.contains(
                                       //           "liked" + data.sId.toString())
                                       //       ? upvoteLiked(context, false)
@@ -829,10 +835,8 @@ class _TribeHomeState extends State<TribeUnique> {
               filled: true,
               suffixIcon: suffixcomment(Textcontroller, postId),
               hintText: lableText,
-              hintStyle:  FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w400,
-                            fontSize: 14,
-                            color: AppColors.bg2),
+              hintStyle: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.w400, fontSize: 14, color: AppColors.bg2),
               enabledBorder: const OutlineInputBorder(
                   // borderRadius: BorderRadius.circular(40),
                   ),
@@ -1152,12 +1156,12 @@ class _TribeHomeState extends State<TribeUnique> {
         if (flag) {
           dataObj["upvotes"]++;
           postListIds.add(objectId);
-          snackBarCalled(context, "Liked!", Colors.black);
+          snackBarCalled(context, "Comment liked!", Colors.black);
         } else {
           dataObj["upvotes"]--;
           if (dataObj["upvotes"] < 0) commentObj.upvotes = 0;
           postListIds.remove(objectId);
-          snackBarCalled(context, "Removed Liked!", Colors.black);
+          snackBarCalled(context, "Comment unliked!", Colors.black);
         }
       });
 
@@ -1177,7 +1181,8 @@ class _TribeHomeState extends State<TribeUnique> {
       //  Navigator.pop(context);
       //  Navigator.pushNamed(context, '/TribeHome');
     } else {
-      snackBarCalled(context, "error while Liked!", Colors.red);
+      snackBarCalled(context,
+          "Error while liking the comment. Please try again.", Colors.red);
     }
   }
 
@@ -1280,7 +1285,8 @@ class _TribeHomeState extends State<TribeUnique> {
       //  Navigator.pop(context);
       //  Navigator.pushNamed(context, '/TribeHome');
     } else {
-      snackBarCalled(context, "error while Liked!", Colors.red);
+      snackBarCalled(context,
+          "Error while liking the comment. Please try again.", Colors.red);
     }
   }
 
@@ -1401,7 +1407,8 @@ class _TribeHomeState extends State<TribeUnique> {
         postListIds.remove(objectId);
       }
     } else {
-      snackBarCalled(context, "error while DisLiked!", Colors.red);
+      snackBarCalled(context,
+          "Error while disliking the comment. Please try again.", Colors.red);
     }
   }
 
@@ -1450,7 +1457,8 @@ class _TribeHomeState extends State<TribeUnique> {
   void reply(value, commentId, Textcontroller) {
     if (value == "") {
       FocusScope.of(context).requestFocus(_replyNode);
-      snackBarCalled(context, "Can't Add Empty Data....!");
+      snackBarCalled(context,
+          "You cannot add an empty comment. Please enter a reply.", Colors.red);
       return;
     }
 
@@ -1775,7 +1783,8 @@ Widget showModel(context, id, [flag = false]) {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: textStyleModel(context,"Helps us to understand the issue, and look into it.", id, flag),
+          child: textStyleModel(context,
+              "Helps us to understand the issue, and look into it.", id, flag),
         ),
         const SizedBox(
           height: 20,

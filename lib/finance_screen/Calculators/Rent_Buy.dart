@@ -51,7 +51,7 @@ class _RentBuyState extends State<RentBuy> {
       }, TextEditingController(text: '4.0'), false, "%"),
       getJsonBodyObj("Loan tenure(months)", 240.0, 12.0, 360.0, (value) {
         updateSliderValue(3, value);
-      }, TextEditingController(text: '240'), false, "Months"),
+      }, TextEditingController(text: '240'), false, "Mts"),
       getJsonBodyObj("Property tax rate(%)", 1.0, 0.0, 5.0, (value) {
         updateSliderValue(4, value);
       }, TextEditingController(text: '1.0'), false, "%"),

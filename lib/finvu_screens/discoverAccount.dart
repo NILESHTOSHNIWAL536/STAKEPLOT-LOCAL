@@ -263,7 +263,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   void getBankAccount() {
     if (listOfBankAccount.isEmpty) {
       snackBarCalled(
-          context, "Pick atleast one Bank to proceed", Colorcodes.red);
+          context, "Pick atleast one bank to proceed", Colorcodes.red);
       return;
     } else {
       //  listOfBankAccount

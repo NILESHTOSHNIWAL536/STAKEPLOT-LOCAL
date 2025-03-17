@@ -428,6 +428,7 @@ import "package:flutter_application_code_stakeplot/Home_Screen/transaction_histo
 import "package:flutter_application_code_stakeplot/Profile/profile.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
+import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart";
 import "package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/profile_screen.dart.dart";
@@ -532,7 +533,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
     bool isSelected =
         widget.data == i; // Check if the current index is selected
 
-    return InkWell(
+    return GestureDetector(
       onLongPress: () async{
        if (i == 2 && widget.data != i) pushName(TribeChats(),true);
        else if (i == 0) {
@@ -797,7 +798,7 @@ Widget logoutWidget(context, [flag = false]) {
               clearServarData(context);
                final SharedPreferences _pref =
                   await SharedPreferences.getInstance();
-
+                 
                 _pref.remove("accessToken").then((_) {
                 // Code to execute after token removal
                 Navigator.of(context).pushNamedAndRemoveUntil(
@@ -805,7 +806,7 @@ Widget logoutWidget(context, [flag = false]) {
                 Navigator.pushReplacementNamed(context, '/');
 
               }).catchError((error) {
-                // Error handling if token removal fails
+  
               });
               clearGetX();
             },

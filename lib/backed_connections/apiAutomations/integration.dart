@@ -41,7 +41,7 @@ void initFinvuManager(BuildContext context) async {
   }
 }
 
-Future<void> loginWithServer(context) async 
+Future<void> getConsentHandleId(context) async 
 {
 
   final String apiUrl ="${url}/finvu/login"; // Change to your actual server URL
@@ -118,10 +118,10 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
         "custId": custId,
       }),
     );
-   
-    if (response.statusCode == 200) {
+    
+    if (response.statusCode == 200) 
+    {
       final data = json.decode(response.body);
-      
     } else {
     
       sessionId.value=true;

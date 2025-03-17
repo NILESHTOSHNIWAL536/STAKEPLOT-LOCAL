@@ -137,10 +137,10 @@ void addBudget(BuildContext context, String name, String amount,
     final body = json.decode(response.body);
     getBudget();
     Navigator.pushNamed(context, "/BudgetDisplay");
-    snackBarCalled(context, 'Added Budget!');
+    snackBarCalled(context, "You have successfully added a new budget!");
   } else {
    
-    snackBarCalled(context, "can't add bedget!", Colors.red);
+    snackBarCalled(context, "Failed to add the budget!", Colors.red);
   }
 
   acceptReset.value = false;
@@ -169,7 +169,7 @@ void budgetUpdate(context, name, amount, expenseCategory, budgetType,
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
 
-    snackBarCalled(context, 'Updated Budget successfully!!');
+    snackBarCalled(context,"Your budget has been updated successfully!");
     // Navigator.pushNamed(context, '/BudgetCheck');
     Navigator.pop(context);
     Navigator.pop(context);
@@ -186,7 +186,7 @@ void budgetUpdate(context, name, amount, expenseCategory, budgetType,
     //                         ),
     // );
   } else {
-    snackBarCalled(context, "can't Update bedget!", Colors.red);
+    snackBarCalled(context,  "Unable to update the budget!" , Colors.red);
   }
 }
 
@@ -212,7 +212,7 @@ void addDebts(context, name, amount, interest, startDate, durations) async {
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
 
-    snackBarCalled(context, 'Added Debt!');
+    snackBarCalled(context, "Debt has been successfully added!");
     acceptReset.value = false;
     //  Navigator.pushNamed(context, '/DebtsBillAmoutDisplay');
 
@@ -244,7 +244,7 @@ void addDebts(context, name, amount, interest, startDate, durations) async {
     //                           isIos: true,
     //  ));
   } else {
-    snackBarCalled(context, "can't add Debt!", Colors.red);
+    snackBarCalled(context, "Failed to add the debt!", Colors.red);
   }
   acceptReset.value = false;
 }
@@ -279,11 +279,11 @@ void addBillTranscations(
       final body = json.decode(response.body);
 
       acceptReset.value = false;
-      snackBarCalled(context, "Add Bill!", Colors.black);
+      snackBarCalled(context, "Bill has been successfully added!", Colors.black);
       getBills();
       Navigator.pop(context);
     } else {
-      snackBarCalled(context, "can't add Bill!", Colors.red);
+      snackBarCalled(context, "Unable to add the bill!", Colors.red);
     }
     acceptReset.value = false;
   }
@@ -319,13 +319,13 @@ void addPaymentTranscations(
        if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
       acceptReset.value = false;
-      snackBarCalled(context, "Add payment!", Colors.black);
+      snackBarCalled(context,"Payment has been successfully added!", Colors.black);
 
       getPayments();
       //  Navigator.pushNamed(context, '/bsDisplay');
       Navigator.pop(context);
     } else {
-      snackBarCalled(context, "can't Add Payment!", Colors.red);
+      snackBarCalled(context, "Unable to add the payment!", Colors.red);
     }
     acceptReset.value = false;
     // Navigator.pushNamed(context, '/SchedulePaymentsDisplay');
@@ -347,7 +347,7 @@ void deleteDebts(context, String id, [flag = false]) async {
   );
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    snackBarCalled(context, "Closed Debts...!", Colors.black);
+    snackBarCalled(context, "Debts have been cleared!", Colors.black);
     debtLength.value--;
     getDebts();
     if (flag) return;
@@ -358,7 +358,7 @@ void deleteDebts(context, String id, [flag = false]) async {
     //           ),
     //       );
   } else {
-    snackBarCalled(context, "error while Closing Debts...!", Colors.red);
+    snackBarCalled(context,"An error occurred while closing the debts!", Colors.red);
   }
 }
 
@@ -376,7 +376,7 @@ void deleteAmount(context, String id, String am) async {
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
   } else {
-    snackBarCalled(context, "error while Closing Debts...!", Colors.red);
+    snackBarCalled(context, "An error occurred while closing the debts!", Colors.red);
   }
 }
 
@@ -402,7 +402,7 @@ void updateBill(context, String path, String objectId) async {
     getPayments();
     snackBarCalled(context, "${path} is paid!", Colors.black);
   } else {
-    snackBarCalled(context, "error while updating!", Colors.red);
+    snackBarCalled(context, "An error occurred during the update!", Colors.red);
   }
 }
 
@@ -418,9 +418,9 @@ void deleteBudget(context, String id) async {
     },
   );
   if (response.statusCode == 200 || response.statusCode == 201) {
-    snackBarCalled(context, "Deleting Budget.....!", Colors.red);
+    snackBarCalled(context, "Processing budget deletion...", Colors.red);
   } else {
-    snackBarCalled(context, "Deleted Budget error!", Colors.red);
+    snackBarCalled(context, "Error occurred while deleting the budget!", Colors.red);
   }
 }
 
@@ -449,10 +449,10 @@ void clearDebts(context, String id, String amount, String value) async {
   );
   if (response.statusCode == 200) {
     final body = json.decode(response.body);
-    snackBarCalled(context, "Cleared Debts OF This Month!", Colors.black);
+    snackBarCalled(context,  "All debts for this month have been cleared!", Colors.black);
     //  Navigator.pushReplacementNamed(context, '/home');
   } else {
-    snackBarCalled(context, "can't Add Trasactions!", Colors.red);
+    snackBarCalled(context, "can't add trasactions!", Colors.red);
   }
 }
 

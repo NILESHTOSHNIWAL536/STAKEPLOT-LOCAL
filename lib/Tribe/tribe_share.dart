@@ -302,7 +302,7 @@ class _TribeHomeState extends State<TribeShare> {
             }
 
             if (addedUser.isEmpty) {
-              snackBarCalled(context, "No Friend Added");
+              snackBarCalled(context, "No friends have been added.");
               return;
             }
 
@@ -339,7 +339,8 @@ class _TribeHomeState extends State<TribeShare> {
                 "roomId": userToSend,
               });
               index++;
-              sendNotificationsToDevice(rec, context, "Hey there! 👋, ${userName.value} have shared a post 📩. Please check it out 🛒 ");
+              sendNotificationsToDevice(rec, context,
+                  "Hey there! 👋, ${userName.value} have shared a post 📩. Please check it out 🛒 ");
             });
             Navigator.pop(context);
           },
@@ -416,15 +417,14 @@ class _TribeHomeState extends State<TribeShare> {
                       ),
                     ),
                   ),
-                  Text((frdsList[index]['name']),
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: AppColors.bg1),
-                         overflow: TextOverflow.ellipsis,
-
-                        ),
-                        
+                  Text(
+                    (frdsList[index]['name']),
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: AppColors.bg1),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ],
               ),
             );
@@ -453,7 +453,7 @@ class _TribeHomeState extends State<TribeShare> {
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
 
-      snackBarCalled(context, 'Send Post!');
+      snackBarCalled(context, 'Post sent successfully!');
       Navigator.pop(context);
     } else {
       snackBarCalled(context, "can't add!", Colors.red);
@@ -637,7 +637,7 @@ class _TribeHomeState extends State<TribeShare> {
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
-      snackBarCalled(context, "Liked!", Colors.black);
+      snackBarCalled(context, "You liked this post!");
 
       if (!postListIds.contains(objectId)) {
         setState(() {
@@ -653,7 +653,7 @@ class _TribeHomeState extends State<TribeShare> {
       //  Navigator.pop(context);
       //  Navigator.pushNamed(context, '/TribeHome');
     } else {
-      snackBarCalled(context, "error while Liked!", Colors.red);
+      snackBarCalled(context, "Error while liking the post!", Colors.red);
     }
   }
 
@@ -675,7 +675,7 @@ class _TribeHomeState extends State<TribeShare> {
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
-      snackBarCalled(context, "DisLiked!", Colors.black);
+      snackBarCalled(context, "You disliked this post!");
 
       if (postListIds.contains(objectId)) {
         setState(() {
@@ -684,7 +684,7 @@ class _TribeHomeState extends State<TribeShare> {
         postListIds.remove(objectId);
       }
     } else {
-      snackBarCalled(context, "error while DisLiked!", Colors.red);
+      snackBarCalled(context, "Error while disliking the post!", Colors.red);
     }
   }
 }

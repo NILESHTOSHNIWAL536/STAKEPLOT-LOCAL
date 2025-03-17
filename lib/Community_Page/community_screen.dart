@@ -85,8 +85,9 @@ class _CommunityState extends State<Community> {
     double width= MediaQuery.of(context).size.width;
     double height= MediaQuery.of(context).size.height;
      return Container(
+     // color: Colors.blue,
             width: width,
-            height: height/1.6,
+            height: height/1.55,
             child: Expanded(
               child: ListView.builder(
                 itemCount: getTrendingData.length,

@@ -104,7 +104,7 @@ class _RotatingIconState extends State<Nextfetch> with SingleTickerProviderState
    void checkAndFetchData()async {
     DateTime now = DateTime.now();
 
-    if (!(now.hour == 9 && now.minute == 0 )) {
+    if ((now.hour == 9 && now.minute == 0 )) {
             await getBankAccounts();
             
           if( consentAndHandleDetails.isNotEmpty)

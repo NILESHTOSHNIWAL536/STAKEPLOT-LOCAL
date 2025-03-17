@@ -42,8 +42,6 @@ class _VerifyOtpState extends State<VerifyOtp> {
     super.dispose();
   }
 
- 
-
   @override
   Widget build(BuildContext context) {
     final double boxSize = MediaQuery.of(context).size.width * 0.12;
@@ -113,7 +111,6 @@ class _VerifyOtpState extends State<VerifyOtp> {
                 ),
                 TextButton(
                   onPressed: () {
-                   
                     loginToAutoTractions(context);
                   },
                   child: Text(
@@ -170,16 +167,18 @@ class _VerifyOtpState extends State<VerifyOtp> {
   }
 
   void linkAccount(otp) async {
-      try {
-        // print(_controller.text);
-        var data = await finvuManager.confirmAccountLinking(widget.linkingReference!, otp);
-        snackBarCalled(context, "Linked Bank SuccessFully...");
-        Navigator.pop(context);
-        accountLinked.add(widget.fid);
-      } catch (e) {
-        snackBarCalled(context,
-            "Error while Linking verify Otp/ Or Already Linked...", Colors.red);
-      }
+    try {
+      // print(_controller.text);
+      var data = await finvuManager.confirmAccountLinking(
+          widget.linkingReference!, otp);
+      snackBarCalled(context, "Bank account linked successfully.");
+      Navigator.pop(context);
+      accountLinked.add(widget.fid);
+    } catch (e) {
+      snackBarCalled(
+          context,
+          "An error occurred while verifying the OTP or the account is already linked.",
+          Colors.red);
+    }
   }
 }
-

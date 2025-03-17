@@ -32,9 +32,9 @@ void setPasswordApiCalled(context, String password) async {
   if (getFlagOfResponse(response))
   {
     cupertinoPin.value = password;
-    snackBarCalled(context, " Pin set successfully!", Colors.black);
+    snackBarCalled(context, "Your PIN has been set successfully!", Colors.black);
   } else {
-    snackBarCalled(context, "can't set pin!", Colors.red);
+    snackBarCalled(context, "Unable to set the PIN!" , Colors.red);
   }
   Navigator.pop(context);
 }

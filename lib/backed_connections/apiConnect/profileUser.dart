@@ -43,7 +43,7 @@ void approveBill(context, id, type, notifyId) async {
 void getRemainders(context) async {
   String urlPath = "${url}/reminders";
   var responce = await getDataApiCall(urlPath);
- // print(responce.body);
+  // print(responce.body);
   if (getFlagOfResponse(responce)) {
     var his = jsonDecode(responce.body);
     // var userDue = his['data']['billsPayable'];
@@ -56,7 +56,7 @@ void getRemainders(context) async {
     dueAmountRemainders.clear();
     lendAmountRemainders.clear();
 
-    dueAmountRemainders.addAll(userDue);//payables 
+    dueAmountRemainders.addAll(userDue); //payables
     lendAmountRemainders.addAll(userDue2); //owed
 
 // print("lendAmountRemainders: $lendAmountRemainders");
@@ -300,7 +300,8 @@ void addLendUserAmount(
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    snackBarCalled(context, "Lend Amount send to users!", Colors.black);
+    snackBarCalled(
+        context, "The lend amount has been sent to users!", Colors.black);
     members.forEach((e) {
       sendNotificationsToDevice(e['id'], context,
           "${userName.value} Has Send U a Lend Bill..Of ${name} Of ${amount}");
@@ -357,7 +358,8 @@ void splitUserAmount(context, String amount, List members, String name) async {
           "${userName.value} Has Send U a Split Bill..Of ${name} Of ${amount}");
     });
 
-    snackBarCalled(context, "Slit Amount send to users!", Colors.black);
+    snackBarCalled(
+        context, "The split amount has been sent to users!", Colors.black);
     addTransaction(amount, "Split Bill", name, context, 'cash', true);
 
     // addSocketMessage(members);
@@ -393,9 +395,11 @@ void aboutuser(context, String about) async {
   );
 
   if (response.statusCode == 200 || response.statusCode == 201) {
-    snackBarCalled(context, "Updated users Info!", Colors.black);
+    snackBarCalled(context, "User information has been updated successfully!",
+        Colors.black);
   } else {
-    snackBarCalled(context, "can't edit User Info error!", Colors.red);
+    snackBarCalled(context,
+        "An error occurred while updating user information!", Colors.red);
   }
 }
 
@@ -416,9 +420,13 @@ void addAccount(context, String account, String money) async {
   );
 
   if (response.statusCode == 200 || response.statusCode == 201) {
-    snackBarCalled(context, "Account Added...!");
+    snackBarCalled(
+        context, "The account has been added successfully!", Colors.black);
     Navigator.pushNamed(context, '/home');
-  } else {}
+  } else {
+    snackBarCalled(
+        context, "An error occurred while adding the account!", Colors.red);
+  }
 }
 
 void editUserDetails(
@@ -451,7 +459,8 @@ void editUserDetails(
       return;
     }
     if (response.statusCode == 200 || response.statusCode == 201) {
-      snackBarCalled(context, "Updated users Info!", Colors.black);
+      snackBarCalled(context, "User information has been updated successfully!",
+          Colors.black);
       // getUserInfomations();
       avatar.value = changeAvater.value;
       userName.value = controller['name']!.text.toString();

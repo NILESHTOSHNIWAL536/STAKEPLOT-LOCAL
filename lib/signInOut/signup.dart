@@ -12,7 +12,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 
-
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
 
@@ -22,20 +21,19 @@ class SignUp extends StatefulWidget {
 }
 
 class _SigninState extends State<SignUp> {
-     RxBool flag = false.obs;
-     TextEditingController emailController= TextEditingController(text: "roshanchenna2@gmail.com");
-     TextEditingController passwordController= TextEditingController(text: "nilesh123");
-     TextEditingController conformController= TextEditingController(text: "nilesh123");
-     TextEditingController usernameController= TextEditingController(text: "nilesh1212");
-     TextEditingController dobController=new TextEditingController(text:DateFormat('yyyy-MM-dd').format(DateTime.now()).toString() );
-     TextEditingController phoneController= TextEditingController(text: "9347064783");
- 
-
-  
-
- 
-
-  
+  RxBool flag = false.obs;
+  TextEditingController emailController =
+      TextEditingController(text: "roshanchenna2@gmail.com");
+  TextEditingController passwordController =
+      TextEditingController(text: "nilesh123");
+  TextEditingController conformController =
+      TextEditingController(text: "nilesh123");
+  TextEditingController usernameController =
+      TextEditingController(text: "nilesh1212");
+  TextEditingController dobController = new TextEditingController(
+      text: DateFormat('yyyy-MM-dd').format(DateTime.now()).toString());
+  TextEditingController phoneController =
+      TextEditingController(text: "9347064783");
 
   @override
   Widget build(BuildContext context) {
@@ -48,157 +46,145 @@ class _SigninState extends State<SignUp> {
             height: MediaQuery.of(context).size.height,
             child: Column(
               children: [
-               
-              
-                topHeader() ,          
+                topHeader(),
                 getTextFeilds(),
                 signUpButton(),
                 allReadyHaveAccount()
-                     
-                
               ],
             ),
           ),
         ),
       ),
     );
-
   }
 
-Widget allReadyHaveAccount(){
-  return Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: Colorcodes.paddingSize / 3),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(("Already have an account ? "),
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colorcodes.iconBackGround,
-                                // decoration: TextDecoration.underline
-                              )),
-                          InkWell(
-                            onTap: () {
-                              acceptReset.value=false;
-                              clearStack(context);
-                              Navigator.pushReplacementNamed(context, '/');
-                            },
-                            child: Text(("Sign In"),
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: Colorcodes.cardShade5,
-                                  // decoration: TextDecoration.underline
-                                )),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-}
-
-Widget signUpButton(){
+  Widget allReadyHaveAccount() {
     return Center(
-                    child: Container(
-                      width: flag.value
-                          ? MediaQuery.of(context).size.width / 1.3
-                          : MediaQuery.of(context).size.width / 1.3,
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 10),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                      decoration: BoxDecoration(
-                          color: AppColors.primaryColor,
-                          borderRadius:
-                              BorderRadius.circular(Colorcodes.borderRadius30)),
-                      child: InkWell(
-                        onTap: () {
-                        
-                          storeData();
-                  
-                        },
-                        child: Obx(() => Center(
-                              child: flag.value? Spinner(size: 20,color: Colorcodes.white,)
-                             :  Text(("Continue"),
-                                      style: FontManager().getTextStyle(context,
-                                          lWeight: FontWeight.bold,
-                                          fontSize: 20,
-                                          color: Colorcodes.white)),
-                            )),
-                      ),
-                    ),
-                  );
-}
-
-
-Widget getTextFeilds(){
-    return Padding(
-     padding: EdgeInsets.symmetric(vertical: Colorcodes.paddingSize),
-      child: Column(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: Colorcodes.paddingSize / 3),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-             TextFeildWidget(
-                      textEditingController: usernameController,
-                      heading: "User Name",
-                      keyBoard: TextInputType.name,
-                      lableText: "Enter  your Name",
-                      icon:Icons.person_2_outlined ,
-                      ),
-                  TextFeildCalender(
-                      textEditingController: dobController,
-                      heading: "Enter Your Date of Birth",
-                      keyBoard: TextInputType.visiblePassword,
-                      lableText: "Date of Birth",
-
-                      ),
-                  // TextFeildWidget(
-                  //     textEditingController: phoneController,
-                  //     heading: "PhoneNo",
-                  //     keyBoard: TextInputType.phone,
-                  //     lableText: "Phone No"),
-                  TextFeildWidget(
-                      textEditingController: emailController,
-                      heading: "email",
-                      keyBoard: TextInputType.emailAddress,
-                      lableText: "example@example.com"
-                    ),
-                  TextFeildWidgetPassword(
-                    textEditingController: passwordController,
-                    heading: "Password",
-                    keyBoard: TextInputType.visiblePassword,
-                    lableText: "Password",
-                    flag: false,
-                    icon: Icons.lock_clock_outlined,
-                  ),
-                  TextFeildWidgetPassword(
-                    textEditingController: conformController,
-                    heading: "Confirm Password",
-                    keyBoard: TextInputType.visiblePassword,
-                    lableText: "Confirm Password",
-                    flag: false,
-                     icon: Icons.lock_clock_outlined,
-                  ),
+            Text(("Already have an account ? "),
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colorcodes.iconBackGround,
+                  // decoration: TextDecoration.underline
+                )),
+            InkWell(
+              onTap: () {
+                acceptReset.value = false;
+                clearStack(context);
+                Navigator.pushReplacementNamed(context, '/');
+              },
+              child: Text(("Sign In"),
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colorcodes.cardShade5,
+                    // decoration: TextDecoration.underline
+                  )),
+            ),
           ],
+        ),
       ),
     );
-}
-
-  Widget topHeader(){
-      return Padding(
-            padding: EdgeInsets.symmetric(vertical: Colorcodes.paddingTopDesign / 1.4),
-            child: Text(("Create Account"),
-                style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.bold,
-                    fontSize: 22,
-                    color: Colors.black)),
-          ); 
   }
 
+  Widget signUpButton() {
+    return Center(
+      child: Container(
+        width: flag.value
+            ? MediaQuery.of(context).size.width / 1.3
+            : MediaQuery.of(context).size.width / 1.3,
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+        decoration: BoxDecoration(
+            color: AppColors.primaryColor,
+            borderRadius: BorderRadius.circular(Colorcodes.borderRadius30)),
+        child: InkWell(
+          onTap: () {
+            storeData();
+          },
+          child: Obx(() => Center(
+                child: flag.value
+                    ? Spinner(
+                        size: 20,
+                        color: Colorcodes.white,
+                      )
+                    : Text(("Continue"),
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colorcodes.white)),
+              )),
+        ),
+      ),
+    );
+  }
+
+  Widget getTextFeilds() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: Colorcodes.paddingSize),
+      child: Column(
+        children: [
+          TextFeildWidget(
+            textEditingController: usernameController,
+            heading: "User Name",
+            keyBoard: TextInputType.name,
+            lableText: "Enter  your Name",
+            icon: Icons.person_2_outlined,
+          ),
+          TextFeildCalender(
+            textEditingController: dobController,
+            heading: "Enter Your Date of Birth",
+            keyBoard: TextInputType.visiblePassword,
+            lableText: "Date of Birth",
+          ),
+          // TextFeildWidget(
+          //     textEditingController: phoneController,
+          //     heading: "PhoneNo",
+          //     keyBoard: TextInputType.phone,
+          //     lableText: "Phone No"),
+          TextFeildWidget(
+              textEditingController: emailController,
+              heading: "email",
+              keyBoard: TextInputType.emailAddress,
+              lableText: "example@example.com"),
+          TextFeildWidgetPassword(
+            textEditingController: passwordController,
+            heading: "Password",
+            keyBoard: TextInputType.visiblePassword,
+            lableText: "Password",
+            flag: false,
+            icon: Icons.lock_clock_outlined,
+          ),
+          TextFeildWidgetPassword(
+            textEditingController: conformController,
+            heading: "Confirm Password",
+            keyBoard: TextInputType.visiblePassword,
+            lableText: "Confirm Password",
+            flag: false,
+            icon: Icons.lock_clock_outlined,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget topHeader() {
+    return Padding(
+      padding:
+          EdgeInsets.symmetric(vertical: Colorcodes.paddingTopDesign / 1.4),
+      child: Text(("Create Account"),
+          style: FontManager().getTextStyle(context,
+              lWeight: FontWeight.bold, fontSize: 22, color: Colors.black)),
+    );
+  }
 
   void call() {
     var data = {
@@ -220,8 +206,7 @@ Widget getTextFeilds(){
 
   Future<http.Response> createUser() async {
     final response = await http.post(
-      Uri.parse(
-          'https://stakeplot.in/api/v1/user/register'),
+      Uri.parse('https://stakeplot.in/api/v1/user/register'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -246,36 +231,34 @@ Widget getTextFeilds(){
     String phone = phoneController.text;
     String dob = dobController.text;
 
-  
-
     if (name == "" ||
         email == "" ||
         password == "" ||
         conform == "" ||
         phone == "" ||
         dob == "") {
-      snackBarCalled(context, "Please Enter All Feilds...", Colors.red);
+      snackBarCalled(context, "Please fill in all fields.", Colors.red);
       return;
     }
 
     if (phone.length != 10) {
-      snackBarCalled(context, "Phone No Invalid", Colors.red);
+      snackBarCalled(context, "The phone number is invalid.", Colors.red);
       return;
     }
     if (password.length < 6) {
-      snackBarCalled(
-          context, "Password must be atleast 6 characters", Colors.red);
+      snackBarCalled(context,
+          "The password must be at least 6 characters long.", Colors.red);
       return;
     }
 
     if (password != conform) {
-      snackBarCalled(
-          context, "Password and Conform password doesn't match", Colors.red);
+      snackBarCalled(context,
+          "The password and confirmation password do not match.", Colors.red);
       return;
     }
 
     flag.value = true;
-   
+
     final response = await http.post(
       Uri.parse('${url}/user/register'),
       headers: <String, String>{
@@ -292,11 +275,11 @@ Widget getTextFeilds(){
         'otp': "opts",
       }),
     );
-   
+
     var responce = jsonDecode(response.body);
-   
+
     bool boolvar = responce['success'];
-   
+
     if (!boolvar && responce['error'] == "Invalid Otp") {
       flag.value = false;
       call();
@@ -307,6 +290,5 @@ Widget getTextFeilds(){
       flag.value = false;
       return;
     }
-
   }
 }

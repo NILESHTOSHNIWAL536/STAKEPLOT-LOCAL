@@ -12,10 +12,10 @@ void   addUserAsFrd(id,context)async
     var response=await postDataApiCall(urlPath, {});
       if(getFlagOfResponse(response))
       {
-            sendNotificationsToDevice(id,context,"${userName.value} Has Accepted Friend Request..");
-            snackBarCalled(context,"Adding user As Friend...!",Colors.black);      
+            sendNotificationsToDevice(id,context,"${userName.value} has accepted your friend request..");
+            snackBarCalled(context,"Adding user as a friend...!",Colors.black);      
       }else{
-           snackBarCalled(context,"can't Add Friend!",Colors.red);
+           snackBarCalled(context,"Unable to add friend!",Colors.red);
       }
 }
 
@@ -25,7 +25,7 @@ void  rejectFrdRequest(body,context)async
   var response=await postDataApiCall(urlPath, {});
       if(!getFlagOfResponse(response))
       {
-          snackBarCalled(context,"can't Reject error Friend!",Colors.red);
+          snackBarCalled(context,"Unfortunately, your friend request has been rejected." ,Colors.red);
       }
 }
 
@@ -41,10 +41,10 @@ void   addUsersendRequest(id,name,context)async
      var response=await postDataApiCall(urlPath, body);
       if(getFlagOfResponse(response))
       {
-            sendNotificationsToDevice(id,context,"${userName.value} Has Send U a Friend Request..");
-            snackBarCalled(context,"Sending Friend Request...!",Colors.black);
+            sendNotificationsToDevice(id,context,"${userName.value} has sent you a friend request");
+            snackBarCalled(context,"Sending friend request..",Colors.black);
       }else{
-           snackBarCalled(context,"can't Add Request!",Colors.red);
+           snackBarCalled(context,"can't add request!",Colors.red);
       }
 }
 
@@ -59,9 +59,9 @@ void  removeRequest(id,name,context)async
       var response=await postDataApiCall(urlPath, body);
       if(getFlagOfResponse(response))
       {
-            snackBarCalled(context,"Removed Friend Request...!",Colors.black);
+            snackBarCalled(context,"Friend request has been successfully removed!",Colors.black);
       }else{
-           snackBarCalled(context,"can't remove Request!",Colors.red);
+           snackBarCalled(context,"unable to  remove request!",Colors.red);
       }
 }
 
@@ -73,7 +73,7 @@ void  removeRequest(id,name,context)async
     var response=await postDataApiCall(urlPath, {});
       if(getFlagOfResponse(response))
       {
-                  snackBarCalled(context,"Removed Friend...!",Colors.black);
+                  snackBarCalled(context,"Friend has been successfully removed Friend!",Colors.black);
                   getUserInfomations();  
       }
 }
