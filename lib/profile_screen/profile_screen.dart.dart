@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/NavigatorScreens/userNavigator.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -268,6 +269,13 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                             final SharedPreferences _pref =
                                 await SharedPreferences.getInstance();
 
+                              try{
+                      var response=await postDataApiCall("${url}/user/logout", {});
+                      printData(response);
+                        }catch(e){
+                          print(e);
+                        }
+
                             // Remove tokens and other session data
                             await _pref.remove("accessToken");
                             await _pref.remove("token");
@@ -277,6 +285,8 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                             await _pref.remove("to");
                             await _pref.remove("sessionId");
 
+                   
+                  
                             // Navigate back to home screen
                             Navigator.of(context).pushNamedAndRemoveUntil(
                                 '/', (Route<dynamic> route) => false);

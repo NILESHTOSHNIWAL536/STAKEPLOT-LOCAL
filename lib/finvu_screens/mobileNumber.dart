@@ -163,7 +163,7 @@ late final WebViewController controller ;
                     ;
                     String phoneNumber = _phoneController.text;
                     number.value = phoneNumber;
-                    await loginWithServer(context);
+                    await getConsentHandleId(context);
                     otpController = TextEditingController();
             
                     showModalBottomSheet(

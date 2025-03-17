@@ -631,7 +631,6 @@ void getTrending() async {
     getTrendingData.clear();
     getTrendingData.addAll(obj);
     if(getTrendingData.length==0){findTranding=false;}
-
     getTrendingData.forEach((element) {
       postCount[element["_id"]] =
           element['upvotes'] < 0 ? 0 : element['upvotes'];
