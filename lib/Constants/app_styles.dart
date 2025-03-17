@@ -630,11 +630,12 @@ class Expansioncalculator {
    static String page21 = "assets/onboarding/page21.svg";
     static String page22 = "assets/onboarding/page22.svg";
      static String page23 = "assets/onboarding/page23.svg";
-static String p1 = "assets/onboarding/p1.svg";
-static String p2 = "assets/onboarding/p2.svg";
-static String p3 = "assets/onboarding/p3.svg";
-static String p4 = "assets/onboarding/p4.svg";
-static String p5 = "assets/onboarding/p5.svg";
+static String p1 = "assets/onboarding/page311.png";
+static String p2 = "assets/onboarding/Avatar1.png";
+static String p3 = "assets/onboarding/Avatar2.png";
+static String p4 = "assets/onboarding/Avatar3.png";
+static String p5 = "assets/onboarding/Avatar4.png";
+static String p6 = "assets/onboarding/Avatar6.png";
   static String page311 = "assets/onboarding/page311.svg";
   static String page322 = "assets/onboarding/page322.svg";
   static String page323 = "assets/onboarding/page323.svg";

@@ -90,7 +90,7 @@ final FocusNode _searchFocusNode = FocusNode(); // FocusNode for search field
       ),
       decoration: BoxDecoration(color: AppColors.backgroundColor),
       child: SingleChildScrollView(
-        child: Expanded(
+       
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +122,7 @@ final FocusNode _searchFocusNode = FocusNode(); // FocusNode for search field
             ],
           ),
         ),
-      ),
+      
     );
   }
 

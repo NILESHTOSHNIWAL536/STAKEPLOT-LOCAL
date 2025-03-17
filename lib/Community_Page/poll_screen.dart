@@ -108,7 +108,7 @@ double modalHeight = 300;
         ? const SuccessPost()
         : Container(
           
-          child: Expanded(
+         
             child: AnimatedPadding(
                       padding: EdgeInsets.only(
                               bottom: MediaQuery.of(context)
@@ -325,8 +325,8 @@ double modalHeight = 300;
                           ),
                         ),
                     ),
-          )
-          ,
+          
+          
         );
   }
 }

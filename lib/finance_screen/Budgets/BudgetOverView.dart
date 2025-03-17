@@ -149,7 +149,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 1.55,
       child: SingleChildScrollView(
-        child: Expanded(
+        
           child: Column(
             children: List.generate(categoriesDividedList.length, (index) {
               String urlAvatar = "";
@@ -225,7 +225,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
             }),
           ),
         ),
-      ),
+      
     );
   }
 

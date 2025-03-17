@@ -88,7 +88,7 @@ class _CommunityState extends State<Community> {
      // color: Colors.blue,
             width: width,
             height: height/1.55,
-            child: Expanded(
+            
               child: ListView.builder(
                 itemCount: getTrendingData.length,
                 itemBuilder: (context, index) {
@@ -96,7 +96,7 @@ class _CommunityState extends State<Community> {
                   return PostCard(data: dataObj);
                 },
               ),
-            ),
+            
 );
   }
 

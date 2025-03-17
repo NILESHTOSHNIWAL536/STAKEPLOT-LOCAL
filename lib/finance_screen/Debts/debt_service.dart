@@ -20,8 +20,11 @@ class DebtService {
     }
   }
 
-  static Future<Map<String, dynamic>?> createDebt(Map<dynamic, dynamic> debtData) async {
+  static Future<Map<String, dynamic>?> createDebt(
+      Map<dynamic, dynamic> debtData) async {
     try {
+      print(
+          "Attempting to create debt with data: $debtData"); // Debug statement
       var accessToken = await getToken();
       if (accessToken == null) {
         print("Error: No access token available");
@@ -37,24 +40,25 @@ class DebtService {
         body: jsonEncode(debtData),
       );
 
+    
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print('Debt created successfully');
+       
         return jsonDecode(response.body); // Return the JSON response
       } else {
-        print('Failed to create debt. Status code: ${response.statusCode}');
-        print('Response: ${response.body}');
+        
       }
     } catch (e) {
-      print('Error creating debt: $e');
+     
     }
     return null;
   }
 
   static Future<List<Debt>> fetchDebts() async {
     try {
+     // Debug statement
       var accessToken = await getToken();
       if (accessToken == null) {
-     //   print("Error: No access token available");
+       
         return [];
       }
 
@@ -66,18 +70,19 @@ class DebtService {
         },
       );
 
+    
       if (response.statusCode == 200) {
-        List<dynamic> body = jsonDecode(response.body); // Decode as a list
-       // print('Raw response body: $body'); // Debug the response
-        List<Debt> debts = body
-            .map((item) => Debt.fromJson(item as Map<String, dynamic>))
-            .toList(); // Convert each item to a Debt object
+        
+        List<dynamic> body = jsonDecode(response.body)['data']; // Decode as a list
+       // Debug statement
+        List<Debt> debts = body.map((item) => Debt.fromJson(item)).toList(); // Convert each item to a Debt object
         return debts;
       } else {
-        throw Exception('Failed to load debts: ${response.statusCode} - ${response.body}');
+        throw Exception(
+            'Failed to load debts: ${response.statusCode} - ${response.body}');
       }
     } catch (error) {
-    //  print('Error fetching debts: $error');
+     
       return [];
     }
   }

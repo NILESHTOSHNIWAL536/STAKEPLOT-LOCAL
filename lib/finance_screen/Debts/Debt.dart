@@ -9,7 +9,6 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDe
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_display.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_service.dart';
 
-
 class DebtCalculatorApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -32,8 +31,10 @@ class _DebtListScreenState extends State<DebtListScreen> {
 
   Future<void> _fetchDebts() async {
     try {
+      print('Fetching debts...'); // Debug print
       var fetchedDebts = await DebtService.fetchDebts();
       if (fetchedDebts != null) {
+       
         setState(() {
           debts = fetchedDebts;
         });
@@ -44,23 +45,27 @@ class _DebtListScreenState extends State<DebtListScreen> {
   }
 
   Future<void> _navigateToCreateDebtScreen() async {
+   // Debug print
     final newDebt = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => CreateDebtScreen()),
     );
 
     if (newDebt != null) {
+     // Debug print
       setState(() {
-         debts.insert(0, newDebt);
+        debts.insert(0, newDebt);
       });
     }
   }
- void _navigateToDebtDetailsScreen(Debt debt) async {
+
+  void _navigateToDebtDetailsScreen(Debt debt) async {
     await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => DebtDetailsScreen(debt: debt)),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,42 +119,40 @@ class _DebtListScreenState extends State<DebtListScreen> {
                     ),
                     margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                     padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                    
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(debt.name),SizedBox(
-                                height: Colorcodes.paddingSize / 2,
-                              ),
-                              Text(
-                                'Amount',
-                                style: FontManager().getTextStyle(context,
-                                    fontSize: 14,
-                                    color: AppColors.bg1,
-                                    lWeight: FontWeight.normal),
-                              ),
-                              SizedBox(
-                                height: Colorcodes.paddingSize / 3,
-                              ),
-                              Text(
-                                '\₹${debt.amount.toStringAsFixed(2)}',
-                                style: FontManager().getTextStyle(context,
-                                    fontSize: 20,
-                                    color: AppColors.bg1,
-                                    lWeight: FontWeight.bold),
-                              ),
-                              
-                        
+                            Text(debt.name),
+                            SizedBox(
+                              height: Colorcodes.paddingSize / 2,
+                            ),
+                            Text(
+                              'Amount',
+                              style: FontManager().getTextStyle(context,
+                                  fontSize: 14,
+                                  color: AppColors.bg1,
+                                  lWeight: FontWeight.normal),
+                            ),
+                            SizedBox(
+                              height: Colorcodes.paddingSize / 3,
+                            ),
+                            Text(
+                              '\₹${debt.amount.toStringAsFixed(2)}',
+                              style: FontManager().getTextStyle(context,
+                                  fontSize: 20,
+                                  color: AppColors.bg1,
+                                  lWeight: FontWeight.bold),
+                            ),
                           ],
                         ),
                         AvatarProfileImage(
-                  url: Finance.addBudget,
-                  height: 10,
-                  width: 12,
-                                ),
+                          url: Finance.addBudget,
+                          height: 10,
+                          width: 12,
+                        ),
                       ],
                     ),
                   ),
