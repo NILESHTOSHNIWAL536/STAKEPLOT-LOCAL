@@ -322,7 +322,7 @@ class _ImageScreenState extends State<ImageScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Expanded(
+      
         child: AnimatedPadding(
           padding:
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -495,7 +495,7 @@ class _ImageScreenState extends State<ImageScreen> {
             ),
           ),
         ),
-      ),
+      
     );
   }
 
