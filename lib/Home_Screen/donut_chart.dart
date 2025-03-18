@@ -144,78 +144,75 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                           ),
                         ),
                       ),
-                      Expanded(
-                        flex: isLargeScreen ? 2 : 3,
-                        child: Container(
-                          padding: const EdgeInsets.all(12.0),
-                          child: selectedIndex != -1
-                              ? Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Expenses: ${chartData[selectedIndex.value].category}',
+                      Container(
+                        padding: const EdgeInsets.all(12.0),
+                        child: selectedIndex != -1
+                            ? Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Expenses: ${chartData[selectedIndex.value].category}',
+                                      style: FontManager().getTextStyle(
+                                          context,
+                                          lWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: AppColors.accentColor),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      '${_getMonthlyRange()}',
+                                      style: FontManager().getTextStyle(
+                                          context,
+                                          lWeight: FontWeight.normal,
+                                          fontSize: 12,
+                                          color: AppColors.bg3),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      'Amount: \₹${chartData[selectedIndex.value].value.toStringAsFixed(2)}',
+                                      style: FontManager().getTextStyle(
+                                          context,
+                                          lWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                          color: AppColors.accentColor),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text('Total Spending',
                                         style: FontManager().getTextStyle(
                                             context,
                                             lWeight: FontWeight.bold,
                                             fontSize: 16,
-                                            color: AppColors.accentColor),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        '${_getMonthlyRange()}',
-                                        style: FontManager().getTextStyle(
-                                            context,
-                                            lWeight: FontWeight.normal,
-                                            fontSize: 12,
-                                            color: AppColors.bg3),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        'Amount: \₹${chartData[selectedIndex.value].value.toStringAsFixed(2)}',
-                                        style: FontManager().getTextStyle(
-                                            context,
-                                            lWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                            color: AppColors.accentColor),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text('Total Spending',
-                                          style: FontManager().getTextStyle(
-                                              context,
-                                              lWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                              color: AppColors.accentColor)),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        '${_getMonthlyRange()}',
-                                        style: FontManager().getTextStyle(
-                                            context,
-                                            lWeight: FontWeight.normal,
-                                            fontSize: 12,
-                                            color: AppColors.bg3),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        'Amount: \₹${totalValue.toStringAsFixed(2)}',
-                                        style: FontManager().getTextStyle(
-                                            context,
-                                            lWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                            color: AppColors.accentColor),
-                                      ),
-                                    ],
-                                  ),
+                                            color: AppColors.accentColor)),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      '${_getMonthlyRange()}',
+                                      style: FontManager().getTextStyle(
+                                          context,
+                                          lWeight: FontWeight.normal,
+                                          fontSize: 12,
+                                          color: AppColors.bg3),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      'Amount: \₹${totalValue.toStringAsFixed(2)}',
+                                      style: FontManager().getTextStyle(
+                                          context,
+                                          lWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                          color: AppColors.accentColor),
+                                    ),
+                                  ],
                                 ),
-                        ),
+                              ),
                       ),
                     ],
                   ),
@@ -232,13 +229,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                           fontSize: 18,
                           color: AppColors.accentColor),
                     )),
-                    Text(
-                      'This week',
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.bold,
-                          fontSize: 12,
-                          color: AppColors.bg3),
-                    ),
+                    
                   ],
                 );
   }

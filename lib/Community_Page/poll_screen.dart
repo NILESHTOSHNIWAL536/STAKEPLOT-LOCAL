@@ -29,7 +29,7 @@ class _PollScreenState extends State<PollScreen> {
     TextEditingController(),
     TextEditingController(),
   ];
-double modalHeight = 300; 
+  double modalHeight = 300;
   String? question;
   bool pollSubmitted = false;
   List<String>? options;
@@ -73,9 +73,9 @@ double modalHeight = 300;
           "option": op,
         });
       }).toList();
-  
-     if( posting.value)return; 
-     posting.value=true;
+
+      if (posting.value) return;
+      posting.value = true;
 
       createPollOfCommunityPost(
           context, question.toString(), options, {}, [], "casual");
@@ -107,231 +107,233 @@ double modalHeight = 300;
     return pollSubmitted
         ? const SuccessPost()
         : Container(
-          
-         
             child: AnimatedPadding(
-                      padding: EdgeInsets.only(
-                              bottom: MediaQuery.of(context)
-                                  .viewInsets
-                                  .bottom), // Adjusts padding when keyboard appears
-                          duration: const Duration(milliseconds: 100),
-                      child: SingleChildScrollView(
-                          
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context)
+                      .viewInsets
+                      .bottom), // Adjusts padding when keyboard appears
+              duration: const Duration(milliseconds: 100),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          AvatarProfileImage(
+                              url: avatar.value, width: 20, height: 20),
+                          const SizedBox(width: 8),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                userName.value.toString(),
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                    color: AppColors.bg1),
+                              ),
+                              Text('New post',
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.w400,
+                                      fontSize: 14,
+                                      color: AppColors.bg1)),
+                            ],
+                          ),
+                        ],
+                      ),
+                      if (question == null) ...[
+                        TextField(
+                          controller: _questionController,
+                          maxLines: 2,
+                          maxLength: 100,
+                          decoration: InputDecoration(
+                            hintText: 'Ask a question',
+                            hintStyle: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.w600,
+                                fontSize: 16,
+                                color: AppColors.bg1),
+                            border: InputBorder.none,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        ...List.generate(_optionControllers.length, (index) {
+                          return Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: _optionControllers[index],
+                                      maxLines: 2,
+                                      maxLength: 80,
+                                      decoration: InputDecoration(
+                                        hintText: 'Option ${index + 1}',
+                                        hintStyle: FontManager().getTextStyle(
+                                            context,
+                                            lWeight: FontWeight.normal,
+                                            fontSize: 14,
+                                            color: AppColors.bg1),
+                                        border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(16))),
+                                        fillColor: AppColors.button,
+                                        filled: true,
+                                        suffixIcon: _showCross[index]
+                                            ? IconButton(
+                                                onPressed: () =>
+                                                    _removeOption(index),
+                                                icon: const Icon(Icons.close),
+                                              )
+                                            : null,
+                                      ),
+                                      onSubmitted: (value) {
+                                        if (value.trim().isNotEmpty) {
+                                          setState(() {
+                                            _showCross[index] =
+                                                true; // Show the cross icon for this field
+                                          });
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                  //const SizedBox(width: 8),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                            ],
+                          );
+                        }),
+                        if (_optionControllers.length < 4)
+                          TextButton.icon(
+                              onPressed: _addOptionController,
+                              icon: const Icon(Icons.add),
+                              label: Text(
+                                'Add Option',
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.normal,
+                                  fontSize: 14,
+                                  color: AppColors.bg1,
+                                ),
+                              )),
+                        GestureDetector(
+                            onTap: _createPoll,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width / 1.1,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 14),
+                              decoration: BoxDecoration(
+                                  color: _questionController.text.isNotEmpty &&
+                                          _optionControllers.every(
+                                              (controller) =>
+                                                  controller.text.isNotEmpty)
+                                      ? AppColors.primaryColor
+                                      : AppColors.button,
+                                  borderRadius: BorderRadius.circular(24)),
+                              child: Center(
+                                child: Obx(() => posting.value
+                                    ? Spinner(
+                                        size: 30,
+                                        color: Colorcodes.white,
+                                      )
+                                    : Text(
+                                        'Continue',
+                                        style: FontManager().getTextStyle(
+                                          context,
+                                          lWeight: FontWeight.bold,
+                                          fontSize: 15,
+                                          color: _questionController
+                                                      .text.isNotEmpty &&
+                                                  _optionControllers.every(
+                                                      (controller) => controller
+                                                          .text.isNotEmpty)
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                      )),
+                              ),
+                            )),
+                      ] else ...[
+                        Card(
+                          elevation: 4,
+                          margin: const EdgeInsets.symmetric(vertical: 10),
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(16.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  children: [
-                                      AvatarProfileImage(url: avatar.value, width: 20, height: 20),
-                                     
-                                                
-                                    const SizedBox(width: 8),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                Text(
+                                  question!,
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Colors.black),
+                                ),
+                                const SizedBox(height: 10),
+                                for (var option in options!)
+                                  GestureDetector(
+                                    onTap: () => _vote(option),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          userName.value.toString(),
-                                          style: FontManager().getTextStyle(context,
-                                              lWeight: FontWeight.w600,
+                                          option,
+                                          style: FontManager().getTextStyle(
+                                              context,
+                                              lWeight: FontWeight.normal,
                                               fontSize: 18,
-                                              color: AppColors.bg1),
+                                              color: Colors.black),
                                         ),
-                                        Text('New post',
-                                            style: FontManager().getTextStyle(context,
-                                                lWeight: FontWeight.w400,
-                                                fontSize: 14,
-                                                color: AppColors.bg1)),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                if (question == null) ...[
-                                  TextField(
-                                    controller: _questionController,
-                                    maxLines: 2,
-                                    maxLength: 100,
-                                    decoration: InputDecoration(
-                                      hintText: 'Ask a question',
-                                      
-                                      hintStyle: FontManager().getTextStyle(context,
-                                          lWeight: FontWeight.w600,
-                                          fontSize: 16,
-                                          color: AppColors.bg1),
-                                      border: InputBorder.none,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  ...List.generate(_optionControllers.length, (index) {
-                                    return Column(
-                                      children: [
-                                        Row(
+                                        const SizedBox(height: 5),
+                                        Stack(
                                           children: [
-                                            Expanded(
-                                              child: TextField(
-                                                controller: _optionControllers[index],
-                                                maxLines: 2,
-                                                decoration: InputDecoration(
-                                                  hintText: 'Option ${index + 1}',
-                                                  hintStyle: FontManager().getTextStyle(context,
-                                                      lWeight: FontWeight.normal,
-                                                      fontSize: 14,
-                                                      color: AppColors.bg1),
-                                                  border: OutlineInputBorder(
-                                                      borderRadius: BorderRadius.all(
-                                                          Radius.circular(16))),
-                                                  fillColor: AppColors.button,
-                                                  filled: true,
-                                                  suffixIcon: _showCross[index]
-                                                      ? IconButton(
-                                                          onPressed: () => _removeOption(index),
-                                                          icon: const Icon(Icons.close),
-                                                        )
-                                                      : null,
-                                                ),
-                                                onSubmitted: (value) {
-                                                  if (value.trim().isNotEmpty) {
-                                                    setState(() {
-                                                      _showCross[index] =
-                                                          true; // Show the cross icon for this field
-                                                    });
-                                                  }
-                                                },
+                                            Container(
+                                              height: 10,
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[300],
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
                                               ),
                                             ),
-                                            //const SizedBox(width: 8),
+                                            Container(
+                                              height: 10,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.8 *
+                                                  (_getPercentage(option) /
+                                                      100),
+                                              decoration: BoxDecoration(
+                                                color: Colors.blue,
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                              ),
+                                            ),
                                           ],
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          '${_getPercentage(option).toStringAsFixed(1)}%',
+                                          style: const TextStyle(
+                                              color: Colors.grey),
                                         ),
                                         const SizedBox(height: 10),
                                       ],
-                                    );
-                                  }),
-                                  if (_optionControllers.length < 4)
-                                  TextButton.icon(
-                                    onPressed: _addOptionController,
-                                    
-                                    icon: const Icon(Icons.add),
-                                        
-                                    label:  Text(
-                                            'Add Option',
-                                            style: FontManager().getTextStyle(
-                                              context,
-                                              lWeight: FontWeight.normal,
-                                              fontSize: 14,
-                                              color: AppColors.bg1,
-                                            ),
-                                          )
-                                        
-                                  ),
-                                 
-                                  GestureDetector(
-                                    onTap: _createPoll,
-                                    
-                                    child:Container(
-                                          width: MediaQuery.of(context).size.width / 1.1,
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 14),
-                                          decoration: BoxDecoration(
-                                              color:  _questionController.text.isNotEmpty &&
-                                          _optionControllers.every(
-                                              (controller) => controller.text.isNotEmpty)
-                                      ? AppColors.primaryColor
-                                      : AppColors.button,
-                                              borderRadius: BorderRadius.circular(24)),
-                                          child: Center(
-                                            child:Obx(()=> posting.value?Spinner(size: 30,color: Colorcodes.white,):  Text(
-                                              'Continue',
-                                              style: FontManager().getTextStyle(
-                                                context,
-                                                lWeight: FontWeight.bold,
-                                                fontSize: 15,
-                                                color: _questionController.text.isNotEmpty &&
-                                                       _optionControllers.every((controller) =>
-                                                      controller.text.isNotEmpty)
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                              ),
-                                            )),
-                                          ),
-                                        )
-                                  ),
-                                ] else ...[
-                                  Card(
-                                    elevation: 4,
-                                    margin: const EdgeInsets.symmetric(vertical: 10),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            question!,
-                                            style: FontManager().getTextStyle(context,
-                                                lWeight: FontWeight.bold,
-                                                fontSize: 18,
-                                                color: Colors.black),
-                                          ),
-                                          const SizedBox(height: 10),
-                                          for (var option in options!)
-                                            GestureDetector(
-                                              onTap: () => _vote(option),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    option,
-                                                    style: FontManager().getTextStyle(context,
-                                                        lWeight: FontWeight.normal,
-                                                        fontSize: 18,
-                                                        color: Colors.black),
-                                                  ),
-                                                  const SizedBox(height: 5),
-                                                  Stack(
-                                                    children: [
-                                                      Container(
-                                                        height: 10,
-                                                        decoration: BoxDecoration(
-                                                          color: Colors.grey[300],
-                                                          borderRadius:
-                                                              BorderRadius.circular(5),
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        height: 10,
-                                                        width:
-                                                            MediaQuery.of(context).size.width *
-                                                                0.8 *
-                                                                (_getPercentage(option) / 100),
-                                                        decoration: BoxDecoration(
-                                                          color: Colors.blue,
-                                                          borderRadius:
-                                                              BorderRadius.circular(5),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(height: 5),
-                                                  Text(
-                                                    '${_getPercentage(option).toStringAsFixed(1)}%',
-                                                    style: const TextStyle(color: Colors.grey),
-                                                  ),
-                                                  const SizedBox(height: 10),
-                                                ],
-                                              ),
-                                            ),
-                                        ],
-                                      ),
                                     ),
                                   ),
-                                ],
                               ],
                             ),
                           ),
                         ),
-                    ),
-          
-          
-        );
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
   }
 }

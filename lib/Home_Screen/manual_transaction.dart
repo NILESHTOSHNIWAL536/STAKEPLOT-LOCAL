@@ -38,7 +38,7 @@ class Manualtransaction extends StatefulWidget {
 class _ManualtransactionState extends State<Manualtransaction> {
   Widget build(BuildContext context) {
     return Container(
-      //height: 300,
+      width: MediaQuery.sizeOf(context).width/0.8,
       // padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
         color: AppColors.mt,
@@ -57,52 +57,49 @@ class _ManualtransactionState extends State<Manualtransaction> {
                     height: 24,
                     width: 24,
                   )),
-              SizedBox(width: MediaQuery.of(context).size.width / 28),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Manual Transaction',
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.w600,
-                          fontSize: MediaQuery.of(context).size.width * 0.04,
-                          color: AppColors.accentColor)),
-                  const SizedBox(height: 8),
-                  InkWell(
-                    onTap: () => showCustomModal(context),
-                    child: Container(
-                      height: Colorcodes.paddingSize * 1.7,
-                      width: Colorcodes.paddingSize * 5,
-                      decoration: BoxDecoration(
-                          color: AppColors.button,
-                          borderRadius: BorderRadius.circular(16)),
-                      child: Center(
-                        child: Text('Start now',
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.normal,
-                                fontSize: 14,
-                                color: AppColors.primaryColor)),
+              SizedBox(width: MediaQuery.of(context).size.width / 52),
+              Container(
+                
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Manual Transaction',
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.w600,
+                            fontSize: MediaQuery.of(context).size.width * 0.04,
+                            color: AppColors.accentColor)),
+                    const SizedBox(height: 8),
+                    InkWell(
+                      onTap: () => showCustomModal(context),
+                      child: Container(
+                        height: Colorcodes.paddingSize * 1.7,
+                        width: Colorcodes.paddingSize * 5,
+                        decoration: BoxDecoration(
+                            color: AppColors.button,
+                            borderRadius: BorderRadius.circular(16)),
+                        child: Center(
+                          child: Text('Start now',
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.normal,
+                                  fontSize: 14,
+                                  color: AppColors.primaryColor)),
+                        ),
                       ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
-              AvatarProfileImage(
-                url: LikeComment.manualTransaction,
-                height: 9.5,
-                width: 10,
-              ),
+             
+                AvatarProfileImage(
+                  url: LikeComment.manualTransaction,
+                  height: 11,
+                  width: 16,
+                )
             ],
           )
 
-          // Expanded(
-          // child: SvgPicture.asset(
-          //   Pictures.manualTransactionImage,
-          //   height: MediaQuery.of(context).size.height *
-          //       0.4, // Make the SVG fit the height of the container
-          //   //fit: BoxFit.contain, // Scale the image to fit within its bounds
-          // ),
-          // ),
+          
         ],
       ),
     );

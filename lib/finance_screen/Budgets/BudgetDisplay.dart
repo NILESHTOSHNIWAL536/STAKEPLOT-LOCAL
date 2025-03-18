@@ -151,7 +151,7 @@
 //                         context: context,
 //                         text: data['name'],
 //                         fontWeight: FontWeight.w500,
-                        
+
 //                         fontsize: 16),
 //                   ),
 //                 ),
@@ -303,7 +303,7 @@ class _BudgetDisplayState extends State<BudgetDisplay> {
       },
       child: Container(
         width: MediaQuery.of(context).size.width / 1.1,
-        height: MediaQuery.of(context).size.height / 6.6,
+        height: MediaQuery.of(context).size.height / 6.4,
         decoration: BoxDecoration(
           color: AppColors.mt,
           borderRadius: BorderRadius.circular(10),
@@ -314,48 +314,47 @@ class _BudgetDisplayState extends State<BudgetDisplay> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             // Constrain the text column
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: Colorcodes.paddingSize / 2),
-                    child: globalText(
-                      context: context,
-                      text: data['name'],
-                      fontWeight: FontWeight.w500,
-                      fontsize: 16,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: Colorcodes.paddingSize / 3),
-                    child: globalText(
-                      context: context,
-                      text: data['budgetPeriod'],
-                      fontWeight: FontWeight.w500,
-                      fontsize: 16,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  globalText(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: Colorcodes.paddingSize / 2),
+                  child: globalText(
                     context: context,
-                    text: 'Amount',
-                    fontWeight: FontWeight.w300,
-                    fontsize: 14,
+                    text: data['name'],
+                    fontWeight: FontWeight.w500,
+                    fontsize: 16,
                     overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
                   ),
-                  globalText(
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: Colorcodes.paddingSize / 3),
+                  child: globalText(
                     context: context,
-                    text: "₹${data['amount']}",
-                    fontWeight: FontWeight.w600,
+                    text: data['budgetPeriod'],
+                    fontWeight: FontWeight.w500,
                     fontsize: 16,
                     overflow: TextOverflow.ellipsis,
                   ),
-                ],
-              ),
+                ),
+                globalText(
+                  context: context,
+                  text: 'Amount',
+                  fontWeight: FontWeight.w300,
+                  fontsize: 14,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                globalText(
+                  context: context,
+                  text: "₹${data['amount']}",
+                  fontWeight: FontWeight.w600,
+                  fontsize: 16,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
             // Fixed-size avatar
             AvatarProfileImage(
@@ -381,16 +380,18 @@ TextStyle textStyle4({
   TextDecoration? decoration,
   String? fontFamily,
 }) {
-  return FontManager().getTextStyle(
-    context,
-    lWeight: fontWeight,
-    fontSize: fontsize,
-    color: color ?? Colors.black,
-  ).copyWith(
-    overflow: overflow ?? TextOverflow.clip,
-    decoration: decoration,
-    fontFamily: fontFamily,
-  );
+  return FontManager()
+      .getTextStyle(
+        context,
+        lWeight: fontWeight,
+        fontSize: fontsize,
+        color: color ?? Colors.black,
+      )
+      .copyWith(
+        overflow: overflow ?? TextOverflow.clip,
+        decoration: decoration,
+        fontFamily: fontFamily,
+      );
 }
 
 Widget globalText({

@@ -104,6 +104,8 @@ class _CommunityState extends State<Community> {
   }
 
   Widget _buildWelcomeRow() {
+    double w = MediaQuery.of(context).size.width; 
+double h = MediaQuery.of(context).size.height;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -119,14 +121,14 @@ class _CommunityState extends State<Community> {
                   'Welcome back to',
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.normal,
-                      fontSize: 18,
+                      fontSize: h/40,
                       color: Colors.black),
                 ),
                 Text(
                   'Financial Community',
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.bold,
-                      fontSize: 20,
+                      fontSize: h/36,
                       color: Colors.black),
                 ),
               ],
@@ -158,7 +160,7 @@ class _CommunityState extends State<Community> {
                     'Create post',
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.normal,
-                        fontSize: 12,
+                        fontSize: h/64,
                         color: AppColors.bg1),
                   ),
                 ],
@@ -167,50 +169,55 @@ class _CommunityState extends State<Community> {
           ],
         ),
         const SizedBox(height: 10,),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Hero(
-              tag: "TribeSearch",
-              child: InkWell(
-                 onTap: () {
-                    Navigator.pushNamed(context, '/TribeSearch');
-                  },
-                child: Container(
-                  width: MediaQuery.sizeOf(context).width / 1.45,
-                  height: 50,
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 0),
-                      filled: true,
-                      enabled: false,
-                      hintText: 'Search...',
-                      fillColor: AppColors.button,
-                      hintStyle: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.normal,
-                          fontSize: 14,
-                          color: Colors.black),
-                      prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24.0),
+        Container(
+          width:w/0.8,
+          
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Hero(
+                tag: "TribeSearch",
+                child: InkWell(
+                   onTap: () {
+                      Navigator.pushNamed(context, '/TribeSearch');
+                    },
+                  child: Container(
+                   
+                    width: MediaQuery.sizeOf(context).width / 1.45,
+                    height: 50,
+                    child: TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 0),
+                        filled: true,
+                        enabled: false,
+                        hintText: 'Search...',
+                        fillColor: AppColors.button,
+                        hintStyle: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.normal,
+                            fontSize: 14,
+                            color: Colors.black),
+                        prefixIcon: Icon(Icons.search),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(24.0),
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-            IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/TribeChats');
-              },
-              icon: AvatarProfileImage(
-                url: LikeComment.message,
-                height: 20,
-                width: 20,
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/TribeChats');
+                },
+                child: AvatarProfileImage(
+                  url: LikeComment.message,
+                  height: 20,
+                  width: 20,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         SizedBox(
           height: 10,
@@ -415,49 +422,49 @@ class _CommunityState extends State<Community> {
                     ),
                   ],
                 ),
-                // SizedBox(
-                //   height: 24,
-                // ),
+                SizedBox(
+                  height: 24,
+                ),
                 // ... existing code ...
                 // This code of exploria is meant for later purposes
-                // Align(
-                //   alignment: Alignment.center,
-                //   child: DecoratedContainer(
-                //     // width:
-                //     //     MediaQuery.of(context).size.width - 50, // Match padding
+                Align(
+                  alignment: Alignment.center,
+                  child: DecoratedContainer(
+                    // width:
+                    //     MediaQuery.of(context).size.width - 50, // Match padding
 
-                //     // height: 60.0,
-                //     borderRadius: 24,
-                //     child: TextButton.icon(
-                //       icon: Icon(Icons.explore),
-                //       onPressed: () {
-                //         Navigator.of(context).pop(); // Close the current modal
-                //         showModalBottomSheet(
-                //           context: context,
-                //           //isScrollControlled: true,
-                //           builder: (context) {
-                //             return Container(
-                //               height: MediaQuery.of(context).size.height * 0.7,
-                //               // 80% of screen height
-                //               child: ExploreModal(
-                //                 onPostCreated: (newPost) {
-                //                   setState(() {
-                //                     posts.add(newPost);
-                //                   });
-                //                 },
-                //               ),
-                //             );
-                //           },
-                //         );
-                //       },
-                //       label: Text('Exploria',
-                //           style: FontManager().getTextStyle(context,
-                //               lWeight: FontWeight.normal,
-                //               fontSize: 18,
-                //               color: Colors.black)),
-                //     ),
-                //   ),
-                // ),
+                    // height: 60.0,
+                    borderRadius: 24,
+                    child: TextButton.icon(
+                      icon: Icon(Icons.explore),
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close the current modal
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) {
+                            return Container(
+                              //height: MediaQuery.of(context).size.height * 0.7,
+                              // 80% of screen height
+                              child: ExploreModal(
+                                onPostCreated: (newPost) {
+                                  setState(() {
+                                    posts.add(newPost);
+                                  });
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      label: Text('Exploria',
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.normal,
+                              fontSize: 18,
+                              color: Colors.black)),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

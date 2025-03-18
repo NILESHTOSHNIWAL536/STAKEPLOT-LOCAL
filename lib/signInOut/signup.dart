@@ -278,8 +278,10 @@ class _SigninState extends State<SignUp> {
 
     var responce = jsonDecode(response.body);
 
-    bool boolvar = responce['success'];
+    print(responce);
 
+    bool boolvar = responce['success'];
+ print(boolvar);
     if (!boolvar && responce['error'] == "Invalid Otp") {
       flag.value = false;
       call();

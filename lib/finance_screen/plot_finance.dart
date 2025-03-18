@@ -27,14 +27,11 @@ class PlotFinance extends StatefulWidget {
 }
 
 class _PlotFinanceState extends State<PlotFinance> {
-
-
   @override
   void initState() {
     super.initState();
     getBudget();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -55,11 +52,13 @@ class _PlotFinanceState extends State<PlotFinance> {
                   width: 1,
                 ),
 
-              budgetAndDebtCalulator(),
-              textStyle(context: context,text: "Calculators",fontsize: 18,fontWeight: FontWeight.w800),
-              calculatorList(),
-
-              
+                budgetAndDebtCalulator(),
+                textStyle(
+                    context: context,
+                    text: "Calculators",
+                    fontsize: 18,
+                    fontWeight: FontWeight.w800),
+                calculatorList(),
               ],
             ),
           ),
@@ -68,92 +67,90 @@ class _PlotFinanceState extends State<PlotFinance> {
     );
   }
 
-
-
-Widget budgetAndDebtCalulator(){
+  Widget budgetAndDebtCalulator() {
     return // Budget and Debt Buttons
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height:  MediaQuery.of(context).size.height/5,
-                  // color: Colorcodes.appBarColor,
-                  child: ListView(
-                     scrollDirection: Axis.horizontal,
-                     padding: EdgeInsets.only(right: 50),
-                    children: [
-                      _buildCard(
-                        icon: AvatarProfileImage(
-                          url: Finance.budget,
-                          height: 7,
-                          width: 7,
-                        ),
-                        path: budgetList.isEmpty? "/Budget":"/BudgetDisplay",
-                      ),
-                      _buildCard(
-                        icon: AvatarProfileImage(
-                          url: Finance.debt,
-                          height: 7,
-                          width: 7,
-                        ),
-                        path: "/Debt",
-                      ),
-                    ],
-                  ),
-                );
-}
+        Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height / 5,
+      // color: Colorcodes.appBarColor,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.only(right: 50),
+        children: [
+          _buildCard(
+            icon: AvatarProfileImage(
+              url: Finance.budget,
+              height: 7,
+              width: 7,
+            ),
+            path: budgetList.isEmpty ? "/Budget" : "/BudgetDisplay",
+          ),
+          _buildCard(
+            icon: AvatarProfileImage(
+              url: Finance.debt,
+              height: 7,
+              width: 7,
+            ),
+            path: "/Debt",
+          ),
+        ],
+      ),
+    );
+  }
 
-  Widget calculatorList(){
-     return Container(
+  Widget calculatorList() {
+    return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       width: MediaQuery.of(context).size.width,
-       child: Wrap(
-        spacing:8 ,
+      child: Wrap(
+        spacing: 8,
         runSpacing: 8,
-          children: [
-                 _buildCalculatorTile(
-                        'Credit Card Payoff',
-                        'Calculator',
-                        url: Finance.credit,
-                        path: "/CreditCard",
-                      ),
-                      _buildCalculatorTile(
-                        'EMI',
-                        'Calculator',
-                        url: Finance.emi,
-                          path: "/emi",
-                      ),
-                      _buildCalculatorTile(
-                        'Rent vs Buy',
-                        'Calculator',
-                        url: Finance.key,
-                          path: "/rent_buy",
-                      ),
-                      _buildCalculatorTile(
-                        'Savings goal',
-                        'Calculator',
-                        url: Finance.savings,
-                          path: "/Savings",
-                      ),
-                      _buildCalculatorTile(
-                        'Auto loan',
-                        'Calculator',
-                        url: Finance.auto,
-                          path: "/autoLoan",
-                      ),
-                      _buildCalculatorTile(
-                        'Trip cost',
-                        'Calculator',
-                        url: Finance.location,
-                          path: "/TripCost",
-                      ),
-                      _buildCalculatorTile(
-                        'Veg and non veg',
-                        'Calculator',
-                        url: Finance.vegNonveg,
-                          path: "/VegNonveg",
-                      ),
-          ],
-       ),
-     );
+        children: [
+          _buildCalculatorTile(
+            'Credit Card Payoff',
+            'Calculator',
+            url: Finance.credit,
+            path: "/CreditCard",
+          ),
+          _buildCalculatorTile(
+            'EMI',
+            'Calculator',
+            url: Finance.emi,
+            path: "/emi",
+          ),
+          _buildCalculatorTile(
+            'Rent vs Buy',
+            'Calculator',
+            url: Finance.key,
+            path: "/rent_buy",
+          ),
+          _buildCalculatorTile(
+            'Savings goal',
+            'Calculator',
+            url: Finance.savings,
+            path: "/Savings",
+          ),
+          _buildCalculatorTile(
+            'Auto loan',
+            'Calculator',
+            url: Finance.auto,
+            path: "/autoLoan",
+          ),
+          _buildCalculatorTile(
+            'Trip cost',
+            'Calculator',
+            url: Finance.location,
+            path: "/TripCost",
+          ),
+          _buildCalculatorTile(
+            'Veg and non veg',
+            'Calculator',
+            url: Finance.vegNonveg,
+            path: "/VegNonveg",
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildCard({icon, required String path}) {
@@ -166,13 +163,13 @@ Widget budgetAndDebtCalulator(){
   }
 
   Widget _buildCalculatorTile(String title, String subtitle,
-      {required String url,required String path}) {
+      {required String url, required String path}) {
     return GestureDetector(
-      onTap: (){
-          Navigator.pushNamed(context, path);
+      onTap: () {
+        Navigator.pushNamed(context, path);
       },
       child: Container(
-        width: MediaQuery.of(context).size.width/2.3,
+        width: MediaQuery.of(context).size.width / 2.4,
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
           color: AppColors.mt,
@@ -199,31 +196,32 @@ Widget budgetAndDebtCalulator(){
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width/4,
-                          height: 30,
-                          child: Text(title,
+                    Container(
+                      width: MediaQuery.sizeOf(context).width / 4,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(title,
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.w700,
-                                  fontSize: 14,
+                                  fontSize:
+                                      MediaQuery.sizeOf(context).height / 56,
                                   overflow: TextOverflow.ellipsis,
                                   color: AppColors.bg1)),
-                        ),
-                        Text(subtitle,
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.w500,
-                                fontSize: 14,
-                                color: AppColors.bg1)),
-                      ],
+                          Text(subtitle,
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.w500,
+                                  fontSize:
+                                      MediaQuery.sizeOf(context).height / 56,
+                                  color: AppColors.bg1)),
+                        ],
+                      ),
                     ),
                     Container(
                         height: MediaQuery.of(context).size.height * 0.04,
-                        width: MediaQuery.of(context).size.width * 0.09,
+                        width: MediaQuery.of(context).size.width * 0.08,
                         decoration: BoxDecoration(
-                            color: AppColors.bg2,
+                            color: AppColors.button,
                             borderRadius: BorderRadius.circular(36)),
                         child:
                             Icon(Icons.arrow_forward_ios, color: Colors.white)),
@@ -237,81 +235,63 @@ Widget budgetAndDebtCalulator(){
     );
   }
 
-
-
-  Widget gridViewList(){
-      return   // Calculator Grid
-                GridView.count(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  childAspectRatio: 1,
-                  children: [
-                    _buildCalculatorTile(
-                      'Credit Card Payoff',
-                      'Calculator',
-                      url: Finance.credit,
-                      path: "/CreditCard",
-                    ),
-                    _buildCalculatorTile(
-                      'EMI',
-                      'Calculator',
-                      url: Finance.emi,
-                      path: "/EMI",
-                    ),
-                    _buildCalculatorTile(
-                      'Rent vs Buy',
-                      'Calculator',
-                      url: Finance.key,
-                      path: "/Rent",
-                    ),
-                    _buildCalculatorTile(
-                      'Savings goal',
-                      'Calculator',
-                      url: Finance.savings,
-                      path: "/Savings",
-                    ),
-                    _buildCalculatorTile(
-                      'Auto loan',
-                      'Calculator',
-                      url: Finance.auto,
-                      path: "/Auto",
-                    ),
-                    _buildCalculatorTile(
-                      'Trip cost',
-                      'Calculator',
-                      url: Finance.location,
-                      path: "/TripCost",
-                    ),
-                  ],
-                );
+  Widget gridViewList() {
+    return ListView(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      children: [
+        _buildCalculatorTile(
+          'Credit Card Payoff',
+          'Calculator',
+          url: Finance.credit,
+          path: "/CreditCard",
+        ),
+        _buildCalculatorTile(
+          'EMI',
+          'Calculator',
+          url: Finance.emi,
+          path: "/EMI",
+        ),
+        _buildCalculatorTile(
+          'Rent vs Buy',
+          'Calculator',
+          url: Finance.key,
+          path: "/Rent",
+        ),
+        _buildCalculatorTile(
+          'Savings goal',
+          'Calculator',
+          url: Finance.savings,
+          path: "/Savings",
+        ),
+        _buildCalculatorTile(
+          'Auto loan',
+          'Calculator',
+          url: Finance.auto,
+          path: "/Auto",
+        ),
+        _buildCalculatorTile(
+          'Trip cost',
+          'Calculator',
+          url: Finance.location,
+          path: "/TripCost",
+        ),
+      ],
+    );
   }
 }
 
-
-
-
- Map<String, dynamic> getJsonBodyObj(
-      String name,
-      double value,
-      double min,
-      double max,
-      Function(double) onChanged,
-      TextEditingController controller,
-      [bool flag=true,String symbol="₹"]
-      ) {
-    return {
-      'name': name,
-      'value': value,
-      'min': min,
-      'max': max,
-      'onChanged': onChanged,
-      'controller': controller,
-      'symbol':symbol,
-      'flag':flag,
-      
-    };
-  }
-
+Map<String, dynamic> getJsonBodyObj(String name, double value, double min,
+    double max, Function(double) onChanged, TextEditingController controller,
+    [bool flag = true, String symbol = "₹"]) {
+  return {
+    'name': name,
+    'value': value,
+    'min': min,
+    'max': max,
+    'onChanged': onChanged,
+    'controller': controller,
+    'symbol': symbol,
+    'flag': flag,
+  };
+}

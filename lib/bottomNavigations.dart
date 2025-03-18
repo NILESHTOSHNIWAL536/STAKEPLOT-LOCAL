@@ -518,15 +518,28 @@ class _BottomNavigationsState extends State<BottomNavigations> {
       iconPath = avatar.value; 
     }
 
-    return iconPath == avatar.value? SvgPicture.asset(
-      iconPath,
-      width: Colorcodes.paddingSize * 1.6,
-      height: Colorcodes.paddingSize * 1.6
-      ):SvgPicture.asset(
-      iconPath,
-      width: Colorcodes.paddingSize * 1.6,
-      height: Colorcodes.paddingSize * 1.6,
-      color: isSelected ? AppColors.primaryColor : AppColors.backgroundColor,
+    return Container(
+      width: Colorcodes.paddingSize * 2.7, // Increased size of the circle
+      height: Colorcodes.paddingSize * 2.7,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: isSelected ? AppColors.backgroundColor:AppColors.accentColor // White background if selected
+      ),
+      child: Center(
+        child: iconPath == avatar.value? SvgPicture.asset(
+          iconPath,
+          width: Colorcodes.paddingSize * 1.6,
+          height: Colorcodes.paddingSize * 1.6
+          ):SvgPicture.asset(
+          iconPath,
+          width: Colorcodes.paddingSize * 1.6,
+               height: Colorcodes.paddingSize * 1.6,
+          colorFilter: isSelected 
+              ? ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn) 
+              : ColorFilter.mode(AppColors.backgroundColor, BlendMode.srcIn),
+        
+        ),
+      ),
     );
   }
   Widget getContainer(url, i) {

@@ -175,7 +175,7 @@ class _SigninState extends State<Avatar> {
                       MaterialPageRoute(
                         builder: (context) => conform(
                           data: widget.data,
-                          url: images[activePage],
+                          url:  "assets/avatar/menp1.svg",
                         ),
                       ),
                     );

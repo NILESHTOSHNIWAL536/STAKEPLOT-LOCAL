@@ -708,8 +708,9 @@ Widget getQuestionsAndOptions(e, context, flag, PostId) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              width: width <= 500 ? width / 1.2 : width / 1.2,
+              
+              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+              width: width <= 500 ? width / 1.3 : width / 1.3,
       
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,

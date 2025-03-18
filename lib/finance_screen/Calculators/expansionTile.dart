@@ -65,7 +65,7 @@ class CustomExpansionTile extends StatelessWidget {
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.w300,
-                  fontSize: 14,
+                  fontSize: MediaQuery.sizeOf(context).height/60,
                   color: AppColors.primaryColor,
                 ),
               ),
