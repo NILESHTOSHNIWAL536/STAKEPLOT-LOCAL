@@ -45,8 +45,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    _progressAnimation =
-        Tween<double>(begin: 0.0, end: 1.0).animate(_progressController);
+    _progressAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _progressController, curve: Curves.easeInOut),
+    );
     _animationController.forward();
     _updateProgress();
     socket = IO.io(urlWithLocallHost,
@@ -77,8 +78,22 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   }
 
   void _updateProgress() {
-    _progressController.value = _currentPage / 2;
+  double targetValue;
+  switch (_currentPage) {
+    case 0:
+      targetValue = 0.25;
+      break;
+    case 1:
+      targetValue = 0.5;
+      break;
+    case 2:
+      targetValue = 0.75;
+      break;
+    default:
+      targetValue = 0.0;
   }
+  _progressController.animateTo(targetValue, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+}
 
   @override
   void dispose() {
@@ -95,9 +110,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     _animationController.reset();
     _animationController.forward();
     _updateProgress();
-    if (index < 2) {
-      _progressController.forward(from: _currentPage / 2);
-    }
+    // if (index < 2) {
+    //   _progressController.forward(from: _currentPage / 2);
+    // }
   }
 
   @override
@@ -109,6 +124,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
           PageView(
             controller: _pageController,
             onPageChanged: _onPageChanged,
+            physics: NeverScrollableScrollPhysics(),
             children: [
               OnboardingPage(
                 title: 'A powerful tool for expense tracking.',
@@ -282,7 +298,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                     ],
                   )
                 : Container(
-                    child: Text("Featched data successfully..."),
+                    child: Text("Fetched data successfully"),
                   )),
           ),
         ],
@@ -525,64 +541,78 @@ class _OnboardingPageState extends State<OnboardingPage>
   }
 
   Widget getGestTap(_onboardingScreenState) {
-    return Stack(alignment: Alignment.center, children: [
-      if (!widget.isLastPage) // Only show progress indicator for non-last pages
-        SizedBox(
-          width: 80,
-          height: 80,
-          child: CircularProgressIndicator(
-             value: _onboardingScreenState._currentPage == 0 
-          ? 0.25 
-          : _onboardingScreenState._currentPage == 1 
-              ? 0.5 
-              : _onboardingScreenState._currentPage == 2 
-                  ? 0.75 
-                  : 0.0,
-            strokeWidth: 4,
-            backgroundColor: AppColors.accentColor,
-            valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
-          ),
-        ),
-      GestureDetector(
-          onTap: () {
-            if (_onboardingScreenState._currentPage == 2) {
-              // Navigator.pushReplacementNamed(context, '/home');
-              if (flagToFetchData.value) {
-                clearStack(context);
-                Navigator.pushNamed(context, "/home");
-              }
-            } else {
-              _onboardingScreenState._pageController.nextPage(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-              );
+  return Stack(alignment: Alignment.center, children: [
+    if (!widget.isLastPage) // Only show progress indicator for non-last pages
+      SizedBox(
+        width: 80,
+        height: 80,
+        child: AnimatedBuilder(
+          animation: _onboardingScreenState._progressAnimation,
+          builder: (context, child) {
+            double targetValue;
+            switch (_onboardingScreenState._currentPage) {
+              case 0:
+                targetValue = 0.25;
+                break;
+              case 1:
+                targetValue = 0.5;
+                break;
+              case 2:
+                targetValue = 0.75;
+                break;
+              default:
+                targetValue = 0.0;
             }
+            double animatedValue = _onboardingScreenState._progressAnimation.value * targetValue;
+            return CircularProgressIndicator(
+              value: animatedValue,
+              strokeWidth: 4,
+              backgroundColor: AppColors.accentColor,
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+            );
           },
-          child: !widget.isLastPage
-              ? Container(
-                  width: 60,
-                  height: 60,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                  ),
-                  child: const Center(
-                    child: Icon(
-                      Icons.arrow_forward,
-                      color: Colors.black,
-                      size: 24,
-                    ),
-                  ),
-                )
-              : Padding(
-                  padding: const EdgeInsets.only(top: 17, bottom: 30),
-                  child: flagToFetchData.value
-                      ? Center(child: getButton(context, 'Let\'s Go'))
-                      : getButton(context, 'Let\'s Go', Colorcodes.greyLight,
-                          Colorcodes.black),
-                )),
-    ]);
-  }
+        ),
+      ),
+    GestureDetector(
+      onTap: () {
+        if (widget.isLastPage) {
+          if (flagToFetchData.value) {
+            clearStack(context);
+            Navigator.pushNamed(context, "/home");
+          }
+        } else {
+          _onboardingScreenState._pageController.nextPage(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        }
+      },
+      child: !widget.isLastPage
+          ? Container(
+              width: 60,
+              height: 60,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+              ),
+              child: const Center(
+                child: Icon(
+                  Icons.arrow_forward,
+                  color: Colors.black,
+                  size: 24,
+                ),
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.only(top: 17, bottom: 30),
+              child: flagToFetchData.value
+                  ? Center(child: getButton(context, 'Let\'s Go'))
+                  : getButton(context, 'Let\'s Go', Colorcodes.greyLight,
+                      Colorcodes.black),
+            ),
+    ),
+  ]);
+}
 }
 
 

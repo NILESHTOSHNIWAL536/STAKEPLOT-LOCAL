@@ -262,14 +262,26 @@ Widget _buildListTile(
                     ? "Successfully paid your bill of ${data['amount'] ?? "0000"} to ${userName.value}."
                     : "You need to pay lend To ${userName.value} of ${data['amount'] ?? "0000"}");
           },
-          child: Text(
-            (data["billApproved"] ?? true)
-                ? (isDue ? "Settle now" : "Remind now")
-                : (isDue ? "Didn't settle" : "Didn't approve"),
-            style: FontManager().getTextStyle(context,
-                lWeight: FontWeight.bold,
-                fontSize: 13,
-                color: AppColors.primaryColor),
+          child: Container(
+            height: 25,
+                width: (data["billApproved"] ?? true)?MediaQuery.sizeOf(context).width * 0.24:MediaQuery.sizeOf(context).width * 0.3,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color:
+                       AppColors.button
+                      
+                ),
+            child: Center(
+              child: Text(
+                (data["billApproved"] ?? true)
+                    ? (isDue ? "Settle now" : "Remind now")
+                    : (isDue ? "Didn't settle" : "Didn't approve"),
+                style: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 13,
+                    color: AppColors.primaryColor),
+              ),
+            ),
           ),
         ),
         SizedBox(height: 10),

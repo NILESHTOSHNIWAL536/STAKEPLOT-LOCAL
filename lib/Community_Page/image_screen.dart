@@ -408,13 +408,15 @@ class _ImageScreenState extends State<ImageScreen> {
                   const SizedBox(height: 10),
                   TextField(
                     controller: textController,
+                   // focusNode: _contentFocusNode,
+                    maxLines: 5,
                     decoration: InputDecoration(
                       hintText: 'Add your thoughts',
+                      border: InputBorder.none,
                       hintStyle: FontManager().getTextStyle(context,
                           lWeight: FontWeight.normal,
                           fontSize: 14,
                           color: AppColors.bg1),
-                      border: InputBorder.none,
                     ),
                   ),
                   GestureDetector(

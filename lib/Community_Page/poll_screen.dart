@@ -150,8 +150,11 @@ double modalHeight = 300;
                                 if (question == null) ...[
                                   TextField(
                                     controller: _questionController,
+                                    maxLines: 2,
+                                    maxLength: 100,
                                     decoration: InputDecoration(
                                       hintText: 'Ask a question',
+                                      
                                       hintStyle: FontManager().getTextStyle(context,
                                           lWeight: FontWeight.w600,
                                           fontSize: 16,
@@ -168,6 +171,7 @@ double modalHeight = 300;
                                             Expanded(
                                               child: TextField(
                                                 controller: _optionControllers[index],
+                                                maxLines: 2,
                                                 decoration: InputDecoration(
                                                   hintText: 'Option ${index + 1}',
                                                   hintStyle: FontManager().getTextStyle(context,
@@ -206,6 +210,7 @@ double modalHeight = 300;
                                   if (_optionControllers.length < 4)
                                   TextButton.icon(
                                     onPressed: _addOptionController,
+                                    
                                     icon: const Icon(Icons.add),
                                         
                                     label:  Text(

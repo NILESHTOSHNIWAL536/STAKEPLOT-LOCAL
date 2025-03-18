@@ -53,7 +53,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
               Row(
                 children: [
                   Container(
-                    child: chatAvatartImage( url: avatar.value, width:15, height:17),
+                    child: chatAvatartImage( url: avatar.value, width:12, height:12),
                     // backgroundImage: NetworkImage(post['profilePic']),
                     // radius: 24,
                   ),
@@ -73,14 +73,14 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.w400,
                                   //fontSize: MediaQuery.of(context).size.width * 0.04,
-                                  fontSize: 12,
+                                  fontSize: 10,
                                   color: AppColors.bg1)),
                         ),
                         Text(Phone.value,
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.w400,
                                 //fontSize: MediaQuery.of(context).size.width * 0.04,
-                                fontSize: 12,
+                                fontSize: 10,
                                 color: AppColors.bg1)),
                       ],
                     ),
@@ -94,20 +94,29 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                       );
                     },
                     child: Container(
-                      child: Row(
-                        children: [
-                          AvatarProfileImage(
-                            url: ProfileIcons.edit,
-                            height: 30,
-                            width: 30,
-                          ),
-                          Text('',
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.w500,
-                                  //fontSize: MediaQuery.of(context).size.width * 0.04,
-                                  fontSize: 12,
-                                  color: AppColors.bg1))
-                        ],
+                      width: MediaQuery.of(context).size.width * 0.2, // Adjust the multiplier as needed
+                      decoration: BoxDecoration(
+                        color: AppColors.mt,
+                        borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: Center(
+                        child: Row(
+                          //mainAxisSize: MainAxisSize.min,
+                          //mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            AvatarProfileImage(
+                              url: ProfileIcons.edit,
+                              height: 40,
+                              width: 40,
+                            ),
+                            Text('Edit',
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.w600,
+                                    //fontSize: MediaQuery.of(context).size.width * 0.04,
+                                    fontSize: 12,
+                                    color: AppColors.bg1))
+                          ],
+                        ),
                       ),
                     ),
                   ),
