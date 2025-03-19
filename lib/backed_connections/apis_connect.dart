@@ -7,7 +7,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.
 import 'package:get/get.dart';
 
 bool flag = true;
-String portNo = flag ? "192.168.1.6" : "localhost";
+String portNo = flag ? "192.168.1.5" : "localhost";
 String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Feilds";
@@ -177,6 +177,11 @@ RxMap<String, List<double>> transactionChatGraphoverall=new RxMap();
 RxDouble maxYValueoverall = 0.0.obs;
 RxBool getGraphDataoverall=false.obs;
 RxDouble totalDebitValuePercent = 0.0.obs;
+RxList historyExploriaListData = [].obs;
+RxList getExploriaTrendingData = [].obs;
+RxMap<String, int> postExploriaCount = <String, int>{}.obs;
+RxMap<String, int> postExploriaCommentCount = <String, int>{}.obs;
+RxMap<String, int> supportExploriaCount = <String, int>{}.obs;
 class Message {
   Message(
       {this.text,

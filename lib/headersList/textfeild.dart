@@ -15,14 +15,14 @@ class TextFeildWidget extends StatelessWidget {
   String heading;
   TextInputType keyBoard;
   bool flag;
-   IconData icon;
+  IconData icon;
   TextFeildWidget(
       {Key? key,
       required this.textEditingController,
       required this.heading,
       required this.keyBoard,
       required this.lableText,
-        this.icon=Icons.email_outlined,
+      this.icon = Icons.email_outlined,
       this.flag = true})
       : super(key: key);
 
@@ -52,7 +52,7 @@ class TextFeildWidget extends StatelessWidget {
             TextFormField(
               keyboardType: keyBoard,
               controller: textEditingController,
-              maxLength: heading=="PhoneNo"?10:null,
+              maxLength: heading == "PhoneNo" ? 10 : null,
               obscureText: flag ? false : show.value,
               decoration: InputDecoration(
                   // contentPadding: EdgeInsets.all(0),
@@ -69,16 +69,22 @@ class TextFeildWidget extends StatelessWidget {
                       borderSide: BorderSide(color: Colorcodes.textFeild)),
                   fillColor: Colorcodes.textFeild,
                   border: InputBorder.none,
-                   prefixIcon: Icon(icon,size: 30,color: AppColors.primaryColor,) ,
+                  prefixIcon: Icon(
+                    icon,
+                    size: 30,
+                    color: AppColors.primaryColor,
+                  ),
                   suffixIcon: flag
                       ? null
                       : Obx(() => InkWell(
                           onTap: () {
                             show.value = !show.value;
                           },
-                          child: Icon(show.value
-                              ? Icons.remove_red_eye_outlined
-                              : Icons.do_disturb_off_outlined,color: AppColors.primaryColor)))),
+                          child: Icon(
+                              show.value
+                                  ? Icons.remove_red_eye_outlined
+                                  : Icons.do_disturb_off_outlined,
+                              color: AppColors.primaryColor)))),
             ),
           ],
         ),
@@ -110,7 +116,7 @@ class TextFeildWidgetPassword extends StatelessWidget {
       required this.heading,
       required this.keyBoard,
       required this.lableText,
-       this.icon=Icons.email_outlined,
+      this.icon = Icons.email_outlined,
       this.flag = true})
       : super(key: key);
 
@@ -147,28 +153,39 @@ class TextFeildWidgetPassword extends StatelessWidget {
                     },
                     decoration: InputDecoration(
                         // contentPadding: EdgeInsets.all(0),
-                        contentPadding:EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         filled: true,
                         hintText: lableText,
                         hintStyle: getStyle(context),
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: Colorcodes.textFeild)),
+                            borderSide:
+                                BorderSide(color: Colorcodes.textFeild)),
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: Colorcodes.textFeild)),
+                            borderSide:
+                                BorderSide(color: Colorcodes.textFeild)),
                         fillColor: Colorcodes.textFeild,
                         border: InputBorder.none,
-                        prefixIcon: Icon(icon,size: 30,color: AppColors.primaryColor,) ,
+                        prefixIcon: Icon(
+                          icon,
+                          size: 30,
+                          color: AppColors.primaryColor,
+                        ),
                         suffixIcon: flag
                             ? null
                             : Obx(() => InkWell(
-                                onTap: () {
-                                  show.value = !show.value;
-                                },
-                                child: Icon(!show.value
-                                    ? Icons.visibility_outlined
-                                    : Icons.visibility_off_outlined ,color: AppColors.primaryColor,),))),
+                                  onTap: () {
+                                    show.value = !show.value;
+                                  },
+                                  child: Icon(
+                                    !show.value
+                                        ? Icons.visibility_outlined
+                                        : Icons.visibility_off_outlined,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                ))),
                   ),
                 ),
               ],
@@ -349,9 +366,11 @@ class TextFeildWidgetCustom extends StatelessWidget {
   //String lableStyle;
   String heading;
   String icon;
+  int? maxLines;
+  int? maxLength;
   TextInputType keyBoard;
   bool flag;
-  
+
   final FocusNode? focusNode;
   TextFeildWidgetCustom({
     Key? key,
@@ -362,7 +381,8 @@ class TextFeildWidgetCustom extends StatelessWidget {
     required this.icon,
     this.flag = true,
     this.focusNode,
-    
+    this.maxLines,
+    this.maxLength,
   }) : super(key: key);
 
   RxBool show = false.obs;
@@ -395,7 +415,8 @@ class TextFeildWidgetCustom extends StatelessWidget {
               obscureText: flag ? false : show.value,
               //added focus node for expansion budget search
               focusNode: focusNode,
-              
+              maxLines: 1,
+              maxLength: 30,
               decoration: InputDecoration(
                 // contentPadding: EdgeInsets.all(0),
                 contentPadding:

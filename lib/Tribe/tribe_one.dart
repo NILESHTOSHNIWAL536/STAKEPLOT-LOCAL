@@ -393,8 +393,12 @@ class _TribeHomeState extends State<TribeUnique> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Container(
-          padding: const EdgeInsets.all(15),
+        width: MediaQuery.sizeOf(context).width/1,
+
+       
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
+           
               // color: const Color.fromRGBO(249, 246, 238, 1),
               borderRadius: BorderRadius.circular(20)),
           child: Column(
@@ -407,12 +411,15 @@ class _TribeHomeState extends State<TribeUnique> {
 
               Obx(
                 () => Container(
+                  width: MediaQuery.sizeOf(context).width/1,
+                  
                   margin: EdgeInsets.only(bottom: 10),
                   decoration: BoxDecoration(
+                   
                       //  color: Colorcodes.budgetLightGreen,
                       borderRadius: BorderRadius.circular(12),
                       border:
-                          Border.all(width: .5, color: AppColors.accentColor)),
+                          Border.all(width: .3, color: AppColors.accentColor)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

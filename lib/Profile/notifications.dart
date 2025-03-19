@@ -134,12 +134,25 @@ class _NotificationsState extends State<Notifications> {
                       delete(notifyId);
                     },
                     background: Container(
-                      color: Colors.red,
+                      
+                      decoration: BoxDecoration(
+                       color: Colors.red,
+                      borderRadius: BorderRadius.circular(10)
+                    ),
                       alignment: Alignment.centerRight,
                       padding: EdgeInsets.only(right: 20),
                       child: Icon(Icons.delete, color: Colors.white),
                     ),
-                    child: getContainer(e),
+                    child: Padding(padding: EdgeInsets.all(6), 
+                    child:Container(
+                     
+                    decoration: BoxDecoration(
+                       color: AppColors.mt,
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+                      child:getContainer(e),
+                    ))
+                    
                   );
                 }).toList(),
               );
@@ -238,6 +251,7 @@ class _NotificationsState extends State<Notifications> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
         decoration: BoxDecoration(
+          color: Colors.green,
           borderRadius: BorderRadius.circular(10),
         ),
         width: screenWidth,
@@ -355,7 +369,9 @@ class _NotificationsState extends State<Notifications> {
     return Center(
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+        decoration: BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.circular(10)),
         width: screenWidth,
         child: Column(
           children: [
@@ -455,7 +471,10 @@ class _NotificationsState extends State<Notifications> {
             fontsize: 10,
             fontWeight: FontWeight.bold,
             c: AppColors.accentColor),
-        Divider(),
+        Divider(
+          thickness: 0,
+          height: 0,
+        ),
       ],
     );
   }

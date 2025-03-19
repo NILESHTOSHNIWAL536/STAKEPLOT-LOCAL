@@ -630,7 +630,9 @@ void getTrending() async {
     var obj = his['data'];
     getTrendingData.clear();
     getTrendingData.addAll(obj);
-    if(getTrendingData.length==0){findTranding=false;}
+    if (getTrendingData.length == 0) {
+      findTranding = false;
+    }
     getTrendingData.forEach((element) {
       postCount[element["_id"]] =
           element['upvotes'] < 0 ? 0 : element['upvotes'];
@@ -652,6 +654,27 @@ void getPost() async {
       postCommentCount[element["_id"]] = element['comments'];
     });
   } else {}
+}
+
+void getExploria() async {
+  var response = await getDataApiCall('${url}/exploria/');
+  print("exploria response: $response"); // Already present
+  if (getFlagOfResponse(response)) {
+    var his = jsonDecode(response.body);
+    var obj = his['data'];
+    print("exploria data: $obj"); // Add this to see the raw data
+    historyExploriaListData.clear();
+    historyExploriaListData.addAll(obj);
+    getExploriaTrendingData.clear();
+    getExploriaTrendingData.addAll(obj);
+    historyExploriaListData.forEach((element) {
+      print("exploria post: ${element['_id']} - place: ${element['place']}, tripHighlight: ${element['tripHighlight']}"); // Log each post’s keys
+      postExploriaCount[element["_id"]] = element['upvotes'];
+      postExploriaCommentCount[element["_id"]] = element['comments'];
+    });
+  } else {
+    print("exploria fetch failed: ${response.statusCode}");
+  }
 }
 
 void savePostData(context, data) async {
@@ -792,13 +815,11 @@ Future<String> addImageToCloud(
   return imageNameUrl;
 }
 
-
-void deletePost(id,context)async{
-   var responce=await deleteDataApiCall("${url}/post/delete/${id}");
-   if(getFlagOfResponse(responce))
-   {
-       snackBarCalled(context, "Deleted Post...");    
-   }else{
-       snackBarCalled(context, "Error while Deleting Post...");    
-   }
+void deletePost(id, context) async {
+  var responce = await deleteDataApiCall("${url}/post/delete/${id}");
+  if (getFlagOfResponse(responce)) {
+    snackBarCalled(context, "Deleted Post...");
+  } else {
+    snackBarCalled(context, "Error while Deleting Post...");
+  }
 }

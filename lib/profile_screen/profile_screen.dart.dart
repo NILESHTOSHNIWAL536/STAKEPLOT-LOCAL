@@ -19,6 +19,7 @@ import 'package:flutter_application_code_stakeplot/profile_screen/webView.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
 class ProfileScreenDart extends StatefulWidget {
   const ProfileScreenDart({super.key});
 
@@ -31,79 +32,83 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
   void initState() {
     super.initState();
     getHiddenTransactions(context);
-    
   }
+
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build( BuildContext context,) {
     return Scaffold(
       bottomNavigationBar: BottomNavigations(data: 4),
       backgroundColor: AppColors.backgroundColor,
-    
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.only(top: 5, left: 16, right: 16),
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Profile section
-              Row(
-                children: [
-                  Container(
-                    child: chatAvatartImage( url: avatar.value, width:15, height:17),
-                    // backgroundImage: NetworkImage(post['profilePic']),
-                    // radius: 24,
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(userName.value,
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.w600,
-                                //fontSize: MediaQuery.of(context).size.width * 0.04,
-                                color: AppColors.primaryColor)),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          child: Text(email.value,
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.w400,
-                                  //fontSize: MediaQuery.of(context).size.width * 0.04,
-                                  fontSize: 12,
-                                  color: AppColors.bg1)),
-                        ),
-                        Text(Phone.value,
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            // Profile section
+            Row(
+              children: [
+                Container(
+                  child: chatAvatartImage(
+                      url: avatar.value, width: 12, height: 12),
+                  // backgroundImage: NetworkImage(post['profilePic']),
+                  // radius: 24,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(userName.value,
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.w600,
+                              //fontSize: MediaQuery.of(context).size.width * 0.04,
+                              color: AppColors.primaryColor)),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Text(email.value,
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.w400,
                                 //fontSize: MediaQuery.of(context).size.width * 0.04,
-                                fontSize: 12,
+                                fontSize: 10,
                                 color: AppColors.bg1)),
-                      ],
-                    ),
+                      ),
+                      Text(Phone.value,
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.w400,
+                              //fontSize: MediaQuery.of(context).size.width * 0.04,
+                              fontSize: 10,
+                              color: AppColors.bg1)),
+                    ],
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => EditDetails()),
-                      );
-                    },
-                    child: Container(
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EditDetails()),
+                    );
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width *
+                        0.2, // Adjust the multiplier as needed
+                    decoration: BoxDecoration(
+                        color: AppColors.mt,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Center(
                       child: Row(
+                        //mainAxisSize: MainAxisSize.min,
+                        //mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           AvatarProfileImage(
                             url: ProfileIcons.edit,
-                            height: 30,
-                            width: 30,
+                            height: 40,
+                            width: 40,
                           ),
-                          Text('',
+                          Text('Edit',
                               style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.w500,
+                                  lWeight: FontWeight.w600,
                                   //fontSize: MediaQuery.of(context).size.width * 0.04,
                                   fontSize: 12,
                                   color: AppColors.bg1))
@@ -111,234 +116,206 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                       ),
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              // Options list
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: Column(
-                  children: [
-                    // First Container for Community profile and Friends list
-                    Container(
-                      decoration: BoxDecoration(
-                          color: AppColors.mt,
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: AppColors.border)),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(12, 14, 12, 14),
-                        child: Column(
-                          children: [
-                            _buildOption(
-                            ProfileImage(
-                                  url: ProfileIcons.communityProf,
-                                 
-                                ),
-                                'Community profile',
-                                'Check your community profile', onTap: () {
-                                navigatorToMyOwnPage(context);
-                            }),
-                            Divider(),
-                            _buildOption(
-                                ProfileImage(
-                                  url: ProfileIcons.friends,
-                                  // height: 20,
-                                  // width: 20,
-                                ),
-                                'Friends list',
-                                'Check your friends list here', onTap: () {
-                              Navigator.pushNamed(context, '/Friends');
-                            }),
-                          ],
-                        ),
-                      ),
-                    ),
-                   // SizedBox(height: 10),
-                    // Second Container for Support, Terms & conditions, and Privacy policy
-                    
-                      SizedBox(height: 10),
-                      // Second Container for Support, Terms & conditions, and Privacy policy
-                      Container(
-                        decoration: BoxDecoration(
-                            color: AppColors.mt,
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: AppColors.border)),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 14, 10, 10),
-                          child: Column(
-                            children: [
-                              InkWell(
-                                onTap: (){
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => HiddenTransactionsScreen(),
-                                    ),
-                                  );
-                                },
-                                child: _buildOption(
-                                    ProfileImage(
-                                      url: ProfileIcons.support,
-                                      // height: 20,
-                                      // width: 20,
-                                    ),
-                                    'History archives ',
-                                    'Find your hidden history here'),
-                              ),
-                              Divider(),
-                              InkWell(
-                                onTap: (){
-                                  WebViewController controller  = WebViewController()..setJavaScriptMode(JavaScriptMode.unrestricted) ..loadRequest(Uri.parse("https://finvu.in/terms"));
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => WebViewPage(controller: controller),
-                                    ),
-                                  );
-                                },
-                                child: _buildOption(
-                                    ProfileImage(
-                                      url: ProfileIcons.terms,
-                                      // height: 20,
-                                      // width: 20,
-                                    ),
-                                    'Terms & conditions',
-                                    'Please follow our terms and conditions'),
-                              ),
-                              InkWell(
-                                onTap: (){
-                                  
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>OnboardingScreen(),
-                                    ),
-                                  );
-                                },
-                                child: _buildOption(
-                                    AvatarProfileImage(
-                                      url:OnboardingImages.page323 ,
-                                       height: 20,
-                                       width: 20,
-                                    ),
-                                    'Terms & conditions',
-                                    'onboarding.'),
-                              ),
-                              // Divider(),
-                              // _buildOption(
-                              //     SizedBox(
-                              //       height: 40,
-                              //       width: 40,
-                              //       child: AvatarProfileImage(
-                              //         url: ProfileIcons.privacyPolicy,
-                              //         height: 22,
-                              //         width: 22,
-                              //       ),
-                              //     ),
-                              //     'Privacy policy',
-                              //     'We respect your privacy'),
-                            ],
-                          ),
-                        ),
-                      ),
-                     
-                      // Third Container for Log ou
-                      // t
-                      const SizedBox(height: 10,),
-                      logoutWidget(),
-                     
-                    
-                  ]
                 ),
-              ),
-              // Spacer(),
-              // logoutWidget(),
-  
-         ] ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            // Options list
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+              child: Column(children: [
+                // First Container for Community profile and Friends list
+                Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                      color: AppColors.mt,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: AppColors.border)),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 14, 12, 14),
+                    child: Column(
+                      children: [
+                        _buildOption(
+                            ProfileImage(
+                              url: ProfileIcons.communityProf,
+                            ),
+                            'Community profile',
+                            'Check your community profile', onTap: () {
+                          navigatorToMyOwnPage(context);
+                        }),
+                        Divider(),
+                        _buildOption(
+                            ProfileImage(
+                              url: ProfileIcons.friends,
+                              // height: 20,
+                              // width: 20,
+                            ),
+                            'Friends list',
+                            'Check your friends list here', onTap: () {
+                          Navigator.pushNamed(context, '/Friends');
+                        }),
+                      ],
+                    ),
+                  ),
+                ),
+                // SizedBox(height: 10),
+                // Second Container for Support, Terms & conditions, and Privacy policy
+
+                SizedBox(height: 10),
+                // Second Container for Support, Terms & conditions, and Privacy policy
+                Container(
+                  decoration: BoxDecoration(
+                      color: AppColors.mt,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: AppColors.border)),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 14, 10, 10),
+                    child: Column(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    HiddenTransactionsScreen(),
+                              ),
+                            );
+                          },
+                          child: _buildOption(
+                              ProfileImage(
+                                url: ProfileIcons.support,
+                                // height: 20,
+                                // width: 20,
+                              ),
+                              'History archives ',
+                              'Find your hidden history here'),
+                        ),
+                        Divider(),
+                        InkWell(
+                          onTap: () {
+                            WebViewController controller = WebViewController()
+                              ..setJavaScriptMode(JavaScriptMode.unrestricted)
+                              ..loadRequest(
+                                  Uri.parse("https://finvu.in/terms"));
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    WebViewPage(controller: controller),
+                              ),
+                            );
+                          },
+                          child: _buildOption(
+                              ProfileImage(
+                                url: ProfileIcons.terms,
+                                // height: 20,
+                                // width: 20,
+                              ),
+                              'Terms & conditions',
+                              'Please follow our terms and conditions'),
+                        ),
+                       
+                       
+                      ],
+                    ),
+                  ),
+                ),
+
+                // Third Container for Log ou
+                // t
+                const SizedBox(
+                  height: 10,
+                ),
+                logoutWidget(),
+              ]),
+            ),
+            // Spacer(),
+            // logoutWidget(),
+          ]),
         ),
       ),
     );
   }
 
+  Widget logoutWidget() {
+    return Column(
+      children: [
+        InkWell(
+          onTap: () async {
+            final SharedPreferences _pref =
+                await SharedPreferences.getInstance();
 
-  Widget logoutWidget(){
-     return Column(
-        children: [
-             InkWell(
-                          onTap: () async {
-                            final SharedPreferences _pref =
-                                await SharedPreferences.getInstance();
+            try {
+              var response = await postDataApiCall("${url}/user/logout", {});
+              printData(response);
+            } catch (e) {
+              print(e);
+            }
 
-                              try{
-                      var response=await postDataApiCall("${url}/user/logout", {});
-                      printData(response);
-                        }catch(e){
-                          print(e);
-                        }
+            // Remove tokens and other session data
+            await _pref.remove("accessToken");
+            await _pref.remove("token");
+            await _pref.remove("ConsentHandleId");
+            await _pref.remove("consentId");
+            await _pref.remove("from");
+            await _pref.remove("to");
+            await _pref.remove("sessionId");
 
-                            // Remove tokens and other session data
-                            await _pref.remove("accessToken");
-                            await _pref.remove("token");
-                            await _pref.remove("ConsentHandleId");
-                            await _pref.remove("consentId");
-                            await _pref.remove("from");
-                            await _pref.remove("to");
-                            await _pref.remove("sessionId");
+            // Navigate back to home screen
+            Navigator.of(context)
+                .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+            Navigator.pushReplacementNamed(context, '/');
 
-                   
-                  
-                            // Navigate back to home screen
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                                '/', (Route<dynamic> route) => false);
-                            Navigator.pushReplacementNamed(context, '/');
-
-                            clearGetX();
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: AppColors.mt,
-                                borderRadius: BorderRadius.circular(14),
-                                border: Border.all(color: AppColors.border)),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(10, 14, 14, 14),
-                              child: _buildOption(
-                                  ProfileImage(
-                                    url: ProfileIcons.logout,
-                                    // height: 22,
-                                    // width: 22,
-                                  ),
-                                  'Log out',
-                                  'You can login and log out from your account',
-                                  isLogout: true),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Text(
-                            'Stakeplot\nApp version 1.0',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.grey, fontSize: 12),
-                          ),
-                        ),
-        ],
-     );
+            clearGetX();
+          },
+          child: Container(
+            decoration: BoxDecoration(
+                color: AppColors.mt,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: AppColors.border)),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 14, 14, 14),
+              child: _buildOption(
+                  ProfileImage(
+                    url: ProfileIcons.logout,
+                    // height: 22,
+                    // width: 22,
+                  ),
+                  'Log out',
+                  'You can login and log out from your account',
+                  isLogout: true),
+            ),
+          ),
+        ),
+        SizedBox(height: 20),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Text(
+            'Stakeplot\nApp version 1.0',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.grey, fontSize: 12),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildOption(Widget icon, String title, String subtitle,
       {Function()? onTap, bool isLogout = false}) {
+    double h = MediaQuery.sizeOf(context).height;
+    double w = MediaQuery.sizeOf(context).width;
     return ListTile(
       leading: Container(
-        padding: EdgeInsets.all(16),
+       
+        padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
             color: AppColors.button,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(color: AppColors.border)),
         child: SizedBox(
-          height: 33,
-          width: 33,
+          height: 20,
+          width: 20,
           child: icon, // Use the passed widget directly
         ),
       ),
@@ -346,13 +323,13 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
           style: FontManager().getTextStyle(context,
               lWeight: FontWeight.w500,
               //fontSize: MediaQuery.of(context).size.width * 0.04,
-              fontSize: 15,
+              fontSize: h/52,
               color: AppColors.bg1)),
       subtitle: Text(subtitle,
           style: FontManager().getTextStyle(context,
               lWeight: FontWeight.w400,
               //fontSize: MediaQuery.of(context).size.width * 0.04,
-              fontSize: 13,
+              fontSize: h/72,
               color: AppColors.bg1)),
       //trailing: isLogout ? Icon(Icons.logout, color: Colors.red) : null,
       onTap: onTap,

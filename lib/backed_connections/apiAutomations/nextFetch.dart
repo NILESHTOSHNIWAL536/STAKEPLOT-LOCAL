@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:io';
 // import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:get/get.dart';
@@ -142,15 +144,11 @@ class _RotatingIconState extends State<Nextfetch> with SingleTickerProviderState
         children: [
           RotationTransition(
             turns: _controller,
-            child: Icon(
-              Icons.restore_outlined,
-              color: Colors.black,
-              size: 30,
-            ),
+            child: AvatarProfileImage(url: HomePageIcons.fetch, width: 25, height: 25)
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: textStyle(context: context,text: "Your Next Fetch Starts in :",fontWeight: FontWeight.bold,c: AppColors.bg1,fontsize: 13),
+            child: textStyle(context: context,text: "Your next fetch starts in :",fontWeight: FontWeight.bold,c: AppColors.bg1,fontsize: 13),
           ),
         Obx(()=>  textStyle(context: context,text: currentTime.value ,fontWeight: FontWeight.bold,c: AppColors.primaryColor,fontsize: 13)),
         ],

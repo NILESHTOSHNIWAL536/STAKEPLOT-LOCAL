@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
     getCategoryData();
     getRemainders(context);
     getNotifications(context);
-    sectionReached.value=false;
+   // sectionReached.value=false;
 
   }
 

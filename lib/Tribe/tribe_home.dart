@@ -32,29 +32,30 @@ bool findData = true;
 bool findTranding = true;
 RxInt indexFlag = 0.obs;
 
-
-Widget noFriend(context,[text=""]){
-   return  GestureDetector(
-    onTap: (){
-        Navigator.pushNamed(context, "/TribeSearch");
+Widget noFriend(context, [text = ""]) {
+  return GestureDetector(
+    onTap: () {
+      Navigator.pushNamed(context, "/TribeSearch");
     },
-     child: Padding(
-       padding: const EdgeInsets.symmetric(vertical: 20),
-       child: Center(
-                              child: Column(
-                                children: [
-                                  AvatarProfileImage(
-                                    url: ProfileIcons.emptyFrnds,
-                                    height: 4,
-                                    width: 4,
-                                  ),
-                                  const SizedBox(height: 30,),
-                                  textStyle(context: context,text: text),
-                                ],
-                              ),
-                            ),
-     ),
-   );
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: Center(
+        child: Column(
+          children: [
+            AvatarProfileImage(
+              url: ProfileIcons.emptyFrnds,
+              height: 4,
+              width: 4,
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            textStyle(context: context, text: text),
+          ],
+        ),
+      ),
+    ),
+  );
 }
 
 Widget popUpBox(id, context) {
@@ -99,8 +100,8 @@ Widget vote(context, dataObj, data) {
   String likeKey = "liked" + dataObj["_id"];
   bool isLiked = likedList.contains(likeKey);
   return Obx(() => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 15),
-    child: Row(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -111,7 +112,7 @@ Widget vote(context, dataObj, data) {
                     onTap: () {
                       String likeKey = "liked" + dataObj["_id"];
                       bool isLiked = likedList.contains(likeKey);
-                      
+
                       // Toggle like status
                       if (isLiked) {
                         likedList.remove(likeKey);
@@ -123,7 +124,7 @@ Widget vote(context, dataObj, data) {
                         likedList.add(likeKey);
                         postCount[idData] = postCount[idData]! + 1;
                       }
-                      
+
                       // Update the server with new vote status
                       upvoteGlobal(context, "Post", dataObj["_id"], dataObj);
                       reRender.value = !reRender.value;
@@ -206,29 +207,18 @@ Widget vote(context, dataObj, data) {
 // Helper function to get the appropriate icon based on like status
 // Helper function to get the appropriate SVG based on like status
 Widget likeIcon(BuildContext context, bool isLiked) {
-  return isLiked
-      ?SvgPicture.asset(
-      LikeComment.likeIcon2, // Path to your outlined heart SVG
-      //color: Colors.white,
-      height: 25,
-    )
-       
-  : SvgPicture.asset(
-      LikeComment.likeIcon, // Path to your outlined heart SVG
-      //color: Colors.white,
-      height: 25,
-    );
-  // return isLiked
-  //     ? SvgPicture.asset(
-  //         LikeComment.likes, // Path to your filled heart SVG
-  //         color: Colors.red,
-  //         height: 25,
-  //       )
-  //     : SvgPicture.asset(
-  //         LikeComment.likes, // Path to your outlined heart SVG
-  //         //color: Colors.white,
-  //         height: 25,
-  //       );
+  return AnimatedContainer(
+    width: 50,
+   // color: Colors.green,
+    duration: const Duration(milliseconds: 300), // Animation duration
+    curve: Curves.easeInOut, // Animation curve
+    height: isLiked ? 26 : 23, // Change height on like
+    child: SvgPicture.asset(
+      isLiked
+          ? LikeComment.likeIcon2
+          : LikeComment.likeIcon, // Path to your outlined heart SVG
+    ),
+  );
 }
 
 void upvoteGlobal(context, String str, String objectId, dataObj) async {
