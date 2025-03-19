@@ -28,17 +28,16 @@ Future<http.Response> loginToAutoTractionsGetData(context) async {
   return response;
 }
 
-void login(handleId,context) async {
+Future<void> login(consenthandleId,context) async {
   try{
   var login = await finvuManager.loginWithUsernameOrMobileNumberAndConsentHandle(
     '${number.value}@finvu',
     '${number.value}',
-    handleId,
+    consenthandleId,
   );
   otpReference = login.reference;
   debugPrint('LoggedIn');
   }catch(e){
-       print("error throw by finvu----"+e.toString());
       snackBarCalled(context, e.toString());
   }
 }

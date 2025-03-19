@@ -127,7 +127,6 @@ late final WebViewController controller ;
                   controller: _phoneController, // Attach the controller
                   maxLength: 10,
                   autocorrect: true,
-                  enabled: !widget.flag,
                   keyboardType: TextInputType.phone, // Phone input keyboard
                   decoration: InputDecoration(
                     prefixIcon: const Icon(Icons.phone_android_outlined),
@@ -163,7 +162,7 @@ late final WebViewController controller ;
                     ;
                     String phoneNumber = _phoneController.text;
                     number.value = phoneNumber;
-                    await getConsentHandleId(context);
+                     getConsentHandleId(context);
                     otpController = TextEditingController();
             
                     showModalBottomSheet(

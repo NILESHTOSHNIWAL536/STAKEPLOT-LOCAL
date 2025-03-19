@@ -14,11 +14,17 @@ import 'package:http/http.dart' as http;
 
 
 String convertToIso8601(String date) {
-  DateTime dateTime = DateTime.parse("${date}T00:00:00.000Z"); // Convert to DateTime
-  String isoString = dateTime.toUtc().toIso8601String(); // Convert to ISO 8601 format
+  // Parse the input date string to a DateTime object
+  DateTime dateTime = DateTime.parse(date);
+  
+  // Convert to UTC
+  DateTime dateTimeUtc = dateTime.toUtc();
+  
+  // Convert the UTC DateTime object to ISO 8601 string
+  String isoString = dateTimeUtc.toIso8601String();
+  print("iosString");
   return isoString;
 }
-
 class Nextfetch extends StatefulWidget {
   @override
   _RotatingIconState createState() => _RotatingIconState();
@@ -106,7 +112,7 @@ class _RotatingIconState extends State<Nextfetch> with SingleTickerProviderState
    void checkAndFetchData()async {
     DateTime now = DateTime.now();
 
-    if ((now.hour == 9 && now.minute == 0 )) {
+    if (!(now.hour == 9 && now.minute == 0 )) {
             await getBankAccounts();
             
           if( consentAndHandleDetails.isNotEmpty)
@@ -114,8 +120,7 @@ class _RotatingIconState extends State<Nextfetch> with SingleTickerProviderState
               bool  f=false;
                consentAndHandleDetails.forEach((item)
                {
-                        if(f){}
-                        else
+              
                            getWeeklyfetchData(
                              item[ "consentId"],
                             item["consendHandleId"],
@@ -124,9 +129,7 @@ class _RotatingIconState extends State<Nextfetch> with SingleTickerProviderState
                             convertToIso8601("2025-01-05"),  
                             convertToIso8601("2025-03-05"),
                             );  
-                            f=true;
-                            
-                          
+                             
                });
           }  
     }

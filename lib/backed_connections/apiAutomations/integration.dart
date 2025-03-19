@@ -41,7 +41,7 @@ void initFinvuManager(BuildContext context) async {
   }
 }
 
-Future<void> getConsentHandleId(context) async 
+void getConsentHandleId(context) async 
 {
 
   final String apiUrl ="${url}/finvu/login"; // Change to your actual server URL
@@ -49,7 +49,8 @@ Future<void> getConsentHandleId(context) async
 
    final SharedPreferences _pref = await SharedPreferences.getInstance();
    var accessToken = _pref.getString("accessToken");
-
+   print("-----------------------------------------");
+   print(apiUrl);
   try {
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -59,16 +60,16 @@ Future<void> getConsentHandleId(context) async
       },
       body: jsonEncode({"custId": custId,'number':number.value}),
     );
-
+   printData(response);
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       String consentHandleId = data["consentHandleId"];
-      handleId.value = consentHandleId;
-      snackBarCalled(context, consentHandleId);
-      login(handleId.value,context);
-
+      handleId.value=consentHandleId;
+      print(handleId.value);
+      login(consentHandleId,context);
     } 
   } catch (error) {
+       print(error);
        snackBarCalled(context, error.toString());
   }
 }

@@ -271,6 +271,7 @@
 //   }
 // }
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -345,16 +346,13 @@ static Future<String?> getToken() async {
     }
   }
   Future<void> _submitPost() async {
-    print('Submitting post...');
+
     if (locationNameController.text.isEmpty || locationAddressController.text.isEmpty) {
-      print('Validation failed: Location name or address is empty');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill in all required fields')),
       );
       return;
     }
-
-    print('Preparing budget list');
     List<Map<String, dynamic>> budget = [];
     for (int i = 0; i < _textControllers.length; i++) {
       if (_textControllers[i].text.isNotEmpty && _amountControllers[i].text.isNotEmpty) {
@@ -362,15 +360,15 @@ static Future<String?> getToken() async {
           "category": _textControllers[i].text,
           "amount": int.tryParse(_amountControllers[i].text) ?? 0,
         });
-        print('Budget item $i: Category=${_textControllers[i].text}, Amount=${_amountControllers[i].text}');
       } else {
-        print('Skipping budget item $i: Empty category or amount');
       }
     }
+ 
+    String getImage =await addImageToCloud(selectedImage!,context);
 
     print('Constructing request body');
     Map<String, dynamic> requestBody ={
-      "pictures":"nilesh",
+      "pictures":getImage ?? "",
       // "pictures": selectedImage != null ? [selectedImage!.path] : [],
       //"backGroundPicture": selectedImage != null ? selectedImage!.path : "",
       "place": {
@@ -390,12 +388,10 @@ static Future<String?> getToken() async {
     var body = {
       'title':  titleController.text,
       'description': {'message': requestBody},
-      'image': "",
+      'image': getImage,
       'fileName': '',
       'type':'explore'
     };
-
-   print(body);
 
     try {
       var accessToken = await getToken();

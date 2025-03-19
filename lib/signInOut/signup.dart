@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/confirm.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -196,10 +197,21 @@ class _SigninState extends State<SignUp> {
       'dob': dobController.text.substring(0, 10),
     };
     flag.value = false;
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => Avatar(data: data),
+    //   ),
+    // );
+     getOTP(context, usernameController.text,emailController.text);
+                    // openShowModal();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => Avatar(data: data),
+        builder: (context) => conform(
+          data: data,
+          url: "assets/avatar/menp1.svg",
+        ),
       ),
     );
   }
