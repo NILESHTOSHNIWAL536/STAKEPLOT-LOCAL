@@ -126,6 +126,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
               child: Column(children: [
                 // First Container for Community profile and Friends list
                 Container(
+                  height: 200,
                   decoration: BoxDecoration(
                       color: AppColors.mt,
                       borderRadius: BorderRadius.circular(14),
@@ -306,14 +307,15 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
     double w = MediaQuery.sizeOf(context).width;
     return ListTile(
       leading: Container(
+       
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
             color: AppColors.button,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(color: AppColors.border)),
         child: SizedBox(
-          height: 33,
-          width: 33,
+          height: 20,
+          width: 20,
           child: icon, // Use the passed widget directly
         ),
       ),
@@ -327,7 +329,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
           style: FontManager().getTextStyle(context,
               lWeight: FontWeight.w400,
               //fontSize: MediaQuery.of(context).size.width * 0.04,
-              fontSize: h/52,
+              fontSize: h/72,
               color: AppColors.bg1)),
       //trailing: isLogout ? Icon(Icons.logout, color: Colors.red) : null,
       onTap: onTap,

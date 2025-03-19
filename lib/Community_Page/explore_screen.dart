@@ -369,8 +369,9 @@ static Future<String?> getToken() async {
     }
 
     print('Constructing request body');
-    Map<String, dynamic> requestBody = {
-      "pictures": selectedImage != null ? [selectedImage!.path] : [],
+    Map<String, dynamic> requestBody ={
+      "pictures":"nilesh",
+      // "pictures": selectedImage != null ? [selectedImage!.path] : [],
       //"backGroundPicture": selectedImage != null ? selectedImage!.path : "",
       "place": {
         "name": locationNameController.text,
@@ -383,19 +384,28 @@ static Future<String?> getToken() async {
       "comments": 0,
       "shares": 0,
       "upvotes": 0,
+      
     };
-    print('Request body: ${jsonEncode(requestBody)}');
+
+    var body = {
+      'title':  titleController.text,
+      'description': {'message': requestBody},
+      'image': "",
+      'fileName': '',
+      'type':'explore'
+    };
+
+   print(body);
 
     try {
       var accessToken = await getToken();
-      print('Making POST request to ${url}/exploria/');
       final response = await http.post(
-        Uri.parse('${url}/exploria/'),
+        Uri.parse('${url}/post/'),
         headers: {
           'Content-Type': 'application/json',
           "Authorization": "$accessToken",
         },
-        body: jsonEncode(requestBody),
+        body: jsonEncode(body),
       );
 
       print('Response received. Status code: ${response.statusCode}');

@@ -320,14 +320,18 @@ class _BudgetDisplayState extends State<BudgetDisplay> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(top: Colorcodes.paddingSize / 2),
-                  child: globalText(
-                    context: context,
-                    text: data['name'],
-                    fontWeight: FontWeight.w500,
-                    fontsize: 16,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
+                  child: Container(
                     
+                    width: MediaQuery.sizeOf(context).width/2.1,
+                    child: globalText(
+                      context: context,
+                      text: data['name'],
+                      fontWeight: FontWeight.w500,
+                      fontsize: 16,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      
+                    ),
                   ),
                 ),
                 Padding(
@@ -348,12 +352,14 @@ class _BudgetDisplayState extends State<BudgetDisplay> {
                   fontsize: 14,
                   overflow: TextOverflow.ellipsis,
                 ),
-                globalText(
-                  context: context,
-                  text: "₹${data['amount']}",
-                  fontWeight: FontWeight.w600,
-                  fontsize: 16,
-                  overflow: TextOverflow.ellipsis,
+                Container(
+                  child: globalText(
+                    context: context,
+                    text: "₹${data['amount']}",
+                    fontWeight: FontWeight.w600,
+                    fontsize: 16,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),

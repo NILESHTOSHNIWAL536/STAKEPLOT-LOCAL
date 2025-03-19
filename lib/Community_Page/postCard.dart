@@ -919,9 +919,10 @@ class _PostCardState extends State<PostCard> {
   }
 
   Widget uploadData(dataObj, bool flag) {
-    print('uploadData: Starting to build post card with data: ${dataObj['_id']}');
-  bool isExploria = dataObj.containsKey('place') && dataObj.containsKey('tripHighlight');
-  print('uploadData: Is this an Exploria post? $isExploria');
+   
+  bool isExploria = dataObj['postType']=="explore";
+  var extractdata=isExploria?dataObj['description']['message']:{};  //  dataObj.containsKey('place') && dataObj.containsKey('tripHighlight')
+ 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
       child: Card(
@@ -1015,7 +1016,7 @@ class _PostCardState extends State<PostCard> {
                                     SizedBox(width: 5),
                                     Expanded(
                                       child: Text(
-                                        "${dataObj['place']['name']} - ${dataObj['place']['location']}",
+                                        "${extractdata['place']['name']} - ${extractdata['place']['location']}",
                                         style: FontManager().getTextStyle(context,
                                             lWeight: FontWeight.bold,
                                             fontSize: 18,
@@ -1033,7 +1034,7 @@ class _PostCardState extends State<PostCard> {
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Text(
-                                    "Highlight: ${dataObj['tripHighlight']}",
+                                    "Highlight: ${extractdata['tripHighlight']}",
                                     style: FontManager().getTextStyle(context,
                                         lWeight: FontWeight.w600,
                                         fontSize: 16,
@@ -1053,7 +1054,7 @@ class _PostCardState extends State<PostCard> {
                                 Wrap(
                                   spacing: 10,
                                   runSpacing: 10,
-                                  children: (dataObj['budget'] as List).map((budgetItem) {
+                                  children: (extractdata['budget'] as List).map((budgetItem) {
                                      print('uploadData: Budget item - Category: ${budgetItem['category']}, Amount: ${budgetItem['amount']}');
                                     return Container(
                                       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -1074,7 +1075,7 @@ class _PostCardState extends State<PostCard> {
                                 ),
                                 SizedBox(height: 10),
                                 // Description
-                                Readmore(str: dataObj['description']),
+                                Readmore(str: extractdata['description']),
                               ],
                             ),
                           )
