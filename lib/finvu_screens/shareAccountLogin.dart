@@ -179,10 +179,10 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            widget.flag ? const DiscoverAccount() : MobileNumber(),
+                        builder: (context) => MobileNumber(),
                       ),
                     );
+                    
                   },
                   child: getButton(
                       context,

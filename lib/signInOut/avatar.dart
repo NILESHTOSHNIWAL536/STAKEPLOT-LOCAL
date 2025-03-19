@@ -28,11 +28,6 @@ class Avatar extends StatefulWidget {
 
 class _SigninState extends State<Avatar> {
   int index = 0;
-
-//   PageController _pageController = PageController(
-//   initialPage: 0,
-// );
-
   final PageController _pageController = PageController(viewportFraction: 0.7);
   int _currentPage = 0;
 
@@ -158,12 +153,12 @@ class _SigninState extends State<Avatar> {
                 InkWell(
                   onTap: () {
                     //  storeData(context);
-                    if (widget.isEdit) {
-                      changeAvater.value = images[activePage];
-                      avatar.value = changeAvater.value;
-                      Navigator.pop(context);
-                      return;
-                    }
+                    // if (widget.isEdit) {
+                    //   changeAvater.value = images[activePage];
+                    //   avatar.value = changeAvater.value;
+                    //   Navigator.pop(context);
+                    //   return;
+                    // }
                     snackBarCalled(
                         context,
                         "An OTP has been sent to your email address.",
@@ -175,7 +170,7 @@ class _SigninState extends State<Avatar> {
                       MaterialPageRoute(
                         builder: (context) => conform(
                           data: widget.data,
-                          url: images[activePage],
+                          url: "assets/avatar/menp1.svg",
                         ),
                       ),
                     );
@@ -305,22 +300,6 @@ void storeData(context, data, String opt, Avatarurl) async {
   String conform = data['confirmPassword'];
   String dob = data['dob'];
 
-  // if(name=="" || email=="" || password=="" || conform=="" || phone=="" || dob==""){
-  //     snackBarCalled(context, "pls enter all feilds",Colors.red);
-  //     return;
-  // }
-
-  // if(password.length<6)
-  // {
-  //      snackBarCalled(context, "Password must be atleast 6 characters",Colors.red);
-  //      return;
-  // }
-
-  // if(password!=conform)
-  // {
-  //      snackBarCalled(context, "Password and Conform password doesn't match",Colors.red);
-  //      return;
-  // }
 
   final response = await http.post(
     Uri.parse('${url}/user/register'),
@@ -354,6 +333,7 @@ void storeData(context, data, String opt, Avatarurl) async {
     String accessToken = body['data'];
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     _pref.setString("accessToken", "Bearer " + accessToken);
+    print(accessToken);
     snackBarCalled(context, "User registered successfully!", Colors.green);
     clearStack(context);
     Navigator.pushReplacementNamed(context, '/ShareAccountLogin');

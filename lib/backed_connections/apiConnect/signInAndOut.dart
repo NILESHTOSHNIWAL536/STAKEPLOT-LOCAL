@@ -156,8 +156,6 @@ void storeinmap(body, SharedPreferences _pref, String password) {
 }
 
 void getOTP(context, String name, String email) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
 
   final response = await http.post(
     Uri.parse('${url}/otp/send'),
@@ -167,12 +165,10 @@ void getOTP(context, String name, String email) async {
     body: jsonEncode({
       'email': email,
       'name': name,
-      'deviceInfo': deviceData
+      'deviceInfo': deviceData 
     }),
   );
   if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
-
     snackBarCalled(context, "Sended Otp To Email Id...!", Colors.black);
   } else {
     snackBarCalled(context, "can't send opt!", Colors.red);

@@ -95,9 +95,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     _animationController.reset();
     _animationController.forward();
     _updateProgress();
-    if (index < 2) {
-      _progressController.forward(from: _currentPage / 2);
-    }
+    
   }
 
   @override
@@ -522,7 +520,7 @@ class _OnboardingPageState extends State<OnboardingPage>
         ),
       GestureDetector(
           onTap: () {
-            if (_onboardingScreenState._currentPage == 2) {
+            if (_onboardingScreenState._currentPage == 3) {
               // Navigator.pushReplacementNamed(context, '/home');
               if (flagToFetchData.value) {
                 clearStack(context);

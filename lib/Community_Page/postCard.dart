@@ -217,9 +217,7 @@ class _PostCardState extends State<PostCard> {
               
                         : SizedBox.shrink(),
 
-                    // const SizedBox(
-                    //   height: 10,
-                    // ),
+                   
 
                     vote(context, dataObj, dataObj),
                   ],

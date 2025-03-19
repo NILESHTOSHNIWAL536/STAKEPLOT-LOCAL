@@ -687,18 +687,15 @@ class _AccessState extends State<Access> {
 
   void approveConsentRequest() async {
     try {
+
       FinvuConsentRequestDetailInfo finvuConsentRequestDetailInfo =
           await finvuManager.getConsentRequestDetails(handleId.value);
 
-      if (seletedAccountIds.isEmpty) {
-        snackBarCalled(context,
-            "No accounts were selected. Please add an account to approve the consent.");
-        return;
-      }
-
-      FinvuProcessConsentRequestResponse response =
-          await finvuManager.approveConsentRequest(
+     
+    
+      FinvuProcessConsentRequestResponse response = await finvuManager.approveConsentRequest(
               finvuConsentRequestDetailInfo, seletedAccountInfomations);
+  
 
       snackBarCalled(context, "Consent request approved successfully.");
 
@@ -709,6 +706,7 @@ class _AccessState extends State<Access> {
         ),
       );
     } catch (e) {
+     
       snackBarCalled(
           context, "An error occurred while approving the consent request.");
     }

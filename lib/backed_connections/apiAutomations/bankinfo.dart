@@ -67,7 +67,7 @@ Future<void> getBankAccounts()async
 
 void getWeeklyfetchData(consentId,consendHandleId,sessionId, custId,from,to)async
 {
-    print("------------------------------------");
+
    final String apiUrl ="${url}/finvu/fetchWeekly";
    final SharedPreferences pref = await SharedPreferences.getInstance();
    String accessToken=pref.getString("accessToken").toString() ; 
@@ -82,14 +82,14 @@ void getWeeklyfetchData(consentId,consendHandleId,sessionId, custId,from,to)asyn
         'custId':custId,
         'consentId':consentId,
         'sessionId':sessionId,
+        'userId':currentId.value,
       }),
     );
      printData(response);
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200)
+    {
       print(response.body);
     }
-
-
 }
 
 
