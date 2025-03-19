@@ -26,7 +26,10 @@ class _UserListScreenState extends State<UserListScreen> {
   void initState() {
     super.initState();
     //getUserLend(context);
+    print('UserListScreen: initState called');
+    //getUserLend(context);
     getRemainders(context);
+    print('UserListScreen: getRemainders called');
 
     //duesPaid(context,index);
   }
@@ -338,26 +341,29 @@ void duesPaid(BuildContext context, int index) async {
   final type = due['type'];
 
   if (dueId == null) {
-    //  print("Error: Transaction ID is null");
+    print("Error: Transaction ID is null");
     return;
   }
 
   final apiUrl = "$url/reminders/settle/$type/$dueId";
   try {
+    print("try url $apiUrl");
     final response = await updateDataApiCall(apiUrl);
+    print("api res ${response.body}");
     if (response.statusCode == 200) {
       // Remove the item from the observable list
+      print("ajdvjadhadvajd: ${response.statusCode} - ${response.body}");
       dueAmountRemainders.removeAt(index);
       // This triggers the UI update automatically
       snackBarCalled(context, "Due settled successfully");
     } else {
-      //  print("Failed to settle due: ${response.statusCode} - ${response.body}");
+      print("Failed to settle due: ${response.statusCode} - ${response.body}");
 
       snackBarCalled(context,
           "Failed to settle due: ${response.statusCode} - ${response.body}");
     }
   } catch (e) {
     snackBarCalled(context, "Error settling due");
-    // print("Error in duesPaid: $e");
+    print("Error in duesPaid: $e");
   }
 }

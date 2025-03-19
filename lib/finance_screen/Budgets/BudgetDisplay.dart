@@ -327,6 +327,7 @@ class _BudgetDisplayState extends State<BudgetDisplay> {
                     fontsize: 16,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
+                    
                   ),
                 ),
                 Padding(
@@ -402,6 +403,7 @@ Widget globalText({
   Color? color,
   TextOverflow? overflow,
   int? maxLines,
+  
   TextDecoration? decoration,
   String? fontFamily,
 }) {

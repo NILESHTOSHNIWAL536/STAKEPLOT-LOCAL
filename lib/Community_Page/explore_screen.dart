@@ -270,7 +270,6 @@
 //         );
 //   }
 // }
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:image_picker/image_picker.dart';
@@ -278,8 +277,11 @@ import 'dart:io';
 import './success_post.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
-import 'package:http/http.dart' as http; // Add this for HTTP requests
-import 'dart:convert'; // For JSON encoding
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ExploreModal extends StatefulWidget {
   final Function(Map<String, dynamic>) onPostCreated;
@@ -305,16 +307,21 @@ class _ExploreModalState extends State<ExploreModal> {
   @override
   void initState() {
     super.initState();
+    print('initState: Initializing ExploreModal state');
     _textControllers.add(TextEditingController());
     _amountControllers.add(TextEditingController());
   }
 
   Future<void> _pickImage() async {
+    print('Picking image from gallery');
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() {
         selectedImage = File(image.path);
+        print('Image picked: ${selectedImage!.path}');
       });
+    } else {
+      print('No image selected');
     }
   }
 
@@ -322,19 +329,32 @@ class _ExploreModalState extends State<ExploreModal> {
     setState(() {
       _textControllers.add(TextEditingController());
       _amountControllers.add(TextEditingController());
+      print('Added new text fields. Total count: ${_textControllers.length}');
     });
   }
+static Future<String?> getToken() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    var accessToken = pref.getString("accessToken");
 
-  // Function to handle the API POST request
+    if (accessToken == null) {
+      // print("No access token found in SharedPreferences");
+      return null;
+    } else {
+      //  print("Token: $accessToken");
+      return accessToken;
+    }
+  }
   Future<void> _submitPost() async {
+    print('Submitting post...');
     if (locationNameController.text.isEmpty || locationAddressController.text.isEmpty) {
+      print('Validation failed: Location name or address is empty');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill in all required fields')),
       );
       return;
     }
 
-    // Prepare the budget list
+    print('Preparing budget list');
     List<Map<String, dynamic>> budget = [];
     for (int i = 0; i < _textControllers.length; i++) {
       if (_textControllers[i].text.isNotEmpty && _amountControllers[i].text.isNotEmpty) {
@@ -342,47 +362,61 @@ class _ExploreModalState extends State<ExploreModal> {
           "category": _textControllers[i].text,
           "amount": int.tryParse(_amountControllers[i].text) ?? 0,
         });
+        print('Budget item $i: Category=${_textControllers[i].text}, Amount=${_amountControllers[i].text}');
+      } else {
+        print('Skipping budget item $i: Empty category or amount');
       }
     }
 
-    // Prepare the body
+    print('Constructing request body');
     Map<String, dynamic> requestBody = {
-      "pictures": selectedImage != null ? [selectedImage!.path] : [], // Replace with actual URL if uploaded
-      "backGroundPicture": selectedImage != null ? selectedImage!.path : "", // Replace with actual URL if uploaded
+      "pictures": selectedImage != null ? [selectedImage!.path] : [],
+      //"backGroundPicture": selectedImage != null ? selectedImage!.path : "",
       "place": {
         "name": locationNameController.text,
         "location": locationAddressController.text,
       },
       "budget": budget,
-      "rating": 4.5, // Hardcoded for now; adjust as needed
+      "rating": 4.5,
       "tripHighlight": titleController.text,
       "description": contentController.text,
-      "comments": 0, // Default value
-      "shares": 0, // Default value
-      "upvotes": 0, // Default value
-      "userId": "60d0fe4f5311236168a109ca", // Replace with actual user ID
+      "comments": 0,
+      "shares": 0,
+      "upvotes": 0,
     };
+    print('Request body: ${jsonEncode(requestBody)}');
 
     try {
+      var accessToken = await getToken();
+      print('Making POST request to ${url}/exploria/');
       final response = await http.post(
         Uri.parse('${url}/exploria/'),
         headers: {
           'Content-Type': 'application/json',
+          "Authorization": "$accessToken",
         },
         body: jsonEncode(requestBody),
       );
 
+      print('Response received. Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
       if (response.statusCode == 201 || response.statusCode == 200) {
+        print('Post submitted successfully');
         setState(() {
           exploreSubmitted = true;
+          print('State updated: exploreSubmitted = true');
         });
-        widget.onPostCreated(jsonDecode(response.body)); // Notify parent widget
+        widget.onPostCreated(jsonDecode(response.body));
+        print('onPostCreated callback triggered');
       } else {
+        print('Failed to submit post. Status code: ${response.statusCode}');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to submit post: ${response.statusCode}')),
         );
       }
     } catch (e) {
+      print('Error during POST request: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
       );
@@ -391,6 +425,7 @@ class _ExploreModalState extends State<ExploreModal> {
 
   @override
   void dispose() {
+    print('Disposing ExploreModal state');
     locationNameController.dispose();
     locationAddressController.dispose();
     titleController.dispose();
@@ -406,6 +441,7 @@ class _ExploreModalState extends State<ExploreModal> {
 
   @override
   Widget build(BuildContext context) {
+    print('Building ExploreModal widget. exploreSubmitted: $exploreSubmitted');
     return exploreSubmitted
         ? const SuccessPost()
         : AnimatedPadding(
@@ -559,7 +595,7 @@ class _ExploreModalState extends State<ExploreModal> {
                             : Colors.grey,
                         child: Center(
                           child: TextButton(
-                            onPressed: _submitPost, // Call the submit function
+                            onPressed: _submitPost,
                             child: Text('Continue',
                                 style: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.normal, fontSize: 18, color: Colors.black)),

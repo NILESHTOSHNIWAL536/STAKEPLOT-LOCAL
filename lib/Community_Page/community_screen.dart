@@ -88,11 +88,13 @@ class _CommunityState extends State<Community> {
     double width= MediaQuery.of(context).size.width;
     double height= MediaQuery.of(context).size.height;
      return Container(
-      //color: Colors.blue,
+     // color: Colors.blue,
             width: width,
-            height: height/1.4,
+           height: height/1.4,
            
               child: ListView.builder(
+                 padding: EdgeInsets.zero, // Removes default padding
+   // physics: const ClampingScrollPhysics(), 
                 itemCount: getTrendingData.length,
                 itemBuilder: (context, index) {
                   final dataObj = getTrendingData[index];
@@ -184,7 +186,7 @@ double h = MediaQuery.of(context).size.height;
                   child: Container(
                    
                     width: MediaQuery.sizeOf(context).width / 1.45,
-                    height: 50,
+                    height: 40,
                     child: TextField(
                       controller: _searchController,
                       decoration: InputDecoration(
@@ -212,8 +214,8 @@ double h = MediaQuery.of(context).size.height;
                 },
                 child: AvatarProfileImage(
                   url: LikeComment.message,
-                  height: 20,
-                  width: 20,
+                  height: 22,
+                  width: 22,
                 ),
               ),
             ],
