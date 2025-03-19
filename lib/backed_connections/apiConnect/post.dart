@@ -823,3 +823,33 @@ void deletePost(id, context) async {
     snackBarCalled(context, "Error while Deleting Post...");
   }
 }
+
+
+Future<String> postImageToCloud(imageFile,context)async{
+
+  try{
+   final url2 = Uri.parse('https://api.cloudinary.com/v1_1/deus5rcgl/upload');
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    var accessToken = pref.getString("accessToken");
+
+    // Upload image to Cloudinary
+    final request = http.MultipartRequest('POST', url2)
+      ..fields['upload_preset'] = 'zu3td0li'
+      ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
+
+    final response2 = await request.send();
+
+    if (response2.statusCode != 200) {
+      snackBarCalled(context, "Image upload failed", Colors.red);
+      return 'Image upload failed';
+    }
+
+    final responseData = await response2.stream.toBytes();
+    final responseString = String.fromCharCodes(responseData);
+    final jsonMap = jsonDecode(responseString);
+    String urlPath = jsonMap['secure_url'];
+    return urlPath;
+  }catch(e){
+      return "";
+  }
+}

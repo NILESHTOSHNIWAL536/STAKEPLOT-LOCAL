@@ -364,7 +364,7 @@ static Future<String?> getToken() async {
       }
     }
  
-    String getImage =await addImageToCloud(selectedImage!,context);
+    String getImage =await postImageToCloud(selectedImage!,context);
 
     print('Constructing request body');
     Map<String, dynamic> requestBody ={
