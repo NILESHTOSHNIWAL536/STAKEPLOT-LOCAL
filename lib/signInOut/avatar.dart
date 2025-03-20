@@ -152,19 +152,16 @@ class _SigninState extends State<Avatar> {
 
                 InkWell(
                   onTap: () {
-                    //  storeData(context);
-                    // if (widget.isEdit) {
-                    //   changeAvater.value = images[activePage];
-                    //   avatar.value = changeAvater.value;
-                    //   Navigator.pop(context);
-                    //   return;
-                    // }
-                    snackBarCalled(
-                        context,
-                        "An OTP has been sent to your email address.",
-                        Colors.green);
+                    //  storeData(context,data,otp,);
+                    if (widget.isEdit) {
+                      changeAvater.value = images[activePage];
+                      avatar.value = changeAvater.value;
+                      Navigator.pop(context);
+                      return;
+                    }
+                   
                     getOTP(context, widget.data['name'], widget.data['email']);
-                    // openShowModal();
+        
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -320,7 +317,7 @@ void storeData(context, data, String opt, Avatarurl) async {
 
   try {
     var data2 = jsonDecode(response.body);
-
+    print(data2);
     bool boolvar = data2['success'];
 
     acceptReset.value = false;
@@ -334,7 +331,6 @@ void storeData(context, data, String opt, Avatarurl) async {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     _pref.setString("accessToken", "Bearer " + accessToken);
     print(accessToken);
-    snackBarCalled(context, "User registered successfully!", Colors.green);
     clearStack(context);
     Navigator.pushReplacementNamed(context, '/ShareAccountLogin');
   } catch (e) {

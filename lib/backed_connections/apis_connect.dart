@@ -7,7 +7,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.
 import 'package:get/get.dart';
 
 bool flag = true;
-String portNo = flag ? "192.168.1.5" : "localhost";
+String portNo = flag ? "192.168.1.6" : "localhost";
 String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Feilds";
@@ -224,15 +224,15 @@ void printData(response, [context = ""]) {
 }
 
 void snackBarCalled(context, String text, [Color colors = Colors.black]) {
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    duration: Duration(seconds: 4),
-    content: Text(
-      text,
-      style: FontManager()
-          .getTextStyle(context, color: Colors.white, fontSize: 15),
-    ),
-    backgroundColor: colors,
-  ));
+  // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //   duration: Duration(seconds: 4),
+  //   content: Text(
+  //     text,
+  //     style: FontManager()
+  //         .getTextStyle(context, color: Colors.white, fontSize: 15),
+  //   ),
+  //   backgroundColor: colors,
+  // ));
 }
 
 void snackBarCalledFrds(context, String text, [Color colors = Colors.black]) {
