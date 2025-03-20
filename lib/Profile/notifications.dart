@@ -368,7 +368,7 @@ class _NotificationsState extends State<Notifications> {
 
     return Center(
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+      //  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
         decoration: BoxDecoration(
            color: AppColors.mt,
                       borderRadius: BorderRadius.circular(10)),
