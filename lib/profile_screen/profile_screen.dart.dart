@@ -132,7 +132,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(color: AppColors.border)),
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 14, 12, 14),
+                    padding: const EdgeInsets.fromLTRB(6, 8, 8, 4),
                     child: Column(
                       children: [
                         _buildOption(
