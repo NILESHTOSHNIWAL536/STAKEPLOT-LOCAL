@@ -216,8 +216,10 @@ class _NotificationsState extends State<Notifications> {
           "${e['from_name']} has settled your loan of ${e['amount']} for the item: ${e['name']}.",
           e['id'].toString(),
           e['avatarType'] ?? "",
-          time);
-    } else if (type == "splitSettled") {
+          time
+          );
+    } else if (type == "splitSettled")
+    {
       return messageChannelProfile(
           "${e['from_name']} has settled your Split of ${e['amount'].toStringAsFixed(1)} for the item: ${e['name']}.",
           e['id'].toString(),

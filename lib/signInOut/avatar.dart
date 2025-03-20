@@ -152,7 +152,7 @@ class _SigninState extends State<Avatar> {
 
                 InkWell(
                   onTap: () {
-                    //  storeData(context,data,otp,);
+                  
                     if (widget.isEdit) {
                       changeAvater.value = images[activePage];
                       avatar.value = changeAvater.value;
