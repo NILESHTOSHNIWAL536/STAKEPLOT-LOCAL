@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
@@ -37,7 +38,7 @@ class _ExploreModalState extends State<ExploreModal> {
   List<File> selectedImages = []; // Changed to List<File>
   static const int maxImages = 5;
    final List<CustomImageCropController> _cropControllers = [];
-  double _rating = 4.0;
+  double _rating = 0.0;
   bool _isSubmitting = false;
 
   final List<TextEditingController> _textControllers = [];
@@ -51,7 +52,7 @@ class _ExploreModalState extends State<ExploreModal> {
     _amountControllers.add(TextEditingController());
   }
 
-  Future<void> _pickImage() async {
+  Future<void> _pickAndCropImage() async {
     if (selectedImages.length >= maxImages) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Maximum 5 images allowed')),
@@ -61,10 +62,80 @@ class _ExploreModalState extends State<ExploreModal> {
 
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
+      await _showCropDialog(File(image.path));
+    }
+  }
+
+  Future<void> _showCropDialog(File imageFile, [int? existingIndex]) async {
+    final cropController = CustomImageCropController();
+    
+    final croppedFile = await showDialog<File?>(
+      context: context,
+      builder: (context) => AlertDialog(
+        contentPadding: EdgeInsets.zero,
+        content: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.9,
+          height: MediaQuery.of(context).size.height * 0.5,
+          child: CustomImageCrop(
+            cropController: cropController,
+            image: FileImage(imageFile),
+            shape: CustomCropShape.Square,
+            overlayColor: Colors.black.withOpacity(0.3),
+            cropPercentage: 0.9,
+            outlineStrokeWidth:0.0,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final croppedImage = await cropController.onCropImage();
+              if (croppedImage != null) {
+                final croppedFile = await _saveCroppedImage(croppedImage);
+                if (croppedFile != null) {
+                  Navigator.pop(context, croppedFile);
+                }
+              }
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+
+    if (croppedFile != null) {
       setState(() {
-        selectedImages.add(File(image.path));
-        _cropControllers.add(CustomImageCropController());
+        if (existingIndex != null) {
+          selectedImages[existingIndex] = croppedFile;
+        } else {
+          selectedImages.add(croppedFile);
+          _cropControllers.add(cropController);
+        }
       });
+    }
+    
+    if (existingIndex == null) {
+      cropController.dispose();
+    }
+  }
+
+  Future<File?> _saveCroppedImage(ImageProvider imageProvider) async {
+    try {
+      final byteData = await _imageProviderToByteData(imageProvider);
+      if (byteData == null) return null;
+
+      final Uint8List bytes = byteData.buffer.asUint8List();
+      final tempDir = await getTemporaryDirectory();
+      final file = await File(
+          '${tempDir.path}/cropped_${DateTime.now().millisecondsSinceEpoch}.png')
+          .writeAsBytes(bytes);
+      return file;
+    } catch (e) {
+      print('Error saving cropped image: $e');
+      return null;
     }
   }
 
@@ -133,79 +204,94 @@ Future<File?> _cropAndSaveImage(int index) async {
     return pref.getString("accessToken");
   }
 
-  Future<void> _submitPost() async {
-    if (locationNameController.text.isEmpty || locationAddressController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill in all required fields')),
-      );
-      return;
-    }
+ Future<void> _submitPost() async {
+  if (locationNameController.text.isEmpty || locationAddressController.text.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Please fill in all required fields')),
+    );
+    return;
+  }
 
-    List<Map<String, dynamic>> budget = [];
-    for (int i = 0; i < _textControllers.length; i++) {
-      if (_textControllers[i].text.isNotEmpty && _amountControllers[i].text.isNotEmpty) {
-        budget.add({
-          "category": _textControllers[i].text,
-          "amount": int.tryParse(_amountControllers[i].text) ?? 0,
-        });
-      }
-    }
+  setState(() => _isSubmitting = true); // Show loading indicator
 
-    // Upload all images and get their URLs
-    List<String> imageUrls = [];
-    for (File image in selectedImages) {
-      String url = await postImageToCloud(image, context);
-      imageUrls.add(url);
-    }
-
-    Map<String, dynamic> requestBody = {
-      "pictures": imageUrls,
-      "place": {
-        "name": locationNameController.text,
-        "location": locationAddressController.text,
-      },
-      "budget": budget,
-      "rating": _rating,
-      "tripHighlight": titleController.text,
-      "description": contentController.text,
-      "comments": 0,
-      "shares": 0,
-      "upvotes": 0,
-    };
-
-    var body = {
-      'title': titleController.text,
-      'description': {'message': requestBody},
-      'image':  '', // First image as main image
-      'fileName': '',
-      'type': 'explore'
-    };
-
-    try {
-      var accessToken = await getToken();
-      final response = await http.post(
-        Uri.parse('$url/post/'),
-        headers: {
-          'Content-Type': 'application/json',
-          "Authorization": "$accessToken",
-        },
-        body: jsonEncode(body),
-      );
-
-      if (response.statusCode == 201 || response.statusCode == 200) {
-        setState(() => exploreSubmitted = true);
-        widget.onPostCreated(jsonDecode(response.body));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to submit post: ${response.statusCode}')),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+  List<Map<String, dynamic>> budget = [];
+  for (int i = 0; i < _textControllers.length; i++) {
+    if (_textControllers[i].text.isNotEmpty && _amountControllers[i].text.isNotEmpty) {
+      budget.add({
+        "category": _textControllers[i].text,
+        "amount": int.tryParse(_amountControllers[i].text) ?? 0,
+      });
     }
   }
+
+  // Upload all cropped images and get their URLs
+  List<String> imageUrls = [];
+  for (File image in selectedImages) {
+    try {
+      String url = await postImageToCloud(image, context);
+      imageUrls.add(url);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error uploading image: $e')),
+      );
+      setState(() => _isSubmitting = false);
+      return;
+    }
+  }
+
+  Map<String, dynamic> requestBody = {
+    "pictures": imageUrls,
+    "place": {
+      "name": locationNameController.text,
+      "location": locationAddressController.text,
+    },
+    "budget": budget,
+    "rating": _rating,
+    "tripHighlight": titleController.text,
+    "description": contentController.text,
+    "comments": 0,
+    "shares": 0,
+    "upvotes": 0,
+  };
+
+  var body = {
+    'title': titleController.text,
+    'description': {'message': requestBody},
+    'image': imageUrls.isNotEmpty ? imageUrls[0] : '', // Use first image as main image
+    'fileName': '',
+    'type': 'explore'
+  };
+
+  try {
+    var accessToken = await getToken();
+    final response = await http.post(
+      Uri.parse('$url/post/'),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "$accessToken",
+      },
+      body: jsonEncode(body),
+    );
+
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      setState(() {
+        exploreSubmitted = true;
+        _isSubmitting = false;
+      });
+      widget.onPostCreated(jsonDecode(response.body));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to submit post: ${response.statusCode}')),
+      );
+      setState(() => _isSubmitting = false);
+    }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error: $e')),
+    );
+    setState(() => _isSubmitting = false);
+  }
+}
 
   @override
   void dispose() {
@@ -268,88 +354,164 @@ Future<File?> _cropAndSaveImage(int index) async {
                 lWeight: FontWeight.bold, fontSize: 18, color: Colors.black)),
       ],
     );
-  }Widget _buildRatingSection() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const Text('Rate this place', style: TextStyle(fontSize: 16)),
-      const SizedBox(height: 10),
-      RatingStars(
-        value: _rating,
-        onValueChanged: (value) {
-          if (mounted) {
-            setState(() => _rating = value);
-          }
-        },
-        starCount: 5,
-        starSize: 30,
-        maxValue: 5,
-        starSpacing: 4,
-        
-        valueLabelVisibility: true,
-        valueLabelTextStyle: const TextStyle(color: Colors.black),
-        starBuilder: (index, color) => Icon(
-          Icons.star,
-          color: color,
-          size: 30,
-        ),
+  }
+ Widget _buildRatingSection() => Row(
+  mainAxisAlignment: MainAxisAlignment.start,
+  crossAxisAlignment: CrossAxisAlignment.center, // Align items vertically centered
+  children: [
+     Text(
+      'Rate this place:',
+      style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.w500,
+            fontSize: 14,
+            color: Colors.black,
+          ),
+    ),
+    const SizedBox(width: 8), // Reduced spacing for better alignment
+    RatingStars(
+      value: _rating,
+      onValueChanged: (value) {
+        if (mounted) {
+          setState(() => _rating = value);
+        }
+      },
+      starCount: 5,
+      starSize: 30,
+      maxValue: 5,
+      starSpacing: 2,
+      starColor: AppColors.primaryColor,
+      starOffColor: AppColors.button,
+      valueLabelVisibility: false,
+      valueLabelTextStyle: const TextStyle(color: Colors.black),
+      starBuilder: (index, color) => Icon(
+        Icons.star,
+        color: color,
+        size: 30,
       ),
-    ],
-  );
+    ),
+  ],
+);
 
   Widget _buildImageSection() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        GestureDetector(
-          onTap: selectedImages.length < maxImages ? _pickImage : null,
-          child: Container(
-            height: 200,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: selectedImages.isEmpty
-                ? const Icon(Icons.add_photo_alternate, size: 50, color: Colors.grey)
-                : null,
+        Text(
+          'Photos (${selectedImages.length}/$maxImages)',
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.bold,
+            fontSize: 16,
+            color: Colors.black,
           ),
         ),
-        if (selectedImages.isNotEmpty)
-          SizedBox(
-            height: 100,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: selectedImages.length,
-              itemBuilder: (context, index) {
-                return Stack(
-                  children: [
-                   Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        width: 80,
-                        height: 80,
-                        child: CustomImageCrop(
-                          image: FileImage(selectedImages[index]),
-                          cropController: _cropControllers[index],
-                          shape: CustomCropShape.Square,
-                          
-                          overlayColor: Colors.black.withOpacity(0.5),
-                          cropPercentage: 0.9,
-                        ),
+        const SizedBox(height: 8),
+        Container(
+          height: 120,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey[300]!, width: 1),
+          ),
+          child: selectedImages.isEmpty
+              ? Center(
+                  child: Text(
+                    'No images selected',
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
+                )
+              : ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  itemCount: selectedImages.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          GestureDetector(
+                            onTap: () => _showCropDialog(selectedImages[index], index),
+                            child: Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.2),
+                                    spreadRadius: 1,
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.file(
+                                  selectedImages[index],
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            right: -8,
+                            top: -8,
+                            child: GestureDetector(
+                              onTap: () => _removeImage(index),
+                              child: Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.red,
+                                ),
+                                child: const Icon(
+                                  Icons.close,
+                                  size: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    Positioned(
-                      right: 0,
-                      top: 0,
-                      child: GestureDetector(
-                        onTap: () => _removeImage(index),
-                        child: const Icon(Icons.cancel, color: Colors.red),
-                      ),
-                    ),
-                  ],
-                );
-              },
+                    );
+                  },
+                ),
+        ),
+        const SizedBox(height: 8),
+        SizedBox(
+          width: double.infinity,
+          height: 50,
+          child: ElevatedButton(
+            onPressed: selectedImages.length < maxImages ? _pickAndCropImage : null,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.add_a_photo, color: Colors.white, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  'Add Photo',
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.normal,
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
           ),
+        ),
       ],
     );
   }
@@ -444,15 +606,24 @@ Future<File?> _cropAndSaveImage(int index) async {
                      locationAddressController.text.isNotEmpty && !_isSubmitting;
     return DecoratedContainer(
       borderRadius: 24,
-      backgroundColor: isEnabled ? Colors.blue : Colors.grey,
+      backgroundColor: isEnabled ? AppColors.primaryColor : Colors.grey,
       child: Center(
         child: TextButton(
           onPressed: isEnabled ? _submitPost : null,
           child: _isSubmitting
           ? const CircularProgressIndicator(color: Colors.white)
-          :Text('Continue',
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.normal, fontSize: 18, color: Colors.black)),
+          :Text(
+                                'Continue',
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                  color: locationNameController.text.isNotEmpty &&
+                                          locationAddressController.text.isNotEmpty
+                                      ? Colors.white
+                                      : Colors.black,
+                                ),
+                              ),
         ),
       ),
     );
