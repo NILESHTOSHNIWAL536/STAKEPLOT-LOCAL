@@ -1,8 +1,13 @@
 
+import 'dart:async';
+import 'dart:typed_data';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:custom_image_crop/custom_image_crop.dart';
 import 'dart:io';
 import './success_post.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -11,6 +16,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:path_provider/path_provider.dart';
 
 class ExploreModal extends StatefulWidget {
   final Function(Map<String, dynamic>) onPostCreated;
@@ -29,6 +36,9 @@ class _ExploreModalState extends State<ExploreModal> {
   final ImagePicker _picker = ImagePicker();
   List<File> selectedImages = []; // Changed to List<File>
   static const int maxImages = 5;
+   final List<CustomImageCropController> _cropControllers = [];
+  double _rating = 4.0;
+  bool _isSubmitting = false;
 
   final List<TextEditingController> _textControllers = [];
   final List<TextEditingController> _amountControllers = [];
@@ -53,6 +63,7 @@ class _ExploreModalState extends State<ExploreModal> {
     if (image != null) {
       setState(() {
         selectedImages.add(File(image.path));
+        _cropControllers.add(CustomImageCropController());
       });
     }
   }
@@ -60,6 +71,8 @@ class _ExploreModalState extends State<ExploreModal> {
   void _removeImage(int index) {
     setState(() {
       selectedImages.removeAt(index);
+       _cropControllers[index].dispose();
+      _cropControllers.removeAt(index);
     });
   }
 
@@ -68,6 +81,51 @@ class _ExploreModalState extends State<ExploreModal> {
       _textControllers.add(TextEditingController());
       _amountControllers.add(TextEditingController());
     });
+  }
+Future<File?> _cropAndSaveImage(int index) async {
+    try {
+      if (index >= selectedImages.length) return null;
+
+      final croppedImage = await _cropControllers[index].onCropImage();
+      if (croppedImage == null) return null;
+
+      final byteData = await _imageProviderToByteData(croppedImage);
+      if (byteData == null) return null;
+
+      final Uint8List bytes = byteData.buffer.asUint8List();
+      final tempDir = await getTemporaryDirectory();
+      final file = await File(
+          '${tempDir.path}/cropped_${DateTime.now().millisecondsSinceEpoch}_$index.png')
+          .writeAsBytes(bytes);
+
+      return file;
+    } catch (e) {
+      print('Error cropping image: $e');
+      return null;
+    }
+  }
+
+  Future<ByteData?> _imageProviderToByteData(ImageProvider imageProvider) async {
+    final completer = Completer<ByteData?>();
+    final ImageStream stream = imageProvider.resolve(const ImageConfiguration());
+
+    ImageStreamListener? listener;
+    listener = ImageStreamListener(
+      (ImageInfo info, bool synchronousCall) {
+        final image = info.image;
+        image.toByteData(format: ImageByteFormat.png).then((byteData) {
+          completer.complete(byteData);
+          stream.removeListener(listener!);
+        });
+      },
+      onError: (exception, stackTrace) {
+        completer.completeError(exception, stackTrace);
+        stream.removeListener(listener!);
+      },
+    );
+
+    stream.addListener(listener);
+    return completer.future;
   }
 
   static Future<String?> getToken() async {
@@ -107,7 +165,7 @@ class _ExploreModalState extends State<ExploreModal> {
         "location": locationAddressController.text,
       },
       "budget": budget,
-      "rating": 4.5,
+      "rating": _rating,
       "tripHighlight": titleController.text,
       "description": contentController.text,
       "comments": 0,
@@ -161,6 +219,9 @@ class _ExploreModalState extends State<ExploreModal> {
     for (var controller in _amountControllers) {
       controller.dispose();
     }
+     for (var cropController in _cropControllers) {
+      cropController.dispose();
+    }
     super.dispose();
   }
 
@@ -185,6 +246,7 @@ class _ExploreModalState extends State<ExploreModal> {
                     _buildPlaceSection(),
                     const SizedBox(height: 10),
                     _buildBudgetSection(),
+                    _buildRatingSection(),
                     const SizedBox(height: 20),
                     _buildHighlightSection(),
                     const SizedBox(height: 20),
@@ -206,7 +268,33 @@ class _ExploreModalState extends State<ExploreModal> {
                 lWeight: FontWeight.bold, fontSize: 18, color: Colors.black)),
       ],
     );
-  }
+  }Widget _buildRatingSection() => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text('Rate this place', style: TextStyle(fontSize: 16)),
+      const SizedBox(height: 10),
+      RatingStars(
+        value: _rating,
+        onValueChanged: (value) {
+          if (mounted) {
+            setState(() => _rating = value);
+          }
+        },
+        starCount: 5,
+        starSize: 30,
+        maxValue: 5,
+        starSpacing: 4,
+        
+        valueLabelVisibility: true,
+        valueLabelTextStyle: const TextStyle(color: Colors.black),
+        starBuilder: (index, color) => Icon(
+          Icons.star,
+          color: color,
+          size: 30,
+        ),
+      ),
+    ],
+  );
 
   Widget _buildImageSection() {
     return Column(
@@ -234,13 +322,19 @@ class _ExploreModalState extends State<ExploreModal> {
               itemBuilder: (context, index) {
                 return Stack(
                   children: [
-                    Padding(
+                   Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Image.file(
-                        selectedImages[index],
+                      child: SizedBox(
                         width: 80,
                         height: 80,
-                        fit: BoxFit.cover,
+                        child: CustomImageCrop(
+                          image: FileImage(selectedImages[index]),
+                          cropController: _cropControllers[index],
+                          shape: CustomCropShape.Square,
+                          
+                          overlayColor: Colors.black.withOpacity(0.5),
+                          cropPercentage: 0.9,
+                        ),
                       ),
                     ),
                     Positioned(
@@ -339,6 +433,7 @@ class _ExploreModalState extends State<ExploreModal> {
         TextField(
           controller: contentController,
           decoration: _inputDecoration('Add your thoughts', null),
+           maxLines: 3,
         ),
       ],
     );
@@ -346,14 +441,16 @@ class _ExploreModalState extends State<ExploreModal> {
 
   Widget _buildSubmitButton() {
     final isEnabled = locationNameController.text.isNotEmpty && 
-                     locationAddressController.text.isNotEmpty;
+                     locationAddressController.text.isNotEmpty && !_isSubmitting;
     return DecoratedContainer(
       borderRadius: 24,
       backgroundColor: isEnabled ? Colors.blue : Colors.grey,
       child: Center(
         child: TextButton(
           onPressed: isEnabled ? _submitPost : null,
-          child: Text('Continue',
+          child: _isSubmitting
+          ? const CircularProgressIndicator(color: Colors.white)
+          :Text('Continue',
               style: FontManager().getTextStyle(context,
                   lWeight: FontWeight.normal, fontSize: 18, color: Colors.black)),
         ),

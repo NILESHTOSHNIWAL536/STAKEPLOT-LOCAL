@@ -299,6 +299,24 @@ class ExploreCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                   Row(
+                    children: [
+                      Text(
+                        "Rating:",
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: AppColors.bg1),
+                      ),
+                      Text(
+                        " ${extractdata['rating']}",
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.w400,
+                            fontSize: 12,
+                            color: AppColors.bg1),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ],
