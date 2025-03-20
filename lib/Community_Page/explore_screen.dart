@@ -67,60 +67,126 @@ class _ExploreModalState extends State<ExploreModal> {
   }
 
   Future<void> _showCropDialog(File imageFile, [int? existingIndex]) async {
-    final cropController = CustomImageCropController();
-    
-    final croppedFile = await showDialog<File?>(
-      context: context,
-      builder: (context) => AlertDialog(
-        contentPadding: EdgeInsets.zero,
-        content: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.9,
-          height: MediaQuery.of(context).size.height * 0.5,
-          child: CustomImageCrop(
-            cropController: cropController,
-            image: FileImage(imageFile),
-            shape: CustomCropShape.Square,
-            overlayColor: Colors.black.withOpacity(0.3),
-            cropPercentage: 0.9,
-            outlineStrokeWidth:0.0,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () async {
-              final croppedImage = await cropController.onCropImage();
-              if (croppedImage != null) {
-                final croppedFile = await _saveCroppedImage(croppedImage);
-                if (croppedFile != null) {
-                  Navigator.pop(context, croppedFile);
-                }
-              }
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    );
+  final cropController = CustomImageCropController();
+  bool isLoading = false; // Track loading state
 
-    if (croppedFile != null) {
-      setState(() {
-        if (existingIndex != null) {
-          selectedImages[existingIndex] = croppedFile;
-        } else {
-          selectedImages.add(croppedFile);
-          _cropControllers.add(cropController);
-        }
-      });
-    }
-    
-    if (existingIndex == null) {
-      cropController.dispose();
-    }
+  final croppedFile = await showDialog<File?>(
+    context: context,
+    builder: (context) => StatefulBuilder(
+      builder: (context, setDialogState) => LayoutBuilder(
+        builder: (context, constraints) {
+          double dialogWidth = constraints.maxWidth * 0.9;
+          double dialogHeight = constraints.maxHeight * 0.5;
+          double buttonWidth = constraints.maxWidth * 0.5;
+
+          return AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            content: Container(
+              width: dialogWidth,
+              height: dialogHeight,
+              padding: const EdgeInsets.all(10),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: CustomImageCrop(
+                  cropController: cropController,
+                  image: FileImage(imageFile),
+                  shape: CustomCropShape.Square,
+                  overlayColor: Colors.black.withOpacity(0.3),
+                  cropPercentage: 0.9,
+                  outlineStrokeWidth: 0.0,
+                ),
+              ),
+            ),
+            actionsPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Cancel Button
+                  InkWell(
+                    onTap: () => Navigator.pop(context),
+                    child: Container(
+                      width: buttonWidth/2,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child:  Text(
+                        'Cancel',
+                         style: FontManager().getTextStyle(context,
+                lWeight: FontWeight.normal, fontSize: 12, color: Colors.white)
+                      ),
+                    ),
+                  ),
+                  // Save Button with Loader
+                  InkWell(
+                    onTap: isLoading
+                        ? null // Disable tap when loading
+                        : () async {
+                            setDialogState(() {
+                              isLoading = true; // Show loader
+                            });
+                            final croppedImage = await cropController.onCropImage();
+                            if (croppedImage != null) {
+                              final croppedFile = await _saveCroppedImage(croppedImage);
+                              if (croppedFile != null) {
+                                Navigator.pop(context, croppedFile);
+                              }
+                            }
+                            setDialogState(() {
+                              isLoading = false; // Hide loader
+                            });
+                          },
+                    child: Container(
+                      width: buttonWidth/2,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: isLoading ? Colors.grey[400] : AppColors.primaryColor,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: isLoading
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          :  Text(
+                              'Save',
+                               style: FontManager().getTextStyle(context,
+                lWeight: FontWeight.normal, fontSize: 12, color: Colors.white)
+                            ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        },
+      ),
+    ),
+  );
+
+  if (croppedFile != null) {
+    setState(() {
+      if (existingIndex != null) {
+        selectedImages[existingIndex] = croppedFile;
+      } else {
+        selectedImages.add(croppedFile);
+        _cropControllers.add(cropController);
+      }
+    });
   }
+
+  if (existingIndex == null) {
+    cropController.dispose();
+  }
+}
 
   Future<File?> _saveCroppedImage(ImageProvider imageProvider) async {
     try {
@@ -315,41 +381,44 @@ Future<File?> _cropAndSaveImage(int index) async {
   Widget build(BuildContext context) {
     return exploreSubmitted
         ? const SuccessPost()
-        : AnimatedPadding(
-            padding: MediaQuery.of(context).viewInsets,
-            duration: const Duration(milliseconds: 100),
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildHeader(),
-                    const SizedBox(height: 20),
-                    _buildImageSection(),
-                    const SizedBox(height: 10),
-                    _buildPlaceSection(),
-                    const SizedBox(height: 10),
-                    _buildBudgetSection(),
-                    _buildRatingSection(),
-                    const SizedBox(height: 20),
-                    _buildHighlightSection(),
-                    const SizedBox(height: 20),
-                    _buildSubmitButton(),
-                  ],
+        : Container(
+          color: AppColors.backgroundColor,
+          child: AnimatedPadding(
+              padding: MediaQuery.of(context).viewInsets,
+              duration: const Duration(milliseconds: 100),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildHeader(),
+                      const SizedBox(height: 20),
+                      _buildImageSection(),
+                      const SizedBox(height: 10),
+                      _buildPlaceSection(),
+                      const SizedBox(height: 10),
+                      _buildBudgetSection(),
+                      _buildRatingSection(),
+                      const SizedBox(height: 20),
+                      _buildHighlightSection(),
+                      const SizedBox(height: 20),
+                      _buildSubmitButton(),
+                    ],
+                  ),
                 ),
               ),
             ),
-          );
+        );
   }
 
   Widget _buildHeader() {
     return Row(
       children: [
-        const Icon(Icons.explore_sharp, size: 24, color: Colors.green),
+        const Icon(Icons.explore_sharp, size: 24, color: AppColors.accentColor),
         const SizedBox(width: 8),
-        Text('Explore',
+        Text('Exploria',
             style: FontManager().getTextStyle(context,
                 lWeight: FontWeight.bold, fontSize: 18, color: Colors.black)),
       ],
@@ -596,6 +665,7 @@ Future<File?> _cropAndSaveImage(int index) async {
           controller: contentController,
           decoration: _inputDecoration('Add your thoughts', null),
            maxLines: 3,
+           maxLength: 150,
         ),
       ],
     );

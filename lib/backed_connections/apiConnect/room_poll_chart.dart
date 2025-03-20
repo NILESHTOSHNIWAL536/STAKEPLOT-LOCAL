@@ -448,9 +448,9 @@ void getChatLoader() async {
               : typed == "message"
                   ? element['chats']['details']['message']
                   : typed == "post"
-                      ? "send a post..."
+                      ? "sent a post"
                       : typed == "image"
-                          ? "send a image..."
+                          ? "sent a image"
                           : typed == "poll"
                               ? "send a poll..."
                               : "message...";

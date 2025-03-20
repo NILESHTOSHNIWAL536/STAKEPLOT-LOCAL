@@ -146,16 +146,21 @@ class _PollScreenState extends State<PollScreen> {
                       if (question == null) ...[
                         TextField(
                           controller: _questionController,
-                          maxLines: 2,
+                          maxLines: null,
                           maxLength: 100,
+                           textInputAction: TextInputAction.next,
+                           
                           decoration: InputDecoration(
                             hintText: 'Ask a question',
                             hintStyle: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.w600,
+                                lWeight: FontWeight.w400,
                                 fontSize: 16,
                                 color: AppColors.bg1),
                             border: InputBorder.none,
+                            contentPadding: const EdgeInsets.all(16),
+                          counterText: '',
                           ),
+                          
                         ),
                         const SizedBox(height: 10),
                         ...List.generate(_optionControllers.length, (index) {
@@ -166,8 +171,9 @@ class _PollScreenState extends State<PollScreen> {
                                   Expanded(
                                     child: TextField(
                                       controller: _optionControllers[index],
-                                      maxLines: 2,
+                                      maxLines: null,
                                       maxLength: 80,
+                                      
                                       decoration: InputDecoration(
                                         hintText: 'Option ${index + 1}',
                                         hintStyle: FontManager().getTextStyle(
@@ -178,8 +184,10 @@ class _PollScreenState extends State<PollScreen> {
                                         border: OutlineInputBorder(
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(16))),
-                                        fillColor: AppColors.button,
-                                        filled: true,
+                                        // fillColor: AppColors.button,
+                                        // filled: true,
+                                         contentPadding: const EdgeInsets.all(12),
+                                    counterText: '',
                                         suffixIcon: _showCross[index]
                                             ? IconButton(
                                                 onPressed: () =>
@@ -188,14 +196,18 @@ class _PollScreenState extends State<PollScreen> {
                                               )
                                             : null,
                                       ),
-                                      onSubmitted: (value) {
-                                        if (value.trim().isNotEmpty) {
-                                          setState(() {
-                                            _showCross[index] =
-                                                true; // Show the cross icon for this field
-                                          });
-                                        }
-                                      },
+                                      onChanged: (value) {
+                                    setState(() {
+                                      _showCross[index] = value.isNotEmpty;
+                                      // Ensure cursor stays at the end
+                                      if (value.length == 80) {
+                                        _optionControllers[index].selection =
+                                            TextSelection.fromPosition(
+                                          TextPosition(offset: value.length),
+                                        );
+                                      }
+                                    });
+                                  },
                                     ),
                                   ),
                                   //const SizedBox(width: 8),

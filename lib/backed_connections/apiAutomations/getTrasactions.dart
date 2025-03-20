@@ -506,7 +506,7 @@ void pickCustomDateRange(BuildContext context) async {
               TextStyle(color: Colors.black), // Selected day text color
           weekdayLabelTextStyle: TextStyle(color: Colors.black),
         ),
-        dialogSize: const Size(300, 300),
+        dialogSize: const Size(400, 300),
         value: [
           DateTime.now().subtract(const Duration(days: 7)),
           DateTime.now(),
