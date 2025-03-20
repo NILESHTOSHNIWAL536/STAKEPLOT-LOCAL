@@ -31,15 +31,24 @@ class _SigninState extends State<Avatar> {
   final PageController _pageController = PageController(viewportFraction: 0.7);
   int _currentPage = 0;
 
-  List<String> images = [
-    "assets/avatar/menp1.svg",
-    "assets/avatar/menp2.svg",
-    "assets/avatar/menp3.svg",
-    "assets/avatar/menp4.svg",
-    "assets/avatar/womenp1.svg",
-    "assets/avatar/womenp2.svg",
-    "assets/avatar/womenp3.svg",
-    "assets/avatar/womenp4.svg",
+  // List<String> images = [
+  //   "assets/avatar/menp1.svg",
+  //   "assets/avatar/menp2.svg",
+  //   "assets/avatar/menp3.svg",
+  //   "assets/avatar/menp4.svg",
+  //   "assets/avatar/womenp1.svg",
+  //   "assets/avatar/womenp2.svg",
+  //   "assets/avatar/womenp3.svg",
+  //   "assets/avatar/womenp4.svg",
+  // ];
+   List<String> images = [
+    "assets/onboarding/Avatar1.png",
+    "assets/onboarding/Avatar2.png",
+   "assets/onboarding/Avatar3.png",
+    "assets/onboarding/Avatar4.png",
+   "assets/onboarding/Avatar6.png",
+   
+   
   ];
 
   int activePage = 3;
@@ -76,7 +85,7 @@ class _SigninState extends State<Avatar> {
               height: 20,
               width: 100,
               child: SvgPicture.asset(
-                images[index],
+                images[index].replaceAll('.svg', '.png'),
                 fit: BoxFit.cover,
                 width: 20,
                 height: 20,
@@ -108,7 +117,7 @@ class _SigninState extends State<Avatar> {
                   padding: const EdgeInsets.all(10.0),
                   child: Center(
                     child: Text(
-                        ("Choose Avatar...!"), // email already exists..! or other errors
+                        ("Choose Avatar!"), // email already exists..! or other errors
                         style: FontManager().getTextStyle(context,
                             fontSize: 18,
                             letterSpacing: 1.2,

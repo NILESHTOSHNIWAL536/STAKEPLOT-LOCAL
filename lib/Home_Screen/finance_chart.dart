@@ -85,14 +85,7 @@ class _FinancePageState extends State<FinancePage> {
               children: [
                 Row(
                   children: [
-                    Obx(() => Text(
-                          getGraphData.value
-                              ? (selectedButton.value == 'Week'
-                                  ? '₹$totalDebitValue'
-                                  : selectedButton.value == 'Month'
-                                      ? '₹$totalDebitValue'
-                                      : '₹$totalDebitValue')
-                              : '₹$totalDebitValue',
+                    Obx(() => Text( getGraphData.value? '₹$totalDebitValue':'₹$totalDebitValue',
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.bold,
                               fontSize: fontSizeFactor * 4,

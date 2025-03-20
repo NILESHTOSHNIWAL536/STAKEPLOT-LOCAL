@@ -1150,7 +1150,7 @@ class _ChatState extends State<Chat> {
                                   color: Colors.black)),
                         ),
                   
-                isExploria?ExploreCard(extractdata: extractdata):   (dataObj['chartType'] == "bargraph" ||
+                isExploria?ExploreCard(extractdata: extractdata,dataObj:dataObj):   (dataObj['chartType'] == "bargraph" ||
                           dataObj['chartType'] == "piechart")
                       ? dataObj['chartType'] == "bargraph"
                           ? barGraph(dataObj)

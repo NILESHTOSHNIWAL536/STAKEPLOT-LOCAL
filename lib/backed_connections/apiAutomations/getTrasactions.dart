@@ -111,14 +111,15 @@ void getAutoMationsTransactionsWeekly() async {
 
 void getAutoMationsTransactionsCustom(date, context,
     [weekORmonth = 'month', String? endDate]) async {
+  print(accountId.value);
   if (accountId.value.trim().toString() == "") return;
 
   String urlPath = endDate != null && weekORmonth == 'Custom'
       ? "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date,${getNextDay(endDate)}"
       : "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date";
- 
+
   var response = await getDataApiCall(urlPath);
- 
+  printData(response);
   trasactionsDataDebitWeekly.clear();
 
   List<String> labelsLocal = [];
@@ -128,24 +129,28 @@ void getAutoMationsTransactionsCustom(date, context,
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     transactionChatGraph.clear();
-   
 
     try {
       Map data = his['data']['result'];
-      totalDebitValuePercent.value=double.parse((his['data']['debitChangePercentage']).toString());
-      totalDebitValue.value =
-          double.parse((his['data']['totalDebit']).toString());
-     // print("Total Debit Value: ${totalDebitValue.value}");
+      try {
+        String nulldata = (his['data']['debitChangePercentage']).toString();
+        totalDebitValuePercent.value =
+            double.parse( nulldata=="null"?"0":nulldata );
+        totalDebitValue.value =
+            double.parse((his['data']['totalDebit']).toString());
+      } catch (e) {
+        print(e);
+      }
+      print("Total Debit Value: ${totalDebitValue.value}");
       maxYValue.value =
           double.parse((his['data']['maxAmount'] ?? 500.0).toString());
-     // print("Max Y Value: ${maxYValue.value}");
+      // print("Max Y Value: ${maxYValue.value}");
 
       if (maxYValue.value == 0) maxYValue.value = 500.0;
 
       if (weekORmonth == 'Custom' && endDate != null) {
         DateTime startDate = DateTime.parse(date);
         DateTime end = DateTime.parse(endDate);
-      
 
         // Generate date labels in "MMM d" format
         labelsLocal = [];
@@ -157,7 +162,6 @@ void getAutoMationsTransactionsCustom(date, context,
           DateTime currentDate = startDate.add(Duration(days: i));
           String formattedDate = DateFormat('MMM d').format(currentDate);
           labelsLocal.add(formattedDate);
-          
         }
 
         data.forEach((key, value) {
@@ -168,7 +172,6 @@ void getAutoMationsTransactionsCustom(date, context,
             if (index >= 0 && index < debitList.length) {
               debitList[index] = getDouble(value['debit']);
               creditList[index] = getDouble(value['credit']);
-             
             }
           }
         });
@@ -181,11 +184,9 @@ void getAutoMationsTransactionsCustom(date, context,
           labelsLocal.add(label);
           debitList.add(getDouble(value['debit']));
           creditList.add(getDouble(value['credit']));
-          
         });
       }
     } catch (e) {
-     
       maxYValue.value = 500.0;
       if (labelsLocal.isEmpty) {
         if (weekORmonth == 'Custom' && endDate != null) {
@@ -226,7 +227,6 @@ void getAutoMationsTransactionsCustom(date, context,
     labels.assignAll(labelsLocal);
     getGraphData.value = true;
   } else {
-   
     if (weekORmonth == 'Custom' && endDate != null) {
       DateTime startDate = DateTime.parse(date);
       DateTime end = DateTime.parse(endDate);
@@ -276,10 +276,6 @@ List<String> getDaysInMonth(String yearMonth) {
 
   return days;
 }
-
-
-
-
 
 // Future<http.Response> postDataApiCall(urlPath,postDataJson) async {
 //   final SharedPreferences pref = await SharedPreferences.getInstance();
@@ -416,7 +412,9 @@ void addTransaction(String amount, String subCategory, String categories,
 
   if (response.statusCode == 200) {
     final body = json.decode(response.body);
-    if (!isSplit) snackBarCalled(context, "Transaction has been successfully saved!", AppColors.pollSelected);
+    if (!isSplit)
+      snackBarCalled(context, "Transaction has been successfully saved!",
+          AppColors.pollSelected);
     getAllTransaction(context);
     getCategoryData();
     setDonectChat.value = !setDonectChat.value;
@@ -433,31 +431,30 @@ void processChartData() {
   double newTotalValue = 0.0;
 
   Map<String, Color> categoryColors = {
-  "Food": Color(0xFFE74C3C), // Red
-  "Shopping": Color(0xFF8E44AD), // Purple
-  "Travel": Color(0xFF3498DB), // Blue
-  "Health": Color(0xFF2ECC71), // Green
-  "Subscriptions": Color(0xFFF1C40F), // Yellow
-  "Entertainment": Color(0xFFE67E22), // Orange
-  "Insurance": Color(0xFF1ABC9C), // Teal
-  "Emi": Color(0xFFD35400), // Dark Orange
-  "Investments": Color(0xFF9B59B6), // Dark Purple
-  "Untagged": Color(0xFF34495E), // Dark Gray-Blue
-  "Bills": Color(0xFF16A085), // Dark Teal
-  "Events": Color(0xFF27AE60), // Green
-  "Personal Care": Color(0xFF2980B9), // Dark Blue
-  "Services": Color(0xFFC0392B), // Dark Red
-  "Current": Color(0xFF7D3C98), // Violet
-  "Children": Color(0xFFF39C12), // Bright Yellow
-  "Pet Care": Color(0xFF52BE80), // Soft Green
-  "Sports": Color(0xFF5DADE2), // Sky Blue
-  "Alcohol": Color(0xFFCD6155), // Soft Red
-  "Hobbies": Color(0xFFAF7AC5), // Light Purple
-  "Education": Color(0xFF45B39D), // Turquoise
-  "Commerce": Color(0xFFDC7633), // Copper Orange
-  "snacks": Color(0xFF5D6D7E), // Muted Blue-Gray
-};
-
+    "Food": Color(0xFFE74C3C), // Red
+    "Shopping": Color(0xFF8E44AD), // Purple
+    "Travel": Color(0xFF3498DB), // Blue
+    "Health": Color(0xFF2ECC71), // Green
+    "Subscriptions": Color(0xFFF1C40F), // Yellow
+    "Entertainment": Color(0xFFE67E22), // Orange
+    "Insurance": Color(0xFF1ABC9C), // Teal
+    "Emi": Color(0xFFD35400), // Dark Orange
+    "Investments": Color(0xFF9B59B6), // Dark Purple
+    "Untagged": Color(0xFF34495E), // Dark Gray-Blue
+    "Bills": Color(0xFF16A085), // Dark Teal
+    "Events": Color(0xFF27AE60), // Green
+    "Personal Care": Color(0xFF2980B9), // Dark Blue
+    "Services": Color(0xFFC0392B), // Dark Red
+    "Current": Color(0xFF7D3C98), // Violet
+    "Children": Color(0xFFF39C12), // Bright Yellow
+    "Pet Care": Color(0xFF52BE80), // Soft Green
+    "Sports": Color(0xFF5DADE2), // Sky Blue
+    "Alcohol": Color(0xFFCD6155), // Soft Red
+    "Hobbies": Color(0xFFAF7AC5), // Light Purple
+    "Education": Color(0xFF45B39D), // Turquoise
+    "Commerce": Color(0xFFDC7633), // Copper Orange
+    "snacks": Color(0xFF5D6D7E), // Muted Blue-Gray
+  };
 
   for (var item in categoriesList) {
     String category = item["category"];
@@ -491,8 +488,6 @@ void getTransaction(context) async {
   } else {}
 }
 
-
-
 void pickCustomDateRange(BuildContext context) async {
   List<DateTime?> picked = await showCalendarDatePicker2Dialog(
         context: context,
@@ -501,7 +496,8 @@ void pickCustomDateRange(BuildContext context) async {
           firstDate: DateTime(2020),
           lastDate: DateTime.now(),
           selectableDayPredicate: (day) => true,
-          selectedDayHighlightColor: AppColors.primaryColor, // Selected range color
+          selectedDayHighlightColor:
+              AppColors.primaryColor, // Selected range color
           controlsTextStyle:
               TextStyle(color: Colors.black), // Header text color
           dayTextStyle:
@@ -548,12 +544,14 @@ double calculateTotal(Map<String, List<double>> data) {
       data["debited"]!.reduce((a, b) => a + b);
 }
 
-void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'month', String? endDate]) async {
+void getAutoMationsTransactionsCustomoverall(date, context,
+    [weekORmonths = 'month', String? endDate]) async {
   String urlPath = endDate != null && weekORmonths == 'custom'
       ? "$url/transactionauto/getWholeTransactionsGraph/${weekORmonths.toLowerCase()}/$date,${getNextDay(endDate)}"
       : "$url/transactionauto/getWholeTransactionsGraph/${weekORmonths.toLowerCase()}/$date";
   print(urlPath);
-  print("Starting getAutoMationsTransactionsCustomoverall with date: $date, weekORmonths: $weekORmonths, endDate: $endDate");
+  print(
+      "Starting getAutoMationsTransactionsCustomoverall with date: $date, weekORmonths: $weekORmonths, endDate: $endDate");
 
   var response = await getDataApiCall(urlPath);
   print("API URL: $urlPath");
@@ -575,8 +573,10 @@ void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'mon
     Map dataoverall = his['data']['result'];
 
     try {
-      List<double> debitValues = dataoverall.values.map((value) => getDouble(value['debit'])).toList();
-      totalDebitValue.value = debitValues.reduce((a, b) => a + b); // Calculate total debit
+      List<double> debitValues =
+          dataoverall.values.map((value) => getDouble(value['debit'])).toList();
+      totalDebitValue.value =
+          debitValues.reduce((a, b) => a + b); // Calculate total debit
       if (debitValues.isNotEmpty) {
         maxYValueoverall.value = debitValues.reduce((a, b) => a > b ? a : b);
       } else {
@@ -600,7 +600,8 @@ void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'mon
 
         dataoverall.forEach((key, value) {
           DateTime txDate = DateTime.parse(key);
-          if (txDate.isAfter(startDate.subtract(Duration(days: 1))) && txDate.isBefore(end.add(Duration(days: 1)))) {
+          if (txDate.isAfter(startDate.subtract(Duration(days: 1))) &&
+              txDate.isBefore(end.add(Duration(days: 1)))) {
             int index = txDate.difference(startDate).inDays;
             if (index >= 0 && index < debitList.length) {
               debitList[index] = getDouble(value['debit']);
@@ -609,7 +610,8 @@ void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'mon
         });
       } else if (weekORmonths == 'week') {
         print("Processing weekly data.");
-        labelsLocal = getWeekDays(); // ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+        labelsLocal =
+            getWeekDays(); // ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
         debitList = List.filled(7, 0.0);
 
         // Parse the week string (e.g., "2025-W10")
@@ -627,14 +629,17 @@ void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'mon
         });
       } else {
         print("Processing monthly data.");
-        DateTime startDate = DateTime.parse("$date-01"); // Ensure full date for month
+        DateTime startDate =
+            DateTime.parse("$date-01"); // Ensure full date for month
         int daysInMonth = DateTime(startDate.year, startDate.month + 1, 0).day;
-        labelsLocal = List.generate(daysInMonth, (i) => (i + 1).toString().padLeft(2, '0'));
+        labelsLocal = List.generate(
+            daysInMonth, (i) => (i + 1).toString().padLeft(2, '0'));
         debitList = List.filled(daysInMonth, 0.0);
 
         dataoverall.forEach((key, value) {
           DateTime txDate = DateTime.parse(key);
-          if (txDate.month == startDate.month && txDate.year == startDate.year) {
+          if (txDate.month == startDate.month &&
+              txDate.year == startDate.year) {
             int index = txDate.day - 1;
             if (index >= 0 && index < debitList.length) {
               debitList[index] = getDouble(value['debit']);
@@ -658,7 +663,8 @@ void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'mon
           }
           dataoverall.forEach((key, value) {
             DateTime txDate = DateTime.parse(key);
-            if (txDate.isAfter(startDate.subtract(Duration(days: 1))) && txDate.isBefore(end.add(Duration(days: 1)))) {
+            if (txDate.isAfter(startDate.subtract(Duration(days: 1))) &&
+                txDate.isBefore(end.add(Duration(days: 1)))) {
               int index = txDate.difference(startDate).inDays;
               if (index >= 0 && index < debitList.length) {
                 debitList[index] = getDouble(value['debit']);
@@ -682,12 +688,15 @@ void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'mon
           });
         } else {
           DateTime startDate = DateTime.parse("$date-01");
-          int daysInMonth = DateTime(startDate.year, startDate.month + 1, 0).day;
-          labelsLocal = List.generate(daysInMonth, (i) => (i + 1).toString().padLeft(2, '0'));
+          int daysInMonth =
+              DateTime(startDate.year, startDate.month + 1, 0).day;
+          labelsLocal = List.generate(
+              daysInMonth, (i) => (i + 1).toString().padLeft(2, '0'));
           debitList = List.filled(daysInMonth, 0.0);
           dataoverall.forEach((key, value) {
             DateTime txDate = DateTime.parse(key);
-            if (txDate.month == startDate.month && txDate.year == startDate.year) {
+            if (txDate.month == startDate.month &&
+                txDate.year == startDate.year) {
               int index = txDate.day - 1;
               if (index >= 0 && index < debitList.length) {
                 debitList[index] = getDouble(value['debit']);
@@ -722,7 +731,8 @@ void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'mon
     } else {
       DateTime startDate = DateTime.parse("$date-01");
       int daysInMonth = DateTime(startDate.year, startDate.month + 1, 0).day;
-      labelsLocal = List.generate(daysInMonth, (i) => (i + 1).toString().padLeft(2, '0'));
+      labelsLocal =
+          List.generate(daysInMonth, (i) => (i + 1).toString().padLeft(2, '0'));
       debitList = List.filled(daysInMonth, 0.0);
     }
     transactionChatGraphoverall['debited'] = debitList;
@@ -744,7 +754,6 @@ String getFormattedDateoverall() {
   final now = DateTime.now();
   return "${now.year}-${now.month.toString().padLeft(2, '0')}";
 }
-
 
 void pickCustomDateRangeoverall(BuildContext context) async {
   List<DateTime?> picked = await showCalendarDatePicker2Dialog(
@@ -786,7 +795,8 @@ void pickCustomDateRangeoverall(BuildContext context) async {
 
     String startDate = start.toIso8601String().split('T')[0];
     String endDate = end.toIso8601String().split('T')[0];
-    getAutoMationsTransactionsCustomoverall(startDate, context, 'custom', endDate);
+    getAutoMationsTransactionsCustomoverall(
+        startDate, context, 'custom', endDate);
   }
 }
 

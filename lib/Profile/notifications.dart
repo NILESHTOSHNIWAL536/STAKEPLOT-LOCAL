@@ -370,10 +370,10 @@ class _NotificationsState extends State<Notifications> {
 
     return Center(
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+      //  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
         decoration: BoxDecoration(
-          color: Colors.blue,
-          borderRadius: BorderRadius.circular(10)),
+           color: AppColors.mt,
+                      borderRadius: BorderRadius.circular(10)),
         width: screenWidth,
         child: Column(
           children: [
@@ -392,16 +392,20 @@ class _NotificationsState extends State<Notifications> {
                           Text(
                             "$name",
                             style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.w800,
+                                lWeight: FontWeight.w600,
                                 fontSize: 13,
+                                overflow: TextOverflow.ellipsis,
                                 color: Colors.black),
                           ),
-                          const SizedBox(width: 5),
+                          const SizedBox(width: 2),
                           Text(
                             "sent you a friend request",
                             style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.w600,
-                                fontSize: 14,
+                                lWeight: FontWeight.w500,
+                                fontSize: 12,
+                                maxLines: 2,
+                                softWrap: false,
+                                overflow: TextOverflow.ellipsis,
                                 color: Colors.black),
                           ),
                         ],
@@ -419,12 +423,12 @@ class _NotificationsState extends State<Notifications> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 7),
                               decoration: BoxDecoration(
-                                  color: const Color.fromRGBO(97, 143, 214, 1),
+                                  color: AppColors.primaryColor,
                                   borderRadius: BorderRadius.circular(5)),
                               child: Text("Accept",
                                   style: FontManager().getTextStyle(context,
-                                      lWeight: FontWeight.bold,
-                                      fontSize: 14,
+                                      lWeight: FontWeight.w400,
+                                      fontSize: 12,
                                       color: Colors.white)),
                             ),
                           ),
@@ -438,13 +442,13 @@ class _NotificationsState extends State<Notifications> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 7),
                               decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(width: 0.5),
+                                  color: AppColors.button,
+                                  //border: Border.all(width: 0.5),
                                   borderRadius: BorderRadius.circular(5)),
                               child: Text("Reject",
                                   style: FontManager().getTextStyle(context,
-                                      lWeight: FontWeight.bold,
-                                      fontSize: 14,
+                                      lWeight: FontWeight.w400,
+                                      fontSize: 12,
                                       color: Colors.black)),
                             ),
                           ),

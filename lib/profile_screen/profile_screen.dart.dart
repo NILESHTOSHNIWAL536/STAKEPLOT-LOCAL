@@ -126,13 +126,13 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
               child: Column(children: [
                 // First Container for Community profile and Friends list
                 Container(
-                  height: 200,
+                  
                   decoration: BoxDecoration(
                       color: AppColors.mt,
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(color: AppColors.border)),
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 14, 12, 14),
+                    padding: const EdgeInsets.fromLTRB(6, 8, 8, 4),
                     child: Column(
                       children: [
                         _buildOption(

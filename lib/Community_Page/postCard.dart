@@ -1005,7 +1005,7 @@ class _PostCardState extends State<PostCard> {
                     ),
                     // Exploria Post UI
                     isExploria
-                        ? ExploreCard(extractdata: extractdata,)
+                        ? ExploreCard(extractdata: extractdata,dataObj: dataObj,)
                         : (dataObj['isPoll'] ?? false)
                             ? Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -1028,7 +1028,8 @@ class _PostCardState extends State<PostCard> {
                                 ),
                               ),
                     // Image Section (Exploria or Others)
-                    dataObj['image'] != null &&
+                    isExploria
+                        ? SizedBox.shrink():  dataObj['image'] != null &&
                             (dataObj['image'] != "none" && dataObj['image'] != "")
                         ? Padding(
                             padding: EdgeInsets.symmetric(vertical: Colorcodes.borderRadius),
