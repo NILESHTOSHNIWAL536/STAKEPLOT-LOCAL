@@ -197,23 +197,23 @@ class _SigninState extends State<SignUp> {
       'dob': dobController.text.substring(0, 10),
     };
     flag.value = false;
-    // Navigator.pushReplacement(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => Avatar(data: data),
-    //   ),
-    // );
-     getOTP(context, usernameController.text,emailController.text);
-                    // openShowModal();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => conform(
-          data: data,
-          url: "assets/avatar/menp1.svg",
-        ),
+        builder: (context) => Avatar(data: data),
       ),
     );
+    //  getOTP(context, usernameController.text,emailController.text);
+                    // openShowModal();
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => conform(
+    //       data: data,
+    //       url: "assets/avatar/menp1.svg",
+    //     ),
+    //   ),
+    // );
   }
 
   Future<http.Response> createUser() async {

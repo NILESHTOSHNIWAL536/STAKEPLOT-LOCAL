@@ -829,9 +829,6 @@ Future<String> postImageToCloud(imageFile,context)async{
 
   try{
    final url2 = Uri.parse('https://api.cloudinary.com/v1_1/deus5rcgl/upload');
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    var accessToken = pref.getString("accessToken");
-
     // Upload image to Cloudinary
     final request = http.MultipartRequest('POST', url2)
       ..fields['upload_preset'] = 'zu3td0li'

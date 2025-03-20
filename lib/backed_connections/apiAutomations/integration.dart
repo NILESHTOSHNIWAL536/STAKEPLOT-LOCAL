@@ -105,15 +105,10 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
     } else {
     
       sessionId.value=true;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Data is not ready to fetch yet. We will notify you once it's available.")),
-      );
+     
     }
   } catch (e) {
-   
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Bank server issue detected. We'll notify you once your data is retrieved")),
-    );
+  
   }
 
    clearStackShared(context);
