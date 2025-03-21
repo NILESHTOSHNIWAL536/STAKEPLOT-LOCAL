@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 import 'dart:convert';
@@ -378,20 +379,14 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
         Row(
           children: [
             Text(
-              '₹$totalExpandedValue',
+              '₹${doubleToFixed(totalExpandedValue.toString())}'
+              ,
               style: FontManager().getTextStyle(context,
                   lWeight: FontWeight.bold,
                   fontSize: fontSizeFactor * 4,
                   color: AppColors.accentColor),
             ),
-            SizedBox(width: screenWidth * 0.02),
-            Text(
-              'This week',
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.normal,
-                  fontSize: fontSizeFactor * 2.5,
-                  color: AppColors.accentColor),
-            ),
+           
           ],
         ),
         Row(

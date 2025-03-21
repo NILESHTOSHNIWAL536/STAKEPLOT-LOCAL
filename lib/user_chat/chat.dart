@@ -1158,7 +1158,7 @@ class _ChatState extends State<Chat> {
                       : getMessage(dataObj),
                  
 
-                  dataObj['image'] != null && dataObj['image'] != "none" && dataObj['image'] !=""
+               isExploria?SizedBox.shrink():   dataObj['image'] != null && dataObj['image'] != "none" && dataObj['image'] !=""
                       ? Image.network(
                           dataObj['image'],
                           width: MediaQuery.of(context).size.width / 1.3,
@@ -1170,9 +1170,7 @@ class _ChatState extends State<Chat> {
                       : SizedBox.shrink(),
                   
 
-                  const SizedBox(
-                    height: 20,
-                  ),
+                 
                 ],
               ),
             ),

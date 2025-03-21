@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui';
@@ -31,13 +30,14 @@ class ExploreModal extends StatefulWidget {
 
 class _ExploreModalState extends State<ExploreModal> {
   final TextEditingController locationNameController = TextEditingController();
-  final TextEditingController locationAddressController = TextEditingController();
+  final TextEditingController locationAddressController =
+      TextEditingController();
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   List<File> selectedImages = []; // Changed to List<File>
   static const int maxImages = 5;
-   final List<CustomImageCropController> _cropControllers = [];
+  final List<CustomImageCropController> _cropControllers = [];
   double _rating = 0.0;
   bool _isSubmitting = false;
 
@@ -67,126 +67,131 @@ class _ExploreModalState extends State<ExploreModal> {
   }
 
   Future<void> _showCropDialog(File imageFile, [int? existingIndex]) async {
-  final cropController = CustomImageCropController();
-  bool isLoading = false; // Track loading state
+    final cropController = CustomImageCropController();
+    bool isLoading = false; // Track loading state
 
-  final croppedFile = await showDialog<File?>(
-    context: context,
-    builder: (context) => StatefulBuilder(
-      builder: (context, setDialogState) => LayoutBuilder(
-        builder: (context, constraints) {
-          double dialogWidth = constraints.maxWidth * 0.9;
-          double dialogHeight = constraints.maxHeight * 0.5;
-          double buttonWidth = constraints.maxWidth * 0.5;
+    final croppedFile = await showDialog<File?>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => LayoutBuilder(
+          builder: (context, constraints) {
+            double dialogWidth = constraints.maxWidth * 0.9;
+            double dialogHeight = constraints.maxHeight * 0.5;
+            double buttonWidth = constraints.maxWidth * 0.5;
 
-          return AlertDialog(
-            contentPadding: EdgeInsets.zero,
-            content: Container(
-              width: dialogWidth,
-              height: dialogHeight,
-              padding: const EdgeInsets.all(10),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: CustomImageCrop(
-                  cropController: cropController,
-                  image: FileImage(imageFile),
-                  shape: CustomCropShape.Square,
-                  overlayColor: Colors.black.withOpacity(0.3),
-                  cropPercentage: 0.9,
-                  outlineStrokeWidth: 0.0,
+            return AlertDialog(
+              contentPadding: EdgeInsets.zero,
+              content: Container(
+                width: dialogWidth,
+                height: dialogHeight,
+                padding: const EdgeInsets.all(10),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: CustomImageCrop(
+                    cropController: cropController,
+                    image: FileImage(imageFile),
+                    shape: CustomCropShape.Square,
+                    overlayColor: Colors.black.withOpacity(0.3),
+                    cropPercentage: 0.9,
+                    outlineStrokeWidth: 0.0,
+                  ),
                 ),
               ),
-            ),
-            actionsPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Cancel Button
-                  InkWell(
-                    onTap: () => Navigator.pop(context),
-                    child: Container(
-                      width: buttonWidth/2,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child:  Text(
-                        'Cancel',
-                         style: FontManager().getTextStyle(context,
-                lWeight: FontWeight.normal, fontSize: 12, color: Colors.white)
+              actionsPadding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              actions: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Cancel Button
+                    InkWell(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        width: buttonWidth / 2,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text('Cancel',
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.normal,
+                                fontSize: 12,
+                                color: Colors.white)),
                       ),
                     ),
-                  ),
-                  // Save Button with Loader
-                  InkWell(
-                    onTap: isLoading
-                        ? null // Disable tap when loading
-                        : () async {
-                            setDialogState(() {
-                              isLoading = true; // Show loader
-                            });
-                            final croppedImage = await cropController.onCropImage();
-                            if (croppedImage != null) {
-                              final croppedFile = await _saveCroppedImage(croppedImage);
-                              if (croppedFile != null) {
-                                Navigator.pop(context, croppedFile);
+                    // Save Button with Loader
+                    InkWell(
+                      onTap: isLoading
+                          ? null // Disable tap when loading
+                          : () async {
+                              setDialogState(() {
+                                isLoading = true; // Show loader
+                              });
+                              final croppedImage =
+                                  await cropController.onCropImage();
+                              if (croppedImage != null) {
+                                final croppedFile =
+                                    await _saveCroppedImage(croppedImage);
+                                if (croppedFile != null) {
+                                  Navigator.pop(context, croppedFile);
+                                }
                               }
-                            }
-                            setDialogState(() {
-                              isLoading = false; // Hide loader
-                            });
-                          },
-                    child: Container(
-                      width: buttonWidth/2,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: isLoading ? Colors.grey[400] : AppColors.primaryColor,
-                        borderRadius: BorderRadius.circular(8),
+                              setDialogState(() {
+                                isLoading = false; // Hide loader
+                              });
+                            },
+                      child: Container(
+                        width: buttonWidth / 2,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: isLoading
+                              ? Colors.grey[400]
+                              : AppColors.primaryColor,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: isLoading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : Text('Save',
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.normal,
+                                    fontSize: 12,
+                                    color: Colors.white)),
                       ),
-                      child: isLoading
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          :  Text(
-                              'Save',
-                               style: FontManager().getTextStyle(context,
-                lWeight: FontWeight.normal, fontSize: 12, color: Colors.white)
-                            ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          );
-        },
+                  ],
+                ),
+              ],
+            );
+          },
+        ),
       ),
-    ),
-  );
+    );
 
-  if (croppedFile != null) {
-    setState(() {
-      if (existingIndex != null) {
-        selectedImages[existingIndex] = croppedFile;
-      } else {
-        selectedImages.add(croppedFile);
-        _cropControllers.add(cropController);
-      }
-    });
-  }
+    if (croppedFile != null) {
+      setState(() {
+        if (existingIndex != null) {
+          selectedImages[existingIndex] = croppedFile;
+        } else {
+          selectedImages.add(croppedFile);
+          _cropControllers.add(cropController);
+        }
+      });
+    }
 
-  if (existingIndex == null) {
-    cropController.dispose();
+    if (existingIndex == null) {
+      cropController.dispose();
+    }
   }
-}
 
   Future<File?> _saveCroppedImage(ImageProvider imageProvider) async {
     try {
@@ -196,7 +201,7 @@ class _ExploreModalState extends State<ExploreModal> {
       final Uint8List bytes = byteData.buffer.asUint8List();
       final tempDir = await getTemporaryDirectory();
       final file = await File(
-          '${tempDir.path}/cropped_${DateTime.now().millisecondsSinceEpoch}.png')
+              '${tempDir.path}/cropped_${DateTime.now().millisecondsSinceEpoch}.png')
           .writeAsBytes(bytes);
       return file;
     } catch (e) {
@@ -208,7 +213,7 @@ class _ExploreModalState extends State<ExploreModal> {
   void _removeImage(int index) {
     setState(() {
       selectedImages.removeAt(index);
-       _cropControllers[index].dispose();
+      _cropControllers[index].dispose();
       _cropControllers.removeAt(index);
     });
   }
@@ -219,7 +224,8 @@ class _ExploreModalState extends State<ExploreModal> {
       _amountControllers.add(TextEditingController());
     });
   }
-Future<File?> _cropAndSaveImage(int index) async {
+
+  Future<File?> _cropAndSaveImage(int index) async {
     try {
       if (index >= selectedImages.length) return null;
 
@@ -232,7 +238,7 @@ Future<File?> _cropAndSaveImage(int index) async {
       final Uint8List bytes = byteData.buffer.asUint8List();
       final tempDir = await getTemporaryDirectory();
       final file = await File(
-          '${tempDir.path}/cropped_${DateTime.now().millisecondsSinceEpoch}_$index.png')
+              '${tempDir.path}/cropped_${DateTime.now().millisecondsSinceEpoch}_$index.png')
           .writeAsBytes(bytes);
 
       return file;
@@ -242,9 +248,11 @@ Future<File?> _cropAndSaveImage(int index) async {
     }
   }
 
-  Future<ByteData?> _imageProviderToByteData(ImageProvider imageProvider) async {
+  Future<ByteData?> _imageProviderToByteData(
+      ImageProvider imageProvider) async {
     final completer = Completer<ByteData?>();
-    final ImageStream stream = imageProvider.resolve(const ImageConfiguration());
+    final ImageStream stream =
+        imageProvider.resolve(const ImageConfiguration());
 
     ImageStreamListener? listener;
     listener = ImageStreamListener(
@@ -270,96 +278,109 @@ Future<File?> _cropAndSaveImage(int index) async {
     return pref.getString("accessToken");
   }
 
- Future<void> _submitPost() async {
-  if (locationNameController.text.isEmpty || locationAddressController.text.isEmpty) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Please fill in all required fields')),
-    );
-    return;
-  }
-
-  setState(() => _isSubmitting = true); // Show loading indicator
-
-  List<Map<String, dynamic>> budget = [];
-  for (int i = 0; i < _textControllers.length; i++) {
-    if (_textControllers[i].text.isNotEmpty && _amountControllers[i].text.isNotEmpty) {
-      budget.add({
-        "category": _textControllers[i].text,
-        "amount": int.tryParse(_amountControllers[i].text) ?? 0,
-      });
-    }
-  }
-
-  // Upload all cropped images and get their URLs
-  List<String> imageUrls = [];
-  for (File image in selectedImages) {
-    try {
-      String url = await postImageToCloud(image, context);
-      imageUrls.add(url);
-    } catch (e) {
+  Future<void> _submitPost() async {
+    if (locationNameController.text.isEmpty ||
+        locationAddressController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error uploading image: $e')),
+        const SnackBar(content: Text('Please fill in all required fields')),
       );
-      setState(() => _isSubmitting = false);
       return;
     }
-  }
 
-  Map<String, dynamic> requestBody = {
-    "pictures": imageUrls,
-    "place": {
-      "name": locationNameController.text,
-      "location": locationAddressController.text,
-    },
-    "budget": budget,
-    "rating": _rating,
-    "tripHighlight": titleController.text,
-    "description": contentController.text,
-    "comments": 0,
-    "shares": 0,
-    "upvotes": 0,
-  };
+    setState(() => _isSubmitting = true); // Show loading indicator
 
-  var body = {
-    'title': titleController.text,
-    'description': {'message': requestBody},
-    'image': imageUrls.isNotEmpty ? imageUrls[0] : '', // Use first image as main image
-    'fileName': '',
-    'type': 'explore'
-  };
+    List<Map<String, dynamic>> budget = [];
+    for (int i = 0; i < _textControllers.length; i++) {
+      if (_textControllers[i].text.isNotEmpty &&
+          _amountControllers[i].text.isNotEmpty) {
+        budget.add({
+          "category": _textControllers[i].text,
+          "amount": int.tryParse(_amountControllers[i].text) ?? 0,
+        });
+      }
+    }
 
-  try {
-    var accessToken = await getToken();
-    final response = await http.post(
-      Uri.parse('$url/post/'),
-      headers: {
-        'Content-Type': 'application/json',
-        "Authorization": "$accessToken",
+    // Upload all cropped images and get their URLs
+    List<String> imageUrls = [];
+    for (File image in selectedImages) {
+      try {
+        String url = await postImageToCloud(image, context);
+        imageUrls.add(url);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error uploading image: $e')),
+        );
+        setState(() => _isSubmitting = false);
+        return;
+      }
+    }
+
+    Map<String, dynamic> requestBody = {
+      "pictures": imageUrls,
+      "place": {
+        "name": locationNameController.text,
+        "location": locationAddressController.text,
       },
-      body: jsonEncode(body),
-    );
+      "budget": budget,
+      "rating": _rating,
+      "tripHighlight": titleController.text,
+      "description": contentController.text,
+      "comments": 0,
+      "shares": 0,
+      "upvotes": 0,
+    };
 
-    if (response.statusCode == 201 || response.statusCode == 200) {
-      setState(() {
-        exploreSubmitted = true;
-        _isSubmitting = false;
-      });
-      
-       getPosted.value = !getPosted.value;
-      widget.onPostCreated(jsonDecode(response.body));
-    } else {
+    var body = {
+      'title': titleController.text,
+      'description': {'message': requestBody},
+      'image': imageUrls.isNotEmpty
+          ? imageUrls[0]
+          : '', // Use first image as main image
+      'fileName': '',
+      'type': 'explore'
+    };
+
+    try {
+      var accessToken = await getToken();
+      final response = await http.post(
+        Uri.parse('$url/post/'),
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": "$accessToken",
+        },
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        setState(() {
+          exploreSubmitted = true;
+          _isSubmitting = false;
+        });
+         var postData = jsonDecode(response.body);
+
+      // Update local state
+      getTrendingData.insert(0, postData);
+      getPosted.value = !getPosted.value;
+      postCount[postData["_id"]] = 0;
+      postCommentCount[postData["_id"]] = 0;
+
+      posting.value = false;
+      postDis.value = false;
+        widget.onPostCreated(jsonDecode(response.body));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Failed to submit post: ${response.statusCode}')),
+        );
+        setState(() => _isSubmitting = false);
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to submit post: ${response.statusCode}')),
+        SnackBar(content: Text('Error: $e')),
       );
       setState(() => _isSubmitting = false);
     }
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Error: $e')),
-    );
-    setState(() => _isSubmitting = false);
   }
-}
 
   @override
   void dispose() {
@@ -373,7 +394,7 @@ Future<File?> _cropAndSaveImage(int index) async {
     for (var controller in _amountControllers) {
       controller.dispose();
     }
-     for (var cropController in _cropControllers) {
+    for (var cropController in _cropControllers) {
       cropController.dispose();
     }
     super.dispose();
@@ -384,8 +405,8 @@ Future<File?> _cropAndSaveImage(int index) async {
     return exploreSubmitted
         ? const SuccessPost()
         : Container(
-          color: AppColors.backgroundColor,
-          child: AnimatedPadding(
+            color: AppColors.backgroundColor,
+            child: AnimatedPadding(
               padding: MediaQuery.of(context).viewInsets,
               duration: const Duration(milliseconds: 100),
               child: SingleChildScrollView(
@@ -412,7 +433,7 @@ Future<File?> _cropAndSaveImage(int index) async {
                 ),
               ),
             ),
-        );
+          );
   }
 
   Widget _buildHeader() {
@@ -426,43 +447,45 @@ Future<File?> _cropAndSaveImage(int index) async {
       ],
     );
   }
- Widget _buildRatingSection() => Row(
-  mainAxisAlignment: MainAxisAlignment.start,
-  crossAxisAlignment: CrossAxisAlignment.center, // Align items vertically centered
-  children: [
-     Text(
-      'Rate this place:',
-      style: FontManager().getTextStyle(
-            context,
-            lWeight: FontWeight.w500,
-            fontSize: 14,
-            color: Colors.black,
+
+  Widget _buildRatingSection() => Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment:
+            CrossAxisAlignment.center, // Align items vertically centered
+        children: [
+          Text(
+            'Rate this place:',
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.w500,
+              fontSize: 14,
+              color: Colors.black,
+            ),
           ),
-    ),
-    const SizedBox(width: 8), // Reduced spacing for better alignment
-    RatingStars(
-      value: _rating,
-      onValueChanged: (value) {
-        if (mounted) {
-          setState(() => _rating = value);
-        }
-      },
-      starCount: 5,
-      starSize: 30,
-      maxValue: 5,
-      starSpacing: 2,
-      starColor: AppColors.primaryColor,
-      starOffColor: AppColors.button,
-      valueLabelVisibility: false,
-      valueLabelTextStyle: const TextStyle(color: Colors.black),
-      starBuilder: (index, color) => Icon(
-        Icons.star,
-        color: color,
-        size: 30,
-      ),
-    ),
-  ],
-);
+          const SizedBox(width: 8), // Reduced spacing for better alignment
+          RatingStars(
+            value: _rating,
+            onValueChanged: (value) {
+              if (mounted) {
+                setState(() => _rating = value);
+              }
+            },
+            starCount: 5,
+            starSize: 30,
+            maxValue: 5,
+            starSpacing: 2,
+            starColor: AppColors.primaryColor,
+            starOffColor: AppColors.button,
+            valueLabelVisibility: false,
+            valueLabelTextStyle: const TextStyle(color: Colors.black),
+            starBuilder: (index, color) => Icon(
+              Icons.star,
+              color: color,
+              size: 30,
+            ),
+          ),
+        ],
+      );
 
   Widget _buildImageSection() {
     return Column(
@@ -499,12 +522,14 @@ Future<File?> _cropAndSaveImage(int index) async {
                   itemCount: selectedImages.length,
                   itemBuilder: (context, index) {
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 4, vertical: 8),
                       child: Stack(
                         clipBehavior: Clip.none,
                         children: [
                           GestureDetector(
-                            onTap: () => _showCropDialog(selectedImages[index], index),
+                            onTap: () =>
+                                _showCropDialog(selectedImages[index], index),
                             child: Container(
                               width: 100,
                               height: 100,
@@ -558,7 +583,8 @@ Future<File?> _cropAndSaveImage(int index) async {
           width: double.infinity,
           height: 50,
           child: ElevatedButton(
-            onPressed: selectedImages.length < maxImages ? _pickAndCropImage : null,
+            onPressed:
+                selectedImages.length < maxImages ? _pickAndCropImage : null,
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryColor,
               shape: RoundedRectangleBorder(
@@ -616,7 +642,9 @@ Future<File?> _cropAndSaveImage(int index) async {
           children: [
             Text('Budget',
                 style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.normal, fontSize: 16, color: Colors.black)),
+                    lWeight: FontWeight.normal,
+                    fontSize: 16,
+                    color: Colors.black)),
             IconButton(
               onPressed: _addTextFields,
               icon: const Icon(Icons.add),
@@ -631,7 +659,8 @@ Future<File?> _cropAndSaveImage(int index) async {
                 Expanded(
                   child: TextField(
                     controller: _textControllers[index],
-                    decoration: _inputDecoration('Add Category', Icons.description),
+                    decoration:
+                        _inputDecoration('Add Category', Icons.description),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -639,7 +668,8 @@ Future<File?> _cropAndSaveImage(int index) async {
                   child: TextField(
                     controller: _amountControllers[index],
                     keyboardType: TextInputType.number,
-                    decoration: _inputDecoration('Add Budget', Icons.currency_rupee),
+                    decoration:
+                        _inputDecoration('Add Budget', Icons.currency_rupee),
                   ),
                 ),
               ],
@@ -666,16 +696,17 @@ Future<File?> _cropAndSaveImage(int index) async {
         TextField(
           controller: contentController,
           decoration: _inputDecoration('Add your thoughts', null),
-           maxLines: 3,
-           maxLength: 150,
+          maxLines: 3,
+          maxLength: 150,
         ),
       ],
     );
   }
 
   Widget _buildSubmitButton() {
-    final isEnabled = locationNameController.text.isNotEmpty && 
-                     locationAddressController.text.isNotEmpty && !_isSubmitting;
+    final isEnabled = locationNameController.text.isNotEmpty &&
+        locationAddressController.text.isNotEmpty &&
+        !_isSubmitting;
     return DecoratedContainer(
       borderRadius: 24,
       backgroundColor: isEnabled ? AppColors.primaryColor : Colors.grey,
@@ -683,19 +714,19 @@ Future<File?> _cropAndSaveImage(int index) async {
         child: TextButton(
           onPressed: isEnabled ? _submitPost : null,
           child: _isSubmitting
-          ? const CircularProgressIndicator(color: Colors.white)
-          :Text(
-                                'Continue',
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                  color: locationNameController.text.isNotEmpty &&
-                                          locationAddressController.text.isNotEmpty
-                                      ? Colors.white
-                                      : Colors.black,
-                                ),
-                              ),
+              ? const CircularProgressIndicator(color: Colors.white)
+              : Text(
+                  'Continue',
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: locationNameController.text.isNotEmpty &&
+                            locationAddressController.text.isNotEmpty
+                        ? Colors.white
+                        : Colors.black,
+                  ),
+                ),
         ),
       ),
     );
