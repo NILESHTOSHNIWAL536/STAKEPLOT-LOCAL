@@ -583,14 +583,9 @@ class _ModalContentState extends State<ModalContent>
             }
             isSplit.value = false;
             isLend.value = true;
-            // showCustomFriendsModal(context, amount ?? 0.0);
-            final result =
-                await showCustomFriendsModal(context, amount ?? 0.0, true);
-            if (result != null) {
-              // print("buttonsWidget: Lend mode - Selected friend: $result");
-              // Don't send amount yet, just pop out and wait for parent "Continue"
-              // Navigator.pop(context); // Close the modal to return to Manualtransaction
-            }
+          
+            final result = await showCustomFriendsModal(context, amount ?? 0.0, true);
+           
           },
           child: Container(
             width: MediaQuery.of(context).size.width / 2.4,
@@ -904,9 +899,7 @@ class _ModalContentState extends State<ModalContent>
       String subCategories) async {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
-    //  print('nameList');
-    //  print(nameList);
-
+    
     final response = await http.post(
       Uri.parse('${url}/bill'),
       headers: <String, String>{
@@ -921,7 +914,6 @@ class _ModalContentState extends State<ModalContent>
         "subcategory": subCategories,
         "type": "Lend Money",
         "amount": amount,
-        // 'dueDate': getCurrentFormattedDate(),
       }),
     );
 
@@ -934,7 +926,7 @@ class _ModalContentState extends State<ModalContent>
       snackBarCalled(context,
           "Lend amount has been successfully sent to users!", Colors.black);
       addTransaction(
-          amount, "Lend Bill (${subCategories})", name, context, 'cash', true);
+          amount, "Lend Bill (${subCategories})", name, context, 'cash', false);
       getUserLend(context);
     } else {
       snackBarCalled(

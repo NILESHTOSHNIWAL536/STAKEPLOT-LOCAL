@@ -252,8 +252,7 @@ Widget _buildListTile(
           InkWell(
             onTap: () {
               if (isDue) {
-                int index = dueAmountRemainders
-                    .indexWhere((element) => element['_id'] == data['_id']);
+                int index = dueAmountRemainders.indexWhere((element) => element['_id'] == data['_id']);
                 if (index != -1) {
                   duesPaid(context, index);
                 }
@@ -275,7 +274,7 @@ Widget _buildListTile(
                   color: AppColors.button),
               child: Center(
                 child: Text(
-                  (data["billApproved"] ?? true)
+                (data["isPaid"] ?? false)? "Requested": (data["billApproved"] ?? true)
                       ? (isDue ? "Settle now" : "Remind now")
                       : (isDue ? "Didn't settle" : "Didn't approve"),
                   style: FontManager().getTextStyle(context,
@@ -318,7 +317,7 @@ Future<String?> getToken() async {
   }
 }
 
-Future<http.Response> updateDataApiCall(String url) async {
+Future<http.Response> updateDataApiCall(String url,var body) async {
   try {
     var accessToken = await getToken();
     final response = await http.patch(
@@ -327,10 +326,10 @@ Future<http.Response> updateDataApiCall(String url) async {
         'Content-Type': 'application/json; charset=UTF-8',
         "Authorization": "$accessToken",
       },
+      body: jsonEncode(body)
     );
     return response;
   } catch (error) {
-    //  print("Error in updateDataApiCall: $error");
     rethrow;
   }
 }
@@ -340,28 +339,23 @@ void duesPaid(BuildContext context, int index) async {
   final dueId = due['_id']?.toString();
   final type = due['type'];
 
-  if (dueId == null) {
-    print("Error: Transaction ID is null");
-    return;
+  final apiUrl = "$url/reminders/request-approval/$type/$dueId";
+  try {
+    final response = await updateDataApiCall(apiUrl,{});
+  } catch (e) {
+    snackBarCalled(context, "Error settling due");
+    print("Error in duesPaid: $e");
   }
+}
 
+void settleAmount(BuildContext context,String dueId,String type,String endUser) async {
   final apiUrl = "$url/reminders/settle/$type/$dueId";
   try {
-    print("try url $apiUrl");
-    final response = await updateDataApiCall(apiUrl);
-    print("api res ${response.body}");
-    if (response.statusCode == 200) {
-      // Remove the item from the observable list
-      print("ajdvjadhadvajd: ${response.statusCode} - ${response.body}");
-      dueAmountRemainders.removeAt(index);
-      // This triggers the UI update automatically
-      snackBarCalled(context, "Due settled successfully");
-    } else {
-      print("Failed to settle due: ${response.statusCode} - ${response.body}");
+    var body={
+      'splittedUserId':endUser,
+    };
+    final response = await updateDataApiCall(apiUrl,body);
 
-      snackBarCalled(context,
-          "Failed to settle due: ${response.statusCode} - ${response.body}");
-    }
   } catch (e) {
     snackBarCalled(context, "Error settling due");
     print("Error in duesPaid: $e");

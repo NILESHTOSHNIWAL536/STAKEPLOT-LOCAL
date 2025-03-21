@@ -415,9 +415,6 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
   final FixedExtentScrollController secondDigitController =
       FixedExtentScrollController(initialItem: 0);
 
-  final PageController _pageController = PageController(viewportFraction: 0.7);
-  int _currentPage = 0;
-
    void initializeData() {
     getBankAccounts();
   }
@@ -439,12 +436,13 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
   }
 
   Widget avatarSlider2() {
-    return bankAccountLinkedList.isEmpty? AvatarProfileImage(url: bankImage, width: 10, height: 10):GFCarousel(
-      // aspectRatio: ,
+    return bankAccountLinkedList.isEmpty? AvatarProfileImage(url: bankImage, width: 10, height: 10):
+    GFCarousel(
       viewportFraction: 1.0,
       reverse: false,
       enlargeMainPage: false,
       autoPlay: false,
+      enableInfiniteScroll: false,
       items: bankAccountLinkedList.map(
         (data) {
           return Padding(
