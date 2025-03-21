@@ -111,8 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
      
       if ((position.dy + renderBox.size.height-screenHeight) <= 1600 && !sectionReached.value)
        {
-         navigateToNextPage(context);
-          sectionReached.value=true;
+        //  navigateToNextPage(context);
+          // sectionReached.value=true;
        }
     }
   }

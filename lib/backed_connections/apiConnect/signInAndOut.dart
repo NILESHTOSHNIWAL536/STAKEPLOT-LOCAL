@@ -67,8 +67,7 @@ Future<void> loginUser(TextEditingController emailController,
     TextEditingController passwordController, BuildContext context,
     [bool flag = false]) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var data=jsonDecode(_pref.getString("deviceInfo")??"{}");
-
+ 
   final response = await http.post(
     Uri.parse('${url}/user/login'),
     headers: <String, String>{
@@ -77,7 +76,7 @@ Future<void> loginUser(TextEditingController emailController,
     body: jsonEncode({
       'email': emailController.text.toString(),
       'userpassword': passwordController.text.toString(),
-      'deviceInfo': data,
+      'deviceInfo': deviceData,
     }),
   );
   printData(response);
@@ -100,18 +99,17 @@ Future<void> loginUser(TextEditingController emailController,
 
     String accessToken = body['data']['accessToken'];
     _pref.setString("accessToken", "Bearer " + accessToken);
-    addThisDeviceToBackendDevice(_pref,context);
-    storeinmap(body, _pref, passwordController.text);
+      await getBankAccounts();
+    //  initializeOneSignal(context);
+    // storeinmap(body, _pref, passwordController.text);
     currentId.value = body['data']['_id'];
-    Phone.value = body['data']['phone'];
-    number.value = body['data']['phone'];
+    // Phone.value = body['data']['phone'] ?? "";
+    // number.value = body['data']['phone']?? "";
     isBankAccountLink.value = body['data']['isBankAccountLinked'];
-   
-    if (flag) return;
     Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
     acceptReset.value = false;
-  
-  } else {
+
+  } else {  
     acceptReset.value = false;
     var snackBar = SnackBar(
       duration: Durations.medium4,
@@ -314,14 +312,14 @@ void changePassword(context, email, p1, p2) async {
 }
 
 
-void addThisDeviceToBackendDevice(SharedPreferences _pref,context)async{
-  await addThisDeviceToBackend(jsonDecode(_pref.getString("deviceInfo")??"{}"), context);
+void addThisDeviceToBackendDevice(pref,context)async{
+  await addThisDeviceToBackend(jsonDecode(pref.getString("deviceInfo")??"{}"), context);
+  // await addThisDeviceToBackend(pref, context);
 }
 
 void resendOpt(context, email, name) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
-
   final response = await http.post(
     Uri.parse('${url}/otp/resend-otp'),
     headers: <String, String>{
@@ -538,18 +536,20 @@ void clearGetX() {
 // print(data);
 // }
 
-void initializeOneSignal(BuildContext context,TextEditingController emailController,TextEditingController passwordController) async {
-   final SharedPreferences pref = await SharedPreferences.getInstance();
-   String key="deviceInfo";
-   if(!pref.containsKey(key)){
-         await oneSignalInit();
+void initializeOneSignal(BuildContext context) async {
+         final SharedPreferences pref = await SharedPreferences.getInstance();
+         String key="deviceInfo";
+      if(!pref.containsKey(key))
+      {
+        await oneSignalInit();
+        await Future.delayed(Duration(seconds: 2)); // Small delay
         String? userDeviceId =await OneSignal.User.pushSubscription.id;
-        if(userDeviceId!=null)await getDeviceInfo(userDeviceId.toString(), context,pref);
-   }
-     navigateScreen(context);
-    loginUser(emailController, passwordController, context);
+        deviceData.value['deviceId']=userDeviceId ?? "deviceData.value";
+        pref.setString(key, jsonEncode(deviceData));
+    }
+    addThisDeviceToBackendDevice(pref,context);
+    navigateScreen(context);
 }
-
 
 void navigateScreen(context)
 {
@@ -577,15 +577,17 @@ Future<void> oneSignalInit() async
   }
 }
 
-Future<void> getDeviceInfo(String playerId, context,SharedPreferences pref) async {
+Future<void> getDeviceInfo(String playerId, context,TextEditingController emailController,TextEditingController passwordController) async {
   final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   deviceData.value = {};
+  final SharedPreferences pref = await SharedPreferences.getInstance();
+  String key="deviceInfo";
+ 
   try {
     if (Platform.isAndroid) {
-      // For Android devices
+     
       final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      // print(androidInfo);
-      // print(androidInfo.device);
+    
       deviceData.value =
       {
         'deviceId': playerId,
@@ -612,10 +614,11 @@ Future<void> getDeviceInfo(String playerId, context,SharedPreferences pref) asyn
         'osVersion': 'Unknown',
       };
     }
-  } catch (e) {
-    print('Error getting device info: $e');
-  }
-    pref.setString("deviceInfo", jsonEncode(deviceData));
+  } catch (e)
+    {
+      print('Error getting device info: $e');
+    }
+  loginUser(emailController, passwordController, context);
 }
 
 Future<void> addThisDeviceToBackend(deviceData, context) async {

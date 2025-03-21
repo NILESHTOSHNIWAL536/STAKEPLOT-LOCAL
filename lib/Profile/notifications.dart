@@ -5,6 +5,7 @@ import "package:flutter/widgets.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
+import "package:flutter_application_code_stakeplot/Home_Screen/pending_users.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart";
@@ -200,7 +201,7 @@ class _NotificationsState extends State<Notifications> {
           e['id'].toString(),
           e['avatarType'] ?? "",
           time);
-    } else if (type == "lendRequest") {
+    } else if (type == "lendRequesta") {
       return lendRequest(e['from_name'], e['from_id'].toString(),
           e['avatarType'], e, index, e['name'] ?? "", notifyId, time);
     } else if (type == "lendAccepted" || type == "rejectedLend") {
@@ -227,6 +228,18 @@ class _NotificationsState extends State<Notifications> {
           time);
     } else if (type == "FetchedData") {
       return messageChannelProfile("${e['message']}", "", "", time);
+    } else if (type == "lendApprovalRequest"){
+      return splitOrLendApprove("${e['from_name']}  has req for Approval for ${e['name']} ${e['amount']??'00'}"  , e['bill_id']??"", e['avatarType']??"", time,"bill","");
+    } else if (type == "splitApprovalRequest"){
+      return splitOrLendApprove("${e['from_name']}  has req for Approval for ${e['name']} ${e['amount']??'00'}"  , e['split_id']??"", e['avatarType']??"", time,"split",e['from_to']);
+    } else if (type == "clearLend" || type == "clearSplit")
+    {
+      String ty= type == "clearLend"? "lend":"split";
+      return messageChannelProfile(
+          "You has clear your ${ty} of ${e['amount'].toStringAsFixed(1)} for the item: ${e['name']}.",
+          e['id'].toString(),
+          e['avatarType'] ?? "",
+          time);
     }
 
     return SizedBox(
@@ -568,88 +581,120 @@ class _NotificationsState extends State<Notifications> {
     );
   }
 
-  Widget poll(e) {
-    // List options=e['options'];
-    // String s="2";//e['myVote'];
-    // bool myvote=e['myVote']!="none";
-    // int len=4;
-
-    return Text("Poll");
-
-    // options.forEach((element) {
-    //     List ll=element['votes'];
-    //      len += ll.length ;
-    // });
-
-//  return Padding(
-//    padding: const EdgeInsets.all(10.0),
-//    child: Container(
-//        padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-//         width: MediaQuery.of(context).size.width/1.1,
-//        decoration: BoxDecoration(
-//            color: Colorcodes.appBarColor,
-//            borderRadius: BorderRadius.circular(5),
-
-//        ),
-//        child: Column(
-//               mainAxisAlignment: MainAxisAlignment.start,
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                       Padding(
-//                         padding: const EdgeInsets.all(8.0),
-//                         child: Text(e['question'],style: FontManager().getTextStyle(context,
-//                                   lWeight: FontWeight.w500,
-//                                   fontSize: 16,
-//                                   color: Colors.black)),
-//                       ),
-//                      Column(
-//                        mainAxisAlignment: MainAxisAlignment.start,
-//                        crossAxisAlignment: CrossAxisAlignment.start,
-//                       children:options.map((op) {
-//                         List ll=[20];//op['votes'];
-//                         String cal=((ll.length/len)* 100).toStringAsFixed(2);
-//                         // len += ll.length ;
-//                         return  Padding(
-//                         padding: const EdgeInsets.symmetric(vertical: 4.0),
-//                         child: InkWell(
-//                           onTap: myvote? null:(){
-//                               //  votePoll(context,e['_id'],options.indexOf(op));
-//                           },
-//                           child: Container(
-//                               padding: EdgeInsets.symmetric(vertical: 13,horizontal: 10),
-//                               width: MediaQuery.of(context).size.width/1.3,
-//                              decoration: BoxDecoration(
-//                                  color: s.endsWith((options.indexOf(op)+1).toString())? Colors.grey[100]:Colors.white,
-//                                   borderRadius: BorderRadius.circular(5),
-//                                   // border: Border.all()
-//                               ),
-//                               child: Row(
-//                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                                 children: [
-//                                   Text(op['option'],
-//                                   style: FontManager().getTextStyle(context,
-//                                           lWeight: FontWeight.w400,
-//                                           fontSize: 14,
-//                                           color: Colors.black)),
-//                                myvote ? Text(cal=="0.00"?'0%':cal=="100.00"?"100&":cal+"%",
-//                                   style: FontManager().getTextStyle(context,
-//                                           lWeight: FontWeight.w400,
-//                                           fontSize: 14,
-//                                           color: Colors.black)):SizedBox.shrink(),
-//                                 ],
-//                               )
-//                                              ),
-//                         ),
-//                  );
-//                  }
-//                  ).toList()),
-// ],
-//        ),
-//    ),
-//  );
-  }
 
   Widget getAvatarh(avatar) {
     return UserAvatar(url: avatar, width: 15, height: 20);
   }
+
+
+
+Widget splitOrLendApprove(String name,String id,String avatar, time,String type,String endUser) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+      child: Center(
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 1, horizontal: 5),
+          decoration: BoxDecoration(
+              //  color:const Color.fromRGBO(249, 246, 238, 1),
+              borderRadius: BorderRadius.circular(10)),
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  avatar != "" ? getAvatarh(avatar) : SizedBox.shrink(),
+                  const SizedBox(
+                    width: 2,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width / 1.4,
+                    //  color: Colorcodes.blue,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          (name),
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.w600,
+                              fontSize: 13,
+                              lineHeight: 1.1,
+                              color: Colors.black),
+                          // maxLines: 1,
+                          // overflow: TextOverflow.ellipsis,
+                        ),
+
+                         Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                                  try{
+                                   settleAmount(context, id, type,endUser);
+                                  }catch(e){
+                                      print(e);
+                                  }
+                                  
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 7),
+                              decoration: BoxDecoration(
+                                color: const Color.fromRGBO(97, 143, 214, 1),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Text(
+                                "Approve",
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                  color: AppColors.bg5,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          InkWell(
+                            onTap: () {
+                              
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 7),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(width: 0.5),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Text(
+                                "Reject",
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                  color: AppColors.bg3,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                        //  const SizedBox(height: 5,),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              divider(time)
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+
+
+
 }

@@ -33,7 +33,7 @@ class _SigninState extends State<Signin> {
   // TextEditingController passwordController = TextEditingController();
   // TextEditingController emailController=TextEditingController(text: "user63@gmail.com");
   // TextEditingController passwordController =TextEditingController(text: "user63password");
-  TextEditingController emailController= TextEditingController(text: "roshanchenna12@gmail.com");
+  TextEditingController emailController= TextEditingController(text: "faiz@gmail.com");
   TextEditingController passwordController= TextEditingController(text: "nilesh123");
 
   
@@ -264,7 +264,8 @@ Widget siginButton(){
                             }
                             
                             acceptReset.value = true;
-                            initializeOneSignal(context,emailController,passwordController);
+                            await getDeviceInfo("deviceData.value".toString(), context,emailController,passwordController);
+                            
                            
                           },
                           child: Obx(() => Center(
