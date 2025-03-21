@@ -215,6 +215,26 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                               'Terms & conditions',
                               'Please follow our terms and conditions'),
                         ),
+
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    OnboardingScreen(),
+                              ),
+                            );
+                          },
+                          child: _buildOption(
+                              ProfileImage(
+                                url: ProfileIcons.support,
+                                // height: 20,
+                                // width: 20,
+                              ),
+                              'History archives ',
+                              'Find your hidden history here'),
+                        ),
                        
                        
                       ],
