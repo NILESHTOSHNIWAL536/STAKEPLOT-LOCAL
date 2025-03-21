@@ -185,7 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Nextfetch(),
               
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.25,
+                height: MediaQuery.of(context).size.height * 0.23,
                 child: NumberPickerScreen(),
               ),
              // const SizedBox(height: 10),

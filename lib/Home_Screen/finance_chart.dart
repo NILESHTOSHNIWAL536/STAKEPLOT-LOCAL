@@ -85,7 +85,7 @@ class _FinancePageState extends State<FinancePage> {
               children: [
                 Row(
                   children: [
-                    Obx(() => Text( getGraphData.value? '₹$totalDebitValue':'₹$totalDebitValue',
+                    Obx(() => Text( getGraphData.value? '₹${doubleToFixed(totalDebitValue.toString())}':'₹${doubleToFixed(totalDebitValue.toString())}',
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.bold,
                               fontSize: fontSizeFactor * 4,
@@ -501,6 +501,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
               minimum: 0,
               maximum: maxYValue * 1.2,
             ),
+             //enableAxisAnimation: true,
             tooltipBehavior: TooltipBehavior(
               enable: true,
               builder: (dynamic data, dynamic point, dynamic series,
@@ -553,13 +554,24 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 // );
               },
             ),
+            
             series: <ChartSeries>[
+                SplineAreaSeries<ChartData, String>(
+      dataSource: creditedData,
+      xValueMapper: (ChartData data, _) => data.x,
+      yValueMapper: (ChartData data, _) => data.y,
+      color: AppColors.primaryColor.withOpacity(0.2), // Faded area color
+      borderWidth: 0, // No border, just the area
+      enableTooltip: false, // Disable tooltip for the area layer
+      splineType: SplineType.cardinal,
+      cardinalSplineTension: 0.9,
+    ),
               SplineSeries<ChartData, String>(
                 dataSource: creditedData,
                 xValueMapper: (ChartData data, _) => data.x,
                 yValueMapper: (ChartData data, _) => data.y,
                 color: AppColors.primaryColor,
-                width: 3, // Increased line width for better visibility
+                width: 1, // Increased line width for better visibility
                 enableTooltip: true,
                 name: 'Credited',
                 splineType: SplineType.cardinal, // Makes the curve smoother
@@ -574,12 +586,13 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                   // Handle point tap here
                 },
               ),
+              
               SplineSeries<ChartData, String>(
                 dataSource: debitedData,
                 xValueMapper: (ChartData data, _) => data.x,
                 yValueMapper: (ChartData data, _) => data.y,
-                color: AppColors.bg1,
-                width: 3,
+                color: AppColors.accentColor,
+                width: 1,
                 enableTooltip: true,
                 name: 'Debited',
                 splineType: SplineType.cardinal,
@@ -594,6 +607,16 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                   // Handle point tap here
                 },
               ),
+               SplineAreaSeries<ChartData, String>(
+      dataSource: debitedData,
+      xValueMapper: (ChartData data, _) => data.x,
+      yValueMapper: (ChartData data, _) => data.y,
+      color: AppColors.accentColor.withOpacity(0.2), // Faded area color
+      borderWidth: 0, // No border, just the area
+      enableTooltip: false, // Disable tooltip for the area layer
+      splineType: SplineType.cardinal,
+      cardinalSplineTension: 0.9,
+    ),
             ],
             legend: Legend(
               isVisible: false,
