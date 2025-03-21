@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/bill.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
@@ -336,125 +337,13 @@ class _TransactionHistoryState extends State<TransactionHistory> with SingleTick
       },
     );
   }
-// Widget historyTransactions(
-//     Map<String, dynamic> transaction, String? date, int index) {
-//   final category = transaction['category']?.toString() ?? 'Uncategorized';
-//   final subcategory = transaction['subcategory']?.toString() ?? 'General';
-//   final amount = transaction['amount']?.toString() ?? '0';
-//   final formattedDate = date != null ? formatDate(date) : 'Unknown Date';
 
-//   return Hero(
-//     tag: "Nilesh",
-//     child: GestureDetector(
-//       onTap: () {
-//         tagName.value = category;
-//         showModalBottomSheet(
-//           context: context,
-//           isScrollControlled: true,
-//           shape: const RoundedRectangleBorder(
-//             borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
-//           ),
-//           builder: (context) {
-//             return TagShowmodal(
-//               data: transaction,
-//               index: index,
-//             );
-//           },
-//         );
-//       },
-//       child: Container(
-//         width: MediaQuery.of(context).size.width,
-//        // margin: const EdgeInsets.symmetric(vertical: 5),
-//         decoration: BoxDecoration(
-//           borderRadius: BorderRadius.circular(12),
-//         ),
-//         child: Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           children: [
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.start,
-//               crossAxisAlignment: CrossAxisAlignment.center,
-//               children: [
-//                 Container(
-//                   margin: const EdgeInsets.all(10),
-//                   width: 40, // Fixed width for consistency
-//                   height: 40, // Fixed height for consistency
-//                   decoration: BoxDecoration(
-//                     color: AppColors.button,
-//                     borderRadius: BorderRadius.circular(10),
-//                   ),
-//                   child: Center(
-//                     child: AvatarProfileImage(
-//                       url: Categories.link +
-//                           (imageMapForHistory[category.toLowerCase()] ??
-//                               'default_image.png'),
-//                       height: 32, // Slightly smaller than container to fit padding
-//                       width: 32,  // Consistent size for all icons
-//                        // Ensure the image scales uniformly
-//                     ),
-//                   ),
-//                 ),
-//                 const SizedBox(width: 5),
-//                 RichText(
-//                   overflow: TextOverflow.ellipsis, // Prevent overflow
-//                   maxLines: 2,
-//                   text: TextSpan(
-//                     children: [
-//                       TextSpan(
-//                         text: " $category",
-//                         style: FontManager().getTextStyle(
-//                           context,
-//                           lWeight: FontWeight.w600,
-//                           fontSize: 14,
-//                           lineHeight: 2.14,
-//                           color: AppColors.accentColor,
-//                         ),
-//                       ),
-//                       TextSpan(
-//                         text: " ($subcategory)",
-//                         style: FontManager().getTextStyle(
-//                           context,
-//                           lWeight: FontWeight.w400,
-//                           fontSize: 12,
-//                           lineHeight: 1.14,
-//                           color: AppColors.accentColor,
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               ],
-//             ),
-//             Column(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 textStyle(
-//                   text: '₹$amount',
-//                   context: context,
-//                   fontWeight: FontWeight.bold,
-//                   fontsize: 12,
-//                 ),
-//                 const SizedBox(height: 6),
-//                 textStyle(
-//                   text: formattedDate,
-//                   context: context,
-//                   fontWeight: FontWeight.w300,
-//                   fontsize: 10,
-//                 ),
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     ),
-//   );
-// }
   Widget historyTransactions(
       Map<String, dynamic> transaction, String? date, int index) {
     final category = transaction['category']?.toString() ?? 'Uncategorized';
     final subcategory = transaction['subcategory']?.toString() ?? 'General';
     final amount = transaction['amount']?.toString() ?? '0';
-    final formattedDate = date != null ? formatDate(date) : 'Unknown Date';
+    final formattedDate = date != null ? formatWhatsAppDate(convertStringToDateTime(date)) : 'Date';
 
     return  Hero(
        tag: "Nilesh",

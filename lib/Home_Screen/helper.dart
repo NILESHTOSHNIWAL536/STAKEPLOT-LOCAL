@@ -58,3 +58,8 @@ String formatWhatsAppDate(DateTime date) {
     return "${DateFormat('d MMM y').format(date)}, $timeFormat"; // 10 Mar 2024, 10:30 AM
   }
 }
+
+
+DateTime convertStringToDateTime(String dateString) {
+  return DateTime.parse(dateString);
+}

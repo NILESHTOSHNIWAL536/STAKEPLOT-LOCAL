@@ -54,60 +54,8 @@ class _RotatingIconState extends State<Nextfetch> with SingleTickerProviderState
          currentTime.value=getTime();
     });
 
-
-  //   if (Platform.isAndroid) {
-  //   await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
-  //   await scheduleAndroidTask();
-  // } else if (Platform.isIOS) {
-  //   await configureBackgroundFetch();
-  // }
-
      checkAndFetchData(); 
   }
-
-
-//  void callbackDispatcher() {
-//   Workmanager().executeTask((task, inputData) async {
-//     if (task == "fetchDataTask") {
-//       await checkAndFetchData();
-//     }
-//     return Future.value(true);
-//   });
-// }
-
-// Future<void> scheduleAndroidTask() async {
-//   await Workmanager().registerPeriodicTask(
-//     "uniqueFetchTask",
-//     "fetchDataTask",
-//     frequency: Duration(days: 1),
-//   );
-// }
-
-// // Background Fetch for iOS
-// Future<void> configureBackgroundFetch() async {
-//   await BackgroundFetch.configure(
-//     BackgroundFetchConfig(
-//       minimumFetchInterval: 15, // Runs every 15 minutes in the background
-//       stopOnTerminate: false,
-//       enableHeadless: true,
-//       startOnBoot: true,
-//     ),
-//     (String taskId) async {
-//       if (DateTime.now().hour == 9) {
-//         await checkAndFetchData();
-//       }
-//       BackgroundFetch.finish(taskId);
-//     },
-//     (String taskId) async {
-//       BackgroundFetch.finish(taskId);
-//     },
-//   );
-// }
-
-
-
-
-
 
    void checkAndFetchData()async {
     DateTime now = DateTime.now();
@@ -120,7 +68,6 @@ class _RotatingIconState extends State<Nextfetch> with SingleTickerProviderState
               bool  f=false;
                consentAndHandleDetails.forEach((item)
                {
-              
                            getWeeklyfetchData(
                              item[ "consentId"],
                             item["consendHandleId"],

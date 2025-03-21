@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> {
     getCategoryData();
     getRemainders(context);
     getNotifications(context);
-   // sectionReached.value=false;
+    sectionReached.value=false;
 
   }
 
@@ -112,8 +112,8 @@ class _HomeScreenState extends State<HomeScreen> {
      
       if ((position.dy + renderBox.size.height-screenHeight) <= 1600 && !sectionReached.value)
        {
-        //  navigateToNextPage(context);
-          // sectionReached.value=true;
+         navigateToNextPage(context);
+          sectionReached.value=true;
        }
     }
   }
@@ -156,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   textStyle(
                       context: context,
-                      text: "Hello..",
+                      text: "Hello",
                       fontWeight: FontWeight.w500,
                       fontsize: 15),
                   Obx(() => textStyle(
