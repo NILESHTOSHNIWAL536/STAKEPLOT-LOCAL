@@ -73,18 +73,19 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
     );
   }
 
-  String _getMonthlyRange() {
+ String _getMonthlyRange() {
     final now = DateTime.now();
     final startOfMonth = DateTime(now.year, now.month, 1);
-    final endOfMonth =
-        DateTime(now.year, now.month + 1, 1).subtract(const Duration(days: 1));
+    final currentDay = now; // Use current date as the end date
 
-    return '${_formatDate(startOfMonth)} - ${_formatDate(endOfMonth)}';
+    return '${_formatDate(startOfMonth)} - ${_formatDate(currentDay)}';
   }
 
   String _formatDate(DateTime date) {
     return '${date.day.toString().padLeft(2, '0')} ${_getMonthName(date.month)} ${date.year}';
   }
+
+  
 
   String _getMonthName(int month) {
     const months = [
@@ -117,12 +118,16 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                         child: Container(
                           alignment: Alignment.center,
                           child: SfCircularChart(
+                            
                             series: <CircularSeries>[
+
                               DoughnutSeries<ChartData, String>(
                                 dataSource: chartData,
                                 xValueMapper: (ChartData data, _) =>data.category,
                                 yValueMapper: (ChartData data, _) => data.value,
                                 explode: true,
+                                 
+                        
                                 explodeIndex: selectedIndex.value,
                                 dataLabelSettings:
                                     const DataLabelSettings(isVisible: false),
@@ -138,6 +143,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                 },
                               ),
                             ],
+                            
                           ),
                         ),
                       ),

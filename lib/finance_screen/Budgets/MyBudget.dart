@@ -23,13 +23,13 @@ class MyBudgetScreen extends StatefulWidget {
 class _MyBudgetScreenState extends State<MyBudgetScreen> {
   List<FlSpot> monthlyBudgetData = [];
   Map<String, double> categories = {};
-   List graphObj = [];
+  List graphObj = [];
   //List<Map<String, dynamic>> graphObj=[];
   List<_ChartData> budgetSpentData = [];
   String budgetType = 'monthly';
   List<dynamic> transactions = []; // Store raw transactions from API
   Map<String, dynamic>? budgetData;
-  Map<String, dynamic>? insightsData;
+  List<String>? insightsData;
 
   @override
   void initState() {
@@ -44,17 +44,19 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     final String budgetId =
         widget.data['_id']?.toString() ?? '679b6ea12af555d641c5da61';
     final String apiUrl = '$url/budget/get-insights/$budgetId';
-    // print('Fetching insights with budgetId: $budgetId');
-    // print('API URL: $apiUrl');
+   // print('Fetching insights with budgetId: $budgetId');
+   // print('API URL: $apiUrl');
     try {
       var response = await getDataApiCall(apiUrl);
-      //  print('Insights API Response: ${response.body}');
+    //  print('Insights API Response: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-
+        
+ //print('Responsingggggg: ${data}');
         setState(() {
-          insightsData = data; // Store insights data in state
+          insightsData = List<String>.from(data);  // Store insights data in state
+        //  print('datataata: ${insightsData}');
         });
       } else {
         //  print('Failed to fetch insights: ${response.statusCode}');
@@ -70,12 +72,12 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     final String apiUrl = '$url/budget/get-budget-spents/$budgetId';
     try {
       var response = await getDataApiCall(apiUrl);
-      print('API Response: ${response.body}');
+      // print('API Response: ${response.body}');
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         setState(() {
           budgetType = widget.data['budgetPeriod']?.toLowerCase() ?? 'monthly';
-          transactions = data['data']['transactions'] ?? [];
+          transactions = data['transactions'] ?? [];
 
           // Clear previous data
           budgetSpentData.clear();
@@ -170,13 +172,13 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
             budgetSpentData.sort((a, b) => a.x.compareTo(b.x));
           }
 
-          print('Processed budgetSpentData: $budgetSpentData');
+          //  print('Processed budgetSpentData: $budgetSpentData');
         });
       } else {
-        print('Failed to load budget data: ${response.statusCode}');
+        // print('Failed to load budget data: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error fetching budget data: $e');
+      //  print('Error fetching budget data: $e');
     }
   }
 
@@ -197,7 +199,8 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
       double percentage = totalAmount > 0 ? (amount / totalAmount) * 100 : 0;
       categories[list[i]['category']] = percentage;
       graphObj.add({
-        'title': list[i]['category'] +" "+ percentage.toStringAsFixed(1) + "%",
+        'title':
+            list[i]['category'] + " " + percentage.toStringAsFixed(1) + "%",
         'value': percentage,
       });
     }
@@ -352,10 +355,12 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
 
   Widget _buildInsights() {
     if (insightsData == null) {
+     // print("null yyyyy  $insightsData");
       return Center(child: CircularProgressIndicator());
     }
-
-    List<dynamic>? insightsList = insightsData?['data']; // Extract list
+ //print("insightsData yyyyy  $insightsData");
+    List<dynamic>? insightsList = insightsData; // Extract list
+   // print("insightsList yyyyy  $insightsList");
 
     return Container(
       padding: EdgeInsets.all(16),
