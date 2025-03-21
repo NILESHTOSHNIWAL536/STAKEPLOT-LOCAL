@@ -345,113 +345,111 @@ class _TransactionHistoryState extends State<TransactionHistory> with SingleTick
     final amount = transaction['amount']?.toString() ?? '0';
     final formattedDate = date != null ? formatWhatsAppDate(convertStringToDateTime(date)) : 'Date';
 
-    return  Hero(
-       tag: "Nilesh",
-      child: GestureDetector(
-        onTap: () {
-          tagName.value = category;
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+    return  GestureDetector(
+      onTap: () {
+        tagName.value = category;
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+          ),
+          builder: (context) {
+            return TagShowmodal(
+              data: transaction,
+              index: index,
+            );
+          },
+        );
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.primaryColor, width: 0.2),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              flex: 2,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: AppColors.button,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: AvatarProfileImage(
+                        url: Categories.link +
+                            (imageMapForHistory[category.toLowerCase()] ??
+                                'default_image.png'),
+                        height: 16,
+                        width: 20,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  Expanded(
+                    flex: 2,
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: " $category",
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w600,
+                              fontSize: 14,
+                              lineHeight: 2.14,
+                              color: AppColors.accentColor,
+                            ),
+                          ),
+                          TextSpan(
+                            text: " ($subcategory)",
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w400,
+                              fontSize: 12,
+                              lineHeight: 1.14,
+                              color: AppColors.accentColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            builder: (context) {
-              return TagShowmodal(
-                data: transaction,
-                index: index,
-              );
-            },
-          );
-        },
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.symmetric(vertical: 5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            //border: Border.all(color: Colorcodes.greyLight, width: 0.3),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                flex: 2,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        margin: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: AppColors.button,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: AvatarProfileImage(
-                          url: Categories.link +
-                              (imageMapForHistory[category.toLowerCase()] ??
-                                  'default_image.png'),
-                          height: 16,
-                          width: 20,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    Expanded(
-                      flex: 2,
-                      child: RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: " $category",
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w600,
-                                fontSize: 14,
-                                lineHeight: 2.14,
-                                color: AppColors.accentColor,
-                              ),
-                            ),
-                            TextSpan(
-                              text: " ($subcategory)",
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w400,
-                                fontSize: 12,
-                                lineHeight: 1.14,
-                                color: AppColors.accentColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+            Expanded(
+              flex: 1,
+              child: Column(
+                children: [
+                  textStyle(
+                    text: '₹$amount',
+                    context: context,
+                    fontWeight: FontWeight.bold,
+                    fontsize: 15,
+                  ),
+                  const SizedBox(height: 6),
+                  textStyle(
+                    text: formattedDate,
+                    context: context,
+                    fontWeight: FontWeight.w300,
+                    fontsize: 10,
+                    c: AppColors.primaryColor
+                  ),
+                ],
               ),
-              Expanded(
-                flex: 1,
-                child: Column(
-                  children: [
-                    textStyle(
-                      text: '₹$amount',
-                      context: context,
-                      fontWeight: FontWeight.bold,
-                      fontsize: 15,
-                    ),
-                    const SizedBox(height: 6),
-                    textStyle(
-                      text: formattedDate,
-                      context: context,
-                      fontWeight: FontWeight.w300,
-                      fontsize: 11,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

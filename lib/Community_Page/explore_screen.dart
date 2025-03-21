@@ -344,6 +344,8 @@ Future<File?> _cropAndSaveImage(int index) async {
         exploreSubmitted = true;
         _isSubmitting = false;
       });
+      
+       getPosted.value = !getPosted.value;
       widget.onPostCreated(jsonDecode(response.body));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

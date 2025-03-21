@@ -889,7 +889,6 @@ class _PostCardState extends State<PostCard> {
   void initState() {
     super.initState();
     getInfo();
-    getExploria();
   }
 
   @override
@@ -923,7 +922,7 @@ class _PostCardState extends State<PostCard> {
    
   bool isExploria = dataObj['postType']=="explore";
   var extractdata=isExploria?dataObj['description']['message']:{};  //  dataObj.containsKey('place') && dataObj.containsKey('tripHighlight')
- 
+   
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
       child: Card(

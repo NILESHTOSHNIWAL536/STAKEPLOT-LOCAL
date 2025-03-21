@@ -146,7 +146,6 @@ class _NotificationsState extends State<Notifications> {
                     ),
                     child: Padding(padding: EdgeInsets.all(6), 
                     child:Container(
-                     
                     decoration: BoxDecoration(
                        color: AppColors.mt,
                       borderRadius: BorderRadius.circular(10)
@@ -227,7 +226,7 @@ class _NotificationsState extends State<Notifications> {
           e['avatarType'] ?? "",
           time);
     } else if (type == "FetchedData") {
-      return messageChannelProfile("${e['message']}", "", "", time);
+      return messageChannelProfile("🔥 Data has been successfully fetched!", "", "", time);
     } else if (type == "lendApprovalRequest"){
       return splitOrLendApprove("${e['from_name']}  has req for Approval for ${e['name']} ${e['amount']??'00'}"  , e['bill_id']??"", e['avatarType']??"", time,"bill","");
     } else if (type == "splitApprovalRequest"){
@@ -384,9 +383,7 @@ class _NotificationsState extends State<Notifications> {
     return Center(
       child: Container(
       //  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-        decoration: BoxDecoration(
-           color: AppColors.mt,
-                      borderRadius: BorderRadius.circular(10)),
+        decoration: BoxDecoration( color: AppColors.mt, borderRadius: BorderRadius.circular(10)),
         width: screenWidth,
         child: Column(
           children: [
@@ -480,21 +477,14 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Widget divider(time) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        textStyle(
-            text: formatWhatsAppDate(DateTime.parse(time)),
-            context: context,
-            fontsize: 10,
-            fontWeight: FontWeight.bold,
-            c: AppColors.accentColor),
-        Divider(
-          thickness: 0,
-          height: 0,
-        ),
-      ],
+    return Container(
+      alignment: Alignment.centerRight,
+      child: textStyle(
+          text: formatWhatsAppDate(DateTime.parse(time)),
+          context: context,
+          fontsize: 10,
+          fontWeight: FontWeight.bold,
+          c: AppColors.accentColor),
     );
   }
 
@@ -505,7 +495,6 @@ class _NotificationsState extends State<Notifications> {
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           decoration: BoxDecoration(
-              //  color:const Color.fromRGBO(249, 246, 238, 1),
               borderRadius: BorderRadius.circular(10)),
           width: MediaQuery.of(context).size.width / 1.1,
           child: Column(

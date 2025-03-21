@@ -112,7 +112,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                     //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
+                  Expanded(
                         flex: 8,
                         child: Container(
                           alignment: Alignment.center,
@@ -120,11 +120,8 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                             series: <CircularSeries>[
                               DoughnutSeries<ChartData, String>(
                                 dataSource: chartData,
-                                xValueMapper: (ChartData data, _) =>
-                                    data.category,
+                                xValueMapper: (ChartData data, _) =>data.category,
                                 yValueMapper: (ChartData data, _) => data.value,
-                                // pointColorMapper: (ChartData data, int index) =>
-                                // selectedIndex == index? data.color : data.color,
                                 explode: true,
                                 explodeIndex: selectedIndex.value,
                                 dataLabelSettings:
@@ -146,14 +143,14 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                       ),
                       Container(
                         padding: const EdgeInsets.all(12.0),
-                        child: selectedIndex != -1
+                        child: (selectedIndex != -1 && chartData.isNotEmpty)
                             ? Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment:
                                       CrossAxisAlignment.center,
                                   children: [
-                                    Text(
+                                 Text(
                                       'Expenses: ${chartData[selectedIndex.value].category}',
                                       style: FontManager().getTextStyle(
                                           context,
@@ -217,6 +214,17 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                     ],
                   ),
                 );
+  }
+
+
+  Widget emptyDataDonectChat(){
+      return Center(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height/3,
+          color: Colors.cyan,
+        ),
+      );
   }
   
  Widget topHeader() {

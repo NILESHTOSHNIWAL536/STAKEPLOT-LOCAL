@@ -454,6 +454,7 @@ void processChartData() {
     "Education": Color(0xFF45B39D), // Turquoise
     "Commerce": Color(0xFFDC7633), // Copper Orange
     "snacks": Color(0xFF5D6D7E), // Muted Blue-Gray
+    "UPI": Color(0xFF5D6D7E), // Muted Blue-Gray
   };
 
   for (var item in categoriesList) {

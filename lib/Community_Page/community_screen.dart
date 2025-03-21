@@ -90,7 +90,6 @@ class _CommunityState extends State<Community> {
       // color: Colors.blue,
       width: width,
       height: height / 1.4,
-
       child: ListView.builder(
         padding: EdgeInsets.zero, // Removes default padding
         // physics: const ClampingScrollPhysics(),
