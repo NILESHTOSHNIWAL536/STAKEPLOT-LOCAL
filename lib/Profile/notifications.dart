@@ -129,31 +129,32 @@ class _NotificationsState extends State<Notifications> {
                 children: notificationList.map((e) {
                   var notifyId = e['_id'];
                   return Dismissible(
-                    key: Key(notifyId),
-                    direction: DismissDirection.endToStart,
-                    onDismissed: (direction) {
-                      delete(notifyId);
-                    },
-                    background: Container(
-                      
-                      decoration: BoxDecoration(
-                       color: Colors.red,
-                      borderRadius: BorderRadius.circular(10)
-                    ),
-                      alignment: Alignment.centerRight,
-                      padding: EdgeInsets.only(right: 20),
-                      child: Icon(Icons.delete, color: Colors.white),
-                    ),
-                    child: Padding(padding: EdgeInsets.all(6), 
-                    child:Container(
-                    decoration: BoxDecoration(
-                       color: AppColors.mt,
-                      borderRadius: BorderRadius.circular(10)
-                    ),
-                      child:getContainer(e),
-                    ))
-                    
-                  );
+                      key: Key(notifyId),
+                      direction: DismissDirection.endToStart,
+                      onDismissed: (direction) {
+                        delete(notifyId);
+                      },
+                      background: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(10)),
+                        alignment: Alignment.centerRight,
+                        padding: EdgeInsets.only(right: 20),
+                        child: Icon(Icons.delete, color: Colors.white),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(0.0),
+                        child: Container(
+                          margin:
+                              EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                          padding:
+                              EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+                          decoration: BoxDecoration(
+                              color: AppColors.mt,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: getContainer(e),
+                        ),
+                      ));
                 }).toList(),
               );
   }
@@ -164,6 +165,7 @@ class _NotificationsState extends State<Notifications> {
     String type = e['notificationMessage']['type'];
     e = e['notificationMessage'];
     index++;
+    print(e);
     if (type == "friendRequest" &&
         e['status'] != null &&
         e['status'] == 'accepted') {
@@ -200,7 +202,7 @@ class _NotificationsState extends State<Notifications> {
           e['id'].toString(),
           e['avatarType'] ?? "",
           time);
-    } else if (type == "lendRequesta") {
+    } else if (type == "lendRequest") {
       return lendRequest(e['from_name'], e['from_id'].toString(),
           e['avatarType'], e, index, e['name'] ?? "", notifyId, time);
     } else if (type == "lendAccepted" || type == "rejectedLend") {
@@ -216,24 +218,35 @@ class _NotificationsState extends State<Notifications> {
           "${e['from_name']} has settled your loan of ${e['amount']} for the item: ${e['name']}.",
           e['id'].toString(),
           e['avatarType'] ?? "",
-          time
-          );
-    } else if (type == "splitSettled")
-    {
+          time);
+    } else if (type == "splitSettled") {
       return messageChannelProfile(
           "${e['from_name']} has settled your Split of ${e['amount'].toStringAsFixed(1)} for the item: ${e['name']}.",
           e['id'].toString(),
           e['avatarType'] ?? "",
           time);
     } else if (type == "FetchedData") {
-      return messageChannelProfile("🔥 Data has been successfully fetched!", "", "", time);
-    } else if (type == "lendApprovalRequest"){
-      return splitOrLendApprove("${e['from_name']}  has req for Approval for ${e['name']} ${e['amount']??'00'}"  , e['bill_id']??"", e['avatarType']??"", time,"bill","");
-    } else if (type == "splitApprovalRequest"){
-      return splitOrLendApprove("${e['from_name']}  has req for Approval for ${e['name']} ${e['amount']??'00'}"  , e['split_id']??"", e['avatarType']??"", time,"split",e['from_to']);
-    } else if (type == "clearLend" || type == "clearSplit")
-    {
-      String ty= type == "clearLend"? "lend":"split";
+      return messageChannelProfile(
+          "🔥 Data has been successfully fetched!", "", "", time);
+    } else if (type == "lendApprovalRequest") {
+      String msg =
+          "${e['from_name']} has requested approval for settling ${e['name']} with an amount of ${e['amount'] ?? '00'}.";
+
+      return splitOrLendApprove(
+          msg, e['bill_id'] ?? "", e['avatarType'] ?? "", time, "bill", "");
+    } else if (type == "splitApprovalRequest") {
+       String msg =
+          "${e['from_name']} has requested approval for settling ${e['name']} with an amount of ${e['amount'] ?? '00'}.";
+
+      return splitOrLendApprove(
+          msg,
+          e['split_id'] ?? "",
+          e['avatarType'] ?? "",
+          time,
+          "split",
+          e['from_to']);
+    } else if (type == "clearLend" || type == "clearSplit") {
+      String ty = type == "clearLend" ? "lend" : "split";
       return messageChannelProfile(
           "You has clear your ${ty} of ${e['amount'].toStringAsFixed(1)} for the item: ${e['name']}.",
           e['id'].toString(),
@@ -263,12 +276,14 @@ class _NotificationsState extends State<Notifications> {
 
     return Center(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+        padding: const EdgeInsets.symmetric(
+          vertical: 4,
+        ),
         decoration: BoxDecoration(
-          color: Colors.green,
+          color: AppColors.mt,
           borderRadius: BorderRadius.circular(10),
         ),
-        width: screenWidth,
+        // width: screenWidth,
         child: Column(
           children: [
             Row(
@@ -311,7 +326,7 @@ class _NotificationsState extends State<Notifications> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 7),
                               decoration: BoxDecoration(
-                                color: const Color.fromRGBO(97, 143, 214, 1),
+                                color: AppColors.primaryColor,
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               child: Text(
@@ -359,7 +374,10 @@ class _NotificationsState extends State<Notifications> {
                 ),
               ],
             ),
-            divider(time),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: divider(time),
+            ),
           ],
         ),
       ),
@@ -382,9 +400,10 @@ class _NotificationsState extends State<Notifications> {
 
     return Center(
       child: Container(
-      //  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-        decoration: BoxDecoration( color: AppColors.mt, borderRadius: BorderRadius.circular(10)),
-        width: screenWidth,
+        padding: EdgeInsets.symmetric(vertical: 2),
+        decoration: BoxDecoration(
+            color: AppColors.mt, borderRadius: BorderRadius.circular(10)),
+        //width: screenWidth/0.8,
         child: Column(
           children: [
             Row(
@@ -469,7 +488,10 @@ class _NotificationsState extends State<Notifications> {
                 ),
               ],
             ),
-            divider(time),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: divider(time),
+            ),
           ],
         ),
       ),
@@ -494,8 +516,7 @@ class _NotificationsState extends State<Notifications> {
       child: Center(
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
           width: MediaQuery.of(context).size.width / 1.1,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -570,14 +591,12 @@ class _NotificationsState extends State<Notifications> {
     );
   }
 
-
   Widget getAvatarh(avatar) {
     return UserAvatar(url: avatar, width: 15, height: 20);
   }
 
-
-
-Widget splitOrLendApprove(String name,String id,String avatar, time,String type,String endUser) {
+  Widget splitOrLendApprove(String name, String id, String avatar, time,
+      String type, String endUser) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
       child: Center(
@@ -612,63 +631,61 @@ Widget splitOrLendApprove(String name,String id,String avatar, time,String type,
                           // maxLines: 1,
                           // overflow: TextOverflow.ellipsis,
                         ),
+                        SizedBox(height: 2),
 
-                         Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                                  try{
-                                   settleAmount(context, id, type,endUser);
-                                  }catch(e){
-                                      print(e);
-                                  }
-                                  
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 7),
-                              decoration: BoxDecoration(
-                                color: const Color.fromRGBO(97, 143, 214, 1),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Text(
-                                "Approve",
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.w400,
-                                  fontSize: 14,
-                                  color: AppColors.bg5,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                try {
+                                  settleAmount(context, id, type, endUser);
+                                } catch (e) {
+                                  print(e);
+                                }
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 7),
+                                decoration: BoxDecoration(
+                                  color:  AppColors.primaryColor,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Text(
+                                  "Approve",
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w400,
+                                    fontSize: 14,
+                                    color: AppColors.bg5,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 10),
-                          InkWell(
-                            onTap: () {
-                              
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 7),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(width: 0.5),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Text(
-                                "Reject",
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.w400,
-                                  fontSize: 14,
-                                  color: AppColors.bg3,
+                            const SizedBox(width: 10),
+                            InkWell(
+                              onTap: () {},
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 7),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(width: 0.5),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Text(
+                                  "Reject",
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w400,
+                                    fontSize: 14,
+                                    color: AppColors.bg3,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
                         //  const SizedBox(height: 5,),
                       ],
                     ),
@@ -682,8 +699,4 @@ Widget splitOrLendApprove(String name,String id,String avatar, time,String type,
       ),
     );
   }
-
-
-
-
 }

@@ -348,36 +348,106 @@ class _ExploreCardState extends State<ExploreCard> {
     );
   }
 
-   Widget _buildDescription(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Description",
-          style: FontManager().getTextStyle(
-            context,
-            lWeight: FontWeight.w600,
-            fontSize: _getResponsiveFontSize(context, 16),
-            color: AppColors.bg1,
-          ),
+  //  Widget _buildDescription(BuildContext context) {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Text(
+  //         "Description",
+  //         style: FontManager().getTextStyle(
+  //           context,
+  //           lWeight: FontWeight.w600,
+  //           fontSize: _getResponsiveFontSize(context, 16),
+  //           color: AppColors.bg1,
+  //         ),
+  //       ),
+  //       Padding(
+  //         padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             Text(
+  //               widget.extractdata['description'],
+  //               maxLines: _showFullDescription ? null : 2,
+  //               overflow: _showFullDescription ? TextOverflow.visible : TextOverflow.ellipsis,
+  //               style: FontManager().getTextStyle(
+  //                 context,
+  //                 lWeight: FontWeight.w400,
+  //                 fontSize: _getResponsiveFontSize(context, 14),
+  //                 color: AppColors.bg1,
+  //               ),
+  //             ),
+  //             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+  //             GestureDetector(
+  //               onTap: () {
+  //                 setState(() {
+  //                   _showFullDescription = !_showFullDescription;
+  //                 });
+  //               },
+  //               child: Text(
+  //                 _showFullDescription ? "Show Less" : "Show More",
+  //                 style: FontManager().getTextStyle(
+  //                   context,
+  //                   lWeight: FontWeight.w600,
+  //                   fontSize: _getResponsiveFontSize(context, 14),
+  //                   color: Colors.blue,
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  Widget _buildDescription(BuildContext context) {
+  // Check if text exceeds one line
+  final TextPainter textPainter = TextPainter(
+    text: TextSpan(
+      text: widget.extractdata['description'],
+      style: FontManager().getTextStyle(
+        context,
+        lWeight: FontWeight.w400,
+        fontSize: _getResponsiveFontSize(context, 14),
+        color: AppColors.bg1,
+      ),
+    ),
+    maxLines: 2,
+    textDirection: TextDirection.ltr,
+  )..layout(maxWidth: MediaQuery.of(context).size.width * 0.9);
+
+  bool isTextOverflowing = textPainter.didExceedMaxLines;
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        "Description",
+        style: FontManager().getTextStyle(
+          context,
+          lWeight: FontWeight.w600,
+          fontSize: _getResponsiveFontSize(context, 16),
+          color: AppColors.bg1,
         ),
-        Padding(
-          padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.extractdata['description'],
-                maxLines: _showFullDescription ? null : 2,
-                overflow: _showFullDescription ? TextOverflow.visible : TextOverflow.ellipsis,
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.w400,
-                  fontSize: _getResponsiveFontSize(context, 14),
-                  color: AppColors.bg1,
-                ),
+      ),
+      Padding(
+        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.extractdata['description'],
+              maxLines: _showFullDescription ? null : 2,
+              overflow: _showFullDescription ? TextOverflow.visible : TextOverflow.ellipsis,
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.w400,
+                fontSize: _getResponsiveFontSize(context, 14),
+                color: AppColors.bg1,
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            ),
+            if (isTextOverflowing) // Show button only if text exceeds one line
               GestureDetector(
                 onTap: () {
                   setState(() {
@@ -386,18 +456,17 @@ class _ExploreCardState extends State<ExploreCard> {
                 },
                 child: Text(
                   _showFullDescription ? "Show Less" : "Show More",
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w600,
-                    fontSize: _getResponsiveFontSize(context, 14),
+                  style: TextStyle(
                     color: Colors.blue,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-            ],
-          ),
+          ],
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
+
 }
