@@ -1,3 +1,7 @@
 {
-    "cmake.sourceDirectory": "C:/Users/NH2323/Desktop/A_Nilesh_stake/stakeplot/linux"
+    "cmake.sourceDirectory": "C:/Users/NH2323/Desktop/A_Nilesh_stake/stakeplot/linux",
+    "flutterTools.displayGetxContextMenu": true,
+    "flutterTools.displayMobxContextMenu": false,
+    "flutterTools.displayRiverpodContextMenu": false,
+    "flutterTools.displayModularContextMenu": false
 }

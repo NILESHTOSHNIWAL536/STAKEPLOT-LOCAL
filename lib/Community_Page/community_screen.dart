@@ -40,10 +40,10 @@ class _CommunityState extends State<Community> {
   int likeCount = 0; // Counter for likes
   bool isLiked = false;
 
- @override
-  void initState() 
- {
+  @override
+  void initState() {
     getTrending();
+    getPost();
   }
 
   @override
@@ -64,18 +64,18 @@ class _CommunityState extends State<Community> {
                 padding: const EdgeInsets.only(top: 10),
                 child: _buildWelcomeRow(),
               ),
-      
+
               // const SizedBox(height: 16),
-      
-              Obx(() => getTrendingData.length == 0 && findTranding
-                  ? Loader()
-                  : !findTranding && getTrendingData.length == 0
-                      ?  noFriend(context,"Make friends to see their posts")
-                      : Obx(()=> getPosted.value? getPostListview()  :getPostListview()),
-                    )
-      
-              
-      
+
+              Obx(
+                () => getTrendingData.length == 0 && findTranding
+                    ? Loader()
+                    : !findTranding && getTrendingData.length == 0
+                        ? noFriend(context, "Make friends to see their posts")
+                        : Obx(() => getPosted.value
+                            ? getPostListview()
+                            : getPostListview()),
+              )
             ],
           ),
         ),
@@ -83,31 +83,29 @@ class _CommunityState extends State<Community> {
     );
   }
 
+  Widget getPostListview() {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    return Container(
+      // color: Colors.blue,
+      width: width,
+      height: height / 1.4,
 
-  Widget getPostListview(){
-    double width= MediaQuery.of(context).size.width;
-    double height= MediaQuery.of(context).size.height;
-     return Container(
-     // color: Colors.blue,
-            width: width,
-           height: height/1.4,
-           
-              child: ListView.builder(
-                 padding: EdgeInsets.zero, // Removes default padding
-   // physics: const ClampingScrollPhysics(), 
-                itemCount: getTrendingData.length,
-                itemBuilder: (context, index) {
-                  final dataObj = getTrendingData[index];
-                  return PostCard(data: dataObj);
-                },
-              ),
-            
-);
+      child: ListView.builder(
+        padding: EdgeInsets.zero, // Removes default padding
+        // physics: const ClampingScrollPhysics(),
+        itemCount: getTrendingData.length,
+        itemBuilder: (context, index) {
+          final dataObj = getTrendingData[index];
+          return PostCard(data: dataObj);
+        },
+      ),
+    );
   }
 
   Widget _buildWelcomeRow() {
-    double w = MediaQuery.of(context).size.width; 
-double h = MediaQuery.of(context).size.height;
+    double w = MediaQuery.of(context).size.width;
+    double h = MediaQuery.of(context).size.height;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -123,34 +121,31 @@ double h = MediaQuery.of(context).size.height;
                   'Welcome back to',
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.normal,
-                      fontSize: h/40,
+                      fontSize: h / 40,
                       color: Colors.black),
                 ),
                 Text(
                   'Financial Community',
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.bold,
-                      fontSize: h/36,
+                      fontSize: h / 36,
                       color: Colors.black),
                 ),
               ],
             ),
-
             Align(
               alignment: Alignment.topRight,
               child: Column(
                 children: [
                   Container(
-                       width: MediaQuery.sizeOf(context).width / 7,
-                       height: MediaQuery.sizeOf(context).width / 7,
+                      width: MediaQuery.sizeOf(context).width / 7,
+                      height: MediaQuery.sizeOf(context).width / 7,
                       decoration: BoxDecoration(
-                        color:AppColors.button,
-                        borderRadius: BorderRadius.circular(18)
-                      ),
+                          color: AppColors.button,
+                          borderRadius: BorderRadius.circular(18)),
                       child: GestureDetector(
                         onTap: () async {
                           await showModal({});
-                         
                         },
                         child: AvatarProfileImage(
                           url: LikeComment.plus,
@@ -162,7 +157,7 @@ double h = MediaQuery.of(context).size.height;
                     'Create post',
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.normal,
-                        fontSize: h/64,
+                        fontSize: h / 64,
                         color: AppColors.bg1),
                   ),
                 ],
@@ -170,27 +165,28 @@ double h = MediaQuery.of(context).size.height;
             ),
           ],
         ),
-        const SizedBox(height: 10,),
+        const SizedBox(
+          height: 10,
+        ),
         Container(
-          width:w/0.8,
-          
+          width: w / 0.8,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Hero(
                 tag: "TribeSearch",
                 child: InkWell(
-                   onTap: () {
-                      Navigator.pushNamed(context, '/TribeSearch');
-                    },
+                  onTap: () {
+                    Navigator.pushNamed(context, '/TribeSearch');
+                  },
                   child: Container(
-                   
                     width: MediaQuery.sizeOf(context).width / 1.45,
                     height: 40,
                     child: TextField(
                       controller: _searchController,
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 0),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         filled: true,
                         enabled: false,
                         hintText: 'Search...',
@@ -237,241 +233,250 @@ double h = MediaQuery.of(context).size.height;
   Future<void> showModal(Map<String, dynamic> post) async {
     TextEditingController textController = TextEditingController();
     TextEditingController textController2 = TextEditingController();
-    //int k = 0;
     File? pickedImage;
     int k = 0;
+
     showModalBottomSheet(
-      
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
+        // Calculate responsive padding based on screen width
+        final double horizontalPadding =
+            MediaQuery.of(context).size.width * 0.04;
+        final double verticalPadding =
+            MediaQuery.of(context).size.height * 0.02;
+
         return Padding(
-          padding: MediaQuery.of(context)
-              .viewInsets, // Adjust for keyboard if needed
+          padding: MediaQuery.of(context).viewInsets,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 20),
-            // constraints: BoxConstraints(
-            //     maxHeight: MediaQuery.of(context).size.height * 0.8),
-            //width: MediaQuery.sizeOf(context).width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  height: 16,
-                ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 12.0),
+            padding: EdgeInsets.symmetric(
+              horizontal: horizontalPadding,
+              vertical: verticalPadding,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height *
+                  0.9, // Limit height to 90% of screen
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: horizontalPadding / 2),
                     child: Text(
                       'Create Post',
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: AppColors.accentColor),
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.bold,
+                        fontSize: MediaQuery.of(context).size.width *
+                            0.05, // Responsive font size
+                        color: AppColors.accentColor,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    //Text button
-                    Expanded(
-                      child: Column(
-                        //crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          DecoratedContainer(
-                            // width: 90.0,
-                            // height: 60.0,
-                            child: IconButton(
-                              icon: const Icon(Icons.text_fields),
-                              onPressed: () {
-                                     posting.value=false;
-                                // Replace the current modal content instead of showing a new one
-                                Navigator.of(context)
-                                    .pop(); // Close the current modal
-                                showModalBottomSheet(
-                                   isScrollControlled: true,
-                                  context: context,
-                                  builder: (context) {
-                                    return TextScreen(
-                                      userInfo: post,
-                                      onPostCreated: (newPost) {
-                                    
-                                        setState(() {
-                                          posts.add(newPost);
-                                          k = 1;
-                                        });
-                                      },
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text('Text',
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.normal,
-                                  fontSize: 18,
-                                  color: Colors.black)),
-                        ],
+                  SizedBox(height: verticalPadding),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildOptionButton(
+                        context: context,
+                        icon: Icons.text_fields,
+                        label: 'Text',
+                        onTap: () {
+                          posting.value = false;
+                          Navigator.of(context).pop();
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (context) {
+                              return TextScreen(
+                                userInfo: post,
+                                onPostCreated: (newPost) {
+                                  setState(() {
+                                    posts.add(newPost);
+                                    k = 1;
+                                  });
+                                },
+                              );
+                            },
+                          );
+                        },
                       ),
-                    ),
-                    // For Image button
-                    Expanded(
-                      child: Column(
-                        //crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          DecoratedContainer(
-                            // width: 90.0,
-                            // height: 60.0,
-                            child: IconButton(
-                              icon: const Icon(Icons.image_rounded),
-                              onPressed: () {
-                                Navigator.of(context)
-                                    .pop(); 
-                                         posting.value=false;// Close the current modal
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  context: context,
-                                  builder: (context) {
-                                    return ImageScreen(
-                                      userInfo: post,
-                                      onPostCreated: (newPost) {
-                                        setState(() {
-                                          posts.add(newPost);
-                                        });
-                                      },
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text('Image',
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.normal,
-                                  fontSize: 18,
-                                  color: Colors.black)),
-                        ],
-                      ),
-                    ),
-
-                    // For Poll button
-                    Expanded(
-                      child: Column(
-                        //crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          DecoratedContainer(
-                            // width: 90.0,
-                            // height: 60.0,
-                            child: IconButton(
-                              icon: const Icon(Icons.poll_outlined),
-                              onPressed: () {
-                                Navigator.of(context)
-                                    .pop(); 
-                                     posting.value=false;// Close the current modal
-                                showModalBottomSheet(
-                                  context: context,
-                                  
-                                  isScrollControlled: true,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(16)),
-                                  ),
-                                  builder: (BuildContext context) {
-                                    return Container(
-                                      padding: const EdgeInsets.all(16.0),
-                                      // height:
-                                      //     MediaQuery.sizeOf(context).height / 2,
-                                      width: MediaQuery.sizeOf(context).width,
-                                      child: PollScreen(
-                                        userInfo: post,
-                                        onPollPosted: (pollData) {
-                                          
-                                          setState(() {
-                                            posts.add(pollData);
-                                          });
-
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text('Poll',
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.normal,
-                                  fontSize: 18,
-                                  color: Colors.black)),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 24,
-                ),
-                // ... existing code ...
-                // This code of exploria is meant for later purposes
-                Align(
-                  alignment: Alignment.center,
-                  child: DecoratedContainer(
-                    // width:
-                    //     MediaQuery.of(context).size.width - 50, // Match padding
-
-                    // height: 60.0,
-                    borderRadius: 24,
-                    child: TextButton.icon(
-                      icon: Icon(Icons.explore),
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Close the current modal
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (context) {
-                            return Container(
-                              //height: MediaQuery.of(context).size.height * 0.7,
-                              // 80% of screen height
-                              child: ExploreModal(
+                      _buildOptionButton(
+                        context: context,
+                        icon: Icons.image_rounded,
+                        label: 'Image',
+                        onTap: () {
+                          posting.value = false;
+                          Navigator.of(context).pop();
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (context) {
+                              return ImageScreen(
+                                userInfo: post,
                                 onPostCreated: (newPost) {
                                   setState(() {
                                     posts.add(newPost);
                                   });
                                 },
+                              );
+                            },
+                          );
+                        },
+                      ),
+                      _buildOptionButton(
+                        context: context,
+                        icon: Icons.poll_outlined,
+                        label: 'Poll',
+                        onTap: () {
+                          posting.value = false;
+                          Navigator.of(context).pop();
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (context) {
+                              return Container(
+                                padding: const EdgeInsets.all(16.0),
+                                width: MediaQuery.sizeOf(context).width,
+                                child: PollScreen(
+                                  userInfo: post,
+                                  onPollPosted: (pollData) {
+                                    setState(() {
+                                      posts.add(pollData);
+                                    });
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: verticalPadding),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) {
+                          return Container(
+                            child: ExploreModal(
+                              onPostCreated: (newPost) {
+                                setState(() {
+                                  posts.add(newPost);
+                                });
+                              },
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.symmetric(
+                          horizontal: horizontalPadding / 2),
+                      padding: EdgeInsets.symmetric(
+                        vertical: verticalPadding,
+                        horizontal: horizontalPadding,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.accentColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.explore,
+                            color: AppColors.primaryColor,
+                            size: MediaQuery.of(context).size.width *
+                                0.06, // Responsive icon size
+                          ),
+                          SizedBox(width: horizontalPadding / 2),
+                          Flexible(
+                            child: Text(
+                              'Exploria',
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w600,
+                                fontSize: MediaQuery.of(context).size.width *
+                                    0.045, // Responsive font size
+                                color: AppColors.accentColor,
                               ),
-                            );
-                          },
-                        );
-                      },
-                      label: Text('Exploria',
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.normal,
-                              fontSize: 18,
-                              color: Colors.black)),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  SizedBox(height: verticalPadding),
+                ],
+              ),
             ),
           ),
         );
       },
+    );
+  }
+
+// Helper method to build option buttons
+  Widget _buildOptionButton({
+    required BuildContext context,
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    final double iconSize =
+        MediaQuery.of(context).size.width * 0.07; // Responsive icon size
+    final double fontSize =
+        MediaQuery.of(context).size.width * 0.04; // Responsive font size
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding:
+                EdgeInsets.all(iconSize * 0.3), // Padding scales with icon size
+            decoration: BoxDecoration(
+              color: AppColors.accentColor.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              size: iconSize,
+              color: AppColors.primaryColor,
+            ),
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+          ConstrainedBox(
+            constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.25),
+            child: Text(
+              label,
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.w500,
+                fontSize: fontSize,
+                color: Colors.black87,
+              ),
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
