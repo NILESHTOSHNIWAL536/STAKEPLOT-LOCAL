@@ -180,7 +180,7 @@
 //                             ],
 //                           ),
 //                         ),
-                    
+
 //                         Row(
 //                           children: [
 //                             flag ? saved() : SizedBox.shrink(),
@@ -230,7 +230,6 @@
 //                                 : dataObj['chartType'] == "bargraph"
 //                                     ? barGraph(dataObj)
 //                                     : pieChart(dataObj)),
-                  
 
 //                     dataObj['image'] != null &&
 //                             (dataObj['image'] != "none" &&
@@ -247,7 +246,7 @@
 //                                     ),
 //                             ),
 //                         )
-              
+
 //                         : SizedBox.shrink(),
 
 //                     // const SizedBox(
@@ -708,15 +707,15 @@
 //           crossAxisAlignment: CrossAxisAlignment.start,
 //           children: [
 //             Container(
-              
+
 //               padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
 //               width: width <= 500 ? width / 1.3 : width / 1.3,
-      
+
 //               child: Column(
 //                 mainAxisAlignment: MainAxisAlignment.start,
 //                 crossAxisAlignment: CrossAxisAlignment.start,
 //                 children: [
-                
+
 //                   Column(
 //                       mainAxisAlignment: MainAxisAlignment.start,
 //                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -829,8 +828,6 @@
 //       ));
 // }
 
-
-
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import "package:flutter/material.dart";
@@ -876,7 +873,11 @@ class ChartData {
 class PostCard extends StatefulWidget {
   var data;
   bool flag = false;
-  PostCard({Key? key, required this.data, this.flag = false,}) : super(key: key);
+  PostCard({
+    Key? key,
+    required this.data,
+    this.flag = false,
+  }) : super(key: key);
 
   @override
   _PostCardState createState() => _PostCardState();
@@ -920,10 +921,14 @@ class _PostCardState extends State<PostCard> {
   }
 
   Widget uploadData(dataObj, bool flag) {
-   
-  bool isExploria = dataObj['postType']=="explore";
-  var extractdata=isExploria?dataObj['description']['message']:{};  //  dataObj.containsKey('place') && dataObj.containsKey('tripHighlight')
- 
+    bool isExploria = dataObj['postType'] == "explore";
+    var extractdata = isExploria
+        ? dataObj['description']['message']
+        : {}; //  dataObj.containsKey('place') && dataObj.containsKey('tripHighlight')
+    if (isExploria) {
+      print("dataObj-----------------------");
+      print(dataObj);
+    }
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
       child: Card(
@@ -938,20 +943,24 @@ class _PostCardState extends State<PostCard> {
               onTap: flag
                   ? null
                   : () {
-                    print('uploadData: Navigating to TribeUnique for post ID: ${dataObj["_id"]}');
+                      print(
+                          'uploadData: Navigating to TribeUnique for post ID: ${dataObj["_id"]}');
                       Navigator.push(
                         context,
                         PageRouteBuilder(
-                          pageBuilder: (context, animation, secondaryAnimation) =>
-                              TribeUnique(
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  TribeUnique(
                             id: dataObj["_id"],
                             dataObj: dataObj,
                           ),
-                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                          transitionsBuilder:
+                              (context, animation, secondaryAnimation, child) {
                             const begin = Offset(1.0, 0.0);
                             const end = Offset.zero;
                             const curve = Curves.easeInOut;
-                            var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                            var tween = Tween(begin: begin, end: end)
+                                .chain(CurveTween(curve: curve));
                             var offsetAnimation = animation.drive(tween);
                             return SlideTransition(
                               position: offsetAnimation,
@@ -966,7 +975,8 @@ class _PostCardState extends State<PostCard> {
                 padding: const EdgeInsets.fromLTRB(0, 3, 0, 7),
                 decoration: BoxDecoration(
                     color: AppColors.mt,
-                    borderRadius: BorderRadius.circular(Colorcodes.borderRadius)),
+                    borderRadius:
+                        BorderRadius.circular(Colorcodes.borderRadius)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -997,7 +1007,8 @@ class _PostCardState extends State<PostCard> {
                         Row(
                           children: [
                             flag ? saved() : SizedBox.shrink(),
-                            popUpBox(dataObj['_id'], context, dataObj["author"]['name']),
+                            popUpBox(dataObj['_id'], context,
+                                dataObj["author"]['name']),
                             const SizedBox(width: 20),
                           ],
                         ),
@@ -1005,7 +1016,10 @@ class _PostCardState extends State<PostCard> {
                     ),
                     // Exploria Post UI
                     isExploria
-                        ? ExploreCard(extractdata: extractdata,dataObj: dataObj,)
+                        ? ExploreCard(
+                            extractdata: extractdata,
+                            dataObj: dataObj,
+                          )
                         : (dataObj['isPoll'] ?? false)
                             ? Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -1018,7 +1032,8 @@ class _PostCardState extends State<PostCard> {
                                 ),
                               )
                             : Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 10),
                                 child: Text(
                                   (dataObj['title']),
                                   style: FontManager().getTextStyle(context,
@@ -1029,52 +1044,69 @@ class _PostCardState extends State<PostCard> {
                               ),
                     // Image Section (Exploria or Others)
                     isExploria
-                        ? SizedBox.shrink():  dataObj['image'] != null &&
-                            (dataObj['image'] != "none" && dataObj['image'] != "")
-                        ? Padding(
-                            padding: EdgeInsets.symmetric(vertical: Colorcodes.borderRadius),
-                            child: Center(
-                              child: GFImageOverlay(
-                                width: MediaQuery.of(context).size.width / 1.2,
-                                height: MediaQuery.of(context).size.height / 2.7,
-                                boxFit: BoxFit.fill,
-                                borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
-                                image: NetworkImage(dataObj['image']),
-                              ),
-                            ),
-                          )
-                        : isExploria && dataObj['backGroundPicture'] != null && dataObj['backGroundPicture'] != ""
+                        ? SizedBox.shrink()
+                        : dataObj['image'] != null &&
+                                (dataObj['image'] != "none" &&
+                                    dataObj['image'] != "")
                             ? Padding(
-                                padding: EdgeInsets.symmetric(vertical: Colorcodes.borderRadius),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: Colorcodes.borderRadius),
                                 child: Center(
                                   child: GFImageOverlay(
-                                    width: MediaQuery.of(context).size.width / 1.2,
-                                    height: MediaQuery.of(context).size.height / 2.7,
+                                    width:
+                                        MediaQuery.of(context).size.width / 1.2,
+                                    height: MediaQuery.of(context).size.height /
+                                        2.7,
                                     boxFit: BoxFit.fill,
-                                    borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
-                                    image: NetworkImage(dataObj['backGroundPicture']),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          begin: Alignment.bottomCenter,
-                                          end: Alignment.topCenter,
-                                          colors: [
-                                            Colors.black.withOpacity(0.6),
-                                            Colors.transparent,
-                                          ],
-                                        ),
-                                      ),
-                                    ),
+                                    borderRadius: BorderRadius.circular(
+                                        Colorcodes.borderRadius),
+                                    image: NetworkImage(dataObj['image']),
                                   ),
                                 ),
                               )
-                            : SizedBox.shrink(),
+                            : isExploria &&
+                                    dataObj['backGroundPicture'] != null &&
+                                    dataObj['backGroundPicture'] != ""
+                                ? Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: Colorcodes.borderRadius),
+                                    child: Center(
+                                      child: GFImageOverlay(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                1.2,
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                2.7,
+                                        boxFit: BoxFit.fill,
+                                        borderRadius: BorderRadius.circular(
+                                            Colorcodes.borderRadius),
+                                        image: NetworkImage(
+                                            dataObj['backGroundPicture']),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              begin: Alignment.bottomCenter,
+                                              end: Alignment.topCenter,
+                                              colors: [
+                                                Colors.black.withOpacity(0.6),
+                                                Colors.transparent,
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox.shrink(),
                     // Content for Non-Exploria Posts
                     !isExploria
                         ? (dataObj['isPoll'] ?? false)
-                            ? getQuestionsAndOptions(dataObj['pollData'], context, true, dataObj['_id'])
+                            ? getQuestionsAndOptions(dataObj['pollData'],
+                                context, true, dataObj['_id'])
                             : Container(
-                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 10),
                                 child: !dataObj['isItenary']
                                     ? text(dataObj)
                                     : dataObj['chartType'] == "bargraph"
@@ -1082,7 +1114,7 @@ class _PostCardState extends State<PostCard> {
                                         : pieChart(dataObj),
                               )
                         : SizedBox.shrink(),
-                      vote(context, dataObj, dataObj),
+                    vote(context, dataObj, dataObj),
                   ],
                 ),
               ),
@@ -1092,7 +1124,6 @@ class _PostCardState extends State<PostCard> {
       ),
     );
   }
-
 
   Future<ui.Image> _loadImage(String url) async {
     final http.Response response = await http.get(Uri.parse(url));
@@ -1157,10 +1188,10 @@ class _PostCardState extends State<PostCard> {
     }
   }
 
-  Widget popUpBox(id, context,userId) {
+  Widget popUpBox(id, context, userId) {
     return PopupMenuButton(
       initialValue: 2,
-      color:  Colorcodes.white,
+      color: Colorcodes.white,
       child: Center(
           child: Icon(
         Icons.more_vert_outlined,
@@ -1168,15 +1199,17 @@ class _PostCardState extends State<PostCard> {
         color: AppColors.bg2,
       )),
       onSelected: (value) {
-        if(value==0 && userId==userName.value){
-              deletePost(id,context);
+        if (value == 0 && userId == userName.value) {
+          deletePost(id, context);
         }
         if (value == 1) {
           print(value);
-          showModalBottomSheet(context: context,
-               builder: (context){
-                     return showModel(context,id,widget.flag);
-            },);
+          showModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return showModel(context, id, widget.flag);
+            },
+          );
         } else {
           reportPost(context, id, "hide post");
           if (widget.flag) {
@@ -1187,32 +1220,39 @@ class _PostCardState extends State<PostCard> {
         }
       },
       itemBuilder: (context) {
-        return userId==userName.value? [
-             PopupMenuItem(
-            value: 0,
-            child: getTextMenuItem(context: context,text: "Delete",color: Colorcodes.red,),
-          ),
-
-        ]:[
-           PopupMenuItem(
-            value: 0,
-            child: getTextMenuItem(context: context,text: "Hide"),
-          ),
-           PopupMenuItem(
-            value: 1,
-            child: getTextMenuItem(context: context,text: "Report"),
-          ),
-        ];
+        return userId == userName.value
+            ? [
+                PopupMenuItem(
+                  value: 0,
+                  child: getTextMenuItem(
+                    context: context,
+                    text: "Delete",
+                    color: Colorcodes.red,
+                  ),
+                ),
+              ]
+            : [
+                PopupMenuItem(
+                  value: 0,
+                  child: getTextMenuItem(context: context, text: "Hide"),
+                ),
+                PopupMenuItem(
+                  value: 1,
+                  child: getTextMenuItem(context: context, text: "Report"),
+                ),
+              ];
       },
     );
   }
 
- Widget getTextMenuItem({required BuildContext context,
+  Widget getTextMenuItem({
+    required BuildContext context,
     text,
     Color color = AppColors.bg1,
-  }){
-   return textStyle(context: context,text:text,c:color,fontWeight: FontWeight.bold);
- }
+  }) {
+    return textStyle(
+        context: context, text: text, c: color, fontWeight: FontWeight.bold);
+  }
 
   Widget barGraph(item) {
     List<SalesData> chartData = <SalesData>[];
@@ -1537,15 +1577,12 @@ Widget getQuestionsAndOptions(e, context, flag, PostId) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              
               padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
               width: width <= 500 ? width / 1.3 : width / 1.3,
-      
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                
                   Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,

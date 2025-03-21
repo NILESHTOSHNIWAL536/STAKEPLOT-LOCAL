@@ -633,6 +633,7 @@ void getTrending() async {
     if (getTrendingData.length == 0) {
       findTranding = false;
     }
+    print(getTrendingData);
     getTrendingData.forEach((element) {
       postCount[element["_id"]] =
           element['upvotes'] < 0 ? 0 : element['upvotes'];
@@ -642,6 +643,7 @@ void getTrending() async {
 
 void getPost() async {
   var response = await getDataApiCall('${url}/post/feed');
+  
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
@@ -649,6 +651,8 @@ void getPost() async {
     historyListData.addAll(obj);
     getTrendingData.clear();
     getTrendingData.addAll(obj);
+    print("getTrendingData-------------------------------------------------");
+    print(getTrendingData);
     historyListData.forEach((element) {
       postCount[element["_id"]] = element['upvotes'];
       postCommentCount[element["_id"]] = element['comments'];
@@ -668,7 +672,8 @@ void getExploria() async {
     getExploriaTrendingData.clear();
     getExploriaTrendingData.addAll(obj);
     historyExploriaListData.forEach((element) {
-      print("exploria post: ${element['_id']} - place: ${element['place']}, tripHighlight: ${element['tripHighlight']}"); // Log each post’s keys
+      print(
+          "exploria post: ${element['_id']} - place: ${element['place']}, tripHighlight: ${element['tripHighlight']}"); // Log each post’s keys
       postExploriaCount[element["_id"]] = element['upvotes'];
       postExploriaCommentCount[element["_id"]] = element['comments'];
     });
@@ -824,11 +829,9 @@ void deletePost(id, context) async {
   }
 }
 
-
-Future<String> postImageToCloud(imageFile,context)async{
-
-  try{
-   final url2 = Uri.parse('https://api.cloudinary.com/v1_1/deus5rcgl/upload');
+Future<String> postImageToCloud(imageFile, context) async {
+  try {
+    final url2 = Uri.parse('https://api.cloudinary.com/v1_1/deus5rcgl/upload');
     // Upload image to Cloudinary
     final request = http.MultipartRequest('POST', url2)
       ..fields['upload_preset'] = 'zu3td0li'
@@ -846,7 +849,7 @@ Future<String> postImageToCloud(imageFile,context)async{
     final jsonMap = jsonDecode(responseString);
     String urlPath = jsonMap['secure_url'];
     return urlPath;
-  }catch(e){
-      return "";
+  } catch (e) {
+    return "";
   }
 }

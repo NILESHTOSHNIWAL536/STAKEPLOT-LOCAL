@@ -669,7 +669,8 @@ class _CommunityState extends State<Community> {
                   Text(
                     'Budget',
                     style: FontManager().getTextStyle(
-                      context,
+            
+                    context,
                       lWeight: FontWeight.bold,
                       fontSize: 18,
                       color: Colors.black,
@@ -816,20 +817,7 @@ class _CommunityState extends State<Community> {
                     lWeight: FontWeight.normal,
                     fontSize: 18,
                     color: Colors.black)),
-            TextButton(
-              onPressed: () {
-                // Follow Button Logic
-              },
-              child: Text('+Follow'),
-              style: ElevatedButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                textStyle: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.normal,
-                    fontSize: 12,
-                    color: Colors.black),
-              ),
-            ),
+           
           ],
         ),
         IconButton(onPressed: () {}, icon: Icon(Icons.more_vert))
@@ -847,8 +835,8 @@ class _CommunityState extends State<Community> {
               fontSize: 18, // Change font size
               fontWeight: FontWeight.bold, // Change font weight
               color: Colors.black, // Change text color
-            ),
-          ),
+               ),
+        ),
           Text(
             post['content'],
             style: const TextStyle(fontSize: 14),
