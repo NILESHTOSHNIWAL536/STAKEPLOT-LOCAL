@@ -700,6 +700,7 @@
 //     );
 //   }
 // }
+
 import "dart:convert";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
@@ -788,11 +789,18 @@ class _NotificationsState extends State<Notifications> {
           centerTitle: true,
         ),
         backgroundColor: AppColors.backgroundColor,
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Obx(() => myNotificationBool.value
-              ? _buildNotificationList()
-              : _buildNotificationList()),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            return Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: constraints.maxWidth * 0.04,
+                vertical: constraints.maxHeight * 0.01,
+              ),
+              child: Obx(() => myNotificationBool.value
+                  ? _buildNotificationList()
+                  : _buildNotificationList()),
+            );
+          },
         ),
       ),
     );
@@ -808,10 +816,10 @@ class _NotificationsState extends State<Notifications> {
                   children: [
                     Icon(
                       Icons.notifications_none,
-                      size: 60,
+                      size: MediaQuery.of(context).size.width * 0.15,
                       color: AppColors.bg3.withOpacity(0.5),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                     Text(
                       "No Notifications",
                       style: FontManager().getTextStyle(
@@ -821,7 +829,7 @@ class _NotificationsState extends State<Notifications> {
                         color: AppColors.accentColor,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                     Text(
                       "You're all caught up!",
                       style: FontManager().getTextStyle(
@@ -867,7 +875,7 @@ class _NotificationsState extends State<Notifications> {
     var data = e['notificationMessage'] ?? {};
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6),
+      margin: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.008),
       decoration: BoxDecoration(
         color: AppColors.mt,
         borderRadius: BorderRadius.circular(12),
@@ -881,13 +889,13 @@ class _NotificationsState extends State<Notifications> {
       ),
       child: IntrinsicHeight(
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+         crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Colored line with AppColors.primaryColor
+           
             Container(
-              width: 6,
+             width: MediaQuery.of(context).size.width * 0.015,
               decoration: BoxDecoration(
-                color: AppColors.primaryColor,
+                 color: AppColors.primaryColor,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(12),
                   bottomLeft: Radius.circular(12),
@@ -896,7 +904,7 @@ class _NotificationsState extends State<Notifications> {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
                 child: _getNotificationContent(type ?? "unknown", data, notifyId, time),
               ),
             ),
@@ -1013,23 +1021,31 @@ class _NotificationsState extends State<Notifications> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         avatar.isNotEmpty
-            ? UserAvatar(url: avatar, width: 20, height: 20)
-            : const SizedBox(width: 40),
-       // const SizedBox(width: 12),
+            ? UserAvatar(
+                url: avatar,
+                width: MediaQuery.of(context).size.width * 0.06,
+                height: MediaQuery.of(context).size.width * 0.06,
+              )
+            : SizedBox(width: MediaQuery.of(context).size.width * 0.06),
+        SizedBox(width: MediaQuery.of(context).size.width * 0.03),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                message,
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.w600,
-                  fontSize: 14,
-                  color: AppColors.bg1,
+              Padding(
+                padding: EdgeInsets.only(top: MediaQuery.of(context).size.width * 0.015),
+                child: Text(
+                  message,
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: AppColors.bg1,
+                  ),
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
               _buildTimeDivider(time),
             ],
           ),
@@ -1043,22 +1059,30 @@ class _NotificationsState extends State<Notifications> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        UserAvatar(url: avatar, width: 20, height: 20),
-        const SizedBox(width: 12),
+        UserAvatar(
+          url: avatar,
+          width: MediaQuery.of(context).size.width * 0.06,
+          height: MediaQuery.of(context).size.width * 0.06,
+        ),
+        SizedBox(width: MediaQuery.of(context).size.width * 0.03),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "$name sent you a friend request",
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.w600,
-                  fontSize: 14,
-                  color: AppColors.bg1,
+              Padding(
+                padding: EdgeInsets.only(top: MediaQuery.of(context).size.width * 0.015),
+                child: Text(
+                  "$name sent you a friend request",
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: AppColors.bg1,
+                  ),
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.015),
               Row(
                 children: [
                   _buildActionButton(
@@ -1070,7 +1094,7 @@ class _NotificationsState extends State<Notifications> {
                       _deleteNotification(notifyId);
                     },
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                   _buildActionButton(
                     "Reject",
                     Colors.white,
@@ -1083,7 +1107,7 @@ class _NotificationsState extends State<Notifications> {
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
               _buildTimeDivider(time),
             ],
           ),
@@ -1097,22 +1121,30 @@ class _NotificationsState extends State<Notifications> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-       UserAvatar(url: avatar, width: 20, height: 20),
-        const SizedBox(width: 12),
+        UserAvatar(
+          url: avatar,
+          width: MediaQuery.of(context).size.width * 0.06,
+          height: MediaQuery.of(context).size.width * 0.06,
+        ),
+        SizedBox(width: MediaQuery.of(context).size.width * 0.03),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "$name has lent you ₹${e['amount'] ?? '500'} for $itemName",
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.w600,
-                  fontSize: 14,
-                  color: AppColors.bg1,
+              Padding(
+                padding: EdgeInsets.only(top: MediaQuery.of(context).size.width * 0.015),
+                child: Text(
+                  "$name has lent you ₹${e['amount'] ?? '500'} for $itemName",
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: AppColors.bg1,
+                  ),
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.015),
               Row(
                 children: [
                   _buildActionButton(
@@ -1124,7 +1156,7 @@ class _NotificationsState extends State<Notifications> {
                       _deleteNotification(notifyId);
                     },
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                   _buildActionButton(
                     "Reject",
                     Colors.white,
@@ -1137,7 +1169,7 @@ class _NotificationsState extends State<Notifications> {
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
               _buildTimeDivider(time),
             ],
           ),
@@ -1152,23 +1184,31 @@ class _NotificationsState extends State<Notifications> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         avatar.isNotEmpty
-            ?UserAvatar(url: avatar, width: 20, height: 20)
-            : const SizedBox(width: 40),
-        const SizedBox(width: 12),
+            ? UserAvatar(
+                url: avatar,
+                width: MediaQuery.of(context).size.width * 0.06,
+                height: MediaQuery.of(context).size.width * 0.06,
+              )
+            : SizedBox(width: MediaQuery.of(context).size.width * 0.06),
+        SizedBox(width: MediaQuery.of(context).size.width * 0.03),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                message,
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.w600,
-                  fontSize: 14,
-                  color: AppColors.bg1,
+              Padding(
+                padding: EdgeInsets.only(top: MediaQuery.of(context).size.width * 0.015),
+                child: Text(
+                  message,
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: AppColors.bg1,
+                  ),
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.015),
               Row(
                 children: [
                   _buildActionButton(
@@ -1179,7 +1219,7 @@ class _NotificationsState extends State<Notifications> {
                       settleAmount(context, id, type, endUser);
                     },
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                   _buildActionButton(
                     "Reject",
                     Colors.white,
@@ -1189,7 +1229,7 @@ class _NotificationsState extends State<Notifications> {
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
               _buildTimeDivider(time),
             ],
           ),
@@ -1203,7 +1243,10 @@ class _NotificationsState extends State<Notifications> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width * 0.04,
+          vertical: MediaQuery.of(context).size.height * 0.01,
+        ),
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(8),

@@ -100,7 +100,7 @@ class _PlotFinanceState extends State<PlotFinance> {
 
   Widget calculatorList() {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
       width: MediaQuery.of(context).size.width,
       child: Wrap(
         spacing: 8,

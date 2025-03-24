@@ -507,7 +507,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
               builder: (dynamic data, dynamic point, dynamic series,
                   int pointIndex, int seriesIndex) {
                 final ChartData chartData = data as ChartData;
-                String label = seriesIndex == 0 ? 'Credited' : 'Debited';
+                String label = seriesIndex == 1 ? 'Credited' : 'Debited';
                 isTooltipVisible.value = true;
 
                 //  Future.delayed(Duration(seconds: 2), () {
@@ -528,30 +528,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                   ),
                 );
 
-                // return GestureDetector(
-                //   behavior: HitTestBehavior.opaque,
-                //   onTap: () {
-                //     if (widget.selectedButton.value == 'Month' &&  widget.shouldBeNavigate) {
-                //          currentPage=1;
-                //         transactionsHistory.clear();
-                //         navToExpanded();
-                //     }
-                //   },
-                //   child: Container(
-                //     padding: EdgeInsets.all(8),
-                //     decoration: BoxDecoration(
-                //       color: Colors.black54,
-                //       borderRadius: BorderRadius.circular(4),
-                //     ),
-                //     child: Text(
-                //       '$label: ₹${chartData.y.toStringAsFixed(2)}',
-                //       style: FontManager().getTextStyle(context,
-                //           lWeight: FontWeight.normal,
-                //           fontSize: fontSizeFactor * 2.5,
-                //           color: Colors.white),
-                //     ),
-                //   ),
-                // );
+               
               },
             ),
             
