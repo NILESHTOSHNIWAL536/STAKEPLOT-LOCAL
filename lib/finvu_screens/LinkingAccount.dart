@@ -36,6 +36,7 @@ RxMap<String, String> bankImageAndid = RxMap();
 RxList<FinvuFIPInfo> listOfBankAccount = <FinvuFIPInfo>[].obs;
 // RxBool getBanks=false.obs;
 RxBool addBank = false.obs;
+RxBool addCheck = false.obs;
 List<FinvuLinkedAccountDetailsInfo> fetchAccountData = [];
 List<FinvuLinkedAccountDetailsInfo> seletedAccountInfomations = [];
 List<String> seletedAccountIds = [];

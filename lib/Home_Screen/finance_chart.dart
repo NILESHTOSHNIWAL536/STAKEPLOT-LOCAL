@@ -451,6 +451,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     double chartWidth = dataLength * labelWidth;
 
     return Container(
+       
         width: widget.selectedButton.value == 'Week'
             ? screenWidth * 0.85 // Fixed width for Week
             : max(chartWidth, screenWidth * 0.85),

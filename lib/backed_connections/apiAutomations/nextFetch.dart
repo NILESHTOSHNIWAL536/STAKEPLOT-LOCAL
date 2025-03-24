@@ -43,6 +43,7 @@ class _RotatingIconState extends State<Nextfetch> with SingleTickerProviderState
     _controller = AnimationController(
       duration: Duration(seconds: 1), // Rotation duration
       vsync: this,
+      
     );
 
     _timer = Timer.periodic(Duration(seconds: 5), (timer) {
@@ -90,6 +91,7 @@ class _RotatingIconState extends State<Nextfetch> with SingleTickerProviderState
       child: Row(
         children: [
           RotationTransition(
+
             turns: _controller,
             child: AvatarProfileImage(url: HomePageIcons.fetch, width: 25, height: 25)
           ),

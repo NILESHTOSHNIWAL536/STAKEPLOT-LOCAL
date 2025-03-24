@@ -17,6 +17,7 @@ class HomePageIcons {
   static String notification = "assets/icons/Home-page/notification.svg";
   static String refresh = "assets/icons/Home-page/Refresh.svg";
   static String fetch = "assets/icons/Home-page/fetch.svg";
+  static String none = "assets/icons/Home-page/none.svg";
 
 }
 

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
+import 'package:flutter_application_code_stakeplot/animated/pdf.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/bill.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
@@ -21,6 +22,7 @@ import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:pdf/pdf.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
 
@@ -31,7 +33,6 @@ class TransactionHistory extends StatefulWidget {
   final bool? isYearView;
   final bool? isflag;
   bool pageTransition;
-
   TransactionHistory(
       {this.isflag = false,
       this.isYearView = false,
@@ -100,8 +101,9 @@ class _TransactionHistoryState extends State<TransactionHistory>
             child: Scaffold(
               appBar: AppBar(
                 leading: InkWell(
-                    onTap: () {
-                      changeTheBool();
+                    onTap: ()async {
+                      // changeTheBool();
+                       
                     },
                     child: Icon(Icons.arrow_back_ios)),
                 title: Text(
@@ -137,12 +139,17 @@ class _TransactionHistoryState extends State<TransactionHistory>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Transaction History',
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: AppColors.accentColor),
+                      InkWell(
+                        onTap:()async{
+                          generatePdf(PdfPageFormat.legal,"StakePlot",transactionsHistory,context);
+                        },
+                        child: Text(
+                          'Transaction History',
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: AppColors.accentColor),
+                        ),
                       ),
                     ],
                   ),
@@ -185,7 +192,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 top: 5,
                 child: Container(
                   //static height for now
-                  height: 80,
+                  height: 70,
                   decoration: BoxDecoration(
                       color: AppColors.primaryColor,
                       borderRadius: BorderRadius.circular(12)),
@@ -354,7 +361,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
         : 'Date';
     final type = transaction['type']?.toString() ?? '0';
     final amtColor= type == 'CREDIT' ? Colors.green : const Color.fromARGB(255, 207, 118, 113);
-    print("typeeeee $type");
+   // print("typeeeee $type");
     final formatAmount= type == 'CREDIT' ? "+₹$amount" : "-₹$amount";
     return GestureDetector(
       onTap: () {
@@ -401,8 +408,8 @@ class _TransactionHistoryState extends State<TransactionHistory>
                         url: Categories.link +
                             (imageMapForHistory[category.toLowerCase()] ??
                                 'default_image.png'),
-                        height: 16,
-                        width: 20,
+                        height: 20,
+                        width: 22,
                       ),
                     ),
                   ),

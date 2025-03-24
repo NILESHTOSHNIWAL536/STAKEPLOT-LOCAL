@@ -704,6 +704,7 @@
 import "dart:convert";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
+import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
@@ -814,11 +815,11 @@ class _NotificationsState extends State<Notifications> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.notifications_none,
-                      size: MediaQuery.of(context).size.width * 0.15,
-                      color: AppColors.bg3.withOpacity(0.5),
-                    ),
+                    AvatarProfileImage(
+                      url: HomePageIcons.none,
+                      height:8,
+                      width: 10
+),
                     SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                     Text(
                       "No Notifications",
@@ -854,6 +855,7 @@ class _NotificationsState extends State<Notifications> {
                       _deleteNotification(notifyId);
                     },
                     background: Container(
+            
                       decoration: BoxDecoration(
                         color: Colors.redAccent,
                         borderRadius: BorderRadius.circular(12),
