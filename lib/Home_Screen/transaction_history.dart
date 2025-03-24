@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
+import 'package:flutter_application_code_stakeplot/animated/pdf.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/bill.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
@@ -21,6 +22,7 @@ import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:pdf/pdf.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
 
@@ -99,8 +101,9 @@ class _TransactionHistoryState extends State<TransactionHistory> with SingleTick
             child: Scaffold(
               appBar: AppBar(
                 leading: InkWell(
-                    onTap: () {
-                      changeTheBool();
+                    onTap: ()async {
+                      // changeTheBool();
+                       
                     },
                     child: Icon(Icons.arrow_back_ios)),
                 title: Text(
@@ -136,12 +139,17 @@ class _TransactionHistoryState extends State<TransactionHistory> with SingleTick
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Transaction History',
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: AppColors.accentColor),
+                      InkWell(
+                        onTap:()async{
+                          generatePdf(PdfPageFormat.legal,"StakePlot",transactionsHistory,context);
+                        },
+                        child: Text(
+                          'Transaction History',
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: AppColors.accentColor),
+                        ),
                       ),
                     ],
                   ),
@@ -181,10 +189,15 @@ class _TransactionHistoryState extends State<TransactionHistory> with SingleTick
               Positioned(
                 left: 0,
                 right: 0,
+                top: 5,
                 child: Container(
+                  //static height for now 
                   height: 80,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor,
+                    borderRadius: BorderRadius.circular(12)
+                  )
                   
-                  color: AppColors.primaryColor,
                 ),
               ),
               Positioned(

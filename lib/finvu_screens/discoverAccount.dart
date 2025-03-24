@@ -113,12 +113,14 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
         isSeletedBankAccout.add(bankData.fipId);
         listOfBankAccount.add(bankData);
       }
-    } else {
+    } else
+    {
       // Remove from the selected list
       isSeletedBankAccout.remove(bankData.fipId);
       listOfBankAccount.removeWhere((item) => item.fipId == bankData.fipId);
     }
     addBank.value = !addBank.value; // Trigger UI update
+    addCheck.value = !addCheck.value; // Trigger UI update
   }
 
 
@@ -160,10 +162,6 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
             },
               child: Text(
                 bankData.productName.toString(),
-                // style: TextStyle(
-                //   fontSize: 15,
-                //   overflow: TextOverflow.ellipsis,
-                // ),
                 style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.w400,
                           fontSize: 15,
@@ -173,10 +171,18 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
             ),
           ),
 
-           Obx(() => Checkbox(
+           Obx(() => addCheck.value?getCheck(bankData):getCheck(bankData)),
+
+        ],
+      ),
+    );
+  }
+
+
+  Widget getCheck(bankData){
+     return Checkbox(
                 value: isSeletedBankAccout.contains(bankData.fipId),
                 activeColor: AppColors.primaryColor,
-                
                  shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(2), // Apply border radius
                 ),
@@ -184,11 +190,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                   // Toggle the checkbox selection
                   addBackToList(boolVale, bankData);
                 },
-          )),
-
-        ],
-      ),
-    );
+          );
   }
 
   void searchFinvuAccount() async {

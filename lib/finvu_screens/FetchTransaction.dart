@@ -21,7 +21,7 @@ RxBool sessionId = false.obs;
 RxBool flagToFetchData = false.obs;
 
 class FetchTransaction extends StatefulWidget {
-  const FetchTransaction({Key? key}) : super(key: key);
+  const   FetchTransaction({Key? key}) : super(key: key);
 
   @override
   State<FetchTransaction> createState() => _FetchTransactionState();

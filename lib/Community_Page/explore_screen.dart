@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:custom_image_crop/custom_image_crop.dart';
@@ -356,16 +357,16 @@ class _ExploreModalState extends State<ExploreModal> {
           exploreSubmitted = true;
           _isSubmitting = false;
         });
-         var postData = jsonDecode(response.body);
+        var postData = jsonDecode(response.body);
 
-      // Update local state
-      getTrendingData.insert(0, postData);
-      getPosted.value = !getPosted.value;
-      postCount[postData["_id"]] = 0;
-      postCommentCount[postData["_id"]] = 0;
+        // Update local state
+        getTrendingData.insert(0, postData);
+        getPosted.value = !getPosted.value;
+        postCount[postData["_id"]] = 0;
+        postCommentCount[postData["_id"]] = 0;
 
-      posting.value = false;
-      postDis.value = false;
+        posting.value = false;
+        postDis.value = false;
         widget.onPostCreated(jsonDecode(response.body));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -707,29 +708,59 @@ class _ExploreModalState extends State<ExploreModal> {
     final isEnabled = locationNameController.text.isNotEmpty &&
         locationAddressController.text.isNotEmpty &&
         !_isSubmitting;
-    return DecoratedContainer(
-      borderRadius: 24,
-      backgroundColor: isEnabled ? AppColors.primaryColor : Colors.grey,
-      child: Center(
-        child: TextButton(
-          onPressed: isEnabled ? _submitPost : null,
-          child: _isSubmitting
-              ? const CircularProgressIndicator(color: Colors.white)
-              : Text(
-                  'Continue',
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.bold,
-                    fontSize: 15,
-                    color: locationNameController.text.isNotEmpty &&
-                            locationAddressController.text.isNotEmpty
-                        ? Colors.white
-                        : Colors.black,
-                  ),
-                ),
+
+    // return GestureDetector( onTap: isEnabled ? _submitPost : null,child:
+    //  ( isEnabled ) ?  getButton(context,  "Continue"): getButton(context, "Continue",AppColors.mt,AppColors.bg1)
+    // );
+    return GestureDetector(
+      onTap: () {
+        isEnabled ? _submitPost : null;
+      },
+      child: _isSubmitting
+              ? const CircularProgressIndicator(color: Colors.white):Container(
+        width: MediaQuery.of(context).size.width / 1.1,
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+        decoration: BoxDecoration(
+            color: isEnabled ? AppColors.primaryColor : Colors.grey,
+            borderRadius: BorderRadius.circular(24)),
+        child: Center(
+          child: Text(
+            "Continue",
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.bold,
+              fontSize: 15,
+              color: locationNameController.text.isNotEmpty &&
+                      locationAddressController.text.isNotEmpty
+                  ? Colors.white
+                  : Colors.black,
+            ),
+          ),
         ),
       ),
     );
+    // return Container(
+    //   color: isEnabled ? AppColors.primaryColor : Colors.grey,
+    //   child: Center(
+    //     child: TextButton(
+    //       onPressed: isEnabled ? _submitPost : null,
+    //       child: _isSubmitting
+    //           ? const CircularProgressIndicator(color: Colors.white)
+    //           : Text(
+    //               'Continue',
+    //               style: FontManager().getTextStyle(
+    //                 context,
+    //                 lWeight: FontWeight.bold,
+    //                 fontSize: 15,
+    //                 color: locationNameController.text.isNotEmpty &&
+    //                         locationAddressController.text.isNotEmpty
+    //                     ? Colors.white
+    //                     : Colors.black,
+    //               ),
+    //             ),
+    //     ),
+    //   ),
+    // );
   }
 
   InputDecoration _inputDecoration(String hintText, IconData? icon) {
