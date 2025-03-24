@@ -43,15 +43,16 @@ class TransactionHistory extends StatefulWidget {
   State<TransactionHistory> createState() => _TransactionHistoryState();
 }
 
-class _TransactionHistoryState extends State<TransactionHistory> with SingleTickerProviderStateMixin {
+class _TransactionHistoryState extends State<TransactionHistory>
+    with SingleTickerProviderStateMixin {
   final Map<int, double> swipeOffsets = {};
   final _scrollController2 = ScrollController();
   final List<Map<String, dynamic>> hiddenTransactions = [];
   final targetKey = GlobalKey();
   BuildContext? _stableContext;
-   late AnimationController _animationController; // For smooth animations
+  late AnimationController _animationController; // For smooth animations
   late Animation<double> _swipeAnimation; // Animation for swipe offset
-  int? _currentSwipedIndex; 
+  int? _currentSwipedIndex;
 
   @override
   void initState() {
@@ -69,7 +70,7 @@ class _TransactionHistoryState extends State<TransactionHistory> with SingleTick
     currentPage = 1;
     getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,
         isRefreshing: true);
-         _animationController = AnimationController(
+    _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 200), // Animation duration
     );
@@ -182,17 +183,12 @@ class _TransactionHistoryState extends State<TransactionHistory> with SingleTick
                 left: 0,
                 right: 0,
                 top: 5,
-
-
                 child: Container(
-                  //static height for now 
+                  //static height for now
                   height: 80,
                   decoration: BoxDecoration(
-                    color: AppColors.primaryColor,
-                    borderRadius: BorderRadius.circular(12)
-
-                  ),
-                  
+                      color: AppColors.primaryColor,
+                      borderRadius: BorderRadius.circular(12)),
                 ),
               ),
               Positioned(
@@ -320,7 +316,8 @@ class _TransactionHistoryState extends State<TransactionHistory> with SingleTick
     );
   }
 
-  Future<dynamic> showCustomFriendsModal(BuildContext context,
+  Future<dynamic> showCustomFriendsModal(
+    BuildContext context,
     double amount,
     bool isLendMode,
     String category,
@@ -352,9 +349,14 @@ class _TransactionHistoryState extends State<TransactionHistory> with SingleTick
     final category = transaction['category']?.toString() ?? 'Uncategorized';
     final subcategory = transaction['subcategory']?.toString() ?? 'General';
     final amount = transaction['amount']?.toString() ?? '0';
-    final formattedDate = date != null ? formatWhatsAppDate(convertStringToDateTime(date)) : 'Date';
-
-    return  GestureDetector(
+    final formattedDate = date != null
+        ? formatWhatsAppDate(convertStringToDateTime(date))
+        : 'Date';
+    final type = transaction['type']?.toString() ?? '0';
+    final amtColor= type == 'CREDIT' ? Colors.green : const Color.fromARGB(255, 207, 118, 113);
+    print("typeeeee $type");
+    final formatAmount= type == 'CREDIT' ? "+₹$amount" : "-₹$amount";
+    return GestureDetector(
       onTap: () {
         tagName.value = category;
         showModalBottomSheet(
@@ -442,19 +444,19 @@ class _TransactionHistoryState extends State<TransactionHistory> with SingleTick
               child: Column(
                 children: [
                   textStyle(
-                    text: '₹$amount',
+                    text: '$formatAmount',
                     context: context,
                     fontWeight: FontWeight.bold,
                     fontsize: 15,
+                    c:amtColor,
                   ),
                   const SizedBox(height: 6),
                   textStyle(
-                    text: formattedDate,
-                    context: context,
-                    fontWeight: FontWeight.w300,
-                    fontsize: 10,
-                    c: AppColors.primaryColor
-                  ),
+                      text: formattedDate,
+                      context: context,
+                      fontWeight: FontWeight.w300,
+                      fontsize: 10,
+                      c: AppColors.primaryColor),
                 ],
               ),
             ),
@@ -464,8 +466,9 @@ class _TransactionHistoryState extends State<TransactionHistory> with SingleTick
     );
   }
 
-   BoxDecoration getBoxDecoration(int index) {
-    double swipeOffset = (swipeOffsets[index] ?? 0.0).abs(); // Absolute value of offset
+  BoxDecoration getBoxDecoration(int index) {
+    double swipeOffset =
+        (swipeOffsets[index] ?? 0.0).abs(); // Absolute value of offset
     double totalSwipeDistance = 90.0; // Total swipe distance
     double mixStart = totalSwipeDistance * 0.7; // Start mixing at 70% (63.0)
     double swipeProgress;
@@ -475,26 +478,32 @@ class _TransactionHistoryState extends State<TransactionHistory> with SingleTick
       swipeProgress = 0.0;
     } else {
       // In the last 30%, calculate progress from mixStart (63.0) to totalSwipeDistance (90.0)
-      swipeProgress = (swipeOffset - mixStart) / (totalSwipeDistance - mixStart);
-      swipeProgress = swipeProgress.clamp(0.0, 1.0); // Ensure it stays between 0 and 1
+      swipeProgress =
+          (swipeOffset - mixStart) / (totalSwipeDistance - mixStart);
+      swipeProgress =
+          swipeProgress.clamp(0.0, 1.0); // Ensure it stays between 0 and 1
     }
 
     return BoxDecoration(
       gradient: LinearGradient(
         begin: Alignment.centerLeft,
         end: Alignment.centerRight,
-        stops: const [0.0, 0.7, 1.0], // Gradient stops: 0% to 70% solid, 70% to 100% mixing
+        stops: const [
+          0.0,
+          0.7,
+          1.0
+        ], // Gradient stops: 0% to 70% solid, 70% to 100% mixing
         colors: [
           AppColors.backgroundColor, // Solid color up to 70%
           AppColors.backgroundColor, // Still solid at 70%
-          AppColors.backgroundColor.withOpacity(1.0 - swipeProgress), // Mixing in last 30%
+          AppColors.backgroundColor
+              .withOpacity(1.0 - swipeProgress), // Mixing in last 30%
         ],
       ),
     );
   }
 
-  
-   void scrollLeft(DragUpdateDetails details, int index) {
+  void scrollLeft(DragUpdateDetails details, int index) {
     setState(() {
       // Reset other items' offsets
       swipeOffsets.forEach((key, value) {
@@ -508,15 +517,16 @@ class _TransactionHistoryState extends State<TransactionHistory> with SingleTick
       animateSwipe(index, targetOffset);
     });
   }
+
   void animateSwipe(int index, double targetOffset) {
     _currentSwipedIndex = index;
     double currentOffset = swipeOffsets[index] ?? 0.0;
 
     _swipeAnimation = Tween<double>(begin: currentOffset, end: targetOffset)
         .animate(CurvedAnimation(
-          parent: _animationController,
-          curve: Curves.easeInOut, // Smooth easing curve
-        ))
+      parent: _animationController,
+      curve: Curves.easeInOut, // Smooth easing curve
+    ))
       ..addListener(() {
         setState(() {
           if (_currentSwipedIndex == index) {
@@ -631,5 +641,3 @@ class _TransactionHistoryState extends State<TransactionHistory> with SingleTick
     }
   }
 }
-
-
