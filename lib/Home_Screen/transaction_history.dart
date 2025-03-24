@@ -183,6 +183,7 @@ class _TransactionHistoryState extends State<TransactionHistory> with SingleTick
                 right: 0,
                 child: Container(
                   height: 80,
+                  
                   color: AppColors.primaryColor,
                 ),
               ),

@@ -135,7 +135,7 @@ class _NotificationsState extends State<Notifications> {
                       delete(notifyId);
                     },
                     background: Container(
-                      
+            
                       decoration: BoxDecoration(
                        color: Colors.red,
                       borderRadius: BorderRadius.circular(10)
