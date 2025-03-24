@@ -67,121 +67,109 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
   }
 
   Future<void> fetchBudgetData() async {
-    final String budgetId =
-        widget.data['_id']?.toString() ?? '67b84fdcfab72f34be29c893';
-    final String apiUrl = '$url/budget/get-budget-spents/$budgetId';
-    try {
-      var response = await getDataApiCall(apiUrl);
-      // print('API Response: ${response.body}');
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        setState(() {
-          budgetType = widget.data['budgetPeriod']?.toLowerCase() ?? 'monthly';
-          transactions = data['transactions'] ?? [];
+  final String budgetId = widget.data['_id']?.toString() ?? '67b84fdcfab72f34be29c893';
+  final String apiUrl = '$url/budget/get-budget-spents/$budgetId';
+   print('Fetching budget data with budgetId: $budgetId');
+    print('API URL: $apiUrl');
+  try {
+    var response = await getDataApiCall(apiUrl);
+     print('API Response: ${response.body}');
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      setState(() {
+        budgetType = widget.data['budgetPeriod']?.toLowerCase() ?? 'monthly';
+        transactions = data['transactions'] ?? [];
+ print('Budget type: $budgetType');
+          print('Transactions: $transactions');
+        // Clear previous data
+        budgetSpentData.clear();
 
-          // Clear previous data
-          budgetSpentData.clear();
+        // Get start and end dates from widget.data
+        final String createdDateStr = widget.data['createdDate'] ?? DateTime.now().toIso8601String();
+        final String endDateStr = widget.data['endDate'] ?? '2025-03-04T12:07:11.028Z';
+        DateTime startDate = DateTime.parse(createdDateStr);
+        DateTime endDate = DateTime.parse(endDateStr);
 
-          if (budgetType == 'yearly') {
-            Map<String, int> monthOrder = {
-              'January': 0,
-              'February': 1,
-              'March': 2,
-              'April': 3,
-              'May': 4,
-              'June': 5,
-              'July': 6,
-              'August': 7,
-              'September': 8,
-              'October': 9,
-              'November': 10,
-              'December': 11
-            };
-            budgetSpentData = transactions.map((transaction) {
-              int index = monthOrder[transaction['_id']] ?? 0;
-              String xString =
-                  DateFormat('MMM').format(DateTime(2025, index + 1, 1));
-              return _ChartData(
-                x: index,
-                y: (transaction['debitTotalAmount'] as num?)?.toDouble() ?? 0.0,
-                xString: xString,
-              );
-            }).toList();
+        if (budgetType == 'yearly') {
+          int startMonth = startDate.month - 1;
+          int endMonth = endDate.month - 1;
+          int yearDiff = endDate.year - startDate.year;
+          int totalMonths = yearDiff * 12 + (endMonth - startMonth) + 1;
 
-            // Fill missing months
-            for (int i = 0; i < 12; i++) {
-              if (!budgetSpentData.any((data) => data.x == i)) {
-                String monthName =
-                    DateFormat('MMM').format(DateTime(2025, i + 1, 1));
-                budgetSpentData
-                    .add(_ChartData(x: i, y: 0.0, xString: monthName));
-              }
-            }
-            budgetSpentData.sort((a, b) => a.x.compareTo(b.x));
-          } else if (budgetType == 'monthly') {
-            // Determine the month and year from the first transaction or endDate
-            String firstDateStr =
-                transactions.isNotEmpty ? transactions[0]['_id'] : '01-03-2025';
-            DateTime firstDate = DateFormat('dd-MM-yyyy').parse(firstDateStr);
-            int daysInMonth =
-                DateTime(firstDate.year, firstDate.month + 1, 0).day;
+          Map<String, double> monthlySpent = {};
+          for (var transaction in transactions) {
+            DateTime date = DateFormat('dd-MM-yyyy').parse(transaction['_id']);
+            String monthKey = DateFormat('MMM yyyy').format(date);
+            monthlySpent[monthKey] =
+                (transaction['debitTotalAmount'] as num?)?.toDouble() ?? 0.0;
+          }
+ print('Monthly spent: $monthlySpent');
+          for (int i = 0; i < totalMonths; i++) {
+            DateTime currentDate = DateTime(startDate.year, startDate.month + i, 1);
+            String monthLabel = DateFormat('MMM yyyy').format(currentDate);
+            budgetSpentData.add(_ChartData(
+              x: i,
+              y: monthlySpent[monthLabel] ?? 0.0,
+              xString: monthLabel,
+            ));
+          }
+        } else if (budgetType == 'monthly') {
+          // Monthly budget: Show all days from start date to end date
+          int totalDays = endDate.difference(startDate).inDays + 1;
 
-            // Map transactions to days
-            Map<int, double> dailySpent = {};
-            for (var transaction in transactions) {
-              DateTime date =
-                  DateFormat('dd-MM-yyyy').parse(transaction['_id']);
-              int dayIndex = date.day - 1; // 0-based index
+          Map<int, double> dailySpent = {};
+          for (var transaction in transactions) {
+            DateTime date = DateFormat('dd-MM-yyyy').parse(transaction['_id']);
+            int dayIndex = date.difference(startDate).inDays;
+            if (dayIndex >= 0 && dayIndex < totalDays) {
               dailySpent[dayIndex] =
                   (transaction['debitTotalAmount'] as num?)?.toDouble() ?? 0.0;
             }
+          }
+print('Daily spent: $dailySpent');
+          for (int i = 0; i < totalDays; i++) {
+            DateTime currentDate = startDate.add(Duration(days: i));
+            String dayLabel = DateFormat('dd MMM').format(currentDate);
+            budgetSpentData.add(_ChartData(
+              x: i,
+              y: dailySpent[i] ?? 0.0,
+              xString: dayLabel,
+            ));
+          }
+        } else {
+          // Weekly budget
+          int totalDays = math.min(endDate.difference(startDate).inDays + 1, 7);
 
-            // Fill all days of the month
-            for (int i = 0; i < daysInMonth; i++) {
-              budgetSpentData.add(_ChartData(
-                x: i,
-                y: dailySpent[i] ?? 0.0,
-                xString: (i + 1).toString(),
-              ));
+          Map<int, double> dailySpent = {};
+          for (var transaction in transactions) {
+            DateTime date = DateFormat('dd-MM-yyyy').parse(transaction['_id']);
+            int dayIndex = date.difference(startDate).inDays;
+            if (dayIndex >= 0 && dayIndex < totalDays) {
+              dailySpent[dayIndex] =
+                  (transaction['debitTotalAmount'] as num?)?.toDouble() ?? 0.0;
             }
-          } else {
-            // weekly
-            List<String> weekdays = [
-              'Sun',
-              'Mon',
-              'Tue',
-              'Wed',
-              'Thu',
-              'Fri',
-              'Sat'
-            ];
-            budgetSpentData = transactions.map((transaction) {
-              int index = transactions.indexOf(transaction);
-              return _ChartData(
-                x: index,
-                y: (transaction['debitTotalAmount'] as num?)?.toDouble() ?? 0.0,
-                xString: weekdays[index % 7],
-              );
-            }).toList();
-
-            // Fill remaining days if less than 7
-            for (int i = budgetSpentData.length; i < 7; i++) {
-              budgetSpentData
-                  .add(_ChartData(x: i, y: 0.0, xString: weekdays[i]));
-            }
-            budgetSpentData.sort((a, b) => a.x.compareTo(b.x));
           }
 
-          //  print('Processed budgetSpentData: $budgetSpentData');
-        });
-      } else {
-        // print('Failed to load budget data: ${response.statusCode}');
-      }
-    } catch (e) {
-      //  print('Error fetching budget data: $e');
+          for (int i = 0; i < totalDays; i++) {
+            DateTime currentDate = startDate.add(Duration(days: i));
+            String dayLabel = DateFormat('EEE').format(currentDate);
+            budgetSpentData.add(_ChartData(
+              x: i,
+              y: dailySpent[i] ?? 0.0,
+              xString: dayLabel,
+            ));
+          }
+        }
+      });
+       print('Final budgetSpentData length: ${budgetSpentData.length}');
+          print('Final budgetSpentData: $budgetSpentData');
+    } else {
+      // print('Failed to load budget data: ${response.statusCode}');
     }
+  } catch (e) {
+    // print('Error fetching budget data: $e');
   }
-
+}
   void getmonthlyBudgetData() {
     List list = widget.data['categoryBudgets'] ?? [];
     monthlyBudgetData.clear();
@@ -445,7 +433,7 @@ class LineChartSample extends StatelessWidget {
         labelRotation = 0;
         break;
       case 'monthly':
-        labelWidth = 30.0;
+        labelWidth = 80.0;
         labelRotation = 0;
         break;
       case 'yearly':

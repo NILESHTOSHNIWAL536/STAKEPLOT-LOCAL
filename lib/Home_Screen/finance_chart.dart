@@ -447,7 +447,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       return ChartData(labels[index], value);
     });
 
-    double labelWidth = widget.selectedButton.value == 'Week' ? 50.0 : 40.0;
+    double labelWidth = widget.selectedButton.value == 'Week' ? 50.0 : 60.0;
     double chartWidth = dataLength * labelWidth;
 
     return Container(
