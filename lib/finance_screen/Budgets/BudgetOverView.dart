@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
@@ -96,21 +97,20 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                       child: textStyle(
                           context: context,
                           text: "Total Amount",
-                          fontsize: 12,
+                          fontsize: 14,
                           fontWeight: FontWeight.w600)),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: Colorcodes.paddingSize),
-                    child: textStyle(
-                        context: context,
-                        text: "₹" + widget.amount,
-                        fontsize: 16,
-                        c: AppColors.primaryColor,
-                        fontWeight: FontWeight.bold),
-                  ),
+                  textStyle(
+                      context: context,
+                      text: "₹" + widget.amount,
+                      fontsize: 16,
+                      c: AppColors.primaryColor,
+                      fontWeight: FontWeight.bold),
                 ],
               ),
             ),
+            Padding(
+                    padding: EdgeInsets.only(
+                        bottom: Colorcodes.paddingSize),),
             Row(
               children: [
                 
@@ -128,7 +128,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
               ],
             ),
             SizedBox(
-              height: Colorcodes.paddingCard / 3,
+              height: Colorcodes.paddingCard / 2,
             ),
             Obx(() => categoryList()),
             SizedBox(
@@ -180,12 +180,12 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                       ),
                     ),
                     Expanded(
-                      flex: 3,
+                      flex: 4,
                       child: Text(
                         categoriesDividedList[index]['category']!,
                         style: TextStyle(
                           fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
                     ),
@@ -197,10 +197,14 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                               .toString(),
                         ),
                         decoration: InputDecoration(
+
+                        //  prefixIcon: Icon(Icons.currency_rupee),
                           contentPadding: EdgeInsets.symmetric(
-                              vertical: 0, horizontal: 8), // Removes extra spacing
+                              vertical: 0, horizontal: 4), // Removes extra spacing
                           isDense: true, // Reduces extra height
                           hintText: "Enter amount",
+                          hintStyle: FontManager().getTextStyle(context,
+            lWeight: FontWeight.w400, fontSize: 12, color: AppColors.accentColor),
                           errorText: _isAmountExceeded(index)
                               ? "Amount exceeds budget"
                               : null,

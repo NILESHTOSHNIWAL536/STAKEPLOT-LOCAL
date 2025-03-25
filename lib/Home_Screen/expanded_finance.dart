@@ -369,7 +369,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Weekly spending and cash flow',
+          'Spending and cash flow',
           style: FontManager().getTextStyle(context,
               lWeight: FontWeight.w500,
               fontSize: fontSizeFactor * 4.5,

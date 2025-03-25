@@ -221,7 +221,7 @@ class _PlotFinanceState extends State<PlotFinance> {
                         height: MediaQuery.of(context).size.height * 0.04,
                         width: MediaQuery.of(context).size.width * 0.08,
                         decoration: BoxDecoration(
-                            color: AppColors.button,
+                            color: AppColors.primaryColor,
                             borderRadius: BorderRadius.circular(36)),
                         child:
                             Icon(Icons.arrow_forward_ios, color: Colors.white)),
