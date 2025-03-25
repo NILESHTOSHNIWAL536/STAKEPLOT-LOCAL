@@ -13,14 +13,17 @@ import 'package:intl/intl.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 
+RxInt startIndex=0.obs;
 
  void getPdf(BuildContext context,RxString selectedValue,RxString selectedValueType) async
   {
           var response=await getDataApiCall("${url}/transactionauto/get-previous-transactions/${getPreviousDate(int.parse(selectedValue.value), selectedValueType.value)}");                            
+        
           if(getFlagOfResponse(response))
           {
               var obj=jsonDecode(response.body);
               List list=obj['data'];
+              print(list);
               if(list.length>0)
               {
                 generatePdf(PdfPageFormat.legal,"StakePlot",list,context);
@@ -41,25 +44,34 @@ Future<pw.MemoryImage> loadLogo() async {
     final pdf = pw.Document();
     final logo = await loadLogo(); // Load the logo
 try{
-    pdf.addPage(
-            pw.MultiPage(
-              pageFormat: PdfPageFormat.a4.copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
-              orientation: pw.PageOrientation.portrait,
-              header: (context) =>tableHeaderCell1(logo),
-              footer: (context) => tableFootercell(logo,context),
-              build: (context) {
-                return[   
-                      buildPDFTable(data,contextBui),
-                ];
-              },
-            ),
-          );
+    
+     while(startIndex.value<data.length)
+     {
+            print(startIndex.value);
+            pdf.addPage(
+                  pw.MultiPage(
+                    pageFormat: PdfPageFormat.a4.copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
+                    orientation: pw.PageOrientation.portrait,
+                    header: (context) =>tableHeaderCell1(logo),
+                    footer: (context) => tableFootercell(logo,context),
+                    build: (context) {
+                      return[   
+                            buildPDFTable(data,contextBui,startIndex.value),
+                      ];
+                    },
+                  ),
+            );
+            
+       }
       }catch(e){
           print("error"+e.toString());
       }
-   getPdgLoader.value=false;
-  
-      Printing.layoutPdf(onLayout: (PdfPageFormat format) async=> pdf.save() );  
+
+    getPdgLoader.value=false;
+    final Uint8List pdfBytes = await pdf.save(); // Save once
+
+      // pdfBytes.addAll(pdfBytes);
+      Printing.layoutPdf(onLayout: (PdfPageFormat format) async=> pdfBytes );  
 
     //  pdf.save();
  }
@@ -107,19 +119,22 @@ pw.Widget tableFootercell(pw.MemoryImage logo,context) {
     ]);
  }
 
-pw.Widget buildPDFTable(data,context) {
+pw.Widget buildPDFTable(data,context,start) {
   final pdfContainers = <pw.Widget>[];
-  int no=18;
-  for (var i = 0; i < data.length; i += no) {
-  List chunk = data.sublist(i, (i + no > data.length) ? data.length : i + no);
-  pdfContainers.add(
-    pw.Container(
-      width: double.infinity, // Replace MediaQuery
-      margin: pw.EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-      child: tableContent(chunk), // Ensure tableContent handles chunk properly
-    ),
-  );
-}
+  int no=   selectedValue.value=="6"? 22 : 15;
+  for (var i = start; i < data.length; i += no)
+  {
+            List chunk = data.sublist(i, (i + no > data.length) ? data.length : i + no);
+            startIndex.value += chunk.length;
+            pdfContainers.add(
+              pw.Container(
+                width: double.infinity, // Replace MediaQuery
+                margin: pw.EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+                child: tableContent(chunk), // Ensure tableContent handles chunk properly
+              ),
+            );
+            if(pdfContainers.length==18)break;
+ }
 
   return pw.Column(
     children: pdfContainers,
@@ -132,7 +147,6 @@ pw.Widget buildPDFTable(data,context) {
        return  pw.Column(
         children:[
             TextStyleD("StakePlot",Colors.red,15.0),
-            // TextStyleD("rice & broken rice canvassing agent",Colors.black,13.0),
             pw.SizedBox(height: 5,),
 
         ]
@@ -199,7 +213,7 @@ pw.Widget tableHeaderCell(String text) {
       text,
       style: pw.TextStyle(
         fontWeight: pw.FontWeight.bold,
-        fontSize: 10,
+        fontSize: selectedValue.value=="6"? 10 : 14,
         color: PdfColors.white,
       ),
     ),
@@ -237,7 +251,7 @@ pw.Widget tableCell(String text) {
     alignment: pw.Alignment.centerLeft,
     child: pw.Text(
       text,
-      style: pw.TextStyle(fontSize: 6),
+      style: pw.TextStyle(fontSize: selectedValue.value=="6"? 8:12),
     ),
   );
 }
@@ -251,7 +265,7 @@ pw.Widget tableMultilineCell(List<String> data) {
         padding: pw.EdgeInsets.symmetric(horizontal: 4, vertical: 2),
   child: pw.Text(
       line,
-      style: pw.TextStyle(fontSize: 6),));
+      style: pw.TextStyle(fontSize:  selectedValue.value=="6"? 8:12),));
     }).toList(),
   );
 }
@@ -271,21 +285,23 @@ String formatTimestamp(String timestamp) {
 
 List<String> getDetails(transaction,type,id){
     try {
-      List<String> parts = transaction.split('-');
-      // print(parts);
-      String txnType = ""+parts[0]; // UPI-DR or UPI-CR
-      String txnId = ""+parts[1];
-      String name = ""+parts[2];
+      List<String> parts = transaction.split('/');
+       print(parts);
+      // String txnType = ""+parts[0]; // UPI-DR or UPI-CR
+      // String txnId = ""+parts[1];
+      // String name = ""+parts[2];
       String bankCode = ""+parts[3];
       String paidto=type=="DEBIT"? "Paid to "+"$bankCode":"Received from "+"$bankCode";
-      String accountNumber = (parts.length > 5 ? parts[4] : "");
-      String description = (parts.length > 6 ? parts[5] : "");
+      // String accountNumber = (parts.length > 5 ? parts[4] : "");
+      // String description = (parts.length > 6 ? parts[5] : "");
       List<String> list=[];
 
       list.add(paidto);
       list.add(id);
 
-    return   list;
+      print(list);
+
+    return list;
     // return "Type: $txnType\nID: $txnId\nName: $name\nBank: $bankCode\nAccount: $accountNumber\nDesc: $description";
     } catch (e) {
        return [];
@@ -294,48 +310,3 @@ List<String> getDetails(transaction,type,id){
 
 
 }
-
-
-// pw.Widget _buildNestedDetailsTable(List<Bill> details) {
-//   double totalAmount=0;
-//   List<List<String>> data = details.map<List<String>>((detail) {
-//        double total= ( (double.parse(detail.bags.toString()) * double.parse(detail.rate.toString())* double.parse(detail.kg.toString())) / 100 ).toDouble();
-//        double q= ( (double.parse(detail.bags.toString()) * double.parse(detail.kg.toString())) / 100 ).toDouble();
-//        totalAmount += total;
-//       return [
-//         detail.rice.toString(),
-//         q.toString(),
-//         // detail.kg.toString(),
-//         detail.rate.toString(),
-//         total.toString()
-      
-//       ];
-//     }).toList();
-
-//    data.add(["", "", "", totalAmount.toString()]);
-  
-//   return pw.Table.fromTextArray(
-//     headers: [
-//       'Rice',    // Define nested table headers
-//       'Quan',    // Define nested table headers
-//       // 'Kg',
-//       'Rate',
-//       'Total'
-//     ],
-//     data: data,
-    
-//     border: pw.TableBorder.all(
-//       color: PdfColors.grey,
-//       width: 1,
-//     ),
-//     cellStyle: pw.TextStyle(fontSize: 12),
-//     headerStyle: pw.TextStyle(
-//       fontWeight: pw.FontWeight.bold,
-//       fontSize: 12,
-//       color: PdfColors.black,
-//     ),
-//     headerDecoration: pw.BoxDecoration(
-//       color: PdfColors.grey300,
-//     ),
-//   );
-// }
