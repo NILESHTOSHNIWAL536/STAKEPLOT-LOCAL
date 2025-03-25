@@ -996,7 +996,8 @@ class _NotificationsState extends State<Notifications> {
             e['avatarType'] as String? ?? "",
             time,
             "bill",
-            "");
+             e['from_to'] as String? ?? "",notifyId.toString());
+
       case "splitApprovalRequest":
         return _buildApprovalCard(
             "${e['from_name'] ?? 'Someone'} has requested approval for settling ${e['name'] ?? 'unknown'} with an amount of ${e['amount'] ?? '00'}",
@@ -1004,7 +1005,7 @@ class _NotificationsState extends State<Notifications> {
             e['avatarType'] as String? ?? "",
             time,
             "split",
-            e['from_to'] as String? ?? "");
+            e['from_to'] as String? ?? "",notifyId.toString());
       case "clearLend":
       case "clearSplit":
         String ty = type == "clearLend" ? "lend" : "split";
@@ -1183,7 +1184,7 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Widget _buildApprovalCard(
-      String message, String id, String avatar, String time, String type, String endUser) {
+      String message, String id, String avatar, String time, String type, String endUser,String notifyId) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1221,6 +1222,7 @@ class _NotificationsState extends State<Notifications> {
                     Colors.white,
                     () {
                       settleAmount(context, id, type, endUser);
+                        _deleteNotification(notifyId);
                     },
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.03),
@@ -1228,7 +1230,10 @@ class _NotificationsState extends State<Notifications> {
                     "Reject",
                     Colors.white,
                     AppColors.bg3,
-                    () {},
+                    () {
+                          declineAmount(context, id, type, endUser);
+                             _deleteNotification(notifyId);
+                    },
                     border: true,
                   ),
                 ],

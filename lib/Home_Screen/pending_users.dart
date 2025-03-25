@@ -380,9 +380,11 @@ Widget _buildListTile(BuildContext context, Map<String, dynamic> data, bool isDu
         children: [
           InkWell(
             onTap: () async {
+               if((data["isPaid"])){return;}
               if (isDue) {
                 int index = dueAmountRemainders.indexWhere((element) => element['_id'] == data['_id']);
                 if (index != -1) {
+                 
                    duesPaid(context, index); // API call to settle
                   // Update local state to trigger reactivity
                   dueAmountRemainders[index]['isPaid'] = true; // Mark as requested or settled
@@ -496,6 +498,22 @@ void settleAmount(
       'splittedUserId': endUser,
     };
     final response = await updateDataApiCall(apiUrl, body);
+    printData(response);
+    
+  } catch (e) {
+    snackBarCalled(context, "Error settling due");
+    print("Error in duesPaid: $e");
+  }
+
+}
+
+void declineAmount(
+    BuildContext context, String dueId, String type, String endUser) async {
+  final apiUrl = "$url/reminders/decline-request/$type/$dueId";
+  try {
+    var body = {};
+    final response = await updateDataApiCall(apiUrl, body);
+    printData(response);
   } catch (e) {
     snackBarCalled(context, "Error settling due");
     print("Error in duesPaid: $e");

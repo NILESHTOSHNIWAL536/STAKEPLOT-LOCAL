@@ -112,8 +112,8 @@ class _HomeScreenState extends State<HomeScreen> {
      
       if ((position.dy + renderBox.size.height-screenHeight) <= 1600 && !sectionReached.value)
        {
-         navigateToNextPage(context);
-          sectionReached.value=true;
+            //  navigateToNextPage(context);
+            //   sectionReached.value=true;
        }
     }
   }
@@ -123,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
     @override
   void initState() {
     super.initState();
-    sectionReached.value=false;
+    // sectionReached.value=false;
     scrollController.addListener(_onScroll);
   }
 
