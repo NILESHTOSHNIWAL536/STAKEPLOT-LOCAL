@@ -511,7 +511,9 @@ void declineAmount(
     BuildContext context, String dueId, String type, String endUser) async {
   final apiUrl = "$url/reminders/decline-request/$type/$dueId";
   try {
-    var body = {};
+    var body = {
+       "splittedUserId":endUser
+    };
     final response = await updateDataApiCall(apiUrl, body);
     printData(response);
   } catch (e) {

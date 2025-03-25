@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 //import 'package:flutter_application_code_stakeplot/Community_Page/community_showmodal_screen.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/explore_screen.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/text_screen.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
@@ -12,6 +14,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart'; // Ensure image_picker is added in pubspec.yaml
@@ -39,68 +42,69 @@ class _CommunityState extends State<Community> {
   final TextEditingController _searchController = TextEditingController();
   int likeCount = 0; // Counter for likes
   bool isLiked = false;
+ 
 
   @override
   void initState() {
-    getTrending();
-    getPost();
+        getTrending();
+        getPost();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true,
-      backgroundColor: AppColors.backgroundColor,
-      bottomNavigationBar: BottomNavigations(data: 2),
-      body: Padding(
-        padding: const EdgeInsets.all(18.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Welcome Section
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: _buildWelcomeRow(),
-              ),
-
-              // const SizedBox(height: 16),
-
-              Obx(
-                () => getTrendingData.length == 0 && findTranding
-                    ? Loader()
-                    : !findTranding && getTrendingData.length == 0
-                        ? noFriend(context, "Make friends to see their posts")
-                        : Obx(() => getPosted.value
-                            ? getPostListview()
-                            : getPostListview()),
-              )
-            ],
+    return SafeArea(
+      child: Scaffold(
+        extendBody: true,
+        backgroundColor: AppColors.backgroundColor,
+        bottomNavigationBar: BottomNavigations(data: 2),
+        body: Container(
+          height: MediaQuery.of(context).size.height/1.1,
+          padding: const EdgeInsets.all(18.0),
+          child: SingleChildScrollView(
+            controller: scrollControllerPost,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: _buildWelcomeRow(),
+                ),
+                  
+                Obx(
+                  () => getTrendingData.length == 0 && findTranding
+                      ? Loader()
+                      : !findTranding && getTrendingData.length == 0
+                          ? noFriend(context, "Make friends to see their posts")
+                          : Obx(() => getPosted.value
+                              ? LazyLoadingList()
+                              : LazyLoadingList()),
+                )
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget getPostListview() {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+ Widget getPostListview() {
+     double width = MediaQuery.of(context).size.width;
+    //  double height = MediaQuery.of(context).size.height;
     return Container(
-      // color: Colors.blue,
       width: width,
-      height: height / 1.4,
+      // height:  height,
       child: ListView.builder(
-        padding: EdgeInsets.zero, // Removes default padding
-        // physics: const ClampingScrollPhysics(),
+        padding: EdgeInsets.zero, 
         itemCount: getTrendingData.length,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           final dataObj = getTrendingData[index];
           return PostCard(data: dataObj);
         },
-      ),
-    );
-  }
+      ));
+
+}
 
   Widget _buildWelcomeRow() {
     double w = MediaQuery.of(context).size.width;

@@ -1232,7 +1232,7 @@ class _NotificationsState extends State<Notifications> {
                     AppColors.bg3,
                     () {
                           declineAmount(context, id, type, endUser);
-                             _deleteNotification(notifyId);
+                          _deleteNotification(notifyId);
                     },
                     border: true,
                   ),

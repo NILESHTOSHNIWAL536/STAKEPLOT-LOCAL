@@ -249,22 +249,22 @@ class _SigninState extends State<SignUp> {
         conform == "" ||
         phone == "" ||
         dob == "") {
-      snackBarCalled(context, "Please fill in all fields.", Colors.red);
+      snackBarCalledSignup(context, "Please fill in all fields.", Colors.red);
       return;
     }
 
     if (phone.length != 10) {
-      snackBarCalled(context, "The phone number is invalid.", Colors.red);
+      snackBarCalledSignup(context, "The phone number is invalid.", Colors.red);
       return;
     }
     if (password.length < 6) {
-      snackBarCalled(context,
+      snackBarCalledSignup(context,
           "The password must be at least 6 characters long.", Colors.red);
       return;
     }
 
     if (password != conform) {
-      snackBarCalled(context,
+      snackBarCalledSignup(context,
           "The password and confirmation password do not match.", Colors.red);
       return;
     }
