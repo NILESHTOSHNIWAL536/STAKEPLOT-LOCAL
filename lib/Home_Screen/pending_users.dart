@@ -51,7 +51,7 @@ class _UserListScreenState extends State<UserListScreen> {
                     fontSize: 18,
                     color: AppColors.accentColor),
               ),
-              if (lendAmountRemainders.length + dueAmountRemainders.length >= 2)
+              // if (lendAmountRemainders.length + dueAmountRemainders.length >= 2)
   GestureDetector(
     onTap: () {
       Navigator.push(
