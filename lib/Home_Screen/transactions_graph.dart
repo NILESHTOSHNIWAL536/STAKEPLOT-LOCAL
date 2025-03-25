@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
@@ -17,6 +16,7 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:week_of_year/week_of_year.dart';
 import './colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -28,7 +28,8 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 final RxBool getGraphDataoverall = false.obs;
 final RxString selectedButton2 = 'month'.obs;
 final RxList<String> labels2 = <String>[].obs;
-final RxMap<String, List<double>> transactionChatGraphoverall = <String, List<double>>{}.obs;
+final RxMap<String, List<double>> transactionChatGraphoverall =
+    <String, List<double>>{}.obs;
 final RxDouble maxYValueoverall = 1000.0.obs;
 final RxDouble totalDebitValue = 0.0.obs;
 
@@ -77,7 +78,6 @@ class _TransactionGraphState extends State<TransactionGraph> {
                     //       fontSize: fontSizeFactor * 2.5,
                     //       color: AppColors.accentColor),
                     // ),
-                    
                   ],
                 ),
               ],
@@ -123,14 +123,17 @@ class _TransactionGraphState extends State<TransactionGraph> {
             GestureDetector(
               onTap: () {
                 selectedButton2.value = 'month';
-                getAutoMationsTransactionsCustomoverall(getFormattedDateoverall(), context);
+                getAutoMationsTransactionsCustomoverall(
+                    getFormattedDateoverall(), context);
               },
               child: Container(
                 height: 35,
                 width: screenWidth * 0.15,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  color: selectedButton2.value == 'month' ? AppColors.button : AppColors.backgroundColor,
+                  color: selectedButton2.value == 'month'
+                      ? AppColors.button
+                      : AppColors.backgroundColor,
                 ),
                 child: Center(
                   child: Text(
@@ -147,14 +150,17 @@ class _TransactionGraphState extends State<TransactionGraph> {
             GestureDetector(
               onTap: () {
                 selectedButton2.value = 'week';
-                getAutoMationsTransactionsCustomoverall(getCurrentWeekoverall(), context, 'week');
+                getAutoMationsTransactionsCustomoverall(
+                    getCurrentWeekoverall(), context, 'week');
               },
               child: Container(
                 height: 35,
                 width: screenWidth * 0.15,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  color: selectedButton2.value == 'week' ? AppColors.button : AppColors.backgroundColor,
+                  color: selectedButton2.value == 'week'
+                      ? AppColors.button
+                      : AppColors.backgroundColor,
                 ),
                 child: Center(
                   child: Text(
@@ -177,7 +183,9 @@ class _TransactionGraphState extends State<TransactionGraph> {
                 width: screenWidth * 0.15,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  color: selectedButton2.value == 'custom' ? AppColors.button : AppColors.backgroundColor,
+                  color: selectedButton2.value == 'custom'
+                      ? AppColors.button
+                      : AppColors.backgroundColor,
                 ),
                 child: Center(
                   child: Text(
@@ -224,7 +232,8 @@ class _BarChartWidgetState extends State<BarChartWidget> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double fontSizeFactor = screenWidth * 0.01;
-    return Obx(() => getGraphBarScroll(fontSizeFactor, screenWidth)); // Wrap with Obx to react to maxYValueoverall changes
+    return Obx(() => getGraphBarScroll(fontSizeFactor,
+        screenWidth)); // Wrap with Obx to react to maxYValueoverall changes
   }
 
   Widget getGraphBarScroll(double fontSizeFactor, double screenWidth) {
@@ -278,7 +287,9 @@ class _BarChartWidgetState extends State<BarChartWidget> {
     double chartWidth = dataLength * barWidth;
 
     return Container(
-      width: widget.selectedButton.value == 'week' ? screenWidth * 0.85 : max(chartWidth, screenWidth * 0.85),
+      width: widget.selectedButton.value == 'week'
+          ? screenWidth * 0.85
+          : max(chartWidth, screenWidth * 0.85),
       height: MediaQuery.of(context).size.height / 2.6,
       child: SfCartesianChart(
         borderWidth: 0,
@@ -313,7 +324,8 @@ class _BarChartWidgetState extends State<BarChartWidget> {
         ),
         tooltipBehavior: TooltipBehavior(
           enable: true,
-          builder: (dynamic data, dynamic point, dynamic series, int pointIndex, int seriesIndex) {
+          builder: (dynamic data, dynamic point, dynamic series, int pointIndex,
+              int seriesIndex) {
             final ChartData chartData = data as ChartData;
             return Container(
               padding: EdgeInsets.all(8),
@@ -389,7 +401,8 @@ class _BarChartWidgetState extends State<BarChartWidget> {
     } else if (numValue >= 1000) {
       return '${(numValue / 1000).toStringAsFixed(0)} K';
     } else {
-      return numValue.toStringAsFixed(2); // Replace doubleToFixed with direct formatting
+      return numValue
+          .toStringAsFixed(2); // Replace doubleToFixed with direct formatting
     }
   }
 }
@@ -399,32 +412,31 @@ class ChartData {
   final String x;
   final double y;
 }
-void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'month', String? endDate]) async {
+
+void getAutoMationsTransactionsCustomoverall(date, context,
+    [weekORmonths = 'month', String? endDate]) async {
   String urlPath = endDate != null && weekORmonths == 'custom'
       ? "$url/transactionauto/getWholeTransactionsGraph/${weekORmonths.toLowerCase()}/$date,${getNextDay(endDate)}"
       : "$url/transactionauto/getWholeTransactionsGraph/${weekORmonths.toLowerCase()}/$date";
- 
   var response = await getDataApiCall(urlPath);
- 
 
   trasactionsDataDebitWeeklyoverall.clear();
- 
 
   List<String> labelsLocal = [];
   List<double> debitList = [];
 
   if (getFlagOfResponse(response)) {
-   
     var his = jsonDecode(response.body);
     transactionChatGraphoverall.clear();
-   
 
     // Declare dataoverall outside the try block
     Map dataoverall = his['data']['result'];
 
     try {
-      List<double> debitValues = dataoverall.values.map((value) => getDouble(value['debit'])).toList();
-      totalDebitValue.value = debitValues.reduce((a, b) => a + b); // Calculate total debit
+      List<double> debitValues =
+          dataoverall.values.map((value) => getDouble(value['debit'])).toList();
+      totalDebitValue.value =
+          debitValues.reduce((a, b) => a + b); // Calculate total debit
       if (debitValues.isNotEmpty) {
         maxYValueoverall.value = debitValues.reduce((a, b) => a > b ? a : b);
       } else {
@@ -432,7 +444,6 @@ void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'mon
       }
 
       if (weekORmonths == 'custom' && endDate != null) {
-       
         DateTime startDate = DateTime.parse(date);
         DateTime end = DateTime.parse(endDate);
 
@@ -448,7 +459,8 @@ void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'mon
 
         dataoverall.forEach((key, value) {
           DateTime txDate = DateTime.parse(key);
-          if (txDate.isAfter(startDate.subtract(Duration(days: 1))) && txDate.isBefore(end.add(Duration(days: 1)))) {
+          if (txDate.isAfter(startDate.subtract(Duration(days: 1))) &&
+              txDate.isBefore(end.add(Duration(days: 1)))) {
             int index = txDate.difference(startDate).inDays;
             if (index >= 0 && index < debitList.length) {
               debitList[index] = getDouble(value['debit']);
@@ -456,8 +468,8 @@ void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'mon
           }
         });
       } else if (weekORmonths == 'week') {
-      
-        labelsLocal = getWeekDays(); // ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+        labelsLocal =
+            getWeekDays(); // ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
         debitList = List.filled(7, 0.0);
 
         // Parse the week string (e.g., "2025-W10")
@@ -474,15 +486,17 @@ void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'mon
           }
         });
       } else {
-       
-        DateTime startDate = DateTime.parse("$date-01"); // Ensure full date for month
+        DateTime startDate =
+            DateTime.parse("$date-01"); // Ensure full date for month
         int daysInMonth = DateTime(startDate.year, startDate.month + 1, 0).day;
-        labelsLocal = List.generate(daysInMonth, (i) => (i + 1).toString().padLeft(2, '0'));
+        labelsLocal = List.generate(
+            daysInMonth, (i) => (i + 1).toString().padLeft(2, '0'));
         debitList = List.filled(daysInMonth, 0.0);
 
         dataoverall.forEach((key, value) {
           DateTime txDate = DateTime.parse(key);
-          if (txDate.month == startDate.month && txDate.year == startDate.year) {
+          if (txDate.month == startDate.month &&
+              txDate.year == startDate.year) {
             int index = txDate.day - 1;
             if (index >= 0 && index < debitList.length) {
               debitList[index] = getDouble(value['debit']);
@@ -491,7 +505,6 @@ void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'mon
         });
       }
     } catch (e) {
-    
       maxYValueoverall.value = 500.0;
       if (labelsLocal.isEmpty) {
         if (weekORmonths == 'custom' && endDate != null) {
@@ -506,7 +519,8 @@ void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'mon
           }
           dataoverall.forEach((key, value) {
             DateTime txDate = DateTime.parse(key);
-            if (txDate.isAfter(startDate.subtract(Duration(days: 1))) && txDate.isBefore(end.add(Duration(days: 1)))) {
+            if (txDate.isAfter(startDate.subtract(Duration(days: 1))) &&
+                txDate.isBefore(end.add(Duration(days: 1)))) {
               int index = txDate.difference(startDate).inDays;
               if (index >= 0 && index < debitList.length) {
                 debitList[index] = getDouble(value['debit']);
@@ -530,12 +544,15 @@ void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'mon
           });
         } else {
           DateTime startDate = DateTime.parse("$date-01");
-          int daysInMonth = DateTime(startDate.year, startDate.month + 1, 0).day;
-          labelsLocal = List.generate(daysInMonth, (i) => (i + 1).toString().padLeft(2, '0'));
+          int daysInMonth =
+              DateTime(startDate.year, startDate.month + 1, 0).day;
+          labelsLocal = List.generate(
+              daysInMonth, (i) => (i + 1).toString().padLeft(2, '0'));
           debitList = List.filled(daysInMonth, 0.0);
           dataoverall.forEach((key, value) {
             DateTime txDate = DateTime.parse(key);
-            if (txDate.month == startDate.month && txDate.year == startDate.year) {
+            if (txDate.month == startDate.month &&
+                txDate.year == startDate.year) {
               int index = txDate.day - 1;
               if (index >= 0 && index < debitList.length) {
                 debitList[index] = getDouble(value['debit']);
@@ -547,13 +564,11 @@ void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'mon
     }
 
     transactionChatGraphoverall['debited'] = debitList;
-   
 
     getGraphDataoverall.value = false;
     labels2.assignAll(labelsLocal);
     getGraphDataoverall.value = true;
   } else {
-   
     if (weekORmonths == 'custom' && endDate != null) {
       DateTime startDate = DateTime.parse(date);
       DateTime end = DateTime.parse(endDate);
@@ -570,7 +585,8 @@ void getAutoMationsTransactionsCustomoverall(date, context, [weekORmonths = 'mon
     } else {
       DateTime startDate = DateTime.parse("$date-01");
       int daysInMonth = DateTime(startDate.year, startDate.month + 1, 0).day;
-      labelsLocal = List.generate(daysInMonth, (i) => (i + 1).toString().padLeft(2, '0'));
+      labelsLocal =
+          List.generate(daysInMonth, (i) => (i + 1).toString().padLeft(2, '0'));
       debitList = List.filled(daysInMonth, 0.0);
     }
     transactionChatGraphoverall['debited'] = debitList;
@@ -586,6 +602,7 @@ DateTime _getWeekStartDate(int year, int weekNumber) {
   DateTime weekStart = firstSunday.add(Duration(days: (weekNumber - 1) * 7));
   return weekStart;
 }
+
 // Helper functions
 double getDouble(dynamic value) {
   if (value == null) return 0.0;
@@ -601,13 +618,11 @@ String getFormattedDateoverall() {
 
 String getCurrentWeekoverall() {
   final now = DateTime.now();
-  // Calculate the ISO week number
-  DateTime yearStart = DateTime(now.year, 1, 1);
-  int daysOffset = yearStart.weekday - 1; // Adjust for Monday as week start
-  DateTime firstMonday = yearStart.subtract(Duration(days: daysOffset));
-  int weekNumber = ((now.difference(firstMonday).inDays) / 7).ceil();
-  return "${now.year}-W${weekNumber.toString().padLeft(2, '0')}";
+  final year = now.year;
+  String s = '$year-W${now.weekOfYear.toString().padLeft(2, '0')}';
+  return s;
 }
+
 void pickCustomDateRangeoverall(BuildContext context) async {
   List<DateTime?> picked = await showCalendarDatePicker2Dialog(
         context: context,
@@ -648,7 +663,8 @@ void pickCustomDateRangeoverall(BuildContext context) async {
 
     String startDate = start.toIso8601String().split('T')[0];
     String endDate = end.toIso8601String().split('T')[0];
-    getAutoMationsTransactionsCustomoverall(startDate, context, 'custom', endDate);
+    getAutoMationsTransactionsCustomoverall(
+        startDate, context, 'custom', endDate);
   }
 }
 

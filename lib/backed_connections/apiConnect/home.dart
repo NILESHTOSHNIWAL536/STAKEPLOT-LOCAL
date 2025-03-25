@@ -12,29 +12,25 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 void getAck() async {
-  var response =await getDataApiCall('${url}/user/newNotifications'); 
-  if (getFlagOfResponse(response))
-  {
+  var response = await getDataApiCall('${url}/user/newNotifications');
+  if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
     hasGetNewNotifications.value = obj != 0;
   }
 }
 
-
-
-
 void setPasswordApiCalled(context, String password) async {
-  var urlPath='${url}/user/cupertino/';
-   final response = await postDataApiCall(urlPath, {
-      'pin': password.toString(),
-    });
-  if (getFlagOfResponse(response))
-  {
+  var urlPath = '${url}/user/cupertino/';
+  final response = await postDataApiCall(urlPath, {
+    'pin': password.toString(),
+  });
+  if (getFlagOfResponse(response)) {
     cupertinoPin.value = password;
-    snackBarCalled(context, "Your PIN has been set successfully!", Colors.black);
+    snackBarCalled(
+        context, "Your PIN has been set successfully!", Colors.black);
   } else {
-    snackBarCalled(context, "Unable to set the PIN!" , Colors.red);
+    snackBarCalled(context, "Unable to set the PIN!", Colors.red);
   }
   Navigator.pop(context);
 }
@@ -63,10 +59,10 @@ void seletedBankUpdateInfo(id, context) async {
   } else {}
 }
 
-
 void getAllTransaction(context) async {
-  var response =await getDataApiCall("${url}/transactionauto/getTransactions/1");
-   expire(response, context);
+  var response =
+      await getDataApiCall("${url}/transactionauto/getTransactions/1");
+  expire(response, context);
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
@@ -76,8 +72,7 @@ void getAllTransaction(context) async {
   } else {}
 }
 
-void getInsights(context,String id) async {
- 
+void getInsights(context, String id) async {
   var response = await getDataApiCall("${url}/budget/get-insights/$id");
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
@@ -89,7 +84,8 @@ void getInsights(context,String id) async {
 }
 
 void getHiddenTransactions(context) async {
-  var response =await getDataApiCall("${url}/transactionauto/get-hide-transactions");
+  var response =
+      await getDataApiCall("${url}/transactionauto/get-hide-transactions");
   if (response.statusCode == 200) {
     var her = jsonDecode(response.body);
     var obj = her['data'];
@@ -99,39 +95,45 @@ void getHiddenTransactions(context) async {
   } else {}
 }
 
-Future<void> getAllTransactionHistory(BuildContext context,bool flag,bool  isYearView,{bool isRefreshing = false}) async {
+Future<void> getAllTransactionHistory(
+    BuildContext context, bool flag, bool isYearView,
+    {bool isRefreshing = false}) async {
   if (isLoadingMore.value) return; // Prevent multiple API calls
 
   try {
     isLoadingMore.value = true;
     // /get-monthly-transactions-history/:accountId/:type/:page
-    String type= isYearView ? selectedYear.value.toString(): selectedYear.value.toString()+"-"+selectedMonth.value.toString().padLeft(2, '0');
-    String urlPath= flag? "${url}/transactionauto/get-monthly-transactions-history/${accountId.value}/${type}/$currentPage":"${url}/transactionauto/getTransactions/$currentPage";
- 
+    String type = isYearView
+        ? selectedYear.value.toString()
+        : selectedYear.value.toString() +
+            "-" +
+            selectedMonth.value.toString().padLeft(2, '0');
+    String urlPath = flag
+        ? "${url}/transactionauto/get-monthly-transactions-history/${accountId.value}/${type}/$currentPage"
+        : "${url}/transactionauto/getTransactions/$currentPage";
+
     var response = await getDataApiCall(urlPath);
+    print("responseeee ${response.body}");
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       var obj = data['data'];
-      if (obj != null && obj is List<dynamic>) 
-      {
-       
-            if (isRefreshing) {
-              transactionsHistory.clear(); // Clear only on refresh
-            }
-         
-            transactionsHistory.addAll(obj);
+      if (obj != null && obj is List<dynamic>) {
+        if (isRefreshing) {
+          transactionsHistory.clear(); // Clear only on refresh
+        }
 
+        transactionsHistory.addAll(obj);
 
         // Stop loading indicator if no more transactions exist
-        if (obj.isEmpty || obj.length<20) {
+        if (obj.isEmpty || obj.length < 20) {
           hasMoreData = false;
-          isLoadingMore.value=false;
+          isLoadingMore.value = false;
         } else {
           currentPage++; // Increment page count for next load
         }
-         await Future.delayed(const Duration(seconds: 1));
-        if(flag){
-          loadChatdataOnChnage.value=!loadChatdataOnChnage.value;
+        await Future.delayed(const Duration(seconds: 1));
+        if (flag) {
+          loadChatdataOnChnage.value = !loadChatdataOnChnage.value;
         }
         getHistory.value = !getHistory.value;
       } else {
@@ -139,12 +141,10 @@ Future<void> getAllTransactionHistory(BuildContext context,bool flag,bool  isYea
       }
     }
   } catch (e) {
-   
   } finally {
     isLoadingMore.value = false;
   }
 }
-
 
 void extractTransaction(bool isYearView, List obj) {
   if (isYearView) {

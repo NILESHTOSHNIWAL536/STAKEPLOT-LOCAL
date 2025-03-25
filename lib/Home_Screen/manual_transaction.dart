@@ -357,6 +357,7 @@ class _ModalContentState extends State<ModalContent>
     return TextField(
       controller: _amountController,
       keyboardType: TextInputType.number,
+      autofocus: true, 
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.currency_rupee),
         hintText: 'Enter amount',

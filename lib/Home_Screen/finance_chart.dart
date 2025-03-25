@@ -447,10 +447,11 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       return ChartData(labels[index], value);
     });
 
-    double labelWidth = widget.selectedButton.value == 'Week' ? 50.0 : 40.0;
+    double labelWidth = widget.selectedButton.value == 'Week' ? 50.0 : 60.0;
     double chartWidth = dataLength * labelWidth;
 
     return Container(
+       
         width: widget.selectedButton.value == 'Week'
             ? screenWidth * 0.85 // Fixed width for Week
             : max(chartWidth, screenWidth * 0.85),
@@ -507,7 +508,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
               builder: (dynamic data, dynamic point, dynamic series,
                   int pointIndex, int seriesIndex) {
                 final ChartData chartData = data as ChartData;
-                String label = seriesIndex == 0 ? 'Credited' : 'Debited';
+                String label = seriesIndex == 1 ? 'Credited' : 'Debited';
                 isTooltipVisible.value = true;
 
                 //  Future.delayed(Duration(seconds: 2), () {
@@ -528,30 +529,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                   ),
                 );
 
-                // return GestureDetector(
-                //   behavior: HitTestBehavior.opaque,
-                //   onTap: () {
-                //     if (widget.selectedButton.value == 'Month' &&  widget.shouldBeNavigate) {
-                //          currentPage=1;
-                //         transactionsHistory.clear();
-                //         navToExpanded();
-                //     }
-                //   },
-                //   child: Container(
-                //     padding: EdgeInsets.all(8),
-                //     decoration: BoxDecoration(
-                //       color: Colors.black54,
-                //       borderRadius: BorderRadius.circular(4),
-                //     ),
-                //     child: Text(
-                //       '$label: ₹${chartData.y.toStringAsFixed(2)}',
-                //       style: FontManager().getTextStyle(context,
-                //           lWeight: FontWeight.normal,
-                //           fontSize: fontSizeFactor * 2.5,
-                //           color: Colors.white),
-                //     ),
-                //   ),
-                // );
+               
               },
             ),
             

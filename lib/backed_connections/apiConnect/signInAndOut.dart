@@ -34,8 +34,8 @@ void clearStack(BuildContext context) {
 
 void clearStackShared(BuildContext context) {
   try {
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/ShareAccountLogin', (Route<dynamic> route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        '/ShareAccountLogin', (Route<dynamic> route) => false);
   } catch (e) {
     Navigator.of(context)
         .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
@@ -60,14 +60,11 @@ void check(context, String flag) async {
   }
 }
 
-
-
-
 Future<void> loginUser(TextEditingController emailController,
     TextEditingController passwordController, BuildContext context,
     [bool flag = false]) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
- 
+
   final response = await http.post(
     Uri.parse('${url}/user/login'),
     headers: <String, String>{
@@ -80,36 +77,38 @@ Future<void> loginUser(TextEditingController emailController,
     }),
   );
   printData(response);
-  if(response.statusCode == 409)
-  {
-      //  final body = json.decode(response.body);
-       showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
-            ),
-            builder: (context) {
-              return UserLoginedAlready(data: response.body,email: emailController.text,userpassword: passwordController.text);
-            },
-          );                  
+  if (response.statusCode == 409) {
+    //  final body = json.decode(response.body);
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+      ),
+      builder: (context) {
+        return UserLoginedAlready(
+            data: response.body,
+            email: emailController.text,
+            userpassword: passwordController.text);
+      },
+    );
   }
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
 
     String accessToken = body['data']['accessToken'];
     _pref.setString("accessToken", "Bearer " + accessToken);
-      await getBankAccounts();
-    //  initializeOneSignal(context);
+    await getBankAccounts();
+      //initializeOneSignal(context);
     // storeinmap(body, _pref, passwordController.text);
     currentId.value = body['data']['_id'];
     // Phone.value = body['data']['phone'] ?? "";
     // number.value = body['data']['phone']?? "";
     isBankAccountLink.value = body['data']['isBankAccountLinked'];
-    Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
     acceptReset.value = false;
-
-  } else {  
+  } else {
     acceptReset.value = false;
     var snackBar = SnackBar(
       duration: Durations.medium4,
@@ -154,17 +153,12 @@ void storeinmap(body, SharedPreferences _pref, String password) {
 }
 
 void getOTP(context, String name, String email) async {
-
   final response = await http.post(
     Uri.parse('${url}/otp/send'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
-    body: jsonEncode({
-      'email': email,
-      'name': name,
-      'deviceInfo': deviceData 
-    }),
+    body: jsonEncode({'email': email, 'name': name, 'deviceInfo': deviceData}),
   );
   if (response.statusCode == 200 || response.statusCode == 201) {
     snackBarCalled(context, "Sended Otp To Email Id...!", Colors.black);
@@ -172,46 +166,49 @@ void getOTP(context, String name, String email) async {
     snackBarCalled(context, "can't send opt!", Colors.red);
   }
 }
-void  forceLogoutUser( sessionId, email, userpassword ,context,id,deviceName) async {
-final SharedPreferences _pref = await SharedPreferences.getInstance();
- try{
-  final response = await http.post(
-    Uri.parse('${url}/user/force-login'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode({
-      "sessionId":sessionId, 
-      "email":email, 
-      "userpassword":userpassword,
-      "deviceInfo":deviceData 
-    }),
-  );
- 
-  if (response.statusCode == 200 || response.statusCode == 201) {
-   final body = json.decode(response.body);
-    String accessToken = body['data']['accessToken'];
-    _pref.setString("accessToken", "Bearer " + accessToken);
-     currentId.value = body['data']['_id'];
-    try{
-    sendNotificationsToDevice( currentId.value, context,"You have been logged out from StakePlot. Your account was logged in on ${deviceName}");
-    }catch(e){}
 
-    await getBankAccounts();
-    addThisDeviceToBackendDevice(_pref,context);
-    storeinmap(body, _pref,userpassword);
-    Phone.value = body['data']['phone'];
-    number.value = body['data']['phone'];
-    isBankAccountLink.value = body['data']['isBankAccountLinked'];
-    clearStack(context);
-    Navigator.pushNamed(context, "/home");
-    acceptReset.value = false;
-  } else {
-    snackBarCalled(context, "can't send opt!", Colors.red);
-  }
- }catch(e){
+void forceLogoutUser(
+    sessionId, email, userpassword, context, id, deviceName) async {
+  final SharedPreferences _pref = await SharedPreferences.getInstance();
+  try {
+    final response = await http.post(
+      Uri.parse('${url}/user/force-login'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        "sessionId": sessionId,
+        "email": email,
+        "userpassword": userpassword,
+        "deviceInfo": deviceData
+      }),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final body = json.decode(response.body);
+      String accessToken = body['data']['accessToken'];
+      _pref.setString("accessToken", "Bearer " + accessToken);
+      currentId.value = body['data']['_id'];
+      try {
+        sendNotificationsToDevice(currentId.value, context,
+            "You have been logged out from StakePlot. Your account was logged in on ${deviceName}");
+      } catch (e) {}
+
+      await getBankAccounts();
+      addThisDeviceToBackendDevice(_pref, context);
+      storeinmap(body, _pref, userpassword);
+      Phone.value = body['data']['phone'];
+      number.value = body['data']['phone'];
+      isBankAccountLink.value = body['data']['isBankAccountLinked'];
+      clearStack(context);
+      Navigator.pushNamed(context, "/home");
+      acceptReset.value = false;
+    } else {
+      snackBarCalled(context, "can't send opt!", Colors.red);
+    }
+  } catch (e) {
     print(e);
- }
+  }
 }
 
 void getforgotPassword(context, String name, String email) async {
@@ -311,9 +308,9 @@ void changePassword(context, email, p1, p2) async {
   }
 }
 
-
-void addThisDeviceToBackendDevice(pref,context)async{
-  await addThisDeviceToBackend(jsonDecode(pref.getString("deviceInfo")??"{}"), context);
+void addThisDeviceToBackendDevice(pref, context) async {
+  await addThisDeviceToBackend(
+      jsonDecode(pref.getString("deviceInfo") ?? "{}"), context);
   // await addThisDeviceToBackend(pref, context);
 }
 
@@ -354,7 +351,7 @@ void resendOptUser(context, email, name) async {
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    acceptReset.value=false;
+    acceptReset.value = false;
     snackBarCalled(context, "ReSended Otp To Email Id...!", Colors.black);
   } else {
     snackBarCalled(context, "can't send opt!", Colors.red);
@@ -537,66 +534,65 @@ void clearGetX() {
 // }
 
 void initializeOneSignal(BuildContext context) async {
-         final SharedPreferences pref = await SharedPreferences.getInstance();
-         String key="deviceInfo";
-      if(!pref.containsKey(key))
-      {
-        await oneSignalInit();
-        await Future.delayed(Duration(seconds: 2)); // Small delay
-        String? userDeviceId =await OneSignal.User.pushSubscription.id;
-        deviceData.value['deviceId']=userDeviceId ?? "deviceData.value";
-        pref.setString(key, jsonEncode(deviceData));
-    }
-    addThisDeviceToBackendDevice(pref,context);
-    navigateScreen(context);
+  final SharedPreferences pref = await SharedPreferences.getInstance();
+  String key = "deviceInfo";
+  if (!pref.containsKey(key)) {
+    await oneSignalInit();
+    await Future.delayed(Duration(seconds: 2)); // Small delay
+    
+    String? userDeviceId = await OneSignal.User.pushSubscription.id;
+    print("UssserDeviceId ${userDeviceId}");
+    deviceData.value['deviceId'] = userDeviceId ?? "deviceData.value";
+    print("deviceid ${deviceData.value['deviceId']}");
+    pref.setString(key, jsonEncode(deviceData));
+  }
+  addThisDeviceToBackendDevice(pref, context);
+  navigateScreen(context);
 }
 
-void navigateScreen(context)
-{
-  OneSignal.Notifications.addClickListener((event){
+void navigateScreen(context) {
+  OneSignal.Notifications.addClickListener((event) {
     String? screen = event.notification.additionalData?['screen'];
-    if (screen != null)
-    {
+    if (screen != null) {
       Navigator.pushNamed(context, screen);
-    } else{
+    } else {
       print("No screen specified in additional data.");
     }
   });
-
 }
 
-Future<void> oneSignalInit() async
-{
-  try{
-  String appId = "66bc1852-d40b-4ad0-8a11-5e3d0da698a2";
-  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
-  OneSignal.initialize(appId);
-  OneSignal.Notifications.requestPermission(true);
-  }catch(e){
-      print(e);
+Future<void> oneSignalInit() async {
+  try {
+    String appId = "66bc1852-d40b-4ad0-8a11-5e3d0da698a2";
+    OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+    OneSignal.initialize(appId);
+    OneSignal.Notifications.requestPermission(true);
+  } catch (e) {
+    print(e);
   }
 }
 
-Future<void> getDeviceInfo(String playerId, context,TextEditingController emailController,TextEditingController passwordController) async {
+Future<void> getDeviceInfo(
+    String playerId,
+    context,
+    TextEditingController emailController,
+    TextEditingController passwordController) async {
   final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   deviceData.value = {};
   final SharedPreferences pref = await SharedPreferences.getInstance();
-  String key="deviceInfo";
- 
+  String key = "deviceInfo";
+
   try {
     if (Platform.isAndroid) {
-     
       final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-    
-      deviceData.value =
-      {
+
+      deviceData.value = {
         'deviceId': playerId,
         'brand': androidInfo.brand,
         'device': androidInfo.device,
         'model': androidInfo.model,
         'os': 'Android',
       };
-
     } else if (Platform.isIOS) {
       // For iOS devices
       final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
@@ -614,10 +610,9 @@ Future<void> getDeviceInfo(String playerId, context,TextEditingController emailC
         'osVersion': 'Unknown',
       };
     }
-  } catch (e)
-    {
-      print('Error getting device info: $e');
-    }
+  } catch (e) {
+    print('Error getting device info: $e');
+  }
   loginUser(emailController, passwordController, context);
 }
 
@@ -634,11 +629,7 @@ Future<void> addThisDeviceToBackend(deviceData, context) async {
     body: jsonEncode(deviceData),
   );
   printData(response);
-  if (response.statusCode == 200 || response.statusCode == 201)
-  {
+  if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-
-  } else{
-    
-  }
+  } else {}
 }

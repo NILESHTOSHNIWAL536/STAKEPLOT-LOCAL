@@ -26,63 +26,78 @@ class _UserListScreenState extends State<UserListScreen> {
   void initState() {
     super.initState();
     //getUserLend(context);
-    print('UserListScreen: initState called');
+  //  print('UserListScreen: initState called');
     //getUserLend(context);
     getRemainders(context);
-    print('UserListScreen: getRemainders called');
+   // print('UserListScreen: getRemainders called');
 
     //duesPaid(context,index);
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Payable overview',
-                style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: AppColors.accentColor),
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ShowAllUsersScreen(),
-                    ),
-                  );
-                },
-                child: Container(
-                  height: 30,
-                  width: MediaQuery.sizeOf(context).width * 0.12,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: AppColors.button),
-                  child: Center(
-                    child: Text(
-                      'more',
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.w500,
-                          fontSize: 14,
-                          color: AppColors.primaryColor),
-                    ),
+ @override
+Widget build(BuildContext context) {
+  return Column(
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Payable overview',
+              style: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: AppColors.accentColor),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ShowAllUsersScreen(),
+                  ),
+                );
+              },
+              child: Container(
+                height: 30,
+                width: MediaQuery.sizeOf(context).width * 0.12,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: AppColors.button),
+                child: Center(
+                  child: Text(
+                    'more',
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.w500,
+                        fontSize: 14,
+                        color: AppColors.primaryColor),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-        Obx(() => !getlendUsers.value ? getUser() : getUser2())
-      ],
-    );
-  }
+      ),
+      Obx(() {
+        if (lendAmountRemainders.isEmpty && dueAmountRemainders.isEmpty) {
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'No payable or owed amounts found.',
+              style: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.w400,
+                  fontSize: 12,
+                  color: AppColors.accentColor),
+            ),
+          );
+        }
+        return !getlendUsers.value ? getUser() : getUser2();
+      }),
+    ],
+  );
+}
 
   Widget getUser() {
     return Visibility(
