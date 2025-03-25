@@ -454,3 +454,90 @@ class TextFeildWidgetCustom extends StatelessWidget {
     ));
   }
 }
+
+
+class TextFeildWidgetCustom2 extends StatelessWidget {
+  TextEditingController textEditingController;
+  String lableText;
+  //String lableStyle;
+  
+  String icon;
+  int? maxLines;
+  int? maxLength;
+  TextInputType keyBoard;
+  bool flag;
+
+  final FocusNode? focusNode;
+  TextFeildWidgetCustom2({
+    Key? key,
+    required this.textEditingController,
+
+    required this.keyBoard,
+    required this.lableText,
+    required this.icon,
+    this.flag = true,
+    this.focusNode,
+    this.maxLines,
+    this.maxLength,
+  }) : super(key: key);
+
+  RxBool show = false.obs;
+
+  @override
+  Widget build(BuildContext context) {
+    //  return Text("data");
+    return Center(
+        child: Container(
+      padding: EdgeInsets.symmetric(vertical: 8),
+      width: MediaQuery.of(context).size.width / 1.1,
+      // color: Colorcodes.white,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            
+            TextFormField(
+              keyboardType: keyBoard,
+              controller: textEditingController,
+              obscureText: flag ? false : show.value,
+              //added focus node for expansion budget search
+              focusNode: focusNode,
+              maxLines: 1,
+              maxLength: 30,
+              
+              decoration: InputDecoration(
+                // contentPadding: EdgeInsets.all(0),
+                counterText: "",
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                filled: true,
+                hintText: lableText,
+                hintStyle: getStyle1(context),
+                labelStyle: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: AppColors.bg3),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(color: AppColors.accentColor)),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(color:AppColors.primaryColor)),
+                fillColor: AppColors.button,
+                border: InputBorder.none,
+                prefixIcon: flag
+                    ? PrefixIcon(
+                        url: icon,
+                        height: 40,
+                        width: 40,
+                      )
+                    : Icon(Icons.search),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ));
+  }
+}

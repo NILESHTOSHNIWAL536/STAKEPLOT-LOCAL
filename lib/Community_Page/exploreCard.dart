@@ -46,8 +46,11 @@ class _ExploreCardState extends State<ExploreCard> {
               _buildHeader(context),
               _buildImageSection(context),
               _buildPlaceInfo(context),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
               _buildBudgetSection(context),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
               _buildTripHighlights(context),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
               _buildDescription(context),
             ],
           ),
@@ -186,18 +189,18 @@ class _ExploreCardState extends State<ExploreCard> {
 
   Widget _buildPlaceInfo(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
+      //padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
       margin: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.015),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(8),
-      ),
+      // decoration: BoxDecoration(
+      //   color: Colors.white.withOpacity(0.2),
+      //   borderRadius: BorderRadius.circular(8),
+      // ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(Icons.place_outlined, size: _getResponsiveFontSize(context, 18), color: AppColors.bg1),
+              Icon(Icons.my_location_outlined, size: _getResponsiveFontSize(context, 18), color: AppColors.bg1),
               SizedBox(width: MediaQuery.of(context).size.width * 0.02),
               Expanded(
                 child: Text(
@@ -243,7 +246,7 @@ class _ExploreCardState extends State<ExploreCard> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: MediaQuery.of(context).size.height * 0.015),
+        //SizedBox(height: MediaQuery.of(context).size.height * 0.015),
         Text(
           "Budget",
           style: FontManager().getTextStyle(
@@ -253,7 +256,7 @@ class _ExploreCardState extends State<ExploreCard> {
             color: AppColors.bg1,
           ),
         ),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.02),
         Wrap(
           spacing: MediaQuery.of(context).size.width * 0.025,
           runSpacing: MediaQuery.of(context).size.height * 0.015,
@@ -273,7 +276,7 @@ class _ExploreCardState extends State<ExploreCard> {
       ),
       decoration: BoxDecoration(
         color: AppColors.button,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.button),
       ),
       child: Row(
@@ -315,6 +318,7 @@ class _ExploreCardState extends State<ExploreCard> {
             color: AppColors.bg1,
           ),
         ),
+         SizedBox(height: MediaQuery.of(context).size.height * 0.01),
         Container(
           //width: double.infinity,
           padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
@@ -343,7 +347,7 @@ class _ExploreCardState extends State<ExploreCard> {
             ],
           ),
         ),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.015),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.01),
       ],
     );
   }

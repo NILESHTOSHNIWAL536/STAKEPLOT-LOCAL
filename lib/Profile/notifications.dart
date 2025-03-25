@@ -996,7 +996,8 @@ class _NotificationsState extends State<Notifications> {
             e['avatarType'] as String? ?? "",
             time,
             "bill",
-            "");
+             e['from_to'] as String? ?? "",notifyId.toString());
+
       case "splitApprovalRequest":
         return _buildApprovalCard(
             "${e['from_name'] ?? 'Someone'} has requested approval for settling ${e['name'] ?? 'unknown'} with an amount of ${e['amount'] ?? '00'}",
@@ -1004,7 +1005,7 @@ class _NotificationsState extends State<Notifications> {
             e['avatarType'] as String? ?? "",
             time,
             "split",
-            e['from_to'] as String? ?? "");
+            e['from_to'] as String? ?? "",notifyId.toString());
       case "clearLend":
       case "clearSplit":
         String ty = type == "clearLend" ? "lend" : "split";
@@ -1019,43 +1020,45 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Widget _buildMessageCard(String message, String id, String avatar, String time) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        avatar.isNotEmpty
-            ? UserAvatar(
-                url: avatar,
-                width: MediaQuery.of(context).size.width * 0.06,
-                height: MediaQuery.of(context).size.width * 0.06,
-              )
-            : SizedBox(width: MediaQuery.of(context).size.width * 0.06),
-        SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: MediaQuery.of(context).size.width * 0.015),
-                child: Text(
-                  message,
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w600,
-                    fontSize: 14,
-                    color: AppColors.bg1,
-                  ),
+  bool isFetchedData = message.contains("🔥 Data has been successfully fetched!");
+  
+  return Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      if (!isFetchedData && avatar.isNotEmpty)
+        UserAvatar(
+          url: avatar,
+          width: MediaQuery.of(context).size.width * 0.06,
+          height: MediaQuery.of(context).size.width * 0.06,
+        )
+      else if (!isFetchedData)
+        SizedBox(width: MediaQuery.of(context).size.width * 0.06),
+      if (!isFetchedData) SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: MediaQuery.of(context).size.width * 0.015),
+              child: Text(
+                message,
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w600,
+                  fontSize: 14,
+                  color: AppColors.bg1,
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-              _buildTimeDivider(time),
-            ],
-          ),
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            _buildTimeDivider(time),
+          ],
         ),
-      ],
-    );
-  }
-
+      ),
+    ],
+  );
+}
   Widget _buildFriendRequestCard(String name, String id, String avatar, Map<String, dynamic> e,
       String? notifyId, String time) {
     return Row(
@@ -1181,7 +1184,7 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Widget _buildApprovalCard(
-      String message, String id, String avatar, String time, String type, String endUser) {
+      String message, String id, String avatar, String time, String type, String endUser,String notifyId) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1219,6 +1222,7 @@ class _NotificationsState extends State<Notifications> {
                     Colors.white,
                     () {
                       settleAmount(context, id, type, endUser);
+                        _deleteNotification(notifyId);
                     },
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.03),
@@ -1226,7 +1230,10 @@ class _NotificationsState extends State<Notifications> {
                     "Reject",
                     Colors.white,
                     AppColors.bg3,
-                    () {},
+                    () {
+                          declineAmount(context, id, type, endUser);
+                             _deleteNotification(notifyId);
+                    },
                     border: true,
                   ),
                 ],

@@ -370,6 +370,8 @@ class _LineChartWidgetState extends State<LineChartWidget> {
               // Fixed Y-axis labels
               if (!widget.isExpandedView)
                 Container(
+                  // width: screenWidth * 0.06, // Reduced width (adjust as needed)
+                padding: EdgeInsets.zero, 
                   child: _buildYAxisLabels(fontSizeFactor),
                 ),
               // Scrollable chart area
@@ -628,50 +630,54 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     return false; // Placeholder return value
   }
 
-  Widget _buildYAxisLabels(double fontSizeFactor) {
-    // Calculate intervals for Y-axis labels
-
-    final double interval = maxYValue * 1.2 / 4; // For 5 labels
-    List<Widget> labels = [];
-
-    for (int i = 0; i <= 4; i++) {
-      double value = interval * i;
-      labels.add(
-        Expanded(
-          child: Align(
-            alignment: Alignment.center,
-            child: Text(
-              '₹${formatNumberString(value.toString())}',
-              style: FontManager().getTextStyle(
-                context,
-                lWeight: FontWeight.normal,
-                fontSize: fontSizeFactor * 3.3,
-                color: AppColors.accentColor,
-              ),
+ Widget _buildYAxisLabels(double fontSizeFactor) {
+  // Calculate the maximum value including padding
+  final double maxValue = maxYValue * 1.2;
+  
+  // Determine the number of labels (e.g., 5) and calculate interval
+  const int numLabels = 5; // You can adjust this based on your needs
+  final double interval = maxValue / (numLabels - 1); // Avoid division by zero
+  
+  List<Widget> labels = [];
+  
+  for (int i = 0; i < numLabels; i++) {
+    double value = i * interval;
+    labels.add(
+      Expanded(
+        child: Align(
+          alignment: Alignment.center,
+          child: Text(
+            '₹${formatNumberString(value.toStringAsFixed(0))}', // Use toStringAsFixed for precision
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.normal,
+              fontSize: fontSizeFactor * 3.3,
+              color: AppColors.accentColor,
             ),
           ),
         ),
-      );
-    }
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children:
-          labels.reversed.toList(), // Reverse to have highest value at top
+      ),
     );
   }
+  
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: labels.reversed.toList(), // Highest value at top
+  );
+}
 
-  String formatNumberString(String value) {
-    double numValue = double.tryParse(value) ?? 0;
-    if (numValue >= 10000000) {
-      return '${(numValue / 10000000).toStringAsFixed(0)} Cr';
-    } else if (numValue >= 100000) {
-      return '${(numValue / 100000).toStringAsFixed(0)} L';
-    } else if (numValue >= 1000) {
-      return '${(numValue / 1000).toStringAsFixed(0)} K';
-    } else {
-      return doubleToFixed(value);
-    }
+String formatNumberString(String value) {
+  double numValue = double.tryParse(value) ?? 0;
+  if (numValue >= 10000000) {
+    return '${(numValue / 10000000).toStringAsFixed(1)} Cr'; // Increased precision
+  } else if (numValue >= 100000) {
+    return '${(numValue / 100000).toStringAsFixed(1)} L'; // Increased precision
+  } else if (numValue >= 1000) {
+    return '${(numValue / 1000).toStringAsFixed(1)} K'; // Increased precision
+  } else {
+    return numValue.toStringAsFixed(0); // No decimals for small values
   }
+}
 }
 
 class ChartData {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
@@ -77,15 +78,15 @@ class _BudgetOverViewState extends State<BudgetOverView> {
             SizedBox(height: Colorcodes.paddingSize),
             textStyle(
                 context: context,
-                text: "Budget Calculations",
-                fontsize: 20,
-                fontWeight: FontWeight.bold),
+                text: "Budget Overview",
+                fontsize: 18,
+                fontWeight: FontWeight.w500),
             SizedBox(height: Colorcodes.paddingSize),
             Container(
               width: MediaQuery.of(context).size.width,
-              child: Column(
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
                       padding:
@@ -95,38 +96,39 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                           borderRadius: BorderRadius.circular(10)),
                       child: textStyle(
                           context: context,
-                          text: "Budget amount",
-                          fontsize: 13,
+                          text: "Total Amount",
+                          fontsize: 14,
                           fontWeight: FontWeight.w600)),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: Colorcodes.paddingSize),
-                    child: textStyle(
-                        context: context,
-                        text: "₹" + widget.amount,
-                        fontsize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
+                  textStyle(
+                      context: context,
+                      text: "₹" + widget.amount,
+                      fontsize: 16,
+                      c: AppColors.primaryColor,
+                      fontWeight: FontWeight.bold),
                 ],
               ),
             ),
+            Padding(
+                    padding: EdgeInsets.only(
+                        bottom: Colorcodes.paddingSize),),
             Row(
               children: [
+                
                 textStyle(
                     context: context,
-                    text: "Budget ",
-                    fontsize: 18,
-                    fontWeight: FontWeight.bold),
-                textStyle(
+                    text: "${widget.period}",
+                    fontsize: 16,
+                    fontWeight: FontWeight.w500,
+                    c: AppColors.accentColor),
+                    textStyle(
                     context: context,
-                    text: "(${widget.period})",
-                    fontsize: 18,
-                    fontWeight: FontWeight.bold,
-                    c: AppColors.primaryColor),
+                    text: " Estimation",
+                    fontsize: 16,
+                    fontWeight: FontWeight.w500),
               ],
             ),
             SizedBox(
-              height: Colorcodes.paddingCard / 3,
+              height: Colorcodes.paddingCard / 2,
             ),
             Obx(() => categoryList()),
             SizedBox(
@@ -145,89 +147,95 @@ class _BudgetOverViewState extends State<BudgetOverView> {
   }
 
   Widget categoryList() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 1.55,
-      child: SingleChildScrollView(
-        
-          child: Column(
-            children: List.generate(categoriesDividedList.length, (index) {
-              String urlAvatar = "";
-              try {
-                urlAvatar = Categories.link +
-                    BudgetCategories2.listofCategories[
-                        categoriesDividedList[index]['category']];
-              } catch (e) {
-                urlAvatar = Categories.link +
-                    BudgetCategories2.listofCategories['Entertainment'];
-              }
-              return Container(
-                padding: EdgeInsets.symmetric(horizontal: 7),
+  return Container(
+  
+    width: MediaQuery.of(context).size.width,
+    height: MediaQuery.of(context).size.height / 1.55,
+    child: SingleChildScrollView(
+      child: Column(
+        children: List.generate(categoriesDividedList.length, (index) {
+          String urlAvatar = "";
+          try {
+            urlAvatar = Categories.link +
+                BudgetCategories2.listofCategories[
+                    categoriesDividedList[index]['category']];
+          } catch (e) {
+            urlAvatar = Categories.link +
+                BudgetCategories2.listofCategories['Entertainment'];
+          }
+
+          return Column(
+            children: [
+              Container(
+                //padding: EdgeInsets.symmetric(horizontal: 7),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      flex: 2,
-                      child: Container(
-                          child: AvatarProfileImage(
-                              url: urlAvatar, width: 10, height: 12)),
-                    ),
-                    const SizedBox(
-                      width: 10,
+                      flex: 1,
+                      child: AvatarProfileImage(
+                        url: urlAvatar,
+                        width: 26,
+                        height: 28,
+                      ),
                     ),
                     Expanded(
                       flex: 4,
                       child: Text(
                         categoriesDividedList[index]['category']!,
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w500),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
-                    const SizedBox(
-                      width: 10,
-                    ),
                     Expanded(
-                      flex: 3,
-                      child: Container(
-                        child: Center(
-                          child: TextField(
-                              controller: TextEditingController(
-                                  text: categoriesDividedList[index]['amount']
-                                      .toString()),
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: "Enter amount",
-                                errorText: _isAmountExceeded(index)
-                                    ? "Amount exceeds budget"
-                                    : null,
-                              ),
-                              keyboardType: TextInputType.number,
-                              onSubmitted: (value) {
-                                if (_validateAmount(value, widget.amount)) {
-                                  onsubmit(index, value);
-                                } else {
-                                  // Show an error message or handle the case where the amount exceeds the budget
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                          "Amount exceeds the total budget!"),
-                                      backgroundColor: Colors.red,
-                                    ),
-                                  );
-                                }
-                              }),
+                      flex: 2,
+                      child: TextField(
+                        controller: TextEditingController(
+                          text: categoriesDividedList[index]['amount']
+                              .toString(),
                         ),
+                        decoration: InputDecoration(
+
+                        //  prefixIcon: Icon(Icons.currency_rupee),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 0, horizontal: 4), // Removes extra spacing
+                          isDense: true, // Reduces extra height
+                          hintText: "Enter amount",
+                          hintStyle: FontManager().getTextStyle(context,
+            lWeight: FontWeight.w400, fontSize: 12, color: AppColors.accentColor),
+                          errorText: _isAmountExceeded(index)
+                              ? "Amount exceeds budget"
+                              : null,
+                        ),
+                        keyboardType: TextInputType.number,
+                        onSubmitted: (value) {
+                          if (_validateAmount(value, widget.amount)) {
+                            onsubmit(index, value);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Amount exceeds the total budget!"),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
                   ],
                 ),
-              );
-            }),
-          ),
-        ),
-      
-    );
-  }
+              ),
+              SizedBox(height: 10), // Adds space between rows
+            ],
+          );
+        }),
+      ),
+    ),
+  );
+}
+
 
   void onsubmit(index, value) async {
   
