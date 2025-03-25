@@ -147,85 +147,91 @@ class _BudgetOverViewState extends State<BudgetOverView> {
   }
 
   Widget categoryList() {
-    return Container(
-      color:Colors.blue,
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 1.55,
-      child: SingleChildScrollView(
-        
-          child: Column(
-            children: List.generate(categoriesDividedList.length, (index) {
-              String urlAvatar = "";
-              try {
-                urlAvatar = Categories.link +
-                    BudgetCategories2.listofCategories[
-                        categoriesDividedList[index]['category']];
-              } catch (e) {
-                urlAvatar = Categories.link +
-                    BudgetCategories2.listofCategories['Entertainment'];
-              }
-              return Container(
+  return Container(
+  
+    width: MediaQuery.of(context).size.width,
+    height: MediaQuery.of(context).size.height / 1.55,
+    child: SingleChildScrollView(
+      child: Column(
+        children: List.generate(categoriesDividedList.length, (index) {
+          String urlAvatar = "";
+          try {
+            urlAvatar = Categories.link +
+                BudgetCategories2.listofCategories[
+                    categoriesDividedList[index]['category']];
+          } catch (e) {
+            urlAvatar = Categories.link +
+                BudgetCategories2.listofCategories['Entertainment'];
+          }
+
+          return Column(
+            children: [
+              Container(
                 padding: EdgeInsets.symmetric(horizontal: 7),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       flex: 1,
-                      child: Container(
-                          child: AvatarProfileImage(
-                              url: urlAvatar, width: 26, height: 28)),
+                      child: AvatarProfileImage(
+                        url: urlAvatar,
+                        width: 26,
+                        height: 28,
+                      ),
                     ),
-                    
                     Expanded(
                       flex: 4,
                       child: Text(
                         categoriesDividedList[index]['category']!,
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w500),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-
                     Expanded(
                       flex: 2,
                       child: TextField(
-                        
-                          controller: TextEditingController(
-                              text: categoriesDividedList[index]['amount']
-                                  .toString()),
-                          decoration: InputDecoration(
-                           contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 8), // Removes extra spacing
-      isDense: true,
-                           // border: OutlineInputBorder(),
-                            hintText: "Enter amount",
-                            errorText: _isAmountExceeded(index)
-                                ? "Amount exceeds budget"
-                                : null,
-                          ),
-                          keyboardType: TextInputType.number,
-                          onSubmitted: (value) {
-                            if (_validateAmount(value, widget.amount)) {
-                              onsubmit(index, value);
-                            } else {
-                              // Show an error message or handle the case where the amount exceeds the budget
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                      "Amount exceeds the total budget!"),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                            }
-                          }),
+                        controller: TextEditingController(
+                          text: categoriesDividedList[index]['amount']
+                              .toString(),
+                        ),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 0, horizontal: 8), // Removes extra spacing
+                          isDense: true, // Reduces extra height
+                          hintText: "Enter amount",
+                          errorText: _isAmountExceeded(index)
+                              ? "Amount exceeds budget"
+                              : null,
+                        ),
+                        keyboardType: TextInputType.number,
+                        onSubmitted: (value) {
+                          if (_validateAmount(value, widget.amount)) {
+                            onsubmit(index, value);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Amount exceeds the total budget!"),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        },
+                      ),
                     ),
                   ],
                 ),
-              );
-            }),
-          ),
-        ),
-      
-    );
-  }
+              ),
+              SizedBox(height: 10), // Adds space between rows
+            ],
+          );
+        }),
+      ),
+    ),
+  );
+}
+
 
   void onsubmit(index, value) async {
   
