@@ -370,12 +370,14 @@ class _LineChartWidgetState extends State<LineChartWidget> {
               // Fixed Y-axis labels
               if (!widget.isExpandedView)
                 Container(
+                  
                   // width: screenWidth * 0.06, // Reduced width (adjust as needed)
                 padding: EdgeInsets.zero, 
                   child: _buildYAxisLabels(fontSizeFactor),
                 ),
               // Scrollable chart area
               Expanded(
+                
                 child: widget.selectedButton.value != 'Week'
                     ? SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
@@ -453,7 +455,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     double chartWidth = dataLength * labelWidth;
 
     return Container(
-       
+       //color: Colors.amber,
         width: widget.selectedButton.value == 'Week'
             ? screenWidth * 0.85 // Fixed width for Week
             : max(chartWidth, screenWidth * 0.85),
@@ -461,12 +463,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         child: Transform.translate(
           offset: Offset(-15, 0),
           child: SfCartesianChart(
-            onChartTouchInteractionUp: (tapArgs) {
-              // if(widget.shouldBeNavigate )
-              // {
-              //     if(!isTooltipVisible.value)navToExpanded();
-              // }
-            },
+            
             borderWidth: 0,
             plotAreaBorderWidth: 0,
             primaryXAxis: CategoryAxis(

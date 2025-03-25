@@ -272,8 +272,8 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 right: 0,
                 top: 5,
                 child: Container(
-                  //static height for now
-                  height: 70,
+                  //static height for now 70
+                  height: MediaQuery.sizeOf(context).height/11.7,
                   decoration: BoxDecoration(
                       color: AppColors.primaryColor,
                       borderRadius: BorderRadius.circular(12)),

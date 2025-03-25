@@ -1008,14 +1008,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
         _buildText('Budget Spending', Colors.black,
             fontSize: 18, fontWeight: FontWeight.bold),
         SizedBox(height: 8),
-        budgetSpentData.isEmpty
-            ? Center(
-                // child: Text('No spending data available',
-                //     style: TextStyle(color: Colors.red))
-                child: _buildText('No spending data available', Colors.black,
-                    fontSize: 12, fontWeight: FontWeight.bold),
-              )
-            : SizedBox(
+         SizedBox(
                 height: 300,
                 child: LineChartSample(
                     budgetData: budgetSpentData, budgetType: budgetType),
@@ -1125,6 +1118,15 @@ class LineChartSample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     if (budgetData.isEmpty) {
+      return Center(
+        child: Text(
+          'No spending data available',
+          style: FontManager().getTextStyle(context,
+              lWeight: FontWeight.bold, fontSize: 12, color: Colors.black),
+        ),
+      );
+    }
     double labelWidth;
     double labelRotation;
 
