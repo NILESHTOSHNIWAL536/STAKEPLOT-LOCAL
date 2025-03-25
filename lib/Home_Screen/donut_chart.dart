@@ -418,15 +418,25 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                 dataLabelSettings:
                                     const DataLabelSettings(isVisible: false),
                                 enableTooltip: true,
-                                onPointTap: (ChartPointDetails details) {
+                                // onPointTap: (ChartPointDetails details) {
                                   
-                                    if (selectedIndex.value == details.pointIndex) {
-                                      selectedIndex.value = -1;
-                                    } else {
-                                      selectedIndex.value = details.pointIndex!;
-                                    }
+                                //     if (selectedIndex.value == details.pointIndex) {
+                                //       selectedIndex.value = -1;
+                                //     } else {
+                                //       selectedIndex.value = details.pointIndex!;
+                                //     }
                                  
-                                },
+                                // },
+                                onPointTap: (ChartPointDetails details) {
+  if (chartData.isNotEmpty && details.pointIndex != null && details.pointIndex! < chartData.length) {
+    if (selectedIndex.value == details.pointIndex) {
+      selectedIndex.value = -1;
+    } else {
+      selectedIndex.value = details.pointIndex!;
+    }
+  }
+},
+
                               ),
                             ],
                             
