@@ -499,7 +499,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '\u{20B9} ${hideBackAccountPassword.value ? data['currentBalance'] : "*********"}',
+                  '\u{20B9} ${hideBackAccountPassword.value ? data['currentBalance'] : "(⌐■_■)"}',
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.bold,
                       fontSize: 20,

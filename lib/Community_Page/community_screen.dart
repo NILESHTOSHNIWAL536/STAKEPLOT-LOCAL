@@ -148,17 +148,11 @@ class _CommunityState extends State<Community> {
                         },
                         child: AvatarProfileImage(
                           url: LikeComment.plus,
-                          height: 24,
-                          width: 24,
+                          height: 22,
+                          width: 22,
                         ),
                       )),
-                  Text(
-                    'Create post',
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
-                        fontSize: h / 64,
-                        color: AppColors.bg1),
-                  ),
+                  
                 ],
               ),
             ),

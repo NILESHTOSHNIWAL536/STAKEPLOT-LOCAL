@@ -77,15 +77,15 @@ class _BudgetOverViewState extends State<BudgetOverView> {
             SizedBox(height: Colorcodes.paddingSize),
             textStyle(
                 context: context,
-                text: "Budget Calculations",
-                fontsize: 20,
-                fontWeight: FontWeight.bold),
+                text: "Budget Overview",
+                fontsize: 18,
+                fontWeight: FontWeight.w500),
             SizedBox(height: Colorcodes.paddingSize),
             Container(
               width: MediaQuery.of(context).size.width,
-              child: Column(
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
                       padding:
@@ -95,8 +95,8 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                           borderRadius: BorderRadius.circular(10)),
                       child: textStyle(
                           context: context,
-                          text: "Budget amount",
-                          fontsize: 13,
+                          text: "Total Amount",
+                          fontsize: 12,
                           fontWeight: FontWeight.w600)),
                   Padding(
                     padding: EdgeInsets.symmetric(
@@ -104,7 +104,8 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                     child: textStyle(
                         context: context,
                         text: "₹" + widget.amount,
-                        fontsize: 20,
+                        fontsize: 16,
+                        c: AppColors.primaryColor,
                         fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -112,17 +113,18 @@ class _BudgetOverViewState extends State<BudgetOverView> {
             ),
             Row(
               children: [
+                
                 textStyle(
                     context: context,
-                    text: "Budget ",
-                    fontsize: 18,
-                    fontWeight: FontWeight.bold),
-                textStyle(
+                    text: "${widget.period}",
+                    fontsize: 16,
+                    fontWeight: FontWeight.w500,
+                    c: AppColors.accentColor),
+                    textStyle(
                     context: context,
-                    text: "(${widget.period})",
-                    fontsize: 18,
-                    fontWeight: FontWeight.bold,
-                    c: AppColors.primaryColor),
+                    text: " Estimation",
+                    fontsize: 16,
+                    fontWeight: FontWeight.w500),
               ],
             ),
             SizedBox(
@@ -146,6 +148,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
 
   Widget categoryList() {
     return Container(
+      color:Colors.blue,
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 1.55,
       child: SingleChildScrollView(
@@ -167,14 +170,12 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      flex: 2,
+                      flex: 1,
                       child: Container(
                           child: AvatarProfileImage(
-                              url: urlAvatar, width: 10, height: 12)),
+                              url: urlAvatar, width: 26, height: 28)),
                     ),
-                    const SizedBox(
-                      width: 10,
-                    ),
+                    
                     Expanded(
                       flex: 4,
                       child: Text(
@@ -183,41 +184,38 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                             fontSize: 16, fontWeight: FontWeight.w500),
                       ),
                     ),
-                    const SizedBox(
-                      width: 10,
-                    ),
+
                     Expanded(
-                      flex: 3,
-                      child: Container(
-                        child: Center(
-                          child: TextField(
-                              controller: TextEditingController(
-                                  text: categoriesDividedList[index]['amount']
-                                      .toString()),
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: "Enter amount",
-                                errorText: _isAmountExceeded(index)
-                                    ? "Amount exceeds budget"
-                                    : null,
-                              ),
-                              keyboardType: TextInputType.number,
-                              onSubmitted: (value) {
-                                if (_validateAmount(value, widget.amount)) {
-                                  onsubmit(index, value);
-                                } else {
-                                  // Show an error message or handle the case where the amount exceeds the budget
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                          "Amount exceeds the total budget!"),
-                                      backgroundColor: Colors.red,
-                                    ),
-                                  );
-                                }
-                              }),
-                        ),
-                      ),
+                      flex: 2,
+                      child: TextField(
+                        
+                          controller: TextEditingController(
+                              text: categoriesDividedList[index]['amount']
+                                  .toString()),
+                          decoration: InputDecoration(
+                           contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 8), // Removes extra spacing
+      isDense: true,
+                           // border: OutlineInputBorder(),
+                            hintText: "Enter amount",
+                            errorText: _isAmountExceeded(index)
+                                ? "Amount exceeds budget"
+                                : null,
+                          ),
+                          keyboardType: TextInputType.number,
+                          onSubmitted: (value) {
+                            if (_validateAmount(value, widget.amount)) {
+                              onsubmit(index, value);
+                            } else {
+                              // Show an error message or handle the case where the amount exceeds the budget
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      "Amount exceeds the total budget!"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          }),
                     ),
                   ],
                 ),

@@ -63,3 +63,25 @@ String formatWhatsAppDate(DateTime date) {
 DateTime convertStringToDateTime(String dateString) {
   return DateTime.parse(dateString);
 }
+
+
+String getPreviousDate(int no, String type) {
+  DateTime now = DateTime.now();
+  DateTime previousDate;
+
+  switch (type) {
+    case 'days':
+      previousDate = now.subtract(Duration(days: no));
+      break;
+    case 'months':
+      previousDate = DateTime(now.year, now.month - no, now.day);
+      break;
+    case 'year':
+      previousDate = DateTime(now.year - no, now.month, now.day);
+      break;
+    default:
+      throw ArgumentError("Invalid type. Use 'days', 'months', or 'years'.");
+  }
+
+  return DateFormat('yyyy-MM-dd').format(previousDate);
+}

@@ -1013,7 +1013,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
                 // child: Text('No spending data available',
                 //     style: TextStyle(color: Colors.red))
                 child: _buildText('No spending data available', Colors.black,
-                    fontSize: 18, fontWeight: FontWeight.bold),
+                    fontSize: 12, fontWeight: FontWeight.bold),
               )
             : SizedBox(
                 height: 300,

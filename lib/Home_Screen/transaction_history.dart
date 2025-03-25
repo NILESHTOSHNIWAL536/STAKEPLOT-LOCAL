@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/animated/pdf.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/bill.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
@@ -27,6 +28,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
 
 RxBool reloadHistory = false.obs;
+RxString selectedValue="30".obs;
+  RxString selectedValueType="days".obs;
+  RxBool getPdgLoader=false.obs;
 
 class TransactionHistory extends StatefulWidget {
   /// Optional
@@ -54,6 +58,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
   late AnimationController _animationController; // For smooth animations
   late Animation<double> _swipeAnimation; // Animation for swipe offset
   int? _currentSwipedIndex;
+  
 
   @override
   void initState() {
@@ -139,16 +144,71 @@ class _TransactionHistoryState extends State<TransactionHistory>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      Text(
+                        'Transaction History',
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: AppColors.accentColor),
+                      ),
                       InkWell(
-                        onTap:()async{
-                          generatePdf(PdfPageFormat.legal,"StakePlot",transactionsHistory,context);
+                        onTap: () {
+                        getPdgLoader.value=false;
+
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Container(
+                                height: MediaQuery.of(context).size.height / 2,
+                                decoration:const BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(30),
+                                    topRight: Radius.circular(30),
+                                  ),
+                                color: Colors.white,
+                                ),
+                                child: Column(children: [
+                                      Center(child: Container()),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 7),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                                textStyle(context: context,text: "Download Statement",fontsize: 14,fontWeight: FontWeight.w500),
+                                                InkWell(
+                                                  onTap: (){
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Icon(Icons.close_outlined,size: 20,color: AppColors.accentColor,),
+                                                )
+                                            ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      getListItemListTile("30","days", context),
+                                      getListItemListTile("60","days", context),
+                                     // getListItemListTile("90","days", context),
+                                       getListItemListTile("6","months", context),
+                                      getListItemListTile("1","year", context),
+                                      // const Spacer(),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 5),
+                                        child: InkWell(
+                                          onTap: ()async{
+                                             getPdgLoader.value=true;
+                                              getPdf(context, selectedValue, selectedValueType);
+                                          },
+                                         child: Obx(()=> getPdgLoader.value? getspinner(context,""): getButton(context, "Containue"))),
+                                      )
+                                 ],),
+                              );
+                            },
+                          );
                         },
-                        child: Text(
-                          'Transaction History',
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: AppColors.accentColor),
+                        child: const Icon(
+                          Icons.backup_sharp,
+                          size: 30,
+                          color: AppColors.accentColor,
                         ),
                       ),
                     ],
@@ -161,6 +221,29 @@ class _TransactionHistoryState extends State<TransactionHistory>
               ),
             ),
           );
+  }
+
+
+  Widget getListItemListTile(String no,String MorY,context){
+      return Container(
+        width: MediaQuery.of(context).size.width,
+         margin: const EdgeInsets.symmetric(vertical: 5,horizontal: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.primaryColor, width: 0.2),
+        ),
+        child:Obx(()=> ListTile(
+              title:  textStyle(context: context,text: no+" ${MorY}",fontsize: 15,fontWeight: FontWeight.w500),
+              trailing: Radio<String>(
+                value: no, // Assign a unique value for each radio button
+                groupValue: selectedValue.value, // The currently selected value
+                onChanged: (value) {
+                    selectedValue.value = value!;
+                    selectedValueType.value = MorY;
+                },
+              ),
+            )),
+      );
   }
 
   void changeTheBool() {
@@ -647,4 +730,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
       return false; // Return false if parsing fails
     }
   }
+  
+
 }
