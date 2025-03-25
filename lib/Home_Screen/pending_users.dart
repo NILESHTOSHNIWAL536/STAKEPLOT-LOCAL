@@ -266,10 +266,11 @@ Widget _buildListTile(
         children: [
           InkWell(
             onTap: () {
+              
               if (isDue) {
                 int index = dueAmountRemainders.indexWhere((element) => element['_id'] == data['_id']);
                 if (index != -1) {
-                  duesPaid(context, index);
+                   duesPaid(context, index);
                 }
               }
               sendNotificationsToDevice(
