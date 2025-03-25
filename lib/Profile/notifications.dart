@@ -1019,43 +1019,45 @@ class _NotificationsState extends State<Notifications> {
   }
 
   Widget _buildMessageCard(String message, String id, String avatar, String time) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        avatar.isNotEmpty
-            ? UserAvatar(
-                url: avatar,
-                width: MediaQuery.of(context).size.width * 0.06,
-                height: MediaQuery.of(context).size.width * 0.06,
-              )
-            : SizedBox(width: MediaQuery.of(context).size.width * 0.06),
-        SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: MediaQuery.of(context).size.width * 0.015),
-                child: Text(
-                  message,
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w600,
-                    fontSize: 14,
-                    color: AppColors.bg1,
-                  ),
+  bool isFetchedData = message.contains("🔥 Data has been successfully fetched!");
+  
+  return Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      if (!isFetchedData && avatar.isNotEmpty)
+        UserAvatar(
+          url: avatar,
+          width: MediaQuery.of(context).size.width * 0.06,
+          height: MediaQuery.of(context).size.width * 0.06,
+        )
+      else if (!isFetchedData)
+        SizedBox(width: MediaQuery.of(context).size.width * 0.06),
+      if (!isFetchedData) SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: MediaQuery.of(context).size.width * 0.015),
+              child: Text(
+                message,
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w600,
+                  fontSize: 14,
+                  color: AppColors.bg1,
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-              _buildTimeDivider(time),
-            ],
-          ),
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            _buildTimeDivider(time),
+          ],
         ),
-      ],
-    );
-  }
-
+      ),
+    ],
+  );
+}
   Widget _buildFriendRequestCard(String name, String id, String avatar, Map<String, dynamic> e,
       String? notifyId, String time) {
     return Row(
