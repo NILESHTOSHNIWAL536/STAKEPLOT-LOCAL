@@ -167,7 +167,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
           return Column(
             children: [
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 7),
+                //padding: EdgeInsets.symmetric(horizontal: 7),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -180,7 +180,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                       ),
                     ),
                     Expanded(
-                      flex: 4,
+                      flex: 3,
                       child: Text(
                         categoriesDividedList[index]['category']!,
                         style: TextStyle(
