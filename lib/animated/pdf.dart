@@ -286,20 +286,16 @@ String formatTimestamp(String timestamp) {
 List<String> getDetails(transaction,type,id){
     try {
       List<String> parts = transaction.split('/');
-       print(parts);
-      // String txnType = ""+parts[0]; // UPI-DR or UPI-CR
-      // String txnId = ""+parts[1];
-      // String name = ""+parts[2];
-      String bankCode = ""+parts[3];
-      String paidto=type=="DEBIT"? "Paid to "+"$bankCode":"Received from "+"$bankCode";
-      // String accountNumber = (parts.length > 5 ? parts[4] : "");
-      // String description = (parts.length > 6 ? parts[5] : "");
+      if(parts.isEmpty) parts = transaction.split('-');
+      if(parts.isEmpty) parts = transaction.split('&');
+      if(parts.isEmpty) parts = transaction.split(' ');
+      
       List<String> list=[];
+      String bankCode = parts.length>3? parts[3]:"";
+      String paidto=type=="DEBIT"? "Paid to "+"$bankCode":"Received from "+"$bankCode";
 
-      list.add(paidto);
+     if(bankCode!="")list.add(paidto);
       list.add(id);
-
-      print(list);
 
     return list;
     // return "Type: $txnType\nID: $txnId\nName: $name\nBank: $bankCode\nAccount: $accountNumber\nDesc: $description";

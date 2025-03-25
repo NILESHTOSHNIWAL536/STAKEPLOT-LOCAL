@@ -186,10 +186,9 @@ class _TransactionHistoryState extends State<TransactionHistory>
                                       const SizedBox(height: 20),
                                       getListItemListTile("30","days", context),
                                       getListItemListTile("60","days", context),
-                                      // getListItemListTile("3","months", context),
                                       getListItemListTile("6","months", context),
                                       getListItemListTile("1","year", context),
-                                      // const Spacer(),
+                                      
                                       Padding(
                                         padding: const EdgeInsets.symmetric(vertical: 5),
                                         child: InkWell(
