@@ -539,9 +539,9 @@ Future<void> initializeOneSignal(BuildContext context) async {
   if(pref.containsKey(key)){
      json = jsonDecode(pref.getString("deviceInfo") ?? "{}");
   }
-  print("json");
-  print(json);  
-  print(json["deviceId"]);
+  // print("json");
+  // print(json);  
+  // print(json["deviceId"]);
   if (!pref.containsKey(key) || json["deviceId"]=="deviceData.value")
   {
     await oneSignalInit();

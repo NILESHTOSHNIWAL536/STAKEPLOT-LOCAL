@@ -46,7 +46,7 @@ class _CommunityState extends State<Community> {
 
   @override
   void initState() {
-        getTrending();
+      //  getTrending();
         getPost();
   }
 

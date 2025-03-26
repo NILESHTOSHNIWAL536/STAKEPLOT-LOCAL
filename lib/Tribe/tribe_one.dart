@@ -96,9 +96,6 @@ class _TribeHomeState extends State<TribeUnique> {
     auth.name = userName.value;
     auth.avatar = avatar.value;
 
-    // post.authorId=auth.id;
-    // post.name=auth.name;
-
     obj.replies = [];
     obj.author = auth;
     obj.commentText = data;

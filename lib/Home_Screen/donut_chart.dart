@@ -282,16 +282,11 @@ class DoughnutChartExample extends StatefulWidget {
 
 class _DoughnutChartExampleState extends State<DoughnutChartExample> {
 
-
- 
-
   @override
   void initState() {
     super.initState();
     getCategoryData();
   }
-
- 
 
   @override
   Widget build(BuildContext context) {
@@ -301,7 +296,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
           final isLargeScreen = constraints.maxWidth > 600;
 
           return Padding(
-            padding: const EdgeInsets.all(5.0),
+            padding: const EdgeInsets.all(3.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
