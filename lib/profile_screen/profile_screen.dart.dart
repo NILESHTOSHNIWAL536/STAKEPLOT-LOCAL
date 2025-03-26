@@ -266,12 +266,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
             final SharedPreferences _pref =
                 await SharedPreferences.getInstance();
 
-            try {
-              var response = await postDataApiCall("${url}/user/logout", {});
-              printData(response);
-            } catch (e) {
-              print(e);
-            }
+          
 
             // Remove tokens and other session data
             await _pref.remove("accessToken");
@@ -288,6 +283,15 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
             Navigator.pushReplacementNamed(context, '/');
 
             clearGetX();
+            
+            try {
+              var response = await postDataApiCall("${url}/user/logout", {});
+              printData(response);
+            } catch (e)
+            {
+              print(e);
+            }
+
           },
           child: Container(
             decoration: BoxDecoration(
