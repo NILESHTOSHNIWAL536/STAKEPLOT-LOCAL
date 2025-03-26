@@ -1745,7 +1745,6 @@ Widget textStyleModel(context, str, id, [flag = false]) {
       reportPost(context, id, str);
       if (flag) {
         getPost();
-        getTrending();
         Navigator.pop(context);
       }
       Navigator.pop(context);

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
 import 'package:flutter_application_code_stakeplot/animated/userLoginedAlready.dart';
@@ -491,6 +492,7 @@ void clearGetX() {
   balance.value = "0";
   selectedBank.value = "";
   accountId.value=="";
+   displayedData.clear();
   bankAccountLinkedList.clear();
 }
 
@@ -539,18 +541,13 @@ Future<void> initializeOneSignal(BuildContext context) async {
   if(pref.containsKey(key)){
      json = jsonDecode(pref.getString("deviceInfo") ?? "{}");
   }
-  print("json");
-  print(json);  
-  print(json["deviceId"]);
+  
   if (!pref.containsKey(key) || json["deviceId"]=="deviceData.value")
   {
     await oneSignalInit();
     await Future.delayed(Duration(seconds: 3)); // Small delay
     String? userDeviceId = await OneSignal.User.pushSubscription.id;
     deviceData['deviceId'] = userDeviceId ?? "deviceData.value";
-    print("deviceid ${deviceData['deviceId']}");
-    print("deviceData");
-    print(deviceData);
     pref.setString(key, jsonEncode(deviceData));
   }
   addThisDeviceToBackendDevice(pref, context);

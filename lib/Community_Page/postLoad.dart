@@ -17,6 +17,7 @@ class _LazyLoadingListState extends State<LazyLoadingList> {
   @override
   void initState() {
     super.initState();
+    displayedData.clear();
     loadInitialData();
     scrollControllerPost.addListener(_onScroll);
   }

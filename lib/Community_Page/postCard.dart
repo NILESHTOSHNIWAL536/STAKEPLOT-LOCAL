@@ -924,10 +924,7 @@ class _PostCardState extends State<PostCard> {
     var extractdata = isExploria
         ? dataObj['description']['message']
         : {}; //  dataObj.containsKey('place') && dataObj.containsKey('tripHighlight')
-    if (isExploria) {
-      print("dataObj-----------------------");
-      print(dataObj);
-    }
+    
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
       child: Card(
@@ -1213,7 +1210,6 @@ class _PostCardState extends State<PostCard> {
           reportPost(context, id, "hide post");
           if (widget.flag) {
             getPost();
-            getTrending();
             Navigator.pop(context);
           }
         }
