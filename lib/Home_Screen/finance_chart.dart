@@ -378,12 +378,12 @@ class _LineChartWidgetState extends State<LineChartWidget> {
               // Scrollable chart area
               Expanded(
                 
-                child: widget.selectedButton.value != 'Week'
-                    ? SingleChildScrollView(
+                child:
+                    SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: getContainerOfGraph(screenWidth, fontSizeFactor),
                       )
-                    : getContainerOfGraph(screenWidth, fontSizeFactor),
+                    
               ),
             ],
           ),

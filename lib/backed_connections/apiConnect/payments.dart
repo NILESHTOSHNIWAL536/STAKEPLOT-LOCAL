@@ -44,6 +44,7 @@ void getBudget() async {
       var obj = his['data'];
       budgetList.clear();
       budgetList.addAll(obj);
+      print("budgetList $budgetList");
       budgetLength.value = obj.length;
     }
   } catch (e) {}
@@ -139,7 +140,6 @@ void addBudget(BuildContext context, String name, String amount,
     Navigator.pushNamed(context, "/BudgetDisplay");
     snackBarCalled(context, "You have successfully added a new budget!");
   } else {
-   
     snackBarCalled(context, "Failed to add the budget!", Colors.red);
   }
 
@@ -165,11 +165,11 @@ void budgetUpdate(context, name, amount, expenseCategory, budgetType,
       'budgetPeriod': budgetPeriod.toString(),
     }),
   );
- 
+
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
 
-    snackBarCalled(context,"Your budget has been updated successfully!");
+    snackBarCalled(context, "Your budget has been updated successfully!");
     // Navigator.pushNamed(context, '/BudgetCheck');
     Navigator.pop(context);
     Navigator.pop(context);
@@ -186,7 +186,7 @@ void budgetUpdate(context, name, amount, expenseCategory, budgetType,
     //                         ),
     // );
   } else {
-    snackBarCalled(context,  "Unable to update the budget!" , Colors.red);
+    snackBarCalled(context, "Unable to update the budget!", Colors.red);
   }
 }
 
@@ -208,7 +208,7 @@ void addDebts(context, name, amount, interest, startDate, durations) async {
       'duration': durations,
     }),
   );
-  
+
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
 
@@ -253,7 +253,7 @@ void addBillTranscations(
     List<TextEditingController> controller, context) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
-  
+
   int end = controller.length;
 
   for (int i = 0; i < end; i += 3) {
@@ -274,12 +274,13 @@ void addBillTranscations(
         'dueDate': expenseCategory.toString(),
       }),
     );
-   
+
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
 
       acceptReset.value = false;
-      snackBarCalled(context, "Bill has been successfully added!", Colors.black);
+      snackBarCalled(
+          context, "Bill has been successfully added!", Colors.black);
       getBills();
       Navigator.pop(context);
     } else {
@@ -316,10 +317,11 @@ void addPaymentTranscations(
         'date': expenseCategory.toString(),
       }),
     );
-       if (response.statusCode == 200 || response.statusCode == 201) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
       acceptReset.value = false;
-      snackBarCalled(context,"Payment has been successfully added!", Colors.black);
+      snackBarCalled(
+          context, "Payment has been successfully added!", Colors.black);
 
       getPayments();
       //  Navigator.pushNamed(context, '/bsDisplay');
@@ -358,7 +360,8 @@ void deleteDebts(context, String id, [flag = false]) async {
     //           ),
     //       );
   } else {
-    snackBarCalled(context,"An error occurred while closing the debts!", Colors.red);
+    snackBarCalled(
+        context, "An error occurred while closing the debts!", Colors.red);
   }
 }
 
@@ -376,7 +379,8 @@ void deleteAmount(context, String id, String am) async {
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
   } else {
-    snackBarCalled(context, "An error occurred while closing the debts!", Colors.red);
+    snackBarCalled(
+        context, "An error occurred while closing the debts!", Colors.red);
   }
 }
 
@@ -420,7 +424,8 @@ void deleteBudget(context, String id) async {
   if (response.statusCode == 200 || response.statusCode == 201) {
     snackBarCalled(context, "Processing budget deletion...", Colors.red);
   } else {
-    snackBarCalled(context, "Error occurred while deleting the budget!", Colors.red);
+    snackBarCalled(
+        context, "Error occurred while deleting the budget!", Colors.red);
   }
 }
 
@@ -437,7 +442,6 @@ void clearDebts(context, String id, String amount, String value) async {
     'remainderId': id,
     'merchantId': 'assxx',
   };
-  
 
   final response = await http.post(
     Uri.parse('${url}/transaction/add'),
@@ -449,7 +453,8 @@ void clearDebts(context, String id, String amount, String value) async {
   );
   if (response.statusCode == 200) {
     final body = json.decode(response.body);
-    snackBarCalled(context,  "All debts for this month have been cleared!", Colors.black);
+    snackBarCalled(
+        context, "All debts for this month have been cleared!", Colors.black);
     //  Navigator.pushReplacementNamed(context, '/home');
   } else {
     snackBarCalled(context, "can't add trasactions!", Colors.red);
@@ -477,7 +482,6 @@ void getNewBudget() async {
     budgetList.addAll(obj);
   } else {}
 }
-
 
 void getUserLend(context) async {
   String urlPath = "${url}/bill/lend";
@@ -533,4 +537,3 @@ Future<String?> getToken() async {
     return accessToken;
   }
 }
-

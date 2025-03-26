@@ -37,7 +37,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
   @override
   Widget build( BuildContext context,) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigations(data: 4),
+      bottomNavigationBar: BottomNavigations(data: 3),
       backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
         child: Container(
