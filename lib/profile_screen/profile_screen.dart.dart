@@ -286,7 +286,6 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
             
             try {
               var response = await postDataApiCall("${url}/user/logout", {});
-              printData(response);
             } catch (e)
             {
               print(e);
