@@ -461,7 +461,11 @@ class _LineChartWidgetState extends State<LineChartWidget> {
             : max(chartWidth, screenWidth * 0.85),
         height: MediaQuery.of(context).size.height / 2.6,
         child: Transform.translate(
-          offset: Offset(-20, 0),
+          offset: widget.selectedButton.value == 'Week'
+      ? Offset(-20, 0)
+      : widget.selectedButton.value == 'Month'
+          ? Offset(-30, 0)
+          : Offset(-20, 0),
           child: SfCartesianChart(
             
             borderWidth: 0,

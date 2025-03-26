@@ -64,9 +64,10 @@ class _TransactionHistoryState extends State<TransactionHistory>
   @override
   void initState() {
     super.initState();
-    //  currentPage=0;
     _stableContext = context;
-    // getAllTransactionHistory(context, widget.isflag!, widget.isYearView!);
+    currentPage = 1;
+
+       // getAllTransactionHistory(context, widget.isflag!, widget.isYearView!);
     _scrollController2.addListener(() {
       if (_scrollController2.position.pixels >=
           _scrollController2.position.maxScrollExtent - 100) {
@@ -77,7 +78,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
         ); // Fetch next page
       }
     });
-    currentPage = 1;
+
     getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,
         isRefreshing: true);
     _animationController = AnimationController(
@@ -93,56 +94,9 @@ class _TransactionHistoryState extends State<TransactionHistory>
   }
 
   @override
-  void dispose() {
-    _animationController.dispose();
-    _scrollController2.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return widget.pageTransition
-        ? WillPopScope(
-            onWillPop: () async {
-              changeTheBool();
-              return true;
-            },
-            child: Scaffold(
-              appBar: AppBar(
-                leading: InkWell(
-                    onTap: () async {
-                      // changeTheBool();
-                    },
-                    child: Icon(Icons.arrow_back_ios)),
-                title: Text(
-                  'Transaction History',
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: AppColors.accentColor),
-                ),
-              ),
-              body: SingleChildScrollView(
-                child: Container(
-                  height: MediaQuery.of(context).size.height / 1.1,
-                  child: Column(
-                    children: [
-                      Obx(() => Expanded(
-                              child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 13, vertical: 10),
-                            child: reloadHistory.value ? getlist() : getlist(),
-                          ))), // Wrapped in Obx for reactivity
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          )
-        : SingleChildScrollView(
-            
+    return  SingleChildScrollView(
             child: Container(
-              // color: AppColors.backgroundColor,
               child: Column(
                 children: [
                   Row(
@@ -155,86 +109,17 @@ class _TransactionHistoryState extends State<TransactionHistory>
                             fontSize: 18,
                             color: AppColors.accentColor),
                       ),
-                      if (widget.showIcon ?? false) ...[
-                        InkWell(
-                          onTap: () {
-                            getPdgLoader.value = false;
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return Container(
-                                  height:
-                                      MediaQuery.of(context).size.height / 2,
-                                  decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(30),
-                                      topRight: Radius.circular(30),
-                                    ),
-                                    color: Colors.white,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Center(child: Container()),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 20, vertical: 7),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            textStyle(
-                                                context: context,
-                                                text: "Download Statement",
-                                                fontsize: 14,
-                                                fontWeight: FontWeight.w500),
-                                            InkWell(
-                                              onTap: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Icon(
-                                                Icons.close_outlined,
-                                                size: 20,
-                                                color: AppColors.accentColor,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(height: 20),
-                                      getListItemListTile(
-                                          "30", "days", context),
-                                      getListItemListTile(
-                                          "60", "days", context),
-                                      getListItemListTile(
-                                          "6", "months", context),
-                                      getListItemListTile("1", "year", context),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 5),
-                                        child: InkWell(
-                                            onTap: () async {
-                                              getPdgLoader.value = true;
-                                              getPdf(context, selectedValue,
-                                                  selectedValueType);
-                                            },
-                                            child: Obx(() => getPdgLoader.value
-                                                ? getspinner(context, "")
-                                                : getButton(
-                                                    context, "Continue"))),
-                                      )
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                          child: const Icon(
-                            Icons.backup_sharp,
-                            size: 30,
-                            color: AppColors.accentColor,
-                          ),
+                      if(widget.showIcon?? false)...[
+                      InkWell(
+                        onTap: () {
+                            showModal();
+                        },
+                        child: const Icon(
+                          Icons.backup_sharp,
+                          size: 30,
+                          color: AppColors.accentColor,
                         ),
-                      ]
+                      ),]
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -281,8 +166,9 @@ class _TransactionHistoryState extends State<TransactionHistory>
   Widget getlist() {
     return ListView.builder(
       itemCount: transactionsHistory.length + 1,
-      controller: _scrollController2, // Attach ScrollControlle
       shrinkWrap: true,
+      controller: _scrollController2,
+        physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         if (index < transactionsHistory.length) {
           final transaction = transactionsHistory[index];
@@ -293,7 +179,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
               'Uncategorized'; // Fixed typo and added null check
           String subcategory =
               transaction['subcategory']?.toString() ?? 'General';
-
+    
           return Stack(
             children: [
               Positioned(
@@ -331,7 +217,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                     //     context, amount, false, category, subcategory);
                     final result = await showCustomFriendsModal(
                         context, amount, false, category, subcategory);
-
+    
                     // showCustomFriendsModal2(context, transaction);
                   },
                   child: const Icon(
@@ -359,6 +245,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
             ],
           );
         } else {
+         
           return isLoadingMore.value
               ? Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20),
@@ -759,4 +646,59 @@ class _TransactionHistoryState extends State<TransactionHistory>
       return false; // Return false if parsing fails
     }
   }
+  
+
+
+  void showModal(){
+       getPdgLoader.value=false;
+     showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Container(
+                                height: MediaQuery.of(context).size.height / 2,
+                                decoration:const BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(30),
+                                    topRight: Radius.circular(30),
+                                  ),
+                                color: Colors.white,
+                                ),
+                                child: Column(children: [
+                                      Center(child: Container()),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 7),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                                textStyle(context: context,text: "Download Statement",fontsize: 14,fontWeight: FontWeight.w500),
+                                                InkWell(
+                                                  onTap: (){
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Icon(Icons.close_outlined,size: 20,color: AppColors.accentColor,),
+                                                )
+                                            ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      getListItemListTile("30","days", context),
+                                      getListItemListTile("60","days", context),
+                                      getListItemListTile("6","months", context),
+                                      getListItemListTile("1","year", context),
+                                      
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 5),
+                                        child: InkWell(
+                                          onTap: ()async{
+                                             getPdgLoader.value=true;
+                                              getPdf(context, selectedValue, selectedValueType);
+                                          },
+                                         child: Obx(()=> getPdgLoader.value? getspinner(context,""): getButton(context, "Containue"))),
+                                      )
+                                 ],),
+                              );
+                            },
+                          );
+  }
+
 }

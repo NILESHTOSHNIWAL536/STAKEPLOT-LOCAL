@@ -282,7 +282,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                   isYearView.value = true;
                   Navigator.pop(context);
                   transactionsHistory.clear();
-                    currentPage=1;
+                      currentPage=1;
                   getAllTransactionHistory(context, true, true);
                   _updateMonthLabels();
                   await _fetchYearlyData(year);

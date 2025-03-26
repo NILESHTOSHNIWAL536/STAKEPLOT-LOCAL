@@ -39,7 +39,8 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
       FixedExtentScrollController(initialItem: 0);
   final FixedExtentScrollController secondDigitController =
       FixedExtentScrollController(initialItem: 0);
-    List lock=["( ◐ o ◑ )"  , " (̿▀̿ ̿Ĺ̯̿̿▀̿ ̿)̄ " , "(¬‿¬) " , " (-‿◦)"  , " ヽ(͡◕ ͜ʖ ͡◕)ﾉ"];
+
+    List lock=["( ◐ o ◑ )"  , "  (̿▀̿ ̿Ĺ̯̿̿▀̿ ̿)̄ " , "(¬‿¬)" , " (-‿◦)"  , " ヽ(͡◕ ͜ʖ ͡◕)ﾉ"];
 
    void initializeData() {
     getBankAccounts();

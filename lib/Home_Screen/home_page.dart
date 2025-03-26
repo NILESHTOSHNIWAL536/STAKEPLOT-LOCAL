@@ -91,35 +91,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final ScrollController scrollController = ScrollController();
-
   final GlobalKey _transactionHistoryKey = GlobalKey();
-  final GlobalKey _transactionHistoryKey2 = GlobalKey();
-
-
-  // Assuming setDonectChat and getHistory are RxBool from GetX
   var setDonectChat = false.obs; 
- // Example, replace with your actual state
   var getHistory = false.obs; 
- // Example, replace with your actual state
-    void _onScroll() {
-    if (_transactionHistoryKey.currentContext != null) {
-      final RenderBox renderBox =
-          _transactionHistoryKey.currentContext!.findRenderObject() as RenderBox;
-      final position = renderBox.localToGlobal(Offset.zero);
-      final screenHeight = MediaQuery.of(context).size.height;
-     
-      if ((position.dy + renderBox.size.height-screenHeight) <= 1600 && !sectionReached.value)
-       {
-            //  navigateToNextPage(context);
-            //   sectionReached.value=true;
-       }
-    }
-  }
+  
 
- 
-
-    @override
-  void initState() {
+  @override
+  void initState()
+  {
     super.initState();
     // sectionReached.value=false;
     scrollController.addListener(_onScroll);
@@ -128,15 +107,69 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     
-      bottomNavigationBar: BottomNavigations(
-        data: 0,
-      ),
+      bottomNavigationBar: BottomNavigations(data: 0,),
       backgroundColor: AppColors.backgroundColor,
-      // floatingActionButton: IconButton(onPressed: (){
+      appBar:getAppBar(),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        child: SingleChildScrollView(
+          controller: scrollController,
+          child: Column(
+         
+            children: [
+             
+              Nextfetch(),
+              
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.23,
+                child: NumberPickerScreen(),
+              ),
+            
+           
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.51,
+                child: FinancePage(
+                  scrollController: scrollController,
+                  transactionHistoryKey:_transactionHistoryKey ,
+                ),
+              ),
+          
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.16,
+                child: Manualtransaction(),
+              ),
 
-      // }, icon: Icon(Icons.add,color: AppColors.primaryColor,)) ,
-      appBar: AppBar(
+               SizedBox(
+                height: MediaQuery.of(context).size.height * 0.46,
+                child: TransactionGraph(),
+              ),
+              
+              UserListScreen(),
+      
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.5,
+                child: Obx(() => setDonectChat.value
+                    ? DoughnutChartExample()
+                    : DoughnutChartExample()),
+              ),
+            
+               TransactionHistory(key: _transactionHistoryKey,),
+            
+
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+
+
+
+
+
+  AppBar getAppBar(){
+    return  AppBar(
         backgroundColor: AppColors.backgroundColor,
         
         automaticallyImplyLeading: false,
@@ -171,60 +204,33 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Text(""),
           ),
         ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        child: SingleChildScrollView(
-          controller: scrollController,
-          child: Column(
-            // controller: _scrollController,
-            children: [
-              // Bank Account Container
-              Nextfetch(),
-              
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.23,
-                child: NumberPickerScreen(),
-              ),
-             // const SizedBox(height: 10),
-
-              // Finance Chart
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.51,
-                child: FinancePage(
-                  scrollController: scrollController,
-                  transactionHistoryKey:_transactionHistoryKey ,
-                ),
-              ),
-          
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.16,
-                child: Manualtransaction(),
-              ),
-               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.46,
-                child: TransactionGraph(),
-              ),
-              
-              UserListScreen(),
-
-      
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.5,
-                child: Obx(() => setDonectChat.value
-                    ? DoughnutChartExample()
-                    : DoughnutChartExample()),
-              ),
-            
-              SizedBox(
-                child: TransactionHistory(key: _transactionHistoryKey,),
-              ),
-
-            ],
-          ),
-        ),
-      ),
-    );
+      );
   }
+
+   void _onScroll() {
+
+    scrollController.addListener(() {
+          if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 100)
+          {
+                getAllTransactionHistory(context,false,false); // Fetch next page
+          }
+    });
+    
+    if (_transactionHistoryKey.currentContext != null) {
+      final RenderBox renderBox =
+          _transactionHistoryKey.currentContext!.findRenderObject() as RenderBox;
+      final position = renderBox.localToGlobal(Offset.zero);
+      final screenHeight = MediaQuery.of(context).size.height;
+     
+      if ((position.dy + renderBox.size.height-screenHeight) <= 1600 && !sectionReached.value)
+       {
+            //  navigateToNextPage(context);
+            //   sectionReached.value=true;
+       }
+    }
+  }
+
 }
+
+
 
