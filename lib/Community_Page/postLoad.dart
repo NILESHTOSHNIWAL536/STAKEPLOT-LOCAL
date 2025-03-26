@@ -2,27 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
-  final ScrollController scrollControllerPost = ScrollController();
 
+final ScrollController scrollControllerPost = ScrollController();
+final RxList displayedData = [].obs;
+final int itemsPerLoad = 10;
 class LazyLoadingList extends StatefulWidget {
   @override
   _LazyLoadingListState createState() => _LazyLoadingListState();
 }
 
 class _LazyLoadingListState extends State<LazyLoadingList> {
-  final RxList displayedData = [].obs;
-  final int itemsPerLoad = 10;
+ 
 
   @override
   void initState() {
     super.initState();
-    _loadInitialData();
+    loadInitialData();
     scrollControllerPost.addListener(_onScroll);
   }
 
-  void _loadInitialData() {
-    displayedData.addAll(getTrendingData.take(itemsPerLoad).toList()); // Load first batch
-  }
+ 
 
   void _onScroll() {
     if (scrollControllerPost.position.pixels >= scrollControllerPost.position.maxScrollExtent * 0.9) {
@@ -59,4 +58,14 @@ class _LazyLoadingListState extends State<LazyLoadingList> {
             ),
     ));
   }
+}
+
+ void loadInitialData() {
+    displayedData.addAll(getTrendingData.take(itemsPerLoad).toList()); // Load first batch
+}
+
+
+void resetAndLoadData() {
+  displayedData.clear();  // Clear existing data
+  loadInitialData();  // Reload initial data
 }

@@ -517,7 +517,6 @@ void getTopFiveCater() async {
     if (getFlagOfResponse(responce)) {
       var his = jsonDecode(responce.body);
       categoriesSeleted.clear();
-
       categoriesSeleted.addAll(his['data']);
       getCategories.value = !getCategories.value;
     }

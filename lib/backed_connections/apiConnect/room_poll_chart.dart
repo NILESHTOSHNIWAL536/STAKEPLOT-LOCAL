@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
@@ -309,6 +310,7 @@ void createPollOfCommunityPost(context, String question, List options,
     var obj = jsonDecode(response.body);
     questionRoom.add(obj['data']);
     posting.value = false;
+    resetAndLoadData();
     getPost();
     Navigator.pop(context);
   } else {
@@ -427,7 +429,7 @@ void getChatLoader() async {
       "Authorization": "$accessToken",
     },
   );
-
+  
   if (response.statusCode == 200 || response.statusCode == 201) {
     var his = jsonDecode(response.body);
     List obj = his['data'];
@@ -468,8 +470,6 @@ void getChatLoader() async {
       } catch (e) {}
     });
 
-    // load.value=false;
-    // reloadCharts.value=!reloadCharts.value;
   } else {}
 }
 

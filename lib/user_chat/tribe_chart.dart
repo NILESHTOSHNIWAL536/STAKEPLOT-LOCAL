@@ -40,7 +40,7 @@ class _TribeSearchState extends State<TribeChats> {
   @override
   void initState() {
     super.initState();
-    getUserInfomations();
+    // getUserInfomations();
     getChatLoader();
     getTransactions();
 
@@ -87,7 +87,7 @@ class _TribeSearchState extends State<TribeChats> {
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
       var obj = his['data'];
-
+      print(obj);
       setState(() {
         frdsList = obj['friendsList'];
         frdsThere = false;

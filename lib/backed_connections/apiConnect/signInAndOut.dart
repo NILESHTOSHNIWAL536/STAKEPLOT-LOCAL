@@ -98,22 +98,24 @@ Future<void> loginUser(TextEditingController emailController,
 
     String accessToken = body['data']['accessToken'];
     _pref.setString("accessToken", "Bearer " + accessToken);
-    await getBankAccounts();
-      //initializeOneSignal(context);
-    // storeinmap(body, _pref, passwordController.text);
+
+    await initializeOneSignal(context);
     currentId.value = body['data']['_id'];
+    isBankAccountLink.value = body['data']['isBankAccountLinked'];
+      await getBankAccounts();
+    Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+    acceptReset.value = false;
+
+    // storeinmap(body, _pref, passwordController.text);
     // Phone.value = body['data']['phone'] ?? "";
     // number.value = body['data']['phone']?? "";
-    isBankAccountLink.value = body['data']['isBankAccountLinked'];
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
-    acceptReset.value = false;
+
   } else {
     acceptReset.value = false;
     var snackBar = SnackBar(
       duration: Durations.medium4,
       content: Text(
-        'invalid credentials!',
+        'invalid credentials or server error...!',
         style: FontManager().getTextStyle(
           context,
           color: Colors.white,
@@ -183,20 +185,20 @@ void forceLogoutUser(
         "deviceInfo": deviceData
       }),
     );
-
+    printData(response);
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
       String accessToken = body['data']['accessToken'];
       _pref.setString("accessToken", "Bearer " + accessToken);
       currentId.value = body['data']['_id'];
       try {
-        sendNotificationsToDevice(currentId.value, context,
-            "You have been logged out from StakePlot. Your account was logged in on ${deviceName}");
+        sendNotificationsToDevice(currentId.value, context, "You have been logged out from StakePlot. Your account was logged in on ${deviceName}");
       } catch (e) {}
 
+      await initializeOneSignal(context);
       await getBankAccounts();
-      addThisDeviceToBackendDevice(_pref, context);
-      storeinmap(body, _pref, userpassword);
+      // addThisDeviceToBackendDevice(_pref, context);
+      // storeinmap(body, _pref, userpassword);
       Phone.value = body['data']['phone'];
       number.value = body['data']['phone'];
       isBankAccountLink.value = body['data']['isBankAccountLinked'];
@@ -308,10 +310,9 @@ void changePassword(context, email, p1, p2) async {
   }
 }
 
-void addThisDeviceToBackendDevice(pref, context) async {
-  await addThisDeviceToBackend(
-      jsonDecode(pref.getString("deviceInfo") ?? "{}"), context);
-  // await addThisDeviceToBackend(pref, context);
+void addThisDeviceToBackendDevice(SharedPreferences pref, context) async {
+  await addThisDeviceToBackend(jsonDecode(pref.getString("deviceInfo") ?? "{}"), context);
+  
 }
 
 void resendOpt(context, email, name) async {
@@ -375,12 +376,8 @@ void loginUser2(TextEditingController emailController,
     final body = json.decode(response.body);
     String accessToken = body['data']['accessToken'];
     _pref.setString("accessToken", "Bearer " + accessToken);
-    // snackBarCalled(context, "User logined..",Colors.green);
-    // .pop(context);Navigator
-    // Get.p
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
-    // Navigator.popAndPushNamed(context, '/home');
+    Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+    
   } else {
     var snackBar = SnackBar(
       duration: Durations.medium4,
@@ -493,6 +490,7 @@ void clearGetX() {
   accountNo.value = "0";
   balance.value = "0";
   selectedBank.value = "";
+  accountId.value=="";
   bankAccountLinkedList.clear();
 }
 
@@ -533,17 +531,26 @@ void clearGetX() {
 // print(data);
 // }
 
-void initializeOneSignal(BuildContext context) async {
+Future<void> initializeOneSignal(BuildContext context) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   String key = "deviceInfo";
-  if (!pref.containsKey(key)) {
+  var json;
+
+  if(pref.containsKey(key)){
+     json = jsonDecode(pref.getString("deviceInfo") ?? "{}");
+  }
+  print("json");
+  print(json);  
+  print(json["deviceId"]);
+  if (!pref.containsKey(key) || json["deviceId"]=="deviceData.value")
+  {
     await oneSignalInit();
-    await Future.delayed(Duration(seconds: 2)); // Small delay
-    
+    await Future.delayed(Duration(seconds: 3)); // Small delay
     String? userDeviceId = await OneSignal.User.pushSubscription.id;
-    print("UssserDeviceId ${userDeviceId}");
-    deviceData.value['deviceId'] = userDeviceId ?? "deviceData.value";
-    print("deviceid ${deviceData.value['deviceId']}");
+    deviceData['deviceId'] = userDeviceId ?? "deviceData.value";
+    print("deviceid ${deviceData['deviceId']}");
+    print("deviceData");
+    print(deviceData);
     pref.setString(key, jsonEncode(deviceData));
   }
   addThisDeviceToBackendDevice(pref, context);
@@ -568,7 +575,7 @@ Future<void> oneSignalInit() async {
     OneSignal.initialize(appId);
     OneSignal.Notifications.requestPermission(true);
   } catch (e) {
-    print(e);
+     
   }
 }
 

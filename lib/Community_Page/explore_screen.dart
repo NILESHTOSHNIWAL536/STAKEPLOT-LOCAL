@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -364,7 +365,7 @@ class _ExploreModalState extends State<ExploreModal> {
         getPosted.value = !getPosted.value;
         postCount[postData["_id"]] = 0;
         postCommentCount[postData["_id"]] = 0;
-
+        resetAndLoadData();
         posting.value = false;
         postDis.value = false;
         widget.onPostCreated(jsonDecode(response.body));
