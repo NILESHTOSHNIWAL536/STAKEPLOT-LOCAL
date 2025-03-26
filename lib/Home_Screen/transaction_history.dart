@@ -36,9 +36,11 @@ class TransactionHistory extends StatefulWidget {
   /// Optional
   final bool? isYearView;
   final bool? isflag;
+  final bool? showIcon;
   bool pageTransition;
   TransactionHistory(
       {this.isflag = false,
+      this.showIcon = false,
       this.isYearView = false,
       this.pageTransition = false,
       super.key});
@@ -70,7 +72,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
       if (_scrollController2.position.pixels >=
           _scrollController2.position.maxScrollExtent - 100) {
         getAllTransactionHistory(
-            context, widget.isflag!, widget.isYearView!); // Fetch next page
+            context, widget.isflag!, widget.isYearView!,); // Fetch next page
       }
     });
     currentPage = 1;
@@ -151,7 +153,9 @@ class _TransactionHistoryState extends State<TransactionHistory>
                             fontSize: 18,
                             color: AppColors.accentColor),
                       ),
-                      InkWell(
+
+                     if(widget.showIcon ??true) ...[
+                     InkWell(
                         onTap: () {
                           getPdgLoader.value=false;
                           showModalBottomSheet(
@@ -196,7 +200,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                                              getPdgLoader.value=true;
                                               getPdf(context, selectedValue, selectedValueType);
                                           },
-                                         child: Obx(()=> getPdgLoader.value? getspinner(context,""): getButton(context, "Containue"))),
+                                         child: Obx(()=> getPdgLoader.value? getspinner(context,""): getButton(context, "Continue"))),
                                       )
                                  ],),
                               );
@@ -208,7 +212,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                           size: 30,
                           color: AppColors.accentColor,
                         ),
-                      ),
+                      ),]
                     ],
                   ),
                   const SizedBox(height: 20),

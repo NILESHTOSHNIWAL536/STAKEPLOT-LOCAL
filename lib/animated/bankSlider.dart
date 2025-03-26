@@ -23,7 +23,7 @@ const BankSlider({ Key? key }) : super(key: key);
   Widget getSliderContainer(context){
      return Container(
        height:  MediaQuery.of(context).size.height/2.5,
-        width: MediaQuery.of(context).size.width/1.2,
+        width: MediaQuery.of(context).size.width/1.1,
         margin: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
         decoration: BoxDecoration(
            color: Colorcodes.greyLight,

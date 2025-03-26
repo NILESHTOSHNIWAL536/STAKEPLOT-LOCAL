@@ -89,6 +89,8 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
     int randomIndex = Random().nextInt(lock.length);
     if(randomIndex==lock.length)randomIndex=0;
     return Container(
+      
+      //width: MediaQuery.sizeOf(context).width/1.1,
         padding: EdgeInsets.symmetric(
             horizontal: Colorcodes.paddingHorizontal,
             vertical: Colorcodes.paddingHorizontal / 5),

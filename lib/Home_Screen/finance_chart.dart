@@ -194,7 +194,7 @@ class _FinancePageState extends State<FinancePage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          'My Spendings',
+          'Bank Spendings',
           style: FontManager().getTextStyle(context,
               lWeight: FontWeight.normal,
               fontSize: fontSizeFactor * 3.4,
@@ -461,7 +461,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
             : max(chartWidth, screenWidth * 0.85),
         height: MediaQuery.of(context).size.height / 2.6,
         child: Transform.translate(
-          offset: Offset(-15, 0),
+          offset: Offset(-20, 0),
           child: SfCartesianChart(
             
             borderWidth: 0,
