@@ -43,7 +43,8 @@ Future<void> getBankAccounts()async
                         }
               }
                   bank['accounts'].forEach((account) {
-                    if(accountId.value=="")accountId.value=account['accountId'];
+                    if(accountId.value=="")
+                    accountId.value=account['accountId'];
                     bankAccountLinkedList.add({
                       'bankId': bank['bankId'],
                       'bankName': bank['bankName'],

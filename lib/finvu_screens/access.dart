@@ -690,7 +690,8 @@ class _AccessState extends State<Access> {
 
       FinvuConsentRequestDetailInfo finvuConsentRequestDetailInfo =
           await finvuManager.getConsentRequestDetails(handleId.value);
-
+      
+      
      
     
       FinvuProcessConsentRequestResponse response = await finvuManager.approveConsentRequest(
@@ -706,9 +707,8 @@ class _AccessState extends State<Access> {
         ),
       );
     } catch (e) {
-     
-      snackBarCalled(
-          context, "An error occurred while approving the consent request.");
+      print(e);
+      snackBarCalled(context, "An error occurred while approving the consent request.");
     }
     debugPrint('approveConsentRequest');
   }

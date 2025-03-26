@@ -491,7 +491,7 @@ void clearGetX() {
   accountNo.value = "0";
   balance.value = "0";
   selectedBank.value = "";
-  accountId.value=="";
+  accountId.value="";
    displayedData.clear();
   bankAccountLinkedList.clear();
 }
