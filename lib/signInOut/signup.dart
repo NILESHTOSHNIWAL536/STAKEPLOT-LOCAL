@@ -293,14 +293,14 @@ class _SigninState extends State<SignUp> {
     print(responce);
 
     bool boolvar = responce['success'];
- print(boolvar);
+
     if (!boolvar && responce['error'] == "Invalid Otp") {
       flag.value = false;
       call();
     }
 
     if (!boolvar) {
-      snackBarCalled(context, responce['error']['explanation'], Colors.red);
+      snackBarCalledSignup(context, responce['error']['explanation'], Colors.red);
       flag.value = false;
       return;
     }

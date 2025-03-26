@@ -23,8 +23,8 @@ import 'package:http/http.dart' as http;
 void initFinvuManager(BuildContext context) async {
   finvuManager.initialize(
     FinvuConfig(
-      //  finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
-      finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
+       finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
+      // finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
       certificatePins: 
       [
             //  "R6wXZnQsKKyg56qFKQNytvygyr/o4Mkq1VXL5LenBYI=",
@@ -46,7 +46,7 @@ void getConsentHandleId(context) async
 
   final String apiUrl ="${url}/finvu/login"; // Change to your actual server URL
   final String custId ="${number.value}@finvu"; // Replace with dynamic value if needed
-
+     
    final SharedPreferences _pref = await SharedPreferences.getInstance();
    var accessToken = _pref.getString("accessToken");
    print("-----------------------------------------");
@@ -63,6 +63,7 @@ void getConsentHandleId(context) async
    printData(response);
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
+      print(data);
       String consentHandleId = data["consentHandleId"];
       handleId.value=consentHandleId;
       print(handleId.value);
