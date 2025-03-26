@@ -98,22 +98,16 @@ void getHiddenTransactions(context) async {
 Future<void> getAllTransactionHistory(
     BuildContext context, bool flag, bool isYearView,
     {bool isRefreshing = false}) async {
-  if (isLoadingMore.value) return; // Prevent multiple API calls
-
+   if (isLoadingMore.value) return; // Prevent multiple API calls
   try {
     isLoadingMore.value = true;
-    // /get-monthly-transactions-history/:accountId/:type/:page
-    String type = isYearView
-        ? selectedYear.value.toString()
-        : selectedYear.value.toString() +
-            "-" +
-            selectedMonth.value.toString().padLeft(2, '0');
+    String type = isYearView? selectedYear.value.toString(): selectedYear.value.toString() +"-" +selectedMonth.value.toString().padLeft(2, '0');
     String urlPath = flag
-        ? "${url}/transactionauto/get-monthly-transactions-history/${accountId.value}/${type}/$currentPage"
-        : "${url}/transactionauto/getTransactions/$currentPage";
+        ? "${url}/transactionauto/get-monthly-transactions-history/${accountId.value}/${type}/${currentPage}"
+        : "${url}/transactionauto/getTransactions/${currentPage}";
 
     var response = await getDataApiCall(urlPath);
-    print("responseeee ${response.body}");
+  
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       var obj = data['data'];
@@ -128,9 +122,10 @@ Future<void> getAllTransactionHistory(
         if (obj.isEmpty || obj.length < 20) {
           hasMoreData = false;
           isLoadingMore.value = false;
-        } else {
-          currentPage++; // Increment page count for next load
+        } else{
+          currentPage++;
         }
+
         await Future.delayed(const Duration(seconds: 1));
         if (flag) {
           loadChatdataOnChnage.value = !loadChatdataOnChnage.value;
