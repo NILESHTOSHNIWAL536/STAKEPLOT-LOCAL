@@ -331,7 +331,7 @@ class _ExploreCardState extends State<ExploreCard> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
-              Icons.highlight, // Added icon for Trip Highlights
+              Icons.tips_and_updates, // Added icon for Trip Highlights
               size: _getResponsiveFontSize(context, 20),
               color: AppColors.bg1,
             ),

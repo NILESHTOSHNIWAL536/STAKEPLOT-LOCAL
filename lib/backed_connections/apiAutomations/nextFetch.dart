@@ -87,6 +87,7 @@ class _RotatingIconState extends State<Nextfetch> with SingleTickerProviderState
   @override
   Widget build(BuildContext context) {
     return Obx(()=> consentAndHandleDetails.isEmpty? SizedBox.shrink():Container(
+      //color: Colors.red,
       width: MediaQuery.of(context).size.width/1.1,
       child: Row(
         children: [

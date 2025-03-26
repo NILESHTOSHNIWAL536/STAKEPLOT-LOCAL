@@ -46,7 +46,7 @@ class _FinancePageState extends State<FinancePage> {
       final position = renderObject.localToGlobal(Offset.zero);
       final scrollOffset = widget.scrollController.offset;
       final targetOffset =
-          position.dy - scrollOffset - MediaQuery.of(context).size.height / 6.9;
+          position.dy - scrollOffset - MediaQuery.of(context).size.height / 6.8;
       widget.scrollController.animateTo(
         targetOffset > 0 ? targetOffset : 0,
         duration: Duration(milliseconds: 500),

@@ -245,14 +245,14 @@ class BudgetCategories {
     "Investments": Categories.bills,
     "Insurance": Categories.insurance,
     "Support": Categories.support,
-     "Current": Categories.current,
+     "Current": Categories.current, //
     "Children": Categories.children,
     "Pet Care": Categories.petCare,
     "Sports": Categories.sports,
     "Alcohol": Categories.alcohal,
     "Hobbies": Categories.hobbies,
     "Education": Categories.education,
-     "Commerce": Categories.commerce,
+     "Commerce": Categories.commerce,//
     "snacks": Categories.snacks,//
     "Entertainment": Categories.entertainment,//
    

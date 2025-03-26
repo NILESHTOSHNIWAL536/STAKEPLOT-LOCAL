@@ -349,12 +349,12 @@ class _BarChartWidgetState extends State<BarChartWidget> {
             xValueMapper: (ChartData data, _) => data.x,
             yValueMapper: (ChartData data, _) => data.y,
             color: AppColors.primaryColor,
-            width: 0.6,
+            width: 0.8,
             spacing: 0.2,
             enableTooltip: true,
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(20), // Cylinder effect
-            ),
+            // borderRadius: BorderRadius.vertical(
+            //   top: Radius.circular(20), // Cylinder effect
+            // ),
             name: 'Debited',
             onPointTap: (ChartPointDetails details) {},
           ),

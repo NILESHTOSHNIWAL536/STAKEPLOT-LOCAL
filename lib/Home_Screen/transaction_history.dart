@@ -28,9 +28,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
 
 RxBool reloadHistory = false.obs;
-RxString selectedValue="30".obs;
-  RxString selectedValueType="days".obs;
-  RxBool getPdgLoader=false.obs;
+RxString selectedValue = "30".obs;
+RxString selectedValueType = "days".obs;
+RxBool getPdgLoader = false.obs;
 
 class TransactionHistory extends StatefulWidget {
   /// Optional
@@ -60,7 +60,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
   late AnimationController _animationController; // For smooth animations
   late Animation<double> _swipeAnimation; // Animation for swipe offset
   int? _currentSwipedIndex;
-  
 
   @override
   void initState() {
@@ -72,7 +71,10 @@ class _TransactionHistoryState extends State<TransactionHistory>
       if (_scrollController2.position.pixels >=
           _scrollController2.position.maxScrollExtent - 100) {
         getAllTransactionHistory(
-            context, widget.isflag!, widget.isYearView!,); // Fetch next page
+          context,
+          widget.isflag!,
+          widget.isYearView!,
+        ); // Fetch next page
       }
     });
     currentPage = 1;
@@ -108,9 +110,8 @@ class _TransactionHistoryState extends State<TransactionHistory>
             child: Scaffold(
               appBar: AppBar(
                 leading: InkWell(
-                    onTap: ()async {
+                    onTap: () async {
                       // changeTheBool();
-                       
                     },
                     child: Icon(Icons.arrow_back_ios)),
                 title: Text(
@@ -139,6 +140,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
             ),
           )
         : SingleChildScrollView(
+            
             child: Container(
               // color: AppColors.backgroundColor,
               child: Column(
@@ -153,66 +155,86 @@ class _TransactionHistoryState extends State<TransactionHistory>
                             fontSize: 18,
                             color: AppColors.accentColor),
                       ),
-
-                     if(widget.showIcon ??true) ...[
-                     InkWell(
-                        onTap: () {
-                          getPdgLoader.value=false;
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Container(
-                                height: MediaQuery.of(context).size.height / 2,
-                                decoration:const BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(30),
-                                    topRight: Radius.circular(30),
+                      if (widget.showIcon ?? false) ...[
+                        InkWell(
+                          onTap: () {
+                            getPdgLoader.value = false;
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return Container(
+                                  height:
+                                      MediaQuery.of(context).size.height / 2,
+                                  decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(30),
+                                      topRight: Radius.circular(30),
+                                    ),
+                                    color: Colors.white,
                                   ),
-                                color: Colors.white,
-                                ),
-                                child: Column(children: [
+                                  child: Column(
+                                    children: [
                                       Center(child: Container()),
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 7),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 7),
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                                textStyle(context: context,text: "Download Statement",fontsize: 14,fontWeight: FontWeight.w500),
-                                                InkWell(
-                                                  onTap: (){
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Icon(Icons.close_outlined,size: 20,color: AppColors.accentColor,),
-                                                )
-                                            ],
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            textStyle(
+                                                context: context,
+                                                text: "Download Statement",
+                                                fontsize: 14,
+                                                fontWeight: FontWeight.w500),
+                                            InkWell(
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Icon(
+                                                Icons.close_outlined,
+                                                size: 20,
+                                                color: AppColors.accentColor,
+                                              ),
+                                            )
+                                          ],
                                         ),
                                       ),
                                       const SizedBox(height: 20),
-                                      getListItemListTile("30","days", context),
-                                      getListItemListTile("60","days", context),
-                                      getListItemListTile("6","months", context),
-                                      getListItemListTile("1","year", context),
-                                      
+                                      getListItemListTile(
+                                          "30", "days", context),
+                                      getListItemListTile(
+                                          "60", "days", context),
+                                      getListItemListTile(
+                                          "6", "months", context),
+                                      getListItemListTile("1", "year", context),
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 5),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 5),
                                         child: InkWell(
-                                          onTap: ()async{
-                                             getPdgLoader.value=true;
-                                              getPdf(context, selectedValue, selectedValueType);
-                                          },
-                                         child: Obx(()=> getPdgLoader.value? getspinner(context,""): getButton(context, "Continue"))),
+                                            onTap: () async {
+                                              getPdgLoader.value = true;
+                                              getPdf(context, selectedValue,
+                                                  selectedValueType);
+                                            },
+                                            child: Obx(() => getPdgLoader.value
+                                                ? getspinner(context, "")
+                                                : getButton(
+                                                    context, "Continue"))),
                                       )
-                                 ],),
-                              );
-                            },
-                          );
-                        },
-                        child: const Icon(
-                          Icons.backup_sharp,
-                          size: 30,
-                          color: AppColors.accentColor,
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          child: const Icon(
+                            Icons.backup_sharp,
+                            size: 30,
+                            color: AppColors.accentColor,
+                          ),
                         ),
-                      ),]
+                      ]
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -225,27 +247,30 @@ class _TransactionHistoryState extends State<TransactionHistory>
           );
   }
 
-
-  Widget getListItemListTile(String no,String MorY,context){
-      return Container(
-        width: MediaQuery.of(context).size.width,
-         margin: const EdgeInsets.symmetric(vertical: 5,horizontal: 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.primaryColor, width: 0.2),
-        ),
-        child:Obx(()=> ListTile(
-              title:  textStyle(context: context,text: no+" ${MorY}",fontsize: 15,fontWeight: FontWeight.w500),
-              trailing: Radio<String>(
-                value: no, // Assign a unique value for each radio button
-                groupValue: selectedValue.value, // The currently selected value
-                onChanged: (value) {
-                    selectedValue.value = value!;
-                    selectedValueType.value = MorY;
-                },
-              ),
-            )),
-      );
+  Widget getListItemListTile(String no, String MorY, context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.primaryColor, width: 0.2),
+      ),
+      child: Obx(() => ListTile(
+            title: textStyle(
+                context: context,
+                text: no + " ${MorY}",
+                fontsize: 15,
+                fontWeight: FontWeight.w500),
+            trailing: Radio<String>(
+              value: no, // Assign a unique value for each radio button
+              groupValue: selectedValue.value, // The currently selected value
+              onChanged: (value) {
+                selectedValue.value = value!;
+                selectedValueType.value = MorY;
+              },
+            ),
+          )),
+    );
   }
 
   void changeTheBool() {
@@ -277,7 +302,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 top: 5,
                 child: Container(
                   //static height for now 70
-                  height: MediaQuery.sizeOf(context).height/11.7,
+                  height: MediaQuery.sizeOf(context).height / 11.7,
                   decoration: BoxDecoration(
                       color: AppColors.primaryColor,
                       borderRadius: BorderRadius.circular(12)),
@@ -445,9 +470,11 @@ class _TransactionHistoryState extends State<TransactionHistory>
         ? formatWhatsAppDate(convertStringToDateTime(date))
         : 'Date';
     final type = transaction['type']?.toString() ?? '0';
-    final amtColor= type == 'CREDIT' ? Colors.green : const Color.fromARGB(255, 207, 118, 113);
-   // print("typeeeee $type");
-    final formatAmount= type == 'CREDIT' ? "+₹$amount" : "-₹$amount";
+    final amtColor = type == 'CREDIT'
+        ? Colors.green
+        : const Color.fromARGB(255, 207, 118, 113);
+    // print("typeeeee $type");
+    final formatAmount = type == 'CREDIT' ? "+₹$amount" : "-₹$amount";
     return GestureDetector(
       onTap: () {
         tagName.value = category;
@@ -540,7 +567,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                     context: context,
                     fontWeight: FontWeight.bold,
                     fontsize: 15,
-                    c:amtColor,
+                    c: amtColor,
                   ),
                   const SizedBox(height: 6),
                   textStyle(
@@ -732,6 +759,4 @@ class _TransactionHistoryState extends State<TransactionHistory>
       return false; // Return false if parsing fails
     }
   }
-  
-
 }
