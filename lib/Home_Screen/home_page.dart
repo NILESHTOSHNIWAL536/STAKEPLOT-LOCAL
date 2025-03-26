@@ -72,7 +72,6 @@ class _HomePageState extends State<HomePage> {
     getRemainders(context);
     getNotifications(context);
     sectionReached.value=false;
-
   }
 
   @override
@@ -100,7 +99,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState()
   {
     super.initState();
-    // sectionReached.value=false;
     scrollController.addListener(_onScroll);
   }
 
@@ -210,24 +208,11 @@ class _HomeScreenState extends State<HomeScreen> {
    void _onScroll() {
 
     scrollController.addListener(() {
-          if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 100)
+          if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 50)
           {
                 getAllTransactionHistory(context,false,false); // Fetch next page
           }
     });
-    
-    if (_transactionHistoryKey.currentContext != null) {
-      final RenderBox renderBox =
-          _transactionHistoryKey.currentContext!.findRenderObject() as RenderBox;
-      final position = renderBox.localToGlobal(Offset.zero);
-      final screenHeight = MediaQuery.of(context).size.height;
-     
-      if ((position.dy + renderBox.size.height-screenHeight) <= 1600 && !sectionReached.value)
-       {
-            //  navigateToNextPage(context);
-            //   sectionReached.value=true;
-       }
-    }
   }
 
 }

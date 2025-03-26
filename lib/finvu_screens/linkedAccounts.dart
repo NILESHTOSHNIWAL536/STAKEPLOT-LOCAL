@@ -38,6 +38,7 @@ Future<void> login(consenthandleId,context) async {
   otpReference = login.reference;
   debugPrint('LoggedIn');
   }catch(e){
+    print(e);
       snackBarCalled(context, e.toString());
   }
 }
@@ -98,7 +99,6 @@ void ConsentRequestPlus(context, accessToken, custId) async {
       String url = (body['body']['url']);
 
       login(ConsentHandleId,context);
-      print(ConsentHandleId);
       handleId.value = ConsentHandleId;
       ConsentStatus(context, accessToken, ConsentHandleId, custId);
     } else {}
