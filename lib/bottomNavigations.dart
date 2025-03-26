@@ -581,8 +581,6 @@ class _BottomNavigationsState extends State<BottomNavigations> {
         if (!sizeRoom) {
           if (i == 2 && widget.data != i){
               pushName(Community());
-              
-
             }
           else if (i == 3 && widget.data != i) pushName(ProfileScreenDart());
         } else {
@@ -596,9 +594,6 @@ class _BottomNavigationsState extends State<BottomNavigations> {
         });
       },
       child: Container(
-       
-        // No special decoration for unselected items
-       // Adjust padding as needed
         child: imageurl(url, i),
       ),
     );
@@ -622,8 +617,6 @@ class _BottomNavigationsState extends State<BottomNavigations> {
               builder: (context) => widgetName,
             ),
           );
-
-
     }
     //  Navigator.push(
     //       context,

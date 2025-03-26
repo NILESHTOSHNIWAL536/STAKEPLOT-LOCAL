@@ -187,7 +187,6 @@ void getUserInfomations() async {
     avatar.value = data['avatarType'].toString();
     userName.value = data['name'];
     email.value = data['email'];
-    Phone.value = data['phone'];
     currency.value = data['currency'];
     score.value = data['score'].toString();
     coin = data['coins'].toString();

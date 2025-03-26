@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
@@ -542,6 +543,7 @@ Future<Map<String, dynamic>> createPost(BuildContext context, String title,
       // Update local state
       getTrendingData.insert(0, postData);
       getPosted.value = !getPosted.value;
+      resetAndLoadData();
       postCount[postData["_id"]] = 0;
       postCommentCount[postData["_id"]] = 0;
 
@@ -596,6 +598,7 @@ void createPostWithOutImage(context, String title, String description) async {
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     getTrendingData.insert(0, his);
+     resetAndLoadData();
     getPosted.value = !getPosted.value;
     postCount[his["_id"]] = 0;
     postCommentCount[his["_id"]] = 0;
@@ -615,6 +618,7 @@ void createPollOfCommunity(context, String title, String description) async {
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     getTrendingData.insert(0, his);
+    resetAndLoadData();
     getPosted.value = !getPosted.value;
     postCount[his["_id"]] = 0;
     postCommentCount[his["_id"]] = 0;
@@ -651,8 +655,7 @@ void getPost() async {
     historyListData.addAll(obj);
     getTrendingData.clear();
     getTrendingData.addAll(obj);
-    print("getTrendingData-------------------------------------------------");
-    print(getTrendingData);
+   
     historyListData.forEach((element) {
       postCount[element["_id"]] = element['upvotes'];
       postCommentCount[element["_id"]] = element['comments'];

@@ -269,8 +269,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
           
 
             // Remove tokens and other session data
-            await _pref.remove("accessToken");
-            await _pref.remove("token");
+            
             await _pref.remove("ConsentHandleId");
             await _pref.remove("consentId");
             await _pref.remove("from");
@@ -286,11 +285,15 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
             
             try {
               var response = await postDataApiCall("${url}/user/logout", {});
+              printData(response);
             } catch (e)
             {
               print(e);
             }
 
+          
+             await _pref.remove("token");
+             await _pref.remove("accessToken");
           },
           child: Container(
             decoration: BoxDecoration(
