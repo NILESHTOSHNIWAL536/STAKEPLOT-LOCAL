@@ -429,6 +429,7 @@ import "package:flutter_application_code_stakeplot/Profile/profile.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
+import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart";
 import "package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/profile_screen.dart.dart";
@@ -578,12 +579,15 @@ class _BottomNavigationsState extends State<BottomNavigations> {
         // if (i == 1 && widget.data != i) pushName(AnimatedImagesScreen());
 
         if (!sizeRoom) {
-          if (i == 2 && widget.data != i)pushName(Community());
+          if (i == 2 && widget.data != i){
+              pushName(Community());
+              
+
+            }
           else if (i == 3 && widget.data != i) pushName(ProfileScreenDart());
         } else {
           // if (i == 2 && widget.data != i) pushName(RoomHome());
-          if (i == 3 && widget.data != i)
-            pushName(Community());
+          if (i == 3 && widget.data != i) pushName(Community());
           else if (i == 4 && widget.data != i) pushName(ProfileScreenDart());
         }
 
@@ -848,7 +852,7 @@ Widget logoutWidget(context, [flag = false]) {
 
 
 void clearServarData(context)async{
-      final SharedPreferences _pref =await SharedPreferences.getInstance();
+              final SharedPreferences _pref =await SharedPreferences.getInstance();
               await _pref.remove("accessToken");
               await _pref.remove("token");
               await _pref.remove("ConsentHandleId");

@@ -331,7 +331,7 @@ void storeData(context, data, String opt, Avatarurl) async {
 
     acceptReset.value = false;
     if (!boolvar) {
-      snackBarCalled(context, data2['error']['explanation'], Colors.red);
+      snackBarCalledSignup(context, data2['error']['explanation'], Colors.red);
       return;
     }
     final body = json.decode(response.body);

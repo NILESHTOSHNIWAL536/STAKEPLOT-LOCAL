@@ -235,6 +235,18 @@ void snackBarCalled(context, String text, [Color colors = Colors.black]) {
   // ));
 }
 
+void snackBarCalledSignup(context, String text, [Color colors = Colors.black]) {
+  // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //   duration: Duration(seconds: 4),
+  //   content: Text(
+  //     text,
+  //     style: FontManager()
+  //         .getTextStyle(context, color: Colors.white, fontSize: 15),
+  //   ),
+  //   backgroundColor: colors,
+  // ));
+}
+
 void snackBarCalledFrds(context, String text, [Color colors = Colors.black]) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
     duration: Duration(seconds: 2),
