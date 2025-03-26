@@ -184,7 +184,6 @@ void reportPost(context, String id, String spam) async {
   }
 
   getPost();
-  getTrending();
 }
 
 void createPostCopy(
@@ -492,6 +491,7 @@ void sn(res, context) {
 //   }
 
 // }
+
 Future<Map<String, dynamic>> createPost(BuildContext context, String title,
     String description, File imageFile) async {
   try {
@@ -571,19 +571,7 @@ Future<Map<String, dynamic>> createPost(BuildContext context, String title,
   }
 }
 
-// Send a multipart request
-// var request = http.MultipartRequest('POST', url);
-// request.fields.addAll(requestBody);
-// request.files.add(await http.MultipartFile.fromPath('fileName', imageFile.path));
 
-// Send the request
-// var response = await request.send();
-
-// //print("response.statusCode");
-// //print(response.statusCode);
-// //print(response.body);
-
-// }
 
 void createPostWithOutImage(context, String title, String description) async {
   var urlPath = '${url}/post/withOutImage';
@@ -626,24 +614,8 @@ void createPollOfCommunity(context, String title, String description) async {
   postDis.value = false;
 }
 
-void getTrending() async {
-  var response = await getDataApiCall('${url}/post/feed');
 
-  if (getFlagOfResponse(response)) {
-    var his = jsonDecode(response.body);
-    var obj = his['data'];
-    getTrendingData.clear();
-    getTrendingData.addAll(obj);
-    if (getTrendingData.length == 0) {
-      findTranding = false;
-    }
-    print(getTrendingData);
-    getTrendingData.forEach((element) {
-      postCount[element["_id"]] =
-          element['upvotes'] < 0 ? 0 : element['upvotes'];
-    });
-  } else {}
-}
+
 
 void getPost() async {
   var response = await getDataApiCall('${url}/post/feed');
@@ -663,27 +635,6 @@ void getPost() async {
   } else {}
 }
 
-void getExploria() async {
-  var response = await getDataApiCall('${url}/exploria/');
-  print("exploria response: $response"); // Already present
-  if (getFlagOfResponse(response)) {
-    var his = jsonDecode(response.body);
-    var obj = his['data'];
-    print("exploria data: $obj"); // Add this to see the raw data
-    historyExploriaListData.clear();
-    historyExploriaListData.addAll(obj);
-    getExploriaTrendingData.clear();
-    getExploriaTrendingData.addAll(obj);
-    historyExploriaListData.forEach((element) {
-      print(
-          "exploria post: ${element['_id']} - place: ${element['place']}, tripHighlight: ${element['tripHighlight']}"); // Log each post’s keys
-      postExploriaCount[element["_id"]] = element['upvotes'];
-      postExploriaCommentCount[element["_id"]] = element['comments'];
-    });
-  } else {
-    print("exploria fetch failed: ${response.statusCode}");
-  }
-}
 
 void savePostData(context, data) async {
   var urlPath = "${url}/post/save";
@@ -714,7 +665,7 @@ void postItenary(title, s, type, context) async {
   }
 
   getPost();
-  getTrending();
+ 
   postInter.value = false;
 }
 
