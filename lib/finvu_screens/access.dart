@@ -71,7 +71,7 @@ class _AccessState extends State<Access> {
   Widget topHeader() {
     return Column(children: [
       Padding(
-          padding: const EdgeInsets.fromLTRB(10.0, 25, 10, 0),
+          padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -174,11 +174,7 @@ class _AccessState extends State<Access> {
               accounts("Permission Validity", range, Icons.date_range_rounded),
               accounts("Frequency of Access",
                   "We can access your information one-time.", Icons.access_time),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: getInfomationsAboutUserConsnt(),
-                // child: viewMore(),
-              ),
+              getInfomationsAboutUserConsnt(),
             ],
           ),
         ),
@@ -247,21 +243,21 @@ class _AccessState extends State<Access> {
     return Container(
                 width: MediaQuery.of(context).size.width / 1,
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(20.0, 20, 16, 10),
+                  padding: const EdgeInsets.fromLTRB(20.0, 0, 16, 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Details of your approval',
-                        style: FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: AppColors.bg1,
-                        ),
-                      ),
+                      // Text(
+                      //   'Details of your approval',
+                      //   style: FontManager().getTextStyle(
+                      //     context,
+                      //     lWeight: FontWeight.bold,
+                      //     fontSize: 18,
+                      //     color: AppColors.bg1,
+                      //   ),
+                      // ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(20.0, 20, 20, 0),
+                        padding: const EdgeInsets.fromLTRB(0.0, 0, 20, 0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -680,7 +676,7 @@ class _AccessState extends State<Access> {
                 finvuManager.denyConsentRequest(consentInfo);
                 logoutAndDisconnect();
                 clearStack(context);
-                snackBarCalled(context, "Successfully disapproved the request.");
+                snackBarCalledSignup(context, "Successfully disapproved the consent request.");
                 Navigator.pushNamed(context, "/ShareAccountLogin");
               } catch (e) {
                 snackBarCalled(context, "Unable to disapprove the request.");
