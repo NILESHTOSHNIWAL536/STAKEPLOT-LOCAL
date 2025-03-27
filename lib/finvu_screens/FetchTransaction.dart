@@ -111,11 +111,13 @@ class _FetchTransactionState extends State<FetchTransaction> {
       child: SingleChildScrollView(
         child: Expanded(
           child: Column(
-            children: fetchedTrsacntionList.map((e) {
-              print(e);
+            children: fetchedTrsacntionList.map((e)
+            {
+              
               return Container(
                 child: Text(e.toString()),
               );
+          
             }).toList(),
           ),
         ),

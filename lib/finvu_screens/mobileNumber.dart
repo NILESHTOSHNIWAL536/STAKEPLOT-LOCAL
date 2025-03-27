@@ -426,10 +426,12 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/finvuAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/skipFInvuProcess.dart';
+import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/webView.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -437,6 +439,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
+
+RxBool isOtpWrong = false.obs;
 
 class MobileNumber extends StatefulWidget {
   bool flag;
@@ -461,7 +465,7 @@ class _MobileNumberState extends State<MobileNumber> {
   RxInt _otpCountdown = 30.obs; // Reactive integer for countdown
   RxBool _canResendOtp = false.obs;
   Timer? _otpTimer;
-RxBool _isOtpWrong = false.obs;
+
   @override
   void initState() {
     super.initState();
@@ -618,7 +622,7 @@ RxBool _isOtpWrong = false.obs;
                       getConsentHandleId(context);
                       otpController = TextEditingController();
                       startOtpTimer();
-                       _isOtpWrong.value = false; 
+                      isOtpWrong.value = false;
                       showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
@@ -692,7 +696,7 @@ RxBool _isOtpWrong = false.obs;
       curve: Curves.easeOut,
       child: Container(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height / 3.3,
+        height: MediaQuery.of(context).size.height / 3,
         decoration: const BoxDecoration(
             color: AppColors.mt,
             borderRadius: BorderRadius.only(
@@ -736,11 +740,11 @@ RxBool _isOtpWrong = false.obs;
                   fieldHeight: MediaQuery.of(context).size.width * 0.12,
                   fieldWidth: MediaQuery.of(context).size.width * 0.12,
                   activeFillColor: Colors.white,
-                  activeColor: Colors.blue,
+                  activeColor: isOtpWrong.value ? Colors.red : Colors.blue,
                   selectedFillColor: Colors.white,
-                  selectedColor: Colors.blue,
+                  selectedColor: isOtpWrong.value ? Colors.red : Colors.blue,
                   inactiveFillColor: Colors.grey[200],
-                  inactiveColor: Colors.grey,
+                  inactiveColor: isOtpWrong.value ? Colors.red : Colors.grey,
                 ),
                 enableActiveFill: true,
                 textStyle: TextStyle(fontSize: 20, color: Colors.black),
@@ -753,7 +757,22 @@ RxBool _isOtpWrong = false.obs;
                 },
               ),
             ),
-
+            Obx(
+              () => isOtpWrong.value
+                  ? Padding(
+                      padding: const EdgeInsets.fromLTRB(40, 0, 0, 5),
+                      child: Text(
+                        "Incorrect OTP entered",
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w300,
+                          fontSize: 10,
+                          color: Colors.red,
+                        ),
+                      ),
+                    )
+                  : SizedBox.shrink(), // Empty widget when OTP is not wrong
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
               child: Row(
@@ -776,8 +795,8 @@ RxBool _isOtpWrong = false.obs;
                       onTap: _canResendOtp.value
                           ? () {
                               login(handleId.value, context);
-                              startOtpTimer(); 
-                               _isOtpWrong.value = false;
+                              startOtpTimer();
+                              isOtpWrong.value = false;
                               // Restart the timer on resend
                             }
                           : null,
@@ -864,9 +883,15 @@ RxBool _isOtpWrong = false.obs;
 
   void checkOtp() {
     if (_isOtpValid.value) {
-      verify(_otpCode.value, context);
+      verify(_otpCode.value, context).then((isValid) {
+        if (!isValid) {
+          setState(() {
+            isOtpWrong.value = true; // Set wrong OTP state
+          });
+        }
+      });
     } else {
-      snackBarCalled(context, "please enter otp of length 6");
+      snackBarCalled(context, "Please enter OTP of length 6");
     }
   }
 
