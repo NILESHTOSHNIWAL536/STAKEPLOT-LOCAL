@@ -729,7 +729,9 @@ class _ModalContentState extends State<ModalContent>
     return await showModalBottomSheet<dynamic>(
       context: context,
       isScrollControlled: true,
+      
       shape: const RoundedRectangleBorder(
+        
         borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
       ),
       builder: (BuildContext context) {

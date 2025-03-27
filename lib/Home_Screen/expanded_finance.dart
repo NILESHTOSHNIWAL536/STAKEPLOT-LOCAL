@@ -499,10 +499,12 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                       ? TransactionHistory(
                           isYearView: isYearView.value,
                           isflag: true,
+                          showIcon: true,
                         )
                       : TransactionHistory(
                           isYearView: isYearView.value,
                           isflag: true,
+                           showIcon: true,
                         ))
                 ],
               ),

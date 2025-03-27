@@ -119,7 +119,7 @@ void getAutoMationsTransactionsCustom(date, context,
       : "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date";
 
   var response = await getDataApiCall(urlPath);
-  printData(response);
+ // printData(response);
   trasactionsDataDebitWeekly.clear();
 
   List<String> labelsLocal = [];
@@ -139,9 +139,9 @@ void getAutoMationsTransactionsCustom(date, context,
         totalDebitValue.value =
             double.parse((his['data']['totalDebit']).toString());
       } catch (e) {
-        print(e);
+      //  print(e);
       }
-      print("Total Debit Value: ${totalDebitValue.value}");
+    //  print("Total Debit Value: ${totalDebitValue.value}");
       maxYValue.value =
           double.parse((his['data']['maxAmount'] ?? 500.0).toString());
       // print("Max Y Value: ${maxYValue.value}");
@@ -346,7 +346,7 @@ void updateTheTagOfTarnsactions(
       'subcategory': subCategory,
     }),
   );
-  printData(response);
+ // printData(response);
   if (getFlagOfResponse(response)) {
     Navigator.pop(context);
     reloadHistory.value = !reloadHistory.value;
@@ -550,25 +550,23 @@ void getAutoMationsTransactionsCustomoverall(date, context,
   String urlPath = endDate != null && weekORmonths == 'custom'
       ? "$url/transactionauto/getWholeTransactionsGraph/${weekORmonths.toLowerCase()}/$date,${getNextDay(endDate)}"
       : "$url/transactionauto/getWholeTransactionsGraph/${weekORmonths.toLowerCase()}/$date";
-  print(urlPath);
-  print(
-      "Starting getAutoMationsTransactionsCustomoverall with date: $date, weekORmonths: $weekORmonths, endDate: $endDate");
-
+ // print(urlPath);
+ 
   var response = await getDataApiCall(urlPath);
-  print("API URL: $urlPath");
-  print("Response for thisssss: ${response.body}");
+  // print("API URL: $urlPath");
+  // print("Response for thisssss: ${response.body}");
 
   trasactionsDataDebitWeeklyoverall.clear();
-  print("Cleared transactions data.");
+ // print("Cleared transactions data.");
 
   List<String> labelsLocal = [];
   List<double> debitList = [];
 
   if (getFlagOfResponse(response)) {
-    print("Response is valid.");
+  //  print("Response is valid.");
     var his = jsonDecode(response.body);
     transactionChatGraphoverall.clear();
-    print("Decoded response body.");
+   // print("Decoded response body.");
 
     // Declare dataoverall outside the try block
     Map dataoverall = his['data']['result'];
@@ -585,7 +583,7 @@ void getAutoMationsTransactionsCustomoverall(date, context,
       }
 
       if (weekORmonths == 'custom' && endDate != null) {
-        print("Processing custom date range.");
+       // print("Processing custom date range.");
         DateTime startDate = DateTime.parse(date);
         DateTime end = DateTime.parse(endDate);
 
@@ -610,7 +608,7 @@ void getAutoMationsTransactionsCustomoverall(date, context,
           }
         });
       } else if (weekORmonths == 'week') {
-        print("Processing weekly data.");
+      //  print("Processing weekly data.");
         labelsLocal =
             getWeekDays(); // ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
         debitList = List.filled(7, 0.0);
@@ -629,7 +627,7 @@ void getAutoMationsTransactionsCustomoverall(date, context,
           }
         });
       } else {
-        print("Processing monthly data.");
+      //  print("Processing monthly data.");
         DateTime startDate =
             DateTime.parse("$date-01"); // Ensure full date for month
         int daysInMonth = DateTime(startDate.year, startDate.month + 1, 0).day;
@@ -649,7 +647,7 @@ void getAutoMationsTransactionsCustomoverall(date, context,
         });
       }
     } catch (e) {
-      print("Error: $e");
+     // print("Error: $e");
       maxYValueoverall.value = 500.0;
       if (labelsLocal.isEmpty) {
         if (weekORmonths == 'custom' && endDate != null) {
@@ -709,13 +707,13 @@ void getAutoMationsTransactionsCustomoverall(date, context,
     }
 
     transactionChatGraphoverall['debited'] = debitList;
-    print("Transaction data for debited: $debitList");
+  //  print("Transaction data for debited: $debitList");
 
     getGraphDataoverall.value = false;
     labels2.assignAll(labelsLocal);
     getGraphDataoverall.value = true;
   } else {
-    print("Response is invalid.");
+  //  print("Response is invalid.");
     if (weekORmonths == 'custom' && endDate != null) {
       DateTime startDate = DateTime.parse(date);
       DateTime end = DateTime.parse(endDate);

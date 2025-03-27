@@ -28,17 +28,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
 
 RxBool reloadHistory = false.obs;
-RxString selectedValue="30".obs;
-  RxString selectedValueType="days".obs;
-  RxBool getPdgLoader=false.obs;
+RxString selectedValue = "30".obs;
+RxString selectedValueType = "days".obs;
+RxBool getPdgLoader = false.obs;
 
 class TransactionHistory extends StatefulWidget {
   /// Optional
   final bool? isYearView;
   final bool? isflag;
+  final bool? showIcon;
   bool pageTransition;
   TransactionHistory(
       {this.isflag = false,
+      this.showIcon = false,
       this.isYearView = false,
       this.pageTransition = false,
       super.key});
@@ -58,7 +60,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
   late AnimationController _animationController; // For smooth animations
   late Animation<double> _swipeAnimation; // Animation for swipe offset
   int? _currentSwipedIndex;
-  
 
   @override
   void initState() {
@@ -71,7 +72,10 @@ class _TransactionHistoryState extends State<TransactionHistory>
       if (_scrollController2.position.pixels >=
           _scrollController2.position.maxScrollExtent - 100) {
         getAllTransactionHistory(
-            context, widget.isflag!, widget.isYearView!); // Fetch next page
+          context,
+          widget.isflag!,
+          widget.isYearView!,
+        ); // Fetch next page
       }
     });
 
@@ -105,6 +109,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                             fontSize: 18,
                             color: AppColors.accentColor),
                       ),
+                      if(widget.showIcon?? false)...[
                       InkWell(
                         onTap: () {
                             showModal();
@@ -114,7 +119,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                           size: 30,
                           color: AppColors.accentColor,
                         ),
-                      ),
+                      ),]
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -127,27 +132,30 @@ class _TransactionHistoryState extends State<TransactionHistory>
           );
   }
 
-
-  Widget getListItemListTile(String no,String MorY,context){
-      return Container(
-        width: MediaQuery.of(context).size.width,
-         margin: const EdgeInsets.symmetric(vertical: 5,horizontal: 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.primaryColor, width: 0.2),
-        ),
-        child:Obx(()=> ListTile(
-              title:  textStyle(context: context,text: no+" ${MorY}",fontsize: 15,fontWeight: FontWeight.w500),
-              trailing: Radio<String>(
-                value: no, // Assign a unique value for each radio button
-                groupValue: selectedValue.value, // The currently selected value
-                onChanged: (value) {
-                    selectedValue.value = value!;
-                    selectedValueType.value = MorY;
-                },
-              ),
-            )),
-      );
+  Widget getListItemListTile(String no, String MorY, context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.primaryColor, width: 0.2),
+      ),
+      child: Obx(() => ListTile(
+            title: textStyle(
+                context: context,
+                text: no + " ${MorY}",
+                fontsize: 15,
+                fontWeight: FontWeight.w500),
+            trailing: Radio<String>(
+              value: no, // Assign a unique value for each radio button
+              groupValue: selectedValue.value, // The currently selected value
+              onChanged: (value) {
+                selectedValue.value = value!;
+                selectedValueType.value = MorY;
+              },
+            ),
+          )),
+    );
   }
 
   void changeTheBool() {
@@ -179,8 +187,8 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 right: 0,
                 top: 5,
                 child: Container(
-                  //static height for now
-                  height: 70,
+                  //static height for now 70
+                  height: MediaQuery.sizeOf(context).height / 11.7,
                   decoration: BoxDecoration(
                       color: AppColors.primaryColor,
                       borderRadius: BorderRadius.circular(12)),
@@ -349,9 +357,11 @@ class _TransactionHistoryState extends State<TransactionHistory>
         ? formatWhatsAppDate(convertStringToDateTime(date))
         : 'Date';
     final type = transaction['type']?.toString() ?? '0';
-    final amtColor= type == 'CREDIT' ? Colors.green : const Color.fromARGB(255, 207, 118, 113);
-   // print("typeeeee $type");
-    final formatAmount= type == 'CREDIT' ? "+₹$amount" : "-₹$amount";
+    final amtColor = type == 'CREDIT'
+        ? Colors.green
+        : const Color.fromARGB(255, 207, 118, 113);
+    // print("typeeeee $type");
+    final formatAmount = type == 'CREDIT' ? "+₹$amount" : "-₹$amount";
     return GestureDetector(
       onTap: () {
         tagName.value = category;
@@ -444,7 +454,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                     context: context,
                     fontWeight: FontWeight.bold,
                     fontsize: 15,
-                    c:amtColor,
+                    c: amtColor,
                   ),
                   const SizedBox(height: 6),
                   textStyle(

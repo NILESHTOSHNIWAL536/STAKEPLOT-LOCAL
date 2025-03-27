@@ -35,8 +35,6 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
     getCategoryData();
   }
 
- 
-
   @override
   Widget build(BuildContext context) {
     return  Container(
@@ -44,7 +42,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
         builder: (context, constraints) {
           final isLargeScreen = constraints.maxWidth > 600;
           return Padding(
-            padding: const EdgeInsets.all(5.0),
+            padding: const EdgeInsets.all(3.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -161,15 +159,25 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                 dataLabelSettings:
                                     const DataLabelSettings(isVisible: false),
                                 enableTooltip: true,
-                                onPointTap: (ChartPointDetails details) {
+                                // onPointTap: (ChartPointDetails details) {
                                   
-                                    if (selectedIndex.value == details.pointIndex) {
-                                      selectedIndex.value = -1;
-                                    } else {
-                                      selectedIndex.value = details.pointIndex!;
-                                    }
+                                //     if (selectedIndex.value == details.pointIndex) {
+                                //       selectedIndex.value = -1;
+                                //     } else {
+                                //       selectedIndex.value = details.pointIndex!;
+                                //     }
                                  
-                                },
+                                // },
+                                onPointTap: (ChartPointDetails details) {
+  if (chartData.isNotEmpty && details.pointIndex != null && details.pointIndex! < chartData.length) {
+    if (selectedIndex.value == details.pointIndex) {
+      selectedIndex.value = -1;
+    } else {
+      selectedIndex.value = details.pointIndex!;
+    }
+  }
+},
+
                               ),
                             ],
                             

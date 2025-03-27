@@ -34,13 +34,12 @@
 //   RxList<String> filteredCategories = <String>[].obs;
 //   RxBool isCategoriesUpdated = false.obs;
 // final FocusNode _searchFocusNode = FocusNode(); // FocusNode for search field
-//   bool _isSearchFocused = false; 
+//   bool _isSearchFocused = false;
 //   @override
 //   void initState() {
 //     super.initState();
 //     getTopFiveCater();
 
-  
 //     filteredCategories.assignAll(BudgetCategories2.categories);
 
 //     // Listen for search input changes
@@ -90,7 +89,7 @@
 //       ),
 //       decoration: BoxDecoration(color: AppColors.backgroundColor),
 //       child: SingleChildScrollView(
-       
+
 //           child: Column(
 //             mainAxisAlignment: MainAxisAlignment.start,
 //             crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +121,7 @@
 //             ],
 //           ),
 //         ),
-      
+
 //     );
 //   }
 
@@ -199,7 +198,7 @@
 //               child: Obx(() => getSearchBox()),
 //             ),
 //           ),
-          
+
 //         ],
 //       ),
 //     );
@@ -254,7 +253,7 @@
 
 //       push(categoryList);
 //     } catch (e) {
-    
+
 //     }
 //   }
 
@@ -262,7 +261,7 @@
 //       double amount, RxList expenseCategories) async {
 //     Set<String> activeMainCategories = {};
 //     Map<String, List<String>> categoriesMap = {};
-   
+
 //     for (String subCategory in expenseCategories) {
 //       for (var entry in categoryWeights.entries) {
 //         String mainCategory = entry.key;
@@ -275,14 +274,13 @@
 //         }
 //       }
 //     }
-    
+
 //     double totalOriginalPercentage = activeMainCategories.fold(
 //         0, (sum, category) => sum + categoryWeights[category]?["percentage"]);
 
-   
 //     double percentageMultiplier = 100 / totalOriginalPercentage;
 //     List<Map<String, dynamic>> result = [];
-  
+
 //     for (String mainCategory in activeMainCategories) {
 //       var mainCategoryData =
 //           categoryWeights[mainCategory] as Map<String, dynamic>;
@@ -296,7 +294,7 @@
 //           (sum, sub) =>
 //               sum +
 //               (mainCategoryData["subcategories"] as Map<String, dynamic>)[sub]);
-      
+
 //       for (String sub in subcategories) {
 //         double originalWeight = double.parse(
 //             (mainCategoryData["subcategories"] as Map<String, dynamic>)[sub]
@@ -395,9 +393,6 @@
 //   }
 // }
 
-
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -434,14 +429,13 @@ class _BudgetSearchState extends State<BudgetSearch> {
   String selectedValue = categoriesSeleted[0] ?? "";
   RxList<String> filteredCategories = <String>[].obs;
   RxBool isCategoriesUpdated = false.obs;
-final FocusNode _searchFocusNode = FocusNode(); // FocusNode for search field
-  bool _isSearchFocused = false; 
+  final FocusNode _searchFocusNode = FocusNode(); // FocusNode for search field
+  bool _isSearchFocused = false;
   @override
   void initState() {
     super.initState();
     getTopFiveCater();
 
-  
     filteredCategories.assignAll(BudgetCategories2.categories);
 
     // Listen for search input changes
@@ -466,7 +460,7 @@ final FocusNode _searchFocusNode = FocusNode(); // FocusNode for search field
   @override
   void dispose() {
     nameController.dispose();
-     _searchFocusNode.dispose();
+    _searchFocusNode.dispose();
     super.dispose();
   }
 
@@ -490,40 +484,54 @@ final FocusNode _searchFocusNode = FocusNode(); // FocusNode for search field
     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
     decoration: BoxDecoration(
       color: AppColors.backgroundColor,
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.2),
-          spreadRadius: 2,
-          blurRadius: 5,
-        ),
-      ],
+      // boxShadow: [
+      //   BoxShadow(
+      //     color: Colors.grey.withOpacity(0.2),
+      //     spreadRadius: 2,
+      //     blurRadius: 5,
+      //   ),
+      // ],
     ),
-    child: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 15),
-          textStyle(
-            context: context,
-            text: "Choose category(s)",
-            fontsize: 18,
-            fontWeight: FontWeight.w500,
-          ),
-          SizedBox(height: 10),
-          searchList(width, height),
-          SizedBox(height: 15),
-          Obx(() => getListOfCat()),
-          SizedBox(height: 20),
-          Center(
-            child: InkWell(
-              onTap: () {
-                calculateBudget(widget.amount, widget.name, widget.period);
-              },
-              child: getButton(context, "Continue"),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween, // Ensures bottom alignment
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 15),
+                textStyle(
+                  context: context,
+                  text: "Choose category(s)",
+                  fontsize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+                SizedBox(height: 10),
+                searchList(width, height),
+                SizedBox(height: 15),
+                Text(
+                  "After analyzing your expenses,\nwe have curated some categories for you!",
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.w300,
+                      fontSize: 14,
+                      color: AppColors.bg1),
+                ),
+                SizedBox(height: 15),
+                Obx(() => getListOfCat()),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+        Center(
+          child: InkWell(
+            onTap: () {
+              calculateBudget(widget.amount, widget.name, widget.period);
+            },
+            child: getButton(context, "Continue"),
+          ),
+        ),
+      ],
     ),
   );
 }
@@ -542,78 +550,72 @@ final FocusNode _searchFocusNode = FocusNode(); // FocusNode for search field
   }
 
   Widget getUipartOfCatero(BuildContext context, String name) {
-  return Material(
-    elevation: 1, // Adds a slight shadow effect
-    borderRadius: BorderRadius.circular(12),
-    child: Container(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Colors.white,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          textStyle(
-            context: context,
-            text: toUpperCase(name.toString()),
-            fontsize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-          const SizedBox(width: 8),
-          InkWell(
-            onTap: () {
-              categoriesSeleted.remove(name);
-              getCategories.value = !getCategories.value;
-            },
-            child: Icon(
-              Icons.delete,
-              color: const Color.fromARGB(255, 207, 118, 113),
-              size: 18,
+    return Material(
+      elevation: 1, // Adds a slight shadow effect
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            textStyle(
+              context: context,
+              text: toUpperCase(name.toString()),
+              fontsize: 14,
+              fontWeight: FontWeight.w500,
             ),
-          ),
-        ],
+            const SizedBox(width: 8),
+            InkWell(
+              onTap: () {
+                categoriesSeleted.remove(name);
+                getCategories.value = !getCategories.value;
+              },
+              child: Icon(
+                Icons.delete,
+                color: const Color.fromARGB(255, 207, 118, 113),
+                size: 18,
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget searchList(double width, double height) {
     return Container(
       width: width / 1.1,
       child: Column(
         children: [
-
-    
           TextFeildWidgetCustom2(
             textEditingController: nameController,
-            
             keyBoard: TextInputType.emailAddress,
             lableText: "Search for category",
             icon: ProfileIcons.friends,
             flag: false,
-
             focusNode: _searchFocusNode,
           ),
           AnimatedSize(
-        duration: Duration(milliseconds: 250), // Smooth transition
-        curve: Curves.fastOutSlowIn, // Natural curve for expansion
-        child: _isSearchFocused
-            ? Container(
-                width: width,
-                height: height / 3,
-                decoration: BoxDecoration(
-                  color: Colorcodes.white,
-                  borderRadius: BorderRadius.circular(12),
-                  
-                ),
-                child: SingleChildScrollView(
-                  child: Obx(() => getSearchBox()),
-                ),
-              )
-            : SizedBox(), // Avoid unnecessary height when collapsed
-      ),
-          
+            duration: Duration(milliseconds: 250), // Smooth transition
+            curve: Curves.fastOutSlowIn, // Natural curve for expansion
+            child: _isSearchFocused
+                ? Container(
+                    width: width,
+                    height: height / 3,
+                    decoration: BoxDecoration(
+                      color: Colorcodes.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: SingleChildScrollView(
+                      child: Obx(() => getSearchBox()),
+                    ),
+                  )
+                : SizedBox(), // Avoid unnecessary height when collapsed
+          ),
         ],
       ),
     );
@@ -627,7 +629,8 @@ final FocusNode _searchFocusNode = FocusNode(); // FocusNode for search field
             }).toList(),
           )
         : Center(
-            child: Text("No categories found", style: TextStyle(color: Colors.grey)),
+            child: Text("No categories found",
+                style: TextStyle(color: Colors.grey)),
           );
   }
 
@@ -644,11 +647,18 @@ final FocusNode _searchFocusNode = FocusNode(); // FocusNode for search field
         child: Row(
           children: [
             AvatarProfileImage(
-                url: Categories.link + BudgetCategories2.listofCategories[categorie], width: 32, height: 34),
+                url: Categories.link +
+                    BudgetCategories2.listofCategories[categorie],
+                width: 32,
+                height: 34),
             const SizedBox(
               width: 2,
             ),
-            textStyle(context: context, text: categorie,fontsize: 14,fontWeight: FontWeight.w400)
+            textStyle(
+                context: context,
+                text: categorie,
+                fontsize: 14,
+                fontWeight: FontWeight.w400)
           ],
         ),
       ),
@@ -662,21 +672,19 @@ final FocusNode _searchFocusNode = FocusNode(); // FocusNode for search field
       cat.clear();
       categoriesDividedList.clear();
       categoriesDividedList.addAll(categoryList);
-      categoriesDividedList.forEach((e){
-            cat.add(e['category']);
+      categoriesDividedList.forEach((e) {
+        cat.add(e['category']);
       });
 
       push(categoryList);
-    } catch (e) {
-    
-    }
+    } catch (e) {}
   }
 
   Future<List<Map<String, dynamic>>> getBudgetForCategoriesList(
       double amount, RxList expenseCategories) async {
     Set<String> activeMainCategories = {};
     Map<String, List<String>> categoriesMap = {};
-   
+
     for (String subCategory in expenseCategories) {
       for (var entry in categoryWeights.entries) {
         String mainCategory = entry.key;
@@ -689,14 +697,13 @@ final FocusNode _searchFocusNode = FocusNode(); // FocusNode for search field
         }
       }
     }
-    
+
     double totalOriginalPercentage = activeMainCategories.fold(
         0, (sum, category) => sum + categoryWeights[category]?["percentage"]);
 
-   
     double percentageMultiplier = 100 / totalOriginalPercentage;
     List<Map<String, dynamic>> result = [];
-  
+
     for (String mainCategory in activeMainCategories) {
       var mainCategoryData =
           categoryWeights[mainCategory] as Map<String, dynamic>;
@@ -710,7 +717,7 @@ final FocusNode _searchFocusNode = FocusNode(); // FocusNode for search field
           (sum, sub) =>
               sum +
               (mainCategoryData["subcategories"] as Map<String, dynamic>)[sub]);
-      
+
       for (String sub in subcategories) {
         double originalWeight = double.parse(
             (mainCategoryData["subcategories"] as Map<String, dynamic>)[sub]

@@ -161,7 +161,16 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
+String _getTimeBasedGreeting() {
+  final hour = DateTime.now().hour;
+  if (hour < 12) {
+    return "Good morning to you";
+  } else if (hour < 16) {
+    return "Good afternoon,";
+  } else {
+    return "Good evening,";
+  }
+}
 
 
 
@@ -186,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   textStyle(
                       context: context,
-                      text: "Hello",
+                      text: _getTimeBasedGreeting(),
                       fontWeight: FontWeight.w500,
                       fontsize: 15),
                   Obx(() => textStyle(

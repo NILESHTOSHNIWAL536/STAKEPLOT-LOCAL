@@ -96,9 +96,6 @@ class _TribeHomeState extends State<TribeUnique> {
     auth.name = userName.value;
     auth.avatar = avatar.value;
 
-    // post.authorId=auth.id;
-    // post.name=auth.name;
-
     obj.replies = [];
     obj.author = auth;
     obj.commentText = data;
@@ -275,90 +272,92 @@ class _TribeHomeState extends State<TribeUnique> {
       backgroundColor: AppColors.backgroundColor,
       bottomNavigationBar: BottomNavigations(data: sizeRoom ? 3 : 2),
       extendBody: true,
-      appBar: AppBar(
-          backgroundColor: AppColors.backgroundColor,
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-          title: Container(
-            width: MediaQuery.of(context).size.width,
-            child: Row(
+      // appBar: AppBar(
+      //     backgroundColor: AppColors.backgroundColor,
+      //     centerTitle: true,
+      //     automaticallyImplyLeading: false,
+      //     title: Container(
+      //       width: MediaQuery.of(context).size.width,
+      //       child: Row(
+      //         mainAxisAlignment: MainAxisAlignment.start,
+      //         crossAxisAlignment: CrossAxisAlignment.center,
+      //         children: [
+      //           //const Spacer(),
+      //           // Text(
+      //           //   ("Tribe"),
+      //           //   style: FontManager().getTextStyle(context,
+      //           //       lWeight: FontWeight.bold,
+      //           //       fontSize: 24,
+      //           //       color: Colorcodes.services),
+      //           // ),
+      //           //const Spacer(),
+      //           Row(
+      //             children: [
+      //               // GestureDetector(
+      //               //   onTap: () {
+      //               //     Navigator.push(
+      //               //       context,
+      //               //       PageTransition(
+      //               //         type: PageTransitionType.fade,
+      //               //         duration: Durations.long1,
+      //               //         child: TribeSearch(),
+      //               //         isIos: true,
+      //               //       ),
+      //               //     );
+      //               //   },
+      //               //   child: Container(
+      //               //       width: 30,
+      //               //       height: 40,
+      //               //       padding: EdgeInsets.all(0),
+      //               //       child: ProfileImage(url: svgIconPath.search)),
+      //               // ),
+      //               // Padding(
+      //               //   padding: const EdgeInsets.only(left: 10.0),
+      //               //   child: GestureDetector(
+      //               //     onTap: () {
+      //               //       Navigator.push(
+      //               //         context,
+      //               //         PageTransition(
+      //               //           type: PageTransitionType.fade,
+      //               //           duration: Durations.long1,
+      //               //           child: TribeChats(),
+      //               //           isIos: true,
+      //               //         ),
+      //               //       );
+      //               //     },
+      //               //     child: Container(
+      //               //         height: 40,
+      //               //         width: 30,
+      //               //         child: ProfileImage(url: svgIconPath.message)),
+      //               //   ),
+      //               // ),
+      //             ],
+      //           ),
+      //         ],
+      //       ),
+      //     )),
+      body: SafeArea(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          color: AppColors.backgroundColor,
+          // padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: SingleChildScrollView(
+            controller: _scrollController,
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Spacer(),
-                // Text(
-                //   ("Tribe"),
-                //   style: FontManager().getTextStyle(context,
-                //       lWeight: FontWeight.bold,
-                //       fontSize: 24,
-                //       color: Colorcodes.services),
-                // ),
-                const Spacer(),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                            type: PageTransitionType.fade,
-                            duration: Durations.long1,
-                            child: TribeSearch(),
-                            isIos: true,
-                          ),
-                        );
-                      },
-                      child: Container(
-                          width: 30,
-                          height: 40,
-                          padding: EdgeInsets.all(0),
-                          child: ProfileImage(url: svgIconPath.search)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            PageTransition(
-                              type: PageTransitionType.fade,
-                              duration: Durations.long1,
-                              child: TribeChats(),
-                              isIos: true,
-                            ),
-                          );
-                        },
-                        child: Container(
-                            height: 40,
-                            width: 30,
-                            child: ProfileImage(url: svgIconPath.message)),
-                      ),
-                    ),
-                  ],
+                // tribeHeader(context),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: PostCard(data: widget.dataObj, flag: true),
+                ),
+                uploadData(widget.dataObj),
+                SizedBox(
+                  height: 100,
                 ),
               ],
             ),
-          )),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        color: AppColors.backgroundColor,
-        // padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // tribeHeader(context),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: PostCard(data: widget.dataObj, flag: true),
-              ),
-              uploadData(widget.dataObj),
-              SizedBox(
-                height: 100,
-              ),
-            ],
           ),
         ),
       ),

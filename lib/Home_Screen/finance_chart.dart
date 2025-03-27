@@ -46,7 +46,7 @@ class _FinancePageState extends State<FinancePage> {
       final position = renderObject.localToGlobal(Offset.zero);
       final scrollOffset = widget.scrollController.offset;
       final targetOffset =
-          position.dy - scrollOffset - MediaQuery.of(context).size.height / 6.9;
+          position.dy - scrollOffset - MediaQuery.of(context).size.height / 6.8;
       widget.scrollController.animateTo(
         targetOffset > 0 ? targetOffset : 0,
         duration: Duration(milliseconds: 500),
@@ -194,7 +194,7 @@ class _FinancePageState extends State<FinancePage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          'My Spendings',
+          'Bank Spendings',
           style: FontManager().getTextStyle(context,
               lWeight: FontWeight.normal,
               fontSize: fontSizeFactor * 3.4,
@@ -370,18 +370,20 @@ class _LineChartWidgetState extends State<LineChartWidget> {
               // Fixed Y-axis labels
               if (!widget.isExpandedView)
                 Container(
+                  
                   // width: screenWidth * 0.06, // Reduced width (adjust as needed)
                 padding: EdgeInsets.zero, 
                   child: _buildYAxisLabels(fontSizeFactor),
                 ),
               // Scrollable chart area
               Expanded(
-                child: widget.selectedButton.value != 'Week'
-                    ? SingleChildScrollView(
+                
+                child:
+                    SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: getContainerOfGraph(screenWidth, fontSizeFactor),
                       )
-                    : getContainerOfGraph(screenWidth, fontSizeFactor),
+                    
               ),
             ],
           ),
@@ -453,20 +455,19 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     double chartWidth = dataLength * labelWidth;
 
     return Container(
-       
+       //color: Colors.amber,
         width: widget.selectedButton.value == 'Week'
             ? screenWidth * 0.85 // Fixed width for Week
             : max(chartWidth, screenWidth * 0.85),
         height: MediaQuery.of(context).size.height / 2.6,
         child: Transform.translate(
-          offset: Offset(-15, 0),
+          offset: widget.selectedButton.value == 'Week'
+      ? Offset(-20, 0)
+      : widget.selectedButton.value == 'Month'
+          ? Offset(-30, 0)
+          : Offset(-20, 0),
           child: SfCartesianChart(
-            onChartTouchInteractionUp: (tapArgs) {
-              // if(widget.shouldBeNavigate )
-              // {
-              //     if(!isTooltipVisible.value)navToExpanded();
-              // }
-            },
+            
             borderWidth: 0,
             plotAreaBorderWidth: 0,
             primaryXAxis: CategoryAxis(
