@@ -340,7 +340,7 @@ class _TribeHomeState extends State<TribeShare> {
               });
               index++;
               sendNotificationsToDevice(rec, context,
-                  "Hey there! 👋, ${userName.value} have shared a post 📩. Please check it out 🛒 ");
+                  "Hey there! 👋, ${userName.value} has shared a post 📩. Please check it out 🛒 ");
             });
             Navigator.pop(context);
           },
