@@ -551,6 +551,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                   GestureDetector(
                     onTap: () {
                       // Add logic for resending OTP
+                      
                     },
                     child: Text(
                       "Resend OTP",
