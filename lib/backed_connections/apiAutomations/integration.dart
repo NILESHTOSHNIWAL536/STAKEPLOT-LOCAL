@@ -133,3 +133,15 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
     fipDisOrginal.addAll(fipDis);
     getBanks.value = !getBanks.value;
   }
+
+
+  void logoutAndDisconnect() async
+  {
+    try{
+        await finvuManager.logout();
+        finvuManager.disconnect();
+    }catch(e)
+    {
+      print(e);
+    }
+  }
