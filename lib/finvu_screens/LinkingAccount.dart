@@ -424,7 +424,6 @@ class _LinkingAccountState extends State<LinkingAccount> {
       showModalBottomSheet(
         context: context,
         isScrollControlled: true,
-        
         builder: (BuildContext context) {
           return verify(linkingReference, fipId, fipDetails, info, context);
         },
@@ -534,8 +533,10 @@ class _LinkingAccountState extends State<LinkingAccount> {
                    Obx(
                     () => GestureDetector(
                       onTap: canResendOtp.value
-                          ? () {
-                              login(handleId.value, context);
+                          ? ()async {
+                              // login(handleId.value, context);
+                              List<FinvuDiscoveredAccountInfo> bankData = listOfAccountAdded[fid] ?? [];
+                              FinvuAccountLinkingRequestReference linkingReference =await finvuManager.linkAccounts(fipDetails, bankData);
                               startOtpTimer();
                               isOtpWrong.value = false;
                               

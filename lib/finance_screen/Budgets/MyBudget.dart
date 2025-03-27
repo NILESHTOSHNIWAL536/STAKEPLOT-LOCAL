@@ -31,11 +31,12 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
   List<dynamic> transactions = []; // Store raw transactions from API
   Map<String, dynamic>? budgetData;
   List<String>? insightsData;
-
+List<Map<String, dynamic>> categoryWiseSpendings = [];
+  List<Map<String, dynamic>> graphData = [];
   @override
   void initState() {
     super.initState();
-    getmonthlyBudgetData();
+   
     fetchBudgetData();
     fetchBudgetInsights();
     // getInsights(context);
@@ -98,6 +99,20 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
           //  print(`Budget type: ${data['data']['categoryWiseSpendings']}`);
           print(data['data']['categoryWiseSpendings']);
           // print('Transactions after assignment: $transactions');
+          
+     categoryWiseSpendings = List<Map<String, dynamic>>.from(
+            data['data']['categoryWiseSpendings'] ?? []);
+             graphData = categoryWiseSpendings.map((item) {
+          return {
+            'title':
+                '${item['category']} ${item['percentage'].toStringAsFixed(1)}%',
+            'value': (item['spending'] as num).toDouble(),
+          };
+        }).toList();
+
+       
+       
+
 
           budgetSpentData.clear();
           //  print('Cleared budgetSpentData');
@@ -207,30 +222,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     }
   }
 
-  void getmonthlyBudgetData() {
-    List list = widget.data['categoryBudgets'] ?? [];
-    monthlyBudgetData.clear();
-    categories.clear();
-    graphObj.clear();
-
-    for (int i = 0; i < list.length; i++) {
-      double amount = double.parse(list[i]['amount'].toString());
-      monthlyBudgetData.add(FlSpot(i.toDouble(), amount));
-    }
-    double totalAmount = list.fold(
-        0, (sum, item) => sum + double.parse(item['amount'].toString()));
-    for (int i = 0; i < list.length; i++) {
-      double amount = double.parse(list[i]['amount'].toString());
-      double percentage = totalAmount > 0 ? (amount / totalAmount) * 100 : 0;
-      categories[list[i]['category']] = percentage;
-      graphObj.add({
-        'title':
-            list[i]['category'] + " " + percentage.toStringAsFixed(1) + "%",
-        'value': percentage,
-      });
-    }
-    setState(() {});
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -450,7 +442,9 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
 
   Widget graph() {
     return PieChartGraph(
-        title: "Categories", graphData: graphObj, graphDisc: []);
+         title: "Categories",
+        graphData: graphData,
+        graphDisc: [],);
   }
 
   Widget _buildCategoriesChart() {
