@@ -426,11 +426,10 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/finvuAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
-import 'package:flutter_application_code_stakeplot/main.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/skipFInvuProcess.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/webView.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -459,11 +458,10 @@ class _MobileNumberState extends State<MobileNumber> {
   final String termsUrl = "https://finvu.in/terms"; // Replace with actual URL
 
   late final WebViewController controller;
- RxInt _otpCountdown = 30.obs; // Reactive integer for countdown
+  RxInt _otpCountdown = 30.obs; // Reactive integer for countdown
   RxBool _canResendOtp = false.obs;
   Timer? _otpTimer;
-   RxBool _isOtpIncorrect = false.obs;
-    late BuildContext _scaffoldContext;
+
   @override
   void initState() {
     super.initState();
@@ -506,7 +504,8 @@ class _MobileNumberState extends State<MobileNumber> {
       throw 'Could not launch $termsUrl';
     }
   }
-void startOtpTimer() {
+
+  void startOtpTimer() {
     _canResendOtp.value = false;
     _otpCountdown.value = 30; // Reset countdown using .value
     _otpTimer?.cancel(); // Cancel any existing timer
@@ -517,20 +516,21 @@ void startOtpTimer() {
         _canResendOtp.value = true;
         _otpTimer?.cancel();
       }
-      setState(() {}); // Ensure the UI updates (optional, since Obx should handle it)
+      setState(
+          () {}); // Ensure the UI updates (optional, since Obx should handle it)
     });
   }
+
   @override
   void dispose() {
     _phoneController.dispose();
     _otpController.dispose();
-     _otpTimer?.cancel(); // Dispose of controller to avoid memory leaks
+    _otpTimer?.cancel(); // Dispose of controller to avoid memory leaks
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-     _scaffoldContext = context;  
     return WillPopScope(
       onWillPop: () async {
         logoutAndDisconnect();
@@ -541,13 +541,17 @@ void startOtpTimer() {
         bottomNavigationBar: BottomBar(),
         body: Container(
           height: MediaQuery.of(context).size.height,
-          padding: EdgeInsets.only(top: 100, left: 16, right: 16, bottom: 5),
+          padding: EdgeInsets.only(top: 60, left: 16, right: 16, bottom: 5),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: buildSkipButton(context),
+                  ),
                   Text(
                     "OTP Verification",
                     style: FontManager().getTextStyle(
@@ -613,7 +617,7 @@ void startOtpTimer() {
 
                       getConsentHandleId(context);
                       otpController = TextEditingController();
- startOtpTimer();
+                      startOtpTimer();
                       showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
@@ -668,7 +672,7 @@ void startOtpTimer() {
       ),
     );
   }
- 
+
   void click() {
     // Step 4: Reuse the initialized controller instead of creating a new one
     Navigator.push(
@@ -731,26 +735,20 @@ void startOtpTimer() {
                   fieldHeight: MediaQuery.of(context).size.width * 0.12,
                   fieldWidth: MediaQuery.of(context).size.width * 0.12,
                   activeFillColor: Colors.white,
-                 activeColor:
-                        _isOtpIncorrect.value ? Colors.red : Colors.blue,
-                    selectedFillColor: Colors.white,
-                    selectedColor:
-                        _isOtpIncorrect.value ? Colors.red : Colors.blue,
+                  activeColor: Colors.blue,
+                  selectedFillColor: Colors.white,
+                  selectedColor: Colors.blue,
                   inactiveFillColor: Colors.grey[200],
-                  inactiveColor:
-                        _isOtpIncorrect.value ? Colors.red : Colors.grey,
+                  inactiveColor: Colors.grey,
                 ),
                 enableActiveFill: true,
                 textStyle: TextStyle(fontSize: 20, color: Colors.black),
                 onChanged: (value) {
                   _otpCode.value = value;
                   _isOtpValid.value = value.length == _otpCodeLength;
-                   if (_isOtpIncorrect.value) {
-                      _isOtpIncorrect.value = false;
-                    }
-                  // if (_isOtpValid.value) {
-                  //   checkOtp();
-                  // }
+                  if (_isOtpValid.value) {
+                    checkOtp();
+                  }
                 },
               ),
             ),
@@ -861,61 +859,28 @@ void startOtpTimer() {
     );
   }
 
-  Future<bool> verify(String otp, BuildContext context) async {
-    try {
-      var login = await finvuManager.verifyLoginOtp(
-        otp,
-        otpReference,
-      );
-      clearStackLocalInfo();
-      getLinkedAccountInfo();
-
-      Navigator.push(
-          _scaffoldContext,
-      
-        MaterialPageRoute(
-          builder: (context) => DiscoverAccount(),
-        ),
-      );
-      return true; // OTP is valid
-    } catch (e) {
-      return false; // OTP is invalid
+  void checkOtp() {
+    if (_isOtpValid.value) {
+      verify(_otpCode.value, context);
+    } else {
+      snackBarCalled(context, "please enter otp of length 6");
     }
   }
 
-  void checkOtp() {
-    if (_isOtpValid.value) {
-      verify(_otpCode.value, context).then((isValid) {
-        if (!isValid) {
-          _isOtpIncorrect.value = true; // Turn OTP fields red
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                "Invalid OTP. Please try again.",
-                style: TextStyle(color: Colors.white),
-              ),
-              backgroundColor: Colors.red,
-              behavior: SnackBarBehavior.floating,
-              margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-              duration: Duration(seconds: 2),
-            ),
-          );
-        }
-      });
-    } else {
-      _isOtpIncorrect.value = true; // Turn fields red for incomplete OTP
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            "Please enter a 6-digit OTP.",
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-          duration: Duration(seconds: 2),
+  Widget buildSkipButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        showSkipDialog(context);
+      },
+      child: Text(
+        "Skip",
+        style: FontManager().getTextStyle(
+          context,
+          lWeight: FontWeight.bold,
+          fontSize: 12,
+          color: AppColors.bg1,
         ),
-      );
-    }
+      ),
+    );
   }
 }
