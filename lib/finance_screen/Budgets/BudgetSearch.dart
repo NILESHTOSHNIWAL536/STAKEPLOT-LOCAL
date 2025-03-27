@@ -106,7 +106,8 @@ class _BudgetSearchState extends State<BudgetSearch> {
         // ],
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween, // Ensures bottom alignment
+        mainAxisAlignment:
+            MainAxisAlignment.spaceBetween, // Ensures bottom alignment
         children: [
           Expanded(
             child: SingleChildScrollView(
@@ -183,20 +184,25 @@ class _BudgetSearchState extends State<BudgetSearch> {
             ),
             const SizedBox(width: 8),
             AnimatedContainer(
-              duration: Duration(milliseconds: 200), // Duration of the animation
+              duration:
+                  Duration(milliseconds: 200), // Duration of the animation
               transform: Matrix4.translationValues(
-                  _isDeletingMap[name] == true ? 5.0 : 0.0, 0.0, 0.0), // Move slightly to the right
+                  _isDeletingMap[name] == true ? 5.0 : 0.0,
+                  0.0,
+                  0.0), // Move slightly to the right
               child: InkWell(
                 onTap: () {
                   setState(() {
-                    _isDeletingMap[name] = true; // Trigger the animation for this specific category
+                    _isDeletingMap[name] =
+                        true; // Trigger the animation for this specific category
                   });
-                 // Vibration.vibrate(); // Vibrate on tap
+                  // Vibration.vibrate(); // Vibrate on tap
                   Future.delayed(Duration(milliseconds: 200), () {
                     categoriesSeleted.remove(name);
                     getCategories.value = !getCategories.value;
                     setState(() {
-                      _isDeletingMap[name] = false; // Reset the animation state for this specific category
+                      _isDeletingMap[name] =
+                          false; // Reset the animation state for this specific category
                     });
                   });
                 },
