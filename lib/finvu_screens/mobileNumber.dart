@@ -42,6 +42,7 @@ late final WebViewController controller ;
   @override
   void initState() {
     super.initState();
+    initFinvuManager(context);
 
     // Step 1: Initialize WebView platform params
     try{
@@ -89,144 +90,150 @@ late final WebViewController controller ;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      bottomNavigationBar: BottomBar(),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        padding: EdgeInsets.only(top: 100, left: 16, right: 16,bottom: 5),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "OTP Verification",
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: AppColors.bg1,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Text(
-                    "Finvu will send you one-time OTP to your mobile number",
+    return WillPopScope(
+      onWillPop: () async {
+          logoutAndDisconnect();
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundColor,
+        bottomNavigationBar: BottomBar(),
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          padding: EdgeInsets.only(top: 100, left: 16, right: 16,bottom: 5),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "OTP Verification",
                     style: FontManager().getTextStyle(
                       context,
-                      lWeight: FontWeight.w400,
-                      fontSize: 14,
-                      color: AppColors.bg3,
-                    ),
-                  ),
-                ),
-                // TextField for entering phone number
-                TextFormField(
-                  controller: _phoneController, // Attach the controller
-                  maxLength: 10,
-                  autocorrect: true,
-                  keyboardType: TextInputType.phone, // Phone input keyboard
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.phone_android_outlined),
-                    prefixIconColor: AppColors.primaryColor,
-                    hintText: 'Enter 10 digit Number',
-                    hintStyle: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.w500,
-                      fontSize: 12,
-                      color: AppColors.bg3,
-                    ),
-                    filled: true,
-                    fillColor: AppColors.button,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide.none,
-                    ),
-            
-                    //prefixIcon: Icon(Icons.phone),
-                    //hintText: 'Mobile Number',
-                  ),
-                ),
-                SizedBox(height: 60), // Add spacing between TextField and button
-                // Button for "Get OTP"
-                GestureDetector(
-                  onTap: () async {
-                    // Handle OTP logic here
-                    if (_phoneController.text.length != 10) {
-                      snackBarCalled(context, "Please enter valid mobile number",
-                          Colorcodes.red);
-                      return;
-                    }
-                    ;
-                    String phoneNumber = _phoneController.text;
-                    number.value = phoneNumber;
-                   
-                    getConsentHandleId(context);
-                    otpController = TextEditingController();
-            
-                    showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (BuildContext context) {
-                          return verifyaotp(context);
-                        });
-            
-                    //print("Phone Number: $phoneNumber");
-                    // Add your logic for sending OTP
-                  },
-                  child: getButton(context, "Continue"),
-            
-                ),
-
-              
-             
-              ],
-            ),
-
-
-              
-                Padding(
-                  padding: const EdgeInsets.only(top: 40),
-                  child: Center(
-                          child: RichText(
-                            text: TextSpan(
-                  text: "By clicking continue, you agree to Finvu's ",
-                  style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.w500,
-                      fontSize: 10,
+                      lWeight: FontWeight.bold,
+                      fontSize: 20,
                       color: AppColors.bg1,
                     ),
-                  children: [
-                    TextSpan(
-                      text: "Terms & Conditions",
-                      
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Text(
+                      "Finvu will send you one-time OTP to your mobile number",
                       style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.w500,
-                      fontSize: 12,
-                      //decoration: UnderlineInputBorder(),
-                      color: Colors.blue,
-                
+                        context,
+                        lWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: AppColors.bg3,
+                      ),
                     ),
-                     recognizer: TapGestureRecognizer()
-                      ..onTap = ()  {
-                          
-                          click();
+                  ),
+                  // TextField for entering phone number
+                  TextFormField(
+                    controller: _phoneController, // Attach the controller
+                    maxLength: 10,
+                    autocorrect: true,
+                    keyboardType: TextInputType.phone, // Phone input keyboard
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.phone_android_outlined),
+                      prefixIconColor: AppColors.primaryColor,
+                      hintText: 'Enter 10 digit Number',
+                      hintStyle: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w500,
+                        fontSize: 12,
+                        color: AppColors.bg3,
+                      ),
+                      filled: true,
+                      fillColor: AppColors.button,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none,
+                      ),
+              
+                      //prefixIcon: Icon(Icons.phone),
+                      //hintText: 'Mobile Number',
+                    ),
+                  ),
+                  SizedBox(height: 60), // Add spacing between TextField and button
+                  // Button for "Get OTP"
+                  GestureDetector(
+                    onTap: () async {
+                      // Handle OTP logic here
+                      if (_phoneController.text.length != 10) {
+                        snackBarCalled(context, "Please enter valid mobile number",
+                            Colorcodes.red);
+                        return;
                       }
-                      // Make it clickable
-                      
-                    ),
-                  ],
+                      ;
+                      String phoneNumber = _phoneController.text;
+                      number.value = phoneNumber;
+                     
+                      getConsentHandleId(context);
+                      otpController = TextEditingController();
+              
+                      showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (BuildContext context) {
+                            return verifyaotp(context);
+                          });
+              
+                      //print("Phone Number: $phoneNumber");
+                      // Add your logic for sending OTP
+                    },
+                    child: getButton(context, "Continue"),
+              
+                  ),
+      
+                
+               
+                ],
+              ),
+      
+      
+                
+                  Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: Center(
+                            child: RichText(
+                              text: TextSpan(
+                    text: "By clicking continue, you agree to Finvu's ",
+                    style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w500,
+                        fontSize: 10,
+                        color: AppColors.bg1,
+                      ),
+                    children: [
+                      TextSpan(
+                        text: "Terms & Conditions",
+                        
+                        style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w500,
+                        fontSize: 12,
+                        //decoration: UnderlineInputBorder(),
+                        color: Colors.blue,
+                  
+                      ),
+                       recognizer: TapGestureRecognizer()
+                        ..onTap = ()  {
+                            
+                            click();
+                        }
+                        // Make it clickable
+                        
+                      ),
+                    ],
+                              ),
                             ),
                           ),
-                        ),
-                ),
-             
-
-          ],
+                  ),
+               
+      
+            ],
+          ),
         ),
       ),
     );
