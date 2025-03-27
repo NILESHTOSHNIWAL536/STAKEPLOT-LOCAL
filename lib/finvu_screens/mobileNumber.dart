@@ -441,7 +441,9 @@ import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
 RxBool isOtpWrong = false.obs;
-
+RxInt otpCountdown = 30.obs; // Reactive integer for countdown
+  RxBool canResendOtp = false.obs;
+   Timer? otpTimer;
 class MobileNumber extends StatefulWidget {
   bool flag;
   MobileNumber({super.key, this.flag = false});
@@ -462,9 +464,8 @@ class _MobileNumberState extends State<MobileNumber> {
   final String termsUrl = "https://finvu.in/terms"; // Replace with actual URL
 
   late final WebViewController controller;
-  RxInt _otpCountdown = 30.obs; // Reactive integer for countdown
-  RxBool _canResendOtp = false.obs;
-  Timer? _otpTimer;
+  
+ 
 
   @override
   void initState() {
@@ -509,27 +510,13 @@ class _MobileNumberState extends State<MobileNumber> {
     }
   }
 
-  void startOtpTimer() {
-    _canResendOtp.value = false;
-    _otpCountdown.value = 30; // Reset countdown using .value
-    _otpTimer?.cancel(); // Cancel any existing timer
-    _otpTimer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (_otpCountdown.value > 0) {
-        _otpCountdown.value--; // Decrease countdown reactively
-      } else {
-        _canResendOtp.value = true;
-        _otpTimer?.cancel();
-      }
-      setState(
-          () {}); // Ensure the UI updates (optional, since Obx should handle it)
-    });
-  }
+ 
 
   @override
   void dispose() {
     _phoneController.dispose();
     _otpController.dispose();
-    _otpTimer?.cancel(); // Dispose of controller to avoid memory leaks
+    otpTimer?.cancel(); // Dispose of controller to avoid memory leaks
     super.dispose();
   }
 
@@ -792,7 +779,7 @@ class _MobileNumberState extends State<MobileNumber> {
                   ),
                   Obx(
                     () => GestureDetector(
-                      onTap: _canResendOtp.value
+                      onTap: canResendOtp.value
                           ? () {
                               login(handleId.value, context);
                               startOtpTimer();
@@ -801,14 +788,14 @@ class _MobileNumberState extends State<MobileNumber> {
                             }
                           : null,
                       child: Text(
-                        _canResendOtp.value
+                        canResendOtp.value
                             ? "Resend OTP"
-                            : "Resend in ${_otpCountdown.value} seconds",
+                            : "Resend in ${otpCountdown.value} seconds",
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.w400,
                           fontSize: 12,
-                          color: _canResendOtp.value
+                          color: canResendOtp.value
                               ? AppColors.primaryColor
                               : Colors.grey,
                         ),
@@ -912,3 +899,18 @@ class _MobileNumberState extends State<MobileNumber> {
     );
   }
 }
+ void startOtpTimer() {
+    canResendOtp.value = false;
+    otpCountdown.value = 30; // Reset countdown using .value
+    otpTimer?.cancel(); // Cancel any existing timer
+    otpTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (otpCountdown.value > 0) {
+        otpCountdown.value--; // Decrease countdown reactively
+      } else {
+        canResendOtp.value = true;
+        otpTimer?.cancel();
+      }
+      // setState(
+      //     () {}); // Ensure the UI updates (optional, since Obx should handle it)
+    });
+  }
