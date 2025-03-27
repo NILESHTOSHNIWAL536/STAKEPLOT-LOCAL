@@ -694,10 +694,11 @@ class _AccessState extends State<Access> {
 
       FinvuProcessConsentRequestResponse response = await finvuManager.approveConsentRequest(
               finvuConsentRequestDetailInfo, seletedAccountInfomations);
-
+  
+       print(response);
+       print("Consent request approved successfully.");
       snackBarCalled(context, "Consent request approved successfully.");
      
-      
       Navigator.push(
         context,
         MaterialPageRoute(
