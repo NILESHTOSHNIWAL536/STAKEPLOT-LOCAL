@@ -164,11 +164,11 @@ class _HomeScreenState extends State<HomeScreen> {
 String _getTimeBasedGreeting() {
   final hour = DateTime.now().hour;
   if (hour < 12) {
-    return "Lovely morning to you";
+    return "Good morning to you";
   } else if (hour < 16) {
-    return "Wonderful afternoon,";
+    return "Good afternoon,";
   } else {
-    return "Pleasant evening,";
+    return "Good evening,";
   }
 }
 
