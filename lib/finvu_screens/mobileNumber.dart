@@ -461,7 +461,7 @@ class _MobileNumberState extends State<MobileNumber> {
   RxInt _otpCountdown = 30.obs; // Reactive integer for countdown
   RxBool _canResendOtp = false.obs;
   Timer? _otpTimer;
-
+RxBool _isOtpWrong = false.obs;
   @override
   void initState() {
     super.initState();
@@ -618,6 +618,7 @@ class _MobileNumberState extends State<MobileNumber> {
                       getConsentHandleId(context);
                       otpController = TextEditingController();
                       startOtpTimer();
+                       _isOtpWrong.value = false; 
                       showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
@@ -775,7 +776,9 @@ class _MobileNumberState extends State<MobileNumber> {
                       onTap: _canResendOtp.value
                           ? () {
                               login(handleId.value, context);
-                              startOtpTimer(); // Restart the timer on resend
+                              startOtpTimer(); 
+                               _isOtpWrong.value = false;
+                              // Restart the timer on resend
                             }
                           : null,
                       child: Text(
