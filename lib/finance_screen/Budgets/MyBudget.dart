@@ -613,26 +613,41 @@ class _ChartData {
 }
 
 // PieChartSample remains unchanged
-class PieChartSample extends StatelessWidget {
-  final Map<String, double> categories;
 
-  const PieChartSample({required this.categories});
+class PieChartSample extends StatelessWidget {
+  final List<Map<String, dynamic>> categoryWiseSpendings;
+
+  const PieChartSample({required this.categoryWiseSpendings});
 
   @override
   Widget build(BuildContext context) {
-    double totalAmount =
-        categories.values.fold(0.0, (sum, amount) => sum + amount);
+    if (categoryWiseSpendings.isEmpty) {
+      return Center(
+        child: Text(
+          'No spending data available',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+      );
+    }
+
+    double totalSpending = categoryWiseSpendings.fold(
+        0.0, (sum, item) => sum + (item['spending'] as num).toDouble());
+
     return AspectRatio(
       aspectRatio: 1.4,
       child: PieChart(
         PieChartData(
-          sections: categories.entries.map((entry) {
-            double percentage =
-                totalAmount > 0 ? (entry.value / totalAmount) * 100 : 0;
+          sections: categoryWiseSpendings.map((entry) {
+            final double spending = (entry['spending'] as num).toDouble();
+            final double percentage = (entry['percentage'] as num).toDouble();
             return PieChartSectionData(
-              color: _getColor(entry.key),
-              value: entry.value,
-              title: '${entry.key} : ${percentage.toStringAsFixed(1)}%',
+              color: _getColor(entry['category'] as String),
+              value: spending, // Use spending as the value for the pie slice size
+              title: '${entry['category']}: ${percentage.toStringAsFixed(1)}%',
               radius: 50,
               badgePositionPercentageOffset: 1.7,
               titleStyle: TextStyle(

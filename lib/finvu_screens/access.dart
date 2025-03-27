@@ -13,6 +13,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Au
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchLinkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/appbar_widget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
@@ -70,7 +71,7 @@ class _AccessState extends State<Access> {
   Widget topHeader() {
     return Column(children: [
       Padding(
-          padding: const EdgeInsets.fromLTRB(10.0, 25, 10, 0),
+          padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -117,32 +118,38 @@ class _AccessState extends State<Access> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          bottomNavigationBar: BottomBar(),
-          backgroundColor: AppColors.backgroundColor,
-          body: SingleChildScrollView(
+    return Scaffold(
+        bottomNavigationBar: BottomBar(),
+        appBar: getAppBar(context),
+        // backgroundColor: AppColors.backgroundColor,
+        body: SafeArea(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(10.0, 16, 16, 0),
             child: Obx(
               () => !flag.value
                   ? Loader()
                   : Container(
-                      height: MediaQuery.of(context).size.height / 1.1,
+                      height: MediaQuery.of(context).size.height / 1.2,
                       width: MediaQuery.of(context).size.width,
+                      // color: Colorcodes.moneyOrange,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          topHeader(),
-                          informationBankAccount(),
-                          pauseOrCancle(),
-                          const Spacer(),
+                          Column(
+                             children: [
+                                  topHeader(),
+                                  informationBankAccount(),
+                                  pauseOrCancle(),
+                             ],
+                          ),
                           givePermissionOrDecline(),
                         ],
                       ),
                     ),
             ),
-          )),
-    );
+          ),
+        ));
   }
 
   Widget informationBankAccount() {
@@ -152,20 +159,26 @@ class _AccessState extends State<Access> {
         " to " +
         formatDate(
             finvuConsentRequestDetailInfo.consentDateTimeRange.to.toString());
-    return Column(
-      children: [
-        accounts(
-            "Accounts Shared",
-            "${seletedAccountIds.length} Account(s) are shared",
-            Icons.account_balance_wallet_outlined),
-        accounts("Permission Validity", range, Icons.date_range_rounded),
-        accounts("Frequency of Access",
-            "We can access your information one-time.", Icons.access_time),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: viewMore(),
+    return Container(
+      height: MediaQuery.of(context).size.height / 2.1,
+      width: MediaQuery.of(context).size.width,
+      // color: Colors.cyan,
+      child: SingleChildScrollView(
+        child: Expanded(
+          child: Column(
+            children: [
+              accounts(
+                  "Accounts Shared",
+                  "${seletedAccountIds.length} Account(s) are shared",
+                  Icons.account_balance_wallet_outlined),
+              accounts("Permission Validity", range, Icons.date_range_rounded),
+              accounts("Frequency of Access",
+                  "We can access your information one-time.", Icons.access_time),
+              getInfomationsAboutUserConsnt(),
+            ],
+          ),
         ),
-      ],
+      ),
     );
   }
 
@@ -208,24 +221,43 @@ class _AccessState extends State<Access> {
         showModalBottomSheet(
             context: context,
             builder: (BuildContext context) {
-              return Container(
+              return getInfomationsAboutUserConsnt();
+            });
+      },
+      child: Center(
+        child: Text(
+          "View more Details",
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.w600,
+            fontSize: 15,
+            color: AppColors.primaryColor,
+          ),
+        ),
+      ),
+    );
+  }
+
+
+  Widget getInfomationsAboutUserConsnt(){
+    return Container(
                 width: MediaQuery.of(context).size.width / 1,
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(20.0, 20, 16, 10),
+                  padding: const EdgeInsets.fromLTRB(20.0, 0, 16, 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Details of your approval',
-                        style: FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: AppColors.bg1,
-                        ),
-                      ),
+                      // Text(
+                      //   'Details of your approval',
+                      //   style: FontManager().getTextStyle(
+                      //     context,
+                      //     lWeight: FontWeight.bold,
+                      //     fontSize: 18,
+                      //     color: AppColors.bg1,
+                      //   ),
+                      // ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(20.0, 20, 20, 0),
+                        padding: const EdgeInsets.fromLTRB(0.0, 0, 20, 0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -362,11 +394,11 @@ class _AccessState extends State<Access> {
                                         ))
                                     .toList()),
                             SizedBox(height: 20),
-                            InkWell(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                                child: getButton(context, "Understand")),
+                            // InkWell(
+                            //     onTap: () {
+                            //       Navigator.pop(context);
+                            //     },
+                            //     child: getButton(context, "Understand")),
                           ],
                         ),
                       )
@@ -374,20 +406,6 @@ class _AccessState extends State<Access> {
                   ),
                 ),
               );
-            });
-      },
-      child: Center(
-        child: Text(
-          "View more Details",
-          style: FontManager().getTextStyle(
-            context,
-            lWeight: FontWeight.w600,
-            fontSize: 15,
-            color: AppColors.primaryColor,
-          ),
-        ),
-      ),
-    );
   }
 
   Widget accounts(String title, String value, IconData icon) {
@@ -622,67 +640,70 @@ class _AccessState extends State<Access> {
   }
 
   Widget givePermissionOrDecline() {
-    return Column(
-      children: [
-        InkWell(
-          onTap: () {
-            approveConsentRequest();
-          },
-          child: Container(
-            width: MediaQuery.of(context).size.width / 1.1,
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
-            decoration: BoxDecoration(
-              color: AppColors.accentColor,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Center(
-              child: Text(
-                "Give permission",
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: AppColors.bg5,
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          InkWell(
+            onTap: () {
+              approveConsentRequest();
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width / 1.1,
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+              decoration: BoxDecoration(
+                color: AppColors.accentColor,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(
+                child: Text(
+                  "Give permission",
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: AppColors.bg5,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        InkWell(
-          onTap: () async {
-            FinvuConsentRequestDetailInfo consentInfo =await finvuManager.getConsentRequestDetails(handleId.value);
-
-            try {
-              finvuManager.denyConsentRequest(consentInfo);
-              logoutAndDisconnect();
-              clearStack(context);
-              snackBarCalled(context, "Successfully disapproved the request.");
-              Navigator.pushNamed(context, "/ShareAccountLogin");
-            } catch (e) {
-              snackBarCalled(context, "Unable to disapprove the request.");
-            }
-          },
-          child: Container(
-            width: MediaQuery.of(context).size.width / 1.1,
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-            decoration: BoxDecoration(
-              //color: AppColors.accentColor,
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Center(
-              child: Text(
-                "Decline",
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: AppColors.bg1,
+          InkWell(
+            onTap: () async {
+              FinvuConsentRequestDetailInfo consentInfo =await finvuManager.getConsentRequestDetails(handleId.value);
+      
+              try {
+                finvuManager.denyConsentRequest(consentInfo);
+                logoutAndDisconnect();
+                clearStack(context);
+                snackBarCalledSignup(context, "Successfully disapproved the consent request.");
+                Navigator.pushNamed(context, "/ShareAccountLogin");
+              } catch (e) {
+                snackBarCalled(context, "Unable to disapprove the request.");
+              }
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width / 1.1,
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              decoration: BoxDecoration(
+                //color: AppColors.accentColor,
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: Center(
+                child: Text(
+                  "Decline",
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: AppColors.bg1,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
