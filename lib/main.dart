@@ -78,9 +78,6 @@ class _MyAppState extends State<MyApp> {
     initPlatformState();
   }
 
-
-
-
   Future<void> initPlatformState() async {
     if (!mounted) return;
   }
@@ -109,7 +106,6 @@ class _MyAppState extends State<MyApp> {
       '/TribeSearch': (context) => TribeSearch(),  
       '/Friends': (context) => Friends(),    
       '/TribeChats': (context) => TribeChats(), 
-      '/FinvuAccount': (context) =>  FinvuAccount(),   
       '/discover': (context) =>  DiscoverAccount(),     
       '/ShareAccountLogin': (context) =>  ShareAccountLogin(),     
       '/Budget': (context) =>  Budget(),     

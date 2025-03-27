@@ -650,11 +650,11 @@ class _AccessState extends State<Access> {
         ),
         InkWell(
           onTap: () async {
-            FinvuConsentRequestDetailInfo consentInfo =
-                await finvuManager.getConsentRequestDetails(handleId.value);
+            FinvuConsentRequestDetailInfo consentInfo =await finvuManager.getConsentRequestDetails(handleId.value);
 
             try {
               finvuManager.denyConsentRequest(consentInfo);
+              logoutAndDisconnect();
               clearStack(context);
               snackBarCalled(context, "Successfully disapproved the request.");
               Navigator.pushNamed(context, "/ShareAccountLogin");
@@ -691,17 +691,12 @@ class _AccessState extends State<Access> {
 
       FinvuConsentRequestDetailInfo finvuConsentRequestDetailInfo =
           await finvuManager.getConsentRequestDetails(handleId.value);
-      
-      
-     
-    
+
       FinvuProcessConsentRequestResponse response = await finvuManager.approveConsentRequest(
               finvuConsentRequestDetailInfo, seletedAccountInfomations);
-  
 
       snackBarCalled(context, "Consent request approved successfully.");
-
-      logoutAndDisconnect();
+     
       
       Navigator.push(
         context,

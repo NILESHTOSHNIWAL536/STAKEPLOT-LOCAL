@@ -1,29 +1,27 @@
 import 'dart:convert';
-
 import 'package:finvu_flutter_sdk/finvu_config.dart';
-import 'package:finvu_flutter_sdk_core/finvu_discovered_accounts.dart';
-import 'package:finvu_flutter_sdk_core/finvu_fip_details.dart';
-import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/ApproveConsentRequest.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/FetchData.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+
+// List listOfTransactions=[];
+
 
 void initFinvuManager(BuildContext context) async {
   finvuManager.initialize(
     FinvuConfig(
-       finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
+     finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
       // finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
       certificatePins: 
       [
@@ -35,11 +33,28 @@ void initFinvuManager(BuildContext context) async {
 
   await finvuManager.connect();
   var isConnected = await finvuManager.isConnected();
-
   if (!isConnected) {
     isConnected = await finvuManager.isConnected();
   }
+  
 }
+
+
+Future<void> login(consenthandleId,context) async {
+  try{
+  var login = await finvuManager.loginWithUsernameOrMobileNumberAndConsentHandle(
+    '${number.value}@finvu',
+    '${number.value}',
+    consenthandleId,
+  );
+  otpReference = login.reference;
+  debugPrint('LoggedIn');
+  }catch(e){
+    print(e);
+      snackBarCalled(context, e.toString());
+  }
+}
+
 
 void getConsentHandleId(context) async 
 {
@@ -49,8 +64,7 @@ void getConsentHandleId(context) async
      
    final SharedPreferences _pref = await SharedPreferences.getInstance();
    var accessToken = _pref.getString("accessToken");
-   print("-----------------------------------------");
-   print(apiUrl);
+
   try {
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -60,32 +74,22 @@ void getConsentHandleId(context) async
       },
       body: jsonEncode({"custId": custId,'number':number.value}),
     );
-   printData(response);
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print(data);
       String consentHandleId = data["consentHandleId"];
       handleId.value=consentHandleId;
-      print(handleId.value);
       login(consentHandleId,context);
     } 
   } catch (error) {
-       print(error);
        snackBarCalled(context, error.toString());
   }
 }
+
 Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
  try {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String apiUrl ="${url}/finvu/fetchData"; // Change to your actual server URL
-    final String custId ="${number.value}@finvu"; // Replace with dynamic value if needed
+    final String apiUrl ="${url}/finvu/fetchData"; 
+    final String custId ="${number.value}@finvu"; 
   
-    if (handleId.value == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Missing required credentials!")),
-      );
-      return;
-    }
 
    final SharedPreferences pref = await SharedPreferences.getInstance();
    String accessToken=pref.getString("accessToken").toString(); 
@@ -102,7 +106,8 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
 
     if (response.statusCode == 200) 
     {
-      final data = json.decode(response.body);
+       final data = json.decode(response.body);
+       logoutAndDisconnect();
     } else {
     
       sessionId.value=true;
@@ -137,11 +142,79 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
 
   void logoutAndDisconnect() async
   {
-    try{
-        await finvuManager.logout();
+       try{
+        LOGOUT();
         finvuManager.disconnect();
-    }catch(e)
-    {
-      print(e);
-    }
+       }catch(e){
+          print(e);
+       }
   }
+
+
+
+  void  LOGOUT() async
+ {
+ listOfAccountAdded.clear();
+ FinvuFIPDetailsList.clear();
+ accountCountList.clear();
+ accountAdded.clear();
+ accountLinked.clear();
+ fipDis.clear();
+ fipDisOrginal.clear();
+ accountLinked.clear();
+ isSeletedBankAccout.clear();
+ bankImageAndid.clear();
+ listOfBankAccount.clear();
+ fetchAccountData.clear();
+ fetchedTrsacntionList.clear();
+ count.value=0;
+ addBank.value = false;
+ getBanks.value=false;
+ getFetch.value =false;
+ number.value="";
+ consentUserId.value="";
+ handleId.value="";
+
+      try{
+         await finvuManager.logout(); 
+
+      }
+      catch(e)
+      {
+        print(e);
+      }
+      
+    debugPrint('getConsentHandleStatus');
+}
+
+
+void verify(String otp, context) async {
+ 
+  try {
+   
+    var login = await finvuManager.verifyLoginOtp(
+      otp,
+      otpReference,
+    );
+   
+  
+    clearStackLocalInfo();
+    getLinkedAccountInfo();
+
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DiscoverAccount(),
+        ),
+     );
+                  
+  } catch (e) {
+
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: textStyle(context: context, text: "Invalid OTP..."),
+          duration: Duration(seconds: 2),
+        ),
+      );
+  }
+}

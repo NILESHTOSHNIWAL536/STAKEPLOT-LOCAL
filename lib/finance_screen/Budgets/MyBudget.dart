@@ -413,7 +413,7 @@ startDate = DateTime(startDate.year, startDate.month, startDate.day);
                         color: AppColors.primaryColor.withOpacity(0.2), // Light blue background
                         borderRadius: BorderRadius.circular(8),
                         // border: Border.all(color: Colors.blue.shade200),
-                        border: Border.all(color: AppColors.primaryColor.withValues(alpha: 0.2,blue: 0.1,green: 0.1)),
+                        border: Border.all(color: AppColors.primaryColor.withOpacity(0.1)),
                       ),
                       // child: Text(
                       //   insightsList[index],

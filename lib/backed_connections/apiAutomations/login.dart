@@ -4,12 +4,13 @@ import 'package:get/get.dart';
 
   String otpReference = "";
   String displayText = '';
-  RxString number="8459177562".obs;
+  RxString number="".obs;
   String custId="${number.value}@finvu";
   RxString mobileNo="".obs;
   RxString handleId="".obs;
   RxString consentUserId="".obs;
   RxBool fetchedData=false.obs;
+  RxList fetchedTrsacntionList = [].obs;
   late FinvuConsentRequestDetailInfo finvuConsentRequestDetailInfo;
   late List<FinvuLinkedAccountDetailsInfo> finvuLinkedAccountDetailsInfo;
   List<String> fiTypes=[];

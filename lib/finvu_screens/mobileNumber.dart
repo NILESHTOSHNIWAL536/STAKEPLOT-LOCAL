@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/finvuAccount.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/webView.dart';
 import 'package:get/get.dart';
@@ -341,7 +342,7 @@ late final WebViewController controller ;
                   ),
                   GestureDetector(
                     onTap: () {
-                      verifyaotp(context);
+                      login(handleId.value, context);
                     },
                     child: Text(
                       "Resend OTP",
