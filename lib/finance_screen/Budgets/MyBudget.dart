@@ -13,6 +13,11 @@ import 'package:intl/intl.dart';
 import 'dart:math' as math;
 
 class MyBudgetScreen extends StatefulWidget {
+
+
+
+
+  
   final Map<String, dynamic> data;
 
   MyBudgetScreen({required this.data});
@@ -31,12 +36,12 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
   List<dynamic> transactions = []; // Store raw transactions from API
   Map<String, dynamic>? budgetData;
   List<String>? insightsData;
-List<Map<String, dynamic>> categoryWiseSpendings = [];
+  List<Map<String, dynamic>> categoryWiseSpendings = [];
   List<Map<String, dynamic>> graphData = [];
   @override
   void initState() {
     super.initState();
-   
+
     fetchBudgetData();
     fetchBudgetInsights();
     // getInsights(context);
@@ -99,20 +104,16 @@ List<Map<String, dynamic>> categoryWiseSpendings = [];
           //  print(`Budget type: ${data['data']['categoryWiseSpendings']}`);
           print(data['data']['categoryWiseSpendings']);
           // print('Transactions after assignment: $transactions');
-          
-     categoryWiseSpendings = List<Map<String, dynamic>>.from(
-            data['data']['categoryWiseSpendings'] ?? []);
-             graphData = categoryWiseSpendings.map((item) {
-          return {
-            'title':
-                '${item['category']} ${item['percentage'].toStringAsFixed(1)}%',
-            'value': (item['spending'] as num).toDouble(),
-          };
-        }).toList();
 
-       
-       
-
+          categoryWiseSpendings = List<Map<String, dynamic>>.from(
+              data['data']['categoryWiseSpendings'] ?? []);
+          graphData = categoryWiseSpendings.map((item) {
+            return {
+              'title':
+                  '${item['category']} ${item['percentage'].toStringAsFixed(1)}%',
+              'value': (item['spending'] as num).toDouble(),
+            };
+          }).toList();
 
           budgetSpentData.clear();
           //  print('Cleared budgetSpentData');
@@ -221,8 +222,6 @@ List<Map<String, dynamic>> categoryWiseSpendings = [];
       //  print('Error fetching budget data: $e');
     }
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -424,27 +423,14 @@ List<Map<String, dynamic>> categoryWiseSpendings = [];
       ),
     );
   }
-// BoxDecoration _buildBackgroundDecoration() {
-//     return BoxDecoration(
-//       borderRadius: BorderRadius.circular(12),
-//       image: DecorationImage(
-//        image: Svg.asset(
-//         'assets/images/onboarding.svg', // Replace 'assets/images/onboarding.svg' with your actual asset path
-//       ),
-//         fit: BoxFit.cover,
-//         colorFilter: const ColorFilter.mode(
-//           Colors.black26,
-//           BlendMode.dstATop,
-//         ),
-//       ),
-//     );
-//   }
+
 
   Widget graph() {
     return PieChartGraph(
-         title: "Categories",
-        graphData: graphData,
-        graphDisc: [],);
+      title: "Categories",
+      graphData: graphData,
+      graphDisc: [],
+    );
   }
 
   Widget _buildCategoriesChart() {
@@ -608,99 +594,101 @@ class _ChartData {
 
 // PieChartSample remains unchanged
 
-class PieChartSample extends StatelessWidget {
-  final List<Map<String, dynamic>> categoryWiseSpendings;
+// class PieChartSample extends StatelessWidget {
+//   final List<Map<String, dynamic>> categoryWiseSpendings;
 
-  const PieChartSample({required this.categoryWiseSpendings});
+//   const PieChartSample({required this.categoryWiseSpendings});
 
-  @override
-  Widget build(BuildContext context) {
-    if (categoryWiseSpendings.isEmpty) {
-      return Center(
-        child: Text(
-          'No spending data available',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-      );
-    }
+//   @override
+//   Widget build(BuildContext context) {
+//     print("categoryWiseSpendings $categoryWiseSpendings");
+//     if (categoryWiseSpendings.isEmpty) {
+//       return Center(
+//         child: Text(
+//           'No spending data available',
+//           style: TextStyle(
+//             fontSize: 16,
+//             fontWeight: FontWeight.bold,
+//             color: Colors.black,
+//           ),
+//         ),
+//       );
+//     }
 
-    double totalSpending = categoryWiseSpendings.fold(
-        0.0, (sum, item) => sum + (item['spending'] as num).toDouble());
+//     double totalSpending = categoryWiseSpendings.fold(
+//         0.0, (sum, item) => sum + (item['spending'] as num).toDouble());
 
-    return AspectRatio(
-      aspectRatio: 1.4,
-      child: PieChart(
-        PieChartData(
-          sections: categoryWiseSpendings.map((entry) {
-            final double spending = (entry['spending'] as num).toDouble();
-            final double percentage = (entry['percentage'] as num).toDouble();
-            return PieChartSectionData(
-              color: _getColor(entry['category'] as String),
-              value: spending, // Use spending as the value for the pie slice size
-              title: '${entry['category']}: ${percentage.toStringAsFixed(1)}%',
-              radius: 50,
-              badgePositionPercentageOffset: 1.7,
-              titleStyle: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryColor,
-              ),
-            );
-          }).toList(),
-          centerSpaceRadius: 40,
-          sectionsSpace: 0,
-          borderData: FlBorderData(show: false),
-        ),
-      ),
-    );
-  }
+//     return AspectRatio(
+//       aspectRatio: 1.4,
+//       child: PieChart(
+//         PieChartData(
+//           sections: categoryWiseSpendings.map((entry) {
+//             final double spending = (entry['spending'] as num).toDouble();
+//             final double percentage = (entry['percentage'] as num).toDouble();
+//             return PieChartSectionData(
+//               color: _getColor(entry['category'] as String),
+//               value:
+//                   spending, // Use spending as the value for the pie slice size
+//               title: '${entry['category']}:  ${percentage.toStringAsFixed(1)}%',
+//               radius: 50,
+//               badgePositionPercentageOffset: 1.7,
+//               titleStyle: TextStyle(
+//                 fontSize: 16,
+//                 fontWeight: FontWeight.bold,
+//                 color: AppColors.primaryColor,
+//               ),
+//             );
+//           }).toList(),
+//           centerSpaceRadius: 40,
+//           sectionsSpace: 0,
+//           borderData: FlBorderData(show: false),
+//         ),
+//       ),
+//     );
+//   }
 
-  Color _getColor(String category) {
-    switch (category) {
-      case 'Food':
-        return Colors.red;
-      case 'Shopping':
-        return Colors.teal;
-      case 'Travel':
-        return Colors.blue;
-      case 'Health':
-        return Colors.green;
-      case 'Bills':
-        return Colors.black;
-      case 'Subscriptions':
-        return Colors.purple;
-      case 'Events':
-        return Colors.orange;
-      case 'PersonalCare':
-        return Colors.pink;
-      case 'Services':
-        return Colors.brown;
-      case 'Emi':
-        return Colors.deepPurple;
-      case 'Insurance':
-        return Colors.indigo;
-      case 'Support':
-        return Colors.cyan;
-      case 'Children':
-        return Colors.grey;
-      case 'PetCare':
-        return Colors.lightGreen;
-      case 'Sports':
-        return Colors.lime;
-      case 'Alcohol':
-        return Colors.blueGrey;
-      case 'Hobbies':
-        return Colors.amber;
-      case 'Snacks':
-        return Colors.deepOrange;
-      case 'Entertainment':
-        return Colors.yellow;
-      default:
-        return Colors.blue;
-    }
-  }
-}
+//   Color _getColor(String category) {
+//     switch (category) {
+//       case 'Food':
+//         return Colors.red;
+//       case 'Shopping':
+//         return Colors.teal;
+//       case 'Travel':
+//         return Colors.blue;
+//       case 'Health':
+//         return Colors.green;
+//       case 'Bills':
+//         return Colors.black;
+//       case 'Subscriptions':
+//         return Colors.purple;
+//       case 'Events':
+//         return Colors.orange;
+//       case 'PersonalCare':
+//         return Colors.pink;
+//       case 'Services':
+//         return Colors.brown;
+//       case 'Emi':
+//         return Colors.deepPurple;
+//       case 'Insurance':
+//         return Colors.indigo;
+//       case 'Support':
+//         return Colors.cyan;
+//       case 'Children':
+//         return Colors.grey;
+//       case 'PetCare':
+//         return Colors.lightGreen;
+//       case 'Sports':
+//         return Colors.lime;
+//       case 'Alcohol':
+//         return Colors.blueGrey;
+//       case 'Hobbies':
+//         return Colors.amber;
+//       case 'Snacks':
+//         return Colors.deepOrange;
+//       case 'Entertainment':
+//         return Colors.yellow;
+//       default:
+//         return Colors.blue;
+//     }
+//   }
+// }
