@@ -14,6 +14,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/access.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/appbar_widget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/verifyOTP.dart';
@@ -82,12 +83,13 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        bottomNavigationBar: BottomBar(),
-        body: Container(
+    return Scaffold(
+      bottomNavigationBar: BottomBar(),
+      appBar:getAppBar(context),
+      body: SafeArea(
+        child: Container(
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
+          height: MediaQuery.of(context).size.height/1.2,
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 3.0),
           child: Column(
             children: [
@@ -105,12 +107,12 @@ class _LinkingAccountState extends State<LinkingAccount> {
                 ),
               ),
               const SizedBox(
-                height: 5,
+                height: 3,
               ),
               BankInfoUiContainer(),
               bankAccountList(),
               const SizedBox(
-                height: 5,
+                height: 3,
               ),
               InkWell(
                   onTap: () {
@@ -360,7 +362,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
       //padding: const EdgeInsets.fromLTRB(14, 5, 16, 5),
       //here we can change height
       width: MediaQuery.of(context).size.width / 1.1,
-      height: height / 1.5,
+      height: height / 1.7,
       child: SingleChildScrollView(
         child: Column(
           children: widget.listOfBankAccount.map((account) {

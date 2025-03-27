@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransactio
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,7 +22,7 @@ import 'package:http/http.dart' as http;
 void initFinvuManager(BuildContext context) async {
   finvuManager.initialize(
     FinvuConfig(
-    //  finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
+      //  finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
       finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
       certificatePins: 
       [
@@ -187,33 +188,55 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
 }
 
 
-void verify(String otp, context) async {
+// void verify(String otp, context) async {
  
-  try {
+//   try {
    
+//     var login = await finvuManager.verifyLoginOtp(
+//       otp,
+//       otpReference,
+//     );
+   
+  
+//     clearStackLocalInfo();
+//     getLinkedAccountInfo();
+
+//     Navigator.pushReplacement(
+//         context,
+//         MaterialPageRoute(
+//           builder: (context) => DiscoverAccount(),
+//         ),
+//      );
+                  
+//   } catch (e) {
+
+//     ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(
+//           content: textStyle(context: context, text: "Invalid OTP..."),
+//           duration: Duration(seconds: 2),
+//         ),
+//       );
+//   }
+// }
+Future<bool> verify(String otp, BuildContext context) async {
+  try {
     var login = await finvuManager.verifyLoginOtp(
       otp,
       otpReference,
     );
-   
-  
+
     clearStackLocalInfo();
     getLinkedAccountInfo();
 
     Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => DiscoverAccount(),
-        ),
-     );
-                  
+      context,
+      MaterialPageRoute(
+        builder: (context) => DiscoverAccount(),
+      ),
+    );
+    return true; // Return true if verification succeeds
   } catch (e) {
-
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: textStyle(context: context, text: "Invalid OTP..."),
-          duration: Duration(seconds: 2),
-        ),
-      );
+   isOtpWrong.value = true;
+    return false; // Return false if verification fails
   }
 }

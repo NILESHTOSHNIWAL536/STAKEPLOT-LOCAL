@@ -9,7 +9,9 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchLinkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/appbar_widget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
@@ -43,13 +45,15 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       bottomNavigationBar: BottomBar(),
+      extendBody: true,
+      appBar: getAppBar(context),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
           child: SingleChildScrollView(
             child: Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height/1.1,
+              height: MediaQuery.of(context).size.height/1.18,
               // color: Colorcodes.barGraphOrange,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,8 +107,10 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   Widget getListOfFinvuBanks() {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 1.5,
+      height: MediaQuery.of(context).size.height / 1.55,
       child: ListView.builder(
+        // shrinkWrap: true,
+        // physics: NeverScrollableScrollPhysics(),
         itemCount: fipDis.length,
         itemBuilder: (context, index) {
           return getBackUi(fipDis[index]);
