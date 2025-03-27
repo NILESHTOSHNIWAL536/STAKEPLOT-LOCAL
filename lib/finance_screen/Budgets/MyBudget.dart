@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -83,7 +82,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     // print('API URL: $apiUrl');
     try {
       var response = await getDataApiCall(apiUrl);
-     // print('API Response: ${response.body}');
+      //  print('API Response: ${response.body}');
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         // Check if the widget is still mounted before calling setState
@@ -94,23 +93,24 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
         setState(() {
           budgetType = widget.data['budgetPeriod']?.toLowerCase() ?? 'monthly';
           transactions = data['data'] != null
-              ? data['data']['transactions'] ?? []
+              ? data['data']['finalResult']['transactions'] ?? []
               : data['transactions'] ?? [];
-          // print('Budget type: $budgetType');
+          //  print(`Budget type: ${data['data']['categoryWiseSpendings']}`);
+          print(data['data']['categoryWiseSpendings']);
           // print('Transactions after assignment: $transactions');
 
           budgetSpentData.clear();
           //  print('Cleared budgetSpentData');
 
           // Normalize startDate and endDate to date-only
-        //  print("created datee $data['transactions']['createdAt']");
-          final String createdDateStr =
-    widget.data['createdAt']?.toString() ?? '2025-01-01T00:00:00.000Z';
+          //  print("created datee $data['transactions']['createdAt']");
+          final String createdDateStr = widget.data['createdAt']?.toString() ??
+              '2025-01-01T00:00:00.000Z';
 
           final String endDateStr =
               widget.data['endDate'] ?? '2025-03-04T12:07:11.028Z';
           DateTime startDate = DateTime.parse(createdDateStr).toLocal();
-startDate = DateTime(startDate.year, startDate.month, startDate.day);
+          startDate = DateTime(startDate.year, startDate.month, startDate.day);
 
           DateTime endDate = DateTime.parse(endDateStr).toLocal();
           //startDate = DateTime(startDate.year, startDate.month, startDate.day);
@@ -126,7 +126,7 @@ startDate = DateTime(startDate.year, startDate.month, startDate.day);
               monthlySpent[monthLabel] =
                   (transaction['debitTotalAmount'] as num?)?.toDouble() ?? 0.0;
             }
-           // print('Monthly spent: $monthlySpent');
+            // print('Monthly spent: $monthlySpent');
 
             // Populate budgetSpentData with backend labels
             List<String> xLabels =
@@ -149,7 +149,7 @@ startDate = DateTime(startDate.year, startDate.month, startDate.day);
               DateTime date =
                   DateFormat('yyyy-MM-dd').parse(transaction['_id']);
               int dayIndex = date.difference(startDate).inDays;
-                print('Transaction date: $date, dayIndex: $dayIndex, debitTotalAmount: ${transaction['debitTotalAmount']}');
+              //  print('Transaction date: $date, dayIndex: $dayIndex, debitTotalAmount: ${transaction['debitTotalAmount']}');
               if (dayIndex >= 0 && dayIndex < totalDays) {
                 dailySpent[dayIndex] =
                     (transaction['debitTotalAmount'] as num?)?.toDouble() ??
@@ -170,21 +170,21 @@ startDate = DateTime(startDate.year, startDate.month, startDate.day);
           } else if (budgetType == 'weekly') {
             int totalDays =
                 math.min(endDate.difference(startDate).inDays + 1, 7);
-              print('Total days (weekly): $totalDays');
+            //  print('Total days (weekly): $totalDays');
 
             Map<int, double> dailySpent = {};
             for (var transaction in transactions) {
               DateTime date =
                   DateFormat('yyyy-MM-dd').parse(transaction['_id']);
               int dayIndex = date.difference(startDate).inDays;
-               print('Transaction date: $date, dayIndex: $dayIndex, debitTotalAmount: ${transaction['debitTotalAmount']}');
+              //  print('Transaction date: $date, dayIndex: $dayIndex, debitTotalAmount: ${transaction['debitTotalAmount']}');
               if (dayIndex >= -1 && dayIndex < totalDays) {
                 dailySpent[dayIndex] =
                     (transaction['debitTotalAmount'] as num?)?.toDouble() ??
                         0.0;
               }
             }
-              print('Daily spent (weekly): $dailySpent');
+            //  print('Daily spent (weekly): $dailySpent');
 
             for (int i = 0; i < totalDays; i++) {
               DateTime currentDate = startDate.add(Duration(days: i));
@@ -196,14 +196,14 @@ startDate = DateTime(startDate.year, startDate.month, startDate.day);
               ));
             }
           }
-           print('Final budgetSpentData length: ${budgetSpentData.length}');
-           print('Final budgetSpentData: $budgetSpentData');
+          //  print('Final budgetSpentData length: ${budgetSpentData.length}');
+          //  print('Final budgetSpentData: $budgetSpentData');
         });
       } else {
-         print('Failed to load budget data: ${response.statusCode}');
+        //  print('Failed to load budget data: ${response.statusCode}');
       }
     } catch (e) {
-       print('Error fetching budget data: $e');
+      //  print('Error fetching budget data: $e');
     }
   }
 
@@ -410,10 +410,12 @@ startDate = DateTime(startDate.year, startDate.month, startDate.day);
                       margin: EdgeInsets.only(bottom: 8),
                       padding: EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppColors.primaryColor.withOpacity(0.2), // Light blue background
+                        color: AppColors.primaryColor
+                            .withOpacity(0.2), // Light blue background
                         borderRadius: BorderRadius.circular(8),
                         // border: Border.all(color: Colors.blue.shade200),
-                        border: Border.all(color: AppColors.primaryColor.withOpacity(0.1)),
+                        border: Border.all(
+                            color: AppColors.primaryColor.withOpacity(0.1)),
                       ),
                       // child: Text(
                       //   insightsList[index],
@@ -467,13 +469,13 @@ class LineChartSample extends StatelessWidget {
   final String budgetType;
 
   LineChartSample({required this.budgetData, required this.budgetType});
- bool _isAllZero(List<_ChartData> data) {
+  bool _isAllZero(List<_ChartData> data) {
     return data.every((item) => item.y == 0.0);
   }
+
   @override
   Widget build(BuildContext context) {
-    
-    if (budgetData.isEmpty || _isAllZero(budgetData)){
+    if (budgetData.isEmpty || _isAllZero(budgetData)) {
       return Center(
         child: Text(
           'No spending data available',
@@ -504,98 +506,99 @@ class LineChartSample extends StatelessWidget {
     }
     double chartWidth = budgetData.length * labelWidth;
     //print("budgetData $budgetData");
-    return budgetData.isNotEmpty ?
-    SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: SizedBox(
-        width: math.max(chartWidth, MediaQuery.of(context).size.width),
-        child: SfCartesianChart(
-          plotAreaBorderWidth: 0,
-          borderWidth: 0,
-          primaryXAxis: CategoryAxis(
-            labelStyle: FontManager().getTextStyle(context,
-                lWeight: FontWeight.w400,
-                fontSize: 10,
-                color: AppColors.accentColor),
-            majorGridLines: MajorGridLines(width: 0),
-            minorGridLines: MinorGridLines(width: 0),
-            edgeLabelPlacement: EdgeLabelPlacement.shift,
-            interval: 1,
-            labelRotation: labelRotation.toInt(),
-            maximumLabels: budgetData.length,
-            axisLine: AxisLine(width: 0),
-            majorTickLines: const MajorTickLines(
-                size: 0), // Hide major tick marks if desired
-            minorTickLines: const MinorTickLines(size: 0),
-          ),
-          primaryYAxis: NumericAxis(
-            isVisible: true,
-            labelStyle: FontManager().getTextStyle(context,
-                lWeight: FontWeight.w400,
-                fontSize: 10,
-                color: AppColors.accentColor),
-            majorGridLines: MajorGridLines(width: 0),
-            minorGridLines: MinorGridLines(width: 0),
-            axisLine: AxisLine(width: 0),
-            minimum: 0,
-            maximum: budgetData.isNotEmpty
-                ? budgetData.map((e) => e.y).reduce(math.max) * 1.2
-                : 1000.0,
-            majorTickLines: const MajorTickLines(
-                size: 0), // Hide major tick marks if desired
-            minorTickLines: const MinorTickLines(size: 0),
-          ),
-          series: <ChartSeries>[
-            SplineAreaSeries<_ChartData, String>(
-              dataSource: budgetData,
-              xValueMapper: (_ChartData data, _) => data.xString,
-              yValueMapper: (_ChartData data, _) => data.y,
-              color:
-                  AppColors.primaryColor.withOpacity(0.2), // Faded area color
-              borderWidth: 0, // No border, just the area
-              enableTooltip: false, // Disable tooltip for the area layer
-              splineType: SplineType.cardinal,
-              cardinalSplineTension: 0.9,
-            ),
-            SplineSeries<_ChartData, String>(
-              dataSource: budgetData,
-              xValueMapper: (_ChartData data, _) => data.xString,
-              yValueMapper: (_ChartData data, _) => data.y,
-              color: AppColors.primaryColor,
-              width: 1,
-              splineType: SplineType.cardinal,
-              cardinalSplineTension: 0.9,
-              name: '', // Hide series name
-            ),
-          ],
-          tooltipBehavior: TooltipBehavior(
-            enable: true,
-            builder: (dynamic data, dynamic point, dynamic series,
-                int pointIndex, int seriesIndex) {
-              final _ChartData chartData = data as _ChartData;
-              return Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: Colors.black,
+    return budgetData.isNotEmpty
+        ? SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: SizedBox(
+              width: math.max(chartWidth, MediaQuery.of(context).size.width),
+              child: SfCartesianChart(
+                plotAreaBorderWidth: 0,
+                borderWidth: 0,
+                primaryXAxis: CategoryAxis(
+                  labelStyle: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.w400,
+                      fontSize: 10,
+                      color: AppColors.accentColor),
+                  majorGridLines: MajorGridLines(width: 0),
+                  minorGridLines: MinorGridLines(width: 0),
+                  edgeLabelPlacement: EdgeLabelPlacement.shift,
+                  interval: 1,
+                  labelRotation: labelRotation.toInt(),
+                  maximumLabels: budgetData.length,
+                  axisLine: AxisLine(width: 0),
+                  majorTickLines: const MajorTickLines(
+                      size: 0), // Hide major tick marks if desired
+                  minorTickLines: const MinorTickLines(size: 0),
                 ),
-                padding: EdgeInsets.all(8),
-                child: Text('₹${chartData.y.toStringAsFixed(2)}',
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.w400,
-                        fontSize: 10,
-                        color: AppColors.backgroundColor)),
-              );
-            },
-          ),
-        ),
-      ),
-    ): Center(
-        child: Text(
-          'No spending data available',
-          style: FontManager().getTextStyle(context,
-              lWeight: FontWeight.bold, fontSize: 12, color: Colors.black),
-        ),
-      );
+                primaryYAxis: NumericAxis(
+                  isVisible: true,
+                  labelStyle: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.w400,
+                      fontSize: 10,
+                      color: AppColors.accentColor),
+                  majorGridLines: MajorGridLines(width: 0),
+                  minorGridLines: MinorGridLines(width: 0),
+                  axisLine: AxisLine(width: 0),
+                  minimum: 0,
+                  maximum: budgetData.isNotEmpty
+                      ? budgetData.map((e) => e.y).reduce(math.max) * 1.2
+                      : 1000.0,
+                  majorTickLines: const MajorTickLines(
+                      size: 0), // Hide major tick marks if desired
+                  minorTickLines: const MinorTickLines(size: 0),
+                ),
+                series: <ChartSeries>[
+                  SplineAreaSeries<_ChartData, String>(
+                    dataSource: budgetData,
+                    xValueMapper: (_ChartData data, _) => data.xString,
+                    yValueMapper: (_ChartData data, _) => data.y,
+                    color: AppColors.primaryColor
+                        .withOpacity(0.2), // Faded area color
+                    borderWidth: 0, // No border, just the area
+                    enableTooltip: false, // Disable tooltip for the area layer
+                    splineType: SplineType.cardinal,
+                    cardinalSplineTension: 0.9,
+                  ),
+                  SplineSeries<_ChartData, String>(
+                    dataSource: budgetData,
+                    xValueMapper: (_ChartData data, _) => data.xString,
+                    yValueMapper: (_ChartData data, _) => data.y,
+                    color: AppColors.primaryColor,
+                    width: 1,
+                    splineType: SplineType.cardinal,
+                    cardinalSplineTension: 0.9,
+                    name: '', // Hide series name
+                  ),
+                ],
+                tooltipBehavior: TooltipBehavior(
+                  enable: true,
+                  builder: (dynamic data, dynamic point, dynamic series,
+                      int pointIndex, int seriesIndex) {
+                    final _ChartData chartData = data as _ChartData;
+                    return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: Colors.black,
+                      ),
+                      padding: EdgeInsets.all(8),
+                      child: Text('₹${chartData.y.toStringAsFixed(2)}',
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.w400,
+                              fontSize: 10,
+                              color: AppColors.backgroundColor)),
+                    );
+                  },
+                ),
+              ),
+            ),
+          )
+        : Center(
+            child: Text(
+              'No spending data available',
+              style: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.bold, fontSize: 12, color: Colors.black),
+            ),
+          );
   }
 }
 

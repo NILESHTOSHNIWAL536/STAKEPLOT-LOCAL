@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -16,6 +17,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransactio
 import 'package:flutter_application_code_stakeplot/finvu_screens/access.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/appbar_widget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/verifyOTP.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
@@ -427,7 +429,8 @@ class _LinkingAccountState extends State<LinkingAccount> {
       }
       FinvuAccountLinkingRequestReference linkingReference =
           await finvuManager.linkAccounts(fipDetails, bankData);
-
+         isOtpWrong.value = false;
+          startOtpTimer();
       showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -484,35 +487,8 @@ class _LinkingAccountState extends State<LinkingAccount> {
             const SizedBox(
               height: 10,
             ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 20),
-            //   child: PinCodeTextField(
-            //     appContext: context,
-            //     length: _otpCodeLength,
-            //     controller: otpController,
-            //     keyboardType: TextInputType.number,
-            //     autoFocus: true,
-            //     animationType: AnimationType.fade,
-            //     pinTheme: PinTheme(
-            //       shape: PinCodeFieldShape.box,
-            //       borderRadius: BorderRadius.circular(10),
-            //       fieldHeight: MediaQuery.of(context).size.width * 0.12,
-            //       fieldWidth: MediaQuery.of(context).size.width * 0.12,
-            //       activeFillColor: Colors.white,
-            //       activeColor: Colors.blue,
-            //       selectedFillColor: Colors.white,
-            //       selectedColor: Colors.blue,
-            //       inactiveFillColor: Colors.grey[200],
-            //       inactiveColor: Colors.grey,
-            //     ),
-            //     enableActiveFill: true,
-            //     textStyle: TextStyle(fontSize: 20, color: Colors.black),
-            //     onChanged: (value) {
-            //       _otpCode.value = value;
-            //       _isOtpValid.value = value.length == _otpCodeLength;
-            //     },
-            //   ),
-            // ),
+            
+            
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: TextField(
@@ -531,6 +507,22 @@ class _LinkingAccountState extends State<LinkingAccount> {
                 },
               ),
             ),
+             Obx(
+              () => isOtpWrong.value
+                  ? Padding(
+                      padding: const EdgeInsets.fromLTRB(40, 0, 0, 5),
+                      child: Text(
+                        "Incorrect OTP entered",
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w300,
+                          fontSize: 10,
+                          color: Colors.red,
+                        ),
+                      ),
+                    )
+                  : SizedBox.shrink(), // Empty widget when OTP is not wrong
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 4, 0, 10),
               child: Row(
@@ -548,18 +540,30 @@ class _LinkingAccountState extends State<LinkingAccount> {
                       ),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      // Add logic for resending OTP
-                      
-                    },
-                    child: Text(
-                      "Resend OTP",
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.w400,
-                        fontSize: 12,
-                        color: AppColors.primaryColor,
+                   Obx(
+                    () => GestureDetector(
+                      onTap: canResendOtp.value
+                          ? ()async {
+                              // login(handleId.value, context);
+                              List<FinvuDiscoveredAccountInfo> bankData = listOfAccountAdded[fid] ?? [];
+                              FinvuAccountLinkingRequestReference linkingReference =await finvuManager.linkAccounts(fipDetails, bankData);
+                              startOtpTimer();
+                              isOtpWrong.value = false;
+                              // Restart the timer on resend
+                            }
+                          : null,
+                      child: Text(
+                        canResendOtp.value
+                            ? "Resend OTP"
+                            : "Resend in ${otpCountdown.value} seconds",
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: canResendOtp.value
+                              ? AppColors.primaryColor
+                              : Colors.grey,
+                        ),
                       ),
                     ),
                   ),
@@ -577,8 +581,8 @@ class _LinkingAccountState extends State<LinkingAccount> {
                           linkAccount(
                               _otpCode.value, linkingReference, fid, context);
                         } else {
-                          snackBarCalled(
-                              context, "Please enter OTP of length 6");
+                          // snackBarCalled(
+                          //     context, "Please enter OTP of length 6");
                         }
                       }
                     : null,
