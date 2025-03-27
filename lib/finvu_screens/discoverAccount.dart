@@ -9,7 +9,9 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchLinkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/appbar_widget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
@@ -40,39 +42,24 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
-        bottomNavigationBar: BottomBar(),
-       
-        body: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 20, 12, 10),
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            // decoration: BoxDecoration(
-            //     color: AppColors.mt, borderRadius: BorderRadius.circular(16)),
-            //padding: EdgeInsets.all(16),
-            child: SingleChildScrollView(
-              child: Column(children: [
-                Padding(
-                  padding:const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      "Pick atleast one to proceed",
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: AppColors.bg1),
-                    ),
-                  ),
-                ),
-               
-                InputDate("Search for banks", TextInputType.name, search),
-                Obx(() => getBanks.value
-                    ? getListOfFinvuBanks()
-                    : getListOfFinvuBanks()),
+    return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
+      bottomNavigationBar: BottomBar(),
+      extendBody: true,
+      appBar: getAppBar(context),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
+          child: SingleChildScrollView(
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height/1.18,
+              // color: Colorcodes.barGraphOrange,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  bankAccountAndSearchBar(),
                 InkWell(
                   onTap: () {
                     count.value=0;
@@ -80,7 +67,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                     getBankAccount();
                   },
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    padding: const EdgeInsets.symmetric(vertical: 5.0),
                     child: getButton(context, "Continue"),
                   ),
                 ),
@@ -92,11 +79,38 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
     );
   }
 
+
+  Widget bankAccountAndSearchBar(){
+    return Column(
+        children: [
+                 Padding(
+                  padding:const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "Pick atleast one to proceed",
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: AppColors.bg1),
+                    ),
+                  ),
+                ),
+                InputDate("Search for banks", TextInputType.name, search),
+                Obx(() => getBanks.value
+                    ? getListOfFinvuBanks()
+                    : getListOfFinvuBanks()),
+        ],
+    );
+  }
+
   Widget getListOfFinvuBanks() {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 1.47,
+      height: MediaQuery.of(context).size.height / 1.55,
       child: ListView.builder(
+        // shrinkWrap: true,
+        // physics: NeverScrollableScrollPhysics(),
         itemCount: fipDis.length,
         itemBuilder: (context, index) {
           return getBackUi(fipDis[index]);

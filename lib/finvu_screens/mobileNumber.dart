@@ -882,7 +882,12 @@ class _MobileNumberState extends State<MobileNumber> {
     }
   }
 
-  Widget buildSkipButton(BuildContext context) {
+  
+}
+
+
+
+Widget buildSkipButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
         showSkipDialog(context);
@@ -898,7 +903,7 @@ class _MobileNumberState extends State<MobileNumber> {
       ),
     );
   }
-}
+
  void startOtpTimer() {
     canResendOtp.value = false;
     otpCountdown.value = 30; // Reset countdown using .value
