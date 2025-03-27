@@ -151,8 +151,6 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
        }
   }
 
-
-
   void  LOGOUT() async
  {
  listOfAccountAdded.clear();

@@ -90,107 +90,109 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
       backgroundColor: AppColors.backgroundColor,
       extendBody: true,
       bottomSheet: bottomSheet(context),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        color: AppColors.backgroundColor,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 60, 10, 30),
-              child: Container(
-                height: 60,
-                child: ListView.builder(
-                  controller: _scrollController,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: autoScrollItems.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Container(
-                         padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 2),
-                        decoration: BoxDecoration(
-                          color: AppColors.mt,
-                          borderRadius: BorderRadius.circular(12)),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              autoScrollItems[index]['icon'],
-                              size: 20.0,
-                              color: AppColors.primaryColor,
-                            ),
-                            SizedBox(width: 8.0),
-                            Text(
-                              autoScrollItems[index]['text'],
-                              style: TextStyle(
-                                  fontSize: 16.0, fontWeight: FontWeight.bold),
-                            ),
-                          ],
+      body: SafeArea(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          color: AppColors.backgroundColor,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: Column(
+            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 60, 10, 30),
+                child: Container(
+                  height: 60,
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: autoScrollItems.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Container(
+                           padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 2),
+                          decoration: BoxDecoration(
+                            color: AppColors.mt,
+                            borderRadius: BorderRadius.circular(12)),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                autoScrollItems[index]['icon'],
+                                size: 20.0,
+                                color: AppColors.primaryColor,
+                              ),
+                              SizedBox(width: 8.0),
+                              Text(
+                                autoScrollItems[index]['text'],
+                                style: TextStyle(
+                                    fontSize: 16.0, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
-            ),
-            //Asset Image
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 40),
-              child:
-                  AvatarProfileImage(url: Sign.transform, width: 4, height: 4),
-            ),
-    
-            Text(
-              "Transform your money habits",
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.bold,
-                  fontSize: 22,
-                  color: AppColors.bg1),
-            ),
-            Text(
-              "with stakeplot",
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.bold,
-                  fontSize: 22,
-                  color: AppColors.bg1),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-
-            Text(
-              "Fuel Your Dreams.Fuel Your Wallet:Your Journey To Financial Success Starts Here",
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.w200, fontSize: 10, color: AppColors.bg1),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: InkWell(
-                  onTap: () {
-                   
-                    if (!widget.flag) initFinvuManager(context);
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MobileNumber(),
-                      ),
-                    );
-                    
-                  },
-                  child: getButton(
-                      context,
-                      widget.flag
-                          ? getFetch.value
-                              ? "Loading..."
-                              : "Fetch Bank Account"
-                          : "Start now")),
-            ),
-          ],
+              //Asset Image
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 40),
+                child:
+                    AvatarProfileImage(url: Sign.transform, width: 4, height: 4),
+              ),
+            
+              Text(
+                "Transform your money habits",
+                style: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 22,
+                    color: AppColors.bg1),
+              ),
+              Text(
+                "with stakeplot",
+                style: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 22,
+                    color: AppColors.bg1),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+        
+              Text(
+                "Fuel Your Dreams.Fuel Your Wallet:Your Journey To Financial Success Starts Here",
+                style: FontManager().getTextStyle(context,
+                    lWeight: FontWeight.w200, fontSize: 10, color: AppColors.bg1),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: InkWell(
+                    onTap: () {
+                     
+                      if (!widget.flag) initFinvuManager(context);
+        
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MobileNumber(),
+                        ),
+                      );
+                      
+                    },
+                    child: getButton(
+                        context,
+                        widget.flag
+                            ? getFetch.value
+                                ? "Loading..."
+                                : "Fetch Bank Account"
+                            : "Start now")),
+              ),
+            ],
+          ),
         ),
       ),
     );
