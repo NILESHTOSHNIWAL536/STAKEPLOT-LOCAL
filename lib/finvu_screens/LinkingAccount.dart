@@ -67,6 +67,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
     getData();
     getinfo();
     getFetch.value = false;
+    
   }
 
   void getinfo() async {
@@ -89,10 +90,13 @@ class _LinkingAccountState extends State<LinkingAccount> {
       body: SafeArea(
         child: Container(
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height/1.2,
+          height: MediaQuery.of(context).size.height/1.1,
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 3.0),
           child: Column(
             children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                 children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 child: Align(
@@ -112,8 +116,10 @@ class _LinkingAccountState extends State<LinkingAccount> {
               BankInfoUiContainer(),
               bankAccountList(),
               const SizedBox(
-                height: 3,
+                height: 2,
               ),
+            ],
+        ),
               InkWell(
                   onTap: () {
                     showModalBottomSheet(
@@ -358,11 +364,13 @@ class _LinkingAccountState extends State<LinkingAccount> {
   Widget bankAccountList() {
     double height = MediaQuery.of(context).size.height;
     count.value = 0;
+   
     return Container(
       //padding: const EdgeInsets.fromLTRB(14, 5, 16, 5),
       //here we can change height
+      // color: Colorcodes.barGraphOrange,
       width: MediaQuery.of(context).size.width / 1.1,
-      height: height / 1.7,
+      height: height / 1.65,
       child: SingleChildScrollView(
         child: Column(
           children: widget.listOfBankAccount.map((account) {
