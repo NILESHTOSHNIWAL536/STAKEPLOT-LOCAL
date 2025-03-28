@@ -78,11 +78,12 @@ void getConsentHandleId(context) async
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       String consentHandleId = data["consentHandleId"];
-      handleId.value=consentHandleId;
-      login(consentHandleId,context);
+       handleId.value=consentHandleId;
+       login(consentHandleId,context);
     } 
-  } catch (error) {
-       snackBarCalled(context, error.toString());
+  } catch (error)
+  {
+      snackBarCalled(context, error.toString());
   }
 }
 

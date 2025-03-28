@@ -203,6 +203,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
   return AnimatedContainer(
     duration: const Duration(milliseconds: 800),
     curve: Curves.easeInOut,
+     margin: EdgeInsets.only(bottom: 14),
     width: MediaQuery.of(context).size.width,
     constraints: BoxConstraints(
       minHeight: MediaQuery.of(context).size.height / 14,
@@ -210,8 +211,8 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
           ? MediaQuery.of(context).size.height / 2 // Expanded height
           : MediaQuery.of(context).size.height / 14, // Collapsed height
     ),
-    decoration: const BoxDecoration(
-      color: AppColors.rbi1,
+    decoration:  BoxDecoration(
+       color: Colorcodes.white,
     ),
     child: SingleChildScrollView(
       child: Column(
@@ -301,6 +302,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
             ),
           Container(
             width: MediaQuery.of(context).size.width,
+           
             decoration: const BoxDecoration(
               color: AppColors.rbi2,
             ),

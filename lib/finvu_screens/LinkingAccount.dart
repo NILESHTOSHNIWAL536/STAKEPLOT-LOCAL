@@ -623,33 +623,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
     );
   }
 
-  // void linkAccount(
-  //     String otp, linkingReference, String fid, BuildContext context) async {
-  //   try {
-  //     isOtpWrong.value = false;
-  //     FinvuConfirmAccountLinkingInfo data =
-  //         await finvuManager.confirmAccountLinking(linkingReference!, otp);
-  //    // snackBarCalled(context, "Linked Bank account Successfully...");
-  //     Navigator.pop(context);
-
-  //     data.linkedAccounts.forEach((finvu) {
-  //       listofLinkedAccount.add(finvu.accountReferenceNumber.toString());
-  //     });
-  //     //  listOfAccountAdded.containsKey(bankData.fipId)
-  //     listOfAccountAdded.remove(fid);
-  //     listofLinkedAccount.refresh();
-
-  //     accountLinked.add(fid);
-  //     otpController = TextEditingController();
-  //     _otpCode.value = "";
-  //     _isOtpValid.value = false;
-  //   } catch (e) {
-  //     snackBarCalled(
-  //         context,
-  //         "Error while verifying OTP or the account is already linked.",
-  //         Colors.red);
-  //   }
-  // }
+ 
 void linkAccount(
       String otp, linkingReference, String fid, BuildContext context) async {
     try {
