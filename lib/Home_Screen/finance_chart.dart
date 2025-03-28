@@ -387,7 +387,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
             ],
           ),
           // Icon button for navigation to ExpandedChartView (only in non-expanded view)
-          if (!widget.isExpandedView)
+          if (!widget.isExpandedView && widget.selectedButton.value == 'Month')
             Positioned(
               top: 8, // Adjust as needed
               right: 2, // Adjust as needed
