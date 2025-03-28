@@ -182,6 +182,14 @@ RxList getExploriaTrendingData = [].obs;
 RxMap<String, int> postExploriaCount = <String, int>{}.obs;
 RxMap<String, int> postExploriaCommentCount = <String, int>{}.obs;
 RxMap<String, int> supportExploriaCount = <String, int>{}.obs;
+
+  final RxList<String> monthLabels = <String>[].obs;
+  final Rx<Map<String, List<double>>> currentChartData =
+      Rx<Map<String, List<double>>>({});
+  final RxList<String> currentDays = <String>[].obs;
+  // final RxBool isYearView = false.obs;
+  final RxBool isLoading = false.obs;
+
 class Message {
   Message(
       {this.text,

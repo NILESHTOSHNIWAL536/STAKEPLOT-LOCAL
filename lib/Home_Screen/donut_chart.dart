@@ -116,31 +116,18 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.insert_chart_outlined,
-                          size: 60,
-                          color: AppColors.bg3.withOpacity(0.6),
-                        ),
-                        const SizedBox(height: 16),
+                       
                         Text(
-                          'No Expense Data Available',
+                         'No Spendings Available',
                           style: FontManager().getTextStyle(
-                            Get.context!,
+                            context,
                             lWeight: FontWeight.bold,
                             fontSize: 16,
                             color: AppColors.bg3.withOpacity(0.8),
                           ),
                         ),
                         const SizedBox(height: 8),
-                        Text(
-                          'Add some transactions to see the chart',
-                          style: FontManager().getTextStyle(
-                            Get.context!,
-                            lWeight: FontWeight.normal,
-                            fontSize: 14,
-                            color: AppColors.bg3.withOpacity(0.6),
-                          ),
-                        ),
+                       
                       ],
                     ),
                   )

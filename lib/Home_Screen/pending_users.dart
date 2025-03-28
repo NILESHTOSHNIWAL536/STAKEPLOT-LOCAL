@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
@@ -440,84 +441,4 @@ Widget _buildListTile(BuildContext context, Map<String, dynamic> data, bool isDu
     ],
   );
 }
-String formatDateTime(String dateString) {
-  DateTime dateTime = DateTime.parse(dateString).toLocal();
-  // print("dateString");
-  // print(dateString);
-  String formattedDate = DateFormat("dd MMM yyyy hh:mm a").format(dateTime);
-  //print(formattedDate);
-  return formattedDate;
-}
 
-Future<String?> getToken() async {
-  final SharedPreferences pref = await SharedPreferences.getInstance();
-  var accessToken = pref.getString("accessToken");
-
-  if (accessToken == null) {
-    return null;
-  } else {
-    return accessToken;
-  }
-}
-
-Future<http.Response> updateDataApiCall(String url, var body) async {
-  try {
-    var accessToken = await getToken();
-    final response = await http.patch(Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          "Authorization": "$accessToken",
-        },
-        body: jsonEncode(body));
-    return response;
-  } catch (error) {
-    rethrow;
-  }
-}
-
-void duesPaid(BuildContext context, int index) async {
-  final due = dueAmountRemainders[index];
-  final dueId = due['_id']?.toString();
-  final type = due['type'];
-
-  final apiUrl = "$url/reminders/request-approval/$type/$dueId";
-  try {
-    final response = await updateDataApiCall(apiUrl, {});
-    
-  } catch (e) {
-    snackBarCalled(context, "Error settling due");
-    print("Error in duesPaid: $e");
-  }
-}
-
-void settleAmount(
-    BuildContext context, String dueId, String type, String endUser) async {
-  final apiUrl = "$url/reminders/settle/$type/$dueId";
-  try {
-    var body = {
-      'splittedUserId': endUser,
-    };
-    final response = await updateDataApiCall(apiUrl, body);
-    printData(response);
-    
-  } catch (e) {
-    snackBarCalled(context, "Error settling due");
-    print("Error in duesPaid: $e");
-  }
-
-}
-
-void declineAmount(
-    BuildContext context, String dueId, String type, String endUser) async {
-  final apiUrl = "$url/reminders/decline-request/$type/$dueId";
-  try {
-    var body = {
-       "splittedUserId":endUser
-    };
-    final response = await updateDataApiCall(apiUrl, body);
-    printData(response);
-  } catch (e) {
-    snackBarCalled(context, "Error settling due");
-    print("Error in duesPaid: $e");
-  }
-}

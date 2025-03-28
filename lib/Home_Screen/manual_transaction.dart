@@ -746,20 +746,7 @@ class _ModalContentState extends State<ModalContent>
     );
   }
 
-// void showCustomFriendsModal2(BuildContext context) {
-//     showModalBottomSheet(
-//       context: context,
-//       isScrollControlled: true,
-//       shape: const RoundedRectangleBorder(
-//         borderRadius: BorderRadius.vertical(
-//           top: Radius.circular(18),
-//         ),
-//       ),
-//       builder: (BuildContext context) {
-//         return FriendsUi(); // Use the modal widget here
-//       },
-//     );
-//   }
+
   void splitUserAmount(
     BuildContext context,
     String totalAmount,

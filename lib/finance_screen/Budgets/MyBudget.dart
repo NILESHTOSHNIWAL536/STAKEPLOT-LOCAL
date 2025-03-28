@@ -102,7 +102,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
               ? data['data']['finalResult']['transactions'] ?? []
               : data['transactions'] ?? [];
           //  print(`Budget type: ${data['data']['categoryWiseSpendings']}`);
-          print(data['data']['categoryWiseSpendings']);
+       //   print(data['data']['categoryWiseSpendings']);
           // print('Transactions after assignment: $transactions');
 
           categoryWiseSpendings = List<Map<String, dynamic>>.from(
