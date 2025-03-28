@@ -7,6 +7,7 @@ import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart";
+import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 
 import 'package:intl/intl.dart';
@@ -371,16 +372,6 @@ class ThousandsFormatter extends TextInputFormatter {
   return formattedDate;
 }
 
-Future<String?> getToken() async {
-  final SharedPreferences pref = await SharedPreferences.getInstance();
-  var accessToken = pref.getString("accessToken");
-
-  if (accessToken == null) {
-    return null;
-  } else {
-    return accessToken;
-  }
-}
 
 Future<http.Response> updateDataApiCall(String url, var body) async {
   try {

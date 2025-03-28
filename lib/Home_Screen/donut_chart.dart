@@ -132,13 +132,14 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                     ),
                   )
                 :SfCircularChart(
-                            
+                             legend: Legend(isVisible: true, position: LegendPosition.bottom),
                             series: <CircularSeries>[
 
                               DoughnutSeries<ChartData, String>(
                                 dataSource: chartData,
                                 xValueMapper: (ChartData data, _) =>data.category,
                                 yValueMapper: (ChartData data, _) => data.value,
+                                pointColorMapper: (ChartData data, _) => data.color,
                                 explode: true,
                                  
                         
@@ -155,6 +156,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                 //     }
                                  
                                 // },
+
                                 onPointTap: (ChartPointDetails details) {
   if (chartData.isNotEmpty && details.pointIndex != null && details.pointIndex! < chartData.length) {
     if (selectedIndex.value == details.pointIndex) {
@@ -247,15 +249,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
   }
 
 
-  Widget emptyDataDonectChat(){
-      return Center(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height/3,
-          color: Colors.cyan,
-        ),
-      );
-  }
+ 
   
  Widget topHeader() {
      return Row(
@@ -272,3 +266,4 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                 );
   }
 }
+

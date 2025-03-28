@@ -53,7 +53,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
           child: SingleChildScrollView(
             child: Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height/1.18,
+              height: MediaQuery.of(context).size.height/1.22,
               // color: Colorcodes.barGraphOrange,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -67,7 +67,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                     getBankAccount();
                   },
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5.0),
+                    padding: const EdgeInsets.symmetric(vertical: 0.0),
                     child: getButton(context, "Continue"),
                   ),
                 ),
@@ -107,7 +107,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   Widget getListOfFinvuBanks() {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 1.55,
+      height: MediaQuery.of(context).size.height / 1.59,
       child: ListView.builder(
         // shrinkWrap: true,
         // physics: NeverScrollableScrollPhysics(),
@@ -293,88 +293,6 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
       );
     }
   }
-
-  // void linkedaccoutnData(bankData) async {
-  //   String fipId = bankData.fipId;
-  //   FinvuFIPInfo finvuFIPInfo = bankData;
-
-  //   try {
-  //     var fetchFIPDetails =
-  //         await finvuManager.fetchFIPDetails(fipId); //dhanagarbank
-  //     // var fetchFIPDetails=await finvuManager.fetchFIPDetails("dhanagarbank");
-  //     var typeIdentifiers = fetchFIPDetails.typeIdentifiers;
-
-  //     List<FinvuTypeIdentifierInfo> finvuTypeIdentifierInfo = [];
-
-  //     typeIdentifiers.forEach((e) {
-  //       e.identifiers.forEach((ele) {
-  //         FinvuTypeIdentifierInfo obj = FinvuTypeIdentifierInfo(
-  //           category: ele.category,
-  //           type: ele.type,
-
-  //           value: number.value, // dou
-  //         );
-  //         finvuTypeIdentifierInfo.add(obj);
-  //       });
-  //     });
-  //     FinvuFIPDetails fipDetails = FinvuFIPDetails(
-  //         fipId: fipId, typeIdentifiers: fetchFIPDetails.typeIdentifiers);
-
-  //     List<FinvuDiscoveredAccountInfo> info =
-  //         await finvuManager.discoverAccounts(
-  //             fipDetails, finvuFIPInfo.fipFitypes, finvuTypeIdentifierInfo);
-
-
-  //     //  Navigator.push(
-  //     //     context,
-  //     //     MaterialPageRoute(
-  //     //       builder: (context) => LinkingAccount(account: info,fipDetails: fipDetails,),
-  //     //     ),
-  //     //   );
-  //   } catch (e) {
-  //     snackBarCalled(context, "No Account Found...");
-  //   }
-  // }
 }
 
 
-
-
-//        String fipId=bankData.fipId;
-      //        FinvuFIPInfo finvuFIPInfo=bankData;
- 
-      //     try{
-      //   var fetchFIPDetails=await finvuManager.fetchFIPDetails(fipId); //dhanagarbank
-      //   // var fetchFIPDetails=await finvuManager.fetchFIPDetails("dhanagarbank");
-      //   var typeIdentifiers=fetchFIPDetails.typeIdentifiers;
-
-      //   List<FinvuTypeIdentifierInfo> finvuTypeIdentifierInfo=[];
-
-      //    typeIdentifiers.forEach((e){
-      //        e.identifiers.forEach((ele){
-      //            FinvuTypeIdentifierInfo obj=FinvuTypeIdentifierInfo(
-      //              category: ele.category,
-      //              type: ele.type,
-      //              value:number.value , // dou
-      //            );
-      //             finvuTypeIdentifierInfo.add(obj);       
-      //        });
-
-      //    });
-      //     FinvuFIPDetails fipDetails=FinvuFIPDetails(fipId:fipId , typeIdentifiers: fetchFIPDetails.typeIdentifiers);
-   
-      //     List<FinvuDiscoveredAccountInfo> info=await finvuManager.discoverAccounts(
-      //       fipDetails,finvuFIPInfo.fipFitypes,finvuTypeIdentifierInfo);
-
-
-          //  Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => LinkingAccount(account: info,fipDetails: fipDetails,),
-          //     ),
-          //   );
-
-
-      // }catch(e){
-      //      snackBarCalled(context,"No Account Found...");   
-      // } 

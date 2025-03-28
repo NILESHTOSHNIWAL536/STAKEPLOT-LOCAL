@@ -11,7 +11,7 @@ class BottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double bp = Platform.isIOS ? 20 : 0;
+    double bp = Platform.isIOS ? 14 : 14;
     return Container(
       width: MediaQuery.of(context).size.width,
        margin: EdgeInsets.only(bottom: bp ),

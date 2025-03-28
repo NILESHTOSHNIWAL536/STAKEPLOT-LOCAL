@@ -200,8 +200,8 @@ void forceLogoutUser(
       await getBankAccounts();
       // addThisDeviceToBackendDevice(_pref, context);
       // storeinmap(body, _pref, userpassword);
-      Phone.value = body['data']['phone'];
-      number.value = body['data']['phone'];
+      // Phone.value = body['data']['phone'];
+      // number.value = body['data']['phone'];
       isBankAccountLink.value = body['data']['isBankAccountLinked'];
       clearStack(context);
       Navigator.pushNamed(context, "/home");

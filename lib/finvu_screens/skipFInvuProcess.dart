@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 
 
 Future<bool?> showSkipModal2(BuildContext context) {
@@ -56,7 +58,10 @@ Future<bool?> showSkipModal2(BuildContext context) {
                 GestureDetector(
                     onTap: () {
                       Navigator.of(context).pop(true); // User chose "Yes"
-                      Navigator.of(context).pushReplacementNamed('/home');
+                      clearStack(context);
+                      logoutAndDisconnect();
+                      Navigator.of(context).pushNamed('/home');
+  
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width / 3,

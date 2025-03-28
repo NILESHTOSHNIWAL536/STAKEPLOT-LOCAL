@@ -539,10 +539,7 @@ class _MobileNumberState extends State<MobileNumber> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Align(
-                  //   alignment: Alignment.topRight,
-                  //   child: buildSkipButton(context),
-                  // ),
+                
                   Text(
                     "OTP Verification",
                     style: FontManager().getTextStyle(
@@ -884,7 +881,6 @@ class _MobileNumberState extends State<MobileNumber> {
 
   
 }
-
 
 
 

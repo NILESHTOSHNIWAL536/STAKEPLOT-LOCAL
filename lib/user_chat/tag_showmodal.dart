@@ -235,10 +235,25 @@ Widget getListOfCat(BuildContext context) {
           padding: const EdgeInsets.symmetric(horizontal: 5),
           child: Column(
              children: [
-                    AvatarProfileImage(
-                            url:  BudgetSubCategories.listofSubCategories[s].toString(),
-                            height: 40,
-                            width: 40,
+            //     Chip(
+            // avatar: ProfileImage(
+            //   url: BudgetSubCategories.listofSubCategories[s].toString(),
+            // ),
+            // label: textStyle(context: context,text:s,fontsize: widget.data['subcategory']==s?13:11,fontWeight: FontWeight.bold,c: widget.data['subcategory']==s?AppColors.bg2:AppColors.primaryColor),
+            // backgroundColor: AppColors.button,
+            // shape: RoundedRectangleBorder(
+            //   borderRadius: BorderRadius.circular(12),
+            // ),
+            // ),
+                    SizedBox(
+                      height: MediaQuery.sizeOf(context).height/30,
+                      width: MediaQuery.sizeOf(context).width/10,
+                      
+                      child: AvatarProfileImage(
+                              url:  BudgetSubCategories.listofSubCategories[s].toString(),
+                              height: 40,
+                              width: 40,
+                      ),
                     ),
                     const SizedBox(height: 5,),
                    Obx(()=> loadAgain.value?

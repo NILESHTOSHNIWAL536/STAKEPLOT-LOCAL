@@ -1272,7 +1272,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
         sendNotificationsToDevice(
             e['id'],
             context,
-            "${userName.value} has sent u a Split Bill..Of ${name} Of ${e['amount']}");
+            "${userName.value} has sent u a split bill for ${name} Of ${e['amount']}");
       });
 
       addSocketMessage(nameList, amount.toString(), "selectedCategory2".toString(),

@@ -438,7 +438,7 @@ class _TextScreenState extends State<TextScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       child: postSubmitted
-          ? const SuccessPost()
+          ? const SuccessPost(celebrationText: "Posted" ,)
           : SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -592,7 +592,7 @@ class _TextScreenState extends State<TextScreen> {
 
                         if (mounted) {
                           Navigator.pop(context);
-                          Get.to(() => const SuccessPost());
+                          Get.to(() => const SuccessPost(celebrationText: "posted",));
                         }
                       } catch (e) {
                         print(

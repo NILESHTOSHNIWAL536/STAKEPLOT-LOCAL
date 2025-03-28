@@ -51,14 +51,14 @@ class _CommunityState extends State<Community> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        extendBody: true,
-        backgroundColor: AppColors.backgroundColor,
-        bottomNavigationBar: BottomNavigations(data: 2),
-        body: Container(
+    return Scaffold(
+      extendBody: true,
+      backgroundColor: AppColors.backgroundColor,
+      bottomNavigationBar: BottomNavigations(data: 2),
+      body: SafeArea(
+        child: Container(
           height: MediaQuery.of(context).size.height/1.1,
-          padding: const EdgeInsets.all(18.0),
+          padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
             controller: scrollControllerPost,
             child: Column(

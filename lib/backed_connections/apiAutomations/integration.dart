@@ -78,11 +78,12 @@ void getConsentHandleId(context) async
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       String consentHandleId = data["consentHandleId"];
-      handleId.value=consentHandleId;
-      login(consentHandleId,context);
+       handleId.value=consentHandleId;
+       login(consentHandleId,context);
     } 
-  } catch (error) {
-       snackBarCalled(context, error.toString());
+  } catch (error)
+  {
+      snackBarCalled(context, error.toString());
   }
 }
 
@@ -144,16 +145,16 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
   void logoutAndDisconnect() async
   {
        try{
-          LOGOUT();
-          finvuManager.disconnect();
+           clearLocalData();
+           await finvuManager.logout();
+           finvuManager.disconnect();
        }catch(e){
+          print("error in logoutAndDisconnect");
           print(e);
        }
   }
 
-
-
-  void  LOGOUT() async
+  void  clearLocalData() async
  {
  listOfAccountAdded.clear();
  FinvuFIPDetailsList.clear();
@@ -175,15 +176,6 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
  number.value="";
  consentUserId.value="";
  handleId.value="";
-
-              try{
-                await finvuManager.logout(); 
-              }
-              catch(e)
-              {
-                print(e);
-              }
-      
     debugPrint('getConsentHandleStatus');
 }
 

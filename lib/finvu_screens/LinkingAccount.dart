@@ -15,6 +15,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/access.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/appbar_widget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
@@ -84,10 +85,11 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        bottomNavigationBar: BottomBar(),
-        body: Container(
+    return Scaffold(
+      bottomNavigationBar: BottomBar(),
+      appBar:getAppBar(context),
+      body: SafeArea(
+        child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 3.0),
@@ -116,14 +118,20 @@ class _LinkingAccountState extends State<LinkingAccount> {
               ),
               InkWell(
                   onTap: () {
+                    if(accountAdded.isNotEmpty){
+                         snackBarCalledSignup(context, "Please link All seleted Account", Colorcodes.red);
+                         return;
+                    };
+
                     showModalBottomSheet(
                       context: context,
                       builder: (context) {
                         return accountLinkedUi();
                       },
                     );
+
                   },
-                  child: getButton(context, "Authorise")),
+                  child: Obx(()=> accountAdded.isNotEmpty? getButton(context, "Authorise",AppColors.bg3,Colorcodes.white):getButton(context, "Authorise"))),
             ],
           ),
         ),
@@ -131,6 +139,9 @@ class _LinkingAccountState extends State<LinkingAccount> {
     );
   }
 
+
+  
+ 
   Widget accountLinkedUi() {
     return Container(
         width: MediaQuery.of(context).size.width,
@@ -362,7 +373,8 @@ class _LinkingAccountState extends State<LinkingAccount> {
       //padding: const EdgeInsets.fromLTRB(14, 5, 16, 5),
       //here we can change height
       width: MediaQuery.of(context).size.width / 1.1,
-      height: height / 1.5,
+      height: height / 1.7,
+      // color: AppColors.bg3,
       child: SingleChildScrollView(
         child: Column(
           children: widget.listOfBankAccount.map((account) {
@@ -372,7 +384,6 @@ class _LinkingAccountState extends State<LinkingAccount> {
               children: [
                 // Display bank name and image before calling linkedaccoutnData
                 getBankNameAndImage(account),
-
                 FutureBuilder<Widget>(
                   future: linkedaccoutnData(account),
                   builder: (context, snapshot) {
@@ -484,6 +495,10 @@ class _LinkingAccountState extends State<LinkingAccount> {
               child: TextField(
                 controller: otpController,
                 keyboardType: TextInputType.number,
+                onSubmitted: (value)
+                {
+                    linkAccount(_otpCode.value, linkingReference, fid, context);
+                },
                 decoration: InputDecoration(
                   hintText: 'Enter OTP',
                   border: OutlineInputBorder(
@@ -492,10 +507,8 @@ class _LinkingAccountState extends State<LinkingAccount> {
                 ),
                 onChanged: (value) {
                   _otpCode.value = value;
-                  _isOtpValid.value =
-                      value.isNotEmpty; 
-                      // Or some other validation logic
-                       isOtpWrong.value = false;
+                  _isOtpValid.value =value.isNotEmpty; 
+                  isOtpWrong.value = false;
                 },
               ),
             ),
@@ -541,7 +554,6 @@ class _LinkingAccountState extends State<LinkingAccount> {
                               FinvuAccountLinkingRequestReference linkingReference =await finvuManager.linkAccounts(fipDetails, bankData);
                               startOtpTimer();
                               isOtpWrong.value = false;
-                              
                             }
                           : null,
                       child: Text(
@@ -563,10 +575,10 @@ class _LinkingAccountState extends State<LinkingAccount> {
               ),
             ),
             const SizedBox(
-              height: 20,
+              height: 5,
             ),
             Center(
-              child: GestureDetector(
+              child: InkWell(
                 onTap: _isOtpValid.value
                     ? () {
                         if (_isOtpValid.value) {
@@ -613,38 +625,11 @@ class _LinkingAccountState extends State<LinkingAccount> {
     );
   }
 
-  // void linkAccount(
-  //     String otp, linkingReference, String fid, BuildContext context) async {
-  //   try {
-  //     isOtpWrong.value = false;
-  //     FinvuConfirmAccountLinkingInfo data =
-  //         await finvuManager.confirmAccountLinking(linkingReference!, otp);
-  //    // snackBarCalled(context, "Linked Bank account Successfully...");
-  //     Navigator.pop(context);
-
-  //     data.linkedAccounts.forEach((finvu) {
-  //       listofLinkedAccount.add(finvu.accountReferenceNumber.toString());
-  //     });
-  //     //  listOfAccountAdded.containsKey(bankData.fipId)
-  //     listOfAccountAdded.remove(fid);
-  //     listofLinkedAccount.refresh();
-
-  //     accountLinked.add(fid);
-  //     otpController = TextEditingController();
-  //     _otpCode.value = "";
-  //     _isOtpValid.value = false;
-  //   } catch (e) {
-  //     snackBarCalled(
-  //         context,
-  //         "Error while verifying OTP or the account is already linked.",
-  //         Colors.red);
-  //   }
-  // }
+ 
 void linkAccount(
       String otp, linkingReference, String fid, BuildContext context) async {
     try {
       isOtpWrong.value = false;
-      print("heyyyyyyyy nottt");
       FinvuConfirmAccountLinkingInfo data =
           await finvuManager.confirmAccountLinking(linkingReference!, otp);
       snackBarCalled(context, "Linked Bank account Successfully...");
@@ -661,12 +646,11 @@ void linkAccount(
       //otpController = TextEditingController();
       otpController.clear();
       _otpCode.value = "";
+        accountAdded.clear();
       _isOtpValid.value = false;
-    } catch (e) {
-      print("Error during OTP verification: $e"); // Debug the exact error
+    } catch (e)
+    {
       isOtpWrong.value = true;
-      print("isOtpWrongggggggggggggg $isOtpWrong");
-      // Show "Incorrect OTP entered"
     }
   }
 
