@@ -31,11 +31,12 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
   List<dynamic> transactions = []; // Store raw transactions from API
   Map<String, dynamic>? budgetData;
   List<String>? insightsData;
-
+List<Map<String, dynamic>> categoryWiseSpendings = [];
+  List<Map<String, dynamic>> graphData = [];
   @override
   void initState() {
     super.initState();
-    getmonthlyBudgetData();
+   
     fetchBudgetData();
     fetchBudgetInsights();
     // getInsights(context);
@@ -98,6 +99,20 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
           //  print(`Budget type: ${data['data']['categoryWiseSpendings']}`);
           print(data['data']['categoryWiseSpendings']);
           // print('Transactions after assignment: $transactions');
+          
+     categoryWiseSpendings = List<Map<String, dynamic>>.from(
+            data['data']['categoryWiseSpendings'] ?? []);
+             graphData = categoryWiseSpendings.map((item) {
+          return {
+            'title':
+                '${item['category']} ${item['percentage'].toStringAsFixed(1)}%',
+            'value': (item['spending'] as num).toDouble(),
+          };
+        }).toList();
+
+       
+       
+
 
           budgetSpentData.clear();
           //  print('Cleared budgetSpentData');
@@ -207,30 +222,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     }
   }
 
-  void getmonthlyBudgetData() {
-    List list = widget.data['categoryBudgets'] ?? [];
-    monthlyBudgetData.clear();
-    categories.clear();
-    graphObj.clear();
-
-    for (int i = 0; i < list.length; i++) {
-      double amount = double.parse(list[i]['amount'].toString());
-      monthlyBudgetData.add(FlSpot(i.toDouble(), amount));
-    }
-    double totalAmount = list.fold(
-        0, (sum, item) => sum + double.parse(item['amount'].toString()));
-    for (int i = 0; i < list.length; i++) {
-      double amount = double.parse(list[i]['amount'].toString());
-      double percentage = totalAmount > 0 ? (amount / totalAmount) * 100 : 0;
-      categories[list[i]['category']] = percentage;
-      graphObj.add({
-        'title':
-            list[i]['category'] + " " + percentage.toStringAsFixed(1) + "%",
-        'value': percentage,
-      });
-    }
-    setState(() {});
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -450,7 +442,9 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
 
   Widget graph() {
     return PieChartGraph(
-        title: "Categories", graphData: graphObj, graphDisc: []);
+         title: "Categories",
+        graphData: graphData,
+        graphDisc: [],);
   }
 
   Widget _buildCategoriesChart() {
@@ -613,26 +607,41 @@ class _ChartData {
 }
 
 // PieChartSample remains unchanged
-class PieChartSample extends StatelessWidget {
-  final Map<String, double> categories;
 
-  const PieChartSample({required this.categories});
+class PieChartSample extends StatelessWidget {
+  final List<Map<String, dynamic>> categoryWiseSpendings;
+
+  const PieChartSample({required this.categoryWiseSpendings});
 
   @override
   Widget build(BuildContext context) {
-    double totalAmount =
-        categories.values.fold(0.0, (sum, amount) => sum + amount);
+    if (categoryWiseSpendings.isEmpty) {
+      return Center(
+        child: Text(
+          'No spending data available',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+      );
+    }
+
+    double totalSpending = categoryWiseSpendings.fold(
+        0.0, (sum, item) => sum + (item['spending'] as num).toDouble());
+
     return AspectRatio(
       aspectRatio: 1.4,
       child: PieChart(
         PieChartData(
-          sections: categories.entries.map((entry) {
-            double percentage =
-                totalAmount > 0 ? (entry.value / totalAmount) * 100 : 0;
+          sections: categoryWiseSpendings.map((entry) {
+            final double spending = (entry['spending'] as num).toDouble();
+            final double percentage = (entry['percentage'] as num).toDouble();
             return PieChartSectionData(
-              color: _getColor(entry.key),
-              value: entry.value,
-              title: '${entry.key} : ${percentage.toStringAsFixed(1)}%',
+              color: _getColor(entry['category'] as String),
+              value: spending, // Use spending as the value for the pie slice size
+              title: '${entry['category']}: ${percentage.toStringAsFixed(1)}%',
               radius: 50,
               badgePositionPercentageOffset: 1.7,
               titleStyle: TextStyle(

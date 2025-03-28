@@ -539,10 +539,7 @@ class _MobileNumberState extends State<MobileNumber> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: buildSkipButton(context),
-                  ),
+                
                   Text(
                     "OTP Verification",
                     style: FontManager().getTextStyle(
@@ -887,22 +884,6 @@ class _MobileNumberState extends State<MobileNumber> {
 
 
 
-Widget buildSkipButton(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        showSkipDialog(context);
-      },
-      child: Text(
-        "Skip",
-        style: FontManager().getTextStyle(
-          context,
-          lWeight: FontWeight.bold,
-          fontSize: 12,
-          color: AppColors.bg1,
-        ),
-      ),
-    );
-  }
 
  void startOtpTimer() {
     canResendOtp.value = false;
