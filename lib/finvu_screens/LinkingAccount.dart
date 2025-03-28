@@ -493,7 +493,9 @@ class _LinkingAccountState extends State<LinkingAccount> {
                 onChanged: (value) {
                   _otpCode.value = value;
                   _isOtpValid.value =
-                      value.isNotEmpty; // Or some other validation logic
+                      value.isNotEmpty; 
+                      // Or some other validation logic
+                       isOtpWrong.value = false;
                 },
               ),
             ),
@@ -611,9 +613,38 @@ class _LinkingAccountState extends State<LinkingAccount> {
     );
   }
 
-  void linkAccount(
+  // void linkAccount(
+  //     String otp, linkingReference, String fid, BuildContext context) async {
+  //   try {
+  //     isOtpWrong.value = false;
+  //     FinvuConfirmAccountLinkingInfo data =
+  //         await finvuManager.confirmAccountLinking(linkingReference!, otp);
+  //    // snackBarCalled(context, "Linked Bank account Successfully...");
+  //     Navigator.pop(context);
+
+  //     data.linkedAccounts.forEach((finvu) {
+  //       listofLinkedAccount.add(finvu.accountReferenceNumber.toString());
+  //     });
+  //     //  listOfAccountAdded.containsKey(bankData.fipId)
+  //     listOfAccountAdded.remove(fid);
+  //     listofLinkedAccount.refresh();
+
+  //     accountLinked.add(fid);
+  //     otpController = TextEditingController();
+  //     _otpCode.value = "";
+  //     _isOtpValid.value = false;
+  //   } catch (e) {
+  //     snackBarCalled(
+  //         context,
+  //         "Error while verifying OTP or the account is already linked.",
+  //         Colors.red);
+  //   }
+  // }
+void linkAccount(
       String otp, linkingReference, String fid, BuildContext context) async {
     try {
+      isOtpWrong.value = false;
+      print("heyyyyyyyy nottt");
       FinvuConfirmAccountLinkingInfo data =
           await finvuManager.confirmAccountLinking(linkingReference!, otp);
       snackBarCalled(context, "Linked Bank account Successfully...");
@@ -627,14 +658,15 @@ class _LinkingAccountState extends State<LinkingAccount> {
       listofLinkedAccount.refresh();
 
       accountLinked.add(fid);
-      otpController = TextEditingController();
+      //otpController = TextEditingController();
+      otpController.clear();
       _otpCode.value = "";
       _isOtpValid.value = false;
     } catch (e) {
-      snackBarCalled(
-          context,
-          "Error while verifying OTP or the account is already linked.",
-          Colors.red);
+      print("Error during OTP verification: $e"); // Debug the exact error
+      isOtpWrong.value = true;
+      print("isOtpWrongggggggggggggg $isOtpWrong");
+      // Show "Incorrect OTP entered"
     }
   }
 
