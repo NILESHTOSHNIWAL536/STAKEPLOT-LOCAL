@@ -495,6 +495,10 @@ class _LinkingAccountState extends State<LinkingAccount> {
               child: TextField(
                 controller: otpController,
                 keyboardType: TextInputType.number,
+                onSubmitted: (value)
+                {
+                    linkAccount(_otpCode.value, linkingReference, fid, context);
+                },
                 decoration: InputDecoration(
                   hintText: 'Enter OTP',
                   border: OutlineInputBorder(
@@ -503,9 +507,8 @@ class _LinkingAccountState extends State<LinkingAccount> {
                 ),
                 onChanged: (value) {
                   _otpCode.value = value;
-                  _isOtpValid.value =
-                      value.isNotEmpty; 
-                       isOtpWrong.value = false;
+                  _isOtpValid.value =value.isNotEmpty; 
+                  isOtpWrong.value = false;
                 },
               ),
             ),
@@ -551,7 +554,6 @@ class _LinkingAccountState extends State<LinkingAccount> {
                               FinvuAccountLinkingRequestReference linkingReference =await finvuManager.linkAccounts(fipDetails, bankData);
                               startOtpTimer();
                               isOtpWrong.value = false;
-                            
                             }
                           : null,
                       child: Text(
@@ -576,7 +578,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
               height: 5,
             ),
             Center(
-              child: GestureDetector(
+              child: InkWell(
                 onTap: _isOtpValid.value
                     ? () {
                         if (_isOtpValid.value) {
