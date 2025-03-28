@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 
 
@@ -58,6 +59,7 @@ Future<bool?> showSkipModal2(BuildContext context) {
                     onTap: () {
                       Navigator.of(context).pop(true); // User chose "Yes"
                       clearStack(context);
+                      logoutAndDisconnect();
                       Navigator.of(context).pushNamed('/home');
   
                     },

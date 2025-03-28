@@ -53,7 +53,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
           child: SingleChildScrollView(
             child: Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height/1.18,
+              height: MediaQuery.of(context).size.height/1.22,
               // color: Colorcodes.barGraphOrange,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -67,7 +67,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                     getBankAccount();
                   },
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5.0),
+                    padding: const EdgeInsets.symmetric(vertical: 0.0),
                     child: getButton(context, "Continue"),
                   ),
                 ),
@@ -107,7 +107,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   Widget getListOfFinvuBanks() {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 1.55,
+      height: MediaQuery.of(context).size.height / 1.59,
       child: ListView.builder(
         // shrinkWrap: true,
         // physics: NeverScrollableScrollPhysics(),
