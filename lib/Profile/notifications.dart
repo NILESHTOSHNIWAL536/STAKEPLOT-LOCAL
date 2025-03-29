@@ -774,24 +774,24 @@ class _NotificationsState extends State<Notifications> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: AppColors.backgroundColor,
-          elevation: 0,
-          title: Text(
-            "Notifications",
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.w600,
-              fontSize: 20,
-              color: AppColors.accentColor,
-            ),
-          ),
-          centerTitle: true,
-        ),
+    return Scaffold(
+      appBar: AppBar(
         backgroundColor: AppColors.backgroundColor,
-        body: LayoutBuilder(
+        elevation: 0,
+        title: Text(
+          "Notifications",
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.w600,
+            fontSize: 20,
+            color: AppColors.accentColor,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      backgroundColor: AppColors.backgroundColor,
+      body: SafeArea(
+        child: LayoutBuilder(
           builder: (context, constraints) {
             return Padding(
               padding: EdgeInsets.symmetric(

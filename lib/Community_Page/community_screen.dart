@@ -57,6 +57,7 @@ class _CommunityState extends State<Community> {
       bottomNavigationBar: BottomNavigations(data: 2),
       body: SafeArea(
         child: Container(
+          
           height: MediaQuery.of(context).size.height/1.1,
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(

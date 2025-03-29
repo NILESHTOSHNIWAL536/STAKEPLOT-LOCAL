@@ -50,13 +50,13 @@ class _ManualtransactionState extends State<Manualtransaction> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              IconButton(
-                  onPressed: () {},
-                  icon: AvatarProfileImage(
+             
+                  
+                  AvatarProfileImage(
                     url: HomePageIcons.manualTransaction,
                     height: 24,
                     width: 24,
-                  )),
+                  ),
               SizedBox(width: MediaQuery.of(context).size.width / 52),
               Container(
                 

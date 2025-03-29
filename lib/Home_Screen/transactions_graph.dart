@@ -242,10 +242,10 @@ class _BarChartWidgetState extends State<BarChartWidget> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (!widget.isExpandedView)
-            Container(
-              child: _buildYAxisLabels(fontSizeFactor),
-            ),
+          // if (!widget.isExpandedView)
+          //   Container(
+          //     child: _buildYAxisLabels(fontSizeFactor),
+          //   ),
           Expanded(
             child: widget.selectedButton.value != 'week'
                 ? SingleChildScrollView(
