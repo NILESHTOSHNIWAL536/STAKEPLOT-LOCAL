@@ -428,15 +428,14 @@ class _LinkingAccountState extends State<LinkingAccount> {
             Colorcodes.red);
         return;
       }
-      FinvuAccountLinkingRequestReference linkingReference =
-          await finvuManager.linkAccounts(fipDetails, bankData);
+         linkingReference = await finvuManager.linkAccounts(fipDetails, bankData);
          isOtpWrong.value = false;
           startOtpTimer();
       showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         builder: (BuildContext context) {
-          return verify(linkingReference, fipId, fipDetails, info, context);
+          return verify(fipId, fipDetails, info, context);
         },
       );
     } catch (e) {
@@ -444,7 +443,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
     }
   }
 
-  Widget verify(linkingReference, fid, FinvuFIPDetails fipDetails,
+  Widget verify(fid, FinvuFIPDetails fipDetails,
       FinvuFIPInfo info, context) {
     return AnimatedPadding(
       padding: MediaQuery.of(context)
@@ -497,7 +496,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                 keyboardType: TextInputType.number,
                 onSubmitted: (value)
                 {
-                    linkAccount(_otpCode.value, linkingReference, fid, context);
+                    linkAccount(_otpCode.value, fid, context);
                 },
                 decoration: InputDecoration(
                   hintText: 'Enter OTP',
@@ -509,6 +508,8 @@ class _LinkingAccountState extends State<LinkingAccount> {
                   _otpCode.value = value;
                   _isOtpValid.value =value.isNotEmpty; 
                   isOtpWrong.value = false;
+                  print(_otpCode.value);
+
                 },
               ),
             ),
@@ -551,7 +552,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                           ? ()async {
                               // login(handleId.value, context);
                               List<FinvuDiscoveredAccountInfo> bankData = listOfAccountAdded[fid] ?? [];
-                              FinvuAccountLinkingRequestReference linkingReference =await finvuManager.linkAccounts(fipDetails, bankData);
+                              linkingReference =await finvuManager.linkAccounts(fipDetails, bankData);
                               startOtpTimer();
                               isOtpWrong.value = false;
                             }
@@ -581,13 +582,13 @@ class _LinkingAccountState extends State<LinkingAccount> {
               child: InkWell(
                 onTap: _isOtpValid.value
                     ? () {
-                        if (_isOtpValid.value) {
-                          linkAccount(
-                              _otpCode.value, linkingReference, fid, context);
-                        } else {
-                          // snackBarCalled(
-                          //     context, "Please enter OTP of length 6");
-                        }
+                         
+                         if(_otpCode.value.length<6){
+                          snackBarCalledSignup(context, "enter valid otp");
+                         }else{
+                          linkAccount(_otpCode.value, fid, context);
+                         }
+                      
                       }
                     : null,
                 child: Obx(
@@ -626,12 +627,10 @@ class _LinkingAccountState extends State<LinkingAccount> {
   }
 
  
-void linkAccount(
-      String otp, linkingReference, String fid, BuildContext context) async {
+void linkAccount( String otp, String fid, BuildContext context) async {
     try {
       isOtpWrong.value = false;
-      FinvuConfirmAccountLinkingInfo data =
-          await finvuManager.confirmAccountLinking(linkingReference!, otp);
+      FinvuConfirmAccountLinkingInfo data = await finvuManager.confirmAccountLinking(linkingReference, otp.toString().trim());
       snackBarCalled(context, "Linked Bank account Successfully...");
       Navigator.pop(context);
 
@@ -641,7 +640,6 @@ void linkAccount(
       //  listOfAccountAdded.containsKey(bankData.fipId)
       listOfAccountAdded.remove(fid);
       listofLinkedAccount.refresh();
-
       accountLinked.add(fid);
       //otpController = TextEditingController();
       otpController.clear();

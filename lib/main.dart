@@ -103,6 +103,7 @@ class _MyAppState extends State<MyApp> {
       '/signup': (context) => SignUp(),  
       '/home': (context) => HomePage(),  
       '/Notifications': (context) => Notifications(),  
+      '/comment': (context) => Notifications(),  
       '/TribeSearch': (context) => TribeSearch(),  
       '/Friends': (context) => Friends(),    
       '/TribeChats': (context) => TribeChats(), 

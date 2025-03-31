@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
+import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
 import 'package:flutter_application_code_stakeplot/animated/userLoginedAlready.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
@@ -200,8 +201,8 @@ void forceLogoutUser(
       await getBankAccounts();
       // addThisDeviceToBackendDevice(_pref, context);
       // storeinmap(body, _pref, userpassword);
-      Phone.value = body['data']['phone'];
-      number.value = body['data']['phone'];
+      // Phone.value = body['data']['phone'];
+      // number.value = body['data']['phone'];
       isBankAccountLink.value = body['data']['isBankAccountLinked'];
       clearStack(context);
       Navigator.pushNamed(context, "/home");
@@ -433,6 +434,29 @@ Future<void> handleSignInGoogle(BuildContext context) async {
   } catch (error) {}
 }
 
+
+Future<void> addThisDeviceToBackend(deviceData, context) async {
+  final SharedPreferences _pref = await SharedPreferences.getInstance();
+  var accessToken = _pref.getString("accessToken");
+
+  final response = await http.post(
+    Uri.parse('${url}/notify/addDeviceToNotify/'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      "Authorization": "$accessToken",
+    },
+    body: jsonEncode(deviceData),
+  );
+  printData(response);
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    final body = json.decode(response.body);
+  } else {}
+}
+
+
+
+
+
 void clearGetX() {
   income = 0.obs;
   messages.clear();
@@ -494,146 +518,4 @@ void clearGetX() {
   accountId.value="";
    displayedData.clear();
   bankAccountLinkedList.clear();
-}
-
-// void oneSignalApis(context) async {
-// String appId = "ff897875-4bac-4b0c-9bb6-a371998d4d1c";
-
-// await OneSignal.shared.setAppId(appId);
-
-// OneSignal().promptUserForPushNotificationPermission().then((granted) {
-//   if (granted) {
-//     print("Notification permission granted");
-//   } else {
-//     print("Notification permission not granted");
-//   }
-// });
-// var status = await OneSignal.shared.getDeviceState();
-// String? userDeviceId = status?.userId;
-// print("userDeviceId"); // Get us the device Unique Id
-// print(userDeviceId); // Get us the device Unique Id
-// await getDeviceInfo(userDeviceId!, context);
-
-// OneSignal.shared
-//     .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-//   print("Notification Opened: ${result.notification.additionalData}");
-
-//   String? screen = result.notification.additionalData?['screen'];
-//   print("Screen to Navigate To: $screen");
-//   // var data=await  getDeviceInfo();
-
-//   if (screen != null) {
-//     Navigator.pushNamed(context, screen); // Navigate to the screen
-//   } else {
-//     print("No screen specified in additional data.");
-//   }
-// });
-
-// var data=await  getDeviceInfo();
-// print(data);
-// }
-
-Future<void> initializeOneSignal(BuildContext context) async {
-  final SharedPreferences pref = await SharedPreferences.getInstance();
-  String key = "deviceInfo";
-  var json;
-
-  if(pref.containsKey(key)){
-     json = jsonDecode(pref.getString("deviceInfo") ?? "{}");
-  }
-  
-  if (!pref.containsKey(key) || json["deviceId"]=="deviceData.value")
-  {
-    await oneSignalInit();
-    await Future.delayed(Duration(seconds: 3)); // Small delay
-    String? userDeviceId = await OneSignal.User.pushSubscription.id;
-    deviceData['deviceId'] = userDeviceId ?? "deviceData.value";
-    pref.setString(key, jsonEncode(deviceData));
-  }
-  addThisDeviceToBackendDevice(pref, context);
-  navigateScreen(context);
-}
-
-void navigateScreen(context) {
-  OneSignal.Notifications.addClickListener((event) {
-    String? screen = event.notification.additionalData?['screen'];
-    if (screen != null) {
-      Navigator.pushNamed(context, screen);
-    } else {
-      print("No screen specified in additional data.");
-    }
-  });
-}
-
-Future<void> oneSignalInit() async {
-  try {
-    String appId = "66bc1852-d40b-4ad0-8a11-5e3d0da698a2";
-    OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
-    OneSignal.initialize(appId);
-    OneSignal.Notifications.requestPermission(true);
-  } catch (e) {
-     
-  }
-}
-
-Future<void> getDeviceInfo(
-    String playerId,
-    context,
-    TextEditingController emailController,
-    TextEditingController passwordController) async {
-  final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-  deviceData.value = {};
-  final SharedPreferences pref = await SharedPreferences.getInstance();
-  String key = "deviceInfo";
-
-  try {
-    if (Platform.isAndroid) {
-      final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-
-      deviceData.value = {
-        'deviceId': playerId,
-        'brand': androidInfo.brand,
-        'device': androidInfo.device,
-        'model': androidInfo.model,
-        'os': 'Android',
-      };
-    } else if (Platform.isIOS) {
-      // For iOS devices
-      final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      deviceData.value = {
-        'deviceId': playerId,
-        'deviceName': iosInfo.name,
-        'os': 'iOS',
-        'osVersion': iosInfo.systemVersion
-      };
-    } else {
-      deviceData.value = {
-        'deviceId': playerId,
-        'deviceName': 'Unknown',
-        'os': 'Unknown',
-        'osVersion': 'Unknown',
-      };
-    }
-  } catch (e) {
-    print('Error getting device info: $e');
-  }
-  loginUser(emailController, passwordController, context);
-}
-
-Future<void> addThisDeviceToBackend(deviceData, context) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.post(
-    Uri.parse('${url}/notify/addDeviceToNotify/'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode(deviceData),
-  );
-  printData(response);
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
-  } else {}
 }

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -7,8 +8,8 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.
 import 'package:get/get.dart';
 
 bool flag = true;
-String portNo = flag ? "192.168.1.6" : "localhost";
-String urlWithLocallHost = flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String portNo = flag ? "192.168.1.43" : "localhost";
+String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Feilds";
 RxString expenses = "Loading....".obs;
@@ -182,6 +183,7 @@ RxList getExploriaTrendingData = [].obs;
 RxMap<String, int> postExploriaCount = <String, int>{}.obs;
 RxMap<String, int> postExploriaCommentCount = <String, int>{}.obs;
 RxMap<String, int> supportExploriaCount = <String, int>{}.obs;
+late FinvuAccountLinkingRequestReference linkingReference;
 class Message {
   Message(
       {this.text,

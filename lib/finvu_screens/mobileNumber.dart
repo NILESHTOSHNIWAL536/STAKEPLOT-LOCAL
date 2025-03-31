@@ -425,13 +425,9 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/appbar_widget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/finvuAccount.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/skipFInvuProcess.dart';
-import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/webView.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -440,6 +436,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
+RxBool loadConsentId=false.obs;
 RxBool isOtpWrong = false.obs;
 RxInt otpCountdown = 30.obs; // Reactive integer for countdown
   RxBool canResendOtp = false.obs;
@@ -471,6 +468,7 @@ class _MobileNumberState extends State<MobileNumber> {
   void initState() {
     super.initState();
     initFinvuManager(context);
+    loadConsentId.value=false;
 
     // Step 1: Initialize WebView platform params
     try {
@@ -530,9 +528,10 @@ class _MobileNumberState extends State<MobileNumber> {
       child: Scaffold(
         backgroundColor: AppColors.backgroundColor,
         bottomNavigationBar: BottomBar(),
+         appBar: getAppBar(context),
         body: Container(
           height: MediaQuery.of(context).size.height,
-          padding: EdgeInsets.only(top: 60, left: 16, right: 16, bottom: 5),
+          padding: EdgeInsets.only(top: 10, left: 16, right: 16, bottom: 5),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -603,7 +602,10 @@ class _MobileNumberState extends State<MobileNumber> {
                       String phoneNumber = _phoneController.text;
                       number.value = phoneNumber;
 
-                      getConsentHandleId(context);
+                  loadConsentId.value=true;
+                    await   getConsentHandleId(context);
+                   String otpRef =   await login(context);
+                   if(otpRef!=""){
                       otpController = TextEditingController();
                       startOtpTimer();
                       isOtpWrong.value = false;
@@ -613,11 +615,13 @@ class _MobileNumberState extends State<MobileNumber> {
                           builder: (BuildContext context) {
                             return verifyaotp(context);
                           });
-
-                      //print("Phone Number: $phoneNumber");
-                      // Add your logic for sending OTP
+                   }else
+                   {
+                     snackBarCalledSignup(context, "Error while generating otp Ref / or internal issue");
+                   }
+                     loadConsentId.value=false;
                     },
-                    child: getButton(context, "Continue"),
+                    child: Obx(()=> loadConsentId.value?  getspinner(context,""):getButton(context, "Continue")),
                   ),
                 ],
               ),
@@ -778,7 +782,7 @@ class _MobileNumberState extends State<MobileNumber> {
                     () => GestureDetector(
                       onTap: canResendOtp.value
                           ? () {
-                              login(handleId.value, context);
+                              login(context);
                               startOtpTimer();
                               isOtpWrong.value = false;
                               // Restart the timer on resend

@@ -41,23 +41,25 @@ void initFinvuManager(BuildContext context) async {
 }
 
 
-Future<void> login(consenthandleId,context) async {
+Future<String> login(context) async {
   try{
+  otpReference="";
   var login = await finvuManager.loginWithUsernameOrMobileNumberAndConsentHandle(
     '${number.value}@finvu',
     '${number.value}',
-    consenthandleId,
+    handleId.value,
   );
   otpReference = login.reference;
-  debugPrint('LoggedIn');
+
   }catch(e){
     print(e);
       snackBarCalled(context, e.toString());
   }
+  return otpReference;
 }
 
 
-void getConsentHandleId(context) async 
+Future<void> getConsentHandleId(context) async 
 {
 
   final String apiUrl ="${url}/finvu/login"; // Change to your actual server URL
@@ -79,7 +81,7 @@ void getConsentHandleId(context) async
       final data = jsonDecode(response.body);
       String consentHandleId = data["consentHandleId"];
        handleId.value=consentHandleId;
-       login(consentHandleId,context);
+     
     } 
   } catch (error)
   {
@@ -180,36 +182,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
 }
 
 
-// void verify(String otp, context) async {
- 
-//   try {
-   
-//     var login = await finvuManager.verifyLoginOtp(
-//       otp,
-//       otpReference,
-//     );
-   
-  
-//     clearStackLocalInfo();
-//     getLinkedAccountInfo();
 
-//     Navigator.pushReplacement(
-//         context,
-//         MaterialPageRoute(
-//           builder: (context) => DiscoverAccount(),
-//         ),
-//      );
-                  
-//   } catch (e) {
-
-//     ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(
-//           content: textStyle(context: context, text: "Invalid OTP..."),
-//           duration: Duration(seconds: 2),
-//         ),
-//       );
-//   }
-// }
 Future<bool> verify(String otp, BuildContext context) async {
   try {
     var login = await finvuManager.verifyLoginOtp(
