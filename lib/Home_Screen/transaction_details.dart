@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:intl/intl.dart'; // For date formatting
 
 class TransactionDetailsPage extends StatelessWidget {
   final Map<String, dynamic> transaction;
 
-  const TransactionDetailsPage({Key? key, required this.transaction}) : super(key: key);
+  const TransactionDetailsPage({Key? key, required this.transaction})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +22,12 @@ class TransactionDetailsPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0, // Flat modern look
         backgroundColor: Colors.white,
-        title: const Text(
+        title: Text(
           'Transaction Details',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
+          style: FontManager().getTextStyle(context,
+              lWeight: FontWeight.bold,
+              fontSize: 18,
+              color: AppColors.accentColor),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -44,20 +46,20 @@ class TransactionDetailsPage extends StatelessWidget {
                   children: [
                     Text(
                       '₹${transaction['amount']}',
-                      style: const TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green, // Green for success/completed
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.bold,
+                          fontSize: 36,
+                          color: transaction['type'] == 'DEBIT'
+                              ? const Color.fromARGB(255, 207, 118, 113)
+                              : Colors.green),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       transaction['type'],
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w500,
+                          fontSize: 16,
+                          color: Colors.grey),
                     ),
                   ],
                 ),
@@ -83,16 +85,19 @@ class TransactionDetailsPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildDetailRow(
+                      context: context,
                       label: 'Transaction ID',
                       value: transaction['txnId'],
                     ),
                     const Divider(height: 24),
                     _buildDetailRow(
+                      context: context,
                       label: 'Date & Time',
                       value: formattedDate,
                     ),
                     const Divider(height: 24),
                     _buildDetailRow(
+                      context: context,
                       label: 'Narration',
                       value: transaction['narration'] ?? 'N/A',
                     ),
@@ -102,22 +107,22 @@ class TransactionDetailsPage extends StatelessWidget {
 
               // Optional: Status Chip (e.g., Success, Pending)
               const SizedBox(height: 20),
-              Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.green[50],
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    'Completed', // Could be dynamic based on transaction status
-                    style: TextStyle(
-                      color: Colors.green[700],
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
+              // Center(
+              //   child: Container(
+              //     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              //     decoration: BoxDecoration(
+              //       color: Colors.green[50],
+              //       borderRadius: BorderRadius.circular(20),
+              //     ),
+              //     child: Text(
+              //       'Completed', // Could be dynamic based on transaction status
+              //       style: TextStyle(
+              //         color: Colors.green[700],
+              //         fontWeight: FontWeight.w600,
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -126,26 +131,23 @@ class TransactionDetailsPage extends StatelessWidget {
   }
 
   // Helper method to build detail rows
-  Widget _buildDetailRow({required String label, required String value}) {
+  Widget _buildDetailRow(
+      {required BuildContext context,
+      required String label,
+      required String value}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey[600],
-            fontWeight: FontWeight.w500,
-          ),
+          style: FontManager().getTextStyle(context,
+              lWeight: FontWeight.w500, fontSize: 14, color: Colors.grey),
         ),
         const SizedBox(height: 6),
         Text(
           value,
-          style: const TextStyle(
-            fontSize: 16,
-            color: Colors.black87,
-            fontWeight: FontWeight.w600,
-          ),
+          style: FontManager().getTextStyle(context,
+              lWeight: FontWeight.w500, fontSize: 14, color: AppColors.bg1),
         ),
       ],
     );

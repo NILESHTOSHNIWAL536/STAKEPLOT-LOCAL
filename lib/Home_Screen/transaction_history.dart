@@ -366,7 +366,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
     // print("typeeeee $type");
     final formatAmount = type == 'CREDIT' ? "+₹$amount" : "-₹$amount";
     return GestureDetector(
-      onTap: () {
+      onLongPress: () {
         tagName.value = category;
         showModalBottomSheet(
           context: context,
@@ -382,15 +382,21 @@ class _TransactionHistoryState extends State<TransactionHistory>
           },
         );
       },
-       onLongPress: () {
-      // Navigate to the transaction details page on long press
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => TransactionDetailsPage(transaction: transaction),
-        ),
-      );
-    },
+      onTap: () {
+        // Navigate to the transaction details page on long press
+        showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return TransactionDetailsPage(transaction: transaction);
+            });
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) =>
+        //         TransactionDetailsPage(transaction: transaction),
+        //   ),
+        // );
+      },
       child: Stack(
         children: [
           Container(
