@@ -123,8 +123,8 @@
 //             heading: "Name",
 //             keyBoard: TextInputType.emailAddress,
 //             lableText: "Enter budget name",
-//             icon: Finance.user,
-            
+//             icon: Icons.person,
+
 //           ),
 //           TextFeildWidgetCustom(
 //             textEditingController: amountController,
@@ -367,23 +367,25 @@ class _BudgetState extends State<Budget> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: LayoutBuilder(
+    return Scaffold(
+      body: SafeArea(
+        child: LayoutBuilder(
           builder: (context, constraints) {
             double height = constraints.maxHeight;
             double width = constraints.maxWidth;
             return getBudgetUiScreen(height, width, context);
           },
         ),
-        bottomNavigationBar: BottomNavigations(data: 1),
       ),
+      bottomNavigationBar: BottomNavigations(data: 1),
     );
   }
 
   Widget getBudgetUiScreen(double height, double width, BuildContext context) {
-    double responsivePadding = width > 600 ? 32 : 24; // Larger padding for tablets
-    double fontScale = width > 600 ? 1.2 : 1.0; // Scale fonts for larger screens
+    double responsivePadding =
+        width > 600 ? 32 : 24; // Larger padding for tablets
+    double fontScale =
+        width > 600 ? 1.2 : 1.0; // Scale fonts for larger screens
 
     return Container(
       width: width,
@@ -400,19 +402,21 @@ class _BudgetState extends State<Budget> {
       ),
       child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: responsivePadding, vertical: 20),
+          padding:
+              EdgeInsets.symmetric(horizontal: responsivePadding, vertical: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 20),
               Row(
                 children: [
-                  Icon(Icons.account_balance_wallet, color: AppColors.accentColor, size: 32 * fontScale),
+                  Icon(Icons.account_balance_wallet,
+                      color: AppColors.primaryColor, size: 22 * fontScale),
                   SizedBox(width: 12),
                   textStyle(
                     context: context,
                     text: "Budget Planner",
-                    fontsize: 30 * fontScale,
+                    fontsize: 20 * fontScale,
                     fontWeight: FontWeight.bold,
                     c: AppColors.accentColor,
                   ),
@@ -422,7 +426,7 @@ class _BudgetState extends State<Budget> {
               textStyle(
                 context: context,
                 text: "Plan and manage your budget effectively",
-                fontsize: 16 * fontScale,
+                fontsize: 14 * fontScale,
                 fontWeight: FontWeight.w300,
                 c: Colors.grey[600]!,
               ),
@@ -449,7 +453,7 @@ class _BudgetState extends State<Budget> {
                       heading: "Name",
                       keyBoard: TextInputType.emailAddress,
                       lableText: "Enter budget name",
-                      icon: Finance.user,
+                      icon: Icons.person,
                     ),
                     SizedBox(height: 20),
                     TextFeildWidgetCustom(
@@ -457,13 +461,13 @@ class _BudgetState extends State<Budget> {
                       heading: "Amount",
                       keyBoard: TextInputType.number,
                       lableText: "Enter amount",
-                      icon: Finance.amt,
+                      icon: Icons.currency_rupee_rounded,
                     ),
                     SizedBox(height: 24),
                     textStyle(
                       context: context,
                       text: "Duration",
-                      fontsize: 22 * fontScale,
+                      fontsize: 16 * fontScale,
                       fontWeight: FontWeight.bold,
                       c: AppColors.accentColor,
                     ),
@@ -484,34 +488,7 @@ class _BudgetState extends State<Budget> {
                 onTap: () {
                   bedgetCalculator();
                 },
-                child: Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(vertical: width > 600 ? 20 : 18),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [AppColors.accentColor, AppColors.accentColor.withOpacity(0.8)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.accentColor.withOpacity(0.4),
-                        blurRadius: 10,
-                        offset: Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: textStyle(
-                      context: context,
-                      text: "Continue",
-                      fontsize: 18 * fontScale,
-                      fontWeight: FontWeight.bold,
-                      c: Colors.white,
-                    ),
-                  ),
-                ),
+                child: getButton(context, "Continue"),
               ),
               SizedBox(height: 20), // Extra padding at bottom for scroll
             ],
@@ -522,11 +499,8 @@ class _BudgetState extends State<Budget> {
   }
 
   Widget rowPer(double width) {
-    return Wrap(
-      
-      spacing: 2, // Space between items horizontally
-      runSpacing: 2, // Space between rows if wrapped
-      alignment: WrapAlignment.center,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         getPeriod("Weekly", width),
         getPeriod("Monthly", width),
@@ -536,7 +510,8 @@ class _BudgetState extends State<Budget> {
   }
 
   Widget getPeriod(String text, double width) {
-    double buttonWidth = width > 600 ? width * 0.2 : width * 0.24; // Responsive width
+    double buttonWidth =
+        width > 400 ? width * 0.12 : width * 0.15; // Adjusted responsive width
     return Obx(() => GestureDetector(
           onTap: () {
             period.value = text;
@@ -545,10 +520,12 @@ class _BudgetState extends State<Budget> {
           },
           child: AnimatedContainer(
             duration: Duration(milliseconds: 300),
-            width: buttonWidth.clamp(100, 150), // Min 100, max 150
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            width: buttonWidth.clamp(80, 120), // Min 80, max 120
+            padding: const EdgeInsets.symmetric(
+                horizontal: 12, vertical: 10), // Adjusted padding
             decoration: BoxDecoration(
-              color: period.value == text ? AppColors.accentColor : Colors.white,
+              color:
+                  period.value == text ? AppColors.accentColor : Colors.white,
               borderRadius: BorderRadius.circular(12),
               boxShadow: period.value == text
                   ? [
@@ -565,7 +542,7 @@ class _BudgetState extends State<Budget> {
                 context: context,
                 text: text,
                 fontWeight: FontWeight.w600,
-                fontsize: 12,
+                fontsize: 10, // Decreased font size
                 c: period.value == text ? Colors.white : AppColors.bg3,
               ),
             ),

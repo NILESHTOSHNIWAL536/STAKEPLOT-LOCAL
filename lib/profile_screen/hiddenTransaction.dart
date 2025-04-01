@@ -45,7 +45,7 @@ class _HiddenTransactionsScreenState extends State<HiddenTransactionsScreen> {
         title: Text("History archives"),
       ),
       body: SafeArea(
-          child: hiddentrasactionsHistory.isEmpty
+          child: Obx(() => hiddentrasactionsHistory.isEmpty
               ? Center(
                   child: Text('No hidden transactions.',
                       style: FontManager().getTextStyle(context,
@@ -53,7 +53,7 @@ class _HiddenTransactionsScreenState extends State<HiddenTransactionsScreen> {
                           fontSize: 18,
                           color: AppColors.accentColor)),
                 )
-              : Obx(() => hiddenTransactionsWidget())),
+              : hiddenTransactionsWidget())),
     );
   }
 
@@ -65,15 +65,14 @@ class _HiddenTransactionsScreenState extends State<HiddenTransactionsScreen> {
         itemBuilder: (context, index) {
           final transaction = hiddentrasactionsHistory[index];
           return historyTransactions(
-            transaction,
-            transaction['transactionTimestamp'],
-          );
+              transaction, transaction['transactionTimestamp'], index);
         },
       ),
     );
   }
 
-  Widget historyTransactions(Map<String, dynamic> transaction, String? date) {
+  Widget historyTransactions(
+      Map<String, dynamic> transaction, String? date, int index) {
     final category = transaction['category']?.toString() ?? 'Uncategorized';
     final subcategory = transaction['subcategory']?.toString() ?? 'General';
     final amount = transaction['amount']?.toString() ?? '0';
@@ -81,91 +80,120 @@ class _HiddenTransactionsScreenState extends State<HiddenTransactionsScreen> {
     // String? s = imageMapForHistory[
     //     transaction['category'].toString().toLowerCase()];
     //String ImageUrl = Categories.link + s.toString();
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colorcodes.greyLight, width: 0.3),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            flex: 3,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    margin: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colorcodes.greyLight,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: AvatarProfileImage(
-                      url: Categories.link +
-                          (imageMapForHistory[category.toLowerCase()] ?? ''),
-                      height: 16,
-                      width: 20,
-                    ),
-                  ),
+    return GestureDetector(
+      onLongPress: () {
+        // Show confirmation dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Confirm Unhide'),
+              content: Text('Do you want to unhide this transaction?'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                  child: Text('No'),
                 ),
-                const SizedBox(width: 5),
-                Expanded(
-                  flex: 2,
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: " $category",
-                          style: FontManager().getTextStyle(
-                            context,
-                            lWeight: FontWeight.w600,
-                            fontSize: 14,
-                            lineHeight: 2.14,
-                            color: AppColors.accentColor,
-                          ),
-                        ),
-                        TextSpan(
-                          text: " ($subcategory)",
-                          style: FontManager().getTextStyle(
-                            context,
-                            lWeight: FontWeight.w400,
-                            fontSize: 12,
-                            lineHeight: 1.14,
-                            color: AppColors.accentColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                TextButton(
+                  onPressed: () {
+                    hideTransaction(index, false, context, transaction['_id']);
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                  child: Text('Yes'),
                 ),
               ],
+            );
+          },
+        );
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colorcodes.greyLight, width: 0.3),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              flex: 3,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colorcodes.greyLight,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: AvatarProfileImage(
+                        url: Categories.link +
+                            (imageMapForHistory[category.toLowerCase()] ?? ''),
+                        height: 16,
+                        width: 20,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  Expanded(
+                    flex: 2,
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: " $category",
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w600,
+                              fontSize: 14,
+                              lineHeight: 2.14,
+                              color: AppColors.accentColor,
+                            ),
+                          ),
+                          TextSpan(
+                            text: " ($subcategory)",
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w400,
+                              fontSize: 12,
+                              lineHeight: 1.14,
+                              color: AppColors.accentColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Column(
-              children: [
-                textStyle(
-                  text: '₹$amount',
-                  context: context,
-                  fontWeight: FontWeight.bold,
-                  fontsize: 15,
-                ),
-                const SizedBox(height: 6),
-                textStyle(
-                  text: formattedDate,
-                  context: context,
-                  fontWeight: FontWeight.w300,
-                  fontsize: 11,
-                ),
-              ],
+            Expanded(
+              flex: 1,
+              child: Column(
+                children: [
+                  textStyle(
+                    text: '₹$amount',
+                    context: context,
+                    fontWeight: FontWeight.bold,
+                    fontsize: 15,
+                  ),
+                  const SizedBox(height: 6),
+                  textStyle(
+                    text: formattedDate,
+                    context: context,
+                    fontWeight: FontWeight.w300,
+                    fontsize: 11,
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -52,8 +52,8 @@ class TextFeildWidget extends StatelessWidget {
             TextFormField(
               keyboardType: keyBoard,
               controller: textEditingController,
-              onChanged: (c){
-                acceptReset.value=false;
+              onChanged: (c) {
+                acceptReset.value = false;
               },
               maxLength: heading == "PhoneNo" ? 10 : null,
               obscureText: flag ? false : show.value,
@@ -368,7 +368,7 @@ class TextFeildWidgetCustom extends StatelessWidget {
   String lableText;
   //String lableStyle;
   String heading;
-  String icon;
+  IconData icon;
   int? maxLines;
   int? maxLength;
   TextInputType keyBoard;
@@ -407,7 +407,7 @@ class TextFeildWidgetCustom extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 9.0),
               child: Text(heading,
                   style: FontManager().getTextStyle(context,
-                      fontSize: 18, lWeight: FontWeight.w500)),
+                      fontSize: 16, lWeight: FontWeight.w500)),
             ),
             const SizedBox(
               height: 10,
@@ -440,10 +440,10 @@ class TextFeildWidgetCustom extends StatelessWidget {
                 fillColor: Colorcodes.white,
                 border: InputBorder.none,
                 prefixIcon: flag
-                    ? PrefixIcon(
-                        url: icon,
-                        height: 40,
-                        width: 40,
+                    ? Icon(
+                        icon,
+                        size: 30,
+                        color: AppColors.primaryColor,
                       )
                     : Icon(Icons.search),
               ),
@@ -455,12 +455,11 @@ class TextFeildWidgetCustom extends StatelessWidget {
   }
 }
 
-
 class TextFeildWidgetCustom2 extends StatelessWidget {
   TextEditingController textEditingController;
   String lableText;
   //String lableStyle;
-  
+
   String icon;
   int? maxLines;
   int? maxLength;
@@ -471,7 +470,6 @@ class TextFeildWidgetCustom2 extends StatelessWidget {
   TextFeildWidgetCustom2({
     Key? key,
     required this.textEditingController,
-
     required this.keyBoard,
     required this.lableText,
     required this.icon,
@@ -496,7 +494,6 @@ class TextFeildWidgetCustom2 extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            
             TextFormField(
               keyboardType: keyBoard,
               controller: textEditingController,
@@ -505,7 +502,7 @@ class TextFeildWidgetCustom2 extends StatelessWidget {
               focusNode: focusNode,
               maxLines: 1,
               maxLength: 30,
-              
+
               decoration: InputDecoration(
                 // contentPadding: EdgeInsets.all(0),
                 counterText: "",
@@ -523,7 +520,7 @@ class TextFeildWidgetCustom2 extends StatelessWidget {
                     borderSide: BorderSide(color: AppColors.accentColor)),
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(color:AppColors.primaryColor)),
+                    borderSide: BorderSide(color: AppColors.primaryColor)),
                 fillColor: AppColors.button,
                 border: InputBorder.none,
                 prefixIcon: flag

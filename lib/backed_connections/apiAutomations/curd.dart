@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,7 +31,20 @@ Future<http.Response> updateDataApiCall(urlPath) async {
       body: jsonEncode({}));
   return response;
 }
+Future<http.Response> updateDataApiCall2(String urlPath, Map<String, dynamic> body) async {
+  final SharedPreferences pref = await SharedPreferences.getInstance();
+  var accessToken = pref.getString("accessToken");
 
+  final response = await http.patch(
+    Uri.parse(urlPath),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      "Authorization": "$accessToken",
+    },
+    body: jsonEncode(body),
+  );
+  return response;
+}
 
 Future<http.Response> getDataApiCall(urlPath) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();

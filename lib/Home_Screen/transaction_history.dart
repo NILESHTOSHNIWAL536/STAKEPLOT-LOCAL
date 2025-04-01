@@ -32,6 +32,8 @@ RxBool reloadHistory = false.obs;
 RxString selectedValue = "30".obs;
 RxString selectedValueType = "days".obs;
 RxBool getPdgLoader = false.obs;
+RxMap<int, double> swipeOffsets = <int, double>{}.obs;
+RxList<Map<String, dynamic>> hiddenTransactions = <Map<String, dynamic>>[].obs;
 
 class TransactionHistory extends StatefulWidget {
   /// Optional
@@ -53,8 +55,8 @@ class TransactionHistory extends StatefulWidget {
 
 class _TransactionHistoryState extends State<TransactionHistory>
     with SingleTickerProviderStateMixin {
-  final Map<int, double> swipeOffsets = {};
   final _scrollController2 = ScrollController();
+  final Map<int, double> swipeOffsets = {};
   final List<Map<String, dynamic>> hiddenTransactions = [];
   final targetKey = GlobalKey();
   BuildContext? _stableContext;
@@ -174,7 +176,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
       itemBuilder: (context, index) {
         if (index < transactionsHistory.length) {
           final transaction = transactionsHistory[index];
-          print("transactionslistttt : $transaction");
+          //  print("transactionslistttt : $transaction");
           double amount = (transaction['amount'] is int)
               ? (transaction['amount'] as int).toDouble()
               : (transaction['amount'] as double? ?? 0.0);
@@ -202,7 +204,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 top: 25,
                 child: GestureDetector(
                   onTap: () {
-                    hideTransaction(index);
+                    hideTransaction(index, true, context, transaction['_id']);
                   },
                   child: const Icon(
                     Icons.visibility_off,
@@ -384,12 +386,12 @@ class _TransactionHistoryState extends State<TransactionHistory>
       },
       onTap: () {
         // Navigate to the transaction details page on long press
-        if(!ismanual)
-        showModalBottomSheet(
-            context: context,
-            builder: (BuildContext context) {
-              return TransactionDetailsPage(transaction: transaction);
-            });
+        if (!ismanual)
+          showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context) {
+                return TransactionDetailsPage(transaction: transaction);
+              });
         // Navigator.push(
         //   context,
         //   MaterialPageRoute(
@@ -629,36 +631,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
     }
   }
 
-  void hideTransaction(int index) async {
-    final transaction = transactionsHistory[index];
-    final transactionId = transaction['_id']?.toString();
-
-    if (transactionId == null) {
-      //   print("Error: Transaction ID is null");
-      return;
-    }
-
-    final apiUrl = "$url/transactionauto/updateTransaction/$transactionId";
-    try {
-      final response = await updateDataApiCall(apiUrl, {"Hidden": true});
-      if (response.statusCode == 200) {
-        hiddenTransactions.add(transaction);
-        transactionsHistory.removeAt(index);
-        swipeOffsets.remove(index);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
-                  "Failed to hide transaction: ${response.statusCode} - ${response.body}")),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Error hiding transaction")),
-      );
-    }
-  }
-
   String formatDate(String dateString) {
     DateTime date = DateTime.parse(dateString);
     return DateFormat("dd MMM yyyy").format(date);
@@ -762,6 +734,44 @@ class _TransactionHistoryState extends State<TransactionHistory>
           ),
         );
       },
+    );
+  }
+}
+
+void hideTransaction(
+    int index, bool hidden, BuildContext context, String id) async {
+  final transaction = transactionsHistory[index];
+  print("transaction hide 1 $transaction");
+  final transactionId = transaction['_id']?.toString();
+  if (transactionId == null) {
+    //   print("Error: Transaction ID is null");
+    return;
+  }
+  //  /67e7d5f43afa9db7fcc3f29c
+  final apiUrl = "$url/transactionauto/updateTransaction/$id";
+  try {
+    final response = await updateDataApiCall2(apiUrl, {"Hidden": hidden});
+    print("Hidden: $apiUrl");
+    printData(response);
+    if (getFlagOfResponse(response)) {
+      if (hidden) {
+        hiddenTransactions.add(transaction);
+        transactionsHistory.removeAt(index);
+        swipeOffsets.remove(index);
+      } else {
+        hiddentrasactionsHistory.removeAt(index);
+        hiddentrasactionsHistory.refresh();
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(
+                "Failed to hide transaction: ${response.statusCode} - ${response.body}")),
+      );
+    }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Error hiding transaction")),
     );
   }
 }
