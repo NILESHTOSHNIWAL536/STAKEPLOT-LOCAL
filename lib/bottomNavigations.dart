@@ -465,37 +465,34 @@ class _BottomNavigationsState extends State<BottomNavigations> {
     //int selectedIndex = 0;
     return Container(
       //color: Colorcodes.white,
-      height: Colorcodes.paddingSize*4,
-      padding: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 12),
+      height: Colorcodes.paddingSize*3.4,
+      padding: const EdgeInsets.only(left: 3.0, right: 3.0, bottom: 2),
       child: Card(
         elevation: Colorcodes.elevation,
         color: AppColors.accentColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30), // Rounded corners
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 3),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              getContainer(NavBarIcons.home, 0),
-              getContainer(NavBarIcons.screen2, 1),
-
-              if (sizeRoom)
-                getContainer(
-                  'assets/images/room.svg',
-                  2,
-                ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            getContainer(NavBarIcons.home, 0),
+            getContainer(NavBarIcons.screen2, 1),
+        
+            if (sizeRoom)
               getContainer(
-                NavBarIcons.community,
-                sizeRoom ? 3 : 2,
+                'assets/images/room.svg',
+                2,
               ),
-              getContainer(
-                svgIconPath.bottom4,
-                sizeRoom ? 4 : 3,
-              ),
-            ],
-          ),
+            getContainer(
+              NavBarIcons.community,
+              sizeRoom ? 3 : 2,
+            ),
+            getContainer(
+              svgIconPath.bottom4,
+              sizeRoom ? 4 : 3,
+            ),
+          ],
         ),
       ),
     );
@@ -518,23 +515,24 @@ class _BottomNavigationsState extends State<BottomNavigations> {
     } else if (url == svgIconPath.bottom4) {
       iconPath = avatar.value; 
     }
+    bool ifAvatar=index==3 || index==4;
 
     return Container(
-      width: Colorcodes.paddingSize * 2.4, // Increased size of the circle
-      height: Colorcodes.paddingSize * 2.4,
+      width: Colorcodes.paddingSize * 2.5, // Increased size of the circle
+      height: Colorcodes.paddingSize * 2.5,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: isSelected ? AppColors.backgroundColor:AppColors.accentColor // White background if selected
       ),
       child: Center(
-        child: iconPath == avatar.value? SvgPicture.asset(
+        child: ifAvatar ? SvgPicture.asset(
           iconPath,
-          width: Colorcodes.paddingSize * 1.4,
-          height: Colorcodes.paddingSize * 1.4
+          width: Colorcodes.paddingSize * 2,
+          height: Colorcodes.paddingSize * 2.2
           ):SvgPicture.asset(
           iconPath,
           width: Colorcodes.paddingSize * 1.4,
-               height: Colorcodes.paddingSize * 1.4,
+          height: Colorcodes.paddingSize * 1.4,
           colorFilter: isSelected 
               ? ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn) 
               : ColorFilter.mode(AppColors.backgroundColor, BlendMode.srcIn),
@@ -554,29 +552,11 @@ class _BottomNavigationsState extends State<BottomNavigations> {
           // Handle long press for index 0
         } else if (i == 3 && widget.data != i) {
         
-          // List<Map<String, dynamic>> users = await UserStorage.getAllUsers();
-         
-        //   showModalBottomSheet(
-        //   context: context,
-        //   isScrollControlled: true,
-
-        //   shape: const RoundedRectangleBorder(
-
-        //     borderRadius: BorderRadius.only(
-        //       topLeft: Radius.circular(30),
-        //       topRight: Radius.circular(30),
-        //     ),
-        //   ),
-        //   builder: (context) {
-        //     return MultipleLogins(users: users,);
-        //   },
-        // );
         }
       },
       onTap: () {
         if (i == 0 && widget.data != i) pushName(HomePage());
          else if (i == 1 && widget.data != i) pushName(PlotFinance());
-        // if (i == 1 && widget.data != i) pushName(AnimatedImagesScreen());
 
         if (!sizeRoom) {
           if (i == 2 && widget.data != i){

@@ -633,6 +633,7 @@ void getPost() async {
       postCount[element["_id"]] = element['upvotes'];
       postCommentCount[element["_id"]] = element['comments'];
     });
+    isPost.value = true;
   } else {}
 }
 

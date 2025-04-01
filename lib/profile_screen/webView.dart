@@ -24,7 +24,7 @@ class _WebViewPageState extends State<WebViewPage> {
       // appBar: AppBar(title: const Text("Ter")),
       body: SafeArea(
           child: WebViewWidget(
-        controller: widget.controller,
+          controller: widget.controller,
       )),
     );
   }

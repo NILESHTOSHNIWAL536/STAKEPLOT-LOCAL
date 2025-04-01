@@ -25,36 +25,15 @@ class Access extends StatefulWidget {
 }
 
 class _AccessState extends State<Access> {
-  // late FinvuConsentRequestDetailInfo finvuConsentRequestDetailInfo;
 
   RxBool flag = true.obs;
   @override
   void initState() {
     super.initState();
-    // flag.value = false;
-    // getInfomationsAboutUser();
   }
 
-  void getInfomationsAboutUser() async {
-    try {
-      // fetchAccountData = await finvuManager.fetchLinkedAccounts();
-      // finvuConsentRequestDetailInfo = await finvuManager.getConsentRequestDetails(handleId.value);
-    } catch (e) {}
-  }
 
-  // void getAccountShared() async
-  // {
 
-  //      fetchAccountData.forEach((FinvuLinkedAccountDetailsInfo finvuInfo){
-  //                try{
-  //                 if(seletedAccountIds.contains(finvuInfo.accountReferenceNumber)){
-  //                     seletedAccountInfomations.add(finvuInfo);
-  //                 }
-  //               }
-  //                 catch(e){}
-  //       });
-  //    flag.value = true;
-  // }
 
   String formatDate(String dateString) {
     DateTime date = DateTime.parse(dateString);
@@ -663,17 +642,10 @@ class _AccessState extends State<Access> {
           ),
           InkWell(
             onTap: () async {
-              FinvuConsentRequestDetailInfo consentInfo =await finvuManager.getConsentRequestDetails(handleId.value);
-      
-              try {
-                finvuManager.denyConsentRequest(consentInfo);
-                logoutAndDisconnect();
-                clearStack(context);
-                snackBarCalledSignup(context, "Successfully disapproved the consent request.");
-                Navigator.pushNamed(context, "/ShareAccountLogin");
-              } catch (e) {
-                snackBarCalled(context, "Unable to disapprove the request.");
-              }
+             
+                  showDialogBoxForDecline(context);
+              
+
             },
             child: Container(
               width: MediaQuery.of(context).size.width / 1.1,
@@ -699,6 +671,9 @@ class _AccessState extends State<Access> {
       ),
     );
   }
+
+
+
 
   void approveConsentRequest() async {
     try {
@@ -743,5 +718,77 @@ class _AccessState extends State<Access> {
             }),
       ),
     );
+  }
+
+
+
+void showDialogBoxForDecline(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), // Optional: rounded corners
+        child: Container(
+          width: 300, // Set width
+          height: 180, // Set height
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start, // Prevent excessive height
+            children: [
+              textStyle(
+                "Are you sure?",20,AppColors.primaryColor,FontWeight.bold
+              ),
+              SizedBox(height: 10),
+              textStyle("Do you really want to decline?",15),
+              Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                      style: TextButton.styleFrom(
+                      side: BorderSide(color: AppColors.bg1), // Add border
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8), // Optional: Rounded corners
+                      ),
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: textStyle("No",15),
+                  ),
+                  const SizedBox(width: 20,),
+                  TextButton(
+                      style: TextButton.styleFrom(
+                      side: BorderSide(color: AppColors.primaryColor), // Add border
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8), // Optional: Rounded corners
+                      ),
+                    ),
+                    onPressed: () {
+                       decline();
+                    },
+                    child: textStyle("Yes",15),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+  void decline()async
+  {
+              try {
+                 FinvuConsentRequestDetailInfo consentInfo =await finvuManager.getConsentRequestDetails(handleId.value);
+                finvuManager.denyConsentRequest(consentInfo);
+                logoutAndDisconnect();
+                clearStack(context);
+                snackBarCalledSignup(context, "Successfully disapproved the consent request.");
+                Navigator.pushNamed(context, "/ShareAccountLogin");
+              } catch (e) {
+                snackBarCalledSignup(context, "Unable to disapprove the request.");
+              }    
   }
 }

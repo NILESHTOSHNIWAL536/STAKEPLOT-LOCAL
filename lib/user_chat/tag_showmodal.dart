@@ -133,14 +133,13 @@ Widget getListOfCat(BuildContext context) {
   List<MapEntry<String, dynamic>> categoryList = categories.entries.toList();
 
   return SizedBox(
-    height: MediaQuery.of(context).size.height * 0.6, // Adjust height as needed
+    height: MediaQuery.of(context).size.height * 0.45, // Adjust height as needed
     child: ListView.builder(
       itemCount: categoryList.length,
       shrinkWrap: true,
       padding: EdgeInsets.symmetric(vertical: 5),
       itemBuilder: (context, index) {
         var e = categoryList[index];
-
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
           margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),

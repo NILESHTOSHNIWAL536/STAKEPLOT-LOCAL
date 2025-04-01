@@ -1,11 +1,8 @@
-import "dart:convert";
 import "package:flutter/material.dart";
-import "package:flutter_application_code_stakeplot/Community_Page/postCard.dart";
-import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
+import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
-import "package:flutter_application_code_stakeplot/Tribe/userDetails.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart";
@@ -13,11 +10,8 @@ import "package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
 import "package:flutter_application_code_stakeplot/controller.dart/userController.dart";
 import "package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart";
-import "package:flutter_application_code_stakeplot/headersList/userProfileHeader.dart";
-import "package:flutter_application_code_stakeplot/profile.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart";
 import "package:get/get.dart";
-import 'package:http/http.dart' as http;
 
 class Friends extends StatefulWidget {
   const Friends({Key? key}) : super(key: key);
@@ -27,14 +21,15 @@ class Friends extends StatefulWidget {
 }
 
 class _FriendsState extends State<Friends> {
-  List frdsList = [];
+  RxList frdsList = [].obs;
   bool frdsThere = true;
   final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-  
+    frdsList.clear();
+    frdsList.addAll(friendsList);
   }
 
   @override
@@ -55,59 +50,63 @@ class _FriendsState extends State<Friends> {
         //  bottomNavigationBar:logoutWidget(),
 
         body: SafeArea(
-          child: Column(children: [
-            // UserProfileHeader(name: "Friends List"),
-           // Text("Friends List"),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height/1.2,
-              padding: EdgeInsets.only(top: Colorcodes.paddingTopDesign/2),
-              child: ListView(
-                children: [
-                  Hero(
-                    tag: "TribeSearch",
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/TribeSearch');
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 18),
-                        child: Container(
-                          width: MediaQuery.sizeOf(context).width / 3,
-                          height: 50,
-                          child: TextField(
-                            controller: _searchController,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 0),
-                              filled: true,
-                              enabled: false,
-                              hintText: 'Search...',
-                              fillColor: AppColors.button,
-                              hintStyle: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.normal,
-                                  fontSize: 14,
-                                  color: Colors.black),
-                              prefixIcon: Icon(Icons.search),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(24.0),
+          child: Column(children: [  
+            Expanded(
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height/1.2,
+                padding: EdgeInsets.only(top: Colorcodes.paddingTopDesign/2),
+                child: ListView(
+                  children: [
+                    Hero(
+                      tag: "TribeSearch",
+                      child: GestureDetector(
+                        onTap: () {
+                         if( friendsList.isEmpty)Navigator.pushNamed(context, '/TribeSearch');
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 18),
+                          child: Container(
+                            width: MediaQuery.sizeOf(context).width / 3,
+                            height: 50,
+                            child: TextField(
+                              controller: _searchController,
+                              onChanged: (value) {
+                                  frdsList.clear();
+                                  frdsList.addAll(getLastTenUsers(getSearchData(value,friendsList )));
+                              },
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 0),
+                                filled: true,
+                                enabled: !friendsList.isEmpty,
+                                hintText: 'Search...',
+                                fillColor: AppColors.button,
+                                hintStyle: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.normal,
+                                    fontSize: 14,
+                                    color: Colors.black),
+                                prefixIcon: Icon(Icons.search),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(24.0),
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 20,),
-                  Obx(() => friendsList.isEmpty
-                      ? noFriend(context)
-                      : Column(
-                          children: friendsList
-                              .map((d) =>
-                                  d == null ? Text("") : profileContainer(d))
-                              .toList(),
-                        )),
-                ],
+                    SizedBox(height: 20,),
+                    Obx(() => frdsList.isEmpty
+                        ? noFriend(context)
+                        : Column(
+                            children: frdsList
+                                .map((d) =>
+                                    d == null ? Text("") : profileContainer(d))
+                                .toList(),
+                          )),
+                  ],
+                ),
               ),
             ),
           ]),

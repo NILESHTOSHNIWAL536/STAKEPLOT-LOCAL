@@ -111,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: AppColors.backgroundColor,
       appBar:getAppBar(),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
         child: SingleChildScrollView(
           controller: scrollController,
           child: Column(

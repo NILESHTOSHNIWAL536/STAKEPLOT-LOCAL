@@ -68,10 +68,10 @@ class _CommunityState extends State<Community> {
                 ),
                   
                 Obx(
-                  () => getTrendingData.length == 0 && findTranding
+                  () => getTrendingData.length == 0 && !isPost.value
                       ? Loader()
-                      : !findTranding && getTrendingData.length == 0
-                          ? noFriend(context, "Make friends to see their posts")
+                      : isPost.value && getTrendingData.length == 0
+                          ? noFriend(context, "Make friends to see their posts or upload post")
                           : Obx(() => getPosted.value
                               ? LazyLoadingList()
                               : LazyLoadingList()),

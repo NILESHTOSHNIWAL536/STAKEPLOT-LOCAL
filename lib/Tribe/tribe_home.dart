@@ -31,6 +31,7 @@ List postListIds = [];
 bool findData = true;
 bool findTranding = true;
 RxInt indexFlag = 0.obs;
+RxBool  isPost = false.obs;
 
 Widget noFriend(context, [text = ""]) {
   return GestureDetector(

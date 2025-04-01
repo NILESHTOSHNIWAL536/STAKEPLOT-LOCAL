@@ -14,7 +14,7 @@ class BottomBar extends StatelessWidget {
     double bp = Platform.isIOS ? 14 : 14;
     return Container(
       width: MediaQuery.of(context).size.width,
-       margin: EdgeInsets.only(bottom: bp ),
+      margin: EdgeInsets.only(bottom: bp ),
       color: AppColors.button,
       height: 30,
       child: Row(
