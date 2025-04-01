@@ -125,34 +125,10 @@ class _TribeHomeState extends State<TribeUnique> {
       final body = json.decode(response.body);
 
       var id = body['data']['_id'];
-      // Comments obj= Comments();
-      //   Author auth=Author();
-      //   PostDetails post=PostDetails();
-
-      //   auth.id=authorId;
-      //   auth.name=name;
-
-      //   // post.authorId=auth.id;
-      //   // post.name=auth.name;
-
-      //   obj.replies=[];
-      //   obj.author=auth;
-      //   obj.commentText=data;
-      //   obj.upvotes=0;
-      //   obj.downvotes=0;
-      //   obj.postDetails=post;
-      //   obj.sId=id;
-      //   commentList.add(obj);
       obj.sId = id;
       postCount[id] = 0;
       snackBarCalled(context, "Comment added successfully!", Colors.black);
-      //  return obj;
-
-      //  snackBarCalled(context,"Added Comment...!",Colors.black);
-
-
-      //  Navigator.pop(context);
-      //  Navigator.pushNamed(context, '/home');
+     
     } else {
       snackBarCalled(
           context, "Unable to add comment. Please try again.", Colors.red);
@@ -163,13 +139,13 @@ class _TribeHomeState extends State<TribeUnique> {
   void initState() {
     super.initState();
     dataObj = widget.dataObj;
+    
     getpost(widget.id);
     getTransactionComments();
     getInfo();
   }
 
-  void getpost(id) async {
-    String url = "https://stakeplot.in/api/v1";
+  void getpost(id) async {;
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
     final response = await http.get(
@@ -273,70 +249,7 @@ class _TribeHomeState extends State<TribeUnique> {
       backgroundColor: AppColors.backgroundColor,
       bottomNavigationBar: BottomNavigations(data: sizeRoom ? 3 : 2),
       extendBody: true,
-      // appBar: AppBar(
-      //     backgroundColor: AppColors.backgroundColor,
-      //     centerTitle: true,
-      //     automaticallyImplyLeading: false,
-      //     title: Container(
-      //       width: MediaQuery.of(context).size.width,
-      //       child: Row(
-      //         mainAxisAlignment: MainAxisAlignment.start,
-      //         crossAxisAlignment: CrossAxisAlignment.center,
-      //         children: [
-      //           //const Spacer(),
-      //           // Text(
-      //           //   ("Tribe"),
-      //           //   style: FontManager().getTextStyle(context,
-      //           //       lWeight: FontWeight.bold,
-      //           //       fontSize: 24,
-      //           //       color: Colorcodes.services),
-      //           // ),
-      //           //const Spacer(),
-      //           Row(
-      //             children: [
-      //               // GestureDetector(
-      //               //   onTap: () {
-      //               //     Navigator.push(
-      //               //       context,
-      //               //       PageTransition(
-      //               //         type: PageTransitionType.fade,
-      //               //         duration: Durations.long1,
-      //               //         child: TribeSearch(),
-      //               //         isIos: true,
-      //               //       ),
-      //               //     );
-      //               //   },
-      //               //   child: Container(
-      //               //       width: 30,
-      //               //       height: 40,
-      //               //       padding: EdgeInsets.all(0),
-      //               //       child: ProfileImage(url: svgIconPath.search)),
-      //               // ),
-      //               // Padding(
-      //               //   padding: const EdgeInsets.only(left: 10.0),
-      //               //   child: GestureDetector(
-      //               //     onTap: () {
-      //               //       Navigator.push(
-      //               //         context,
-      //               //         PageTransition(
-      //               //           type: PageTransitionType.fade,
-      //               //           duration: Durations.long1,
-      //               //           child: TribeChats(),
-      //               //           isIos: true,
-      //               //         ),
-      //               //       );
-      //               //     },
-      //               //     child: Container(
-      //               //         height: 40,
-      //               //         width: 30,
-      //               //         child: ProfileImage(url: svgIconPath.message)),
-      //               //   ),
-      //               // ),
-      //             ],
-      //           ),
-      //         ],
-      //       ),
-      //     )),
+     
       body: SafeArea(
         child: Container(
           height: MediaQuery.of(context).size.height,
@@ -829,6 +742,7 @@ class _TribeHomeState extends State<TribeUnique> {
           child: TextField(
             focusNode: _replyFocusNode,
             keyboardType: keyBoard,
+            autofocus: true,
             controller: Textcontroller,
             onSubmitted: (value) {
               addComment(context, value, postId, widget.dataObj['author']['id'],
