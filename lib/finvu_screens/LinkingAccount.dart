@@ -240,10 +240,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                     height: 20,
                   ),
 
-                  // textStyle("Please tap on 'Fetch Now' to Fetch your bank Transactions", 14),
-                  // const SizedBox(
-                  //   height: 20,
-                  // ),
+            
                   Container(
                     width: MediaQuery.of(context).size.width / 1.1,
                     // padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -407,7 +404,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
   Widget getListOfFinvuBanksAccounts(
       List<FinvuDiscoveredAccountInfo> account, FinvuFIPDetails fipDetails) {
     return account.isEmpty
-        ? Text("No Accounts Found")
+        ? getNoBankAccount()
         : Column(
             children: account
                 .map((bankData) => getBackUi(bankData, fipDetails))
@@ -772,7 +769,7 @@ void linkAccount( String otp, String fid, BuildContext context,FinvuFIPDetails f
       count.value += info.length;
       count.refresh();
     } catch (e) {
-      return SizedBox.shrink();
+      return getNoBankAccount();
     }
 
     return Container(
@@ -906,6 +903,10 @@ void linkAccount( String otp, String fid, BuildContext context,FinvuFIPDetails f
     }catch(e){
         print(e);
     }
+  }
+  
+  Widget getNoBankAccount() {
+    return textStyle("No accounts found please try with another bank",15);
   }
 }
 

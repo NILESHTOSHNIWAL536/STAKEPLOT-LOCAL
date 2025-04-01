@@ -22,7 +22,7 @@ class _WebViewPageState extends State<WebViewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: AppBar(title: const Text("Ter")),
-      body: WebViewWidget(controller: widget.controller,),
+      body: SafeArea(child: WebViewWidget(controller: widget.controller,)),
     );
   }
 }
