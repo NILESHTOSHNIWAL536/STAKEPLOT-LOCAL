@@ -2,6 +2,7 @@ import "dart:convert";
 import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
+import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/Tribe/userDetails.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends.dart";
@@ -169,16 +170,7 @@ class _TribeSearchState extends State<TribeSearch> {
     } else {}
   }
 
-  List getLastTenUsers(List allUsers) {
-    // Determine the number of users to take
-    int numberOfUsersToTake = allUsers.length < 10 ? allUsers.length : 10;
-
-    // Get the last `numberOfUsersToTake` users
-    List lastUsers = allUsers.sublist(allUsers.length - numberOfUsersToTake);
-
-    // Reverse the list
-    return lastUsers.reversed.toList();
-  }
+ 
 
   @override
   Widget build(BuildContext context) {

@@ -85,3 +85,15 @@ String getPreviousDate(int no, String type) {
 
   return DateFormat('yyyy-MM-dd').format(previousDate);
 }
+
+
+ List getLastTenUsers(List allUsers) {
+    // Determine the number of users to take
+    int numberOfUsersToTake = allUsers.length < 10 ? allUsers.length : 10;
+
+    // Get the last `numberOfUsersToTake` users
+    List lastUsers = allUsers.sublist(allUsers.length - numberOfUsersToTake);
+
+    // Reverse the list
+    return lastUsers.reversed.toList();
+  }

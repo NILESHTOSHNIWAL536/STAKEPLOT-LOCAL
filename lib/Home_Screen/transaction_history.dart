@@ -384,6 +384,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
       },
       onTap: () {
         // Navigate to the transaction details page on long press
+        if(!ismanual)
         showModalBottomSheet(
             context: context,
             builder: (BuildContext context) {
@@ -495,13 +496,13 @@ class _TransactionHistoryState extends State<TransactionHistory>
           ),
           if (ismanual)
             Positioned(
-              top: 5,
-              left: 5,
+              top: 3,
+              left: 1,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(30),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black26,
@@ -515,7 +516,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 12,
+                    fontSize: 10,
                   ),
                 ),
               ),

@@ -38,7 +38,7 @@ class Manualtransaction extends StatefulWidget {
 class _ManualtransactionState extends State<Manualtransaction> {
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.sizeOf(context).width/0.8,
+      width: MediaQuery.sizeOf(context).width / 0.8,
       // padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
         color: AppColors.mt,
@@ -50,16 +50,13 @@ class _ManualtransactionState extends State<Manualtransaction> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-             
-                  
-                  AvatarProfileImage(
-                    url: HomePageIcons.manualTransaction,
-                    height: 24,
-                    width: 24,
-                  ),
+              AvatarProfileImage(
+                url: HomePageIcons.manualTransaction,
+                height: 24,
+                width: 24,
+              ),
               SizedBox(width: MediaQuery.of(context).size.width / 52),
               Container(
-                
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -73,8 +70,8 @@ class _ManualtransactionState extends State<Manualtransaction> {
                     InkWell(
                       onTap: () => showCustomModal(context),
                       child: Container(
-                        height: Colorcodes.paddingSize * 1.7,
-                        width: Colorcodes.paddingSize * 5,
+                        height: Colorcodes.paddingSize * 1.5,
+                        width: Colorcodes.paddingSize * 4,
                         decoration: BoxDecoration(
                             color: AppColors.button,
                             borderRadius: BorderRadius.circular(16)),
@@ -82,7 +79,7 @@ class _ManualtransactionState extends State<Manualtransaction> {
                           child: Text('Start now',
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.normal,
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   color: AppColors.primaryColor)),
                         ),
                       ),
@@ -91,15 +88,13 @@ class _ManualtransactionState extends State<Manualtransaction> {
                 ),
               ),
              
-                AvatarProfileImage(
-                  url: LikeComment.manualTransaction,
-                  height: 11,
-                  width: 16,
-                )
             ],
-          )
-
-          
+          ),
+           AvatarProfileImage(
+                url: LikeComment.manualTransaction,
+                height: 10,
+                width: 14,
+              )
         ],
       ),
     );
@@ -357,7 +352,7 @@ class _ModalContentState extends State<ModalContent>
     return TextField(
       controller: _amountController,
       keyboardType: TextInputType.number,
-      autofocus: true, 
+      autofocus: true,
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.currency_rupee),
         hintText: 'Enter amount',
@@ -584,9 +579,9 @@ class _ModalContentState extends State<ModalContent>
             }
             isSplit.value = false;
             isLend.value = true;
-          
-            final result = await showCustomFriendsModal(context, amount ?? 0.0, true);
-           
+
+            final result =
+                await showCustomFriendsModal(context, amount ?? 0.0, true);
           },
           child: Container(
             width: MediaQuery.of(context).size.width / 2.4,
@@ -729,9 +724,7 @@ class _ModalContentState extends State<ModalContent>
     return await showModalBottomSheet<dynamic>(
       context: context,
       isScrollControlled: true,
-      
       shape: const RoundedRectangleBorder(
-        
         borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
       ),
       builder: (BuildContext context) {
@@ -745,7 +738,6 @@ class _ModalContentState extends State<ModalContent>
       },
     );
   }
-
 
   void splitUserAmount(
     BuildContext context,
@@ -889,7 +881,7 @@ class _ModalContentState extends State<ModalContent>
       String subCategories) async {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
-    
+
     final response = await http.post(
       Uri.parse('${url}/bill'),
       headers: <String, String>{

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:intl/intl.dart'; // For date formatting
 
 class TransactionDetailsPage extends StatelessWidget {
@@ -12,10 +13,14 @@ class TransactionDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Assuming transactionTimestamp is a DateTime or String that can be parsed
-    String formattedDate = transaction['transactionTimestamp'] is String
-        ? DateFormat('MMM dd, yyyy • hh:mm a')
-            .format(DateTime.parse(transaction['transactionTimestamp']))
-        : transaction['transactionTimestamp'].toString();
+    // String formattedDate = transaction['transactionTimestamp'] is String
+    //     ? DateFormat('MMM dd, yyyy • hh:mm a')
+    //         .format(DateTime.parse(transaction['transactionTimestamp']))
+    //     : transaction['transactionTimestamp'].toString();
+    final formattedDate = transaction['transactionTimestamp'] != null
+        ? formatWhatsAppDate(convertStringToDateTime(
+            transaction['transactionTimestamp'].toString()))
+        : 'N/A'; // Default value if transactionTimestamp is null
 
     return Scaffold(
       backgroundColor: Colors.grey[100], // Light background like payment apps
