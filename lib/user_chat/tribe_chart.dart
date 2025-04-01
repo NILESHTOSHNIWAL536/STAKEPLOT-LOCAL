@@ -164,7 +164,11 @@ class _TribeSearchState extends State<TribeChats> {
               )
             : Column(
                 children:
-                    chatList.map((item) => profileContainer(item)).toList(),
+                    chatList.map((item) => GestureDetector(
+                      onTap: (){
+                        
+                      },
+                      child: profileContainer(item))).toList(),
               );
     // return   Column(
     //         children: frdsList.map((item) => profileContainer(item)).toList(),
@@ -257,6 +261,7 @@ class _TribeSearchState extends State<TribeChats> {
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
       child: GestureDetector(
         onTap: () {
+          
           messages.clear();
           unSeenChat(context, item['_id']);
           getChatLoader();

@@ -405,7 +405,7 @@ class _ExploreModalState extends State<ExploreModal> {
   @override
   Widget build(BuildContext context) {
     return exploreSubmitted
-        ? const SuccessPost()
+        ? const SuccessPost(celebrationText: "Posted",)
         : Container(
             color: AppColors.backgroundColor,
             child: AnimatedPadding(

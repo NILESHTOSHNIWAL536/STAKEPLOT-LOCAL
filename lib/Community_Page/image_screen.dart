@@ -452,7 +452,7 @@ class _ImageScreenState extends State<ImageScreen> {
 
                         if (mounted) {
                           Navigator.pop(context);
-                          Get.to(() => const SuccessPost());
+                          Get.to(() => const SuccessPost(celebrationText: "Posted",));
                         }
                       } catch (e) {
                         print(

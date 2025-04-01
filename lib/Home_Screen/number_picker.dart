@@ -40,12 +40,17 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
   final FixedExtentScrollController secondDigitController =
       FixedExtentScrollController(initialItem: 0);
 
-    List lock=["( ◐ o ◑ )"  , "  (̿▀̿ ̿Ĺ̯̿̿▀̿ ̿)̄ " , "(¬‿¬)" , " (-‿◦)"  , " ヽ(͡◕ ͜ʖ ͡◕)ﾉ"];
+  List lock = [
+    "( ◐ o ◑ )",
+    "  (̿▀̿ ̿Ĺ̯̿̿▀̿ ̿)̄ ",
+    "(¬‿¬)",
+    " (-‿◦)",
+    " ヽ(͡◕ ͜ʖ ͡◕)ﾉ"
+  ];
 
-   void initializeData() {
+  void initializeData() {
     getBankAccounts();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -59,39 +64,41 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
             child: SizedBox(
                 width: width,
                 height: height > 0 ? height / 2.5 : 100, // Fallback height
-                child: Obx(()=> loadBanks.value ? BankSlider():avatarSlider2()))));
+                child: Obx(
+                    () => loadBanks.value ? BankSlider() : avatarSlider2()))));
   }
 
   Widget avatarSlider2() {
-    return bankAccountLinkedList.isEmpty? AvatarProfileImage(url: bankImage, width: 10, height: 10):
-    GFCarousel(
-      viewportFraction: 1.0,
-      reverse: false,
-      enlargeMainPage: false,
-      autoPlay: false,
-      enableInfiniteScroll: false,
-      items: bankAccountLinkedList.map(
-        (data) {
-          return Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: getListViewBankInfo(data),
+    return bankAccountLinkedList.isEmpty
+        ? AvatarProfileImage(url: bankImage, width: 10, height: 10)
+        : GFCarousel(
+            viewportFraction: 1.0,
+            reverse: false,
+            enlargeMainPage: false,
+            autoPlay: false,
+            enableInfiniteScroll: false,
+            items: bankAccountLinkedList.map(
+              (data) {
+                return Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: getListViewBankInfo(data),
+                );
+              },
+            ).toList(),
+            onPageChanged: (index) {
+              if (bankAccountLinkedList.isEmpty) return;
+              accountId.value = bankAccountLinkedList[index]['accountId'] ?? "";
+              calledFunctionToFetchData(context);
+            },
           );
-        },
-      ).toList(),
-      onPageChanged: (index) {
-        if(bankAccountLinkedList.isEmpty)return;
-         accountId.value = bankAccountLinkedList[index]['accountId'] ?? "";
-         calledFunctionToFetchData(context);
-      },
-    );
   }
 
   Widget getListViewBankInfo(data) {
     int randomIndex = Random().nextInt(lock.length);
-    if(randomIndex==lock.length)randomIndex=0;
+    if (randomIndex == lock.length) randomIndex = 0;
     return Container(
-      
-      //width: MediaQuery.sizeOf(context).width/1.1,
+
+        //width: MediaQuery.sizeOf(context).width/1.1,
         padding: EdgeInsets.symmetric(
             horizontal: Colorcodes.paddingHorizontal,
             vertical: Colorcodes.paddingHorizontal / 5),
@@ -103,7 +110,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(height: Colorcodes.borderRadius10 ),
+            SizedBox(height: Colorcodes.borderRadius10),
             Text(
               data['bankName'],
               style: FontManager().getTextStyle(context,
@@ -119,18 +126,18 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                   fontSize: 16,
                   color: AppColors.backgroundColor),
             ),
-            SizedBox(height: Colorcodes.borderRadius ),
+            SizedBox(height: Colorcodes.borderRadius),
             Text('Available balance',
                 style: FontManager().getTextStyle(context,
                     lWeight: FontWeight.w400,
                     fontSize: 12,
                     color: AppColors.backgroundColor)),
-            SizedBox(height: Colorcodes.borderRadius10 ),
+            SizedBox(height: Colorcodes.borderRadius10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '\u{20B9} ${hideBackAccountPassword.value ? data['currentBalance'] : lock[randomIndex]}',
+                  '\u{20B9} ${(hideBackAccountPassword.value || cupertinoPin.value == "0") ? data['currentBalance'] : lock[randomIndex]}',
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.bold,
                       fontSize: 20,
@@ -199,7 +206,6 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
       ),
     );
   }
-
 
   Widget setPinForAccountHide(context) {
     return Obx(() => cupertinoPin.value == "0"
@@ -342,7 +348,6 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
         selectedBank.value = value;
         accountId.value = value;
         seletedBankUpdateInfo(value, context);
-
       },
       itemBuilder: (context) {
         return bankAccountLinkedList.map<PopupMenuEntry<String>>((e) {

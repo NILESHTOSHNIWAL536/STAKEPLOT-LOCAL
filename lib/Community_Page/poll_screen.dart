@@ -105,7 +105,7 @@ class _PollScreenState extends State<PollScreen> {
   @override
   Widget build(BuildContext context) {
     return pollSubmitted
-        ? const SuccessPost()
+        ? const SuccessPost(celebrationText: "Posted",)
         : Container(
             child: AnimatedPadding(
               padding: EdgeInsets.only(

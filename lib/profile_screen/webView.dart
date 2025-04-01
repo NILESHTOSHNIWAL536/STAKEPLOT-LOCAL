@@ -5,14 +5,14 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewPage extends StatefulWidget {
   final WebViewController controller;
-   WebViewPage({Key? key, required this.controller}) : super(key: key);
+  WebViewPage({Key? key, required this.controller}) : super(key: key);
 
   @override
   _WebViewPageState createState() => _WebViewPageState();
 }
 
 class _WebViewPageState extends State<WebViewPage> {
-  RxBool flag=false.obs;
+  RxBool flag = false.obs;
   @override
   void initState() {
     super.initState();
@@ -22,7 +22,10 @@ class _WebViewPageState extends State<WebViewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: AppBar(title: const Text("Ter")),
-      body: SafeArea(child: WebViewWidget(controller: widget.controller,)),
+      body: SafeArea(
+          child: WebViewWidget(
+          controller: widget.controller,
+      )),
     );
   }
 }

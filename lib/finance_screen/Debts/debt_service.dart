@@ -1,3 +1,5 @@
+
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:http/http.dart' as http;
@@ -7,18 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class DebtService {
   static String _baseUrl = 'http://${portNo}:5000/api/v1/debt';
 
-  static Future<String?> getToken() async {
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    var accessToken = pref.getString("accessToken");
-
-    if (accessToken == null) {
-      print("No access token found in SharedPreferences");
-      return null;
-    } else {
-      print("Token: $accessToken");
-      return accessToken;
-    }
-  }
+  
 
   static Future<Map<String, dynamic>?> createDebt(
       Map<dynamic, dynamic> debtData) async {
@@ -40,7 +31,8 @@ class DebtService {
         body: jsonEncode(debtData),
       );
 
-    
+    //  print('Response status code: ${response.statusCode}');
+    //   print('Response body: ${response.body}');
       if (response.statusCode == 200 || response.statusCode == 201) {
        
         return jsonDecode(response.body); // Return the JSON response

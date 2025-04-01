@@ -35,7 +35,9 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
   }
 
   @override
-  Widget build( BuildContext context,) {
+  Widget build(
+    BuildContext context,
+  ) {
     return Scaffold(
       bottomNavigationBar: BottomNavigations(data: 3),
       backgroundColor: AppColors.backgroundColor,
@@ -126,7 +128,6 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
               child: Column(children: [
                 // First Container for Community profile and Friends list
                 Container(
-                  
                   decoration: BoxDecoration(
                       color: AppColors.mt,
                       borderRadius: BorderRadius.circular(14),
@@ -196,8 +197,8 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                           onTap: () {
                             WebViewController controller = WebViewController()
                               ..setJavaScriptMode(JavaScriptMode.unrestricted)
-                              ..loadRequest(
-                                  Uri.parse("https://stakeplot.com/privacy-policy"));
+                              ..loadRequest(Uri.parse(
+                                  "https://stakeplot.com/privacy-policy"));
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -235,8 +236,6 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                         //       'History archives ',
                         //       'Find your hidden history here'),
                         // ),
-                       
-                       
                       ],
                     ),
                   ),
@@ -266,10 +265,8 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
             final SharedPreferences _pref =
                 await SharedPreferences.getInstance();
 
-          
-
             // Remove tokens and other session data
-            
+
             await _pref.remove("ConsentHandleId");
             await _pref.remove("consentId");
             await _pref.remove("from");
@@ -282,18 +279,16 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
             Navigator.pushReplacementNamed(context, '/');
 
             clearGetX();
-            
+
             try {
               var response = await postDataApiCall("${url}/user/logout", {});
               printData(response);
-            } catch (e)
-            {
+            } catch (e) {
               print(e);
             }
 
-          
-             await _pref.remove("token");
-             await _pref.remove("accessToken");
+            await _pref.remove("token");
+            await _pref.remove("accessToken");
           },
           child: Container(
             decoration: BoxDecoration(
@@ -333,7 +328,6 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
     double w = MediaQuery.sizeOf(context).width;
     return ListTile(
       leading: Container(
-       
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
             color: AppColors.button,
@@ -349,13 +343,13 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
           style: FontManager().getTextStyle(context,
               lWeight: FontWeight.w500,
               //fontSize: MediaQuery.of(context).size.width * 0.04,
-              fontSize: h/52,
+              fontSize: h / 52,
               color: AppColors.bg1)),
       subtitle: Text(subtitle,
           style: FontManager().getTextStyle(context,
               lWeight: FontWeight.w400,
               //fontSize: MediaQuery.of(context).size.width * 0.04,
-              fontSize: h/72,
+              fontSize: h / 72,
               color: AppColors.bg1)),
       //trailing: isLogout ? Icon(Icons.logout, color: Colors.red) : null,
       onTap: onTap,

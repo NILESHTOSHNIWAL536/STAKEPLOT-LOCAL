@@ -445,6 +445,7 @@ class _ChatState extends State<Chat> {
                               height: 17)),
                       GestureDetector(
                         onTap: () {
+                          
                           pushDetails();
                         },
                         child: Container(
@@ -771,6 +772,7 @@ class _ChatState extends State<Chat> {
       ),
     );
   }
+
   Widget image(url) {
     if (url == "" || url == "None") return SizedBox.shrink();
 
@@ -795,7 +797,6 @@ class _ChatState extends State<Chat> {
             url,
             width: MediaQuery.of(context).size.width / 2,
             height: MediaQuery.of(context).size.height / 5,
-            
             fit: BoxFit.cover,
             color: Colors.black.withOpacity(0.0),
             colorBlendMode: BlendMode.exclusion,
@@ -1018,11 +1019,13 @@ class _ChatState extends State<Chat> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    textStyleColor("Cancel", AppColors.accentColor, data, imageData),
+                    textStyleColor(
+                        "Cancel", AppColors.accentColor, data, imageData),
                     const SizedBox(
                       width: 5,
                     ),
-                    textStyleColor(" Send ", AppColors.primaryColor, data, imageData),
+                    textStyleColor(
+                        " Send ", AppColors.primaryColor, data, imageData),
                   ],
                 ),
               ],
@@ -1073,9 +1076,10 @@ class _ChatState extends State<Chat> {
 
   Widget uploadData(dataObj2) {
     var dataObj = jsonDecode(dataObj2);
-  bool isExploria = dataObj['postType']=="explore";
-  var extractdata=isExploria?dataObj['description']['message']:{};  //  dataObj.containsKey('place') && dataObj.containsKey('tripHighlight')
- 
+    bool isExploria = dataObj['postType'] == "explore";
+    var extractdata = isExploria
+        ? dataObj['description']['message']
+        : {}; //  dataObj.containsKey('place') && dataObj.containsKey('tripHighlight')
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
@@ -1083,6 +1087,7 @@ class _ChatState extends State<Chat> {
         children: [
           GestureDetector(
             onTap: () {
+             
               Navigator.push(
                 context,
                 PageTransition(
@@ -1136,41 +1141,45 @@ class _ChatState extends State<Chat> {
 
                   // var dataObj = jsonDecode(message.post);
 
-             isExploria?SizedBox.shrink(): dataObj['isPoll']
-                      ? poll(
-                          dataObj['pollData'],
-                        )
-                      : Container(
-                          width: MediaQuery.of(context).size.width / 1.3,
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Text((dataObj['title']),
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: Colors.black)),
-                        ),
-                  
-                isExploria?ExploreCard(extractdata: extractdata,dataObj:dataObj):   (dataObj['chartType'] == "bargraph" ||
-                          dataObj['chartType'] == "piechart")
-                      ? dataObj['chartType'] == "bargraph"
-                          ? barGraph(dataObj)
-                          : pieChart(dataObj)
-                      : getMessage(dataObj),
-                 
+                  isExploria
+                      ? SizedBox.shrink()
+                      : dataObj['isPoll']
+                          ? poll(
+                              dataObj['pollData'],
+                            )
+                          : Container(
+                              width: MediaQuery.of(context).size.width / 1.3,
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: Text((dataObj['title']),
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      color: Colors.black)),
+                            ),
 
-               isExploria?SizedBox.shrink():   dataObj['image'] != null && dataObj['image'] != "none" && dataObj['image'] !=""
-                      ? Image.network(
-                          dataObj['image'],
-                          width: MediaQuery.of(context).size.width / 1.3,
-                          height: MediaQuery.of(context).size.height / 5,
-                          fit: BoxFit.cover,
-                          color: Colors.black.withOpacity(0.0),
-                          colorBlendMode: BlendMode.exclusion,
-                        )
-                      : SizedBox.shrink(),
-                  
+                  isExploria
+                      ? ExploreCard(extractdata: extractdata, dataObj: dataObj)
+                      : (dataObj['chartType'] == "bargraph" ||
+                              dataObj['chartType'] == "piechart")
+                          ? dataObj['chartType'] == "bargraph"
+                              ? barGraph(dataObj)
+                              : pieChart(dataObj)
+                          : getMessage(dataObj),
 
-                 
+                  isExploria
+                      ? SizedBox.shrink()
+                      : dataObj['image'] != null &&
+                              dataObj['image'] != "none" &&
+                              dataObj['image'] != ""
+                          ? Image.network(
+                              dataObj['image'],
+                              width: MediaQuery.of(context).size.width / 1.3,
+                              height: MediaQuery.of(context).size.height / 5,
+                              fit: BoxFit.cover,
+                              color: Colors.black.withOpacity(0.0),
+                              colorBlendMode: BlendMode.exclusion,
+                            )
+                          : SizedBox.shrink(),
                 ],
               ),
             ),

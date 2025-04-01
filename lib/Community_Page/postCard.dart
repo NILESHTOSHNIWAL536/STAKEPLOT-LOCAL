@@ -1196,6 +1196,7 @@ class _PostCardState extends State<PostCard> {
       )),
       onSelected: (value) {
         if (value == 0 && userId == userName.value) {
+           print("value $value");
           deletePost(id, context);
         }
         if (value == 1) {

@@ -708,6 +708,7 @@ import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
+import "package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/pending_users.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
@@ -773,24 +774,24 @@ class _NotificationsState extends State<Notifications> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: AppColors.backgroundColor,
-          elevation: 0,
-          title: Text(
-            "Notifications",
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.w600,
-              fontSize: 20,
-              color: AppColors.accentColor,
-            ),
-          ),
-          centerTitle: true,
-        ),
+    return Scaffold(
+      appBar: AppBar(
         backgroundColor: AppColors.backgroundColor,
-        body: LayoutBuilder(
+        elevation: 0,
+        title: Text(
+          "Notifications",
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.w600,
+            fontSize: 20,
+            color: AppColors.accentColor,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      backgroundColor: AppColors.backgroundColor,
+      body: SafeArea(
+        child: LayoutBuilder(
           builder: (context, constraints) {
             return Padding(
               padding: EdgeInsets.symmetric(

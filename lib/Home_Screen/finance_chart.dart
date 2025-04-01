@@ -46,7 +46,8 @@ class _FinancePageState extends State<FinancePage> {
       final position = renderObject.localToGlobal(Offset.zero);
       final scrollOffset = widget.scrollController.offset;
       final targetOffset =
-          position.dy - scrollOffset - MediaQuery.of(context).size.height / 6.8;
+          position.dy - scrollOffset - MediaQuery.of(context).size.height / 7;
+     // print("targetOffset $targetOffset");
       widget.scrollController.animateTo(
         targetOffset > 0 ? targetOffset : 0,
         duration: Duration(milliseconds: 500),
@@ -85,7 +86,10 @@ class _FinancePageState extends State<FinancePage> {
               children: [
                 Row(
                   children: [
-                    Obx(() => Text( getGraphData.value? '₹${doubleToFixed(totalDebitValue.toString())}':'₹${doubleToFixed(totalDebitValue.toString())}',
+                    Obx(() => Text(
+                          getGraphData.value
+                              ? '₹${doubleToFixed(totalDebitValue.toString())}'
+                              : '₹${doubleToFixed(totalDebitValue.toString())}',
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.bold,
                               fontSize: fontSizeFactor * 4,
@@ -370,25 +374,20 @@ class _LineChartWidgetState extends State<LineChartWidget> {
               // Fixed Y-axis labels
               if (!widget.isExpandedView)
                 Container(
-                  
                   // width: screenWidth * 0.06, // Reduced width (adjust as needed)
-                padding: EdgeInsets.zero, 
+                  padding: EdgeInsets.zero,
                   child: _buildYAxisLabels(fontSizeFactor),
                 ),
               // Scrollable chart area
               Expanded(
-                
-                child:
-                    SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: getContainerOfGraph(screenWidth, fontSizeFactor),
-                      )
-                    
-              ),
+                  child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: getContainerOfGraph(screenWidth, fontSizeFactor),
+              )),
             ],
           ),
           // Icon button for navigation to ExpandedChartView (only in non-expanded view)
-          if (!widget.isExpandedView)
+          if (!widget.isExpandedView && widget.selectedButton.value == 'Month')
             Positioned(
               top: 8, // Adjust as needed
               right: 2, // Adjust as needed
@@ -455,19 +454,18 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     double chartWidth = dataLength * labelWidth;
 
     return Container(
-       //color: Colors.amber,
+        //color: Colors.amber,
         width: widget.selectedButton.value == 'Week'
             ? screenWidth * 0.85 // Fixed width for Week
             : max(chartWidth, screenWidth * 0.85),
         height: MediaQuery.of(context).size.height / 2.6,
         child: Transform.translate(
           offset: widget.selectedButton.value == 'Week'
-      ? Offset(-20, 0)
-      : widget.selectedButton.value == 'Month'
-          ? Offset(-30, 0)
-          : Offset(-20, 0),
+              ? Offset(-20, 0)
+              : widget.selectedButton.value == 'Month'
+                  ? Offset(-30, 0)
+                  : Offset(-20, 0),
           child: SfCartesianChart(
-            
             borderWidth: 0,
             plotAreaBorderWidth: 0,
             primaryXAxis: CategoryAxis(
@@ -505,7 +503,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
               minimum: 0,
               maximum: maxYValue * 1.2,
             ),
-             //enableAxisAnimation: true,
+            //enableAxisAnimation: true,
             tooltipBehavior: TooltipBehavior(
               enable: true,
               builder: (dynamic data, dynamic point, dynamic series,
@@ -531,22 +529,21 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                         color: Colors.white),
                   ),
                 );
-
-               
               },
             ),
-            
+
             series: <ChartSeries>[
-                SplineAreaSeries<ChartData, String>(
-      dataSource: creditedData,
-      xValueMapper: (ChartData data, _) => data.x,
-      yValueMapper: (ChartData data, _) => data.y,
-      color: AppColors.primaryColor.withOpacity(0.2), // Faded area color
-      borderWidth: 0, // No border, just the area
-      enableTooltip: false, // Disable tooltip for the area layer
-      splineType: SplineType.cardinal,
-      cardinalSplineTension: 0.9,
-    ),
+              SplineAreaSeries<ChartData, String>(
+                dataSource: creditedData,
+                xValueMapper: (ChartData data, _) => data.x,
+                yValueMapper: (ChartData data, _) => data.y,
+                color:
+                    AppColors.primaryColor.withOpacity(0.2), // Faded area color
+                borderWidth: 0, // No border, just the area
+                enableTooltip: false, // Disable tooltip for the area layer
+                splineType: SplineType.cardinal,
+                cardinalSplineTension: 0.9,
+              ),
               SplineSeries<ChartData, String>(
                 dataSource: creditedData,
                 xValueMapper: (ChartData data, _) => data.x,
@@ -567,7 +564,6 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                   // Handle point tap here
                 },
               ),
-              
               SplineSeries<ChartData, String>(
                 dataSource: debitedData,
                 xValueMapper: (ChartData data, _) => data.x,
@@ -588,16 +584,17 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                   // Handle point tap here
                 },
               ),
-               SplineAreaSeries<ChartData, String>(
-      dataSource: debitedData,
-      xValueMapper: (ChartData data, _) => data.x,
-      yValueMapper: (ChartData data, _) => data.y,
-      color: AppColors.accentColor.withOpacity(0.2), // Faded area color
-      borderWidth: 0, // No border, just the area
-      enableTooltip: false, // Disable tooltip for the area layer
-      splineType: SplineType.cardinal,
-      cardinalSplineTension: 0.9,
-    ),
+              SplineAreaSeries<ChartData, String>(
+                dataSource: debitedData,
+                xValueMapper: (ChartData data, _) => data.x,
+                yValueMapper: (ChartData data, _) => data.y,
+                color:
+                    AppColors.accentColor.withOpacity(0.2), // Faded area color
+                borderWidth: 0, // No border, just the area
+                enableTooltip: false, // Disable tooltip for the area layer
+                splineType: SplineType.cardinal,
+                cardinalSplineTension: 0.9,
+              ),
             ],
             legend: Legend(
               isVisible: false,
@@ -631,54 +628,55 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     return false; // Placeholder return value
   }
 
- Widget _buildYAxisLabels(double fontSizeFactor) {
-  // Calculate the maximum value including padding
-  final double maxValue = maxYValue * 1.2;
-  
-  // Determine the number of labels (e.g., 5) and calculate interval
-  const int numLabels = 5; // You can adjust this based on your needs
-  final double interval = maxValue / (numLabels - 1); // Avoid division by zero
-  
-  List<Widget> labels = [];
-  
-  for (int i = 0; i < numLabels; i++) {
-    double value = i * interval;
-    labels.add(
-      Expanded(
-        child: Align(
-          alignment: Alignment.center,
-          child: Text(
-            '₹${formatNumberString(value.toStringAsFixed(0))}', // Use toStringAsFixed for precision
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.normal,
-              fontSize: fontSizeFactor * 3.3,
-              color: AppColors.accentColor,
+  Widget _buildYAxisLabels(double fontSizeFactor) {
+    // Calculate the maximum value including padding
+    final double maxValue = maxYValue * 1.2;
+
+    // Determine the number of labels (e.g., 5) and calculate interval
+    const int numLabels = 5; // You can adjust this based on your needs
+    final double interval =
+        maxValue / (numLabels - 1); // Avoid division by zero
+
+    List<Widget> labels = [];
+
+    for (int i = 0; i < numLabels; i++) {
+      double value = i * interval;
+      labels.add(
+        Expanded(
+          child: Align(
+            alignment: Alignment.center,
+            child: Text(
+              '₹${formatNumberString(value.toStringAsFixed(0))}', // Use toStringAsFixed for precision
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.normal,
+                fontSize: fontSizeFactor * 3.3,
+                color: AppColors.accentColor,
+              ),
             ),
           ),
         ),
-      ),
+      );
+    }
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: labels.reversed.toList(), // Highest value at top
     );
   }
-  
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: labels.reversed.toList(), // Highest value at top
-  );
-}
 
-String formatNumberString(String value) {
-  double numValue = double.tryParse(value) ?? 0;
-  if (numValue >= 10000000) {
-    return '${(numValue / 10000000).toStringAsFixed(1)} Cr'; // Increased precision
-  } else if (numValue >= 100000) {
-    return '${(numValue / 100000).toStringAsFixed(1)} L'; // Increased precision
-  } else if (numValue >= 1000) {
-    return '${(numValue / 1000).toStringAsFixed(1)} K'; // Increased precision
-  } else {
-    return numValue.toStringAsFixed(0); // No decimals for small values
+  String formatNumberString(String value) {
+    double numValue = double.tryParse(value) ?? 0;
+    if (numValue >= 10000000) {
+      return '${(numValue / 10000000).toStringAsFixed(1)} Cr'; // Increased precision
+    } else if (numValue >= 100000) {
+      return '${(numValue / 100000).toStringAsFixed(1)} L'; // Increased precision
+    } else if (numValue >= 1000) {
+      return '${(numValue / 1000).toStringAsFixed(1)} K'; // Increased precision
+    } else {
+      return numValue.toStringAsFixed(0); // No decimals for small values
+    }
   }
-}
 }
 
 class ChartData {

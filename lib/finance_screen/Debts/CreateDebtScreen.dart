@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_application_code_stakeplot/Community_Page/success_post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_service.dart';
 import 'package:http/http.dart' as http;
@@ -95,6 +96,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
 
   void _saveDebt() async {
     if (_formKey.currentState!.validate()) {
+    //  print('Form is valid. Preparing to save debt.'); // Debug statement
       Map<String, dynamic> debtData = {
         'name': _name,
         'type': _loanType.toLowerCase(),
@@ -103,12 +105,14 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
         'durationMonths': _durationMonths,
         'startDate': _date.toIso8601String(),
       };
+    //  print('Debt data: $debtData'); // Debug statement
 
       try {
         Map<String, dynamic>? response = await DebtService.createDebt(debtData);
+      //  print('Response from DebtService: $response'); // Debug statement
 
         if (response != null) {
-          print('Debt created successfully: $response');
+         // print('Debt created successfully: $response');
 
           if (context.mounted) {
             // Ensure the widget is still in the tree
@@ -125,11 +129,13 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
             );
           }
         } else {
-          print('Failed to create debt. No valid response received.');
+         // print('Failed to create debt. No valid response received.');
         }
       } catch (e) {
-        print('Error creating debt: $e');
+       // print('Error creating debt: $e');
       }
+    } else {
+     // print('Form is invalid.'); // Debug statement
     }
   }
 
@@ -223,7 +229,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                   },
                 ),
                 SizedBox(height: Colorcodes.paddingSize),
-                
+
                 CustomFormField(
                   hintText: 'Select Date',
                   readOnly: true,
@@ -288,15 +294,15 @@ class Debt {
     required this.durationMonths,
   });
   factory Debt.fromJson(Map<String, dynamic> json) {
-  return Debt(
-    name: json['name'],
-    type: json['type'],
-    amount: (json['principalAmount'] as num).toDouble(),
-    interest: (json['interestRate'] as num).toDouble(),
-    durationMonths: json['durationMonths'] as int,
-    date: DateTime.parse(json['startDate']),
-  );
-}
+    return Debt(
+      name: json['name'],
+      type: json['type'],
+      amount: (json['principalAmount'] as num).toDouble(),
+      interest: (json['interestRate'] as num).toDouble(),
+      durationMonths: json['durationMonths'] as int,
+      date: DateTime.parse(json['startDate']),
+    );
+  }
 
   @override
   String toString() {

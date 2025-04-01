@@ -50,13 +50,13 @@ class _ManualtransactionState extends State<Manualtransaction> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              IconButton(
-                  onPressed: () {},
-                  icon: AvatarProfileImage(
+             
+                  
+                  AvatarProfileImage(
                     url: HomePageIcons.manualTransaction,
                     height: 24,
                     width: 24,
-                  )),
+                  ),
               SizedBox(width: MediaQuery.of(context).size.width / 52),
               Container(
                 
@@ -746,20 +746,7 @@ class _ModalContentState extends State<ModalContent>
     );
   }
 
-// void showCustomFriendsModal2(BuildContext context) {
-//     showModalBottomSheet(
-//       context: context,
-//       isScrollControlled: true,
-//       shape: const RoundedRectangleBorder(
-//         borderRadius: BorderRadius.vertical(
-//           top: Radius.circular(18),
-//         ),
-//       ),
-//       builder: (BuildContext context) {
-//         return FriendsUi(); // Use the modal widget here
-//       },
-//     );
-//   }
+
   void splitUserAmount(
     BuildContext context,
     String totalAmount,

@@ -8,8 +8,8 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.
 import 'package:get/get.dart';
 
 bool flag = true;
-String portNo = flag ? "192.168.1.6" : "localhost";
-String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String portNo = flag ? "192.168.1.3" : "localhost";
+String urlWithLocallHost =!flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Feilds";
 RxString expenses = "Loading....".obs;
@@ -183,6 +183,13 @@ RxList getExploriaTrendingData = [].obs;
 RxMap<String, int> postExploriaCount = <String, int>{}.obs;
 RxMap<String, int> postExploriaCommentCount = <String, int>{}.obs;
 RxMap<String, int> supportExploriaCount = <String, int>{}.obs;
+
+  final RxList<String> monthLabels = <String>[].obs;
+  final Rx<Map<String, List<double>>> currentChartData =
+      Rx<Map<String, List<double>>>({});
+  final RxList<String> currentDays = <String>[].obs;
+  // final RxBool isYearView = false.obs;
+  final RxBool isLoading = false.obs;
 late FinvuAccountLinkingRequestReference linkingReference;
 
 class Message {

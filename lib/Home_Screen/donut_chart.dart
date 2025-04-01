@@ -116,42 +116,30 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.insert_chart_outlined,
-                          size: 60,
-                          color: AppColors.bg3.withOpacity(0.6),
-                        ),
-                        const SizedBox(height: 16),
+                       
                         Text(
-                          'No Expense Data Available',
+                         'No Spendings Available',
                           style: FontManager().getTextStyle(
-                            Get.context!,
+                            context,
                             lWeight: FontWeight.bold,
                             fontSize: 16,
                             color: AppColors.bg3.withOpacity(0.8),
                           ),
                         ),
                         const SizedBox(height: 8),
-                        Text(
-                          'Add some transactions to see the chart',
-                          style: FontManager().getTextStyle(
-                            Get.context!,
-                            lWeight: FontWeight.normal,
-                            fontSize: 14,
-                            color: AppColors.bg3.withOpacity(0.6),
-                          ),
-                        ),
+                       
                       ],
                     ),
                   )
                 :SfCircularChart(
-                            
+                             legend: Legend(isVisible: true, position: LegendPosition.bottom),
                             series: <CircularSeries>[
 
                               DoughnutSeries<ChartData, String>(
                                 dataSource: chartData,
                                 xValueMapper: (ChartData data, _) =>data.category,
                                 yValueMapper: (ChartData data, _) => data.value,
+                                pointColorMapper: (ChartData data, _) => data.color,
                                 explode: true,
                                  
                         
@@ -168,6 +156,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                 //     }
                                  
                                 // },
+
                                 onPointTap: (ChartPointDetails details) {
   if (chartData.isNotEmpty && details.pointIndex != null && details.pointIndex! < chartData.length) {
     if (selectedIndex.value == details.pointIndex) {
@@ -260,15 +249,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
   }
 
 
-  Widget emptyDataDonectChat(){
-      return Center(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height/3,
-          color: Colors.cyan,
-        ),
-      );
-  }
+ 
   
  Widget topHeader() {
      return Row(
@@ -285,3 +266,4 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                 );
   }
 }
+
