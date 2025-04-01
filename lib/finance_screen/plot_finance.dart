@@ -1,22 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
-import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/customNoti.dart';
-
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/finvuAccount.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
-import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
-import 'package:flutter_application_code_stakeplot/signInOut/signup.dart';
-import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 
 class PlotFinance extends StatefulWidget {

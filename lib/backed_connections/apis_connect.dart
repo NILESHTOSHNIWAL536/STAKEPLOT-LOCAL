@@ -184,6 +184,7 @@ RxMap<String, int> postExploriaCount = <String, int>{}.obs;
 RxMap<String, int> postExploriaCommentCount = <String, int>{}.obs;
 RxMap<String, int> supportExploriaCount = <String, int>{}.obs;
 late FinvuAccountLinkingRequestReference linkingReference;
+
 class Message {
   Message(
       {this.text,
