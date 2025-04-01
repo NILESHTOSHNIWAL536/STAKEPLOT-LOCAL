@@ -150,6 +150,7 @@ class _TribeHomeState extends State<TribeUnique> {
 
       //  snackBarCalled(context,"Added Comment...!",Colors.black);
 
+
       //  Navigator.pop(context);
       //  Navigator.pushNamed(context, '/home');
     } else {

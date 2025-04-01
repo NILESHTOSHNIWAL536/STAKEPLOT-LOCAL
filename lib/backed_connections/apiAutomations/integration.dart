@@ -5,25 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/linkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
-import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-
-// List listOfTransactions=[];
-
 
 void initFinvuManager(BuildContext context) async {
   finvuManager.initialize(
     FinvuConfig(
-       finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
-     // finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
+        // finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
+      finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
       certificatePins: 
       [
             //  "R6wXZnQsKKyg56qFKQNytvygyr/o4Mkq1VXL5LenBYI=",
@@ -41,23 +35,25 @@ void initFinvuManager(BuildContext context) async {
 }
 
 
-Future<void> login(consenthandleId,context) async {
+Future<String> login(context) async {
   try{
+  otpReference="";
   var login = await finvuManager.loginWithUsernameOrMobileNumberAndConsentHandle(
     '${number.value}@finvu',
     '${number.value}',
-    consenthandleId,
+    handleId.value,
   );
   otpReference = login.reference;
-  debugPrint('LoggedIn');
+
   }catch(e){
     print(e);
       snackBarCalled(context, e.toString());
   }
+  return otpReference;
 }
 
 
-void getConsentHandleId(context) async 
+Future<void> getConsentHandleId(context) async 
 {
 
   final String apiUrl ="${url}/finvu/login"; // Change to your actual server URL
@@ -79,7 +75,7 @@ void getConsentHandleId(context) async
       final data = jsonDecode(response.body);
       String consentHandleId = data["consentHandleId"];
        handleId.value=consentHandleId;
-       login(consentHandleId,context);
+     
     } 
   } catch (error)
   {
@@ -180,36 +176,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
 }
 
 
-// void verify(String otp, context) async {
- 
-//   try {
-   
-//     var login = await finvuManager.verifyLoginOtp(
-//       otp,
-//       otpReference,
-//     );
-   
-  
-//     clearStackLocalInfo();
-//     getLinkedAccountInfo();
 
-//     Navigator.pushReplacement(
-//         context,
-//         MaterialPageRoute(
-//           builder: (context) => DiscoverAccount(),
-//         ),
-//      );
-                  
-//   } catch (e) {
-
-//     ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(
-//           content: textStyle(context: context, text: "Invalid OTP..."),
-//           duration: Duration(seconds: 2),
-//         ),
-//       );
-//   }
-// }
 Future<bool> verify(String otp, BuildContext context) async {
   try {
     var login = await finvuManager.verifyLoginOtp(

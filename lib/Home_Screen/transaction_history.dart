@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_details.dart';
 import 'package:flutter_application_code_stakeplot/animated/pdf.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/bill.dart';
@@ -67,7 +68,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
     _stableContext = context;
     currentPage = 1;
 
-       // getAllTransactionHistory(context, widget.isflag!, widget.isYearView!);
+    // getAllTransactionHistory(context, widget.isflag!, widget.isYearView!);
     _scrollController2.addListener(() {
       if (_scrollController2.position.pixels >=
           _scrollController2.position.maxScrollExtent - 100) {
@@ -95,41 +96,42 @@ class _TransactionHistoryState extends State<TransactionHistory>
 
   @override
   Widget build(BuildContext context) {
-    return  SingleChildScrollView(
-            child: Container(
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Transaction History',
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: AppColors.accentColor),
-                      ),
-                      if(widget.showIcon?? false)...[
-                      InkWell(
-                        onTap: () {
-                            showModal();
-                        },
-                        child: const Icon(
-                          Icons.backup_sharp,
-                          size: 30,
-                          color: AppColors.accentColor,
-                        ),
-                      ),]
-                    ],
+    return SingleChildScrollView(
+      child: Container(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Transaction History',
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: AppColors.accentColor),
+                ),
+                if (widget.showIcon ?? false) ...[
+                  InkWell(
+                    onTap: () {
+                      showModal();
+                    },
+                    child: const Icon(
+                      Icons.backup_sharp,
+                      size: 30,
+                      color: AppColors.accentColor,
+                    ),
                   ),
-                  const SizedBox(height: 20),
-                  Obx(() => reloadHistory.value
-                      ? getlist()
-                      : getlist()), // Wrapped in Obx for reactivity
-                ],
-              ),
+                ]
+              ],
             ),
-          );
+            const SizedBox(height: 20),
+            Obx(() => reloadHistory.value
+                ? getlist()
+                : getlist()), // Wrapped in Obx for reactivity
+          ],
+        ),
+      ),
+    );
   }
 
   Widget getListItemListTile(String no, String MorY, context) {
@@ -168,10 +170,11 @@ class _TransactionHistoryState extends State<TransactionHistory>
       itemCount: transactionsHistory.length + 1,
       shrinkWrap: true,
       controller: _scrollController2,
-        physics: const NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         if (index < transactionsHistory.length) {
           final transaction = transactionsHistory[index];
+          print("transactionslistttt : $transaction");
           double amount = (transaction['amount'] is int)
               ? (transaction['amount'] as int).toDouble()
               : (transaction['amount'] as double? ?? 0.0);
@@ -179,7 +182,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
               'Uncategorized'; // Fixed typo and added null check
           String subcategory =
               transaction['subcategory']?.toString() ?? 'General';
-    
+
           return Stack(
             children: [
               Positioned(
@@ -217,7 +220,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                     //     context, amount, false, category, subcategory);
                     final result = await showCustomFriendsModal(
                         context, amount, false, category, subcategory);
-    
+
                     // showCustomFriendsModal2(context, transaction);
                   },
                   child: const Icon(
@@ -245,7 +248,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
             ],
           );
         } else {
-         
           return isLoadingMore.value
               ? Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20),
@@ -353,6 +355,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
     final category = transaction['category']?.toString() ?? 'Uncategorized';
     final subcategory = transaction['subcategory']?.toString() ?? 'General';
     final amount = transaction['amount']?.toString() ?? '0';
+    final ismanual = transaction['manualTransaction'];
     final formattedDate = date != null
         ? formatWhatsAppDate(convertStringToDateTime(date))
         : 'Date';
@@ -379,95 +382,139 @@ class _TransactionHistoryState extends State<TransactionHistory>
           },
         );
       },
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        margin: const EdgeInsets.symmetric(vertical: 5),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.primaryColor, width: 0.2),
+       onLongPress: () {
+      // Navigate to the transaction details page on long press
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TransactionDetailsPage(transaction: transaction),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              flex: 2,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      margin: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: AppColors.button,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: AvatarProfileImage(
-                        url: Categories.link +
-                            (imageMapForHistory[category.toLowerCase()] ??
-                                'default_image.png'),
-                        height: 20,
-                        width: 22,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 5),
-                  Expanded(
-                    flex: 2,
-                    child: RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: " $category",
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: FontWeight.w600,
-                              fontSize: 14,
-                              lineHeight: 2.14,
-                              color: AppColors.accentColor,
-                            ),
-                          ),
-                          TextSpan(
-                            text: " ($subcategory)",
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: FontWeight.w400,
-                              fontSize: 12,
-                              lineHeight: 1.14,
-                              color: AppColors.accentColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+      );
+    },
+      child: Stack(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            margin: const EdgeInsets.symmetric(vertical: 5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color:
+                    AppColors.primaryColor, // Keep the border color consistent
+                width: 0.2,
               ),
             ),
-            Expanded(
-              flex: 1,
-              child: Column(
-                children: [
-                  textStyle(
-                    text: '$formatAmount',
-                    context: context,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          margin: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: AppColors.button,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: AvatarProfileImage(
+                            url: Categories.link +
+                                (imageMapForHistory[category.toLowerCase()] ??
+                                    'default_image.png'),
+                            height: 20,
+                            width: 22,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      Expanded(
+                        flex: 2,
+                        child: RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: " $category",
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                  lineHeight: 2.14,
+                                  color: AppColors.accentColor,
+                                ),
+                              ),
+                              TextSpan(
+                                text: " ($subcategory)",
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                  lineHeight: 1.14,
+                                  color: AppColors.accentColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    children: [
+                      textStyle(
+                        text: '$formatAmount',
+                        context: context,
+                        fontWeight: FontWeight.bold,
+                        fontsize: 15,
+                        c: amtColor,
+                      ),
+                      const SizedBox(height: 6),
+                      textStyle(
+                          text: formattedDate,
+                          context: context,
+                          fontWeight: FontWeight.w300,
+                          fontsize: 10,
+                          c: AppColors.primaryColor),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (ismanual)
+            Positioned(
+              top: 5,
+              left: 5,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryColor,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 4,
+                      offset: Offset(2, 2),
+                    ),
+                  ],
+                ),
+                child: const Text(
+                  'M',
+                  style: TextStyle(
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontsize: 15,
-                    c: amtColor,
+                    fontSize: 12,
                   ),
-                  const SizedBox(height: 6),
-                  textStyle(
-                      text: formattedDate,
-                      context: context,
-                      fontWeight: FontWeight.w300,
-                      fontsize: 10,
-                      c: AppColors.primaryColor),
-                ],
+                ),
               ),
             ),
-          ],
-        ),
+        ],
       ),
     );
   }
@@ -646,59 +693,68 @@ class _TransactionHistoryState extends State<TransactionHistory>
       return false; // Return false if parsing fails
     }
   }
-  
 
-
-  void showModal(){
-       getPdgLoader.value=false;
-     showModalBottomSheet(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return Container(
-                                height: MediaQuery.of(context).size.height / 2,
-                                decoration:const BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(30),
-                                    topRight: Radius.circular(30),
-                                  ),
-                                color: Colors.white,
-                                ),
-                                child: Column(children: [
-                                      Center(child: Container()),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 7),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                                textStyle(context: context,text: "Download Statement",fontsize: 14,fontWeight: FontWeight.w500),
-                                                InkWell(
-                                                  onTap: (){
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Icon(Icons.close_outlined,size: 20,color: AppColors.accentColor,),
-                                                )
-                                            ],
-                                        ),
-                                      ),
-                                      const SizedBox(height: 20),
-                                      getListItemListTile("30","days", context),
-                                      getListItemListTile("60","days", context),
-                                      getListItemListTile("6","months", context),
-                                      getListItemListTile("1","year", context),
-                                      
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 5),
-                                        child: InkWell(
-                                          onTap: ()async{
-                                             getPdgLoader.value=true;
-                                              getPdf(context, selectedValue, selectedValueType);
-                                          },
-                                         child: Obx(()=> getPdgLoader.value? getspinner(context,""): getButton(context, "Containue"))),
-                                      )
-                                 ],),
-                              );
-                            },
-                          );
+  void showModal() {
+    getPdgLoader.value = false;
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: MediaQuery.of(context).size.height / 2,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+            color: Colors.white,
+          ),
+          child: Column(
+            children: [
+              Center(child: Container()),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    textStyle(
+                        context: context,
+                        text: "Download Statement",
+                        fontsize: 14,
+                        fontWeight: FontWeight.w500),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Icon(
+                        Icons.close_outlined,
+                        size: 20,
+                        color: AppColors.accentColor,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              getListItemListTile("30", "days", context),
+              getListItemListTile("60", "days", context),
+              getListItemListTile("6", "months", context),
+              getListItemListTile("1", "year", context),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: InkWell(
+                    onTap: () async {
+                      getPdgLoader.value = true;
+                      getPdf(context, selectedValue, selectedValueType);
+                    },
+                    child: Obx(() => getPdgLoader.value
+                        ? getspinner(context, "")
+                        : getButton(context, "Containue"))),
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
-
 }

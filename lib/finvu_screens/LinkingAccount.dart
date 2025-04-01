@@ -8,8 +8,6 @@ import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -19,10 +17,8 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/appbar_widget.d
 import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/verifyOTP.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
 
 RxMap<String, List<FinvuDiscoveredAccountInfo>> listOfAccountAdded =
     <String, List<FinvuDiscoveredAccountInfo>>{}.obs;
@@ -48,6 +44,8 @@ RxBool addAccount = false.obs;
 RxBool getFetch = false.obs;
 RxBool directFetch = false.obs;
 
+RxInt  otpCount=0.obs;
+
 class LinkingAccount extends StatefulWidget {
   List<FinvuFIPInfo> listOfBankAccount;
   LinkingAccount({Key? key, required this.listOfBankAccount}) : super(key: key);
@@ -66,6 +64,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
   void initState() {
     super.initState();
     count.value = 0;
+    otpCount.value = 0;
     getData();
     getinfo();
     getFetch.value = false;
@@ -428,23 +427,22 @@ class _LinkingAccountState extends State<LinkingAccount> {
             Colorcodes.red);
         return;
       }
-      FinvuAccountLinkingRequestReference linkingReference =
-          await finvuManager.linkAccounts(fipDetails, bankData);
+         linkingReference = await finvuManager.linkAccounts(fipDetails, bankData);
          isOtpWrong.value = false;
           startOtpTimer();
       showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         builder: (BuildContext context) {
-          return verify(linkingReference, fipId, fipDetails, info, context);
+          return verify(fipId, fipDetails, info, context);
         },
       );
     } catch (e) {
-      snackBarCalled(context, "Added check has Some Linked Account");
+      snackBarCalledSignup(context, "Maximum Retries Exceeded. Please try again after sometime.");
     }
   }
 
-  Widget verify(linkingReference, fid, FinvuFIPDetails fipDetails,
+  Widget verify(fid, FinvuFIPDetails fipDetails,
       FinvuFIPInfo info, context) {
     return AnimatedPadding(
       padding: MediaQuery.of(context)
@@ -497,7 +495,8 @@ class _LinkingAccountState extends State<LinkingAccount> {
                 keyboardType: TextInputType.number,
                 onSubmitted: (value)
                 {
-                    linkAccount(_otpCode.value, linkingReference, fid, context);
+                    otpCount.value++;
+                    linkAccount(_otpCode.value, fid, context,fipDetails);
                 },
                 decoration: InputDecoration(
                   hintText: 'Enter OTP',
@@ -507,8 +506,9 @@ class _LinkingAccountState extends State<LinkingAccount> {
                 ),
                 onChanged: (value) {
                   _otpCode.value = value;
-                  _isOtpValid.value =value.isNotEmpty; 
+                  _isOtpValid.value = value.toString().length>4; 
                   isOtpWrong.value = false;
+
                 },
               ),
             ),
@@ -548,13 +548,10 @@ class _LinkingAccountState extends State<LinkingAccount> {
                    Obx(
                     () => GestureDetector(
                       onTap: canResendOtp.value
-                          ? ()async {
-                              // login(handleId.value, context);
-                              List<FinvuDiscoveredAccountInfo> bankData = listOfAccountAdded[fid] ?? [];
-                              FinvuAccountLinkingRequestReference linkingReference =await finvuManager.linkAccounts(fipDetails, bankData);
-                              startOtpTimer();
-                              isOtpWrong.value = false;
-                            }
+                          ? ()async
+                          {
+                              reSendOtp(fipDetails,fid);
+                          }
                           : null,
                       child: Text(
                         canResendOtp.value
@@ -579,17 +576,16 @@ class _LinkingAccountState extends State<LinkingAccount> {
             ),
             Center(
               child: InkWell(
-                onTap: _isOtpValid.value
-                    ? () {
-                        if (_isOtpValid.value) {
-                          linkAccount(
-                              _otpCode.value, linkingReference, fid, context);
-                        } else {
-                          // snackBarCalled(
-                          //     context, "Please enter OTP of length 6");
-                        }
-                      }
-                    : null,
+                onTap: () {
+
+                         if(_otpCode.value.length<6){
+                          snackBarCalledSignup(context, "enter valid otp");
+                         }else{
+                          otpCount.value++;
+                          linkAccount(_otpCode.value, fid, context,fipDetails);
+                         }
+                      
+                      },
                 child: Obx(
                   () => _isOtpValid.value ? getColorVerify() : getColorVerify(),
                 ),
@@ -625,23 +621,29 @@ class _LinkingAccountState extends State<LinkingAccount> {
     );
   }
 
+
+void reSendOtp(fipDetails,fid)async{
+
+      otpCount.value=0;
+      List<FinvuDiscoveredAccountInfo> bankData = listOfAccountAdded[fid] ?? [];
+      linkingReference =await finvuManager.linkAccounts(fipDetails, bankData);
+      startOtpTimer();
+      isOtpWrong.value = false;
+
+}
  
-void linkAccount(
-      String otp, linkingReference, String fid, BuildContext context) async {
+void linkAccount( String otp, String fid, BuildContext context,FinvuFIPDetails fipDetails) async {
     try {
       isOtpWrong.value = false;
-      FinvuConfirmAccountLinkingInfo data =
-          await finvuManager.confirmAccountLinking(linkingReference!, otp);
+      FinvuConfirmAccountLinkingInfo data = await finvuManager.confirmAccountLinking(linkingReference, otpController.text.toString().trim());
       snackBarCalled(context, "Linked Bank account Successfully...");
       Navigator.pop(context);
-
       data.linkedAccounts.forEach((finvu) {
         listofLinkedAccount.add(finvu.accountReferenceNumber.toString());
       });
       //  listOfAccountAdded.containsKey(bankData.fipId)
       listOfAccountAdded.remove(fid);
       listofLinkedAccount.refresh();
-
       accountLinked.add(fid);
       //otpController = TextEditingController();
       otpController.clear();
@@ -650,7 +652,10 @@ void linkAccount(
       _isOtpValid.value = false;
     } catch (e)
     {
+     
       isOtpWrong.value = true;
+     if(otpCount.value==2)reSendOtp(fipDetails,fid);
+
     }
   }
 
@@ -903,3 +908,5 @@ void linkAccount(
     }
   }
 }
+
+
