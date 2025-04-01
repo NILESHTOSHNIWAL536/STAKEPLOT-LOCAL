@@ -384,6 +384,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
       },
       onTap: () {
         // Navigate to the transaction details page on long press
+        if(!ismanual)
         showModalBottomSheet(
             context: context,
             builder: (BuildContext context) {
