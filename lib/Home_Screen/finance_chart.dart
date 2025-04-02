@@ -47,7 +47,7 @@ class _FinancePageState extends State<FinancePage> {
       final scrollOffset = widget.scrollController.offset;
       final targetOffset =
           position.dy - scrollOffset - MediaQuery.of(context).size.height / 7;
-     // print("targetOffset $targetOffset");
+      // print("targetOffset $targetOffset");
       widget.scrollController.animateTo(
         targetOffset > 0 ? targetOffset : 0,
         duration: Duration(milliseconds: 500),
@@ -504,29 +504,30 @@ class _LineChartWidgetState extends State<LineChartWidget> {
               maximum: maxYValue * 1.2,
             ),
             //enableAxisAnimation: true,
+            
             tooltipBehavior: TooltipBehavior(
               enable: true,
+              
               builder: (dynamic data, dynamic point, dynamic series,
                   int pointIndex, int seriesIndex) {
                 final ChartData chartData = data as ChartData;
                 String label = seriesIndex == 1 ? 'Credited' : 'Debited';
-                isTooltipVisible.value = true;
-
-                //  Future.delayed(Duration(seconds: 2), () {
-                //       isTooltipVisible.value = false;
-                //     });
-                return Container(
-                  padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.black54,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    '$label: ₹${chartData.y.toStringAsFixed(2)}',
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
-                        fontSize: fontSizeFactor * 2.5,
-                        color: Colors.white),
+                isTooltipVisible.value = false;
+                return Padding(
+                   padding: EdgeInsets.only(left: 15,top:0,right:0,bottom:0),
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.black54,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      '$label: ₹${chartData.y.toStringAsFixed(2)}',
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.normal,
+                          fontSize: fontSizeFactor * 2.5,
+                          color: Colors.white),
+                    ),
                   ),
                 );
               },
@@ -574,6 +575,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 name: 'Debited',
                 splineType: SplineType.cardinal,
                 cardinalSplineTension: 0.9,
+                
                 markerSettings: MarkerSettings(
                   isVisible: false,
                   height: 4,

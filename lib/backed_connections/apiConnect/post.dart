@@ -170,6 +170,7 @@ void reportPost(context, String id, String spam) async {
   );
 
   if (response.statusCode == 200 || response.statusCode == 201) {
+    print("hide called ");
     final body = json.decode(response.body);
     snackBarCalled(
         context,
@@ -554,7 +555,6 @@ Future<Map<String, dynamic>> createPost(BuildContext context, String title,
         'success': true,
         'data': postData,
       };
-      
     } else {
       snackBarCalled(
           context, "Server error: ${response.statusCode}", Colors.red);
@@ -572,8 +572,6 @@ Future<Map<String, dynamic>> createPost(BuildContext context, String title,
   }
 }
 
-
-
 void createPostWithOutImage(context, String title, String description) async {
   var urlPath = '${url}/post/withOutImage';
   var body = {
@@ -587,7 +585,7 @@ void createPostWithOutImage(context, String title, String description) async {
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     getTrendingData.insert(0, his);
-     resetAndLoadData();
+    resetAndLoadData();
     getPosted.value = !getPosted.value;
     postCount[his["_id"]] = 0;
     postCommentCount[his["_id"]] = 0;
@@ -615,12 +613,9 @@ void createPollOfCommunity(context, String title, String description) async {
   postDis.value = false;
 }
 
-
-
-
 void getPost() async {
   var response = await getDataApiCall('${url}/post/feed');
-  
+
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
@@ -628,7 +623,7 @@ void getPost() async {
     historyListData.addAll(obj);
     getTrendingData.clear();
     getTrendingData.addAll(obj);
-   
+
     historyListData.forEach((element) {
       postCount[element["_id"]] = element['upvotes'];
       postCommentCount[element["_id"]] = element['comments'];
@@ -636,7 +631,6 @@ void getPost() async {
     isPost.value = true;
   } else {}
 }
-
 
 void savePostData(context, data) async {
   var urlPath = "${url}/post/save";
@@ -667,7 +661,7 @@ void postItenary(title, s, type, context) async {
   }
 
   getPost();
- 
+
   postInter.value = false;
 }
 

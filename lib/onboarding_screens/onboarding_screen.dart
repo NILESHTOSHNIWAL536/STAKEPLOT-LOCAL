@@ -338,13 +338,18 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                       ),
                     ],
                   )
-                : Container(
-                    child: Text(
-                      "Fetched data successfully",
-                      style: TextStyle(
-                          fontSize: screenWidth * 0.02), // 4% of screen width
-                    ),
-                  )),
+                : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                        child: Text(
+                          "Fetched data successfully",
+                          style: TextStyle(
+                              fontSize: screenWidth * 0.02), // 4% of screen width
+                        ),
+                      ),
+                  ],
+                )),
           ),
         ],
       ),

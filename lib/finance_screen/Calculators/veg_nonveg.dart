@@ -511,7 +511,9 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                     EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.0),
+                  
                 ),
+                
               ),
             ),
           ),

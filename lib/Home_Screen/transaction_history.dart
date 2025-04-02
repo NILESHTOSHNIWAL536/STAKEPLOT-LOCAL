@@ -34,7 +34,7 @@ RxString selectedValueType = "days".obs;
 RxBool getPdgLoader = false.obs;
 RxMap<int, double> swipeOffsets = <int, double>{}.obs;
 RxList<Map<String, dynamic>> hiddenTransactions = <Map<String, dynamic>>[].obs;
-
+AnimationController? _animationController;
 class TransactionHistory extends StatefulWidget {
   /// Optional
   final bool? isYearView;
@@ -60,8 +60,8 @@ class _TransactionHistoryState extends State<TransactionHistory>
   final List<Map<String, dynamic>> hiddenTransactions = [];
   final targetKey = GlobalKey();
   BuildContext? _stableContext;
-  late AnimationController _animationController; // For smooth animations
-  late Animation<double> _swipeAnimation; // Animation for swipe offset
+   // For smooth animations
+  Animation<double>? _swipeAnimation;// Animation for swipe offset
   int? _currentSwipedIndex;
 
   @override
@@ -71,6 +71,10 @@ class _TransactionHistoryState extends State<TransactionHistory>
     currentPage = 1;
 
     // getAllTransactionHistory(context, widget.isflag!, widget.isYearView!);
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
     _scrollController2.addListener(() {
       if (_scrollController2.position.pixels >=
           _scrollController2.position.maxScrollExtent - 100) {
@@ -84,10 +88,10 @@ class _TransactionHistoryState extends State<TransactionHistory>
 
     getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,
         isRefreshing: true);
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200), // Animation duration
-    );
+    // _animationController = AnimationController(
+    //   vsync: this,
+    //   duration: const Duration(milliseconds: 200), // Animation duration
+    // );
   }
 
   @override
@@ -95,7 +99,12 @@ class _TransactionHistoryState extends State<TransactionHistory>
     super.didChangeDependencies();
     _stableContext ??= context;
   }
-
+@override
+void dispose() {
+  _scrollController2.dispose();
+  _animationController?.dispose();
+  super.dispose();
+}
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -368,7 +377,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
     // print("typeeeee $type");
     final formatAmount = type == 'CREDIT' ? "+₹$amount" : "-₹$amount";
     return GestureDetector(
-      onLongPress: () {
+      onTap: () {
         tagName.value = category;
         showModalBottomSheet(
           context: context,
@@ -384,7 +393,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
           },
         );
       },
-      onTap: () {
+      onLongPress: () {
         // Navigate to the transaction details page on long press
         if (!ismanual)
           showModalBottomSheet(
@@ -581,25 +590,33 @@ class _TransactionHistoryState extends State<TransactionHistory>
   }
 
   void animateSwipe(int index, double targetOffset) {
-    _currentSwipedIndex = index;
-    double currentOffset = swipeOffsets[index] ?? 0.0;
+    if (_animationController == null) return;
+  _currentSwipedIndex = index;
+  double currentOffset = swipeOffsets[index] ?? 0.0;
 
-    _swipeAnimation = Tween<double>(begin: currentOffset, end: targetOffset)
-        .animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut, // Smooth easing curve
-    ))
-      ..addListener(() {
-        setState(() {
-          if (_currentSwipedIndex == index) {
-            swipeOffsets[index] = _swipeAnimation.value;
-          }
-        });
+  _swipeAnimation = Tween<double>(begin: currentOffset, end: targetOffset)
+      .animate(CurvedAnimation(
+    parent: _animationController!,
+    curve: Curves.easeInOut,
+  ))
+    ..addListener(() {
+      setState(() {
+        if (_currentSwipedIndex == index) {
+          swipeOffsets[index] = _swipeAnimation!.value;
+        }
       });
+    })
+    ..addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        // Optionally reset the offset to 0 if swipe is canceled or completed
+        if (targetOffset == 0.0) {
+          swipeOffsets.remove(index);
+        }
+      }
+    });
 
-    _animationController.forward(from: 0.0);
-  }
-
+  _animationController!.forward(from: 0.0);
+}
   static Future<String?> getToken() async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     var accessToken = pref.getString("accessToken");
@@ -728,7 +745,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                     },
                     child: Obx(() => getPdgLoader.value
                         ? getspinner(context, "")
-                        : getButton(context, "Containue"))),
+                        : getButton(context, "Continue"))),
               )
             ],
           ),
@@ -757,7 +774,12 @@ void hideTransaction(
       if (hidden) {
         hiddenTransactions.add(transaction);
         transactionsHistory.removeAt(index);
-        swipeOffsets.remove(index);
+      //  swipeOffsets.remove(index);
+        swipeOffsets.clear(); // Clear all swipe offsets
+        _animationController?.reset(); // Reset the animation controller
+        
+        // Optionally, refresh the reactive list to trigger UI update
+        transactionsHistory.refresh();
       } else {
         hiddentrasactionsHistory.removeAt(index);
         hiddentrasactionsHistory.refresh();
