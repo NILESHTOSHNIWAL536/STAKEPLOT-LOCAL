@@ -68,8 +68,6 @@ Future<void> loginUser(TextEditingController emailController,
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   print("SharedPreferences instance obtained.");
 
-  print("${url}/user/login");
-
   final response = await http.post(
     Uri.parse('${url}/user/login'),
     headers: <String, String>{
