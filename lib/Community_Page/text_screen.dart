@@ -592,11 +592,11 @@ class _TextScreenState extends State<TextScreen> {
 
                         if (mounted) {
                           Navigator.pop(context);
-                          Get.to(() => const SuccessPost(celebrationText: "posted",));
+                          // Get.to(() => const SuccessPost(celebrationText: "posted",));
                         }
                       } catch (e) {
-                        print(
-                            'Error posting: $e'); // Log error instead of showing snackbar
+                        // print(
+                        //     'Error posting: $e'); // Log error instead of showing snackbar
                       } finally {
                         if (mounted) {
                           posting.value = false;

@@ -70,7 +70,7 @@ class _AccessState extends State<Access> {
                   children: [
                     TextSpan(
                       text:
-                          "processing your loan application.", // Highlighted text
+                          "smart finance management & insights.", // Highlighted text
                       style: FontManager().getTextStyle(
                         context,
                         lWeight:
@@ -267,7 +267,7 @@ class _AccessState extends State<Access> {
                             ),
                             SizedBox(height: 5),
                             Text(
-                              "To process your  loan application",
+                              "To process your transactions.",
                               style: FontManager().getTextStyle(
                                 context,
                                 lWeight: FontWeight.w600,
