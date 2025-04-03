@@ -45,6 +45,7 @@ RxBool getFetch = false.obs;
 RxBool directFetch = false.obs;
 
 RxInt  otpCount=0.obs;
+RxInt loopCount = 0.obs;
 
 class LinkingAccount extends StatefulWidget {
   List<FinvuFIPInfo> listOfBankAccount;
@@ -65,6 +66,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
     super.initState();
     count.value = 0;
     otpCount.value = 0;
+    loopCount.value = 0;
     getData();
     getinfo();
     getFetch.value = false;
@@ -115,22 +117,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
               const SizedBox(
                 height: 5,
               ),
-              InkWell(
-                  onTap: () {
-                    if(accountAdded.isNotEmpty){
-                         snackBarCalledSignup(context, "Please link All seleted Account", Colorcodes.red);
-                         return;
-                    };
-
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return accountLinkedUi();
-                      },
-                    );
-
-                  },
-                  child: Obx(()=> accountAdded.isNotEmpty? getButton(context, "Authorise",AppColors.bg3,Colorcodes.white):getButton(context, "Authorise"))),
+              buttonLinkNow(),
             ],
           ),
         ),
@@ -139,60 +126,33 @@ class _LinkingAccountState extends State<LinkingAccount> {
   }
 
 
+Widget buttonLinkNow(){
+   return   InkWell(
+                  onTap: () {
+                    if(loopCount.value!=widget.listOfBankAccount.length)return;
+                    if(count==0)return;
+                    // if(accountAdded.isNotEmpty){
+                    //      snackBarCalledSignup(context, "Please link All seleted Account", Colorcodes.red);
+                    //      return;
+                    // };
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return accountLinkedUi();
+                      },
+                    );
+                  },
+                  child: Obx(()=>(loopCount.value!=widget.listOfBankAccount.length)? SizedBox.shrink():  count.value==0 ?  SizedBox.shrink() :accountAdded.isNotEmpty? getButton(context, "Authorise",AppColors.bg3,Colorcodes.white):getButton(context, "Authorise")));
+}
   
  
   Widget accountLinkedUi() {
     return Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height / 3,
-        child: seletedAccountIds.length == 0
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  textStyle(
-                      "Please tap on 'Link Now' to link your bank account", 14),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width / 1.1,
-                    // padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Center(
-                      child: Text(
-                        "Your selected bank is not yet linked. Before proceeding, ensure that the specified bank is linked"
-                            .toString(),
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w600,
-                            fontSize: 14,
-                            color: Colorcodes.red),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Icon(
-                    Icons.warning_outlined,
-                    color: Colorcodes.red,
-                    size: 30,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: getButton(context, "Link Now")),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                ],
-              )
+        child:accountAdded.isNotEmpty
+            ? getLinkNow( BankText.linkNow,BankText.linkNowproceeding,"Link Now"):
+            seletedAccountIds.isEmpty?getLinkNow( BankText.checkNow,BankText.checkNowproceeding,"check Now")
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -225,29 +185,27 @@ class _LinkingAccountState extends State<LinkingAccount> {
               ));
   }
 
-  Widget fetchDataOfLinkedAccount() {
-    return Container(
-        width: MediaQuery.of(context).size.width,
-        height: seletedAccountIds.length == 0
-            ? MediaQuery.of(context).size.height / 3.5
-            : MediaQuery.of(context).size.height / 3,
-        child: seletedAccountIds.length == 0
-            ? Column(
+
+
+
+  Widget getLinkNow(String title,String des,String btnText)
+  {
+    return Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(
                     height: 20,
                   ),
-
-            
+                  textStyle(title, 14),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   Container(
                     width: MediaQuery.of(context).size.width / 1.1,
                     // padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Center(
-                      child: Text(
-                        "Your selected bank is not yet linked. Before proceeding, ensure that the specified bank is linked By clicking on Fecth Now U can Fetch Your Linked Account Trsactions"
-                            .toString(),
+                      child: Text(des,
                         style: FontManager().getTextStyle(context,
                             lWeight: FontWeight.w600,
                             fontSize: 14,
@@ -266,54 +224,16 @@ class _LinkingAccountState extends State<LinkingAccount> {
                   const SizedBox(
                     height: 10,
                   ),
-                  InkWell(
-                      onTap: () async {
-                        Navigator.pop(context);
-                        directFetch.value = true;
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => FetchTransaction(),
-                          ),
-                        );
-
-                        // }else{
-
-                        // }
-                      },
-                      child: getButton(context, "Fetch Now")),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                ],
-              )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text("${seletedAccountIds.length} Banks Linked..",
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.bold,
-                          fontSize: 14,
-                          color: Colorcodes.black)),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  InkWell(
+               btnText== "check Now"?SizedBox.shrink(): InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Access(),
-                          ),
-                        );
+                        Navigator.pop(context);
                       },
-                      child: getButton(context, "continue")),
-                  const SizedBox(
-                    height: 20,
+                      child: getButton(context, btnText)),
+                   SizedBox(
+                    height:  btnText== "check Now"? 0: 20,
                   ),
                 ],
-              ));
+              );
   }
 
   Widget BankInfoUiContainer() {
@@ -365,6 +285,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
   Widget bankAccountList() {
     double height = MediaQuery.of(context).size.height;
     count.value = 0;
+    loopCount.value=0;
     return Container(
       //padding: const EdgeInsets.fromLTRB(14, 5, 16, 5),
       //here we can change height
@@ -384,12 +305,11 @@ class _LinkingAccountState extends State<LinkingAccount> {
                   future: linkedaccoutnData(account),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator(); // Show loading indicator
+                      return CircularProgressIndicator(color:AppColors.primaryColor,strokeWidth: BorderSide.strokeAlignOutside,); // Show loading indicator
                     } else if (snapshot.hasError) {
                       return Text("Error: ${snapshot.error}");
                     } else {
-                      return snapshot.data ??
-                          SizedBox.shrink(); // Return the widget from Future
+                      return snapshot.data ?? SizedBox.shrink(); // Return the widget from Future
                     }
                   },
                 ),
@@ -403,6 +323,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
   Widget getListOfFinvuBanksAccounts(
       List<FinvuDiscoveredAccountInfo> account, FinvuFIPDetails fipDetails) {
+   loopCount.value++;
     return account.isEmpty
         ? getNoBankAccount()
         : Column(
@@ -743,6 +664,7 @@ void linkAccount( String otp, String fid, BuildContext context,FinvuFIPDetails f
     FinvuFIPInfo finvuFIPInfo = bankData;
     FinvuFIPDetails fipDetails;
     List<FinvuDiscoveredAccountInfo> info = [];
+
     try {
       var fetchFIPDetails = await finvuManager.fetchFIPDetails(fipId);
 
@@ -769,6 +691,7 @@ void linkAccount( String otp, String fid, BuildContext context,FinvuFIPDetails f
       count.value += info.length;
       count.refresh();
     } catch (e) {
+      loopCount++;
       return getNoBankAccount();
     }
 
@@ -905,9 +828,43 @@ void linkAccount( String otp, String fid, BuildContext context,FinvuFIPDetails f
     }
   }
   
-  Widget getNoBankAccount() {
-    return textStyle("No accounts found please try with another bank",15);
+  Widget getNoBankAccount()
+  {
+    
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 2),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+              textNoAccountFound(BankText.text1,16,FontWeight.bold),
+              textNoAccountFound(BankText.text2,15,FontWeight.w400),
+              textNoAccountFound(BankText.text3,13),
+              textNoAccountFound(BankText.text4,13),
+              textNoAccountFound(BankText.text5,13),
+        ],
+      ),
+    );
   }
+
+
+  Widget textNoAccountFound(text,
+      [double fontsize = 12,
+      FontWeight fontWeight = FontWeight.w500,  Color c = AppColors.bg1,]) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: 
+          Text(
+            text.toString(),
+            style: FontManager().getTextStyle(context,
+                lWeight: fontWeight, fontSize: fontsize, color: c),
+            overflow: TextOverflow.visible,
+      ),
+    );
+  }
+
+  
+
 }
 
 

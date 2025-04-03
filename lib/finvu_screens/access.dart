@@ -70,7 +70,7 @@ class _AccessState extends State<Access> {
                   children: [
                     TextSpan(
                       text:
-                          "smart finance management & insights.", // Highlighted text
+                          "Smart finance management & insights.", // Highlighted text
                       style: FontManager().getTextStyle(
                         context,
                         lWeight:
@@ -212,6 +212,9 @@ class _AccessState extends State<Access> {
 
 
   Widget getInfomationsAboutUserConsnt(){
+
+    print(finvuConsentRequestDetailInfo.consentDisplayDescriptions);
+
     return Container(
                 width: MediaQuery.of(context).size.width / 1,
                 child: SingleChildScrollView(
@@ -219,15 +222,7 @@ class _AccessState extends State<Access> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Text(
-                      //   'Details of your approval',
-                      //   style: FontManager().getTextStyle(
-                      //     context,
-                      //     lWeight: FontWeight.bold,
-                      //     fontSize: 18,
-                      //     color: AppColors.bg1,
-                      //   ),
-                      // ),
+                     
                       Padding(
                         padding: const EdgeInsets.fromLTRB(0.0, 0, 20, 0),
                         child: Column(
@@ -267,7 +262,7 @@ class _AccessState extends State<Access> {
                             ),
                             SizedBox(height: 5),
                             Text(
-                              "To process your transactions.",
+                             finvuConsentRequestDetailInfo.consentPurposeInfo.text,
                               style: FontManager().getTextStyle(
                                 context,
                                 lWeight: FontWeight.w600,
@@ -287,7 +282,7 @@ class _AccessState extends State<Access> {
                             ),
                             SizedBox(height: 5),
                             Text(
-                              "Profile,Summary Transactions",
+                              "Profile,Summary,Transactions",
                               style: FontManager().getTextStyle(
                                 context,
                                 lWeight: FontWeight.w600,
@@ -309,7 +304,7 @@ class _AccessState extends State<Access> {
                             Text(
                               finvuConsentRequestDetailInfo
                                       .consentDataLifePeriod.value
-                                      .toString() +
+                                      .toString() +" "+
                                   finvuConsentRequestDetailInfo
                                       .consentDataLifePeriod.unit
                                       .toString(),
@@ -683,15 +678,14 @@ class _AccessState extends State<Access> {
 
       FinvuProcessConsentRequestResponse response = await finvuManager.approveConsentRequest(
               finvuConsentRequestDetailInfo, seletedAccountInfomations);
+      //  print(response.)
+//  FinvuConsentHandleStatusResponse data =await finvuManager.getConsentHandleStatus(handleId.value);
 
-
+//       print(data.status);
       snackBarCalled(context, "Consent request approved successfully.");
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => FetchTransaction(),
-        ),
-      );
+
+      FetchTransactionFromFinvuApi(context);
+      
     } catch (e) {
       print(e);
       snackBarCalled(context, "An error occurred while approving the consent request.");
@@ -783,10 +777,10 @@ void showDialogBoxForDecline(BuildContext context) {
               try {
                  FinvuConsentRequestDetailInfo consentInfo =await finvuManager.getConsentRequestDetails(handleId.value);
                 finvuManager.denyConsentRequest(consentInfo);
-                logoutAndDisconnect();
-                clearStack(context);
-                snackBarCalledSignup(context, "Successfully disapproved the consent request.");
-                Navigator.pushNamed(context, "/ShareAccountLogin");
+                 logoutAndDisconnect();
+                 Navigator.of(context).pushNamedAndRemoveUntil('/ShareAccountLogin', (Route<dynamic> route) => false);
+                 Navigator.pushNamed(context, "/ShareAccountLogin");
+                 snackBarCalledSignup(context, "Successfully decline the consent request.");
               } catch (e) {
                 snackBarCalledSignup(context, "Unable to disapprove the request.");
               }    

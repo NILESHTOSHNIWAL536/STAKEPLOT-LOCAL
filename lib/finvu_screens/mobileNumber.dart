@@ -134,7 +134,8 @@ class _MobileNumberState extends State<MobileNumber> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     child: Text(
-                      "Finvu will send you one-time OTP to your mobile number",
+                     
+"Finvu will send an OTP to your mobile number.",
                       style: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.w400,
@@ -149,6 +150,9 @@ class _MobileNumberState extends State<MobileNumber> {
                     maxLength: 10,
                     autocorrect: true,
                     keyboardType: TextInputType.phone, // Phone input keyboard
+                    onChanged: (c){
+                       loadConsentId.value=false;
+                    },
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.phone_android_outlined),
                       prefixIconColor: AppColors.primaryColor,
@@ -176,6 +180,7 @@ class _MobileNumberState extends State<MobileNumber> {
                   GestureDetector(
                     onTap: () async {
                       // Handle OTP logic here
+                      if(loadConsentId.value)return;
                       if (_phoneController.text.length != 10) {
                         snackBarCalled(context,
                             "Please enter valid mobile number", Colorcodes.red);
@@ -185,7 +190,7 @@ class _MobileNumberState extends State<MobileNumber> {
                       String phoneNumber = _phoneController.text;
                       number.value = phoneNumber;
 
-                  loadConsentId.value=true;
+                     loadConsentId.value=true;
                     await   getConsentHandleId(context);
                    String otpRef =   await login(context);
                    if(otpRef!=""){

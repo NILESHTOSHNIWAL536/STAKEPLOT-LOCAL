@@ -343,6 +343,6 @@ void storeData(context, data, String opt, Avatarurl) async {
     clearStack(context);
     Navigator.pushReplacementNamed(context, '/ShareAccountLogin');
   } catch (e) {
-    snackBarCalled(context, "Invalid OTP!", Colors.red);
+    snackBarCalledSignup(context, "Invalid OTP!", Colors.red);
   }
 }
