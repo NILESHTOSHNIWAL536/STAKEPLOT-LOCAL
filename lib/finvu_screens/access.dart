@@ -678,12 +678,9 @@ class _AccessState extends State<Access> {
 
       FinvuProcessConsentRequestResponse response = await finvuManager.approveConsentRequest(
               finvuConsentRequestDetailInfo, seletedAccountInfomations);
-
-      FinvuConsentHandleStatusResponse data =await finvuManager.getConsentHandleStatus(handleId.value);
-
-      print(data.status);
-
+  
       snackBarCalled(context, "Consent request approved successfully.");
+    //  await Future.delayed(Duration(seconds: 5a));
 
       FetchTransactionFromFinvuApi(context);
       

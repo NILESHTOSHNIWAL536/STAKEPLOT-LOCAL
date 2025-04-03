@@ -5,21 +5,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_application_code_stakeplot/animated/bankSlider.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
-import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
-import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:getwidget/components/carousel/gf_carousel.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-//import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
+
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 
 // class NumberPickerController extends GetxController {
@@ -62,6 +57,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
         // Wrap content with SingleChildScrollView
         body: SafeArea(
             child: SizedBox(
+              
                 width: width,
                 height: height > 0 ? height / 2.5 : 100, // Fallback height
                 child: Obx(
@@ -77,9 +73,11 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
             enlargeMainPage: false,
             autoPlay: false,
             enableInfiniteScroll: false,
+
             items: bankAccountLinkedList.map(
               (data) {
                 return Padding(
+                  
                   padding: const EdgeInsets.all(2.0),
                   child: getListViewBankInfo(data),
                 );
@@ -98,7 +96,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
     if (randomIndex == lock.length) randomIndex = 0;
     return Container(
 
-        //width: MediaQuery.sizeOf(context).width/1.1,
+       // width: MediaQuery.sizeOf(context).width/1.1,
         padding: EdgeInsets.symmetric(
             horizontal: Colorcodes.paddingHorizontal,
             vertical: Colorcodes.paddingHorizontal / 5),

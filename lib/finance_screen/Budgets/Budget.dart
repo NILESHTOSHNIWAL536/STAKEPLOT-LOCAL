@@ -461,6 +461,7 @@ class _BudgetState extends State<Budget> {
                       heading: "Amount",
                       keyBoard: TextInputType.number,
                       lableText: "Enter amount",
+                      
                       icon: Icons.currency_rupee_rounded,
                     ),
                     SizedBox(height: 24),
@@ -488,7 +489,7 @@ class _BudgetState extends State<Budget> {
                 onTap: () {
                   bedgetCalculator();
                 },
-                child: getButton(context, "Continue"),
+                child: getButton(context, "Continue",),
               ),
               SizedBox(height: 20), // Extra padding at bottom for scroll
             ],

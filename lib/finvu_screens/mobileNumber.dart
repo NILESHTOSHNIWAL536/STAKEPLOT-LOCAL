@@ -134,7 +134,8 @@ class _MobileNumberState extends State<MobileNumber> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     child: Text(
-                      "Finvu will send you one-time OTP to your mobile number",
+                     
+"Finvu will send an OTP to your mobile number.",
                       style: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.w400,

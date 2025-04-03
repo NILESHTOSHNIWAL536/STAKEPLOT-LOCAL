@@ -119,234 +119,241 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      body: Stack(
-        children: [
-          PageView(
-            controller: _pageController,
-            onPageChanged: _onPageChanged,
-            physics: NeverScrollableScrollPhysics(),
-            children: [
-              OnboardingPage(
-                title: 'A powerful tool for expense tracking.',
-                subtitle: 'Your go-to tool for hassle-free expense management.',
-                baseImage: OnboardingImages.page11, // this week
-                baseSize: Size(
-                    screenWidth * 0.02, screenHeight * 0.02), // Responsive size
-                baseOffset: Offset(
-                    screenWidth * 0.1, screenHeight * 0.1), // Responsive offset
-                animatedImages: [
-                  AnimatedImage(
-                    path: OnboardingImages.page12, // graph
-                    size: Size(screenWidth * 0.16,
-                        screenHeight * 0.16), // Responsive size
-                    initialOffset: Offset(0, 1.0),
-                    finalOffset: Offset(screenWidth * 0.095,
-                        screenHeight * 0.13), // Responsive offset
-                    duration: const Duration(milliseconds: 600),
-                  ),
-                  AnimatedImage(
-                    path: OnboardingImages.page13,
-                    size: Size(screenWidth * 0.05,
-                        screenHeight * 0.05), // Responsive size
-                    initialOffset: Offset(-1, 0),
-                    finalOffset: Offset(screenWidth * 0.14,
-                        screenHeight * 0.25), // Responsive offset
-                    duration: const Duration(milliseconds: 1200),
-                  ),
-                  AnimatedImage(
-                    path: OnboardingImages.page14,
-                    size: Size(screenWidth * 0.05,
-                        screenHeight * 0.05), // Responsive size
-                    initialOffset: Offset(1, 0),
-                    finalOffset: Offset(screenWidth * 0.45,
-                        screenHeight * 0.1), // Responsive offset
-                    duration: const Duration(milliseconds: 1500),
-                  ),
-                ],
-                isLastPage: false,
-              ),
-              OnboardingPage(
-                title: 'Plot your finances with our calculators',
-                subtitle: 'Use our EMI, Credit and 5+ calculators',
-                baseImage: OnboardingImages.page21,
-                baseSize: Size(
-                    screenWidth * 0.23, screenHeight * 0.23), // Responsive size
-                baseOffset: Offset(
-                    screenWidth * 0.3, screenHeight * 0.1), // Responsive offset
-                animatedImages: [
-                  AnimatedImage(
-                    path: OnboardingImages.page22,
-                    size: Size(screenWidth * 0.05,
-                        screenHeight * 0.05), // Responsive size
-                    initialOffset: Offset(-1.0, -1.0),
-                    finalOffset: Offset(screenWidth * 0.1,
-                        screenHeight * 0.3), // Responsive offset
-                    duration: const Duration(milliseconds: 600),
-                  ),
-                  AnimatedImage(
-                    path: OnboardingImages.page23,
-                    size: Size(screenWidth * 0.05,
-                        screenHeight * 0.05), // Responsive size
-                    initialOffset: Offset(1.0, -1.0),
-                    finalOffset: Offset(screenWidth * 0.38,
-                        screenHeight * 0.1), // Responsive offset
-                    duration: const Duration(milliseconds: 1000),
-                  ),
-                ],
-                isLastPage: false,
-              ),
-              OnboardingPage(
-                title: 'Connect with the unique community.',
-                subtitle: 'Connect and engage with a community like no other.',
-                baseImage: OnboardingImages.p1,
-                baseSize: Size(
-                    screenWidth * 0.9, screenHeight * 0.45), // Responsive size
-                baseOffset: Offset(screenWidth * 0.07,
-                    screenHeight * 0.04), // Responsive offset
-                animatedImages: [
-                  AnimatedImage(
-                    path: OnboardingImages.p2,//beard man
+      body: SafeArea(
+        child: Stack(
+          children: [
+            PageView(
+              controller: _pageController,
+              onPageChanged: _onPageChanged,
+              physics: NeverScrollableScrollPhysics(),
+              children: [
+                OnboardingPage(
+                  title: 'A powerful tool for expense tracking.',
+                  subtitle: 'Your go-to tool for hassle-free expense management.',
+                  baseImage: OnboardingImages.page11, // this week
+                  baseSize: Size(
+                      screenWidth * 0.02, screenHeight * 0.02), // Responsive size
+                  baseOffset: Offset(
+                      screenWidth * 0.1, screenHeight * 0.1), // Responsive offset
+                  animatedImages: [
+                    AnimatedImage(
+                      path: OnboardingImages.page12, // graph
+                      size: Size(screenWidth * 0.16,
+                          screenHeight * 0.16), // Responsive size
+                      initialOffset: Offset(0, 1.0),
+                      finalOffset: Offset(screenWidth * 0.095,
+                          screenHeight * 0.13), // Responsive offset
+                      duration: const Duration(milliseconds: 600),
+                    ),
+                    AnimatedImage(
+                      path: OnboardingImages.page13,
+                      size: Size(screenWidth * 0.05,
+                          screenHeight * 0.05), // Responsive size
+                      initialOffset: Offset(-1, 0),
+                      finalOffset: Offset(screenWidth * 0.14,
+                          screenHeight * 0.25), // Responsive offset
+                      duration: const Duration(milliseconds: 1200),
+                    ),
+                    AnimatedImage(
+                      path: OnboardingImages.page14,
+                      size: Size(screenWidth * 0.05,
+                          screenHeight * 0.05), // Responsive size
+                      initialOffset: Offset(1, 0),
+                      finalOffset: Offset(screenWidth * 0.45,
+                          screenHeight * 0.1), // Responsive offset
+                      duration: const Duration(milliseconds: 1500),
+                    ),
+                  ],
+                  isLastPage: false,
+                ),
+                OnboardingPage(
+                  title: 'Plot your finances with our calculators',
+                  subtitle: 'Use our EMI, Credit and 5+ calculators',
+                  baseImage: OnboardingImages.page21,
+                  baseSize: Size(
+                      screenWidth * 0.23, screenHeight * 0.23), // Responsive size
+                  baseOffset: Offset(
+                      screenWidth * 0.3, screenHeight * 0.1), // Responsive offset
+                  animatedImages: [
+                    AnimatedImage(
+                      path: OnboardingImages.page22,
+                      size: Size(screenWidth * 0.05,
+                          screenHeight * 0.05), // Responsive size
+                      initialOffset: Offset(-1.0, -1.0),
+                      finalOffset: Offset(screenWidth * 0.1,
+                          screenHeight * 0.3), // Responsive offset
+                      duration: const Duration(milliseconds: 600),
+                    ),
+                    AnimatedImage(
+                      path: OnboardingImages.page23,
+                      size: Size(screenWidth * 0.05,
+                          screenHeight * 0.05), // Responsive size
+                      initialOffset: Offset(1.0, -1.0),
+                      finalOffset: Offset(screenWidth * 0.38,
+                          screenHeight * 0.1), // Responsive offset
+                      duration: const Duration(milliseconds: 1000),
+                    ),
+                  ],
+                  isLastPage: false,
+                ),
+                OnboardingPage(
+                  title: 'Connect with the unique community.',
+                  subtitle: 'Connect and engage with a community like no other.',
+                  baseImage: OnboardingImages.p1,
+                  baseSize: Size(
+                      screenWidth * 0.9, screenHeight * 0.45), // Responsive size
+                  baseOffset: Offset(screenWidth * 0.07,
+                      screenHeight * 0.04), // Responsive offset
+                  animatedImages: [
+                    AnimatedImage(
+                      path: OnboardingImages.p2,//beard man
+                        size: Size(screenWidth * 0.15,
+                          screenHeight * 0.15), 
+                      initialOffset:
+                          const Offset(-1.0, 0.0), // Start from top-right
+                      finalOffset: const Offset(0.75, 0.25), // Responsive offset
+                      duration: const Duration(milliseconds: 500),
+                    ),
+                    AnimatedImage(
+                      path: OnboardingImages.p3, //lady
                       size: Size(screenWidth * 0.15,
-                        screenHeight * 0.15), 
-                    initialOffset:
-                        const Offset(-1.0, 0.0), // Start from top-right
-                    finalOffset: const Offset(0.75, 0.25), // Responsive offset
-                    duration: const Duration(milliseconds: 500),
-                  ),
-                  AnimatedImage(
-                    path: OnboardingImages.p3, //lady
-                    size: Size(screenWidth * 0.15,
-                        screenHeight * 0.15), // Responsive size
-                    initialOffset: Offset(1.0, 0.0),
-                    // finalOffset: Offset(screenWidth * 0.01,
-                    //     screenHeight * 0.05), // Responsive offset
-                    finalOffset: const Offset(0.2, 0.37),
-                    duration: const Duration(milliseconds: 700),
-                  ),
-                  AnimatedImage(
-                    path: OnboardingImages.p4,//black hair
-                    size: Size(screenWidth * 0.15,
-                        screenHeight * 0.15), // Responsive size
-                    initialOffset: Offset(0.0, 1.0),
-                    // finalOffset: Offset(screenWidth * 0.05,
-                    //     screenHeight * 0.3), // Responsive offset
-                    finalOffset: const Offset(0.1, 0.65),
-                    duration: const Duration(milliseconds: 900),
-                  ),
-                  AnimatedImage(
-                    path: OnboardingImages.p5,//specs lady
-                    size: Size(screenWidth * 0.15,
-                        screenHeight * 0.15), // Responsive size
-                    initialOffset: Offset(1.0, -1.0),
-                    // finalOffset: Offset(screenWidth * 0.3,
-                    //     screenHeight * 0.3), // Responsive offset
-                     finalOffset: const Offset(0.8, 0.6),
-                    duration: const Duration(milliseconds: 1100),
-                  ),
-                  AnimatedImage(
-                    path: OnboardingImages.p6,
-                    size: Size(screenWidth * 0.158,
-                        screenHeight * 0.158), // Responsive size
-                    initialOffset: Offset(0.0, 1.0),
-                    // finalOffset: Offset(screenWidth * 0.15,
-                    //     screenHeight * 0.25), // Responsive offset
-                     finalOffset: const Offset(0.5, 0.45),
-                    duration: const Duration(milliseconds: 1300),
-                  ),
-                ],
-                isLastPage: false,
-              ),
-              OnboardingPage(
-                title: 'We look after your budgets and debts.',
-                subtitle: 'We manage your budgets and debts with care.',
-                baseImage: OnboardingImages.page41,
-                baseSize: Size(
-                    screenWidth * 0.32, screenHeight * 0.3), // Responsive size
-                baseOffset: Offset(screenWidth * 0.07,
-                    screenHeight * 0.02), // Responsive offset
-                animatedImages: [
-                  AnimatedImage(
-                    path: OnboardingImages.page42,
-                    size: Size(screenWidth * 0.04,
-                        screenHeight * 0.04), // Responsive size
-                    initialOffset: Offset(-1.0, -1.0),
-                    finalOffset: Offset(screenWidth * 0.1,
-                        screenHeight * 0.1), // Responsive offset
-                    duration: const Duration(milliseconds: 500),
-                  ),
-                  AnimatedImage(
-                    path: OnboardingImages.page43,
-                    size: Size(screenWidth * 0.04,
-                        screenHeight * 0.04), // Responsive size
-                    initialOffset: Offset(1.0, -1.0),
-                    finalOffset: Offset(screenWidth * 0.1,
-                        screenHeight * 0.15), // Responsive offset
-                    duration: const Duration(milliseconds: 900),
-                  ),
-                  AnimatedImage(
-                    path: OnboardingImages.page44,
-                    size: Size(screenWidth * 0.04,
-                        screenHeight * 0.04), // Responsive size
-                    initialOffset: Offset(-1.0, 0.0),
-                    finalOffset: Offset(screenWidth * 0.1,
-                        screenHeight * 0.2), // Responsive offset
-                    duration: const Duration(milliseconds: 1300),
-                  ),
-                  AnimatedImage(
-                    path: OnboardingImages.page45,
-                    size: Size(screenWidth * 0.04,
-                        screenHeight * 0.04), // Responsive size
-                    initialOffset: Offset(1.0, 0.0),
-                    finalOffset: Offset(screenWidth * 0.1,
-                        screenHeight * 0.25), // Responsive offset
-                    duration: const Duration(milliseconds: 1700),
-                  ),
-                  AnimatedImage(
-                    path: OnboardingImages.page46,
-                    size: Size(screenWidth * 0.15,
-                        screenHeight * 0.16), // Responsive size
-                    initialOffset: Offset(0.0, 1.0),
-                    finalOffset: Offset(screenWidth * 0.6,
-                        screenHeight * 0.11), // Responsive offset
-                    duration: const Duration(milliseconds: 1200),
-                  ),
-                ],
-                isLastPage: true,
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: screenHeight * 0.02, // 5% of screen height
-              horizontal: screenWidth * 0.02, // 5% of screen width
+                          screenHeight * 0.15), // Responsive size
+                      initialOffset: Offset(1.0, 0.0),
+                      // finalOffset: Offset(screenWidth * 0.01,
+                      //     screenHeight * 0.05), // Responsive offset
+                      finalOffset: const Offset(0.2, 0.37),
+                      duration: const Duration(milliseconds: 700),
+                    ),
+                    AnimatedImage(
+                      path: OnboardingImages.p4,//black hair
+                      size: Size(screenWidth * 0.15,
+                          screenHeight * 0.15), // Responsive size
+                      initialOffset: Offset(0.0, 1.0),
+                      // finalOffset: Offset(screenWidth * 0.05,
+                      //     screenHeight * 0.3), // Responsive offset
+                      finalOffset: const Offset(0.1, 0.65),
+                      duration: const Duration(milliseconds: 900),
+                    ),
+                    AnimatedImage(
+                      path: OnboardingImages.p5,//specs lady
+                      size: Size(screenWidth * 0.15,
+                          screenHeight * 0.15), // Responsive size
+                      initialOffset: Offset(1.0, -1.0),
+                      // finalOffset: Offset(screenWidth * 0.3,
+                      //     screenHeight * 0.3), // Responsive offset
+                       finalOffset: const Offset(0.8, 0.6),
+                      duration: const Duration(milliseconds: 1100),
+                    ),
+                    AnimatedImage(
+                      path: OnboardingImages.p6,
+                      size: Size(screenWidth * 0.158,
+                          screenHeight * 0.158), // Responsive size
+                      initialOffset: Offset(0.0, 1.0),
+                      // finalOffset: Offset(screenWidth * 0.15,
+                      //     screenHeight * 0.25), // Responsive offset
+                       finalOffset: const Offset(0.5, 0.45),
+                      duration: const Duration(milliseconds: 1300),
+                    ),
+                  ],
+                  isLastPage: false,
+                ),
+                OnboardingPage(
+                  title: 'We look after your budgets and debts.',
+                  subtitle: 'We manage your budgets and debts with care.',
+                  baseImage: OnboardingImages.page41,
+                  baseSize: Size(
+                      screenWidth * 0.32, screenHeight * 0.3), // Responsive size
+                  baseOffset: Offset(screenWidth * 0.07,
+                      screenHeight * 0.02), // Responsive offset
+                  animatedImages: [
+                    AnimatedImage(
+                      path: OnboardingImages.page42,
+                      size: Size(screenWidth * 0.04,
+                          screenHeight * 0.04), // Responsive size
+                      initialOffset: Offset(-1.0, -1.0),
+                      finalOffset: Offset(screenWidth * 0.1,
+                          screenHeight * 0.1), // Responsive offset
+                      duration: const Duration(milliseconds: 500),
+                    ),
+                    AnimatedImage(
+                      path: OnboardingImages.page43,
+                      size: Size(screenWidth * 0.04,
+                          screenHeight * 0.04), // Responsive size
+                      initialOffset: Offset(1.0, -1.0),
+                      finalOffset: Offset(screenWidth * 0.1,
+                          screenHeight * 0.15), // Responsive offset
+                      duration: const Duration(milliseconds: 900),
+                    ),
+                    AnimatedImage(
+                      path: OnboardingImages.page44,
+                      size: Size(screenWidth * 0.04,
+                          screenHeight * 0.04), // Responsive size
+                      initialOffset: Offset(-1.0, 0.0),
+                      finalOffset: Offset(screenWidth * 0.1,
+                          screenHeight * 0.2), // Responsive offset
+                      duration: const Duration(milliseconds: 1300),
+                    ),
+                    AnimatedImage(
+                      path: OnboardingImages.page45,
+                      size: Size(screenWidth * 0.04,
+                          screenHeight * 0.04), // Responsive size
+                      initialOffset: Offset(1.0, 0.0),
+                      finalOffset: Offset(screenWidth * 0.1,
+                          screenHeight * 0.25), // Responsive offset
+                      duration: const Duration(milliseconds: 1700),
+                    ),
+                    AnimatedImage(
+                      path: OnboardingImages.page46,
+                      size: Size(screenWidth * 0.15,
+                          screenHeight * 0.16), // Responsive size
+                      initialOffset: Offset(0.0, 1.0),
+                      finalOffset: Offset(screenWidth * 0.6,
+                          screenHeight * 0.11), // Responsive offset
+                      duration: const Duration(milliseconds: 1200),
+                    ),
+                  ],
+                  isLastPage: true,
+                ),
+              ],
             ),
-            child: Obx(() => !flagToFetchData.value
-                ? Row(
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: screenHeight * 0.02, // 5% of screen height
+                horizontal: screenWidth * 0.02, // 5% of screen width
+              ),
+              child: Obx(() => !flagToFetchData.value
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: screenWidth * 0.07, // 10% of screen width
+                          height: screenHeight * 0.07, // 10% of screen height
+                          child: Spinner(
+                              size: screenWidth * 0.08), // Responsive size
+                        ),
+                        SizedBox(width: screenWidth * 0.02), // 5% of screen width
+                        Text(
+                          "Data is Not Yet Fetched",
+                          style: TextStyle(
+                              fontSize: screenWidth * 0.02), // 4% of screen width
+                        ),
+                      ],
+                    )
+                  : Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        width: screenWidth * 0.07, // 10% of screen width
-                        height: screenHeight * 0.07, // 10% of screen height
-                        child: Spinner(
-                            size: screenWidth * 0.08), // Responsive size
-                      ),
-                      SizedBox(width: screenWidth * 0.02), // 5% of screen width
-                      Text(
-                        "Data is Not Yet Fetched",
-                        style: TextStyle(
-                            fontSize: screenWidth * 0.02), // 4% of screen width
-                      ),
+                          child: Text(
+                            "Fetched data successfully",
+                            style: TextStyle(
+                                fontSize: screenWidth * 0.02), // 4% of screen width
+                          ),
+                        ),
                     ],
-                  )
-                : Container(
-                    child: Text(
-                      "Fetched data successfully",
-                      style: TextStyle(
-                          fontSize: screenWidth * 0.02), // 4% of screen width
-                    ),
                   )),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }

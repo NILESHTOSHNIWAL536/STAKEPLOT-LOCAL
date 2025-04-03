@@ -64,6 +64,7 @@ Future<void> loginUser(TextEditingController emailController,
     TextEditingController passwordController, BuildContext context,
     [bool flag = false]) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
+  print("SharedPreferences instance obtained.");
 
   final response = await http.post(
     Uri.parse('${url}/user/login'),
@@ -76,9 +77,10 @@ Future<void> loginUser(TextEditingController emailController,
       'deviceInfo': deviceData,
     }),
   );
-  printData(response);
+  print("Login request sent. Response status: ${response.statusCode}");
+
   if (response.statusCode == 409) {
-    //  final body = json.decode(response.body);
+    print("Conflict error: User already logged in.");
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -95,9 +97,11 @@ Future<void> loginUser(TextEditingController emailController,
   }
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
+    print("Login successful. Response body: $body");
 
     String accessToken = body['data']['accessToken'];
     _pref.setString("accessToken", "Bearer " + accessToken);
+    print("Access token stored: $accessToken");
 
     await initializeOneSignal(context);
     currentId.value = body['data']['_id'];
@@ -109,9 +113,9 @@ Future<void> loginUser(TextEditingController emailController,
     // storeinmap(body, _pref, passwordController.text);
     // Phone.value = body['data']['phone'] ?? "";
     // number.value = body['data']['phone']?? "";
-
   } else {
     acceptReset.value = false;
+    print("Login failed. Response status: ${response.statusCode}");
     var snackBar = SnackBar(
       duration: Durations.medium4,
       content: Text(
@@ -192,7 +196,8 @@ void forceLogoutUser(
       _pref.setString("accessToken", "Bearer " + accessToken);
       currentId.value = body['data']['_id'];
       try {
-        sendNotificationsToDevice(currentId.value, context, "You have been logged out from StakePlot. Your account was logged in on ${deviceName}");
+        sendNotificationsToDevice(currentId.value, context,
+            "You have been logged out from StakePlot. Your account was logged in on ${deviceName}");
       } catch (e) {}
 
       await initializeOneSignal(context);
@@ -311,8 +316,8 @@ void changePassword(context, email, p1, p2) async {
 }
 
 void addThisDeviceToBackendDevice(SharedPreferences pref, context) async {
-  await addThisDeviceToBackend(jsonDecode(pref.getString("deviceInfo") ?? "{}"), context);
-  
+  await addThisDeviceToBackend(
+      jsonDecode(pref.getString("deviceInfo") ?? "{}"), context);
 }
 
 void resendOpt(context, email, name) async {
@@ -376,8 +381,8 @@ void loginUser2(TextEditingController emailController,
     final body = json.decode(response.body);
     String accessToken = body['data']['accessToken'];
     _pref.setString("accessToken", "Bearer " + accessToken);
-    Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
-    
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
   } else {
     var snackBar = SnackBar(
       duration: Durations.medium4,
@@ -432,7 +437,6 @@ Future<void> handleSignInGoogle(BuildContext context) async {
   } catch (error) {}
 }
 
-
 Future<void> addThisDeviceToBackend(deviceData, context) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
@@ -450,10 +454,6 @@ Future<void> addThisDeviceToBackend(deviceData, context) async {
     final body = json.decode(response.body);
   } else {}
 }
-
-
-
-
 
 void clearGetX() {
   income = 0.obs;
@@ -513,7 +513,7 @@ void clearGetX() {
   accountNo.value = "0";
   balance.value = "0";
   selectedBank.value = "";
-  accountId.value="";
-   displayedData.clear();
+  accountId.value = "";
+  displayedData.clear();
   bankAccountLinkedList.clear();
 }

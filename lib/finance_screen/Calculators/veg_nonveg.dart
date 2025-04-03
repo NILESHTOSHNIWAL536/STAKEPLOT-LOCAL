@@ -511,7 +511,9 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                     EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.0),
+                  
                 ),
+                
               ),
             ),
           ),
@@ -604,7 +606,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       });
 
       addSocketMessage(nameList, amount.toString(),
-          "selectedCategory2".toString(), splitID.value, totalAmount);
+          "Calculation".toString(), splitID.value, totalAmount);
 
       snackBarCalled(context, "Split amount sent to users!", Colors.black);
       Navigator.pop(context);

@@ -26,25 +26,25 @@ String getFormattedDate() {
   return "${now.year}-${now.month.toString().padLeft(2, '0')}";
 }
 
-
 String getCurrentWeekNumber() {
-
   DateTime now = DateTime.now();
   int weekNumber = int.parse(DateFormat('w').format(now));
   int year = now.year;
   return '$year-W${weekNumber.toString().padLeft(2, '0')}';
 }
 
-
-
 String formatWhatsAppDate(DateTime date) {
-  date = date.toLocal(); // Ensure local timezone
+  date = date
+      .toLocal()
+      .subtract(Duration(hours: 5, minutes: 30)); // Adjust for 5:30 fast
   DateTime now = DateTime.now().toLocal();
   DateTime today = DateTime(now.year, now.month, now.day);
   DateTime yesterday = today.subtract(Duration(days: 1));
-  DateTime weekStart = today.subtract(Duration(days: today.weekday)); // Start of the week
+  DateTime weekStart =
+      today.subtract(Duration(days: today.weekday)); // Start of the week
 
-  String timeFormat = DateFormat('h:mm a').format(date); // Format time as "10:30 AM"
+  String timeFormat =
+      DateFormat('h:mm a').format(date); // Format time as "10:30 AM"
 
   if (date.isAfter(today)) {
     return "Today, $timeFormat";
@@ -59,11 +59,9 @@ String formatWhatsAppDate(DateTime date) {
   }
 }
 
-
 DateTime convertStringToDateTime(String dateString) {
   return DateTime.parse(dateString);
 }
-
 
 String getPreviousDate(int no, String type) {
   DateTime now = DateTime.now();
@@ -86,14 +84,13 @@ String getPreviousDate(int no, String type) {
   return DateFormat('yyyy-MM-dd').format(previousDate);
 }
 
+List getLastTenUsers(List allUsers) {
+  // Determine the number of users to take
+  int numberOfUsersToTake = allUsers.length < 10 ? allUsers.length : 10;
 
- List getLastTenUsers(List allUsers) {
-    // Determine the number of users to take
-    int numberOfUsersToTake = allUsers.length < 10 ? allUsers.length : 10;
+  // Get the last `numberOfUsersToTake` users
+  List lastUsers = allUsers.sublist(allUsers.length - numberOfUsersToTake);
 
-    // Get the last `numberOfUsersToTake` users
-    List lastUsers = allUsers.sublist(allUsers.length - numberOfUsersToTake);
-
-    // Reverse the list
-    return lastUsers.reversed.toList();
-  }
+  // Reverse the list
+  return lastUsers.reversed.toList();
+}

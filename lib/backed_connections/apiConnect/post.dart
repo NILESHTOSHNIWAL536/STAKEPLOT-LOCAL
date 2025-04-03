@@ -157,19 +157,26 @@ void addPost(context, String title, String description, File obj) async {
   }
 }
 
-void reportPost(context, String id, String spam) async {
+void reportPost(context, String id, String spam, String type) async {
+  print(
+      "Starting reportPost with id: $id, spam: $spam, type: $type"); // Debugging statement
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
+  print("Access token retrieved: $accessToken"); // Debugging statement
+
   final response = await http.post(
-    Uri.parse('${url}/user/report/${id}'),
+    Uri.parse('${url}/user/report/${type}/$id'),
+    
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       "Authorization": "$accessToken",
     },
     body: jsonEncode({'reason': spam}),
   );
-
+print("api ${Uri.parse('${url}/user/report/${type}/$id')}");
+  print("Response status code: ${response.statusCode}"); // Debugging statement
   if (response.statusCode == 200 || response.statusCode == 201) {
+    print("Report successful: ${response.body}"); // Debugging statement
     final body = json.decode(response.body);
     snackBarCalled(
         context,
@@ -177,9 +184,8 @@ void reportPost(context, String id, String spam) async {
             ? "The post has been hidden from you."
             : "Reported successfully.",
         Colors.green);
-    // Navigator.pop(context);
-    // Get.back();
   } else {
+    print("Error reporting post: ${response.body}"); // Debugging statement
     snackBarCalled(context, "An error occurred while reporting.", Colors.red);
   }
 
@@ -554,7 +560,6 @@ Future<Map<String, dynamic>> createPost(BuildContext context, String title,
         'success': true,
         'data': postData,
       };
-      
     } else {
       snackBarCalled(
           context, "Server error: ${response.statusCode}", Colors.red);
@@ -572,8 +577,6 @@ Future<Map<String, dynamic>> createPost(BuildContext context, String title,
   }
 }
 
-
-
 void createPostWithOutImage(context, String title, String description) async {
   var urlPath = '${url}/post/withOutImage';
   var body = {
@@ -587,7 +590,7 @@ void createPostWithOutImage(context, String title, String description) async {
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     getTrendingData.insert(0, his);
-     resetAndLoadData();
+    resetAndLoadData();
     getPosted.value = !getPosted.value;
     postCount[his["_id"]] = 0;
     postCommentCount[his["_id"]] = 0;
@@ -615,12 +618,9 @@ void createPollOfCommunity(context, String title, String description) async {
   postDis.value = false;
 }
 
-
-
-
 void getPost() async {
   var response = await getDataApiCall('${url}/post/feed');
-  
+
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
@@ -628,7 +628,7 @@ void getPost() async {
     historyListData.addAll(obj);
     getTrendingData.clear();
     getTrendingData.addAll(obj);
-   
+
     historyListData.forEach((element) {
       postCount[element["_id"]] = element['upvotes'];
       postCommentCount[element["_id"]] = element['comments'];
@@ -636,7 +636,6 @@ void getPost() async {
     isPost.value = true;
   } else {}
 }
-
 
 void savePostData(context, data) async {
   var urlPath = "${url}/post/save";
@@ -667,7 +666,7 @@ void postItenary(title, s, type, context) async {
   }
 
   getPost();
- 
+
   postInter.value = false;
 }
 

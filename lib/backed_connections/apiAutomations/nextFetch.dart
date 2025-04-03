@@ -55,30 +55,10 @@ class _RotatingIconState extends State<Nextfetch>
       currentTime.value = getTime();
     });
 
-    checkAndFetchData();
+    // checkAndFetchData();
   }
 
-  void checkAndFetchData() async {
-    DateTime now = DateTime.now();
-
-    if ((now.hour == 9 && now.minute == 0)) {
-      await getBankAccounts();
-
-      if (consentAndHandleDetails.isNotEmpty) {
-        bool f = false;
-        consentAndHandleDetails.forEach((item) {
-          getWeeklyfetchData(
-            item["consentId"],
-            item["consendHandleId"],
-            item["sessionId"],
-            item["custId"],
-            convertToIso8601("2025-01-05"),
-            convertToIso8601("2025-03-05"),
-          );
-        });
-      }
-    }
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -89,16 +69,19 @@ class _RotatingIconState extends State<Nextfetch>
             width: MediaQuery.of(context).size.width / 1.1,
             child: Row(
               children: [
-                RotationTransition(
-                    turns: Tween(begin: 0.0, end: 1.0)
-                        .animate(CurvedAnimation(
-                          parent: _controller,
-                          curve: Curves.linear,
-                        ))
-                        .drive(Tween(
-                            begin: 1.0, end: 0.0)), // Reverse the rotation
-                    child: AvatarProfileImage(
-                        url: HomePageIcons.fetch, width: 25, height: 25)),
+                InkWell(
+                   onTap: () => showFetchModal(context),
+                  child: RotationTransition(
+                      turns: Tween(begin: 0.0, end: 1.0)
+                          .animate(CurvedAnimation(
+                            parent: _controller,
+                            curve: Curves.linear,
+                          ))
+                          .drive(Tween(
+                              begin: 1.0, end: 0.0)), // Reverse the rotation
+                      child: AvatarProfileImage(
+                          url: HomePageIcons.fetch, width: 25, height: 25)),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: textStyle(
@@ -135,4 +118,75 @@ class _RotatingIconState extends State<Nextfetch>
 
     return '$hoursLeft:${minutesLeft.toString().padLeft(2, '0')}';
   }
+
+
+
+    void showFetchModal(BuildContext context) {
+    int fetchCount = 0;
+  DateTime nextFetchDate = DateTime.now().add(Duration(days: 1));
+
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Your next fetch is on: ${nextFetchDate.toLocal()}",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10),
+              Text("Number of fetches completed: $fetchCount"),
+              SizedBox(height: 20),
+              Text("Do you want to fetch again?", style: TextStyle(fontSize: 16)),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => checkAndFetchData(),
+                    child: Text("Yes"),
+                  ),
+                  OutlinedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text("No"),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
 }
+
+
+void checkAndFetchData() async 
+{
+   
+      await getBankAccounts();
+      if (consentAndHandleDetails.isNotEmpty) {
+
+        consentAndHandleDetails.forEach((item) {
+          getWeeklyfetchData(
+            item["consentId"],
+            item["consendHandleId"],
+            item["sessionId"],
+            item["custId"],
+            convertToIso8601("2025-01-05"),
+            convertToIso8601("2025-03-05"),
+          );
+        });
+      }
+
+  }

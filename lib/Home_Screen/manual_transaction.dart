@@ -646,7 +646,7 @@ class _ModalContentState extends State<ModalContent>
                   );
                 }
               },
-              child: getButton(context, "Continue"),
+              child: getButton(context, "Add"),
             ),
           ),
         ),
