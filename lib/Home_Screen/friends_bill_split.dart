@@ -259,7 +259,17 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
               child: SizedBox(
                 height: 70,
                 width: MediaQuery.of(context).size.width,
-                child: ListView.builder(
+
+                child: frdsList.isEmpty? Center(
+                        child: Text(
+                          'No friends available',
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: AppColors.bg3),
+                        ),
+                      )
+                    :ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: frdsList.length,
                   itemBuilder: (context, index) {

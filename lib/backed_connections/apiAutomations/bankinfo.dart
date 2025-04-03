@@ -39,7 +39,9 @@ Future<void> getBankAccounts()async
                             "consendHandleId": bank['consendHandleId'],
                             "sessionId": bank['sessionId'],
                             "custId": bank['custId'],
-                            'from':bank['from'] ?? ""
+                            'lastFetch':bank['accounts'][0]['lastFetch'] ?? "",
+                            'nextFetch':bank['accounts'][0]['nextFetch'] ?? "",
+                            'fetchCount':bank['accounts'][0]['fetchCount'] ?? "0",
                           });
                         }
               }
@@ -54,6 +56,9 @@ Future<void> getBankAccounts()async
                       'maskedAccNumber': account['maskedAccNumber'],
                       'type': account['type'],
                       'currentBalance': account['currentBalance'],
+                      'lastFetch':account['lastFetch'] ?? "",
+                      'nextFetch':account['nextFetch'] ?? "",
+                      'fetchCount':account['fetchCount'] ?? "0",
                     });
                   });
                 });
