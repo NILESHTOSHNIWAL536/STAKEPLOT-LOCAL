@@ -26,11 +26,9 @@ import 'dart:io';
 
 void clearStack(BuildContext context) {
   try {
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
   } catch (e) {
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
   }
 }
 
@@ -104,7 +102,7 @@ Future<void> loginUser(TextEditingController emailController,
     await initializeOneSignal(context);
     currentId.value = body['data']['_id'];
     isBankAccountLink.value = body['data']['isBankAccountLinked'];
-      await getBankAccounts();
+      // await getBankAccounts();
     Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
     acceptReset.value = false;
 
