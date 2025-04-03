@@ -122,8 +122,9 @@ class _RotatingIconState extends State<Nextfetch>
 
 
     void showFetchModal(BuildContext context) {
-    int fetchCount = 0;
-  DateTime nextFetchDate = DateTime.now().add(Duration(days: 1));
+    String fetchCount = consentAndHandleDetails[0]['fetchCount'];
+    String nextFetch = consentAndHandleDetails[0]['nextFetch'];
+    String lastFetch = consentAndHandleDetails[0]['lastFetch'];
 
     showModalBottomSheet(
       context: context,
@@ -140,7 +141,12 @@ class _RotatingIconState extends State<Nextfetch>
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "Your next fetch is on: ${nextFetchDate.toLocal()}",
+                "Your ladt fetch wad on: ${lastFetch}",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10),
+              Text(
+                "Your next fetch is on: ${nextFetch}",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 10),

@@ -39,7 +39,9 @@ Future<void> getBankAccounts()async
                             "consendHandleId": bank['consendHandleId'],
                             "sessionId": bank['sessionId'],
                             "custId": bank['custId'],
-                            'from':bank['from'] ?? ""
+                            'lastFetch':bank['lastFetch'] ?? "",
+                            'nextFetch':bank['nextFetch'] ?? "",
+                            'fetchCount':bank['fetchCount'] ?? 0,
                           });
                         }
               }
