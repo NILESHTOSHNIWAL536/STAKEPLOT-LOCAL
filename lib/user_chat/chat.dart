@@ -485,7 +485,7 @@ class _ChatState extends State<Chat> {
                 // margin: EdgeInsets.all(8.0),
 
                 decoration: BoxDecoration(
-                    //color: AppColors.chatcolor,
+                   
                     //borderRadius: BorderRadius.circular(24),
                     ),
                 //       decoration: InputDecoration(
@@ -704,6 +704,7 @@ class _ChatState extends State<Chat> {
         controller: textController,
         maxLines: null, // Allow multiple lines
         maxLength: 150,
+       
         onSubmitted: (value) {
           if (value.isNotEmpty) {
             _handleSubmitted(value);
@@ -717,16 +718,16 @@ class _ChatState extends State<Chat> {
         decoration: InputDecoration(
           hintText: labelText,
           filled: true,
-          prefixIcon: IconButton(
-            icon: Icon(
-              Icons.emoji_emotions,
-              size: 25,
-              color: AppColors.primaryColor,
-            ),
-            onPressed: () {
-              // Implement emoji picker or logic here
-            },
-          ),
+          // prefixIcon: IconButton(
+          //   icon: Icon(
+          //     Icons.emoji_emotions,
+          //     size: 25,
+          //     color: AppColors.primaryColor,
+          //   ),
+          //   onPressed: () {
+          //     // Implement emoji picker or logic here
+          //   },
+          // ),
           suffixIcon: Row(
             mainAxisSize: MainAxisSize.min, // Takes minimum space needed
             children: [

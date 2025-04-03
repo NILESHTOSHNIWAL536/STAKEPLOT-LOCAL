@@ -119,7 +119,7 @@ Future<void> loginUser(TextEditingController emailController,
     var snackBar = SnackBar(
       duration: Durations.medium4,
       content: Text(
-        'invalid credentials or server error...!',
+        'invalid credentials or server error!',
         style: FontManager().getTextStyle(
           context,
           color: Colors.white,

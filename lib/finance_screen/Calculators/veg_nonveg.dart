@@ -362,80 +362,92 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
               child: SizedBox(
                 height: MediaQuery.sizeOf(context).height / 12,
                 width: MediaQuery.of(context).size.width,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: frdsList.length,
-                  itemBuilder: (context, index) {
-                    String values = frdsList[index]['_id'];
-                    return InkWell(
-                      onTap: () {},
-                      child: Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                addedUser.contains(values)
-                                    ? addedUser.remove(values)
-                                    : addedUser.add(values);
-                                if (addedUser.contains(values)) {
-                                  addedMembers.add({
-                                    "name": frdsList[index]['name'],
-                                    "id": values,
-                                    'avatar': frdsList[index]['avatar'],
-                                    "balance": 200
-                                  });
-                                  selectedOptions[values] =
-                                      []; // Initialize for friend
-                                } else {
-                                  List f = [];
-                                  addedMembers.forEach((element) {
-                                    if (element['id'] != values) {
-                                      f.add(element);
-                                    }
-                                  });
-                                  setState(() {
-                                    addedMembers.clear();
-                                    addedMembers.addAll(f);
-                                  });
-                                }
-                              });
-                            },
-                            child: Container(
-                              width: MediaQuery.of(context).size.width / 5,
-                              height: 50,
-                              child: Stack(
-                                children: [
-                                  Center(
-                                      child: AvatarProfileImage(
-                                          url: frdsList[index]['avatar'] ??
-                                              userAvatar,
-                                          width: 8,
-                                          height: 18)),
-                                  addedUser.contains(values)
-                                      ? const Positioned(
-                                          right: 0,
-                                          top: 0,
-                                          child: Icon(
-                                            Icons.check,
-                                            size: 30,
-                                            color: Colors.green,
-                                          ),
-                                        )
-                                      : const SizedBox.shrink(),
-                                ],
-                              ),
+                child: frdsList.isEmpty
+                    ? Center(
+                        child: Text(
+                          'No friends available',
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: AppColors.bg3),
+                        ),
+                      )
+                    : ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: frdsList.length,
+                        itemBuilder: (context, index) {
+                          String values = frdsList[index]['_id'];
+                          return InkWell(
+                            onTap: () {},
+                            child: Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      addedUser.contains(values)
+                                          ? addedUser.remove(values)
+                                          : addedUser.add(values);
+                                      if (addedUser.contains(values)) {
+                                        addedMembers.add({
+                                          "name": frdsList[index]['name'],
+                                          "id": values,
+                                          'avatar': frdsList[index]['avatar'],
+                                          "balance": 200
+                                        });
+                                        selectedOptions[values] =
+                                            []; // Initialize for friend
+                                      } else {
+                                        List f = [];
+                                        addedMembers.forEach((element) {
+                                          if (element['id'] != values) {
+                                            f.add(element);
+                                          }
+                                        });
+                                        setState(() {
+                                          addedMembers.clear();
+                                          addedMembers.addAll(f);
+                                        });
+                                      }
+                                    });
+                                  },
+                                  child: Container(
+                                    width:
+                                        MediaQuery.of(context).size.width / 5,
+                                    height: 50,
+                                    child: Stack(
+                                      children: [
+                                        Center(
+                                            child: AvatarProfileImage(
+                                                url: frdsList[index]
+                                                        ['avatar'] ??
+                                                    userAvatar,
+                                                width: 8,
+                                                height: 18)),
+                                        addedUser.contains(values)
+                                            ? const Positioned(
+                                                right: 0,
+                                                top: 0,
+                                                child: Icon(
+                                                  Icons.check,
+                                                  size: 30,
+                                                  color: Colors.green,
+                                                ),
+                                              )
+                                            : const SizedBox.shrink(),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Text((frdsList[index]['name']),
+                                    style: FontManager().getTextStyle(context,
+                                        lWeight: FontWeight.w400,
+                                        fontSize: 14,
+                                        color: Colors.black))
+                              ],
                             ),
-                          ),
-                          Text((frdsList[index]['name']),
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.w400,
-                                  fontSize: 14,
-                                  color: Colors.black))
-                        ],
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               ),
             ),
           ],
@@ -511,9 +523,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                     EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.0),
-                  
                 ),
-                
               ),
             ),
           ),
@@ -605,8 +615,8 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
             "${userName.value} has sent u a split bill for ${name} Of ${e['amount']}");
       });
 
-      addSocketMessage(nameList, amount.toString(),
-          "Calculation".toString(), splitID.value, totalAmount);
+      addSocketMessage(nameList, amount.toString(), "Calculation".toString(),
+          splitID.value, totalAmount);
 
       snackBarCalled(context, "Split amount sent to users!", Colors.black);
       Navigator.pop(context);
