@@ -1523,7 +1523,8 @@ Widget popUpBox(id, context) {
           },
         );
       } else {
-        reportPost(context, id, "hide post");
+      
+        reportPost(context, id, "hide post","hide");
       }
     },
     itemBuilder: (context) {
@@ -1656,7 +1657,7 @@ Widget textStyleModel(context, str, id, [flag = false]) {
   bool f = str == "Helps us to understand the issue, and look into it.";
   return GestureDetector(
     onTap: () {
-      reportPost(context, id, str);
+      reportPost(context, id, str,"report");
       if (flag) {
         getPost();
         Navigator.pop(context);

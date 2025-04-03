@@ -963,7 +963,7 @@ class _PostCardState extends State<PostCard> {
                               child: child,
                             );
                           },
-                          transitionDuration: const Duration(milliseconds: 500),
+                          transitionDuration: const Duration(milliseconds: 300),
                         ),
                       );
                     },
@@ -1208,7 +1208,7 @@ class _PostCardState extends State<PostCard> {
             },
           );
         } else {
-          reportPost(context, id, "hide post");
+          reportPost(context, id, "hide post","hide");
           if (widget.flag) {
             getPost();
             Navigator.pop(context);
