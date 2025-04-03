@@ -95,6 +95,12 @@ class _PlotFinanceState extends State<PlotFinance> {
         spacing: 8,
         runSpacing: 8,
         children: [
+           _buildCalculatorTile(
+            'Veg and non veg',
+            'Calculator',
+            url: Finance.vegNonveg,
+            path: "/VegNonveg",
+          ),
           _buildCalculatorTile(
             'Credit Card Payoff',
             'Calculator',
@@ -131,12 +137,7 @@ class _PlotFinanceState extends State<PlotFinance> {
             url: Finance.location,
             path: "/TripCost",
           ),
-          _buildCalculatorTile(
-            'Veg and non veg',
-            'Calculator',
-            url: Finance.vegNonveg,
-            path: "/VegNonveg",
-          ),
+         
         ],
       ),
     );

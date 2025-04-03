@@ -182,7 +182,7 @@ class _EditDetailsState extends State<EditDetails> {
         children: [
           Column(
             children: bankAccountLinkedList.map((e) {
-              return _buildAccountDetails(e['bankName'], e['fipId'], e);
+              return _buildAccountDetails(e['bankName'], e['maskedAccNumber'], e);
             }).toList(),
           ),
           const SizedBox(
