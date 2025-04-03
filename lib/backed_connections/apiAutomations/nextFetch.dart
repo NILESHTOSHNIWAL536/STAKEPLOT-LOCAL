@@ -121,7 +121,7 @@ class _RotatingIconState extends State<Nextfetch>
 
 
 
-    void showFetchModal(BuildContext context) {
+void showFetchModal(BuildContext context) {
     int fetchCount = 0;
   DateTime nextFetchDate = DateTime.now().add(Duration(days: 1));
 
@@ -139,14 +139,20 @@ class _RotatingIconState extends State<Nextfetch>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                "Your next fetch is on: ${nextFetchDate.toLocal()}",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Row(
+                children: [
+                  textStyleOnly2(context: context, text: "Your next fetch is on:", fontsize: 12, color: AppColors.bg1, fontWeight: FontWeight.w500),
+                               textStyleOnly2(context: context, text: " ${nextFetchDate.toLocal()}", fontsize: 12, color: AppColors.bg1, fontWeight: FontWeight.w500),
+                ],
               ),
               SizedBox(height: 10),
-              Text("Number of fetches completed: $fetchCount"),
+ textStyleOnly2(context: context, text: "Number of fetches completed:", fontsize: 12, color: AppColors.bg1, fontWeight: FontWeight.w500),
+textStyleOnly2(context: context, text: "$fetchCount", fontsize: 12, color: AppColors.bg1, fontWeight: FontWeight.w500),
+
+             
               SizedBox(height: 20),
-              Text("Do you want to fetch again?", style: TextStyle(fontSize: 16)),
+               textStyleOnly2(context: context, text: "Do you want to fetch again?", fontsize: 12, color: AppColors.bg1, fontWeight: FontWeight.w500),
+             
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

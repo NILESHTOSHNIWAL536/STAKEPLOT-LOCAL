@@ -645,6 +645,6 @@ Widget textStyleOnly2({
       fontSize: fontsize,
       color: color,
     ),
-    overflow: TextOverflow.ellipsis,
+    overflow: TextOverflow.visible,
   );
 }

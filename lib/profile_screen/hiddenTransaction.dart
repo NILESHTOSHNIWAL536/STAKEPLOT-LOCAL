@@ -87,21 +87,44 @@ class _HiddenTransactionsScreenState extends State<HiddenTransactionsScreen> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('Confirm Unhide'),
-              content: Text('Do you want to unhide this transaction?'),
+             // title: textStyleOnly2(context: context, text: "Do you want to fetch again?", fontsize: 12, color: AppColors.bg1, fontWeight: FontWeight.w500),
+
+              content: textStyleOnly2(
+                    context: context,
+                    text:
+                        "Do you want to unhide this transaction? This action will make it visible again.",
+                    fontsize: 14,
+                    color: AppColors.bg1,
+                    fontWeight: FontWeight.w500,
+                  ),
+
               actions: [
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop(); // Close the dialog
                   },
-                  child: Text('No'),
+                  child:  textStyleOnly2(
+                    context: context,
+                    text:
+                        "No",
+                    fontsize: 14,
+                    color: AppColors.bg1,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 TextButton(
                   onPressed: () {
                     hideTransaction(index, false, context, transaction['_id']);
                     Navigator.of(context).pop(); // Close the dialog
                   },
-                  child: Text('Yes'),
+                  child:  textStyleOnly2(
+                    context: context,
+                    text:
+                        "Yes",
+                    fontsize: 14,
+                    color: AppColors.bg1,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             );
