@@ -366,7 +366,7 @@ void dispose() {
     final amount = transaction['amount']?.toString() ?? '0';
     final ismanual = transaction['manualTransaction'];
     final formattedDate = date != null
-        ? formatWhatsAppDate(convertStringToDateTime(date))
+        ? formatWhatsAppDate3(convertStringToDateTime(date))
         : 'Date';
     final type = transaction['type']?.toString() ?? '0';
     final amtColor = type == 'CREDIT'
