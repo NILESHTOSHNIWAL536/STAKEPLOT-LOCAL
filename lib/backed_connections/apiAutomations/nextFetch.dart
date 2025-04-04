@@ -68,8 +68,9 @@ class _RotatingIconState extends State<Nextfetch>
             width: MediaQuery.of(context).size.width / 1.1,
             child: Row(
               children: [
-                InkWell(
-                  onTap: () => showFetchModal(context),
+              
+                 InkWell(
+                     onTap: () => showFetchModal(context),
                   child: RotationTransition(
                       turns: Tween(begin: 0.0, end: 1.0)
                           .animate(CurvedAnimation(
@@ -154,6 +155,7 @@ class _RotatingIconState extends State<Nextfetch>
   // Format dates (assuming formatWhatsAppDate exists or define it below)
   String formattedNextFetch = formatWhatsAppDate(nextFetchDate);
   String formattedLastFetch = formatWhatsAppDate(lastFetchDate);
+
 
   // Get screen width for responsive sizing
   final double screenWidth = MediaQuery.of(context).size.width;
@@ -355,8 +357,8 @@ class _RotatingIconState extends State<Nextfetch>
           item["consendHandleId"],
           item["sessionId"],
           item["custId"],
-          convertToIso8601("2025-01-05"),
-          convertToIso8601("2025-03-05"),
+         item["lastFetch"],
+         
         );
       });
     }

@@ -44,7 +44,7 @@ class TextFeildWidget extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 9.0),
               child: Text(heading,
                   style: FontManager().getTextStyle(context,
-                      fontSize: 18, lWeight: FontWeight.w600)),
+                      fontSize: 16, lWeight: FontWeight.w600)),
             ),
             const SizedBox(
               height: 10,
@@ -98,9 +98,12 @@ class TextFeildWidget extends StatelessWidget {
 
 TextStyle getStyle(context) {
   return FontManager().getTextStyle(context,
-      fontSize: 16, lWeight: FontWeight.w400, color: Colorcodes.black);
+      fontSize: 16, lWeight: FontWeight.w400, color: Colors.grey);
 }
-
+TextStyle getStyle2(context) {
+  return FontManager().getTextStyle(context,
+      fontSize: 18, lWeight: FontWeight.w400, color: Colors.grey);
+}
 TextStyle getStyle1(context) {
   return FontManager().getTextStyle(context,
       fontSize: 14, lWeight: FontWeight.w300, color: AppColors.bg6);
@@ -141,7 +144,7 @@ class TextFeildWidgetPassword extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 9.0),
                   child: Text(heading,
                       style: FontManager().getTextStyle(context,
-                          fontSize: 18, lWeight: FontWeight.w600)),
+                          fontSize: 16, lWeight: FontWeight.w600)),
                 ),
                 const SizedBox(
                   height: 10,
@@ -281,13 +284,7 @@ class TextFeildCalender extends StatelessWidget {
     return Center(
         child: GestureDetector(
       onTap: () async {
-        DateTime? dateTime = await showDatePicker(
-            context: context,
-            initialDate: DateTime.now(),
-            firstDate: DateTime(2021),
-            lastDate: DateTime(2025));
-        textEditingController.text =
-            DateFormat('yyyy-MM-dd').format(dateTime!).toString();
+        // Removed manual entry, only allow selection through suffix icon
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 5),
@@ -301,54 +298,62 @@ class TextFeildCalender extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 9.0),
                 child: Text(heading,
                     style: FontManager().getTextStyle(context,
-                        fontSize: 18, lWeight: FontWeight.w600)),
+                        fontSize: 16, lWeight: FontWeight.w600)),
               ),
               const SizedBox(
                 height: 10,
               ),
               TextFormField(
-                keyboardType: keyBoard,
+                keyboardType: TextInputType.none, // Disable manual entry
                 controller: textEditingController,
                 obscureText: flag ? false : show.value,
+                readOnly: true, 
                 onChanged: (s) {
-                  acceptReset.value = false;
+                  // Removed manual entry handling
                 },
                 decoration: InputDecoration(
-                    // contentPadding: EdgeInsets.all(0),
                     contentPadding:
-                        EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 12),
                     filled: true,
                     hintText: lableText,
-                    hintStyle: getStyle(context),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(40),
-                        borderSide: BorderSide(color: Colorcodes.textFeild)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(40),
-                        borderSide: BorderSide(color: Colorcodes.textFeild)),
+                    hintStyle: getStyle2(context),
                     fillColor: Colorcodes.textFeild,
+                     enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide:
+                                BorderSide(color: Colorcodes.textFeild)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide:
+                                BorderSide(color: Colorcodes.textFeild)),
                     border: InputBorder.none,
+                    prefixIcon:  Icon(Icons.calendar_today,color: AppColors.primaryColor),
                     suffixIcon: GestureDetector(
                       onTap: () async {
                         DateTime? dateTime = await showDatePicker(
                             context: context,
                             initialDate:
-                                DateTime.tryParse(textEditingController.text),
+                                DateTime.tryParse(textEditingController.text) ??
+                                    DateTime.now(),
                             firstDate: DateTime(1995),
                             lastDate: DateTime(2035));
-                        textEditingController.text = DateFormat('yyyy-MM-dd')
-                            .format(dateTime!)
-                            .toString();
+                        if (dateTime != null) {
+                          textEditingController.text = DateFormat('yyyy-MM-dd')
+                              .format(dateTime)
+                              .toString();
+                        }
                       },
                       child: Container(
                           padding: EdgeInsets.symmetric(
                               horizontal: Colorcodes.paddingSize),
-                          decoration: BoxDecoration(
-                              color: Colorcodes.dropdown,
-                              borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(40),
-                                topRight: Radius.circular(40),
-                              )),
+                          decoration:
+                              BoxDecoration(color: AppColors.primaryColor,
+                              
+                                                       borderRadius: BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10)),
+                       
+                           
+                           
+                              ),
                           child: Icon(
                             Icons.arrow_drop_down_sharp,
                             color: Colorcodes.white,

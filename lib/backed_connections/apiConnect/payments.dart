@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
@@ -138,6 +139,7 @@ void addBudget(BuildContext context, String name, String amount,
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     getBudget();
+    clearStackName(context, "/Budget","/BudgetDisplay");
     Navigator.pushNamed(context, "/BudgetDisplay");
     snackBarCalled(context, "You have successfully added a new budget!");
     await showDialog(

@@ -24,17 +24,17 @@ class SignUp extends StatefulWidget {
 class _SigninState extends State<SignUp> {
   RxBool flag = false.obs;
   TextEditingController emailController =
-      TextEditingController(text: "roshanchenna2@gmail.com");
+      TextEditingController(text: "");
   TextEditingController passwordController =
-      TextEditingController(text: "nilesh123");
+      TextEditingController(text: "");
   TextEditingController conformController =
-      TextEditingController(text: "nilesh123");
+      TextEditingController(text: "");
   TextEditingController usernameController =
-      TextEditingController(text: "nilesh1212");
+      TextEditingController(text: "");
   TextEditingController dobController = new TextEditingController(
       text: DateFormat('yyyy-MM-dd').format(DateTime.now()).toString());
   TextEditingController phoneController =
-      TextEditingController(text: "9347064783");
+      TextEditingController(text: "");
 
   @override
   Widget build(BuildContext context) {
@@ -135,14 +135,14 @@ class _SigninState extends State<SignUp> {
         children: [
           TextFeildWidget(
             textEditingController: usernameController,
-            heading: "User Name",
+            heading: "Username",
             keyBoard: TextInputType.name,
-            lableText: "Enter  your Name",
+            lableText: "Enter your username",
             icon: Icons.person_2_outlined,
           ),
           TextFeildCalender(
             textEditingController: dobController,
-            heading: "Enter Your Date of Birth",
+            heading: "Date of Birth",
             keyBoard: TextInputType.visiblePassword,
             lableText: "Date of Birth",
           ),
@@ -153,9 +153,9 @@ class _SigninState extends State<SignUp> {
           //     lableText: "Phone No"),
           TextFeildWidget(
               textEditingController: emailController,
-              heading: "email",
+              heading: "Email",
               keyBoard: TextInputType.emailAddress,
-              lableText: "example@example.com"),
+              lableText: "johndoe@gmail.com"),
           TextFeildWidgetPassword(
             textEditingController: passwordController,
             heading: "Password",

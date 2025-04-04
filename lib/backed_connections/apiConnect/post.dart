@@ -158,11 +158,9 @@ void addPost(context, String title, String description, File obj) async {
 }
 
 void reportPost(context, String id, String spam, String type) async {
-  print(
-      "Starting reportPost with id: $id, spam: $spam, type: $type"); // Debugging statement
+ 
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
-  print("Access token retrieved: $accessToken"); // Debugging statement
 
   final response = await http.post(
     Uri.parse('${url}/user/report/${type}/$id'),
@@ -173,19 +171,14 @@ void reportPost(context, String id, String spam, String type) async {
     },
     body: jsonEncode({'reason': spam}),
   );
-print("api ${Uri.parse('${url}/user/report/${type}/$id')}");
-  print("Response status code: ${response.statusCode}"); // Debugging statement
+
   if (response.statusCode == 200 || response.statusCode == 201) {
-    print("Report successful: ${response.body}"); // Debugging statement
+   
     final body = json.decode(response.body);
-    snackBarCalled(
-        context,
-        spam == "hide post"
-            ? "The post has been hidden from you."
-            : "Reported successfully.",
-        Colors.green);
+    snackBarCalled(context,spam == "hide post"? "The post has been hidden from you.": "Reported successfully.",Colors.green);
+    
   } else {
-    print("Error reporting post: ${response.body}"); // Debugging statement
+   
     snackBarCalled(context, "An error occurred while reporting.", Colors.red);
   }
 

@@ -17,12 +17,15 @@ import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class Access extends StatefulWidget {
+class Access extends StatefulWidget
+{
   const Access({super.key});
 
   @override
   State<Access> createState() => _AccessState();
 }
+
+
 
 class _AccessState extends State<Access> {
 
@@ -134,21 +137,18 @@ class _AccessState extends State<Access> {
     return Container(
       height: MediaQuery.of(context).size.height / 2.1,
       width: MediaQuery.of(context).size.width,
-      // color: Colors.cyan,
       child: SingleChildScrollView(
-        child: Expanded(
-          child: Column(
-            children: [
-              accounts(
-                  "Accounts Shared",
-                  "${seletedAccountIds.length} Account(s) are shared",
-                  Icons.account_balance_wallet_outlined),
-              accounts("Permission Validity", range, Icons.date_range_rounded),
-              accounts("Frequency of Access",
-                  "We can access your information one-time.", Icons.access_time),
-              getInfomationsAboutUserConsnt(),
-            ],
-          ),
+        child: Column(
+          children: [
+            accounts(
+                "Accounts Shared",
+                "${seletedAccountIds.length} Account(s) are shared",
+                Icons.account_balance_wallet_outlined),
+            accounts("Permission Validity", range, Icons.date_range_rounded),
+            accounts("Frequency of Access",
+                "We can access your information one-time.", Icons.access_time),
+            getInfomationsAboutUserConsnt(),
+          ],
         ),
       ),
     );

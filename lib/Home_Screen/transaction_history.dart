@@ -35,6 +35,7 @@ RxBool getPdgLoader = false.obs;
 RxMap<int, double> swipeOffsets = <int, double>{}.obs;
 RxList<Map<String, dynamic>> hiddenTransactions = <Map<String, dynamic>>[].obs;
 AnimationController? _animationController;
+
 class TransactionHistory extends StatefulWidget {
   /// Optional
   final bool? isYearView;
@@ -88,10 +89,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
 
     getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,
         isRefreshing: true);
-    // _animationController = AnimationController(
-    //   vsync: this,
-    //   duration: const Duration(milliseconds: 200), // Animation duration
-    // );
+   
   }
 
   @override
@@ -138,7 +136,7 @@ void dispose() {
             const SizedBox(height: 20),
             Obx(() => reloadHistory.value
                 ? getlist()
-                : getlist()), // Wrapped in Obx for reactivity
+                : getlist()), 
           ],
         ),
       ),
