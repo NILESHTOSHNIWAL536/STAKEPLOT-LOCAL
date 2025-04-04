@@ -31,6 +31,7 @@ Future<http.Response> updateDataApiCall(urlPath) async {
       body: jsonEncode({}));
   return response;
 }
+
 Future<http.Response> updateDataApiCall2(String urlPath, Map<String, dynamic> body) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   var accessToken = pref.getString("accessToken");
@@ -45,7 +46,20 @@ Future<http.Response> updateDataApiCall2(String urlPath, Map<String, dynamic> bo
   );
   return response;
 }
+Future<http.Response> updateDataApiCall3(String urlPath, {required Map<String, dynamic> data}) async {
+  final SharedPreferences pref = await SharedPreferences.getInstance();
+  var accessToken = pref.getString("accessToken");
 
+  final response = await http.patch(
+    Uri.parse(urlPath),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      "Authorization": "$accessToken",
+    },
+    body: jsonEncode(data),
+  );
+  return response;
+}
 Future<http.Response> getDataApiCall(urlPath) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   var accessToken = pref.getString("accessToken");

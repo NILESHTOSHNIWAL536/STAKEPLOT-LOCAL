@@ -31,6 +31,13 @@ void clearStack(BuildContext context) {
     Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
   }
 }
+void clearStackName(BuildContext context,String str,[String to="/home"]) {
+  try {
+    Navigator.of(context).pushNamedAndRemoveUntil('${str}', (Route<dynamic> route) => false);
+  } catch (e) {
+    Navigator.of(context).pushNamedAndRemoveUntil('${to}', (Route<dynamic> route) => false);
+  }
+}
 
 void clearStackShared(BuildContext context) {
   try {

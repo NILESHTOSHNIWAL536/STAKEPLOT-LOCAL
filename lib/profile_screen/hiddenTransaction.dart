@@ -86,24 +86,121 @@ class _HiddenTransactionsScreenState extends State<HiddenTransactionsScreen> {
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Confirm Unhide'),
-              content: Text('Do you want to unhide this transaction?'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Close the dialog
-                  },
-                  child: Text('No'),
+            double screenWidth = MediaQuery.sizeOf(context).width;
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              elevation: 4,
+              backgroundColor: Colors.transparent, // For custom container
+              child: Container(
+                width: screenWidth * 0.85, // 85% of screen width
+                padding: EdgeInsets.all(screenWidth * 0.05),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.white,
+                      Colors.grey[50]!,
+                    ],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 12,
+                      spreadRadius: 2,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
-                TextButton(
-                  onPressed: () {
-                    hideTransaction(index, false, context, transaction['_id']);
-                    Navigator.of(context).pop(); // Close the dialog
-                  },
-                  child: Text('Yes'),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Content
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: screenWidth * 0.02),
+                      child: textStyleOnly2(
+                        context: context,
+                        text:
+                            "Do you want to unhide this transaction?\nThis action will make it visible again.",
+                        fontsize: screenWidth < 400 ? 14 : 16,
+                        color: AppColors.bg1,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+
+                    // Divider
+                    Divider(
+                      color: Colors.grey[200],
+                      thickness: 1,
+                      height: screenWidth * 0.06,
+                    ),
+
+                    // Actions
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: screenWidth * 0.06,
+                              vertical: screenWidth * 0.03,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: textStyleOnly2(
+                            context: context,
+                            text: "No",
+                            fontsize: screenWidth < 400 ? 14 : 16,
+                            color: AppColors.bg1.withOpacity(0.7),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Container(
+                          width: 1,
+                          height: screenWidth * 0.06,
+                          color: Colors.grey[200],
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            hideTransaction(
+                                index, false, context, transaction['_id']);
+                            Navigator.of(context).pop();
+                          },
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: screenWidth * 0.06,
+                              vertical: screenWidth * 0.03,
+                            ),
+                            backgroundColor:
+                                AppColors.primaryColor.withOpacity(0.1),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: textStyleOnly2(
+                            context: context,
+                            text: "Yes",
+                            fontsize: screenWidth < 400 ? 14 : 16,
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
+              ),
             );
           },
         );

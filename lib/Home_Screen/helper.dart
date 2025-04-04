@@ -33,32 +33,69 @@ String getCurrentWeekNumber() {
   return '$year-W${weekNumber.toString().padLeft(2, '0')}';
 }
 
+// String formatWhatsAppDate(DateTime date) {
+//   date = date
+//       .toLocal()
+//       .subtract(Duration(hours: 5, minutes: 30)); // Adjust for 5:30 fast
+//   DateTime now = DateTime.now().toLocal();
+//   DateTime today = DateTime(now.year, now.month, now.day);
+//   DateTime yesterday = today.subtract(Duration(days: 1));
+//   DateTime weekStart =
+//       today.subtract(Duration(days: today.weekday)); // Start of the week
+
+//   String timeFormat =
+//       DateFormat('h:mm a').format(date); // Format time as "10:30 AM"
+
+//   if (date.isAfter(today)) {
+//     return "Today, $timeFormat";
+//   } else if (date.isAfter(yesterday)) {
+//     return "Yesterday, $timeFormat";
+//   } else if (date.isAfter(weekStart)) {
+//     return "${DateFormat('EEE').format(date)}, $timeFormat"; // Mon, 10:30 AM
+//   } else if (date.year == now.year) {
+//     return "${DateFormat('d MMM').format(date)}, $timeFormat"; // 10 Mar, 10:30 AM
+//   } else {
+//     return "${DateFormat('d MMM y').format(date)}, $timeFormat"; // 10 Mar 2024, 10:30 AM
+//   }
+// }
 String formatWhatsAppDate(DateTime date) {
   date = date
       .toLocal()
-      .subtract(Duration(hours: 5, minutes: 30)); // Adjust for 5:30 fast
+      .subtract(Duration(hours: 5, minutes: 30)); // Adjust for 5:30 offset
   DateTime now = DateTime.now().toLocal();
   DateTime today = DateTime(now.year, now.month, now.day);
   DateTime yesterday = today.subtract(Duration(days: 1));
-  DateTime weekStart =
-      today.subtract(Duration(days: today.weekday)); // Start of the week
+  DateTime tomorrow = today.add(Duration(days: 1));
+  DateTime weekStart = today.subtract(Duration(days: today.weekday));
+  DateTime weekEnd = weekStart.add(Duration(days: 7));
 
-  String timeFormat =
-      DateFormat('h:mm a').format(date); // Format time as "10:30 AM"
+  String timeFormat = DateFormat('h:mm a').format(date);
 
-  if (date.isAfter(today)) {
+  // Check if the date is today
+  if (date.year == today.year && date.month == today.month && date.day == today.day) {
     return "Today, $timeFormat";
-  } else if (date.isAfter(yesterday)) {
+  } 
+  // Check if the date is yesterday
+  else if (date.year == yesterday.year && date.month == yesterday.month && date.day == yesterday.day) {
     return "Yesterday, $timeFormat";
-  } else if (date.isAfter(weekStart)) {
-    return "${DateFormat('EEE').format(date)}, $timeFormat"; // Mon, 10:30 AM
-  } else if (date.year == now.year) {
-    return "${DateFormat('d MMM').format(date)}, $timeFormat"; // 10 Mar, 10:30 AM
-  } else {
-    return "${DateFormat('d MMM y').format(date)}, $timeFormat"; // 10 Mar 2024, 10:30 AM
+  } 
+  // Check if the date is tomorrow
+  else if (date.year == tomorrow.year && date.month == tomorrow.month && date.day == tomorrow.day) {
+    return "Tomorrow, $timeFormat";
+  } 
+  // Check if the date is within the current week (past or future)
+  else if (date.isAfter(weekStart) && date.isBefore(weekEnd)) {
+    return "${DateFormat('EEE').format(date)}, $timeFormat"; // e.g., Mon, 10:30 AM
+  } 
+  // Same year, different week
+  else if (date.year == now.year) {
+    return "${DateFormat('d MMM').format(date)}, $timeFormat"; // e.g., 7 Apr, 10:30 AM
+  } 
+  // Different year
+  else {
+    return "${DateFormat('d MMM y').format(date)}, $timeFormat"; // e.g., 7 Apr 2025, 10:30 AM
   }
 }
-
 DateTime convertStringToDateTime(String dateString) {
   return DateTime.parse(dateString);
 }

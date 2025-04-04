@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
@@ -58,8 +59,6 @@ class _RotatingIconState extends State<Nextfetch>
     // checkAndFetchData();
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Obx(() => consentAndHandleDetails.isEmpty
@@ -69,8 +68,9 @@ class _RotatingIconState extends State<Nextfetch>
             width: MediaQuery.of(context).size.width / 1.1,
             child: Row(
               children: [
-                InkWell(
-                   onTap: () => showFetchModal(context),
+              
+                 InkWell(
+                     onTap: () => showFetchModal(context),
                   child: RotationTransition(
                       turns: Tween(begin: 0.0, end: 1.0)
                           .animate(CurvedAnimation(
@@ -121,78 +121,221 @@ class _RotatingIconState extends State<Nextfetch>
 
 
 
-    void showFetchModal(BuildContext context) {
-    String fetchCount = consentAndHandleDetails[0]['fetchCount'].toString();
-    String nextFetch = consentAndHandleDetails[0]['nextFetch'].toString();
-    String lastFetch = consentAndHandleDetails[0]['lastFetch'].toString();
+ showFetchModal(BuildContext context) {
+  // String fetchCount = consentAndHandleDetails[0]['fetchCount'].toString();
+  // String nextFetch = consentAndHandleDetails[0]['nextFetch'].toString();
+  // String lastFetch = consentAndHandleDetails[0]['lastFetch'].toString();
+   String fetchCount = consentAndHandleDetails[0]['fetchCount'].toString();
+  DateTime nextFetchDate = DateTime.parse(consentAndHandleDetails[0]['nextFetch']);
+  DateTime lastFetchDate = DateTime.parse(consentAndHandleDetails[0]['lastFetch']);
+  String formattedNextFetch = formatWhatsAppDate(nextFetchDate);
+  String formattedLastFetch = formatWhatsAppDate(lastFetchDate);
+  // Get screen width for responsive sizing
+  final double screenWidth = MediaQuery.of(context).size.width;
 
-    showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return Container(
-          padding: EdgeInsets.all(16),
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
+    backgroundColor: Colors.transparent,
+    builder: (context) {
+      return Container();
+      return AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Container(
+          width: MediaQuery.of(context).size.width, // Full screen width
+          padding: EdgeInsets.all(screenWidth * 0.06), // Responsive padding
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "Your ladt fetch wad on: ${lastFetch}",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10),
-              Text(
-                "Your next fetch is on: ${nextFetch}",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10),
-              Text("Number of fetches completed: $fetchCount"),
-              SizedBox(height: 20),
-              Text("Do you want to fetch again?", style: TextStyle(fontSize: 16)),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () => checkAndFetchData(),
-                    child: Text("Yes"),
-                  ),
-                  OutlinedButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text("No"),
-                  ),
-                ],
+            color: Colors.white,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.white,
+                Colors.grey[50]!,
+              ],
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 20,
+                spreadRadius: 5,
+                offset: const Offset(0, -5),
               ),
             ],
           ),
-        );
-      },
-    );
-  }
-
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Drag handle
+                // Container(
+                //   width: 40,
+                //   height: 4,
+                //   margin: EdgeInsets.only(bottom: screenWidth * 0.04),
+                //   decoration: BoxDecoration(
+                //     color: Colors.grey[300],
+                //     borderRadius: BorderRadius.circular(2),
+                //   ),
+                // ),
+                
+                // // Info Cards
+                // _buildInfoCard(
+                //   context: context,
+                //   title: 'Last Fetch',
+                //   value: formattedLastFetch,
+                // ),
+                // SizedBox(height: screenWidth * 0.04),
+                // _buildInfoCard(
+                //   context: context,
+                //   title: 'Next Fetch',
+                //   value: formattedNextFetch,
+                // ),
+                // SizedBox(height: screenWidth * 0.04),
+                // _buildInfoCard(
+                //   context: context,
+                //   title: 'Fetch Count',
+                
+                // value: '$fetchCount/5',
+                // // ...
+                // ),
+                
+                // // Question
+                // SizedBox(height: screenWidth * 0.06),
+                // textStyleOnly2(
+                //   context: context,
+                //   text: "Would you like to fetch again?",
+                //   fontsize: screenWidth < 400 ? 12 : 14,
+                //   color: AppColors.bg1,
+                //   fontWeight: FontWeight.w500,
+                // ),
+                
+                // // Buttons
+                // SizedBox(height: screenWidth * 0.06),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     ElevatedButton(
+                //       onPressed: () => checkAndFetchData(),
+                //       style: ElevatedButton.styleFrom(
+                //         backgroundColor: AppColors.primaryColor,
+                //         foregroundColor: Colors.white,
+                //         padding: EdgeInsets.symmetric(
+                //           horizontal: screenWidth * 0.06,
+                //           vertical: screenWidth * 0.04,
+                //         ),
+                //         shape: RoundedRectangleBorder(
+                //           borderRadius: BorderRadius.circular(12),
+                //         ),
+                //         elevation: 2,
+                //         minimumSize: Size(screenWidth * 0.3, 0),
+                //       ),
+                //       child:  textStyleOnly2(
+                //   context: context,
+                //   text: "Yes, Fetch now",
+                //   fontsize: screenWidth < 400 ? 12 : 14,
+                //   color: AppColors.backgroundColor,
+                //   fontWeight: FontWeight.w500,
+                // ),
+                //     ),
+                //     SizedBox(width: screenWidth * 0.04),
+                //     OutlinedButton(
+                //       onPressed: () => Navigator.pop(context),
+                //       style: OutlinedButton.styleFrom(
+                //         side: BorderSide(
+                //           color: AppColors.bg1,
+                //           width: 2,
+                //         ),
+                //         padding: EdgeInsets.symmetric(
+                //           horizontal: screenWidth * 0.06,
+                //           vertical: screenWidth * 0.04,
+                //         ),
+                //         shape: RoundedRectangleBorder(
+                //           borderRadius: BorderRadius.circular(12),
+                //         ),
+                //         minimumSize: Size(screenWidth * 0.3, 0),
+                //       ),
+                //       child:  textStyleOnly2(
+                //   context: context,
+                //   text: "Not Now",
+                //   fontsize: screenWidth < 400 ? 12 : 14,
+                //   color: AppColors.bg1,
+                //   fontWeight: FontWeight.w500,
+                // ),
+                //     ),
+                //   ],
+                // ),
+                // SizedBox(height: screenWidth * 0.04),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
 }
 
 
-void checkAndFetchData() async 
-{
-   
-      await getBankAccounts();
-      if (consentAndHandleDetails.isNotEmpty) {
 
-        consentAndHandleDetails.forEach((item) {
-          getWeeklyfetchData(
-            item["consentId"],
-            item["consendHandleId"],
-            item["sessionId"],
-            item["custId"],
-            convertToIso8601("2025-01-05"),
-            convertToIso8601("2025-03-05"),
-          );
-        });
-      }
 
+// Info Card widget with full width
+Widget _buildInfoCard({
+  required BuildContext context,
+  required String title,
+  required String value,
+}) {
+  final double screenWidth = MediaQuery.of(context).size.width;
+  
+  return Container(
+    width: double.infinity, // Full width
+    padding: EdgeInsets.all(screenWidth * 0.04),
+    decoration: BoxDecoration(
+      color: Colors.grey[50],
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: Colors.grey[200]!, width: 1),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        textStyleOnly2(
+          context: context,
+          text: title,
+          fontsize: screenWidth < 400 ? 12 : 14,
+          color: AppColors.bg1.withOpacity(0.8),
+          fontWeight: FontWeight.w500,
+        ),
+        textStyleOnly2(
+          context: context,
+          text: value,
+          fontsize: screenWidth < 400 ? 10 : 12,
+          color: AppColors.bg1,
+          fontWeight: FontWeight.w500,
+        ),
+      ],
+    ),
+  );
+}
+void checkAndFetchData() async {
+  await getBankAccounts();
+  if (consentAndHandleDetails.isNotEmpty) {
+    consentAndHandleDetails.forEach((item) {
+      getWeeklyfetchData(
+        item["consentId"],
+        item["consendHandleId"],
+        item["sessionId"],
+        item["custId"],
+        item['lastFetch']
+      );
+    });
   }
+}
+    }
