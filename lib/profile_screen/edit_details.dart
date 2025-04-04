@@ -58,7 +58,8 @@ class _EditDetailsState extends State<EditDetails> {
     super.dispose();
   }
 
-void resetCupertinoPin(BuildContext context, String accountId) {
+  void resetCupertinoPin(BuildContext context) {
+    print("Reset PIN dialog opened");
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -84,7 +85,7 @@ void resetCupertinoPin(BuildContext context, String accountId) {
             children: [
               textStyleOnly2(
                 context: context,
-                text: "Are you sure you want to reset the PIN for this account?",
+                text: "Are you sure you want to reset your PIN?",
                 fontsize: 14,
                 color: AppColors.bg3,
                 fontWeight: FontWeight.w400,
@@ -101,7 +102,10 @@ void resetCupertinoPin(BuildContext context, String accountId) {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
+              onPressed: () {
+                print("Reset PIN dialog cancelled");
+                Navigator.of(dialogContext).pop();
+              },
               child: textStyleOnly2(
                 context: context,
                 text: "Cancel",
@@ -115,47 +119,27 @@ void resetCupertinoPin(BuildContext context, String accountId) {
                 backgroundColor: Colors.red.withOpacity(0.1),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
-              onPressed: () async {
+             onPressed: () async {
+                print("Reset PIN button pressed");
                 try {
                   final response = await updateDataApiCall3(
-                    'https://$url/user/updateCupertino', // Add your base URL
+                    '$url/user/updateCupertino', // Use your base URL
                     data: {
                       'pin': '0',
-                      'accountId': accountId,
                     },
                   );
 
-                  if (response.statusCode == 200) { // Assuming 200 is success
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        backgroundColor: AppColors.primaryColor,
-                        content: textStyleOnly2(
-                          context: context,
-                          text: "PIN reset successfully",
-                          fontsize: 14,
-                          color: AppColors.backgroundColor,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
+                  print("Response status code: ${response.statusCode}");
+                  print("Response body: ${response.body}");
+                  if (response.statusCode == 200) {
+                    print("PIN reset successful");
+                    cupertinoPin.value = "0"; // Reset the global PIN
                     Navigator.of(dialogContext).pop();
                   } else {
-                    throw Exception("Failed to reset PIN: ${response.statusCode}");
+                    print("Failed to reset PIN: ${response.statusCode} - ${response.body}");
                   }
                 } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      backgroundColor: Colors.red,
-                      content: textStyleOnly2(
-                        context: context,
-                        text: "Error resetting PIN: $e",
-                        fontsize: 14,
-                        color: AppColors.backgroundColor,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  );
+                  print("Error occurred while resetting PIN: $e");
                 }
               },
               child: textStyleOnly2(
@@ -232,15 +216,42 @@ void resetCupertinoPin(BuildContext context, String accountId) {
               ],
             ),
             const SizedBox(height: 20),
-            Align(
-              alignment: Alignment.topLeft,
-              child: textStyleOnly2(
-                context: context,
-                text: "Personal details",
-                fontsize: 16,
-                color: AppColors.bg3,
-                fontWeight: FontWeight.w400,
-              ),
+            Row(
+              children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: textStyleOnly2(
+                    context: context,
+                    text: "Personal details",
+                    fontsize: 16,
+                    color: AppColors.bg3,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    print("Reset PIN button tapped.");
+                    // For now, we'll need an accountId - you might want to select one first
+                    // For demonstration, using first account if available
+                    resetCupertinoPin(context);
+                   
+                  },
+                  child: Row(
+                    children: [
+                      Icon(Icons.lock_reset,
+                          color: AppColors.primaryColor, size: 20),
+                      SizedBox(width: 4),
+                      textStyleOnly2(
+                        context: context,
+                        text: "Reset PIN",
+                        fontsize: 14,
+                        color: AppColors.primaryColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 20),
             Container(
@@ -256,7 +267,8 @@ void resetCupertinoPin(BuildContext context, String accountId) {
                   Divider(),
                   _buildNonEditableField(Icons.phone, "Number", number.value),
                   Divider(),
-                  _buildNonEditableField(Icons.calendar_today, "dob", dob.value),
+                  _buildNonEditableField(
+                      Icons.calendar_today, "dob", dob.value),
                   // Divider(),
                   // _buildEditableField(Icons.location_on, "Address",
                   //     "6-10-128/3/A/5/A, Budwel, Telangana"),
@@ -297,7 +309,8 @@ void resetCupertinoPin(BuildContext context, String accountId) {
         children: [
           Column(
             children: bankAccountLinkedList.map((e) {
-              return _buildAccountDetails(e['bankName'], e['maskedAccNumber'], e);
+              return _buildAccountDetails(
+                  e['bankName'], e['maskedAccNumber'], e);
             }).toList(),
           ),
           const SizedBox(
@@ -308,7 +321,7 @@ void resetCupertinoPin(BuildContext context, String accountId) {
             child: InkWell(
                 onTap: () {
                   number.value = Phone.value;
-                
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -343,19 +356,17 @@ void resetCupertinoPin(BuildContext context, String accountId) {
         child: TextFormField(
           controller: controller, // Use the controller to manage the text
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             //prefixIcon: Icon(icon, color: Colors.blueGrey),
-           prefixIcon: Padding(
-             padding: const EdgeInsets.all(6.0),
-             child: Container(
-              
-                
-                decoration: BoxDecoration(
-                  color: AppColors.button,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(icon, color: AppColors.primaryColor)),
-           ),
+            prefixIcon: Padding(
+              padding: const EdgeInsets.all(6.0),
+              child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.button,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(icon, color: AppColors.primaryColor)),
+            ),
             hintText: value,
             border: InputBorder.none,
             enabledBorder: InputBorder.none,
@@ -377,17 +388,15 @@ void resetCupertinoPin(BuildContext context, String accountId) {
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 10),
             // prefixIcon: Icon(icon, color: Colors.blueGrey),
-             prefixIcon: Padding(
-             padding: const EdgeInsets.all(6.0),
-             child: Container(
-              
-                
-                decoration: BoxDecoration(
-                  color: AppColors.button,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(icon, color: AppColors.primaryColor)),
-           ),
+            prefixIcon: Padding(
+              padding: const EdgeInsets.all(6.0),
+              child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.button,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(icon, color: AppColors.primaryColor)),
+            ),
             border: InputBorder.none, // No border
             enabledBorder: InputBorder.none, // No border when not focused
             focusedBorder: InputBorder.none,

@@ -204,54 +204,98 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
       ),
     );
   }
+Widget setPinForAccountHide(context) {
+  return Obx(() {
+    print("setPinForAccountHide: cupertinoPin.value = ${cupertinoPin.value}");
+    if (cupertinoPin.value == "0" || cupertinoPin.value.isEmpty) { // Handle empty case too
+      print("Showing Set Pin button");
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5),
+        child: InkWell(
+          onTap: () {
+            print("Set Pin button tapped");
+            showModalBottomSheet(
+              context: context,
+              backgroundColor: Colorcodes.appBarColor,
+              builder: (context) {
+                return setPassword(context);
+              },
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.all(8.0),
+            width: 80,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: AppColors.bg3,
+            ),
+            child: Center(
+              child: Text(
+                'Set Pin',
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.normal,
+                  fontSize: 12,
+                  color: AppColors.backgroundColor,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    } else {
+      print("Showing locker widget");
+      return locker(context);
+    }
+  });
+}
+  // Widget setPinForAccountHide(context) {
+  //   return Obx(() => cupertinoPin.value == "0"
+  //       ? Padding(
+  //           padding: const EdgeInsets.symmetric(vertical: 5),
+  //           child: InkWell(
+  //               onTap: () {
+  //                 showModalBottomSheet(
+  //                   context: context,
+  //                   backgroundColor: Colorcodes.appBarColor,
+  //                   builder: (context) {
+  //                     return setPassword(context);
+  //                   },
+  //                 );
+  //               },
+  //               child: Container(
+  //                 padding: const EdgeInsets.all(8.0),
+  //                 width: 80,
+  //                 decoration: BoxDecoration(
+  //                   borderRadius: BorderRadius.circular(10),
+  //                   color: AppColors.bg3,
+  //                 ),
+  //                 child: Center(
+  //                   child: Text(
+  //                     'Set Pin',
+  //                     style: FontManager().getTextStyle(context,
+  //                         lWeight: FontWeight.normal,
+  //                         fontSize: 12,
+  //                         color: AppColors.backgroundColor),
+  //                   ),
+  //                 ),
+  //                 // child: textStyle(
+  //                 //     text: "Set pin",
+  //                 //     context: context,
+  //                 //     fontsize: 10,
 
-  Widget setPinForAccountHide(context) {
-    return Obx(() => cupertinoPin.value == "0"
-        ? Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5),
-            child: InkWell(
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    backgroundColor: Colorcodes.appBarColor,
-                    builder: (context) {
-                      return setPassword(context);
-                    },
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  width: 80,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: AppColors.bg3,
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Set Pin',
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.normal,
-                          fontSize: 12,
-                          color: AppColors.backgroundColor),
-                    ),
-                  ),
-                  // child: textStyle(
-                  //     text: "Set pin",
-                  //     context: context,
-                  //     fontsize: 10,
-
-                  //     fontWeight: FontWeight.bold),
-                )),
-          )
-        : digitLoad.value
-            ? locker(context)
-            : locker(context));
-  }
+  //                 //     fontWeight: FontWeight.bold),
+  //               )),
+  //         )
+  //       : digitLoad.value
+  //           ? locker(context)
+  //           : locker(context));
+  // }
 
   Widget setPassword(context) {
     double height = MediaQuery.of(context).size.height;
-    int selectedNumber1 = 0; // First selected number
-    int selectedNumber2 = 0; // Second selected number
+   RxInt selectedNumber1 = 0.obs; // Make first digit reactive
+    RxInt selectedNumber2 = 0.obs;  // Second selected number
 
     return Container(
       //  color: AppColors.backgroundColor,
@@ -288,7 +332,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                     child: CupertinoPicker(
                       itemExtent: 26.0, // Height of each item
                       onSelectedItemChanged: (int index) {
-                        selectedNumber1 = index; // Update first number
+                        selectedNumber1.value = index; // Update first number
                       },
                       children: List<Widget>.generate(10, (int index) {
                         return Center(child: Text(index.toString()));
@@ -304,7 +348,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                     child: CupertinoPicker(
                       itemExtent: 26.0, // Height of each item
                       onSelectedItemChanged: (int index) {
-                        selectedNumber2 = index; // Update second number
+                        selectedNumber2.value = index; // Update second number
                       },
                       children: List<Widget>.generate(10, (int index) {
                         return Center(child: Text(index.toString()));
@@ -316,12 +360,40 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
               SizedBox(
                 height: 30,
               ),
-              InkWell(
-                  onTap: () {
-                    String combinedInput = '$selectedNumber1$selectedNumber2';
-                    setPasswordApiCalled(context, combinedInput);
-                  },
-                  child: getButton(context, "Confirm")),
+             Obx(() {
+                String combinedInput = '${selectedNumber1.value}${selectedNumber2.value}';
+                bool isInvalidPin = combinedInput == "00";
+              
+                return InkWell(
+                  onTap: isInvalidPin
+                      ? null
+                      : () {
+                        
+                          setPasswordApiCalled(context, combinedInput);
+                        },
+                  child:  Container(
+      width: MediaQuery.of(context).size.width / 1.1,
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
+      decoration: BoxDecoration(
+        color: isInvalidPin
+            ? AppColors.bg3
+            : AppColors.primaryColor, // Button color based on validity
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Center(
+        child: Text(
+          "Confirm",
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.bold,
+            fontSize: 18,
+            color: AppColors.bg5,
+          ),
+        ),
+      ),
+    ),
+                );
+              }),
             ],
           ),
         ],

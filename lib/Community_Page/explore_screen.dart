@@ -281,8 +281,10 @@ class _ExploreModalState extends State<ExploreModal> {
   }
 
   Future<void> _submitPost() async {
+   
     if (locationNameController.text.isEmpty ||
         locationAddressController.text.isEmpty) {
+      print('Validation failed: Required fields are empty');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill in all required fields')),
       );
@@ -290,6 +292,7 @@ class _ExploreModalState extends State<ExploreModal> {
     }
 
     setState(() => _isSubmitting = true); // Show loading indicator
+    print('Submitting post...');
 
     List<Map<String, dynamic>> budget = [];
     for (int i = 0; i < _textControllers.length; i++) {
@@ -405,7 +408,11 @@ class _ExploreModalState extends State<ExploreModal> {
   @override
   Widget build(BuildContext context) {
     return exploreSubmitted
-        ? const SuccessPost(celebrationText: "Posted",)
+        ? Center(
+          child: const SuccessPost(
+              celebrationText: "Posted Successfully",
+            ),
+        )
         : Container(
             color: AppColors.backgroundColor,
             child: AnimatedPadding(
@@ -715,30 +722,33 @@ class _ExploreModalState extends State<ExploreModal> {
     // );
     return GestureDetector(
       onTap: () {
-        isEnabled ? _submitPost : null;
+        print("heyyy");
+        print("isEnabled $isEnabled");
+        isEnabled ? _submitPost() : null;
       },
       child: _isSubmitting
-              ? const CircularProgressIndicator(color: Colors.white):Container(
-        width: MediaQuery.of(context).size.width / 1.1,
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
-        decoration: BoxDecoration(
-            color: isEnabled ? AppColors.primaryColor : Colors.grey,
-            borderRadius: BorderRadius.circular(24)),
-        child: Center(
-          child: Text(
-            "Continue",
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.bold,
-              fontSize: 15,
-              color: locationNameController.text.isNotEmpty &&
-                      locationAddressController.text.isNotEmpty
-                  ? Colors.white
-                  : Colors.black,
+          ? Center(child: const CircularProgressIndicator(color: Colors.black))
+          : Container(
+              width: MediaQuery.of(context).size.width / 1.1,
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+              decoration: BoxDecoration(
+                  color: isEnabled ? AppColors.primaryColor : Colors.grey,
+                  borderRadius: BorderRadius.circular(24)),
+              child: Center(
+                child: Text(
+                  "Continue",
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: locationNameController.text.isNotEmpty &&
+                            locationAddressController.text.isNotEmpty
+                        ? Colors.white
+                        : Colors.black,
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
     );
     // return Container(
     //   color: isEnabled ? AppColors.primaryColor : Colors.grey,
