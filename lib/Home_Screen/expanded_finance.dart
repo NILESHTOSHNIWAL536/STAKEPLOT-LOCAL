@@ -52,6 +52,12 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
     filterDataForSelectedMonth();
   }
 
+
+  void callBackApi()
+  {
+      currentPage = 1;
+      getAllTransactionHistory(context,false,false,isRefreshing: true);
+  }
   
   Widget _buildMonthYearSelector(double fontSizeFactor, double screenWidth) {
     return Column(
@@ -152,53 +158,67 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
     double screenHeight = MediaQuery.of(context).size.height;
     double fontSizeFactor = screenWidth * 0.01;
 
-    return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      appBar: AppBar(
-        title: Text('Detailed Chart View'),
+    return WillPopScope(
+           onWillPop: () async {
+           
+            callBackApi();
+           return true;
+       },
+      child: Scaffold(
         backgroundColor: AppColors.backgroundColor,
-      ),
-      body: Obx(() => SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  _buildMonthYearSelector(fontSizeFactor, screenWidth),
-                  if (isLoading.value)
-                    Center(child: CircularProgressIndicator())
-                  else
-                   Obx(()=> Container(
-                      height: screenHeight / 2.6,
-                      
-                      child: LineChartWidget(
-                        chartData: currentChartData.value,
-                        days: isYearView.value ? monthLabels : currentDays,
-                        selectedButton: selectedButton,
-                        daysInMonth: isYearView.value
-                            ? 12
-                            : getDaysInMonthExpanded(
-                                selectedYear.value, selectedMonth.value),
-                        isExpandedView: true,
-                      ),
-                    )),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Obx(() => loadChatdataOnChnage.value
-                      ? TransactionHistory(
-                          isYearView: isYearView.value,
-                          isflag: true,
-                          showIcon: true,
-                        )
-                      : TransactionHistory(
-                          isYearView: isYearView.value,
-                          isflag: true,
-                           showIcon: true,
-                        ))
-                ],
-              ),
+        appBar: AppBar(
+          leading: InkWell(
+            onTap: () {
+               Navigator.pop(context);
+                 
+                 callBackApi();
+            },
+            child: Icon(
+              Icons.arrow_back,
+              color: AppColors.accentColor,
             ),
-          )),
+          ),
+          title: Text('Detailed Chart View'),
+          backgroundColor: AppColors.backgroundColor,
+        ),
+        body:  SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Obx(() => _buildMonthYearSelector(fontSizeFactor, screenWidth)),
+                     Obx(()=> isLoading.value ? Center(child: CircularProgressIndicator()) : Container(
+                        height: screenHeight / 2.6,
+                        child: LineChartWidget(
+                          chartData: currentChartData.value,
+                          days: isYearView.value ? monthLabels : currentDays,
+                          selectedButton: selectedButton,
+                          daysInMonth: isYearView.value
+                              ? 12
+                              : getDaysInMonthExpanded(
+                                  selectedYear.value, selectedMonth.value),
+                          isExpandedView: true,
+                        ),
+                      )),
+                    SizedBox(
+                      height: 10,
+                    ),
+      
+                    Obx(() => loadChatdataOnChnage.value
+                        ? TransactionHistory(
+                            isYearView: isYearView.value,
+                            isflag: true,
+                            showIcon: true,
+                          )
+                        : TransactionHistory(
+                            isYearView: isYearView.value,
+                            isflag: true,
+                             showIcon: true,
+                          ))
+                  ],
+                ),
+              ),
+            )),
     );
   }
 }

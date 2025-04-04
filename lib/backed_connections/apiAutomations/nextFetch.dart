@@ -122,14 +122,39 @@ class _RotatingIconState extends State<Nextfetch>
 
 
  showFetchModal(BuildContext context) {
-  // String fetchCount = consentAndHandleDetails[0]['fetchCount'].toString();
-  // String nextFetch = consentAndHandleDetails[0]['nextFetch'].toString();
-  // String lastFetch = consentAndHandleDetails[0]['lastFetch'].toString();
-   String fetchCount = consentAndHandleDetails[0]['fetchCount'].toString();
-  DateTime nextFetchDate = DateTime.parse(consentAndHandleDetails[0]['nextFetch']);
-  DateTime lastFetchDate = DateTime.parse(consentAndHandleDetails[0]['lastFetch']);
+   if (consentAndHandleDetails.isEmpty || consentAndHandleDetails[0] == null) {
+    print("Error: consentAndHandleDetails is empty or null");
+    return; // Exit early if data is invalid
+  }
+
+  // Safely extract values with fallback
+  String fetchCount = consentAndHandleDetails[0]['fetchCount']?.toString() ?? '0';
+  String nextFetch = consentAndHandleDetails[0]['nextFetch']?.toString() ?? '';
+  String lastFetch = consentAndHandleDetails[0]['lastFetch']?.toString() ?? '';
+
+  DateTime nextFetchDate;
+  DateTime lastFetchDate;
+
+  // Parse nextFetch with fallback
+  try {
+    nextFetchDate = nextFetch.isNotEmpty ? DateTime.parse(nextFetch) : DateTime.now();
+  } catch (e) {
+    print("Error parsing nextFetch date: $e");
+    nextFetchDate = DateTime.now(); // Fallback to current date
+  }
+
+  // Parse lastFetch with fallback
+  try {
+    lastFetchDate = lastFetch.isNotEmpty ? DateTime.parse(lastFetch) : DateTime.now();
+  } catch (e) {
+    print("Error parsing lastFetch date: $e");
+    lastFetchDate = DateTime.now(); // Fallback to current date
+  }
+
+  // Format dates (assuming formatWhatsAppDate exists or define it below)
   String formattedNextFetch = formatWhatsAppDate(nextFetchDate);
   String formattedLastFetch = formatWhatsAppDate(lastFetchDate);
+
   // Get screen width for responsive sizing
   final double screenWidth = MediaQuery.of(context).size.width;
 
@@ -141,11 +166,10 @@ class _RotatingIconState extends State<Nextfetch>
     ),
     backgroundColor: Colors.transparent,
     builder: (context) {
-      return Container();
+  
       return AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
-      
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
@@ -177,104 +201,103 @@ class _RotatingIconState extends State<Nextfetch>
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Drag handle
-                // Container(
-                //   width: 40,
-                //   height: 4,
-                //   margin: EdgeInsets.only(bottom: screenWidth * 0.04),
-                //   decoration: BoxDecoration(
-                //     color: Colors.grey[300],
-                //     borderRadius: BorderRadius.circular(2),
-                //   ),
-                // ),
+                Container(
+                  width: 40,
+                  height: 4,
+                  margin: EdgeInsets.only(bottom: screenWidth * 0.04),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
                 
-                // // Info Cards
-                // _buildInfoCard(
-                //   context: context,
-                //   title: 'Last Fetch',
-                //   value: formattedLastFetch,
-                // ),
-                // SizedBox(height: screenWidth * 0.04),
-                // _buildInfoCard(
-                //   context: context,
-                //   title: 'Next Fetch',
-                //   value: formattedNextFetch,
-                // ),
-                // SizedBox(height: screenWidth * 0.04),
-                // _buildInfoCard(
-                //   context: context,
-                //   title: 'Fetch Count',
+                // Info Cards
+                _buildInfoCard(
+                  context: context,
+                  title: 'Last Fetch',
+                  value: formattedLastFetch,
+                ),
+                SizedBox(height: screenWidth * 0.04),
+                _buildInfoCard(
+                  context: context,
+                  title: 'Next Fetch',
+                  value: formattedNextFetch,
+                ),
+                SizedBox(height: screenWidth * 0.04),
+                _buildInfoCard(
+                  context: context,
+                  title: 'Fetch Count',
                 
-                // value: '$fetchCount/5',
-                // // ...
-                // ),
+                value: '$fetchCount/5',
+                // ...
+                ),
                 
-                // // Question
-                // SizedBox(height: screenWidth * 0.06),
-                // textStyleOnly2(
-                //   context: context,
-                //   text: "Would you like to fetch again?",
-                //   fontsize: screenWidth < 400 ? 12 : 14,
-                //   color: AppColors.bg1,
-                //   fontWeight: FontWeight.w500,
-                // ),
+                // Question
+                SizedBox(height: screenWidth * 0.06),
+                textStyleOnly2(
+                  context: context,
+                  text: "Would you like to fetch again?",
+                  fontsize: screenWidth < 400 ? 12 : 14,
+                  color: AppColors.bg1,
+                  fontWeight: FontWeight.w500,
+                ),
                 
-                // // Buttons
-                // SizedBox(height: screenWidth * 0.06),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     ElevatedButton(
-                //       onPressed: () => checkAndFetchData(),
-                //       style: ElevatedButton.styleFrom(
-                //         backgroundColor: AppColors.primaryColor,
-                //         foregroundColor: Colors.white,
-                //         padding: EdgeInsets.symmetric(
-                //           horizontal: screenWidth * 0.06,
-                //           vertical: screenWidth * 0.04,
-                //         ),
-                //         shape: RoundedRectangleBorder(
-                //           borderRadius: BorderRadius.circular(12),
-                //         ),
-                //         elevation: 2,
-                //         minimumSize: Size(screenWidth * 0.3, 0),
-                //       ),
-                //       child:  textStyleOnly2(
-                //   context: context,
-                //   text: "Yes, Fetch now",
-                //   fontsize: screenWidth < 400 ? 12 : 14,
-                //   color: AppColors.backgroundColor,
-                //   fontWeight: FontWeight.w500,
-                // ),
-                //     ),
-                //     SizedBox(width: screenWidth * 0.04),
-                //     OutlinedButton(
-                //       onPressed: () => Navigator.pop(context),
-                //       style: OutlinedButton.styleFrom(
-                //         side: BorderSide(
-                //           color: AppColors.bg1,
-                //           width: 2,
-                //         ),
-                //         padding: EdgeInsets.symmetric(
-                //           horizontal: screenWidth * 0.06,
-                //           vertical: screenWidth * 0.04,
-                //         ),
-                //         shape: RoundedRectangleBorder(
-                //           borderRadius: BorderRadius.circular(12),
-                //         ),
-                //         minimumSize: Size(screenWidth * 0.3, 0),
-                //       ),
-                //       child:  textStyleOnly2(
-                //   context: context,
-                //   text: "Not Now",
-                //   fontsize: screenWidth < 400 ? 12 : 14,
-                //   color: AppColors.bg1,
-                //   fontWeight: FontWeight.w500,
-                // ),
-                //     ),
-                //   ],
-                // ),
-                // SizedBox(height: screenWidth * 0.04),
+                // Buttons
+                SizedBox(height: screenWidth * 0.06),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => checkAndFetchData(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryColor,
+                        foregroundColor: Colors.white,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.06,
+                          vertical: screenWidth * 0.04,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 2,
+                        minimumSize: Size(screenWidth * 0.3, 0),
+                      ),
+                      child:  textStyleOnly2(
+                  context: context,
+                  text: "Yes, Fetch now",
+                  fontsize: screenWidth < 400 ? 12 : 14,
+                  color: AppColors.backgroundColor,
+                  fontWeight: FontWeight.w500,
+                ),
+                    ),
+                    SizedBox(width: screenWidth * 0.04),
+                    OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(
+                          color: AppColors.bg1,
+                          width: 2,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.06,
+                          vertical: screenWidth * 0.04,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        minimumSize: Size(screenWidth * 0.3, 0),
+                      ),
+                      child:  textStyleOnly2(
+                  context: context,
+                  text: "Not Now",
+                  fontsize: screenWidth < 400 ? 12 : 14,
+                  color: AppColors.bg1,
+                  fontWeight: FontWeight.w500,
+                ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: screenWidth * 0.04),
               ],
             ),
           ),
