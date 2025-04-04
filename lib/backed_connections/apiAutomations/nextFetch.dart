@@ -122,7 +122,6 @@ class _RotatingIconState extends State<Nextfetch>
 
 
     void showFetchModal(BuildContext context) {
-    print(consentAndHandleDetails);
     String fetchCount = consentAndHandleDetails[0]['fetchCount'].toString();
     String nextFetch = consentAndHandleDetails[0]['nextFetch'].toString();
     String lastFetch = consentAndHandleDetails[0]['lastFetch'].toString();
