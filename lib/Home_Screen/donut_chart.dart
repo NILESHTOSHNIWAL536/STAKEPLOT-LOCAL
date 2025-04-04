@@ -47,7 +47,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Monthly Expenses',
+                  'Categorized Expense Overview',
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.normal,
                       fontSize: 14,

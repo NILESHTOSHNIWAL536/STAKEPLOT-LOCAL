@@ -237,6 +237,34 @@ class _BarChartWidgetState extends State<BarChartWidget> {
   }
 
   Widget getGraphBarScroll(double fontSizeFactor, double screenWidth) {
+     final debitedList = widget.chartData["debited"];
+
+  // Check if debited data is null, empty, or all zeros
+  final bool hasNoDebitData = debitedList == null || 
+      debitedList.isEmpty || 
+      debitedList.every((e) => e == 0);
+
+  // Debug print to verify
+  // print("debitedList: $debitedList");
+  // print("hasNoDebitData: $hasNoDebitData");
+
+  if (hasNoDebitData) {
+    return Container(
+      height: MediaQuery.of(context).size.height / 2.6,
+      color: AppColors.backgroundColor, // Match your app's background
+      child: Center(
+        child: Text(
+          'No spendings for now',
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.normal,
+            fontSize: fontSizeFactor * 4.0,
+            color: AppColors.accentColor,
+          ),
+        ),
+      ),
+    );
+  }
     return Container(
       height: MediaQuery.of(context).size.height / 2.6,
       child: Row(
