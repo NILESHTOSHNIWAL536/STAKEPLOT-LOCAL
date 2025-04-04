@@ -22,6 +22,12 @@ void getAck() async {
 }
 
 void setPasswordApiCalled(context, String password) async {
+   print("setPasswordApiCalled: Attempting to set PIN = $password");
+  if (password == "00") {
+    print("Error: Cannot set PIN to '00'");
+    
+    return; // Exit the function without setting the PIN
+  }
   var urlPath = '${url}/user/cupertino/';
   final response = await postDataApiCall(urlPath, {
     'pin': password.toString(),

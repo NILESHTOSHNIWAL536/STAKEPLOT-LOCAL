@@ -34,8 +34,8 @@ class _SigninState extends State<Signin> {
   // TextEditingController passwordController = TextEditingController();
   // TextEditingController emailController=TextEditingController(text: "user63@gmail.com");
   // TextEditingController passwordController =TextEditingController(text: "user63password");
-  TextEditingController emailController= TextEditingController(text: "roshanchennaL@gmail.com");
-  TextEditingController passwordController= TextEditingController(text: "nilesh123");
+  TextEditingController emailController= TextEditingController(text: "");
+  TextEditingController passwordController= TextEditingController(text: "");
 
   
   @override
@@ -59,7 +59,7 @@ class _SigninState extends State<Signin> {
                   textHeader(),
                   getTextFeilds(),
                   siginButton(),   
-                  signinWith(),  
+                 // signinWith(),  
                   forgotPassword(),
                   dontHaveAccount(),
             ],
@@ -160,7 +160,7 @@ Widget getTextFeilds(){
                         textEditingController: emailController,
                         heading: "Email",
                         keyBoard: TextInputType.emailAddress,
-                        lableText: "example@example.com"),
+                        lableText: "johndoe@gmail.com"),
                     TextFeildWidgetPassword(
                       textEditingController: passwordController,
                       heading: "Password",

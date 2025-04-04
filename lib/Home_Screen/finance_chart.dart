@@ -364,7 +364,31 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   }
 
   Widget getGraphLineScroll(double fontSizeFactor, double screenWidth) {
+    final creditedList = widget.chartData["credited"];
+  final debitedList = widget.chartData["debited"];
+
+  // Check if both lists are either null, empty, or contain only zeros
+  final bool hasNoData = (creditedList == null || creditedList.isEmpty || creditedList.every((e) => e == 0)) &&
+      (debitedList == null || debitedList.isEmpty || debitedList.every((e) => e == 0));
+    if (hasNoData) {
+      return Container(
+        color: AppColors.backgroundColor, // Use a neutral background color
+        height: MediaQuery.of(context).size.height / 2.6,
+        child: Center(
+          child: Text(
+                        'No spendings available',
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.normal,
+              fontSize: fontSizeFactor * 4.0,
+              color: AppColors.accentColor,
+            ),
+          ),
+        ),
+      );
+    }
     return Container(
+      
       height: MediaQuery.of(context).size.height / 2.6,
       child: Stack(
         children: [
@@ -504,17 +528,17 @@ class _LineChartWidgetState extends State<LineChartWidget> {
               maximum: maxYValue * 1.2,
             ),
             //enableAxisAnimation: true,
-            
+
             tooltipBehavior: TooltipBehavior(
               enable: true,
-              
               builder: (dynamic data, dynamic point, dynamic series,
                   int pointIndex, int seriesIndex) {
                 final ChartData chartData = data as ChartData;
                 String label = seriesIndex == 1 ? 'Credited' : 'Debited';
                 isTooltipVisible.value = false;
                 return Padding(
-                   padding: EdgeInsets.only(left: 15,top:0,right:0,bottom:0),
+                  padding:
+                      EdgeInsets.only(left: 15, top: 0, right: 0, bottom: 0),
                   child: Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -575,7 +599,6 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 name: 'Debited',
                 splineType: SplineType.cardinal,
                 cardinalSplineTension: 0.9,
-                
                 markerSettings: MarkerSettings(
                   isVisible: false,
                   height: 4,
