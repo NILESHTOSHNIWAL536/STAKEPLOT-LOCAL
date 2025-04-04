@@ -57,6 +57,14 @@ Future<void> getBankAccounts() async {
       });
     });
   }
+         if(bankAccountLinkedList.isNotEmpty)
+         {
+              LastFetchDate.value =  bankAccountLinkedList[0]['lastFetch'].toString() ;
+              nextFecthDate.value =  bankAccountLinkedList[0]['nextFetch'].toString() ;
+              fetchCount.value =  bankAccountLinkedList[0]['fetchCount'].toString();
+              BankName.value =  bankAccountLinkedList[0]['bankName'].toString();
+         }
+
   loadBanks.value = false;
 }
 

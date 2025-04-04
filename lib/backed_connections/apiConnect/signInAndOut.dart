@@ -104,11 +104,10 @@ Future<void> loginUser(TextEditingController emailController,
   }
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    print("Login successful. Response body: $body");
+   
 
     String accessToken = body['data']['accessToken'];
     _pref.setString("accessToken", "Bearer " + accessToken);
-    print("Access token stored: $accessToken");
 
     await initializeOneSignal(context);
     currentId.value = body['data']['_id'];

@@ -261,7 +261,7 @@ void dispose() {
               ? Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   child: const Center(
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(color: AppColors.primaryColor,),
                   ),
                 )
               : const SizedBox.shrink();

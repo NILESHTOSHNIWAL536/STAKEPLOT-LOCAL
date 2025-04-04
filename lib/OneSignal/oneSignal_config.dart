@@ -28,8 +28,10 @@ Future<void> initializeOneSignal(BuildContext context) async {
     deviceData['deviceId'] = userDeviceId ?? "deviceData.value";
     pref.setString(key, jsonEncode(deviceData));
   }
- 
- 
+  else
+  {
+    deviceData['deviceId'] = json["deviceId"];
+  }
 
  addThisDeviceToBackendDevice(pref, context);
 

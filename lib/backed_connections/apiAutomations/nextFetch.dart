@@ -7,6 +7,8 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -86,17 +88,19 @@ class _RotatingIconState extends State<Nextfetch>
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: textStyle(
                       context: context,
-                      text: "Your next fetch starts in :",
+                      text: "Next fetch on :",
                       fontWeight: FontWeight.bold,
                       c: AppColors.bg1,
                       fontsize: 13),
                 ),
-                Obx(() => textStyle(
+
+                 textStyle(
                     context: context,
-                    text: currentTime.value,
+                    text: "Monday, 9:00 AM",
+                    // text: currentTime.value,
                     fontWeight: FontWeight.bold,
                     c: AppColors.primaryColor,
-                    fontsize: 13)),
+                    fontsize: 13),
               ],
             ),
           ));
@@ -128,9 +132,12 @@ class _RotatingIconState extends State<Nextfetch>
   }
 
   // Safely extract values with fallback
-  String fetchCount = consentAndHandleDetails[0]['fetchCount']?.toString() ?? '0';
-  String nextFetch = consentAndHandleDetails[0]['nextFetch']?.toString() ?? '';
-  String lastFetch = consentAndHandleDetails[0]['lastFetch']?.toString() ?? '';
+  // String fetchCount = fetchCount.value;
+  String nextFetch = nextFecthDate.value;// consentAndHandleDetails[0]['nextFetch']?.toString() ?? '';
+  String lastFetch = LastFetchDate.value;//consentAndHandleDetails[0]['lastFetch']?.toString() ?? '';
+  // String fetchCount = consentAndHandleDetails[0]['fetchCount']?.toString() ?? '0';
+  // String nextFetch = consentAndHandleDetails[0]['nextFetch']?.toString() ?? '';
+  // String lastFetch = consentAndHandleDetails[0]['lastFetch']?.toString() ?? '';
 
   DateTime nextFetchDate;
   DateTime lastFetchDate;
@@ -211,6 +218,12 @@ class _RotatingIconState extends State<Nextfetch>
                   ),
                 ),
                 
+                Container(
+                  alignment: Alignment.topLeft,
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: textStyle(context: context, text: BankName.value, fontsize: 16, c: AppColors.primaryColor, fontWeight: FontWeight.w600),
+                ),  
+
                 // Info Cards
                 _buildInfoCard(
                   context: context,
@@ -228,22 +241,39 @@ class _RotatingIconState extends State<Nextfetch>
                   context: context,
                   title: 'Fetch Count',
                 
-                value: '$fetchCount/5',
+                value: '${fetchCount.value}/5',
                 // ...
+                ),
+
+                 fetchCount.value == "5" ?
+               SizedBox.shrink():   Padding(padding: EdgeInsets.symmetric(vertical: 10),
+                 child: textStyle(context: context, text: "Hang tight! Fetching will take ~10 minutes.", fontsize: 13, c: AppColors.primaryColor, fontWeight: FontWeight.bold),
                 ),
                 
                 // Question
-                SizedBox(height: screenWidth * 0.06),
+                // SizedBox(height: screenWidth * 0.06),
+               fetchCount.value == "5" ?
+               SizedBox.shrink(): 
                 textStyleOnly2(
                   context: context,
-                  text: "Would you like to fetch again?",
+                  text:  "Would you like to fetch again?",
                   fontsize: screenWidth < 400 ? 12 : 14,
                   color: AppColors.bg1,
                   fontWeight: FontWeight.w500,
                 ),
                 
                 // Buttons
-                SizedBox(height: screenWidth * 0.06),
+                SizedBox(height: screenWidth * 0.03),
+               
+               fetchCount.value == "5" ?
+                textStyleOnly2(
+                  context: context,
+                  text: "You have reached the maximum fetch limit.",
+                  fontsize: screenWidth < 400 ? 12 : 14,
+                  color: AppColors.primaryColor,
+                  fontWeight: FontWeight.bold,
+                ) :
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -270,7 +300,7 @@ class _RotatingIconState extends State<Nextfetch>
                   fontWeight: FontWeight.w500,
                 ),
                     ),
-                    SizedBox(width: screenWidth * 0.04),
+                    SizedBox(width: screenWidth * 0.03),
                     OutlinedButton(
                       onPressed: () => Navigator.pop(context),
                       style: OutlinedButton.styleFrom(
@@ -288,16 +318,16 @@ class _RotatingIconState extends State<Nextfetch>
                         minimumSize: Size(screenWidth * 0.3, 0),
                       ),
                       child:  textStyleOnly2(
-                  context: context,
-                  text: "Not Now",
-                  fontsize: screenWidth < 400 ? 12 : 14,
-                  color: AppColors.bg1,
-                  fontWeight: FontWeight.w500,
-                ),
+                            context: context,
+                            text: "Not Now",
+                            fontsize: screenWidth < 400 ? 12 : 14,
+                            color: AppColors.bg1,
+                            fontWeight: FontWeight.w500,
+                           ),
                     ),
                   ],
                 ),
-                SizedBox(height: screenWidth * 0.04),
+                
               ],
             ),
           ),

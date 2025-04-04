@@ -152,6 +152,7 @@ RxBool isSplit = false.obs;
 final ScrollController scrollController = ScrollController();
 final GlobalKey targetKey = GlobalKey(); // Key to identify the target widget
 
+
 RxString selectedButton2 = 'Month'.obs; 
  RxString selectedButton = 'Month'.obs; // Default view is "Month"
   DateTimeRange? selectedDateRange; // Default view is "Month"
@@ -191,6 +192,12 @@ RxMap<String, int> supportExploriaCount = <String, int>{}.obs;
   // final RxBool isYearView = false.obs;
   final RxBool isLoading = false.obs;
 late FinvuAccountLinkingRequestReference linkingReference;
+
+RxString nextFecthDate = "".obs;
+RxString LastFetchDate = "".obs;
+RxString fetchCount = "".obs;
+RxString BankName = "".obs;
+
 
 class Message {
   Message(

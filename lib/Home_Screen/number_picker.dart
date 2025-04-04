@@ -86,6 +86,10 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
             onPageChanged: (index) {
               if (bankAccountLinkedList.isEmpty) return;
               accountId.value = bankAccountLinkedList[index]['accountId'] ?? "";
+              LastFetchDate.value =  bankAccountLinkedList[index]['lastFetch'].toString() ;
+              nextFecthDate.value =  bankAccountLinkedList[index]['nextFetch'].toString() ;
+              fetchCount.value =  bankAccountLinkedList[index]['fetchCount'].toString();
+              BankName.value =  bankAccountLinkedList[index]['bankName'].toString();
               calledFunctionToFetchData(context);
             },
           );

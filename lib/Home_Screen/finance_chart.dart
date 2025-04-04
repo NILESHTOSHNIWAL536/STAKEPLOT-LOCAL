@@ -611,6 +611,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   }
 
   void navToExpanded() {
+     selectedYear.value=DateTime.now().year;
+      selectedMonth.value= DateTime.now().month;
+      currentPage=1;
     Navigator.push(
       context,
       MaterialPageRoute(

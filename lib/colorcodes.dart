@@ -319,4 +319,5 @@ class BankText
     static String linkNowproceeding= "Your selected bank is not yet linked. Before proceeding, ensure that the specified bank is linked";
     static String checkNow="No account selected";
     static String checkNowproceeding= "Please select atleast one account to proceed";
+    static String nextFetchTime= "Hang tight! Fetching will take ~10 minutes.";
 }

@@ -125,7 +125,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: NumberPickerScreen(),
               ),
             
-           
+              const SizedBox(
+                height: 10,
+              ),
+              
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.51,
                 child: FinancePage(
