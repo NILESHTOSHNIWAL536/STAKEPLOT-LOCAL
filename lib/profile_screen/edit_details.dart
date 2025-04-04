@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
@@ -55,6 +56,120 @@ class _EditDetailsState extends State<EditDetails> {
     // Dispose all controllers when the widget is removed from the tree
     _controllers.forEach((_, controller) => controller.dispose());
     super.dispose();
+  }
+
+void resetCupertinoPin(BuildContext context, String accountId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          backgroundColor: AppColors.backgroundColor,
+          title: Row(
+            children: [
+              Icon(Icons.lock_reset, color: AppColors.primaryColor),
+              SizedBox(width: 8),
+              textStyleOnly2(
+                context: context,
+                text: "Reset PIN",
+                fontsize: 18,
+                color: AppColors.bg2,
+                fontWeight: FontWeight.bold,
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              textStyleOnly2(
+                context: context,
+                text: "Are you sure you want to reset the PIN for this account?",
+                fontsize: 14,
+                color: AppColors.bg3,
+                fontWeight: FontWeight.w400,
+              ),
+              SizedBox(height: 8),
+              textStyleOnly2(
+                context: context,
+                text: "You'll need to set a new PIN after reset.",
+                fontsize: 12,
+                color: AppColors.bg3.withOpacity(0.7),
+                fontWeight: FontWeight.w400,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: textStyleOnly2(
+                context: context,
+                text: "Cancel",
+                fontsize: 14,
+                color: AppColors.primaryColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red.withOpacity(0.1),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              onPressed: () async {
+                try {
+                  final response = await updateDataApiCall3(
+                    'https://$url/user/updateCupertino', // Add your base URL
+                    data: {
+                      'pin': '0',
+                      'accountId': accountId,
+                    },
+                  );
+
+                  if (response.statusCode == 200) { // Assuming 200 is success
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: AppColors.primaryColor,
+                        content: textStyleOnly2(
+                          context: context,
+                          text: "PIN reset successfully",
+                          fontsize: 14,
+                          color: AppColors.backgroundColor,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                    Navigator.of(dialogContext).pop();
+                  } else {
+                    throw Exception("Failed to reset PIN: ${response.statusCode}");
+                  }
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Colors.red,
+                      content: textStyleOnly2(
+                        context: context,
+                        text: "Error resetting PIN: $e",
+                        fontsize: 14,
+                        color: AppColors.backgroundColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  );
+                }
+              },
+              child: textStyleOnly2(
+                context: context,
+                text: "Reset",
+                fontsize: 14,
+                color: Colors.red,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
