@@ -333,7 +333,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                         ),
                         SizedBox(width: screenWidth * 0.02), // 5% of screen width
                         Text(
-                          "Data is Not Yet Fetched",
+                          "It will take around 10 minutes to fetch the data.",
                           style: TextStyle(
                               fontSize: screenWidth * 0.02), // 4% of screen width
                         ),

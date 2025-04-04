@@ -247,16 +247,11 @@ class _SigninState extends State<SignUp> {
         email == "" ||
         password == "" ||
         conform == "" ||
-        phone == "" ||
         dob == "") {
       snackBarCalledSignup(context, "Please fill in all fields.", Colors.red);
       return;
     }
 
-    if (phone.length != 10) {
-      snackBarCalledSignup(context, "The phone number is invalid.", Colors.red);
-      return;
-    }
     if (password.length < 6) {
       snackBarCalledSignup(context,
           "The password must be at least 6 characters long.", Colors.red);
