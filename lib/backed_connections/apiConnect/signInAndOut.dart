@@ -50,7 +50,7 @@ void clearStackName(BuildContext context,String str,[String to="/home"]) {
 
 void clearStackShared(BuildContext context) 
 {
-    for(int i=0;i<=3;i++)
+    for(int i=0;i<=4;i++)
     {
         Navigator.pop(context);
     }

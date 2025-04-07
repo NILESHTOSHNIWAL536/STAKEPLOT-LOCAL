@@ -217,6 +217,7 @@ class _EditDetailsState extends State<EditDetails> {
             ),
             const SizedBox(height: 20),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Align(
                   alignment: Alignment.topLeft,
@@ -228,11 +229,10 @@ class _EditDetailsState extends State<EditDetails> {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                InkWell(
+              bankAccountLinkedList.isEmpty? SizedBox.shrink(): InkWell(
                   onTap: () {
-                    print("Reset PIN button tapped.");
-                    // For now, we'll need an accountId - you might want to select one first
-                    // For demonstration, using first account if available
+                  
+                   
                     resetCupertinoPin(context);
                    
                   },
