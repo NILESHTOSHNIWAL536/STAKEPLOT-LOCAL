@@ -11,12 +11,15 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
+ 
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: AnimatedSplashScreen(
           backgroundColor: Colors.white,
-          duration: 3000,
+          duration: 2000,
           splashIconSize:500,
           nextScreen: HomePage(),
           splash: Center(
