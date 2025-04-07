@@ -107,6 +107,7 @@ Future<void> loginUser(TextEditingController emailController,
    
 
     String accessToken = body['data']['accessToken'];
+    print("access token --------- $accessToken");
     _pref.setString("accessToken", "Bearer " + accessToken);
 
     await initializeOneSignal(context);
