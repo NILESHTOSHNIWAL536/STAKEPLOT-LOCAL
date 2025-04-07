@@ -395,11 +395,13 @@ class _RotatingIconState extends State<Nextfetch>
 
   void checkAndFetchData() async {
     await getBankAccounts();
-    if (consentAndHandleDetails.isNotEmpty) {
+    if (consentAndHandleDetails.isNotEmpty) 
+    {
       consentAndHandleDetails.forEach((item) {
         getWeeklyfetchData(item["consentId"], item["consendHandleId"],
             item["sessionId"], item["custId"], item['lastFetch']);
       });
     }
+    Navigator.pop(context);
   }
 }
