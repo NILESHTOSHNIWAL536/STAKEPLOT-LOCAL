@@ -105,64 +105,59 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        clearStack(context);
-        return true;
-      },
-      child: Scaffold(
-        bottomNavigationBar: BottomNavigations(data: 0),
-        backgroundColor: AppColors.backgroundColor,
-        appBar:getAppBar(),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
-          child: SingleChildScrollView(
-            controller: scrollController,
-            child: Column(
-              children: [
-                Nextfetch(),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.23,
-                  child: NumberPickerScreen(),
-                ),
-              
-                const SizedBox(
-                  height: 10,
-                ),
-                
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.51,
-                  child: FinancePage(
-                    scrollController: scrollController,
-                    transactionHistoryKey:_transactionHistoryKey ,
-                  ),
-                ),
+  Widget build(BuildContext context)
+  {
+    return Scaffold(
+      bottomNavigationBar: BottomNavigations(data: 0),
+      backgroundColor: AppColors.backgroundColor,
+      appBar:getAppBar(),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
+        child: SingleChildScrollView(
+          controller: scrollController,
+          child: Column(
+            children: [
+              Nextfetch(),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.23,
+                child: NumberPickerScreen(),
+              ),
             
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.16,
-                  child: Manualtransaction(),
-                ),
-      
-                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.46,
-                  child: TransactionGraph(),
-                ),
-                
-                UserListScreen(),
-        
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.5,
-                  child: Obx(() => setDonectChat.value
-                      ? DoughnutChartExample()
-                      : DoughnutChartExample()),
-                ),
+              const SizedBox(
+                height: 10,
+              ),
               
-                 TransactionHistory(key: _transactionHistoryKey,),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.51,
+                child: FinancePage(
+                  scrollController: scrollController,
+                  transactionHistoryKey:_transactionHistoryKey ,
+                ),
+              ),
+          
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.16,
+                child: Manualtransaction(),
+              ),
+    
+               SizedBox(
+                height: MediaQuery.of(context).size.height * 0.46,
+                child: TransactionGraph(),
+              ),
               
+              UserListScreen(),
       
-              ],
-            ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.5,
+                child: Obx(() => setDonectChat.value
+                    ? DoughnutChartExample()
+                    : DoughnutChartExample()),
+              ),
+            
+               TransactionHistory(key: _transactionHistoryKey,),
+            
+    
+            ],
           ),
         ),
       ),

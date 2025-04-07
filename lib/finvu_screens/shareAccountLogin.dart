@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
@@ -167,7 +168,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                     onTap: () {
                      
                       if (!widget.flag) initFinvuManager(context);
-        
+                      isFromEditDeatils.value=false;
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -176,13 +177,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                       );
                       
                     },
-                    child: getButton(
-                        context,
-                        widget.flag
-                            ? getFetch.value
-                                ? "Loading..."
-                                : "Fetch Bank Account"
-                            : "Start now")),
+                    child: getButton(context,"Start now")),
               ),
             ],
           ),

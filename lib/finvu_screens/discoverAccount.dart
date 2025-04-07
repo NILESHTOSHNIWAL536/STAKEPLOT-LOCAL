@@ -17,7 +17,7 @@ import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 
 class DiscoverAccount extends StatefulWidget {
-  const DiscoverAccount({Key? key}) : super(key: key);
+   DiscoverAccount({Key? key}) : super(key: key);
 
   @override
   _DiscoverAccountState createState() => _DiscoverAccountState();
@@ -30,7 +30,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   void initState() {
     super.initState();
     getData();
-    getFetch.value = false;
+    // getFetch.value = false;
   }
 
   void getData() async {
@@ -109,8 +109,6 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 1.59,
       child: ListView.builder(
-        // shrinkWrap: true,
-        // physics: NeverScrollableScrollPhysics(),
         itemCount: fipDis.length,
         itemBuilder: (context, index) {
           return getBackUi(fipDis[index]);

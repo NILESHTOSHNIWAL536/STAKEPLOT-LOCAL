@@ -680,7 +680,7 @@ class _AccessState extends State<Access> {
               finvuConsentRequestDetailInfo, seletedAccountInfomations);
   
       snackBarCalled(context, "Consent request approved successfully.");
-    //  await Future.delayed(Duration(seconds: 5a));
+   
 
       FetchTransactionFromFinvuApi(context);
       

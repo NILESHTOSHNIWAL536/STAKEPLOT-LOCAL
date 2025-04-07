@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Profile/friends.dart';
 import 'package:flutter_application_code_stakeplot/Profile/notifications.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/animated/splashScreen.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/controller.dart/userController.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/BudgetDisplay.dart';
@@ -20,6 +21,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransactio
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/firebase_options.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/edit_details.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/forgot.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/signup.dart';
@@ -82,7 +84,6 @@ class _MyAppState extends State<MyApp> {
       
       debugShowCheckedModeBanner: false,
        initialRoute: '/splash', 
-      // home:  SplashScreen(),
   routes:
     {  
       '/splash': (context) =>  SplashScreen(),   
@@ -110,6 +111,7 @@ class _MyAppState extends State<MyApp> {
       '/FetchTransaction':(context) => FetchTransaction() ,
       '/ForgotPassword':(context) => ForgotPassword() ,
       '/OnboardingScreen':(context) => OnboardingScreen() ,
+      '/editDetails':(context) => EditDetails() ,
       
     });
   }

@@ -589,14 +589,11 @@ class _BottomNavigationsState extends State<BottomNavigations> {
             ),
           );
     }else{
-
-          Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => widgetName,
-            ),
-          );
+             
+                 Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => widgetName),
+                  (Route<dynamic> route) => false,
+                );
     }
     //  Navigator.push(
     //       context,

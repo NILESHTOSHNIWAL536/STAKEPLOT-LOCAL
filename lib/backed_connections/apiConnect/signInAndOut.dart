@@ -31,6 +31,15 @@ void clearStack(BuildContext context) {
     Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
   }
 }
+void clearStackHome(BuildContext context) {
+  try {
+    Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+  } catch (e) {
+    Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+  }
+}
+
+
 void clearStackName(BuildContext context,String str,[String to="/home"]) {
   try {
     Navigator.of(context).pushNamedAndRemoveUntil('${str}', (Route<dynamic> route) => false);
@@ -39,14 +48,12 @@ void clearStackName(BuildContext context,String str,[String to="/home"]) {
   }
 }
 
-void clearStackShared(BuildContext context) {
-  try {
-    Navigator.of(context).pushNamedAndRemoveUntil(
-        '/ShareAccountLogin', (Route<dynamic> route) => false);
-  } catch (e) {
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
-  }
+void clearStackShared(BuildContext context) 
+{
+    for(int i=0;i<=3;i++)
+    {
+        Navigator.pop(context);
+    }
 }
 
 void expire(responce, BuildContext context) {
@@ -60,11 +67,14 @@ void expire(responce, BuildContext context) {
   } catch (e) {}
 }
 
-void check(context, String flag) async {
+void check(context, String flag) async { 
   final SharedPreferences _pref = await SharedPreferences.getInstance();
-  if (!_pref.containsKey("accessToken")) {
+  bool f=_pref.containsKey("accessToken");
+  if (!f)
+  {
     if (flag != "loginuser") Navigator.pushReplacementNamed(context, '/');
   }
+
 }
 
 Future<void> loginUser(TextEditingController emailController,
@@ -105,7 +115,7 @@ Future<void> loginUser(TextEditingController emailController,
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
    
-
+    
     String accessToken = body['data']['accessToken'];
     _pref.setString("accessToken", "Bearer " + accessToken);
 
@@ -113,11 +123,12 @@ Future<void> loginUser(TextEditingController emailController,
     currentId.value = body['data']['_id'];
     isBankAccountLink.value = body['data']['isBankAccountLinked'];
       // await getBankAccounts();
+    getPhoneNo(body);
     Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
     acceptReset.value = false;
 
     // storeinmap(body, _pref, passwordController.text);
-    // Phone.value = body['data']['phone'] ?? "";
+  //   Phone.value = body['data']['phone'] ?? "";
     // number.value = body['data']['phone']?? "";
   } else {
     acceptReset.value = false;
@@ -136,6 +147,25 @@ Future<void> loginUser(TextEditingController emailController,
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
+}
+
+
+
+void getPhoneNo(body){
+  List<dynamic> phoneList = body['data']['phone'] ?? [];
+  String phone = "0";
+
+if (phoneList.isNotEmpty) {
+  if (phoneList[0] != "0")
+  {
+    phone = phoneList[0];
+  } else if (phoneList.length > 1 && phoneList[1] != "0") {
+    phone = phoneList[1];
+  }
+}
+ 
+   Phone.value = phone;
+  number.value= phone;
 }
 
 void storeinmap(body, SharedPreferences _pref, String password) {
@@ -212,6 +242,7 @@ void forceLogoutUser(
       // storeinmap(body, _pref, userpassword);
       // Phone.value = body['data']['phone'];
       // number.value = body['data']['phone'];
+       getPhoneNo(body);
       isBankAccountLink.value = body['data']['isBankAccountLinked'];
       clearStack(context);
       Navigator.pushNamed(context, "/home");

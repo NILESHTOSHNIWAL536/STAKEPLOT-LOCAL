@@ -16,8 +16,8 @@ import 'package:http/http.dart' as http;
 void initFinvuManager(BuildContext context) async {
   finvuManager.initialize(
     FinvuConfig(
-       finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
-      // finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
+     //  finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
+       finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
       certificatePins: 
       [
             //  "R6wXZnQsKKyg56qFKQNytvygyr/o4Mkq1VXL5LenBYI=",
@@ -111,9 +111,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
       sessionId.value=true;
      
     }
-  } catch (e) {
-  
-  }
+  }catch(e){}
 
    clearStackShared(context);
    Navigator.pushNamed(context, "/OnboardingScreen"); 
@@ -190,9 +188,11 @@ Future<bool> verify(String otp, BuildContext context) async {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => DiscoverAccount(),
+        builder: (context) => DiscoverAccount(
+        ),
       ),
     );
+
     return true; // Return true if verification succeeds
   } catch (e) {
    isOtpWrong.value = true;

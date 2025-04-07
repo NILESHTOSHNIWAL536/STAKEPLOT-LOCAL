@@ -321,12 +321,13 @@ class _EditDetailsState extends State<EditDetails> {
             child: InkWell(
                 onTap: () {
                   number.value = Phone.value;
-
+                  isFromEditDeatils.value=true;
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => MobileNumber(
                         flag: true,
+                        formEditDetails: true,
                       ),
                     ),
                   );

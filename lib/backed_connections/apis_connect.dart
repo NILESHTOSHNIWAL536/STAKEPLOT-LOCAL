@@ -8,7 +8,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.
 import 'package:get/get.dart';
 
 bool flag = true;
-String portNo = flag ? "192.168.1.13" : "localhost";
+String portNo = flag ? "192.168.1.11" : "localhost";
 String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Feilds";
@@ -39,6 +39,7 @@ List<double> trasactionsDataCustomDebit = [];
 List<String> trasactionsDataCustomLabel = [];
 
 RxBool flagTrasaction = false.obs;
+RxBool isFromEditDeatils = false.obs;
 RxString range = ''.obs;
 List<double> trasactionsDataCreditWeekly = [];
 List<double> trasactionsDataDebitWeekly = [];
@@ -254,7 +255,7 @@ void snackBarCalled(context, String text, [Color colors = Colors.black]) {
 
 void snackBarCalledSignup(context, String text, [Color colors = Colors.black]) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    duration: Duration(seconds: 4),
+    duration: Duration(seconds: 3),
     content: Text(
       text,
       style: FontManager()

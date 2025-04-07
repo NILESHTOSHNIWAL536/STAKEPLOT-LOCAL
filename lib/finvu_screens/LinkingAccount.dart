@@ -131,10 +131,7 @@ Widget buttonLinkNow(){
                   onTap: () {
                     if(loopCount.value!=widget.listOfBankAccount.length)return;
                     if(count==0)return;
-                    // if(accountAdded.isNotEmpty){
-                    //      snackBarCalledSignup(context, "Please link All seleted Account", Colorcodes.red);
-                    //      return;
-                    // };
+                   
                     showModalBottomSheet(
                       context: context,
                       builder: (context) {
@@ -563,7 +560,7 @@ void linkAccount( String otp, String fid, BuildContext context,FinvuFIPDetails f
       listOfAccountAdded.remove(fid);
       listofLinkedAccount.refresh();
       accountLinked.add(fid);
-      //otpController = TextEditingController();
+     
       otpController.clear();
       _otpCode.value = "";
         accountAdded.clear();
@@ -689,7 +686,7 @@ void linkAccount( String otp, String fid, BuildContext context,FinvuFIPDetails f
           fipDetails.fipId, finvuFIPInfo.fipFitypes, finvuTypeIdentifierInfo);
 
       count.value += info.length;
-      count.refresh();
+       count.refresh();
     } catch (e) {
       loopCount++;
       return getNoBankAccount();
@@ -731,6 +728,7 @@ void linkAccount( String otp, String fid, BuildContext context,FinvuFIPDetails f
               : InkWell(
                   onTap: () {
                     otpController = TextEditingController(text: "");
+                    count.value = 0;
                     LinkingBank(FinvuFIPDetailsList[bankData.fipId]!,
                         bankData.fipId, bankData);
                   },

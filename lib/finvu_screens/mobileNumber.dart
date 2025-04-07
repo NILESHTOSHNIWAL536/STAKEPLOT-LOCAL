@@ -26,7 +26,8 @@ RxInt otpCountdown = 30.obs; // Reactive integer for countdown
    Timer? otpTimer;
 class MobileNumber extends StatefulWidget {
   bool flag;
-  MobileNumber({super.key, this.flag = false});
+  bool formEditDetails = false;
+  MobileNumber({super.key, this.flag = false,this.formEditDetails = false});
 
   @override
   State<MobileNumber> createState() => _MobileNumberState();
