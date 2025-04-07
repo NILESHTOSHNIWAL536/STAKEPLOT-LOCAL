@@ -184,7 +184,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
               ),
             ),
           ),
-
+//getCheck(bankData),
            Obx(() => addCheck.value?getCheck(bankData):getCheck(bankData)),
 
         ],
