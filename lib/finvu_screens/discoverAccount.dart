@@ -30,14 +30,14 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   void initState() {
     super.initState();
     getData();
-    getFetch.value = false;
+   // getFetch.value = false;
   }
 
   void getData() async {
     fipDis = await finvuManager.fipsAllFIPOptions();
     fipDisOrginal.clear();
     fipDisOrginal.addAll(fipDis);
-    getBanks.value = !getBanks.value;
+  getBanks.value = !getBanks.value;
   }
 
   @override
