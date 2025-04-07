@@ -159,7 +159,7 @@ class _RotatingIconState extends State<Nextfetch>
   }
 
   // Format dates (assuming formatWhatsAppDate exists or define it below)
-  String formattedNextFetch = formatWhatsAppDate(nextFetchDate);
+  String formattedNextFetch = formatWhatsAppDate2(nextFetchDate);
   String formattedLastFetch = formatWhatsAppDate(lastFetchDate);
 
   // Get screen width for responsive sizing

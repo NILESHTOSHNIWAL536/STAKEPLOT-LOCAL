@@ -40,7 +40,7 @@ class _TribeSearchState extends State<TribeChats> {
   @override
   void initState() {
     super.initState();
-    // getUserInfomations();
+    getUserInfomations();
     getChatLoader();
     getTransactions();
 
