@@ -116,6 +116,7 @@ class TextFeildWidgetPassword extends StatelessWidget {
   TextInputType keyBoard;
   bool flag;
   IconData icon;
+  final RxBool show = true.obs;
   TextFeildWidgetPassword(
       {Key? key,
       required this.textEditingController,
@@ -126,7 +127,7 @@ class TextFeildWidgetPassword extends StatelessWidget {
       this.flag = true})
       : super(key: key);
 
-  RxBool show = true.obs;
+  
 
   @override
   Widget build(BuildContext context) {

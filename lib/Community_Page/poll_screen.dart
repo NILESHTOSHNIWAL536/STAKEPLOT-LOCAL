@@ -147,7 +147,7 @@ class _PollScreenState extends State<PollScreen> {
                         TextField(
                           controller: _questionController,
                           maxLines: null,
-                          maxLength: 100,
+                          maxLength: 80,
                            textInputAction: TextInputAction.next,
                            
                           decoration: InputDecoration(
@@ -172,7 +172,7 @@ class _PollScreenState extends State<PollScreen> {
                                     child: TextField(
                                       controller: _optionControllers[index],
                                       maxLines: null,
-                                      maxLength: 80,
+                                      maxLength: 50,
                                       
                                       decoration: InputDecoration(
                                         hintText: 'Option ${index + 1}',

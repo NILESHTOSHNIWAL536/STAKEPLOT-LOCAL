@@ -625,7 +625,7 @@ Widget poll(e, context) {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(op,
-                            overflow: TextOverflow.ellipsis,
+                            overflow: TextOverflow.visible,
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.bold,
                                 fontSize: 14,
@@ -728,6 +728,7 @@ Widget getQuestionsAndOptions(e, context, flag, PostId) {
   optionsList.addAll(options);
   int indexVal = -1;
   double width = MediaQuery.of(context).size.width;
+  
   return Obx(() => Padding(
         padding: const EdgeInsets.all(5.0),
         child: Row(
@@ -756,8 +757,10 @@ Widget getQuestionsAndOptions(e, context, flag, PostId) {
                         //       cal =  s == op['option'] ? "100" :"0";
                         // }
                         bool isSe = op['option'] == s;
+String formattedText = op['option'].replaceAllMapped(RegExp(r'.{6}'), (match) => '${match.group(0)}\u200B');
 
                         return Obx(() => Padding(
+                          
                               padding:
                                   const EdgeInsets.symmetric(vertical: 4.0),
                               child: InkWell(
@@ -813,9 +816,14 @@ Widget getQuestionsAndOptions(e, context, flag, PostId) {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Container(
+                                        Expanded(
                                           // width: MediaQuery.of(context).size.width/2,
-                                          child: Text(op['option'],
+                                           child: Text(op['option'],
+                                           //child: Text(formattedText,
+                                          maxLines: null,
+                                          softWrap: true,
+                                           textWidthBasis: TextWidthBasis.longestLine,
+                                          overflow: TextOverflow.visible,
                                               style: FontManager().getTextStyle(
                                                   context,
                                                   lWeight: FontWeight.bold,

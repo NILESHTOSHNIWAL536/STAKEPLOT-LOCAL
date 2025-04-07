@@ -79,7 +79,7 @@ class _BudgetState extends State<Budget> {
           },
         ),
       ),
-      bottomNavigationBar: BottomNavigations(data: 1),
+     // bottomNavigationBar: BottomNavigations(data: 1),
     );
   }
 

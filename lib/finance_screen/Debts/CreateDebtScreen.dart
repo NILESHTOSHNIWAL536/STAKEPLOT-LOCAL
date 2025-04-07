@@ -94,9 +94,9 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
   //   }
   // }
 
-  void _saveDebt() async {
+  void saveDebt() async {
     if (_formKey.currentState!.validate()) {
-    //  print('Form is valid. Preparing to save debt.'); // Debug statement
+        print('Form is valid. Preparing to save debt.'); // Debug statement
       Map<String, dynamic> debtData = {
         'name': _name,
         'type': _loanType.toLowerCase(),
@@ -105,14 +105,14 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
         'durationMonths': _durationMonths,
         'startDate': _date.toIso8601String(),
       };
-    //  print('Debt data: $debtData'); // Debug statement
+        print('Debt data: $debtData'); // Debug statement
 
       try {
         Map<String, dynamic>? response = await DebtService.createDebt(debtData);
-      //  print('Response from DebtService: $response'); // Debug statement
+         print('Response from DebtService: $response'); // Debug statement
 
         if (response != null) {
-         // print('Debt created successfully: $response');
+           print('Debt created successfully: $response');
 
           if (context.mounted) {
             // Ensure the widget is still in the tree
@@ -129,13 +129,13 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
             );
           }
         } else {
-         // print('Failed to create debt. No valid response received.');
+           print('Failed to create debt. No valid response received.');
         }
       } catch (e) {
-       // print('Error creating debt: $e');
+         print('Error creating debt: $e');
       }
     } else {
-     // print('Form is invalid.'); // Debug statement
+       print('Form is invalid.'); // Debug statement
     }
   }
 
@@ -249,8 +249,13 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                 //   onPressed: _saveDebt,
                 //   child: Text('Continue'),
                 // ),
+                // check the issue with continue...
                 GestureDetector(
-                  onTap: _saveDebt,
+                  onTap: () {
+                    print('Continue button tapped.'); // Debug statement
+                    saveDebt();
+                    print('saveDebt function called.'); // Debug statement
+                  },
                   child: Container(
                     width: MediaQuery.of(context).size.width / 1.1,
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),

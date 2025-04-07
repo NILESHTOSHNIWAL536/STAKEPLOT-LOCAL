@@ -839,7 +839,7 @@ class _ChatState extends State<Chat> {
   //     //              ),
   //   );
   // }
-
+// poll card display in community
   Widget poll(e) {
     List options = e['options'] ?? [];
     int index = 0; // e['selectedOption'];
@@ -900,14 +900,20 @@ class _ChatState extends State<Chat> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(op['option'].toString(),
-                                overflow: TextOverflow.ellipsis,
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: index == s
-                                        ? Colorcodes.white
-                                        : Colors.black)),
+                            Expanded(
+                              child: Text(op['option'].toString(),
+                               maxLines: null,
+                                            softWrap: true,
+                                             textWidthBasis: TextWidthBasis.longestLine,
+                                            overflow: TextOverflow.visible,
+                                 
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: index == s
+                                          ? Colorcodes.white
+                                          : Colors.black)),
+                            ),
 
                             //  myvote ? Text(cal=="0.00"?'0%':cal=="100.00"?"100%":cal+"%",
                             //     style: FontManager().getTextStyle(context,

@@ -23,11 +23,13 @@ class SignUp extends StatefulWidget {
 
 class _SigninState extends State<SignUp> {
   RxBool flag = false.obs;
+  RxString passwordError = ''.obs;
+  RxString confirmError = ''.obs;
   TextEditingController emailController =
       TextEditingController(text: "");
   TextEditingController passwordController =
       TextEditingController(text: "");
-  TextEditingController conformController =
+  TextEditingController confirmController =
       TextEditingController(text: "");
   TextEditingController usernameController =
       TextEditingController(text: "");
@@ -35,13 +37,55 @@ class _SigninState extends State<SignUp> {
       text: DateFormat('yyyy-MM-dd').format(DateTime.now()).toString());
   TextEditingController phoneController =
       TextEditingController(text: "");
+  @override
+  void initState() {
+    super.initState();
+    // Add listeners for real-time validation
+    passwordController.addListener(validatePassword);
+    confirmController.addListener(validateConfirmPassword);
+  }
+
+  @override
+  void dispose() {
+    passwordController.removeListener(validatePassword);
+    confirmController.removeListener(validateConfirmPassword);
+    super.dispose();
+  }
+
+  void validatePassword() {
+    String password = passwordController.text;
+    if (password.isEmpty) {
+      passwordError.value = 'Password cannot be empty';
+    } else if (password.length < 8) {
+      passwordError.value = 'Password must be at least 8 characters';
+    } else if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~])')
+        .hasMatch(password)) {
+      passwordError.value = 'Must include uppercase, lowercase, number, and special character';
+    } else {
+      passwordError.value = '';
+    }
+    validateConfirmPassword(); // Check confirmation whenever password changes
+  }
+
+  void validateConfirmPassword() {
+    String password = passwordController.text;
+    String confirm = confirmController.text;
+    
+    if (confirm.isEmpty) {
+      confirmError.value = 'Please confirm your password';
+    } else if (password != confirm) {
+      confirmError.value = 'Passwords do not match';
+    } else {
+      confirmError.value = '';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colorcodes.white,
-        body: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: Colorcodes.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
@@ -156,22 +200,48 @@ class _SigninState extends State<SignUp> {
               heading: "Email",
               keyBoard: TextInputType.emailAddress,
               lableText: "johndoe@gmail.com"),
-          TextFeildWidgetPassword(
-            textEditingController: passwordController,
-            heading: "Password",
-            keyBoard: TextInputType.visiblePassword,
-            lableText: "Password",
-            flag: false,
-            icon: Icons.lock_clock_outlined,
-          ),
-          TextFeildWidgetPassword(
-            textEditingController: conformController,
-            heading: "Confirm Password",
-            keyBoard: TextInputType.visiblePassword,
-            lableText: "Confirm Password",
-            flag: false,
-            icon: Icons.lock_clock_outlined,
-          ),
+          Obx(() => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFeildWidgetPassword(
+                textEditingController: passwordController,
+                heading: "Password",
+                keyBoard: TextInputType.visiblePassword,
+                lableText: "Password",
+                flag: false,
+                icon: Icons.lock_clock_outlined,
+              ),
+              if (passwordError.value.isNotEmpty)
+                Padding(
+                  padding: EdgeInsets.only(left: 20, top: 5),
+                  child: Text(
+                    passwordError.value,
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+                ),
+            ],
+          )),
+         Obx(() => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFeildWidgetPassword(
+                textEditingController: confirmController,
+                heading: "Confirm Password",
+                keyBoard: TextInputType.visiblePassword,
+                lableText: "Confirm Password",
+                flag: false,
+                icon: Icons.lock_clock_outlined,
+              ),
+              if (confirmError.value.isNotEmpty)
+                Padding(
+                  padding: EdgeInsets.only(left: 20, top: 5),
+                  child: Text(
+                    confirmError.value,
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+                ),
+            ],
+          )),
         ],
       ),
     );
@@ -193,7 +263,7 @@ class _SigninState extends State<SignUp> {
       'email': emailController.text,
       'userpassword': passwordController.text,
       // 'phone': phoneController.text,
-      'confirmPassword': conformController.text,
+      'confirmPassword': confirmController.text,
       'dob': dobController.text.substring(0, 10),
     };
     flag.value = false;
@@ -227,7 +297,7 @@ class _SigninState extends State<SignUp> {
         'email': emailController.text,
         'userpassword': passwordController.text,
         'phone': phoneController.text,
-        'confirmPassword': conformController.text,
+        'confirmPassword': confirmController.text,
         'dob': '12-03-2022',
       }),
     );
@@ -239,7 +309,7 @@ class _SigninState extends State<SignUp> {
     String name = usernameController.text;
     String email = emailController.text;
     String password = passwordController.text;
-    String conform = conformController.text;
+    String conform = confirmController.text;
     String phone = phoneController.text;
     String dob = dobController.text;
 
@@ -247,25 +317,12 @@ class _SigninState extends State<SignUp> {
         email == "" ||
         password == "" ||
         conform == "" ||
+        
         dob == "") {
       snackBarCalledSignup(context, "Please fill in all fields.", Colors.red);
       return;
     }
-
-    if (password.length < 6) {
-      snackBarCalledSignup(context,
-          "The password must be at least 6 characters long.", Colors.red);
-      return;
-    }
-
-    if (password != conform) {
-      snackBarCalledSignup(context,
-          "The password and confirmation password do not match.", Colors.red);
-      return;
-    }
-
     flag.value = true;
-
     final response = await http.post(
       Uri.parse('${url}/user/register'),
       headers: <String, String>{
@@ -276,7 +333,7 @@ class _SigninState extends State<SignUp> {
         'email': emailController.text,
         'userpassword': passwordController.text,
         'phone': phone,
-        'confirmPassword': conformController.text,
+        'confirmPassword': confirmController.text,
         'dob': dobController.text.substring(0, 10),
         'avatarType': url,
         'otp': "opts",

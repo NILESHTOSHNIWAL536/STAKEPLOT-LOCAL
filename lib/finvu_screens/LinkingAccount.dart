@@ -1,11 +1,881 @@
-import 'dart:convert';
+// import 'dart:convert';
 
+// import 'package:finvu_flutter_sdk/finvu_manager.dart';
+// import 'package:finvu_flutter_sdk_core/finvu_discovered_accounts.dart';
+// import 'package:finvu_flutter_sdk_core/finvu_fip_details.dart';
+// import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
+// import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+// import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+// import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+// import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+// import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+// import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
+// import 'package:flutter_application_code_stakeplot/finvu_screens/access.dart';
+// import 'package:flutter_application_code_stakeplot/finvu_screens/appbar_widget.dart';
+// import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
+// import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
+// import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+// import 'package:flutter_application_code_stakeplot/main.dart';
+// import 'package:get/get.dart';
+
+// RxMap<String, List<FinvuDiscoveredAccountInfo>> listOfAccountAdded =
+//     <String, List<FinvuDiscoveredAccountInfo>>{}.obs;
+// RxMap<String, FinvuFIPDetails> FinvuFIPDetailsList =
+//     <String, FinvuFIPDetails>{}.obs;
+// RxMap<String, int> accountCountList = <String, int>{}.obs;
+// RxList accountAdded = [].obs;
+// RxList accountLinked = [].obs;
+// RxInt count = 0.obs;
+// List<FinvuFIPInfo> fipDis = [];
+// List<FinvuFIPInfo> fipDisOrginal = [];
+// RxList isSeletedBankAccout = [].obs;
+// RxMap<String, String> bankImageAndid = RxMap();
+// RxList<FinvuFIPInfo> listOfBankAccount = <FinvuFIPInfo>[].obs;
+// // RxBool getBanks=false.obs;
+// RxBool addBank = false.obs;
+// RxBool addCheck = false.obs;
+// List<FinvuLinkedAccountDetailsInfo> fetchAccountData = [];
+// List<FinvuLinkedAccountDetailsInfo> seletedAccountInfomations = [];
+// List<String> seletedAccountIds = [];
+// RxBool getBanks = false.obs;
+// RxBool addAccount = false.obs;
+// RxBool getFetch = false.obs;
+// RxBool directFetch = false.obs;
+
+// RxInt  otpCount=0.obs;
+// RxInt loopCount = 0.obs;
+
+// class LinkingAccount extends StatefulWidget {
+//   List<FinvuFIPInfo> listOfBankAccount;
+//   LinkingAccount({Key? key, required this.listOfBankAccount}) : super(key: key);
+
+//   @override
+//   _LinkingAccountState createState() => _LinkingAccountState();
+// }
+
+// class _LinkingAccountState extends State<LinkingAccount> {
+//   final int _otpCodeLength = 6; // OTP length
+//   RxString _otpCode = "".obs; // Captured OTP code
+//   RxBool _isOtpValid = false.obs; // Validate OTP length
+//   TextEditingController otpController = TextEditingController();
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     count.value = 0;
+//     otpCount.value = 0;
+//     loopCount.value = 0;
+//     getData();
+//     getinfo();
+//     getFetch.value = false;
+//   }
+
+//   void getinfo() async {
+//     finvuConsentRequestDetailInfo =
+//         await finvuManager.getConsentRequestDetails(handleId.value);
+//   }
+
+//   void getData() async {
+//     fipDis = await finvuManager.fipsAllFIPOptions();
+//     fipDisOrginal.clear();
+//     fipDisOrginal.addAll(fipDis);
+//     getBanks.value = !getBanks.value;
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       bottomNavigationBar: BottomBar(),
+//       appBar:getAppBar(context),
+//       body: SafeArea(
+//         child: Container(
+//           width: MediaQuery.of(context).size.width,
+//           height: MediaQuery.of(context).size.height,
+//           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 3.0),
+//           child: Column(
+//             children: [
+//               Padding(
+//                 padding: const EdgeInsets.symmetric(vertical: 6),
+//                 child: Align(
+//                   alignment: Alignment.topLeft,
+//                   child: Text(
+//                     "Select accounts to share",
+//                     style: FontManager().getTextStyle(context,
+//                         lWeight: FontWeight.bold,
+//                         fontSize: 22,
+//                         color: AppColors.bg1),
+//                   ),
+//                 ),
+//               ),
+//               const SizedBox(
+//                 height: 5,
+//               ),
+//               BankInfoUiContainer(),
+//               bankAccountList(),
+//               const SizedBox(
+//                 height: 5,
+//               ),
+//               buttonLinkNow(),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+
+// Widget buttonLinkNow(){
+//    return   InkWell(
+//                   onTap: () {
+//                     if(loopCount.value!=widget.listOfBankAccount.length)return;
+//                     if(count==0)return;
+//                     // if(accountAdded.isNotEmpty){
+//                     //      snackBarCalledSignup(context, "Please link All seleted Account", Colorcodes.red);
+//                     //      return;
+//                     // };
+//                     showModalBottomSheet(
+//                       context: context,
+//                       builder: (context) {
+//                         return accountLinkedUi();
+//                       },
+//                     );
+//                   },
+//                   child: Obx(()=>(loopCount.value!=widget.listOfBankAccount.length)? SizedBox.shrink():  count.value==0 ?  SizedBox.shrink() :accountAdded.isNotEmpty? getButton(context, "Authorise",AppColors.bg3,Colorcodes.white):getButton(context, "Authorise")));
+// }
+  
+ 
+//   Widget accountLinkedUi() {
+//     return Container(
+//         width: MediaQuery.of(context).size.width,
+//         height: MediaQuery.of(context).size.height / 3,
+//         child:accountAdded.isNotEmpty
+//             ? getLinkNow( BankText.linkNow,BankText.linkNowproceeding,"Link Now"):
+//             seletedAccountIds.isEmpty?getLinkNow( BankText.checkNow,BankText.checkNowproceeding,"check Now")
+//             : Column(
+//                 mainAxisAlignment: MainAxisAlignment.center,
+//                 crossAxisAlignment: CrossAxisAlignment.center,
+//                 children: [
+//                   Text("${seletedAccountIds.length} Bank Accounts are shared",
+//                       style: FontManager().getTextStyle(context,
+//                           lWeight: FontWeight.bold,
+//                           fontSize: 14,
+//                           color: Colorcodes.black)),
+//                   const SizedBox(
+//                     height: 20,
+//                   ),
+//                   InkWell(
+//                       onTap: () async {
+//                         directFetch.value = false;
+//                         await getAccountShared();
+//                         Navigator.push(
+//                           context,
+//                           MaterialPageRoute(
+//                             builder: (context) => Access(),
+//                           ),
+//                         );
+//                       },
+//                       child: getButton(context, "Continue")),
+//                   const SizedBox(
+//                     height: 20,
+//                   ),
+//                   textStyle("We will fetch this account transactions", 8),
+//                 ],
+//               ));
+//   }
+
+
+
+
+//   Widget getLinkNow(String title,String des,String btnText)
+//   {
+//     return Column(
+//                 mainAxisAlignment: MainAxisAlignment.spaceAround,
+//                 crossAxisAlignment: CrossAxisAlignment.center,
+//                 children: [
+//                   const SizedBox(
+//                     height: 20,
+//                   ),
+//                   textStyle(title, 14),
+//                   const SizedBox(
+//                     height: 20,
+//                   ),
+//                   Container(
+//                     width: MediaQuery.of(context).size.width / 1.1,
+//                     // padding: const EdgeInsets.symmetric(horizontal: 10),
+//                     child: Center(
+//                       child: Text(des,
+//                         style: FontManager().getTextStyle(context,
+//                             lWeight: FontWeight.w600,
+//                             fontSize: 14,
+//                             color: Colorcodes.red),
+//                       ),
+//                     ),
+//                   ),
+//                   const SizedBox(
+//                     height: 10,
+//                   ),
+//                   Icon(
+//                     Icons.warning_outlined,
+//                     color: Colorcodes.red,
+//                     size: 30,
+//                   ),
+//                   const SizedBox(
+//                     height: 10,
+//                   ),
+//                btnText== "check Now"?SizedBox.shrink(): InkWell(
+//                       onTap: () {
+//                         Navigator.pop(context);
+//                       },
+//                       child: getButton(context, btnText)),
+//                    SizedBox(
+//                     height:  btnText== "check Now"? 0: 20,
+//                   ),
+//                 ],
+//               );
+//   }
+
+//   Widget BankInfoUiContainer() {
+//     return Container(
+//       padding: const EdgeInsets.all(12.0),
+//       decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Row(
+//             children: [
+//               CircleAvatar(
+//                   backgroundColor: AppColors.mt,
+//                   child: Icon(
+//                     Icons.account_balance_rounded,
+//                     size: 25,
+//                     color: AppColors.primaryColor,
+//                   )),
+//               SizedBox(
+//                 width: 10,
+//               ),
+//               Column(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   //textStyle("Bank Accounts", 16),
+//                   Text(
+//                     "Bank Accounts",
+//                     style: FontManager().getTextStyle(context,
+//                         lWeight: FontWeight.bold,
+//                         fontSize: 16,
+//                         color: AppColors.bg1),
+//                   ),
+//                   Obx(() => textStyle("${count.value} accounts discovered", 12,
+//                       Colorcodes.graphColor1)),
+//                 ],
+//               ),
+//             ],
+//           ),
+//           //const Divider(thickness: 1, height: 20),
+//           const SizedBox(height: 10),
+//           textStyle("Select atleast 1 Account to share from", 14),
+//           const SizedBox(height: 10),
+//         ],
+//       ),
+//     );
+//   }
+
+//   Widget bankAccountList() {
+//     double height = MediaQuery.of(context).size.height;
+//     count.value = 0;
+//     loopCount.value=0;
+//     return Container(
+//       //padding: const EdgeInsets.fromLTRB(14, 5, 16, 5),
+//       //here we can change height
+//       width: MediaQuery.of(context).size.width / 1.1,
+//       height: height / 1.7,
+//       // color: AppColors.bg3,
+//       child: SingleChildScrollView(
+//         child: Column(
+//           children: widget.listOfBankAccount.map((account) {
+//             return Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 // Display bank name and image before calling linkedaccoutnData
+//                 getBankNameAndImage(account),
+//                 FutureBuilder<Widget>(
+//                   future: linkedaccoutnData(account),
+//                   builder: (context, snapshot) {
+//                     if (snapshot.connectionState == ConnectionState.waiting) {
+//                       return CircularProgressIndicator(color:AppColors.primaryColor,strokeWidth: BorderSide.strokeAlignOutside,); // Show loading indicator
+//                     } else if (snapshot.hasError) {
+//                       return Text("Error: ${snapshot.error}");
+//                     } else {
+//                       return snapshot.data ?? SizedBox.shrink(); // Return the widget from Future
+//                     }
+//                   },
+//                 ),
+//               ],
+//             );
+//           }).toList(),
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget getListOfFinvuBanksAccounts(
+//       List<FinvuDiscoveredAccountInfo> account, FinvuFIPDetails fipDetails) {
+//    loopCount.value++;
+//     return account.isEmpty
+//         ? getNoBankAccount()
+//         : Column(
+//             children: account
+//                 .map((bankData) => getBackUi(bankData, fipDetails))
+//                 .toList(),
+//           );
+//   }
+
+//   void LinkingBank(
+//       FinvuFIPDetails fipDetails, String fipId, FinvuFIPInfo info) async {
+//     try {
+//       List<FinvuDiscoveredAccountInfo> bankData =
+//           listOfAccountAdded[fipId] ?? [];
+//       if (bankData.isEmpty) {
+//         snackBarCalled(
+//             context,
+//             "The account has been successfully added for linking.",
+//             Colorcodes.red);
+//         return;
+//       }
+//          linkingReference = await finvuManager.linkAccounts(fipDetails, bankData);
+//          isOtpWrong.value = false;
+//           startOtpTimer();
+//       showModalBottomSheet(
+//         context: context,
+//         isScrollControlled: true,
+//         builder: (BuildContext context) {
+//           return verify(fipId, fipDetails, info, context);
+//         },
+//       );
+//     } catch (e) {
+//       snackBarCalledSignup(context, "Maximum Retries Exceeded. Please try again after sometime.");
+//     }
+//   }
+
+//   Widget verify(fid, FinvuFIPDetails fipDetails,
+//       FinvuFIPInfo info, context) {
+//     return AnimatedPadding(
+//       padding: MediaQuery.of(context)
+//           .viewInsets, // Adjusts padding when keyboard appears
+//       duration: const Duration(milliseconds: 100),
+//       curve: Curves.easeOut,
+//       child: Container(
+//         width: MediaQuery.of(context).size.width,
+//         height: MediaQuery.of(context).size.height / 2.5,
+//         decoration: const BoxDecoration(
+//           color: AppColors.mt,
+//           borderRadius: BorderRadius.only(
+//             topLeft: Radius.circular(20),
+//             topRight: Radius.circular(20),
+//           ),
+//         ),
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.start,
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Padding(
+//               padding: const EdgeInsets.symmetric(vertical: 10),
+//               child: Center(
+//                   child: textStyle("Securely authorize each selected account",
+//                       14, Colorcodes.black, FontWeight.bold)),
+//             ),
+//             Padding(
+//               padding: const EdgeInsets.symmetric(horizontal: 20),
+//               child: getBankNameAndImage(info, false),
+//             ),
+//             Padding(
+//               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+//               child: textStyle(
+//                   "OTP Verification", 20, AppColors.bg1, FontWeight.bold),
+//             ),
+//             Padding(
+//               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
+//               child: textStyle("Enter the OTP sent to ${number.value}", 15,
+//                   AppColors.bg1, FontWeight.w400),
+//             ),
+//             const SizedBox(
+//               height: 10,
+//             ),
+            
+            
+//             Padding(
+//               padding: const EdgeInsets.symmetric(horizontal: 20),
+//               child: TextField(
+//                 controller: otpController,
+//                 keyboardType: TextInputType.number,
+//                 onSubmitted: (value)
+//                 {
+//                     otpCount.value++;
+//                     linkAccount(_otpCode.value, fid, context,fipDetails);
+//                 },
+//                 decoration: InputDecoration(
+//                   hintText: 'Enter OTP',
+//                   border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(12),
+//                       borderSide: BorderSide(color: Colors.black12)),
+//                 ),
+//                 onChanged: (value) {
+//                   _otpCode.value = value;
+//                   _isOtpValid.value = value.toString().length>4; 
+//                   isOtpWrong.value = false;
+
+//                 },
+//               ),
+//             ),
+//              Obx(
+//               () => isOtpWrong.value
+//                   ? Padding(
+//                       padding: const EdgeInsets.fromLTRB(40, 0, 0, 5),
+//                       child: Text(
+//                         "Incorrect OTP entered",
+//                         style: FontManager().getTextStyle(
+//                           context,
+//                           lWeight: FontWeight.w300,
+//                           fontSize: 10,
+//                           color: Colors.red,
+//                         ),
+//                       ),
+//                     )
+//                   : SizedBox.shrink(), // Empty widget when OTP is not wrong
+//             ),
+//             Padding(
+//               padding: const EdgeInsets.fromLTRB(0, 4, 0, 10),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.center,
+//                 children: [
+//                   Padding(
+//                     padding: const EdgeInsets.only(right: 5),
+//                     child: Text(
+//                       "Didn't you receive the OTP?  ",
+//                       style: FontManager().getTextStyle(
+//                         context,
+//                         lWeight: FontWeight.w200,
+//                         fontSize: 12,
+//                         color: AppColors.bg3,
+//                       ),
+//                     ),
+//                   ),
+//                    Obx(
+//                     () => GestureDetector(
+//                       onTap: canResendOtp.value
+//                           ? ()async
+//                           {
+//                               reSendOtp(fipDetails,fid);
+//                           }
+//                           : null,
+//                       child: Text(
+//                         canResendOtp.value
+//                             ? "Resend OTP"
+//                             : "Resend in ${otpCountdown.value} seconds",
+//                         style: FontManager().getTextStyle(
+//                           context,
+//                           lWeight: FontWeight.w400,
+//                           fontSize: 12,
+//                           color: canResendOtp.value
+//                               ? AppColors.primaryColor
+//                               : Colors.grey,
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             const SizedBox(
+//               height: 5,
+//             ),
+//             Center(
+//               child: InkWell(
+//                 onTap: () {
+
+//                          if(_otpCode.value.length<6){
+//                           snackBarCalledSignup(context, "enter valid otp");
+//                          }else{
+//                           otpCount.value++;
+//                           linkAccount(_otpCode.value, fid, context,fipDetails);
+//                          }
+                      
+//                       },
+//                 child: Obx(
+//                   () => _isOtpValid.value ? getColorVerify() : getColorVerify(),
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget getColorVerify() {
+//     return Container(
+//       width: MediaQuery.of(context).size.width / 1.1,
+//       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+//       decoration: BoxDecoration(
+//         color: _isOtpValid.value
+//             ? AppColors.primaryColor
+//             : Colors.grey, // Button color based on validity
+//         borderRadius: BorderRadius.circular(12),
+//       ),
+//       child: Center(
+//         child: Text(
+//           "Verify",
+//           style: FontManager().getTextStyle(
+//             context,
+//             lWeight: FontWeight.bold,
+//             fontSize: 18,
+//             color: AppColors.bg5,
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+
+// void reSendOtp(fipDetails,fid)async{
+
+//       otpCount.value=0;
+//       List<FinvuDiscoveredAccountInfo> bankData = listOfAccountAdded[fid] ?? [];
+//       linkingReference =await finvuManager.linkAccounts(fipDetails, bankData);
+//       startOtpTimer();
+//       isOtpWrong.value = false;
+
+// }
+ 
+// void linkAccount( String otp, String fid, BuildContext context,FinvuFIPDetails fipDetails) async {
+//     try {
+//       isOtpWrong.value = false;
+//       FinvuConfirmAccountLinkingInfo data = await finvuManager.confirmAccountLinking(linkingReference, otpController.text.toString().trim());
+//       snackBarCalled(context, "Linked Bank account Successfully...");
+//       Navigator.pop(context);
+//       data.linkedAccounts.forEach((finvu) {
+//         listofLinkedAccount.add(finvu.accountReferenceNumber.toString());
+//       });
+//       //  listOfAccountAdded.containsKey(bankData.fipId)
+//       listOfAccountAdded.remove(fid);
+//       listofLinkedAccount.refresh();
+//       accountLinked.add(fid);
+//       //otpController = TextEditingController();
+//       otpController.clear();
+//       _otpCode.value = "";
+//         accountAdded.clear();
+//       _isOtpValid.value = false;
+//     } catch (e)
+//     {
+     
+//       isOtpWrong.value = true;
+//      if(otpCount.value==2)reSendOtp(fipDetails,fid);
+
+//     }
+//   }
+
+//   Widget getBackUi(
+//       FinvuDiscoveredAccountInfo bankData, FinvuFIPDetails fipDetails) {
+//     String id = bankData.accountReferenceNumber.toString();
+
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(vertical: 3),
+//       child: Container(
+//         width: MediaQuery.of(context).size.width,
+//         child: Row(
+//           children: [
+//             Column(
+//               mainAxisAlignment: MainAxisAlignment.start,
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 formatMaskedAccount(bankData),
+//                 const SizedBox(
+//                   height: 2,
+//                 ),
+//                 Obx(() => listofLinkedAccount.contains(id)
+//                     ? textStyle("Linked", 13, Colorcodes.graphColor2)
+//                     : SizedBox.shrink())
+//               ],
+//             ),
+//             const Spacer(),
+//             checkBoxForAccountLink(bankData, fipDetails, id),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget formatMaskedAccount(FinvuDiscoveredAccountInfo bankData) {
+//     int lenght = bankData.maskedAccountNumber.toString().length;
+//     return Row(
+//       children: [
+//         textStyle(
+//             toUpperCase(bankData.accountType.toLowerCase()) + " Account ", 14),
+//         (bankData.maskedAccountNumber.toString().length > 4)
+//             ? textStyle(
+//                 '•' + bankData.maskedAccountNumber.substring(lenght - 4), 14)
+//             : textStyle('•' + bankData.maskedAccountNumber),
+//       ],
+//     );
+//   }
+
+//   Widget checkBoxForAccountLink(bankData, fipDetails, id) {
+//     return Obx(() => listofLinkedAccount.contains(id)
+//         ? Obx(() => addAccount.value ? getcheckBox(id) : getcheckBox(id))
+//         : Checkbox(
+//             value: accountAdded.contains(bankData.accountReferenceNumber),
+//             onChanged: (b) {
+//               addAccountToMap(
+//                   fipDetails.fipId, bankData.accountReferenceNumber, bankData);
+//             },
+//             activeColor: AppColors.primaryColor,
+//             shape: RoundedRectangleBorder(
+//               borderRadius: BorderRadius.circular(4), // Apply border radius
+//             ),
+//           ));
+//   }
+
+//   Widget textStyle(text,
+//       [double fontsize = 12,
+//       Color c = AppColors.bg1,
+//       FontWeight fontWeight = FontWeight.w500]) {
+//     return Column(
+//       mainAxisAlignment: MainAxisAlignment.start,
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         const SizedBox(
+//           width: 7,
+//         ),
+//         Text(
+//           text.toString(),
+//           style: FontManager().getTextStyle(context,
+//               lWeight: fontWeight, fontSize: fontsize, color: c),
+//           overflow: TextOverflow.ellipsis,
+//         ),
+//       ],
+//     );
+//   }
+
+//   Future<Widget> linkedaccoutnData(bankData) async {
+//     String fipId = bankData.fipId;
+//     FinvuFIPInfo finvuFIPInfo = bankData;
+//     FinvuFIPDetails fipDetails;
+//     List<FinvuDiscoveredAccountInfo> info = [];
+
+//     try {
+//       var fetchFIPDetails = await finvuManager.fetchFIPDetails(fipId);
+
+//       var typeIdentifiers = fetchFIPDetails.typeIdentifiers;
+
+//       List<FinvuTypeIdentifierInfo> finvuTypeIdentifierInfo = [];
+
+//       typeIdentifiers.forEach((e) {
+//         e.identifiers.forEach((ele) {
+//           FinvuTypeIdentifierInfo obj = FinvuTypeIdentifierInfo(
+//             category: ele.category,
+//             type: ele.type,
+//             value: number.value, // dou
+//           );
+//           finvuTypeIdentifierInfo.add(obj);
+//         });
+//       });
+//       fipDetails = FinvuFIPDetails(
+//           fipId: fipId, typeIdentifiers: fetchFIPDetails.typeIdentifiers);
+//       FinvuFIPDetailsList[fipId] = fipDetails;
+//       info = await finvuManager.discoverAccounts(
+//           fipDetails.fipId, finvuFIPInfo.fipFitypes, finvuTypeIdentifierInfo);
+
+//       count.value += info.length;
+//       count.refresh();
+//     } catch (e) {
+//       loopCount++;
+//       return getNoBankAccount();
+//     }
+
+//     return Container(
+//       width: MediaQuery.of(context).size.width,
+//       child: getListOfFinvuBanksAccounts(info, fipDetails),
+//     );
+//   }
+
+//   Widget getBankNameAndImage(FinvuFIPInfo bankData, [bool flag = true]) {
+//     // List<FinvuDiscoveredAccountInfo> bankDataList = listOfAccountAdded[ bankData.fipId] ?? [];
+
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(vertical: 10),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//         crossAxisAlignment: CrossAxisAlignment.center,
+//         children: [
+//           Row(
+//             crossAxisAlignment: CrossAxisAlignment.center,
+//             children: [
+//               Container(
+//                   width: 30,
+//                   height: 30,
+//                   child: Image.network(bankData.productIconUri.toString())),
+//               const SizedBox(
+//                 width: 10,
+//               ),
+//               Container(
+//                   width: MediaQuery.of(context).size.width / 1.7,
+//                   child: textStyle(bankData.productName.toString(), 16,
+//                       AppColors.bg1, FontWeight.bold)),
+//             ],
+//           ),
+//           Obx(() => (!listOfAccountAdded.containsKey(bankData.fipId) || !flag)
+//               ? SizedBox.shrink()
+//               : InkWell(
+//                   onTap: () {
+//                     otpController = TextEditingController(text: "");
+//                     LinkingBank(FinvuFIPDetailsList[bankData.fipId]!,
+//                         bankData.fipId, bankData);
+//                   },
+//                   child: Container(
+//                     decoration: BoxDecoration(
+//                         color: AppColors.primaryColor,
+//                         borderRadius: BorderRadiusDirectional.circular(12)),
+//                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+//                     child: Text(
+//                       "Link now".toString(),
+//                       style: TextStyle(fontSize: 12, color: Colorcodes.white),
+//                     ),
+//                   )
+//                   // ),
+//                   )),
+//         ],
+//       ),
+//     );
+//   }
+
+//   void addAccountToMap(String fipId, String accountReferenceNumber,
+//       FinvuDiscoveredAccountInfo bankData) {
+//     bool flag = accountAdded.contains(accountReferenceNumber);
+
+//     if (flag) {
+//       // If already added, remove from `accountAdded` and `listOfAccountAdded`
+//       accountAdded.remove(accountReferenceNumber);
+
+//       if (listOfAccountAdded.containsKey(fipId)) {
+//         listOfAccountAdded[fipId]!.removeWhere((account) =>
+//             account.accountReferenceNumber == accountReferenceNumber);
+
+//         // If the list is empty, remove the key from the map
+//         if (listOfAccountAdded[fipId]!.isEmpty) {
+//           listOfAccountAdded.remove(fipId);
+//         }
+//       }
+//     } else {
+//       // If not present, add it
+//       accountAdded.add(accountReferenceNumber);
+
+//       if (!listOfAccountAdded.containsKey(fipId)) {
+//         listOfAccountAdded[fipId] = [];
+//       }
+
+//       listOfAccountAdded[fipId]?.add(bankData);
+//     }
+//     // Update the observables
+//     listOfAccountAdded.refresh();
+//     accountAdded.refresh();
+//   }
+
+//   Widget getcheckBox(String fipId) {
+//     return Padding(
+//       padding: const EdgeInsets.only(left: 10.0),
+//       child: Container(
+//         width: 50,
+//         height: 50,
+//         child: Checkbox(
+//             value: seletedAccountIds.contains(fipId),
+//             // checkColor: AppColors.primaryColor,
+//             activeColor: AppColors.primaryColor,
+//             shape: RoundedRectangleBorder(
+//               borderRadius: BorderRadius.circular(4), // Apply border radius
+//             ),
+//             onChanged: (value) {
+//               if (seletedAccountIds.contains(fipId)) {
+//                 seletedAccountIds.remove(fipId);
+//               } else {
+//                 seletedAccountIds.add(fipId);
+//               }
+
+//               addAccount.value = !addAccount.value;
+//             }),
+//       ),
+//     );
+//   }
+
+//   Future<void> getAccountShared() async {
+//     try{
+//     fetchAccountData = await finvuManager.fetchLinkedAccounts();
+//     finvuConsentRequestDetailInfo = await finvuManager.getConsentRequestDetails(handleId.value);
+//     seletedAccountInfomations.clear();
+//     fetchAccountData.forEach((FinvuLinkedAccountDetailsInfo finvuInfo) {
+//       try {
+//         if (seletedAccountIds.contains(finvuInfo.accountReferenceNumber)) {
+//           seletedAccountInfomations.add(finvuInfo);
+//         }
+//       } catch (e) {
+//          print(e);
+//       }
+//     });
+//     }catch(e){
+//         print(e);
+//     }
+//   }
+  
+//   Widget getNoBankAccount()
+//   {
+    
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(horizontal: 2),
+//       child: Column(
+//         mainAxisAlignment: MainAxisAlignment.start,
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//               textNoAccountFound(BankText.text1,16,FontWeight.bold),
+//               textNoAccountFound(BankText.text2,15,FontWeight.w400),
+//               textNoAccountFound(BankText.text3,13),
+//               textNoAccountFound(BankText.text4,13),
+//               textNoAccountFound(BankText.text5,13),
+//         ],
+//       ),
+//     );
+//   }
+
+
+//   Widget textNoAccountFound(text,
+//       [double fontsize = 12,
+//       FontWeight fontWeight = FontWeight.w500,  Color c = AppColors.bg1,]) {
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(vertical: 3),
+//       child: 
+//           Text(
+//             text.toString(),
+//             style: FontManager().getTextStyle(context,
+//                 lWeight: fontWeight, fontSize: fontsize, color: c),
+//             overflow: TextOverflow.visible,
+//       ),
+//     );
+//   }
+
+  
+
+// }
+
+
+import 'dart:convert';
 import 'package:finvu_flutter_sdk/finvu_manager.dart';
 import 'package:finvu_flutter_sdk_core/finvu_discovered_accounts.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_details.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
@@ -18,12 +888,10 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart'
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
-import 'package:get/get.dart';
 
-RxMap<String, List<FinvuDiscoveredAccountInfo>> listOfAccountAdded =
-    <String, List<FinvuDiscoveredAccountInfo>>{}.obs;
-RxMap<String, FinvuFIPDetails> FinvuFIPDetailsList =
-    <String, FinvuFIPDetails>{}.obs;
+// Reactive variables (unchanged)
+RxMap<String, List<FinvuDiscoveredAccountInfo>> listOfAccountAdded = <String, List<FinvuDiscoveredAccountInfo>>{}.obs;
+RxMap<String, FinvuFIPDetails> FinvuFIPDetailsList = <String, FinvuFIPDetails>{}.obs;
 RxMap<String, int> accountCountList = <String, int>{}.obs;
 RxList accountAdded = [].obs;
 RxList accountLinked = [].obs;
@@ -33,22 +901,20 @@ List<FinvuFIPInfo> fipDisOrginal = [];
 RxList isSeletedBankAccout = [].obs;
 RxMap<String, String> bankImageAndid = RxMap();
 RxList<FinvuFIPInfo> listOfBankAccount = <FinvuFIPInfo>[].obs;
-// RxBool getBanks=false.obs;
+RxBool getBanks = false.obs;
 RxBool addBank = false.obs;
 RxBool addCheck = false.obs;
 List<FinvuLinkedAccountDetailsInfo> fetchAccountData = [];
 List<FinvuLinkedAccountDetailsInfo> seletedAccountInfomations = [];
 List<String> seletedAccountIds = [];
-RxBool getBanks = false.obs;
 RxBool addAccount = false.obs;
 RxBool getFetch = false.obs;
 RxBool directFetch = false.obs;
-
-RxInt  otpCount=0.obs;
+RxInt otpCount = 0.obs;
 RxInt loopCount = 0.obs;
 
 class LinkingAccount extends StatefulWidget {
-  List<FinvuFIPInfo> listOfBankAccount;
+  final List<FinvuFIPInfo> listOfBankAccount;
   LinkingAccount({Key? key, required this.listOfBankAccount}) : super(key: key);
 
   @override
@@ -56,10 +922,11 @@ class LinkingAccount extends StatefulWidget {
 }
 
 class _LinkingAccountState extends State<LinkingAccount> {
-  final int _otpCodeLength = 6; // OTP length
-  RxString _otpCode = "".obs; // Captured OTP code
-  RxBool _isOtpValid = false.obs; // Validate OTP length
+  final int _otpCodeLength = 6;
+  RxString _otpCode = "".obs;
+  RxBool _isOtpValid = false.obs;
   TextEditingController otpController = TextEditingController();
+  late double textScale;
 
   @override
   void initState() {
@@ -73,8 +940,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
   }
 
   void getinfo() async {
-    finvuConsentRequestDetailInfo =
-        await finvuManager.getConsentRequestDetails(handleId.value);
+    finvuConsentRequestDetailInfo = await finvuManager.getConsentRequestDetails(handleId.value);
   }
 
   void getData() async {
@@ -86,227 +952,245 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+    textScale = screenWidth / 375;
+
     return Scaffold(
       bottomNavigationBar: BottomBar(),
-      appBar:getAppBar(context),
+      appBar: getAppBar(context),
       body: SafeArea(
         child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 3.0),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                child: Align(
-                  alignment: Alignment.topLeft,
+          width: screenWidth,
+          height: screenHeight,
+          padding: EdgeInsets.symmetric(horizontal: 16 * textScale, vertical: 3 * textScale),
+          child: SingleChildScrollView( // Wrap Column in SingleChildScrollView to prevent overflow
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 6 * textScale),
                   child: Text(
                     "Select accounts to share",
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.bold,
-                        fontSize: 22,
-                        color: AppColors.bg1),
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.bold,
+                      fontSize: 22 * textScale,
+                      color: AppColors.bg1,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              BankInfoUiContainer(),
-              bankAccountList(),
-              const SizedBox(
-                height: 5,
-              ),
-              buttonLinkNow(),
-            ],
+                SizedBox(height: 5 * textScale),
+                BankInfoUiContainer(),
+                bankAccountList(screenWidth, screenHeight),
+                SizedBox(height: 10 * textScale),
+                buttonLinkNow(screenWidth),
+                SizedBox(height: 10 * textScale), // Extra padding to ensure button visibility
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
+  Widget buttonLinkNow(double screenWidth) {
+    return Obx(() {
+      // Debugging: Print state to verify conditions
+      print("buttonLinkNow: loopCount=${loopCount.value}, listLength=${widget.listOfBankAccount.length}, count=${count.value}, accountAdded=${accountAdded.length}");
 
-Widget buttonLinkNow(){
-   return   InkWell(
-                  onTap: () {
-                    if(loopCount.value!=widget.listOfBankAccount.length)return;
-                    if(count==0)return;
-                   
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return accountLinkedUi();
-                      },
-                    );
-                  },
-                  child: Obx(()=>(loopCount.value!=widget.listOfBankAccount.length)? SizedBox.shrink():  count.value==0 ?  SizedBox.shrink() :accountAdded.isNotEmpty? getButton(context, "Authorise",AppColors.bg3,Colorcodes.white):getButton(context, "Authorise")));
-}
-  
- 
-  Widget accountLinkedUi() {
+      // Simplified condition: Show button if there are linked accounts or all banks are processed
+      bool shouldShowButton = (accountLinked.isNotEmpty || loopCount.value == widget.listOfBankAccount.length) && count.value > 0;
+
+      if (!shouldShowButton) {
+        return SizedBox(height: 0);
+      }
+
+      return InkWell(
+        onTap: () {
+          if (accountAdded.isNotEmpty) {
+           
+            return;
+          }
+          showModalBottomSheet(
+            context: context,
+            builder: (context) => accountLinkedUi(screenWidth),
+          );
+        },
+        child: Container(
+          width: screenWidth * 0.9,
+          padding: EdgeInsets.symmetric(vertical: 14 * textScale),
+          margin: EdgeInsets.only(bottom: 10 * textScale),
+          decoration: BoxDecoration(
+            color: accountAdded.isNotEmpty ? AppColors.bg3 : AppColors.primaryColor,
+            borderRadius: BorderRadius.circular(12 * textScale),
+          ),
+          child: Center(
+            child: Text(
+              "Authorise",
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.bold,
+                fontSize: 18 * textScale,
+                color: Colorcodes.white,
+              ),
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget accountLinkedUi(double screenWidth) {
     return Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height / 3,
-        child:accountAdded.isNotEmpty
-            ? getLinkNow( BankText.linkNow,BankText.linkNowproceeding,"Link Now"):
-            seletedAccountIds.isEmpty?getLinkNow( BankText.checkNow,BankText.checkNowproceeding,"check Now")
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text("${seletedAccountIds.length} Bank Accounts are shared",
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.bold,
-                          fontSize: 14,
-                          color: Colorcodes.black)),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  InkWell(
+      width: screenWidth,
+      height: MediaQuery.of(context).size.height / 3,
+      padding: EdgeInsets.all(12 * textScale),
+      child: accountAdded.isNotEmpty
+          ? getLinkNow(BankText.linkNow, BankText.linkNowproceeding, "Link Now", screenWidth)
+          : seletedAccountIds.isEmpty
+              ? getLinkNow(BankText.checkNow, BankText.checkNowproceeding, "check Now", screenWidth)
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "${seletedAccountIds.length} Bank Accounts are shared",
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.bold,
+                        fontSize: 14 * textScale,
+                        color: Colorcodes.black,
+                      ),
+                    ),
+                    SizedBox(height: 20 * textScale),
+                    InkWell(
                       onTap: () async {
                         directFetch.value = false;
                         await getAccountShared();
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => Access(),
-                          ),
+                          MaterialPageRoute(builder: (context) => Access()),
                         );
                       },
-                      child: getButton(context, "Continue")),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  textStyle("We will fetch this account transactions", 8),
-                ],
-              ));
+                      child: getButton(context, "Continue", screenWidth),
+                    ),
+                    SizedBox(height: 20 * textScale),
+                    textStyle("We will fetch this account transactions", 8 * textScale),
+                  ],
+                ),
+    );
   }
 
-
-
-
-  Widget getLinkNow(String title,String des,String btnText)
-  {
+  Widget getLinkNow(String title, String des, String btnText, double screenWidth) {
     return Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  textStyle(title, 14),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width / 1.1,
-                    // padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Center(
-                      child: Text(des,
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w600,
-                            fontSize: 14,
-                            color: Colorcodes.red),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Icon(
-                    Icons.warning_outlined,
-                    color: Colorcodes.red,
-                    size: 30,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-               btnText== "check Now"?SizedBox.shrink(): InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: getButton(context, btnText)),
-                   SizedBox(
-                    height:  btnText== "check Now"? 0: 20,
-                  ),
-                ],
-              );
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(height: 20 * textScale),
+        textStyle(title, 14 * textScale),
+        SizedBox(height: 20 * textScale),
+        Container(
+          width: screenWidth * 0.9,
+          child: Center(
+            child: Text(
+              des,
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.w600,
+                fontSize: 14 * textScale,
+                color: Colorcodes.red,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        SizedBox(height: 10 * textScale),
+        Icon(Icons.warning_outlined, color: Colorcodes.red, size: 30 * textScale),
+        SizedBox(height: 10 * textScale),
+        btnText == "check Now"
+            ? SizedBox(height: 0)
+            : InkWell(
+                onTap: () => Navigator.pop(context),
+                child: getButton(context, btnText, screenWidth),
+              ),
+        SizedBox(height: btnText == "check Now" ? 0 : 20 * textScale),
+      ],
+    );
   }
 
   Widget BankInfoUiContainer() {
     return Container(
-      padding: const EdgeInsets.all(12.0),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
+      padding: EdgeInsets.all(12 * textScale),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16 * textScale)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               CircleAvatar(
-                  backgroundColor: AppColors.mt,
-                  child: Icon(
-                    Icons.account_balance_rounded,
-                    size: 25,
-                    color: AppColors.primaryColor,
-                  )),
-              SizedBox(
-                width: 10,
+                backgroundColor: AppColors.mt,
+                radius: 20 * textScale,
+                child: Icon(
+                  Icons.account_balance_rounded,
+                  size: 25 * textScale,
+                  color: AppColors.primaryColor,
+                ),
               ),
+              SizedBox(width: 10 * textScale),
               Column(
-                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  //textStyle("Bank Accounts", 16),
                   Text(
                     "Bank Accounts",
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: AppColors.bg1),
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.bold,
+                      fontSize: 16 * textScale,
+                      color: AppColors.bg1,
+                    ),
                   ),
-                  Obx(() => textStyle("${count.value} accounts discovered", 12,
-                      Colorcodes.graphColor1)),
+                  Obx(() => textStyle("${count.value} accounts discovered", 12 * textScale, Colorcodes.graphColor1)),
                 ],
               ),
             ],
           ),
-          //const Divider(thickness: 1, height: 20),
-          const SizedBox(height: 10),
-          textStyle("Select atleast 1 Account to share from", 14),
-          const SizedBox(height: 10),
+          SizedBox(height: 10 * textScale),
+          textStyle("Select at least 1 Account to share from", 14 * textScale),
+          SizedBox(height: 10 * textScale),
         ],
       ),
     );
   }
 
-  Widget bankAccountList() {
-    double height = MediaQuery.of(context).size.height;
+  Widget bankAccountList(double screenWidth, double screenHeight) {
     count.value = 0;
-    loopCount.value=0;
+    loopCount.value = 0;
     return Container(
-      //padding: const EdgeInsets.fromLTRB(14, 5, 16, 5),
-      //here we can change height
-      width: MediaQuery.of(context).size.width / 1.1,
-      height: height / 1.7,
-      // color: AppColors.bg3,
+      width: screenWidth * 0.9,
+      height: screenHeight * 0.6,
       child: SingleChildScrollView(
         child: Column(
           children: widget.listOfBankAccount.map((account) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Display bank name and image before calling linkedaccoutnData
                 getBankNameAndImage(account),
                 FutureBuilder<Widget>(
                   future: linkedaccoutnData(account),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator(color:AppColors.primaryColor,strokeWidth: BorderSide.strokeAlignOutside,); // Show loading indicator
+                      return Padding(
+                        padding: EdgeInsets.all(8 * textScale),
+                        child: CircularProgressIndicator(
+                          color: AppColors.primaryColor,
+                          strokeWidth: 2 * textScale,
+                        ),
+                      );
                     } else if (snapshot.hasError) {
                       return Text("Error: ${snapshot.error}");
                     } else {
-                      return snapshot.data ?? SizedBox.shrink(); // Return the widget from Future
+                      return snapshot.data ?? SizedBox(height: 0);
                     }
                   },
                 ),
@@ -318,192 +1202,145 @@ Widget buttonLinkNow(){
     );
   }
 
-  Widget getListOfFinvuBanksAccounts(
-      List<FinvuDiscoveredAccountInfo> account, FinvuFIPDetails fipDetails) {
-   loopCount.value++;
+  Widget getListOfFinvuBanksAccounts(List<FinvuDiscoveredAccountInfo> account, FinvuFIPDetails fipDetails) {
+    loopCount.value++;
     return account.isEmpty
         ? getNoBankAccount()
-        : Column(
-            children: account
-                .map((bankData) => getBackUi(bankData, fipDetails))
-                .toList(),
-          );
+        : Column(children: account.map((bankData) => getBackUi(bankData, fipDetails)).toList());
   }
 
-  void LinkingBank(
-      FinvuFIPDetails fipDetails, String fipId, FinvuFIPInfo info) async {
+  void LinkingBank(FinvuFIPDetails fipDetails, String fipId, FinvuFIPInfo info) async {
     try {
-      List<FinvuDiscoveredAccountInfo> bankData =
-          listOfAccountAdded[fipId] ?? [];
+      List<FinvuDiscoveredAccountInfo> bankData = listOfAccountAdded[fipId] ?? [];
       if (bankData.isEmpty) {
-        snackBarCalled(
-            context,
-            "The account has been successfully added for linking.",
-            Colorcodes.red);
+        snackBarCalled(context, "The account has been successfully added for linking.", Colorcodes.red);
         return;
       }
-         linkingReference = await finvuManager.linkAccounts(fipDetails, bankData);
-         isOtpWrong.value = false;
-          startOtpTimer();
+      linkingReference = await finvuManager.linkAccounts(fipDetails, bankData);
+      isOtpWrong.value = false;
+      startOtpTimer();
       showModalBottomSheet(
         context: context,
         isScrollControlled: true,
-        builder: (BuildContext context) {
-          return verify(fipId, fipDetails, info, context);
-        },
+        builder: (BuildContext context) => verify(fipId, fipDetails, info, context),
       );
     } catch (e) {
       snackBarCalledSignup(context, "Maximum Retries Exceeded. Please try again after sometime.");
     }
   }
 
-  Widget verify(fid, FinvuFIPDetails fipDetails,
-      FinvuFIPInfo info, context) {
+  Widget verify(String fid, FinvuFIPDetails fipDetails, FinvuFIPInfo info, BuildContext context) {
     return AnimatedPadding(
-      padding: MediaQuery.of(context)
-          .viewInsets, // Adjusts padding when keyboard appears
+      padding: MediaQuery.of(context).viewInsets,
       duration: const Duration(milliseconds: 100),
       curve: Curves.easeOut,
       child: Container(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height / 2.5,
-        decoration: const BoxDecoration(
+        height: MediaQuery.of(context).size.height * 0.4,
+        decoration: BoxDecoration(
           color: AppColors.mt,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20 * textScale)),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              padding: EdgeInsets.symmetric(vertical: 10 * textScale),
               child: Center(
-                  child: textStyle("Securely authorize each selected account",
-                      14, Colorcodes.black, FontWeight.bold)),
+                child: textStyle("Securely authorize each selected account", 14 * textScale, Colorcodes.black, FontWeight.bold),
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(horizontal: 20 * textScale),
               child: getBankNameAndImage(info, false),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: textStyle(
-                  "OTP Verification", 20, AppColors.bg1, FontWeight.bold),
+              padding: EdgeInsets.symmetric(vertical: 10 * textScale, horizontal: 20 * textScale),
+              child: textStyle("OTP Verification", 20 * textScale, AppColors.bg1, FontWeight.bold),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
-              child: textStyle("Enter the OTP sent to ${number.value}", 15,
-                  AppColors.bg1, FontWeight.w400),
+              padding: EdgeInsets.symmetric(vertical: 4 * textScale, horizontal: 20 * textScale),
+              child: textStyle("Enter the OTP sent to ${number.value}", 15 * textScale, AppColors.bg1, FontWeight.w400),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            
-            
+            SizedBox(height: 10 * textScale),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(horizontal: 20 * textScale),
               child: TextField(
                 controller: otpController,
                 keyboardType: TextInputType.number,
-                onSubmitted: (value)
-                {
-                    otpCount.value++;
-                    linkAccount(_otpCode.value, fid, context,fipDetails);
+                onSubmitted: (value) {
+                  otpCount.value++;
+                  linkAccount(_otpCode.value, fid, context, fipDetails);
                 },
                 decoration: InputDecoration(
                   hintText: 'Enter OTP',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.black12)),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12 * textScale)),
                 ),
                 onChanged: (value) {
                   _otpCode.value = value;
-                  _isOtpValid.value = value.toString().length>4; 
+                  _isOtpValid.value = value.length > 4;
                   isOtpWrong.value = false;
-
                 },
               ),
             ),
-             Obx(
-              () => isOtpWrong.value
-                  ? Padding(
-                      padding: const EdgeInsets.fromLTRB(40, 0, 0, 5),
-                      child: Text(
-                        "Incorrect OTP entered",
-                        style: FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.w300,
-                          fontSize: 10,
-                          color: Colors.red,
-                        ),
+            Obx(() => isOtpWrong.value
+                ? Padding(
+                    padding: EdgeInsets.fromLTRB(40 * textScale, 0, 0, 5 * textScale),
+                    child: Text(
+                      "Incorrect OTP entered",
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w300,
+                        fontSize: 10 * textScale,
+                        color: Colors.red,
                       ),
-                    )
-                  : SizedBox.shrink(), // Empty widget when OTP is not wrong
-            ),
+                    ),
+                  )
+                : SizedBox(height: 0)),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 4, 0, 10),
+              padding: EdgeInsets.fromLTRB(0, 4 * textScale, 0, 10 * textScale),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(right: 5),
+                    padding: EdgeInsets.only(right: 5 * textScale),
                     child: Text(
                       "Didn't you receive the OTP?  ",
                       style: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.w200,
-                        fontSize: 12,
+                        fontSize: 12 * textScale,
                         color: AppColors.bg3,
                       ),
                     ),
                   ),
-                   Obx(
-                    () => GestureDetector(
-                      onTap: canResendOtp.value
-                          ? ()async
-                          {
-                              reSendOtp(fipDetails,fid);
-                          }
-                          : null,
-                      child: Text(
-                        canResendOtp.value
-                            ? "Resend OTP"
-                            : "Resend in ${otpCountdown.value} seconds",
-                        style: FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.w400,
-                          fontSize: 12,
-                          color: canResendOtp.value
-                              ? AppColors.primaryColor
-                              : Colors.grey,
+                  Obx(() => GestureDetector(
+                        onTap: canResendOtp.value ? () async => reSendOtp(fipDetails, fid) : null,
+                        child: Text(
+                          canResendOtp.value ? "Resend OTP" : "Resend in ${otpCountdown.value} seconds",
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight.w400,
+                            fontSize: 12 * textScale,
+                            color: canResendOtp.value ? AppColors.primaryColor : Colors.grey,
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
+                      )),
                 ],
               ),
             ),
-            const SizedBox(
-              height: 5,
-            ),
+            SizedBox(height: 5 * textScale),
             Center(
               child: InkWell(
                 onTap: () {
-
-                         if(_otpCode.value.length<6){
-                          snackBarCalledSignup(context, "enter valid otp");
-                         }else{
-                          otpCount.value++;
-                          linkAccount(_otpCode.value, fid, context,fipDetails);
-                         }
-                      
-                      },
-                child: Obx(
-                  () => _isOtpValid.value ? getColorVerify() : getColorVerify(),
-                ),
+                  if (_otpCode.value.length < 6) {
+                    snackBarCalledSignup(context, "enter valid otp");
+                  } else {
+                    otpCount.value++;
+                    linkAccount(_otpCode.value, fid, context, fipDetails);
+                  }
+                },
+                child: Obx(() => getColorVerify()),
               ),
             ),
           ],
@@ -514,13 +1351,11 @@ Widget buttonLinkNow(){
 
   Widget getColorVerify() {
     return Container(
-      width: MediaQuery.of(context).size.width / 1.1,
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+      width: MediaQuery.of(context).size.width * 0.9,
+      padding: EdgeInsets.symmetric(horizontal: 10 * textScale, vertical: 14 * textScale),
       decoration: BoxDecoration(
-        color: _isOtpValid.value
-            ? AppColors.primaryColor
-            : Colors.grey, // Button color based on validity
-        borderRadius: BorderRadius.circular(12),
+        color: _isOtpValid.value ? AppColors.primaryColor : Colors.grey,
+        borderRadius: BorderRadius.circular(12 * textScale),
       ),
       child: Center(
         child: Text(
@@ -528,7 +1363,7 @@ Widget buttonLinkNow(){
           style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.bold,
-            fontSize: 18,
+            fontSize: 18 * textScale,
             color: AppColors.bg5,
           ),
         ),
@@ -536,68 +1371,58 @@ Widget buttonLinkNow(){
     );
   }
 
+  void reSendOtp(fipDetails, fid) async {
+    otpCount.value = 0;
+    List<FinvuDiscoveredAccountInfo> bankData = listOfAccountAdded[fid] ?? [];
+    linkingReference = await finvuManager.linkAccounts(fipDetails, bankData);
+    startOtpTimer();
+    isOtpWrong.value = false;
+  }
 
-void reSendOtp(fipDetails,fid)async{
-
-      otpCount.value=0;
-      List<FinvuDiscoveredAccountInfo> bankData = listOfAccountAdded[fid] ?? [];
-      linkingReference =await finvuManager.linkAccounts(fipDetails, bankData);
-      startOtpTimer();
-      isOtpWrong.value = false;
-
-}
- 
-void linkAccount( String otp, String fid, BuildContext context,FinvuFIPDetails fipDetails) async {
+  void linkAccount(String otp, String fid, BuildContext context, FinvuFIPDetails fipDetails) async {
     try {
       isOtpWrong.value = false;
-      FinvuConfirmAccountLinkingInfo data = await finvuManager.confirmAccountLinking(linkingReference, otpController.text.toString().trim());
+      FinvuConfirmAccountLinkingInfo data = await finvuManager.confirmAccountLinking(linkingReference, otpController.text.trim());
       snackBarCalled(context, "Linked Bank account Successfully...");
       Navigator.pop(context);
       data.linkedAccounts.forEach((finvu) {
         listofLinkedAccount.add(finvu.accountReferenceNumber.toString());
       });
-      //  listOfAccountAdded.containsKey(bankData.fipId)
       listOfAccountAdded.remove(fid);
       listofLinkedAccount.refresh();
       accountLinked.add(fid);
-     
       otpController.clear();
       _otpCode.value = "";
-        accountAdded.clear();
+      accountAdded.clear();
       _isOtpValid.value = false;
-    } catch (e)
-    {
-     
+      count.value=0;
+      print("After linking: loopCount=${loopCount.value}, count=${count.value}, accountAdded=${accountAdded.length}, accountLinked=${accountLinked.length}");
+      // Force rebuild after linking
+    } catch (e) {
       isOtpWrong.value = true;
-     if(otpCount.value==2)reSendOtp(fipDetails,fid);
-
+      if (otpCount.value == 2) reSendOtp(fipDetails, fid);
     }
   }
 
-  Widget getBackUi(
-      FinvuDiscoveredAccountInfo bankData, FinvuFIPDetails fipDetails) {
+  Widget getBackUi(FinvuDiscoveredAccountInfo bankData, FinvuFIPDetails fipDetails) {
     String id = bankData.accountReferenceNumber.toString();
-
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
+      padding: EdgeInsets.symmetric(vertical: 3 * textScale),
       child: Container(
         width: MediaQuery.of(context).size.width,
         child: Row(
           children: [
             Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 formatMaskedAccount(bankData),
-                const SizedBox(
-                  height: 2,
-                ),
+                SizedBox(height: 2 * textScale),
                 Obx(() => listofLinkedAccount.contains(id)
-                    ? textStyle("Linked", 13, Colorcodes.graphColor2)
-                    : SizedBox.shrink())
+                    ? textStyle("Linked", 13 * textScale, Colorcodes.graphColor2)
+                    : SizedBox(height: 0)),
               ],
             ),
-            const Spacer(),
+            Spacer(),
             checkBoxForAccountLink(bankData, fipDetails, id),
           ],
         ),
@@ -606,15 +1431,13 @@ void linkAccount( String otp, String fid, BuildContext context,FinvuFIPDetails f
   }
 
   Widget formatMaskedAccount(FinvuDiscoveredAccountInfo bankData) {
-    int lenght = bankData.maskedAccountNumber.toString().length;
+    int length = bankData.maskedAccountNumber.toString().length;
     return Row(
       children: [
-        textStyle(
-            toUpperCase(bankData.accountType.toLowerCase()) + " Account ", 14),
-        (bankData.maskedAccountNumber.toString().length > 4)
-            ? textStyle(
-                '•' + bankData.maskedAccountNumber.substring(lenght - 4), 14)
-            : textStyle('•' + bankData.maskedAccountNumber),
+        textStyle("${toUpperCase(bankData.accountType.toLowerCase())} Account ", 14 * textScale),
+        (length > 4)
+            ? textStyle('•${bankData.maskedAccountNumber.substring(length - 4)}', 14 * textScale)
+            : textStyle('•${bankData.maskedAccountNumber}', 14 * textScale),
       ],
     );
   }
@@ -624,32 +1447,20 @@ void linkAccount( String otp, String fid, BuildContext context,FinvuFIPDetails f
         ? Obx(() => addAccount.value ? getcheckBox(id) : getcheckBox(id))
         : Checkbox(
             value: accountAdded.contains(bankData.accountReferenceNumber),
-            onChanged: (b) {
-              addAccountToMap(
-                  fipDetails.fipId, bankData.accountReferenceNumber, bankData);
-            },
+            onChanged: (b) => addAccountToMap(fipDetails.fipId, bankData.accountReferenceNumber, bankData),
             activeColor: AppColors.primaryColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4), // Apply border radius
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4 * textScale)),
           ));
   }
 
-  Widget textStyle(text,
-      [double fontsize = 12,
-      Color c = AppColors.bg1,
-      FontWeight fontWeight = FontWeight.w500]) {
+  Widget textStyle(String text, double fontsize, [Color c = AppColors.bg1, FontWeight fontWeight = FontWeight.w500]) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(
-          width: 7,
-        ),
+        SizedBox(width: 7),
         Text(
-          text.toString(),
-          style: FontManager().getTextStyle(context,
-              lWeight: fontWeight, fontSize: fontsize, color: c),
+          text,
+          style: FontManager().getTextStyle(context, lWeight: fontWeight, fontSize: fontsize, color: c),
           overflow: TextOverflow.ellipsis,
         ),
       ],
@@ -661,37 +1472,25 @@ void linkAccount( String otp, String fid, BuildContext context,FinvuFIPDetails f
     FinvuFIPInfo finvuFIPInfo = bankData;
     FinvuFIPDetails fipDetails;
     List<FinvuDiscoveredAccountInfo> info = [];
-
     try {
       var fetchFIPDetails = await finvuManager.fetchFIPDetails(fipId);
-
       var typeIdentifiers = fetchFIPDetails.typeIdentifiers;
-
       List<FinvuTypeIdentifierInfo> finvuTypeIdentifierInfo = [];
-
       typeIdentifiers.forEach((e) {
         e.identifiers.forEach((ele) {
-          FinvuTypeIdentifierInfo obj = FinvuTypeIdentifierInfo(
-            category: ele.category,
-            type: ele.type,
-            value: number.value, // dou
-          );
+          FinvuTypeIdentifierInfo obj = FinvuTypeIdentifierInfo(category: ele.category, type: ele.type, value: number.value);
           finvuTypeIdentifierInfo.add(obj);
         });
       });
-      fipDetails = FinvuFIPDetails(
-          fipId: fipId, typeIdentifiers: fetchFIPDetails.typeIdentifiers);
+      fipDetails = FinvuFIPDetails(fipId: fipId, typeIdentifiers: fetchFIPDetails.typeIdentifiers);
       FinvuFIPDetailsList[fipId] = fipDetails;
-      info = await finvuManager.discoverAccounts(
-          fipDetails.fipId, finvuFIPInfo.fipFitypes, finvuTypeIdentifierInfo);
-
+      info = await finvuManager.discoverAccounts(fipDetails.fipId, finvuFIPInfo.fipFitypes, finvuTypeIdentifierInfo);
       count.value += info.length;
        count.refresh();
     } catch (e) {
       loopCount++;
       return getNoBankAccount();
     }
-
     return Container(
       width: MediaQuery.of(context).size.width,
       child: getListOfFinvuBanksAccounts(info, fipDetails),
@@ -699,170 +1498,155 @@ void linkAccount( String otp, String fid, BuildContext context,FinvuFIPDetails f
   }
 
   Widget getBankNameAndImage(FinvuFIPInfo bankData, [bool flag = true]) {
-    // List<FinvuDiscoveredAccountInfo> bankDataList = listOfAccountAdded[ bankData.fipId] ?? [];
-
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: EdgeInsets.symmetric(vertical: 10 * textScale),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                  width: 30,
-                  height: 30,
-                  child: Image.network(bankData.productIconUri.toString())),
-              const SizedBox(
-                width: 10,
+                width: 30 * textScale,
+                height: 30 * textScale,
+                child: Image.network(bankData.productIconUri.toString(), fit: BoxFit.cover),
               ),
+              SizedBox(width: 10 * textScale),
               Container(
-                  width: MediaQuery.of(context).size.width / 1.7,
-                  child: textStyle(bankData.productName.toString(), 16,
-                      AppColors.bg1, FontWeight.bold)),
+                width: MediaQuery.of(context).size.width * 0.6,
+                child: textStyle(bankData.productName.toString(), 16 * textScale, AppColors.bg1, FontWeight.bold),
+              ),
             ],
           ),
           Obx(() => (!listOfAccountAdded.containsKey(bankData.fipId) || !flag)
-              ? SizedBox.shrink()
+              ? SizedBox(width: 0)
               : InkWell(
                   onTap: () {
-                    otpController = TextEditingController(text: "");
-                    count.value = 0;
-                    LinkingBank(FinvuFIPDetailsList[bankData.fipId]!,
-                        bankData.fipId, bankData);
+                    otpController = TextEditingController();
+                    count.value=0;
+                    LinkingBank(FinvuFIPDetailsList[bankData.fipId]!, bankData.fipId, bankData);
                   },
                   child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10 * textScale, vertical: 3 * textScale),
                     decoration: BoxDecoration(
-                        color: AppColors.primaryColor,
-                        borderRadius: BorderRadiusDirectional.circular(12)),
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                    child: Text(
-                      "Link now".toString(),
-                      style: TextStyle(fontSize: 12, color: Colorcodes.white),
+                      color: AppColors.primaryColor,
+                      borderRadius: BorderRadius.circular(12 * textScale),
                     ),
-                  )
-                  // ),
-                  )),
+                    child: Text(
+                      "Link now",
+                      style: TextStyle(fontSize: 12 * textScale, color: Colorcodes.white),
+                    ),
+                  ),
+                )),
         ],
       ),
     );
   }
 
-  void addAccountToMap(String fipId, String accountReferenceNumber,
-      FinvuDiscoveredAccountInfo bankData) {
+  void addAccountToMap(String fipId, String accountReferenceNumber, FinvuDiscoveredAccountInfo bankData) {
     bool flag = accountAdded.contains(accountReferenceNumber);
-
     if (flag) {
-      // If already added, remove from `accountAdded` and `listOfAccountAdded`
       accountAdded.remove(accountReferenceNumber);
-
       if (listOfAccountAdded.containsKey(fipId)) {
-        listOfAccountAdded[fipId]!.removeWhere((account) =>
-            account.accountReferenceNumber == accountReferenceNumber);
-
-        // If the list is empty, remove the key from the map
-        if (listOfAccountAdded[fipId]!.isEmpty) {
-          listOfAccountAdded.remove(fipId);
-        }
+        listOfAccountAdded[fipId]!.removeWhere((account) => account.accountReferenceNumber == accountReferenceNumber);
+        if (listOfAccountAdded[fipId]!.isEmpty) listOfAccountAdded.remove(fipId);
       }
     } else {
-      // If not present, add it
       accountAdded.add(accountReferenceNumber);
-
-      if (!listOfAccountAdded.containsKey(fipId)) {
-        listOfAccountAdded[fipId] = [];
-      }
-
+      if (!listOfAccountAdded.containsKey(fipId)) listOfAccountAdded[fipId] = [];
       listOfAccountAdded[fipId]?.add(bankData);
     }
-    // Update the observables
     listOfAccountAdded.refresh();
     accountAdded.refresh();
   }
 
   Widget getcheckBox(String fipId) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10.0),
+      padding: EdgeInsets.only(left: 10 * textScale),
       child: Container(
-        width: 50,
-        height: 50,
+        width: 50 * textScale,
+        height: 50 * textScale,
         child: Checkbox(
-            value: seletedAccountIds.contains(fipId),
-            // checkColor: AppColors.primaryColor,
-            activeColor: AppColors.primaryColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4), // Apply border radius
-            ),
-            onChanged: (value) {
-              if (seletedAccountIds.contains(fipId)) {
-                seletedAccountIds.remove(fipId);
-              } else {
-                seletedAccountIds.add(fipId);
-              }
-
-              addAccount.value = !addAccount.value;
-            }),
+          value: seletedAccountIds.contains(fipId),
+          activeColor: AppColors.primaryColor,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4 * textScale)),
+          onChanged: (value) {
+            if (seletedAccountIds.contains(fipId)) {
+              seletedAccountIds.remove(fipId);
+            } else {
+              seletedAccountIds.add(fipId);
+            }
+            addAccount.value = !addAccount.value;
+          },
+        ),
       ),
     );
   }
 
   Future<void> getAccountShared() async {
-    try{
-    fetchAccountData = await finvuManager.fetchLinkedAccounts();
-    finvuConsentRequestDetailInfo = await finvuManager.getConsentRequestDetails(handleId.value);
-    seletedAccountInfomations.clear();
-    fetchAccountData.forEach((FinvuLinkedAccountDetailsInfo finvuInfo) {
-      try {
-        if (seletedAccountIds.contains(finvuInfo.accountReferenceNumber)) {
-          seletedAccountInfomations.add(finvuInfo);
+    try {
+      fetchAccountData = await finvuManager.fetchLinkedAccounts();
+      finvuConsentRequestDetailInfo = await finvuManager.getConsentRequestDetails(handleId.value);
+      seletedAccountInfomations.clear();
+      fetchAccountData.forEach((FinvuLinkedAccountDetailsInfo finvuInfo) {
+        try {
+          if (seletedAccountIds.contains(finvuInfo.accountReferenceNumber)) {
+            seletedAccountInfomations.add(finvuInfo);
+          }
+        } catch (e) {
+          print(e);
         }
-      } catch (e) {
-         print(e);
-      }
-    });
-    }catch(e){
-        print(e);
+      });
+    } catch (e) {
+      print(e);
     }
   }
-  
-  Widget getNoBankAccount()
-  {
-    
+
+  Widget getNoBankAccount() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 2),
+      padding: EdgeInsets.symmetric(horizontal: 2 * textScale),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-              textNoAccountFound(BankText.text1,16,FontWeight.bold),
-              textNoAccountFound(BankText.text2,15,FontWeight.w400),
-              textNoAccountFound(BankText.text3,13),
-              textNoAccountFound(BankText.text4,13),
-              textNoAccountFound(BankText.text5,13),
+          textNoAccountFound(BankText.text1, 16 * textScale, FontWeight.bold),
+          textNoAccountFound(BankText.text2, 15 * textScale, FontWeight.w400),
+          textNoAccountFound(BankText.text3, 13 * textScale),
+          textNoAccountFound(BankText.text4, 13 * textScale),
+          textNoAccountFound(BankText.text5, 13 * textScale),
         ],
       ),
     );
   }
 
-
-  Widget textNoAccountFound(text,
-      [double fontsize = 12,
-      FontWeight fontWeight = FontWeight.w500,  Color c = AppColors.bg1,]) {
+  Widget textNoAccountFound(String text, double fontsize, [FontWeight fontWeight = FontWeight.w500, Color c = AppColors.bg1]) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
-      child: 
-          Text(
-            text.toString(),
-            style: FontManager().getTextStyle(context,
-                lWeight: fontWeight, fontSize: fontsize, color: c),
-            overflow: TextOverflow.visible,
+      padding: EdgeInsets.symmetric(vertical: 3 * textScale),
+      child: Text(
+        text,
+        style: FontManager().getTextStyle(context, lWeight: fontWeight, fontSize: fontsize, color: c),
+        overflow: TextOverflow.visible,
       ),
     );
   }
 
-  
-
+  Widget getButton(BuildContext context, String text, double screenWidth) {
+    return Container(
+      width: screenWidth * 0.9,
+      padding: EdgeInsets.symmetric(vertical: 14 * textScale),
+      decoration: BoxDecoration(
+        color: AppColors.primaryColor,
+        borderRadius: BorderRadius.circular(12 * textScale),
+      ),
+      child: Center(
+        child: Text(
+          text,
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.bold,
+            fontSize: 18 * textScale,
+            color: Colorcodes.white,
+          ),
+        ),
+      ),
+    );
+  }
 }
-
-

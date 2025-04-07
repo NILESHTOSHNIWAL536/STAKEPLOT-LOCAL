@@ -35,14 +35,16 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
   }
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context, ) {
+    print("phone value is :${Phone.value}");
     return Scaffold(
+     
       bottomNavigationBar: BottomNavigations(data: 3),
       backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
+        
         child: Container(
+          
           padding: const EdgeInsets.only(top: 5, left: 16, right: 16),
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
@@ -76,6 +78,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                 fontSize: 10,
                                 color: AppColors.bg1)),
                       ),
+                      
                       Text(Phone.value,
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.w400,
