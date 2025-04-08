@@ -53,33 +53,32 @@ class _UserListScreenState extends State<UserListScreen> {
                     color: AppColors.accentColor),
               ),
               // if (lendAmountRemainders.length + dueAmountRemainders.length >= 2)
-  GestureDetector(
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ShowAllUsersScreen(),
-        ),
-      );
-    },
-    child: Container(
-      height: 30,
-      width: MediaQuery.sizeOf(context).width * 0.12,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: AppColors.button),
-      child: Center(
-        child: Text(
-          'more',
-          style: FontManager().getTextStyle(context,
-              lWeight: FontWeight.w500,
-              fontSize: 14,
-              color: AppColors.primaryColor),
-        ),
-      ),
-    ),
-  ),
-
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ShowAllUsersScreen(),
+                    ),
+                  );
+                },
+                child: Container(
+                  height: 30,
+                  width: MediaQuery.sizeOf(context).width * 0.12,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: AppColors.button),
+                  child: Center(
+                    child: Text(
+                      'more',
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w500,
+                          fontSize: 14,
+                          color: AppColors.primaryColor),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -96,7 +95,7 @@ class _UserListScreenState extends State<UserListScreen> {
               ),
             );
           }
-          return !getlendUsers.value ? getUser() : getUser2();
+          return getUser();
         }),
       ],
     );
@@ -104,16 +103,21 @@ class _UserListScreenState extends State<UserListScreen> {
 
   Widget getUser() {
     return Visibility(
-      visible: lendAmountRemainders.isNotEmpty,
+      visible:
+          lendAmountRemainders.isNotEmpty || dueAmountRemainders.isNotEmpty,
       child: Obx(() {
         return Container(
           width: MediaQuery.of(context).size.width / 1.1,
           padding: const EdgeInsets.symmetric(vertical: 6),
           child: Column(
-            children: lendAmountRemainders
-                .take(2)
-                .map((data) => _buildListTile(context, data, false))
-                .toList(),
+            children: [
+              ...lendAmountRemainders
+                  .take(2)
+                  .map((data) => _buildListTile(context, data, false)),
+              ...dueAmountRemainders
+                  .take(2)
+                  .map((data) => _buildListTile(context, data, true)),
+            ],
           ),
         );
       }),
@@ -232,7 +236,9 @@ Widget _buildListTile(BuildContext context, Map<String, dynamic> data, bool isDu
             Row(
               children: [
                 Text(
-                  (!isDue ? data["name"] : data["name"]) ?? data['userName'] ?? "",
+                  (!isDue ? data["name"] : data["name"]) ??
+                      data['userName'] ??
+                      "",
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.bold,
                       fontSize: 16,
@@ -271,23 +277,27 @@ Widget _buildListTile(BuildContext context, Map<String, dynamic> data, bool isDu
             onTap: () async {
               if((data["isPaid"])){return;}
               if (isDue) {
-                int index = dueAmountRemainders.indexWhere((element) => element['_id'] == data['_id']);
+                int index = dueAmountRemainders
+                    .indexWhere((element) => element['_id'] == data['_id']);
                 if (index != -1) {
-                 
-                   duesPaid(context, index); // API call to settle
+                  duesPaid(context, index); // API call to settle
                   // Update local state to trigger reactivity
-                  dueAmountRemainders[index]['isPaid'] = true; // Mark as requested or settled
+                  dueAmountRemainders[index]['isPaid'] =
+                      true; // Mark as requested or settled
                   dueAmountRemainders[index]['billApproved'] = true;
-                  dueAmountRemainders.refresh(); // Notify outer Obx of the change
+                  dueAmountRemainders
+                      .refresh(); // Notify outer Obx of the change
                 }
               } else {
-                int index = lendAmountRemainders.indexWhere((element) => element['_id'] == data['_id']);
+                int index = lendAmountRemainders
+                    .indexWhere((element) => element['_id'] == data['_id']);
                 if (index != -1) {
                   // For "Remind now", we can update a state if needed (e.g., mark as reminded)
                   // Optionally update lendAmountRemainders[index]['isPaid'] = false;
                   lendAmountRemainders.refresh(); // Notify outer Obx
                 }
               }
+             
               sendNotificationsToDevice(
                 !isDue  ? data['billReceiverId'] : data['owedToId'],
                   context,
@@ -329,4 +339,3 @@ Widget _buildListTile(BuildContext context, Map<String, dynamic> data, bool isDu
     ],
   );
 }
-

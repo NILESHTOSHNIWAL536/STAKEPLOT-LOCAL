@@ -119,7 +119,7 @@ void getAutoMationsTransactionsCustom(date, context,
       : "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date";
 
   var response = await getDataApiCall(urlPath);
- // printData(response);
+  printData(response);
   trasactionsDataDebitWeekly.clear();
 
   List<String> labelsLocal = [];
@@ -139,12 +139,12 @@ void getAutoMationsTransactionsCustom(date, context,
         totalDebitValue.value =
             double.parse((his['data']['totalDebit']).toString());
       } catch (e) {
-      //  print(e);
+        print(e);
       }
-    //  print("Total Debit Value: ${totalDebitValue.value}");
+      print("Total Debit Value: ${totalDebitValue.value}");
       maxYValue.value =
           double.parse((his['data']['maxAmount'] ?? 500.0).toString());
-      // print("Max Y Value: ${maxYValue.value}");
+       print("Max Y Value: ${maxYValue.value}");
 
       if (maxYValue.value == 0) maxYValue.value = 500.0;
 
