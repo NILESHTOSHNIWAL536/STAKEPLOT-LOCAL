@@ -1405,7 +1405,10 @@ class _LinkingAccountState extends State<LinkingAccount> {
   }
 
   Widget getBackUi(FinvuDiscoveredAccountInfo bankData, FinvuFIPDetails fipDetails) {
+
     String id = bankData.accountReferenceNumber.toString();
+    String maskedAccountNumber = bankData.maskedAccountNumber.toString();
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 3 * textScale),
       child: Container(
@@ -1417,13 +1420,13 @@ class _LinkingAccountState extends State<LinkingAccount> {
               children: [
                 formatMaskedAccount(bankData),
                 SizedBox(height: 2 * textScale),
-                Obx(() => listofLinkedAccount.contains(id)
-                    ? textStyle("Linked", 13 * textScale, Colorcodes.graphColor2)
+                Obx(() =>( listofLinkedAccount.contains(id))
+                    ? textStyle(FipIdsConnected.contains(maskedAccountNumber)? "Shared":"Linked", 13 * textScale, Colorcodes.graphColor2)
                     : SizedBox(height: 0)),
               ],
             ),
             Spacer(),
-            checkBoxForAccountLink(bankData, fipDetails, id),
+            checkBoxForAccountLink(bankData, fipDetails, id,maskedAccountNumber),
           ],
         ),
       ),
@@ -1442,15 +1445,19 @@ class _LinkingAccountState extends State<LinkingAccount> {
     );
   }
 
-  Widget checkBoxForAccountLink(bankData, fipDetails, id) {
-    return Obx(() => listofLinkedAccount.contains(id)
+  Widget checkBoxForAccountLink(bankData,FinvuFIPDetails fipDetails, id,String maskedAccountNumber) {
+    return Obx(() =>
+        FipIdsConnected.contains(maskedAccountNumber)? SizedBox.shrink():
+        listofLinkedAccount.contains(id)
         ? Obx(() => addAccount.value ? getcheckBox(id) : getcheckBox(id))
         : Checkbox(
             value: accountAdded.contains(bankData.accountReferenceNumber),
             onChanged: (b) => addAccountToMap(fipDetails.fipId, bankData.accountReferenceNumber, bankData),
             activeColor: AppColors.primaryColor,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4 * textScale)),
-          ));
+          )
+
+        );
   }
 
   Widget textStyle(String text, double fontsize, [Color c = AppColors.bg1, FontWeight fontWeight = FontWeight.w500]) {

@@ -104,7 +104,7 @@ class _TribeSearchState extends State<TribeChats> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      bottomNavigationBar: BottomNavigations(data: sizeRoom ? 3 : 2),
+      // bottomNavigationBar: BottomNavigations(data: sizeRoom ? 3 : 2),
       extendBody: true,
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(

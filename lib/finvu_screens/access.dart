@@ -14,6 +14,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/appbar_widget.d
 import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
+import 'package:flutter_application_code_stakeplot/onboarding_screens/onboarding_screen.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -681,11 +682,10 @@ class _AccessState extends State<Access> {
   
       snackBarCalled(context, "Consent request approved successfully.");
    
-
       FetchTransactionFromFinvuApi(context);
       
     } catch (e) {
-      print(e);
+      skipOrLets.value = "Skip";
       snackBarCalled(context, "An error occurred while approving the consent request.");
     }
     debugPrint('approveConsentRequest');

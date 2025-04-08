@@ -510,10 +510,7 @@ void sendNotificationsToDevice(id, context, msg) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
 
-  print("Sending notification to device with ID: $id");
-  print("Request URL: $urlPath");
-  print("Request Body: ${jsonEncode({'id': id, 'message': msg})}");
-
+   try{
   final response = await http.post(
     Uri.parse('${urlPath}'),
     headers: <String, String>{
@@ -526,9 +523,10 @@ void sendNotificationsToDevice(id, context, msg) async {
     }),
   );
 
-  print("Response Status: ${response.statusCode}");
-  // Optionally, you can print the response body if needed
-  // print("Response Body: ${response.body}");
+  printData(response);
+   }catch(e){
+    print("Error in sendNotificationsToDevice: $e");
+}
 }
 
 void getTopFiveCater() async {

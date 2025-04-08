@@ -17,7 +17,7 @@ void initFinvuManager(BuildContext context) async {
   finvuManager.initialize(
     FinvuConfig(
        finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
-      // finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
+      //  finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
       certificatePins: 
       [
             //  "R6wXZnQsKKyg56qFKQNytvygyr/o4Mkq1VXL5LenBYI=",
@@ -92,6 +92,9 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
    final SharedPreferences pref = await SharedPreferences.getInstance();
    String accessToken=pref.getString("accessToken").toString(); 
 
+   clearStackShared(context);
+   Navigator.pushNamed(context, "/OnboardingScreen"); 
+
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {"Content-Type": "application/json", "Authorization": "$accessToken",},
@@ -111,10 +114,11 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
       sessionId.value=true;
      
     }
-  }catch(e){}
+  }catch(e){
+      print("error in FetchTransactionFromFinvuApi");
+  }
 
-   clearStackShared(context);
-   Navigator.pushNamed(context, "/OnboardingScreen"); 
+ 
 
 }
 

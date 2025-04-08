@@ -10,8 +10,13 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransactio
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+
+
+ RxString skipOrLets = "Let\'s Go".obs;
+ RxString mess = "".obs;
 
 class OnboardingScreen extends StatefulWidget {
   @override
@@ -27,6 +32,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   late AnimationController _progressController;
   late Animation<double> _progressAnimation;
   late IO.Socket socket;
+ 
 
   @override
   void initState() {
@@ -62,10 +68,20 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     socket.on(
         "registerUser",
         (data) => {
+
+             if(data['data']['data']=="error" || data['data']['data']=="account-data-not-found")
+             {
+                  skipOrLets.value="Skip",
+             }else{
+                skipOrLets.value="Let\'s Go",
+             },
+                mess.value=data['message'],
               flagToFetchData.value = true,
               fetchedData.value = true,
               fetchedTrsacntionList.clear(),
               fetchedTrsacntionList.addAll(data['data']['data']),
+
+
             });
 
     socket.onConnectError((data) {
@@ -348,7 +364,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                       children: [
                         Container(
                             child: Text(
-                              "Fetched data successfully",
+                              mess.value,
                               style: TextStyle(
                                   fontSize: screenWidth * 0.02), // 4% of screen width
                             ),
@@ -671,8 +687,9 @@ class _OnboardingPageState extends State<OnboardingPage>
             : Padding(
                 padding: const EdgeInsets.only(top: 17, bottom: 30),
                 child: flagToFetchData.value
-                    ? Center(child: getButton(context, 'Let\'s Go'))
-                    : getButton(context, 'Let\'s Go', Colorcodes.greyLight,
+                    ? Center(child: getButton(context, skipOrLets.value,
+                        Colorcodes.greyLight, Colorcodes.black))
+                    : getButton(context, skipOrLets.value, Colorcodes.greyLight,
                         Colorcodes.black),
               ),
       ),
