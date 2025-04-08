@@ -150,9 +150,8 @@ void oneSignalAddClickListener(context)
   try{
   OneSignal.Notifications.addClickListener((event)
   {
-      print("insisde click listener");
+  
       _handleNotificationClick(event, context);
-      print("outside click listener");
   });
  }catch(e)
  {

@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
@@ -42,6 +43,7 @@ Future<void> getBankAccounts() async {
       }
       bank['accounts'].forEach((account) {
         if (accountId.value == "") accountId.value = account['accountId'];
+        FipIdsConnected.add(account['maskedAccNumber']);
         bankAccountLinkedList.add({
           'bankId': bank['bankId'],
           'bankName': bank['bankName'],

@@ -510,6 +510,7 @@ void sendNotificationsToDevice(id, context, msg) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
 
+   try{
   final response = await http.post(
     Uri.parse('${urlPath}'),
     headers: <String, String>{
@@ -521,6 +522,11 @@ void sendNotificationsToDevice(id, context, msg) async {
       'message': msg,
     }),
   );
+
+  printData(response);
+   }catch(e){
+    print("Error in sendNotificationsToDevice: $e");
+}
 }
 
 void getTopFiveCater() async {

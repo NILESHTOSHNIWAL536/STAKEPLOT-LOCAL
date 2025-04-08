@@ -554,4 +554,5 @@ void clearGetX() {
   accountId.value = "";
   displayedData.clear();
   bankAccountLinkedList.clear();
+  FipIdsConnected.clear();
 }

@@ -14,4 +14,6 @@ import 'package:get/get.dart';
   late FinvuConsentRequestDetailInfo finvuConsentRequestDetailInfo;
   late List<FinvuLinkedAccountDetailsInfo> finvuLinkedAccountDetailsInfo;
   List<String> fiTypes=[];
+
+  RxList<String> FipIdsConnected=<String>[].obs;
  

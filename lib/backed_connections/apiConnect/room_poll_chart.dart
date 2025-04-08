@@ -594,7 +594,8 @@ void addMessageImage(context, String messageType, String messageObj, String id,
           isMe: true,
           type: messageType,
           image: urlPath.toString(),
-          poll: id));
+          poll: id
+        ));
 
   // {
 //     "messageType": "image",
@@ -618,14 +619,6 @@ void addMessageImage(context, String messageType, String messageObj, String id,
     "roomId": roomIdVal,
   };
 
-  //  var jsonData={
-  //                'text': messageObj,
-  //               'isMe': true,
-  //               'type':messageType,
-  //               'image': urlPath,
-  //               'poll':id,
-  //  };
-
   socket.emit("message", imageJson);
 
   final response = await http.post(
@@ -639,7 +632,6 @@ void addMessageImage(context, String messageType, String messageObj, String id,
       "receiver": id,
       "message": messageObj,
       "image": urlPath,
-      "poll": id
     }),
   );
 
