@@ -1,27 +1,13 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/amount_entry_modal.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart';
-
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-
-
-import 'dart:convert';
-
-
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
-
 import 'package:get/get.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 RxList addedUser = [].obs;
 RxList addedMembers = [].obs;
@@ -168,7 +154,9 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                 Center(
                   child: InkWell(
                     onTap: () async {
-                      if (addedMembers.isNotEmpty) {
+
+                      if (addedMembers.isNotEmpty)
+                    {
                         if (widget.isLendMode) {
                           if (addedMembers.length > 1) {
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -178,11 +166,10 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                             );
                             return;
                           }
-                          Navigator.pop(
-                              context,
-                              addedMembers[
-                                  0]); // Return single friend’s details
+                          Navigator.pop(context,addedMembers[0]); // Return single friend’s details
+
                         } else {
+
                           Navigator.pop(context);
                           final amounts = await showAmountEntryModal(
                             context,
@@ -200,6 +187,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                 context, amounts); // Return amounts for split
                           } else {}
                         }
+                        
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(

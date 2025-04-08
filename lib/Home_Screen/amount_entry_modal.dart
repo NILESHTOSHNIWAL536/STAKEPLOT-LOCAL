@@ -378,7 +378,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                         splitUserAmount(
                           context,
                           widget.totalAmount.toString(),
-                          addedMembers,
+                          widget.selectedFriends,
                           widget.cate ?? 'Uncategorized',
                           widget.subcate ?? 'General',
                           amounts: amounts,
@@ -463,7 +463,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
     }
 
     if (members.isEmpty) {
-      snackBarCalled(context, "No members selected!", Colors.red);
+      snackBarCalledSignup(context, "No members selected!", Colors.red);
       return;
     }
 

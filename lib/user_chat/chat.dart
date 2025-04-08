@@ -185,6 +185,7 @@ class _ChatState extends State<Chat> {
     socket.emit("LoadCharts", {
       "roomId": data['name'] + "" + data['name'],
     });
+    
   }
 
   Widget getDataWidget(Message message) {

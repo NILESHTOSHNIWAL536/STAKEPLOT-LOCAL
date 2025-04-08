@@ -471,15 +471,8 @@ void processChartData() {
 }
 
 void getTransaction(context) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  final response = await http.get(
-    Uri.parse('${url}/transaction/history'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
+
+  var response = await getDataApiCall("${url}/transaction/history");
 
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);

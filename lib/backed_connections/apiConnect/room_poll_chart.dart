@@ -446,16 +446,18 @@ void getChatLoader() async {
         String type = "message...";
         try {
           type = typed == null
-              ? "message..."
+              ? "message... 😎"
               : typed == "message"
                   ? element['chats']['details']['message']
                   : typed == "post"
-                      ? "sent a post"
+                      ? "Sent a post 🤪"
                       : typed == "image"
-                          ? "sent a image"
+                          ? "Sent a image 🔥"
                           : typed == "poll"
-                              ? "send a poll..."
-                              : "message...";
+                              ? "Send a poll 🤔..." :
+                           typed == "split"
+                              ? "Send a split bill 🥱"
+                              : "message... 😎";
         } catch (e) {}
 
         var data = {
@@ -632,6 +634,7 @@ void addMessageImage(context, String messageType, String messageObj, String id,
       "receiver": id,
       "message": messageObj,
       "image": urlPath,
+      "poll": id
     }),
   );
 
@@ -644,6 +647,12 @@ void addMessageImage(context, String messageType, String messageObj, String id,
             type: messageType,
             image: urlPath.toString(),
             poll: id));
+
+    // socket.emit("message", imageJson);
+
+    socket.emit("LoadCharts", {
+      "roomId": data['name'] + "" + data['name'],
+    });
 
     // Navigator.pushReplacement(
     //                   context,
