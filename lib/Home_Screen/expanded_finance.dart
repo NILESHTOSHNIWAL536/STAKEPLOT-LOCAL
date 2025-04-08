@@ -98,7 +98,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    Obx(() => _buildMonthYearSelector(fontSizeFactor, screenWidth)),
+                    _buildMonthYearSelector(fontSizeFactor, screenWidth),
                      Obx(()=> isLoading.value ? Center(child: CircularProgressIndicator()) : Container(
                         height: screenHeight / 2.6,
                         child: LineChartWidget(
@@ -163,14 +163,14 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
         SizedBox(height: 10),
         Row(
           children: [
-            Text(
+          Obx(()=> Text(
               '₹${doubleToFixed(totalExpandedValue.toString())}'
               ,
               style: FontManager().getTextStyle(context,
                   lWeight: FontWeight.bold,
                   fontSize: fontSizeFactor * 4,
                   color: AppColors.accentColor),
-            ),
+            )),
            
           ],
         ),
