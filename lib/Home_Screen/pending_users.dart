@@ -114,7 +114,6 @@ class _UserListScreenState extends State<UserListScreen> {
               ...lendAmountRemainders
                   .take(2)
                   .map((data) => _buildListTile(context, data, false)),
-              
             ],
           ),
         );
@@ -215,118 +214,6 @@ Widget usersDuelist() {
   });
 }
 
-// Reusable method to build ListTile for both Userslist and UsersDuelist
-// Widget _buildListTile(
-//     BuildContext context, Map<String, dynamic> data, bool isDue) {
-
-//    return  Row(
-//       children: [
-//         Container(
-//           height: MediaQuery.of(context).size.height / 15,
-//           width: MediaQuery.of(context).size.width / 7,
-//           child: UserAvatar(
-//             url: data['avatarType'] ?? 'assets/avatar/menp4.svg',
-//             width: 1,
-//             height: 1,
-//           ),
-//         ),
-//         Expanded(
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               Row(
-//                 children: [
-//                   Text(
-//                     (!isDue ? data["name"] : data["name"]) ??
-//                         data['userName'] ??
-//                         "",
-//                     style: FontManager().getTextStyle(context,
-//                         lWeight: FontWeight.bold,
-//                         fontSize: 16,
-//                         color: AppColors.accentColor),
-//                   ),
-//                 ],
-//               ),
-//               Row(
-//                 children: [
-//                   Flexible(
-//                     child: Text(
-//                       data["category"] ?? "Untagged",
-//                       style: FontManager().getTextStyle(context,
-//                           lWeight: FontWeight.bold,
-//                           fontSize: 8,
-//                           color: AppColors.accentColor),
-//                     ),
-//                   ),
-//                   SizedBox(width: 10),
-//                   Text(
-//                     '${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(data["amount"] ?? 0)}',
-//                     style: FontManager().getTextStyle(context,
-//                         lWeight: FontWeight.bold,
-//                         fontSize: 10,
-//                         color: Colors.green),
-//                   )
-//                 ],
-//               ),
-//             ],
-//           ),
-//         ),
-//         Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//               InkWell(
-//               onTap: () {
-//                 if (isDue) {
-//                   int index = dueAmountRemainders
-//                       .indexWhere((element) => element['_id'] == data['_id']);
-//                   if (index != -1) {
-//                     duesPaid(context, index);
-//                   }
-//                 }
-//                 sendNotificationsToDevice(
-//                     data['_id'],
-//                     context,
-//                     isDue
-//                         ? "Successfully paid your bill of ${data['amount'] ?? "0000"} to ${userName.value}."
-//                         : "You need to pay lend To ${userName.value} of ${data['amount'] ?? "0000"}");
-//               },
-//               child: Container(
-//                 height: MediaQuery.sizeOf(context).height * 0.03,
-//                 width: (data["billApproved"] ?? true)
-//                     ? MediaQuery.sizeOf(context).width * 0.25
-//                     : MediaQuery.sizeOf(context).width * 0.30,
-//                 decoration: BoxDecoration(
-//                     borderRadius: BorderRadius.circular(12),
-//                     color: AppColors.button),
-//                 child: Center(
-//                   child: Text(
-//                     (data["isPaid"] ?? false)
-//                         ? "Requested"
-//                         : (data["billApproved"] ?? true)
-//                             ? (isDue ? "Settle now" : "Remind now")
-//                             : (isDue ? "Didn't settle" : "Didn't approve"),
-//                     style: FontManager().getTextStyle(context,
-//                         lWeight: FontWeight.bold,
-//                         fontSize: 12,
-//                         color: AppColors.primaryColor),
-//                   ),
-//                 ),
-//               ),
-//             )
-//              ,
-//             SizedBox(height: 5),
-//             Text(
-//               formatDateTime(data["createdAt"]),
-//               style: FontManager().getTextStyle(context,
-//                   lWeight: FontWeight.w300, fontSize: 8, color: Colors.green),
-//             )
-//           ],
-//         ),
-//       ],
-//     );
-
-// }
-
 Widget _buildListTile(
     BuildContext context, Map<String, dynamic> data, bool isDue) {
   return Row(
@@ -410,15 +297,13 @@ Widget _buildListTile(
                   lendAmountRemainders.refresh(); // Notify outer Obx
                 }
               }
-              print("Sending notification to userId: ${data['_id']}");
-              print(
-                  "Notification message: ${isDue ? "Successfully paid your bill of ${data['amount'] ?? "0000"} to ${userName.value}." : "You need to pay lend To ${userName.value} of ${data['amount'] ?? "0000"}"}");
+
               sendNotificationsToDevice(
-                  data['_id'],
+                  data['payerId'] ?? data['receiverId'],
                   context,
                   isDue
                       ? "Successfully paid your bill of ${data['amount'] ?? "0000"} to ${userName.value}."
-                      : "You need to pay lend To ${userName.value} of ${data['amount'] ?? "0000"}");
+                      : "You need to pay  To ${userName.value} of ${data['amount'] ?? "0000"}");
             },
             child: Container(
               height: MediaQuery.sizeOf(context).height * 0.03,

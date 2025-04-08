@@ -713,6 +713,7 @@ class _ModalContentState extends State<ModalContent>
       socket.emit("LoadCharts", {
         "roomId": userToSend,
       });
+      
     });
   }
 

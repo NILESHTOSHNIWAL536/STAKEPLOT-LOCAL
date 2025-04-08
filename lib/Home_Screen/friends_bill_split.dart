@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/amount_entry_modal.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart';
-
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
@@ -16,9 +13,6 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 
 import 'package:get/get.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 RxList addedUser = [].obs;
 RxList addedMembers = [].obs;
@@ -199,6 +193,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                             print("No amounts received");
                           }
                         }
+                        
                       } else {
                         print("No friends selected");
                         ScaffoldMessenger.of(context).showSnackBar(

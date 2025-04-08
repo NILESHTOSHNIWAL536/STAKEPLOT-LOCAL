@@ -164,11 +164,7 @@ class _TribeSearchState extends State<TribeChats> {
               )
             : Column(
                 children:
-                    chatList.map((item) => GestureDetector(
-                      onTap: (){
-                        
-                      },
-                      child: profileContainer(item))).toList(),
+                    chatList.map((item) => profileContainer(item)).toList(),
               );
     // return   Column(
     //         children: frdsList.map((item) => profileContainer(item)).toList(),
@@ -256,7 +252,6 @@ class _TribeSearchState extends State<TribeChats> {
     getChats2(id, key);
     double width = MediaQuery.of(context).size.width;
     
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
       child: GestureDetector(
