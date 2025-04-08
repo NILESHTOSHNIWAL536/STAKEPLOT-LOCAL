@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -11,9 +10,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
-
 import 'dart:convert';
-
 
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 
@@ -46,7 +43,7 @@ class NewFriendsUi extends StatefulWidget {
     this.isLendMode = false,
     this.category,
     this.subcategory,
-    this.flag=false,
+    this.flag = false,
   }) : super(key: key);
 
   @override
@@ -58,7 +55,6 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Container(
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
@@ -169,8 +165,11 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                   child: InkWell(
                     onTap: () async {
                       if (addedMembers.isNotEmpty) {
+                        print("Added members: $addedMembers");
                         if (widget.isLendMode) {
+                          print("Lend mode activated");
                           if (addedMembers.length > 1) {
+                            print("More than one friend selected for lending");
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                   content: Text(
@@ -178,11 +177,9 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                             );
                             return;
                           }
-                          Navigator.pop(
-                              context,
-                              addedMembers[
-                                  0]); // Return single friend’s details
+                          Navigator.pop(context, addedMembers[0]);
                         } else {
+                          print("Proceeding to amount entry modal");
                           Navigator.pop(context);
                           final amounts = await showAmountEntryModal(
                             context,
@@ -191,16 +188,19 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                           );
 
                           if (amounts != null) {
-                            Navigator.pop(context,
-                                amounts); // Return amounts to TransactionHistory
+                            print("Amounts received: $amounts");
+                            Navigator.pop(context, amounts);
                           }
                           ;
                           if (amounts != null) {
-                            Navigator.pop(
-                                context, amounts); // Return amounts for split
-                          } else {}
+                            print("Returning amounts for split: $amounts");
+                            Navigator.pop(context, amounts);
+                          } else {
+                            print("No amounts received");
+                          }
                         }
                       } else {
+                        print("No friends selected");
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content:
@@ -259,8 +259,8 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
               child: SizedBox(
                 height: 70,
                 width: MediaQuery.of(context).size.width,
-
-                child: frdsList.isEmpty? Center(
+                child: frdsList.isEmpty
+                    ? Center(
                         child: Text(
                           'No friends available',
                           style: FontManager().getTextStyle(context,
@@ -269,87 +269,88 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                               color: AppColors.bg3),
                         ),
                       )
-                    :ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: frdsList.length,
-                  itemBuilder: (context, index) {
-                    String values = frdsList[index]['_id'];
-                    return InkWell(
-                      onTap: () {},
-                      child: Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                if (addedUser.contains(values)) {
-                                  addedUser.remove(values);
-                                  addedMembers.removeWhere(
-                                      (element) => element['id'] == values);
-                                } else if (widget.isLendMode &&
-                                    addedMembers.isNotEmpty) {
-                                  // For lend mode, replace the current selection
-                                  addedUser.clear();
-                                  addedMembers.clear();
-                                  addedUser.add(values);
-                                  addedMembers.add({
-                                    "name": frdsList[index]['name'],
-                                    "id": values,
-                                    'avatar': frdsList[index]['avatar'],
-                                    "balance": 200,
-                                  });
-                                } else {
-                                  addedUser.add(values);
-                                  addedMembers.add({
-                                    "name": frdsList[index]['name'],
-                                    "id": values,
-                                    'avatar': frdsList[index]['avatar'],
-                                    "balance": 200,
-                                  });
-                                }
-                              });
-                            },
-                            child: Container(
-                              width: MediaQuery.of(context).size.width / 5,
-                              height: 50,
-                              child: Stack(
-                                children: [
-                                  Center(
-                                    child: AvatarProfileImage(
-                                      url: frdsList[index]['avatar'] ??
-                                          widget.userAvatar,
-                                      width: 8,
-                                      height: 18,
+                    : ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: frdsList.length,
+                        itemBuilder: (context, index) {
+                          String values = frdsList[index]['_id'];
+                          return InkWell(
+                            onTap: () {},
+                            child: Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      if (addedUser.contains(values)) {
+                                        addedUser.remove(values);
+                                        addedMembers.removeWhere((element) =>
+                                            element['id'] == values);
+                                      } else if (widget.isLendMode &&
+                                          addedMembers.isNotEmpty) {
+                                        // For lend mode, replace the current selection
+                                        addedUser.clear();
+                                        addedMembers.clear();
+                                        addedUser.add(values);
+                                        addedMembers.add({
+                                          "name": frdsList[index]['name'],
+                                          "id": values,
+                                          'avatar': frdsList[index]['avatar'],
+                                          "balance": 200,
+                                        });
+                                      } else {
+                                        addedUser.add(values);
+                                        addedMembers.add({
+                                          "name": frdsList[index]['name'],
+                                          "id": values,
+                                          'avatar': frdsList[index]['avatar'],
+                                          "balance": 200,
+                                        });
+                                      }
+                                    });
+                                  },
+                                  child: Container(
+                                    width:
+                                        MediaQuery.of(context).size.width / 5,
+                                    height: 50,
+                                    child: Stack(
+                                      children: [
+                                        Center(
+                                          child: AvatarProfileImage(
+                                            url: frdsList[index]['avatar'] ??
+                                                widget.userAvatar,
+                                            width: 8,
+                                            height: 18,
+                                          ),
+                                        ),
+                                        addedUser.contains(values)
+                                            ? const Positioned(
+                                                right: 0,
+                                                top: 0,
+                                                child: Icon(
+                                                  Icons.check,
+                                                  size: 30,
+                                                  color: Colors.green,
+                                                ),
+                                              )
+                                            : const SizedBox.shrink(),
+                                      ],
                                     ),
                                   ),
-                                  addedUser.contains(values)
-                                      ? const Positioned(
-                                          right: 0,
-                                          top: 0,
-                                          child: Icon(
-                                            Icons.check,
-                                            size: 30,
-                                            color: Colors.green,
-                                          ),
-                                        )
-                                      : const SizedBox.shrink(),
-                                ],
-                              ),
+                                ),
+                                Text(
+                                  frdsList[index]['name'],
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w400,
+                                    fontSize: 14,
+                                    color: AppColors.bg1,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          Text(
-                            frdsList[index]['name'],
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: FontWeight.w400,
-                              fontSize: 14,
-                              color: AppColors.bg1,
-                            ),
-                          ),
-                        ],
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               ),
             ),
           ],

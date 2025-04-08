@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -8,16 +7,10 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCall
 
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-
 
 import 'dart:convert';
 
-
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
-
-import 'package:get/get.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -63,6 +56,8 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
     int totalParticipants = widget.selectedFriends.length + 1;
     initialEqualAmount = widget.totalAmount / totalParticipants;
 
+    print("Initial equal amount calculated: $initialEqualAmount");
+
     amountControllers[widget.userId] = TextEditingController(
       text: initialEqualAmount.toStringAsFixed(2),
     );
@@ -107,6 +102,9 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
       currentTotal += amount;
     });
     leftoverAmount = widget.totalAmount - currentTotal;
+
+    print("Current total calculated: $currentTotal");
+    print("Leftover amount calculated: $leftoverAmount");
 
     setState(() {});
   }
@@ -163,6 +161,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
     }
 
     calculateTotal();
+    print("Settling leftover amount: $leftoverAmount");
   }
 
   @override
@@ -320,25 +319,24 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
             const SizedBox(height: 10),
             Text(
               'Current Total: ₹${currentTotal.toStringAsFixed(2)}',
-             style: FontManager().getTextStyle(
-                              context,
-                              fontSize: 14,
-                              color: AppColors.bg1,
-                            ),
+              style: FontManager().getTextStyle(
+                context,
+                fontSize: 14,
+                color: AppColors.bg1,
+              ),
             ),
-             const SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               'Leftover: ₹${leftoverAmount.toStringAsFixed(2)}',
               style: FontManager().getTextStyle(
-                              context,
-                              fontSize: 14,
-                              color:  leftoverAmount == 0
+                context,
+                fontSize: 14,
+                color: leftoverAmount == 0
                     ? Colors.green
                     : leftoverAmount < 0
                         ? Colors.red
                         : Colors.orange,
-                            ),
-            
+              ),
             ),
             const SizedBox(height: 16),
             Text(
@@ -359,7 +357,6 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                   onTap: settleLeftover,
                   child: buttonContainer(context, "Settle"),
                 ),
-
                 Center(
                   child: InkWell(
                     onTap: () {
@@ -375,10 +372,11 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                                   controller.text.replaceAll(',', '')) ??
                               0.0;
                         });
+                        print("Amounts being split: $amounts");
                         splitUserAmount(
                           context,
                           widget.totalAmount.toString(),
-                          addedMembers,
+                          widget.selectedFriends,
                           widget.cate ?? 'Uncategorized',
                           widget.subcate ?? 'General',
                           amounts: amounts,
@@ -392,7 +390,6 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                     child: buttonContainer(context, "Continue"),
                   ),
                 )
-                
               ],
             ),
             SizedBox(
@@ -456,13 +453,18 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
     String subcategory, {
     Map<String, double>? amounts, // Manual amounts including user's share
   }) async {
+    print(
+        "Starting splitUserAmount with totalAmount: $totalAmount, members: $members, category: $category, subcategory: $subcategory");
+
     double? parsedTotalAmount = double.tryParse(totalAmount);
     if (parsedTotalAmount == null || parsedTotalAmount <= 0) {
+      print("Invalid total amount entered: $totalAmount");
       snackBarCalled(context, "Invalid amount entered!", Colors.red);
       return;
     }
 
     if (members.isEmpty) {
+      print("No members selected for splitting.");
       snackBarCalled(context, "No members selected!", Colors.red);
       return;
     }
@@ -480,6 +482,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
           'amount': memberAmount,
         });
         calculatedTotal += memberAmount;
+        print("Member ${element['id']} amount: $memberAmount");
       });
       // Include the user's amount if present
       if (amounts.containsKey(currentId.value)) {
@@ -490,6 +493,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
           'amount': userAmount,
         });
         calculatedTotal += userAmount;
+        print("User amount: $userAmount");
       }
     } else {
       double amountPerPerson = parsedTotalAmount / (members.length + 1);
@@ -500,6 +504,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
           'amount': amountPerPerson,
         });
         calculatedTotal += amountPerPerson;
+        print("Member ${element['id']} amount per person: $amountPerPerson");
       });
       nameList.add({
         'member': currentId.value,
@@ -507,11 +512,14 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         'amount': amountPerPerson,
       });
       calculatedTotal += amountPerPerson;
+      print("User amount per person: $amountPerPerson");
     }
 
     // Verify total matches
     if ((calculatedTotal - parsedTotalAmount).abs() > 0.01) {
       // Allow small floating-point errors
+      print(
+          "Total amount mismatch detected: $calculatedTotal vs $parsedTotalAmount");
       snackBarCalled(context, "Total amount mismatch!", Colors.red);
       return;
     }
@@ -519,6 +527,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
     if (accessToken == null) {
+      print("Authentication error: No access token found.");
       snackBarCalled(context, "Authentication error!", Colors.red);
       return;
     }
@@ -538,6 +547,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
       }),
     );
 
+    print("Response status code: ${response.statusCode}");
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
       splitID.value = body['id']['_id'];
@@ -547,6 +557,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         double memberAmount = amounts?[member['id']] ??
             (parsedTotalAmount / (members.length + 1));
         String formattedAmount = memberAmount.toStringAsFixed(2);
+        print("Split amount sent to ${member['id']}: $formattedAmount");
         sendNotificationsToDevice(
           member['id'],
           context,
@@ -562,8 +573,8 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
       }
 
       snackBarCalled(context, "Split amount sent to users!", Colors.black);
-      //Navigator.pop(context);
     } else {
+      print("Error splitting amount: ${response.body}");
       snackBarCalled(context, "Can't split, error!", Colors.red);
     }
 
@@ -587,4 +598,3 @@ Widget buttonContainer(context, str,
     ),
   );
 }
-
