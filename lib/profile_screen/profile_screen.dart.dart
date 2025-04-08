@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/NavigatorScreens/userNavigator.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -79,7 +80,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                 color: AppColors.bg1)),
                       ),
                       
-                      Text(Phone.value,
+                      Text(number.value,
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.w400,
                               //fontSize: MediaQuery.of(context).size.width * 0.04,

@@ -139,15 +139,15 @@ void addBudget(BuildContext context, String name, String amount,
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     getBudget();
-    clearStackName(context, "/Budget","/BudgetDisplay");
+    clearStackName(context, "/Budget", "/BudgetDisplay");
     Navigator.pushNamed(context, "/BudgetDisplay");
     snackBarCalled(context, "You have successfully added a new budget!");
     await showDialog(
-          context: context,
-          builder: (context) => SuccessPost(
-            celebrationText: "Budget Created Successfully!",
-          ),
-        );
+      context: context,
+      builder: (context) => SuccessPost(
+        celebrationText: "Budget Created Successfully!",
+      ),
+    );
   } else {
     snackBarCalled(context, "Failed to add the budget!", Colors.red);
   }
@@ -510,6 +510,10 @@ void sendNotificationsToDevice(id, context, msg) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
 
+  print("Sending notification to device with ID: $id");
+  print("Request URL: $urlPath");
+  print("Request Body: ${jsonEncode({'id': id, 'message': msg})}");
+
   final response = await http.post(
     Uri.parse('${urlPath}'),
     headers: <String, String>{
@@ -521,6 +525,10 @@ void sendNotificationsToDevice(id, context, msg) async {
       'message': msg,
     }),
   );
+
+  print("Response Status: ${response.statusCode}");
+  // Optionally, you can print the response body if needed
+  // print("Response Body: ${response.body}");
 }
 
 void getTopFiveCater() async {

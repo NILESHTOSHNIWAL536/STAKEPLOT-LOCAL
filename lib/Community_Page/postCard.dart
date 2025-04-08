@@ -826,7 +826,7 @@ String formattedText = op['option'].replaceAllMapped(RegExp(r'.{6}'), (match) =>
                                           overflow: TextOverflow.visible,
                                               style: FontManager().getTextStyle(
                                                   context,
-                                                  lWeight: FontWeight.bold,
+                                                  lWeight: FontWeight.w500,
                                                   fontSize: 14,
                                                   color: isSe
                                                       ? AppColors.bg1
