@@ -808,69 +808,81 @@ class _NotificationsState extends State<Notifications> {
     );
   }
 
-  Widget _buildNotificationList() {
-    return notificationList.isEmpty && flag.value
-        ? const Loader()
-        : notificationList.isEmpty
-            ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    AvatarProfileImage(
-                      url: HomePageIcons.none,
-                      height:8,
-                      width: 10
-),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                    Text(
-                      "No Notifications",
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: AppColors.accentColor,
-                      ),
+ Widget _buildNotificationList() {
+  return notificationList.isEmpty && flag.value
+      ? const Loader()
+      : notificationList.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AvatarProfileImage(
+                    url: HomePageIcons.none,
+                    height: 8,
+                    width: 10,
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                  Text(
+                    "No Notifications",
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: AppColors.accentColor,
                     ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                    Text(
-                      "You're all caught up!",
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.normal,
-                        fontSize: 14,
-                        color: AppColors.bg3,
-                      ),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                  Text(
+                    "You're all caught up!",
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.normal,
+                      fontSize: 14,
+                      color: AppColors.bg3,
                     ),
-                  ],
-                ),
-              )
-            : ListView.builder(
-                itemCount: notificationList.length,
-                itemBuilder: (context, index) {
-                  var e = notificationList[index];
-                  var notifyId = e['_id'] as String?;
-                  return Dismissible(
-                    key: Key(notifyId ?? index.toString()),
-                    direction: DismissDirection.endToStart,
-                    onDismissed: (direction) {
-                      _deleteNotification(notifyId);
-                    },
-                    background: Container(
-            
-                      decoration: BoxDecoration(
-                        color: Colors.redAccent,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.only(right: 20),
-                      child: const Icon(Icons.delete, color: Colors.white),
+                  ),
+                ],
+              ),
+            )
+          : ListView.builder(
+              itemCount: notificationList.length,
+              itemBuilder: (context, index) {
+                var e = notificationList[index];
+                var notifyId = e['_id'] as String?;
+                return Dismissible(
+                  key: Key(notifyId ?? index.toString()),
+                  direction: DismissDirection.endToStart,
+                  onDismissed: (direction) {
+                    _deleteNotification(notifyId);
+                  },
+                  background: Container(
+                    // Match the margin and decoration of the foreground card
+                    margin: EdgeInsets.symmetric(
+                        vertical: MediaQuery.of(context).size.height * 0.008),
+                    decoration: BoxDecoration(
+                      color: Colors.redAccent,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
-                    child: _buildNotificationCard(e),
-                  );
-                },
-              );
-  }
-
+                    // Match padding with the foreground card
+                    padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
+                    alignment: Alignment.centerRight,
+                    child: const Padding(
+                      padding: EdgeInsets.only(right: 20),
+                      child: Icon(Icons.delete, color: Colors.white),
+                    ),
+                  ),
+                  child: _buildNotificationCard(e),
+                );
+              },
+            );
+}
   Widget _buildNotificationCard(Map<String, dynamic> e) {
     var notifyId = e['_id'] as String?;
     var time = e['createdAt'] as String? ?? "";

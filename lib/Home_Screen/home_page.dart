@@ -161,6 +161,24 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+      floatingActionButton: Positioned(
+        right: 10,
+        top: MediaQuery.of(context).size.height * 0.5, // Adjust as needed
+        child: GestureDetector(
+          onTap: () {
+            scrollController.animateTo(
+              0, // Scroll to the top
+              duration: Duration(milliseconds: 300), // Animation duration
+              curve: Curves.easeInOut, // Animation curve
+            );
+          },
+          child: Icon(
+            Icons.arrow_upward, // Arrow icon
+            size: 30, // Size of the icon
+            color: Colors.grey, // Color of the icon
+          ),
+        ),
+      ),
     );
   }
 String _getTimeBasedGreeting() {
@@ -227,6 +245,4 @@ String _getTimeBasedGreeting() {
   }
 
 }
-
-
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -36,6 +37,7 @@ class Manualtransaction extends StatefulWidget {
 }
 
 class _ManualtransactionState extends State<Manualtransaction> {
+ // final AudioPlayer player = AudioPlayer(); 
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.sizeOf(context).width / 0.8,
@@ -68,7 +70,9 @@ class _ManualtransactionState extends State<Manualtransaction> {
                             color: AppColors.accentColor)),
                     const SizedBox(height: 8),
                     InkWell(
-                      onTap: () => showCustomModal(context),
+                      onTap: () { showCustomModal(context);
+                       // player.play(UrlSource('https://www.soundjay.com/button/beep-07.wav'));
+                      },
                       child: Container(
                         height: Colorcodes.paddingSize * 1.5,
                         width: Colorcodes.paddingSize * 4,

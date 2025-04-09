@@ -1144,7 +1144,8 @@ class _LineChartWidgetState extends State<LineChartWidget> {
             children: [
               if (!widget.isExpandedView)
                 SizedBox(
-                  width: screenWidth * 0.15, // Fixed width to prevent overflow
+                  
+                  width: screenWidth * 0.1, // Fixed width to prevent overflow
                   height: MediaQuery.of(context).size.height / 2.6, // Match chart height
                   child: _buildYAxisLabels(fontSizeFactor),
                 ),
@@ -1229,14 +1230,14 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         offset: widget.selectedButton.value == 'Week'
             ? Offset(-20, 0)
             : widget.selectedButton.value == 'Month'
-                ? Offset(-30, 0)
+                ? Offset(-35, 0)
                 : Offset(-20, 0),
         child: SfCartesianChart(
           borderWidth: 0,
           plotAreaBorderWidth: 0,
           primaryXAxis: CategoryAxis(
             labelStyle: FontManager().getTextStyle(context,
-                lWeight: FontWeight.bold,
+                lWeight: FontWeight.w500,
                 fontSize: fontSizeFactor * 3,
                 color: AppColors.accentColor),
             majorGridLines: MajorGridLines(width: 0),
@@ -1397,7 +1398,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
               style: FontManager().getTextStyle(
                 context,
                 lWeight: FontWeight.normal,
-                fontSize: fontSizeFactor * 3.3,
+                fontSize: fontSizeFactor * 3.0,
                 color: AppColors.accentColor,
               ),
             ),
@@ -1415,11 +1416,11 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   String formatNumberString(String value) {
     double numValue = double.tryParse(value) ?? 0;
     if (numValue >= 10000000) {
-      return '${(numValue / 10000000).toStringAsFixed(1)} Cr';
+      return '${(numValue / 10000000).toStringAsFixed(0)} Cr';
     } else if (numValue >= 100000) {
-      return '${(numValue / 100000).toStringAsFixed(1)} L';
+      return '${(numValue / 100000).toStringAsFixed(0)} L';
     } else if (numValue >= 1000) {
-      return '${(numValue / 1000).toStringAsFixed(1)} K';
+      return '${(numValue / 1000).toStringAsFixed(0)} K';
     } else {
       return numValue.toStringAsFixed(0);
     }

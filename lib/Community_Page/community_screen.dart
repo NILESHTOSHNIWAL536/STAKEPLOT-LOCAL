@@ -39,11 +39,10 @@ class _CommunityState extends State<Community> {
   final TextEditingController _searchController = TextEditingController();
   int likeCount = 0; // Counter for likes
   bool isLiked = false;
- 
 
   @override
   void initState() {
-        getPost();
+    getPost();
   }
 
   @override
@@ -54,8 +53,7 @@ class _CommunityState extends State<Community> {
       bottomNavigationBar: BottomNavigations(data: 2),
       body: SafeArea(
         child: Container(
-          
-          height: MediaQuery.of(context).size.height/1.1,
+          height: MediaQuery.of(context).size.height / 1.1,
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
             controller: scrollControllerPost,
@@ -66,12 +64,12 @@ class _CommunityState extends State<Community> {
                   padding: const EdgeInsets.only(top: 10),
                   child: _buildWelcomeRow(),
                 ),
-                  
                 Obx(
                   () => getTrendingData.length == 0 && !isPost.value
                       ? Loader()
                       : isPost.value && getTrendingData.length == 0
-                          ? noFriend(context, "Make friends to see their posts or upload post")
+                          ? noFriend(context,
+                              "Make friends to see their posts or upload post")
                           : Obx(() => getPosted.value
                               ? LazyLoadingList()
                               : LazyLoadingList()),
@@ -81,27 +79,44 @@ class _CommunityState extends State<Community> {
           ),
         ),
       ),
+      floatingActionButton: Positioned(
+        right: 10,
+        top: MediaQuery.of(context).size.height * 0.5, // Adjust as needed
+        child: GestureDetector(
+          onTap: () {
+            scrollControllerPost.animateTo(
+              0, // Scroll to the top
+              duration: Duration(milliseconds: 300), // Animation duration
+              curve: Curves.easeInOut, // Animation curve
+            );
+          },
+          child: Icon(
+            Icons.arrow_upward, // Arrow icon
+            size: 30, // Size of the icon
+            color: Colors.grey, // Color of the icon
+          ),
+        ),
+      ),
     );
   }
 
- Widget getPostListview() {
-     double width = MediaQuery.of(context).size.width;
+  Widget getPostListview() {
+    double width = MediaQuery.of(context).size.width;
     //  double height = MediaQuery.of(context).size.height;
     return Container(
-      width: width,
-      // height:  height,
-      child: ListView.builder(
-        padding: EdgeInsets.zero, 
-        itemCount: getTrendingData.length,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (context, index) {
-          final dataObj = getTrendingData[index];
-          return PostCard(data: dataObj);
-        },
-      ));
-
-}
+        width: width,
+        // height:  height,
+        child: ListView.builder(
+          padding: EdgeInsets.zero,
+          itemCount: getTrendingData.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            final dataObj = getTrendingData[index];
+            return PostCard(data: dataObj);
+          },
+        ));
+  }
 
   Widget _buildWelcomeRow() {
     double w = MediaQuery.of(context).size.width;
@@ -153,7 +168,6 @@ class _CommunityState extends State<Community> {
                           width: 22,
                         ),
                       )),
-                  
                 ],
               ),
             ),
@@ -663,8 +677,7 @@ class _CommunityState extends State<Community> {
                   Text(
                     'Budget',
                     style: FontManager().getTextStyle(
-            
-                    context,
+                      context,
                       lWeight: FontWeight.bold,
                       fontSize: 18,
                       color: Colors.black,
@@ -811,7 +824,6 @@ class _CommunityState extends State<Community> {
                     lWeight: FontWeight.normal,
                     fontSize: 18,
                     color: Colors.black)),
-           
           ],
         ),
         IconButton(onPressed: () {}, icon: Icon(Icons.more_vert))
@@ -829,8 +841,8 @@ class _CommunityState extends State<Community> {
               fontSize: 18, // Change font size
               fontWeight: FontWeight.bold, // Change font weight
               color: Colors.black, // Change text color
-               ),
-        ),
+            ),
+          ),
           Text(
             post['content'],
             style: const TextStyle(fontSize: 14),
