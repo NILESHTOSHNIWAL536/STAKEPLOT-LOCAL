@@ -88,8 +88,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
       }
     });
 
-    getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,
-        isRefreshing: true);
+    getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,isRefreshing: true);
    
   }
 

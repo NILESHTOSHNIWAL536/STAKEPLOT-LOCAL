@@ -1,20 +1,16 @@
 import 'dart:core';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+
 
 class ExpandedChartView extends StatefulWidget {
   final Map<String, List<double>> chartData;
@@ -39,20 +35,19 @@ class ExpandedChartView extends StatefulWidget {
 class _ExpandedChartViewState extends State<ExpandedChartView> {
 
    final ScrollController scrollController = ScrollController();
+   
  
   @override
   void initState() {
     super.initState();
     isLoadingMore.value=false;
     currentPage=1;
-    hasMoreData = true;
-    selectedButton.value = widget.selectedButton;
-    currentChartData.value = widget.chartData;
-    currentDays.value = List.from(widget.days);
-    getAllTransactionHistory(context, true, isYearView.value);
-    updateMonthLabels();
-    filterDataForSelectedMonth();
-     scrollController.addListener(_onScroll);
+     hasMoreData = true;
+     currentDays.value = List.from(widget.days);
+     getAllTransactionHistory(context, true, isYearView.value);
+     updateMonthLabels();
+     filterDataForSelectedMonth();
+    scrollController.addListener(_onScroll);
   }
 
 
@@ -70,36 +65,39 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
 
     return WillPopScope(
            onWillPop: () async {
-           
             callBackApi();
-           return true;
+             return true;
        },
       child: Scaffold(
         backgroundColor: AppColors.backgroundColor,
-        
-        appBar: AppBar(
-          leading: InkWell(
-            onTap: () {
-               Navigator.pop(context);
-                 
-                 callBackApi();
-            },
-            child: Icon(
-              Icons.arrow_back,
-              color: AppColors.accentColor,
-            ),
-          ),
-          title: Text('Detailed Chart View'),
-          backgroundColor: AppColors.backgroundColor,
-        ),
+        appBar: appbarWidget(),
         body:  SingleChildScrollView(
               controller: scrollController,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    _buildMonthYearSelector(fontSizeFactor, screenWidth),
-                     Obx(()=> isLoading.value ? Center(child: CircularProgressIndicator()) : Container(
+                     _buildMonthYearSelector(fontSizeFactor, screenWidth),
+
+                    Obx(()=> isLoading.value ? Center(child: CircularProgressIndicator()) :  getLineGraph(screenHeight)),
+
+                   const SizedBox(
+                      height: 10,
+                    ),
+      
+                    transactionsHistoryList(),
+                         
+                  ],
+                ),
+              ),
+            )),
+    );
+  }
+
+
+
+Widget getLineGraph(screenHeight){
+    return  Container(
                         height: screenHeight / 2.6,
                         child: LineChartWidget(
                           chartData: currentChartData.value,
@@ -111,40 +109,8 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
                                   selectedYear.value, selectedMonth.value),
                           isExpandedView: true,
                         ),
-                      )),
-                    SizedBox(
-                      height: 10,
-                    ),
-      
-                    Obx(() => loadChatdataOnChnage.value
-                        ? TransactionHistory(
-                            isYearView: isYearView.value,
-                            isflag: true,
-                            showIcon: true,
-                          )
-                        : TransactionHistory(
-                            isYearView: isYearView.value,
-                            isflag: true,
-                             showIcon: true,
-                          )),
-                         
-                  ],
-                ),
-              ),
-            )),
-    );
-  }
-
-   void _onScroll() {
-
-    scrollController.addListener(() async{
-          if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 50)
-          {
-               print(isLoadingMore.value);
-               getAllTransactionHistory(context, true, isYearView.value);
-          }
-    });
-  }
+     );
+}
 
 
   
@@ -241,5 +207,47 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
       ],
     );
   }
+  
+ AppBar appbarWidget() {
+    return AppBar(
+          leading: InkWell(
+            onTap: () {
+                Navigator.pop(context);
+                 callBackApi();
+            },
+            child: Icon(
+              Icons.arrow_back,
+              color: AppColors.accentColor,
+            ),
+          ),
+          title: Text('Detailed Chart View'),
+          backgroundColor: AppColors.backgroundColor,
+        );
+  }
+
+  void _onScroll() {
+    scrollController.addListener(() async{
+          if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 50)
+          {
+               getAllTransactionHistory(context, true, isYearView.value);
+          }
+    });
+}
+
+Widget  transactionsHistoryList() {
+    return  Obx(() => loadChatdataOnChnage.value
+                        ? TransactionHistory(
+                            isYearView: isYearView.value,
+                            isflag: true,
+                            showIcon: true,
+                          )
+                        : TransactionHistory(
+                            isYearView: isYearView.value,
+                            isflag: true,
+                             showIcon: true,
+                          ));
+  }
 
 }
+
+
