@@ -48,17 +48,19 @@ class _BottomNavigationsState extends State<BottomNavigations> {
   Widget build(BuildContext context) {
     //int selectedIndex = 0;
     return Container(
-      //color: Colorcodes.white,
+      
       height: Colorcodes.paddingSize*3.4,
       padding: const EdgeInsets.only(left: 3.0, right: 3.0, bottom: 2),
       child: Card(
         elevation: Colorcodes.elevation,
+        
         color: AppColors.accentColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30), // Rounded corners
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
+          
           children: [
             getContainer(NavBarIcons.home, 0),
             getContainer(NavBarIcons.screen2, 1),

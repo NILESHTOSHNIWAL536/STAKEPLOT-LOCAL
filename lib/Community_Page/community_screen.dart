@@ -28,21 +28,37 @@ class Community extends StatefulWidget {
   @override
   State<Community> createState() => _CommunityState();
 }
-
 class _CommunityState extends State<Community> {
   final List<Map<String, dynamic>> posts = [];
-
   String? selectedImage;
   String CurrentUser = 'user1';
-
-  final ImagePicker _picker = ImagePicker(); // Initialize the ImagePicker
+  final ImagePicker _picker = ImagePicker();
   final TextEditingController _searchController = TextEditingController();
-  int likeCount = 0; // Counter for likes
+  int likeCount = 0;
   bool isLiked = false;
+  late ScrollController scrollControllerPost;
+  
+  // Use RxBool instead of regular bool
+  final RxBool showScrollToTop = false.obs;
 
   @override
   void initState() {
+    super.initState();
+    scrollControllerPost = ScrollController();
     getPost();
+    
+    // Add scroll listener using GetX reactive approach
+    scrollControllerPost.addListener(() {
+      // Update reactive variable instead of using setState
+      showScrollToTop.value = scrollControllerPost.offset > 50;
+    });
+  }
+
+  @override
+  void dispose() {
+    scrollControllerPost.dispose();
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -53,8 +69,9 @@ class _CommunityState extends State<Community> {
       bottomNavigationBar: BottomNavigations(data: 2),
       body: SafeArea(
         child: Container(
+        // color: Colors.green,
           height: MediaQuery.of(context).size.height / 1.1,
-          padding: const EdgeInsets.all(16.0),
+           padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 0,top: 8.0),
           child: SingleChildScrollView(
             controller: scrollControllerPost,
             child: Column(
@@ -79,26 +96,31 @@ class _CommunityState extends State<Community> {
           ),
         ),
       ),
-      floatingActionButton: Positioned(
-        right: 10,
-        top: MediaQuery.of(context).size.height * 0.5, // Adjust as needed
-        child: GestureDetector(
-          onTap: () {
-            scrollControllerPost.animateTo(
-              0, // Scroll to the top
-              duration: Duration(milliseconds: 300), // Animation duration
-              curve: Curves.easeInOut, // Animation curve
-            );
-          },
-          child: Icon(
-            Icons.arrow_upward, // Arrow icon
-            size: 30, // Size of the icon
-            color: Colors.grey, // Color of the icon
+      floatingActionButton: Obx(() => Visibility(
+        visible: showScrollToTop.value, // Use .value with Obx
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.12, // Adjusted for responsiveness
+              height: MediaQuery.of(context).size.height * 0.05, 
+          child: FloatingActionButton(
+            onPressed: () {
+              scrollControllerPost.animateTo(
+                0,
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            },
+            backgroundColor: Colors.grey.withOpacity(0.8),
+            child: Icon(
+              Icons.arrow_upward,
+              color: Colors.white,
+              size: 25,
+            ),
           ),
         ),
-      ),
+      )),
     );
   }
+
 
   Widget getPostListview() {
     double width = MediaQuery.of(context).size.width;

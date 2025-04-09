@@ -41,8 +41,11 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:get/get.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:page_transition/page_transition.dart';
+
 //import 'dart:io';
 RxBool sectionReached = false.obs;
+var isButtonVisible = false.obs;
+
 class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
@@ -58,8 +61,7 @@ class _HomePageState extends State<HomePage> {
     initializeData();
   }
 
-  void initializeData()   
-  {
+  void initializeData() {
     check(context, "homeScreen");
     getBankAccounts();
     getCategoryData();
@@ -74,7 +76,7 @@ class _HomePageState extends State<HomePage> {
     getCategoryData();
     getRemainders(context);
     getNotifications(context);
-    sectionReached.value=false;
+    sectionReached.value = false;
   }
 
   @override
@@ -84,34 +86,28 @@ class _HomePageState extends State<HomePage> {
 }
 
 class HomeScreen extends StatefulWidget {
-  
-
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
-   
 
 class _HomeScreenState extends State<HomeScreen> {
   final ScrollController scrollController = ScrollController();
   final GlobalKey _transactionHistoryKey = GlobalKey();
-  var setDonectChat = false.obs; 
-  var getHistory = false.obs; 
-  
+  var setDonectChat = false.obs;
+  var getHistory = false.obs;
 
   @override
-  void initState()
-  {
+  void initState() {
     super.initState();
     scrollController.addListener(_onScroll);
   }
 
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigations(data: 0),
       backgroundColor: AppColors.backgroundColor,
-      appBar:getAppBar(),
+      appBar: getAppBar(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
         child: SingleChildScrollView(
@@ -123,129 +119,120 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: MediaQuery.of(context).size.height * 0.23,
                 child: NumberPickerScreen(),
               ),
-            
               const SizedBox(
                 height: 10,
               ),
-              
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.51,
                 child: FinancePage(
                   scrollController: scrollController,
-                  transactionHistoryKey:_transactionHistoryKey ,
+                  transactionHistoryKey: _transactionHistoryKey,
                 ),
               ),
-          
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.16,
                 child: Manualtransaction(),
               ),
-    
-               SizedBox(
+              SizedBox(
                 height: MediaQuery.of(context).size.height * 0.46,
                 child: TransactionGraph(),
               ),
-              
               UserListScreen(),
-      
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.5,
                 child: Obx(() => setDonectChat.value
                     ? DoughnutChartExample()
                     : DoughnutChartExample()),
               ),
-            
-            
-        
-          TransactionHistory(key: _transactionHistoryKey,),
-            
-    
+              TransactionHistory(
+                key: _transactionHistoryKey,
+              ),
             ],
           ),
         ),
       ),
-      floatingActionButton: Positioned(
-        right: 10,
-        top: MediaQuery.of(context).size.height * 0.5, // Adjust as needed
-        child: GestureDetector(
-          onTap: () {
-            scrollController.animateTo(
-              0, // Scroll to the top
-              duration: Duration(milliseconds: 300), // Animation duration
-              curve: Curves.easeInOut, // Animation curve
-            );
-          },
-          child: Icon(
-            Icons.arrow_upward, // Arrow icon
-            size: 30, // Size of the icon
-            color: Colors.grey, // Color of the icon
-          ),
-        ),
-      ),
+      floatingActionButton: Obx(() => Visibility(
+            visible: isButtonVisible.value,
+            child: Container(
+             width: MediaQuery.of(context).size.width * 0.12, // Adjusted for responsiveness
+              height: MediaQuery.of(context).size.height * 0.05, 
+              
+              // Adjusted for responsiveness
+// ... existing code ...
+              child: FloatingActionButton(
+                onPressed: () {
+                  scrollController.animateTo(
+                    0,
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
+                },
+                backgroundColor: Colors.grey.withOpacity(0.8),
+                child: Icon(
+                  Icons.arrow_upward,
+                  size: 25,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          )),
     );
   }
-String _getTimeBasedGreeting() {
-  final hour = DateTime.now().hour;
-  if (hour < 12) {
-    return "Good morning";
-  } else if (hour < 16) {
-    return "Good afternoon,";
-  } else {
-    return "Good evening,";
+
+  String _getTimeBasedGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) {
+      return "Good morning";
+    } else if (hour < 16) {
+      return "Good afternoon,";
+    } else {
+      return "Good evening,";
+    }
   }
-}
 
-
-
-
-
-  AppBar getAppBar(){
-    return  AppBar(
-        backgroundColor: AppColors.backgroundColor,
-        automaticallyImplyLeading: false,
-        actions: [
-          Row(
-            children: [
-              GestureDetector(
-                onTap: (){
-                   navigatorToMyOwnPage(context);
+  AppBar getAppBar() {
+    return AppBar(
+      backgroundColor: AppColors.backgroundColor,
+      automaticallyImplyLeading: false,
+      actions: [
+        Row(
+          children: [
+            GestureDetector(
+                onTap: () {
+                  navigatorToMyOwnPage(context);
                 },
                 child: UserAvatar(url: avatar.value, width: 15, height: 15)),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  textStyle(
-                      context: context,
-                      text: _getTimeBasedGreeting(),
-                      fontWeight: FontWeight.w500,
-                      fontsize: 15),
-                  Obx(() => textStyle(
-                      context: context,
-                      text: userName.value,
-                      fontWeight: FontWeight.bold,
-                      fontsize: 15))
-                ],
-              )
-            ],
-          ),
-          Spacer(),
-          NotificationsBudget(
-            child: Text(""),
-          ),
-        ],
-      );
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                textStyle(
+                    context: context,
+                    text: _getTimeBasedGreeting(),
+                    fontWeight: FontWeight.w500,
+                    fontsize: 15),
+                Obx(() => textStyle(
+                    context: context,
+                    text: userName.value,
+                    fontWeight: FontWeight.bold,
+                    fontsize: 15))
+              ],
+            )
+          ],
+        ),
+        Spacer(),
+        NotificationsBudget(
+          child: Text(""),
+        ),
+      ],
+    );
   }
 
-   void _onScroll() {
-
-    scrollController.addListener(() {
-          if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 50)
-          {
-                getAllTransactionHistory(context,false,false); // Fetch next page
-          }
-    });
+  void _onScroll() {
+    if (scrollController.position.pixels > 0) {
+      isButtonVisible.value = true;
+    } else {
+      isButtonVisible.value = false;
+    }
   }
-
 }
-

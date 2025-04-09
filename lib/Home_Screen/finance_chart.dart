@@ -1144,9 +1144,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               if (!widget.isExpandedView)
-                SizedBox(
+                Container(
                   
-                  width: screenWidth * 0.1, // Fixed width to prevent overflow
+                  width: screenWidth * 0.07, // Fixed width to prevent overflow
                   height: MediaQuery.of(context).size.height / 2.6, // Match chart height
                   child: _buildYAxisLabels(fontSizeFactor),
                 ),
@@ -1223,6 +1223,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     double chartWidth = dataLength * labelWidth;
 
     return Container(
+     
       width: widget.selectedButton.value == 'Week'
           ? screenWidth * 0.85
           : max(chartWidth, screenWidth * 0.85),
@@ -1232,7 +1233,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
             ? Offset(-20, 0)
             : widget.selectedButton.value == 'Month'
                 ? Offset(-35, 0)
-                : Offset(-20, 0),
+                : Offset(-25, 0),
         child: SfCartesianChart(
           borderWidth: 0,
           plotAreaBorderWidth: 0,
@@ -1393,7 +1394,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       labels.add(
         Expanded(
           child: Align(
-            alignment: Alignment.center,
+            alignment: Alignment.centerLeft,
             child: Text(
               '₹${formatNumberString(value.toStringAsFixed(0))}',
               style: FontManager().getTextStyle(
