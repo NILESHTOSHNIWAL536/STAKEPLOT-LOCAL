@@ -211,6 +211,9 @@ class StringConstant {
   static String onboading_1 = "Welcome to Expense Manager !";
   static String onboading_2 =
       "Are You to Ready To take control of your finance?";
+
+  static String allTransactions = "All";
+  static String pollTransactions = "Pool";
 }
 
 class svgIconPath {
@@ -321,3 +324,5 @@ class BankText
     static String checkNowproceeding= "Please select atleast one account to proceed";
     static String nextFetchTime= "Hang tight! Fetching will take ~10 minutes.";
 }
+
+

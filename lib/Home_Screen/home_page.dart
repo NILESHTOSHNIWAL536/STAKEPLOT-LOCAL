@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/GroupTrans/group_transactions.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/expanded_finance.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/donut_chart.dart';
@@ -154,7 +155,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     : DoughnutChartExample()),
               ),
             
-               TransactionHistory(key: _transactionHistoryKey,),
+            
+        
+          TransactionHistory(key: _transactionHistoryKey,),
             
     
             ],

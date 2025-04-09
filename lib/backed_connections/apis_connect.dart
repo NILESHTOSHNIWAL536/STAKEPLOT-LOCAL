@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:get/get.dart';
 
 bool flag = true;
 String portNo = flag ? "192.168.1.13" : "localhost";
-String urlWithLocallHost = flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Feilds";
 RxString expenses = "Loading....".obs;
@@ -96,7 +97,9 @@ RxBool getdueUsers = false.obs;
  RxInt selectedMonth = DateTime.now().month.obs;
 RxList inSights = [].obs;
 RxBool getInsights = false.obs;
+RxBool allOrGroupTransactions = true.obs;
 RxString accountId = "".obs;
+RxString allOrGroupTransactionsName = "All".obs;
 List<String> month = [
   "",
   "January",

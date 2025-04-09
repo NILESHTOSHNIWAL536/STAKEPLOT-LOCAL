@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_application_code_stakeplot/GroupTrans/group_transactions.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_details.dart';
@@ -100,7 +101,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
 @override
 void dispose() {
   _scrollController2.dispose();
-  _animationController?.dispose();
+  // _animationController?.dispose();
   super.dispose();
 }
   @override
@@ -119,7 +120,7 @@ void dispose() {
                       fontSize: 18,
                       color: AppColors.accentColor),
                 ),
-                if (widget.showIcon ?? false) ...[
+                if (!(widget.showIcon?? false)) ...[
                   InkWell(
                     onTap: () {
                       showModal();
@@ -133,15 +134,57 @@ void dispose() {
                 ]
               ],
             ),
-            const SizedBox(height: 20),
-            Obx(() => reloadHistory.value
+          
+            Obx(()=> allOrGroupTransactionsName.value==StringConstant.allTransactions ?  getTabsForTransactions():getTabsForTransactions()),
+            
+         Obx(
+             ()=>  allOrGroupTransactionsName.value==StringConstant.allTransactions ? 
+             Obx(() => reloadHistory.value
                 ? getlist()
-                : getlist()), 
+                : getlist()): GroupTransactions()
+            ), 
           ],
         ),
       ),
     );
   }
+
+
+Widget getTabsForTransactions(){
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 20),
+    child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                tabItem(StringConstant.allTransactions),
+                tabItem(StringConstant.pollTransactions),
+              ],
+     ),
+  );
+}
+
+
+Widget tabItem(text){
+ bool f=  text==allOrGroupTransactionsName.value;
+  return  InkWell(
+    onTap: (){
+        allOrGroupTransactionsName.value = text;
+    },
+    child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: f? AppColors.primaryColor:AppColors.bg5,
+                      border: Border.all(
+                        width: .5,
+                        color:  AppColors.primaryColor,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: textStyle(context: context, text:text, c: f? AppColors.bg5:AppColors.primaryColor,fontsize: 15, fontWeight: FontWeight.w500)  
+                  ),
+  );
+}
+
 
   Widget getListItemListTile(String no, String MorY, context) {
     return Container(
@@ -183,10 +226,8 @@ void dispose() {
       itemBuilder: (context, index) {
         if (index < transactionsHistory.length) {
           final transaction = transactionsHistory[index];
-          //  print("transactionslistttt : $transaction");
-          double amount = (transaction['amount'] is int)
-              ? (transaction['amount'] as int).toDouble()
-              : (transaction['amount'] as double? ?? 0.0);
+       
+          double amount = double.parse(doubleToFixed((transaction['amount'] ?? 0.0).toString()));
           String category = transaction['category']?.toString() ??
               'Uncategorized'; // Fixed typo and added null check
           String subcategory =

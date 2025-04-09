@@ -73,11 +73,14 @@ void expire(responce, BuildContext context) {
 
 void check(context, String flag) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
-  bool f = _pref.containsKey("accessToken");
-  if (!f) {
-    if (_pref.containsKey("accessToken")) {
-    } else if (flag != "loginuser")
-      Navigator.pushReplacementNamed(context, '/');
+  bool f=_pref.containsKey("accessToken");
+  if (!f)
+  {
+    if(_pref.containsKey("accessToken"))
+    {
+            
+    }
+    else if (flag != "loginuser") Navigator.pushReplacementNamed(context, '/');
   }
 }
 
@@ -116,7 +119,12 @@ Future<void> loginUser(TextEditingController emailController,
       },
     );
   }
-  if (response.statusCode == 200 || response.statusCode == 201) {
+  if(response.statusCode == 500){
+    snackBarCalledSignup(context, "Server Error!", Colors.red);
+    return;
+  }
+  if (response.statusCode == 200 || response.statusCode == 201)
+   {
     final body = json.decode(response.body);
 
     String accessToken = body['data']['accessToken'];
