@@ -412,10 +412,10 @@ void addTransaction(String amount, String subCategory, String categories,
 
   if (response.statusCode == 200) {
     final body = json.decode(response.body);
-    if (!isSplit)
-      snackBarCalled(context, "Transaction has been successfully saved!",
-          AppColors.pollSelected);
-    getAllTransaction(context);
+    if (!isSplit)snackBarCalled(context, "Transaction has been successfully saved!",AppColors.pollSelected);
+    // getAllTransaction(context);
+    transactionsHistory.insert(0, body['data'][0]);
+    reloadHistory.value = ! reloadHistory.value;
     getCategoryData();
     setDonectChat.value = !setDonectChat.value;
     processChartData();

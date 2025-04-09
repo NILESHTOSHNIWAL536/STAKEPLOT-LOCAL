@@ -72,7 +72,11 @@ void check(context, String flag) async {
   bool f=_pref.containsKey("accessToken");
   if (!f)
   {
-    if (flag != "loginuser") Navigator.pushReplacementNamed(context, '/');
+    if(_pref.containsKey("accessToken"))
+    {
+            
+    }
+    else if (flag != "loginuser") Navigator.pushReplacementNamed(context, '/');
   }
 
 }

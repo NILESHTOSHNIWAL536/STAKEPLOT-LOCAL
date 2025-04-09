@@ -183,10 +183,8 @@ void dispose() {
       itemBuilder: (context, index) {
         if (index < transactionsHistory.length) {
           final transaction = transactionsHistory[index];
-          //  print("transactionslistttt : $transaction");
-          double amount = (transaction['amount'] is int)
-              ? (transaction['amount'] as int).toDouble()
-              : (transaction['amount'] as double? ?? 0.0);
+       
+          double amount = double.parse(doubleToFixed((transaction['amount'] ?? 0.0).toString()));
           String category = transaction['category']?.toString() ??
               'Uncategorized'; // Fixed typo and added null check
           String subcategory =
