@@ -277,18 +277,6 @@ List<String> getDaysInMonth(String yearMonth) {
   return days;
 }
 
-// Future<http.Response> postDataApiCall(urlPath,postDataJson) async {
-//   final SharedPreferences pref = await SharedPreferences.getInstance();
-//   var accessToken = pref.getString("accessToken");
-
-//   final response = await http.patch(Uri.parse(urlPath),
-//       headers: <String, String>{
-//         'Content-Type': 'application/json; charset=UTF-8',
-//         "Authorization": "$accessToken",
-//       },
-//       body: jsonEncode({}));
-//   return response;
-// }
 
 String getCurrentMonth() {
   DateTime now = DateTime.now();

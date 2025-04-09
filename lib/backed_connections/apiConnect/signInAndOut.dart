@@ -116,7 +116,12 @@ Future<void> loginUser(TextEditingController emailController,
       },
     );
   }
-  if (response.statusCode == 200 || response.statusCode == 201) {
+  if(response.statusCode == 500){
+    snackBarCalledSignup(context, "Server Error!", Colors.red);
+    return;
+  }
+  if (response.statusCode == 200 || response.statusCode == 201)
+   {
     final body = json.decode(response.body);
    
     
