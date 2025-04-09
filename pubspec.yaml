@@ -102,6 +102,7 @@ dependencies:
   syncfusion_flutter_pdf: ^22.2.12
   pdf_render: ^1.4.12
   audioplayers: ^6.4.0
+  graphic: ^2.5.1
 
 dev_dependencies:
   flutter_test:

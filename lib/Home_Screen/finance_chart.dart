@@ -1007,6 +1007,7 @@ class _FinancePageState extends State<FinancePage> {
     );
   }
 }
+
 class LineChartWidget extends StatefulWidget {
   final Map<String, List<double>> chartData;
   final List days;
