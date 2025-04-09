@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
@@ -20,7 +21,8 @@ RxBool loadAgain=false.obs;
 class TagShowmodal extends StatefulWidget {
 var data;
 int index;
- TagShowmodal({ Key? key ,required this.data,required  this.index }) : super(key: key);
+bool isGroupTransaction=false;
+ TagShowmodal({ Key? key ,required this.data,required  this.index,this.isGroupTransaction=false }) : super(key: key);
 
   @override
   State<TagShowmodal> createState() => _TagShowmodalState();
@@ -111,10 +113,24 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
               onTap: (){
                   //  Change Tag
 
-                   updateTheTagOfTarnsactions(widget.data['category'], widget.data['subcategory'], widget.data['_id'], context,widget.index);
-                    transactionsHistory[widget.index]['category']=widget.data['category'];
-                    transactionsHistory[widget.index]['subcategory']=widget.data['subcategory'];
-                    transactionsHistory.refresh();
+                  if(widget.isGroupTransaction)
+                  {
+                      updateTheTagOfTarnsactions(widget.data['category'], widget.data['subcategory'], widget.data['_id'], context,widget.index);
+                      transactionsHistory[widget.index]['category']=widget.data['category'];
+                      transactionsHistory[widget.index]['subcategory']=widget.data['subcategory'];
+                      transactionsHistory.refresh();
+                  }else{
+                      print("Group Transaction");
+                      print(removedGrpItemsList);
+                      if(widget.data['category']==null && widget.data['subcategory']==Null){
+                          snackBarCalledSignup(context, "Please select a category and subcategory",Colorcodes.red);
+                          return;
+                      }
+                      updateTheTagOfTarnsactionsGroup(widget.data['category'], widget.data['subcategory'], widget.data['_id'], context,widget.index);
+                      setGroupTransactions.value=false;
+                      getGroupTransactions();
+                  }
+
 
               },
                child: Icon(
@@ -198,7 +214,7 @@ Widget getListOfCat(BuildContext context) {
           duration: Duration(milliseconds: 500),
           opacity: opacity,
                     child: Container(
-              child: historyTransactions(widget.data,widget.data['transactionTimestamp'], context),
+              child: historyTransactions(widget.data,widget.isGroupTransaction? widget.data['transactionTimestamp']:widget.data['createdAt'], context),
                     ),
                   ),
       );
@@ -268,7 +284,7 @@ Widget getListOfCat(BuildContext context) {
   Widget historyTransactions(Map<String, dynamic> transaction, String? date,context) {
   final category = transaction['category']?.toString() ?? 'Uncategorized';
   final subcategory = transaction['subcategory']?.toString() ?? 'General';
-  final amount = transaction['amount']?.toString() ?? '0';
+  final amount =  transaction[ widget.isGroupTransaction? 'amount' : 'totalAmount']?.toString() ?? '0';
   final formattedDate = date != null ? formatDate(date) : 'Unknown Date';
   
     return Container(
