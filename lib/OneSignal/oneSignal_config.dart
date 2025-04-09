@@ -95,17 +95,19 @@ Future<void> getDeviceInfo(
   if(pref.containsKey(key))
   {
     deviceData.value = jsonDecode(pref.getString(key) ?? "{}");
-  }else
+     loginUser(emailController, passwordController, context);
+  }
+  else
   {
-      getDeviceLocalDetails(playerId);
+      getDeviceLocalDetails(playerId,emailController, passwordController, context);
   }
 
-  loginUser(emailController, passwordController, context);
+ 
 }
 
 
 
-void getDeviceLocalDetails(String playerId)async{
+void getDeviceLocalDetails(String playerId,emailController, passwordController, context)async{
 
 final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
@@ -140,6 +142,8 @@ try {
   } catch (e) {
     print('Error getting device info: $e');
   }
+
+   loginUser(emailController, passwordController, context);
 
 }
 
