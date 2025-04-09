@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/donut_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
@@ -316,8 +317,7 @@ void getUserBankData(context) async {
   }
 }
 
-void updateTheTagOfTarnsactions(
-    category, subCategory, transactionId, context, index) async {
+void updateTheTagOfTarnsactions(category, subCategory, transactionId, context, index) async {
   String urlPath = "${url}/transactionauto/updateTransaction/${transactionId}";
 
   final SharedPreferences _pref = await SharedPreferences.getInstance();
@@ -338,6 +338,28 @@ void updateTheTagOfTarnsactions(
   if (getFlagOfResponse(response)) {
     Navigator.pop(context);
     reloadHistory.value = !reloadHistory.value;
+  } else {}
+}
+
+void updateTheTagOfTarnsactionsGroup(category, subCategory, grpId, context, index) async {
+  String urlPath = "${url}/transactionauto/grouped/${grpId}/categorize";
+
+  var body={
+      'category': category,
+      'subcategory': subCategory,
+      "removedTransactions": removedGrpItemsList,
+    };
+
+  var response =await postDataApiCall(urlPath, body);
+
+  if (getFlagOfResponse(response))
+  {
+       getAllTransaction(context);
+      reloadHistory.value = !reloadHistory.value;
+      Navigator.pop(context);
+      Navigator.pop(context);
+      removedGrpItemsList.clear();
+      lengthOfTransactions.value=false;
   } else {}
 }
 

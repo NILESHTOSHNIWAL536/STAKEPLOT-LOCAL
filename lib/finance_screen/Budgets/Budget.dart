@@ -279,6 +279,7 @@ Widget textStyle({
   double fontsize = 12,
   Color c = AppColors.bg1,
   FontWeight fontWeight = FontWeight.w500,
+  bool iswrap = false,
 }) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.start,
@@ -289,7 +290,7 @@ Widget textStyle({
         text.toString(),
         style: FontManager().getTextStyle(context,
             lWeight: fontWeight, fontSize: fontsize, color: c),
-        overflow: TextOverflow.ellipsis,
+        overflow: iswrap? TextOverflow.visible:TextOverflow.ellipsis,
       ),
     ],
   );
