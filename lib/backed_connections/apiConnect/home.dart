@@ -17,10 +17,10 @@ void getAck() async {
 }
 
 void setPasswordApiCalled(context, String password) async {
-   print("setPasswordApiCalled: Attempting to set PIN = $password");
+  print("setPasswordApiCalled: Attempting to set PIN = $password");
   if (password == "00") {
     print("Error: Cannot set PIN to '00'");
-    
+
     return; // Exit the function without setting the PIN
   }
   var urlPath = '${url}/user/cupertino/';
@@ -62,7 +62,8 @@ void seletedBankUpdateInfo(id, context) async {
 }
 
 void getAllTransaction(context) async {
-  var response =await getDataApiCall("${url}/transactionauto/getTransactions/${currentPage}");
+  var response = await getDataApiCall(
+      "${url}/transactionauto/getTransactions/${currentPage}");
   expire(response, context);
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
@@ -99,16 +100,20 @@ void getHiddenTransactions(context) async {
 Future<void> getAllTransactionHistory(
     BuildContext context, bool flag, bool isYearView,
     {bool isRefreshing = false}) async {
-   if (isLoadingMore.value) return; // Prevent multiple API calls
+  if (isLoadingMore.value) return; // Prevent multiple API calls
   try {
     isLoadingMore.value = true;
-    String type = isYearView? selectedYear.value.toString(): selectedYear.value.toString() +"-" +selectedMonth.value.toString().padLeft(2, '0');
+    String type = isYearView
+        ? selectedYear.value.toString()
+        : selectedYear.value.toString() +
+            "-" +
+            selectedMonth.value.toString().padLeft(2, '0');
     String urlPath = flag
         ? "${url}/transactionauto/get-monthly-transactions-history/${accountId.value}/${type}/${currentPage}"
         : "${url}/transactionauto/getTransactions/${currentPage}";
 
     var response = await getDataApiCall(urlPath);
-  
+    print("Tranaction history details : ${response.body}");
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       var obj = data['data'];
@@ -123,7 +128,7 @@ Future<void> getAllTransactionHistory(
         if (obj.isEmpty || obj.length < 20) {
           hasMoreData = false;
           isLoadingMore.value = false;
-        } else{
+        } else {
           currentPage++;
         }
 
