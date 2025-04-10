@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/opt_email.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
@@ -76,21 +76,16 @@ class _SigninState extends State<ResetOtp> {
 
   }
 
-   final int _otpLength = 6;
+  final int _otpLength = 6;
   late List<TextEditingController> _controllers= List.generate(_otpLength, (_) => TextEditingController());
   late List<FocusNode> _focusNodes=List.generate(_otpLength, (_) => FocusNode());
-
 
   
   @override
   void initState() {
     super.initState();
-    // _controllers = List.generate(_otpLength, (_) => TextEditingController());
-    // _focusNodes = List.generate(_otpLength, (_) => FocusNode());
   }
- 
 
- 
   @override
   void dispose() {
     for (var controller in _controllers) {
@@ -258,112 +253,6 @@ class _SigninState extends State<ResetOtp> {
         ],
       ),
     );
-
-   
-    // return SafeArea(
-    //   child: Scaffold(
-    //     body: Container(
-    //            height: MediaQuery.of(context).size.height,
-    //           //  padding:const EdgeInsets.only(bottom: 20),
-    //            child:   SingleChildScrollView(
-    //              child: Column(
-    //                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //                  crossAxisAlignment: CrossAxisAlignment.center,
-    //                  children: [
-    //                      ClipRRect(
-    //                          borderRadius: BorderRadius.only(
-    //                              bottomLeft: Radius.circular(100)
-    //                          ),
-    //                          child: Container( 
-    //                             padding:const EdgeInsets.all(25),
-    //                              color: Colorcodes.debtBody,
-    //                             // color:  Color.fromRGBO(97, 143, 214, 1),  //rgba(97, 143, 214, 1)
-    //                             child: Center(child: Text(("signup"),
-    //                             style: FontManager().getTextStyle(context,
-    //                           lWeight: FontWeight.w400,
-    //                           fontSize: 25,
-    //                           color: Colors.white))),
-    //                          ),
-    //                        ),
-      
-    //                        const SizedBox(height: 100,),
-      
-      
-    //                        Container(
-    //                          padding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 20),
-    //                          decoration: BoxDecoration(
-    //                           color: Color.fromRGBO(249, 246, 238, 1),
-    //                           borderRadius: BorderRadius.circular(50)
-                                 
-    //                          ),
-    //                          child: Column(
-    //                             mainAxisAlignment: MainAxisAlignment.center,
-    //                             children: [
-    //                               Text(("confirmation code"),
-    //                               style: FontManager().getTextStyle(context,
-    //                                                         fontSize: 17,
-    //                                                         color: Colors.black)),
-    //                             ],
-    //                           ),
-    //                        ),
-      
-    //                          const SizedBox(height: 40,),
-                        
-                          //  Row(
-                          //      mainAxisAlignment: MainAxisAlignment.center,
-                          //      children: [
-                          //            InputDate("email/phone number",TextInputType.number,emailController,0),
-                          //            InputDate("username",TextInputType.number,passwordController,1),
-                          //            InputDate("Date of birth",TextInputType.number,passwordController,2),
-                          //            InputDate("password",TextInputType.number,passwordController,3),
-                          //            InputDate("password",TextInputType.number,passwordController,4),
-                          //            InputDate("password",TextInputType.number,passwordController,5),
-                          //      ],
-                          //  ),
-                                        
-                                        
-    //                             const SizedBox(height:100,),                       
-                                              
-                                              
-    //                         Row(
-    //                           mainAxisAlignment: MainAxisAlignment.center,
-    //                           children: [
-    //                             GestureDetector(
-    //                               onTap: () {
-                                    // String opt="";
-
-                                    // _controllers.forEach((element) { 
-                                    //      opt += element.text;
-                                    // });
-                                   
-                                    //  storeData(context,widget.data, opt, widget.url);
-    //                               },
-    //                               child: Container( 
-    //                                 padding:const EdgeInsets.symmetric(horizontal:35,vertical: 10),
-    //                                 decoration: BoxDecoration(
-    //                                 // color:const Color.fromRGBO(97, 143, 214, 1),
-    //                                 color: Colorcodes.debtBody,
-    //                                      borderRadius: BorderRadius.circular(5)
-    //                                 ),
-    //                                 child: Text(("Sign Up"),
-    //                                 style: FontManager().getTextStyle(context,
-    //                                                             lWeight: FontWeight.w400,
-    //                                                             fontSize: 20,
-    //                                                             color: Colors.white)),
-    //                                                    ),
-    //                             ),
-    //                           ],
-    //                         )
-                           
-                            
-                       
-                       
-    //                  ],
-    //              ),
-    //            ),
-    //      ),
-    //   ),
-    // );
   }
 
 

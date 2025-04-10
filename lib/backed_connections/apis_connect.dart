@@ -258,7 +258,7 @@ void snackBarCalled(context, String text, [Color colors = Colors.black]) {
 
 void snackBarCalledSignup(context, String text, [Color colors = Colors.black]) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    duration: Duration(seconds: 3),
+    duration: Duration(seconds: 2),
     content: Text(
       text,
       style: FontManager()

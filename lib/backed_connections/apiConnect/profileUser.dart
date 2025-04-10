@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
@@ -10,7 +8,6 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:http/http.dart' as http;
-import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
@@ -23,23 +20,6 @@ void approveBill(context, id, type, notifyId) async {
   if (getFlagOfResponse(responce)) {}
 }
 
-// void getRemainders(context) async {
-//   String urlPath = "${url}/reminders";
-//   var responce = await getDataApiCall(urlPath);
-
-//   if (getFlagOfResponse(responce)) {
-//     var his = jsonDecode(responce.body);
-//     var userDue = his['data']['PendingBills'];
-//     var userDue2 = his['data']['PendingPayments'];
-//     var userDue3 = his['data']['PendingSplits'];
-//     dueAmountRemainders.clear();
-//     dueAmountRemainders.addAll(userDue);
-//     dueAmountRemainders.addAll(userDue2);
-//     dueAmountRemainders.addAll(userDue3);
-//     getdueUsers.value = !getdueUsers.value;
-//   }
-
-// }
 void getRemainders(context) async {
   String urlPath = "${url}/reminders";
   var responce = await getDataApiCall(urlPath);

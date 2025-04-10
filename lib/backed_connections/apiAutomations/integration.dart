@@ -3,7 +3,7 @@ import 'package:finvu_flutter_sdk/finvu_config.dart';
 import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';

@@ -18,6 +18,19 @@ Future postDataApiCall(String urlPath, Map body) async {
   return response;
 }
 
+Future postDataApiCallwithOutSharedPref(String urlPath, Map body) async
+{
+  final response = await http.post(
+    Uri.parse(urlPath),
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(body),
+  );
+  return response;
+  
+}
+
 
 Future<http.Response> updateDataApiCall(urlPath) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
