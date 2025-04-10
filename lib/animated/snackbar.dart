@@ -6,15 +6,18 @@ import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 void showSuccessTopSnackBar(BuildContext context, String message) {
   showTopSnackBar(
     Overlay.of(context),
-    CustomSnackBar.success(
-      message: message,
-      backgroundColor: Colors.green.shade600,
-      textStyle: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.bold,
-                    fontSize: 12,
-                    color: Colors.white,
-                  ),
+    Container(
+      height: 40,
+      child: CustomSnackBar.success(
+        message: message,
+        backgroundColor: Colors.green.shade600,
+        textStyle: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.bold,
+                      fontSize: 12,
+                      color: Colors.white,
+                    ),
+      ),
     ),
     displayDuration: const Duration(seconds: 2),
     curve: Curves.easeOutBack,

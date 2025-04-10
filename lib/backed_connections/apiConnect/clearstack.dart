@@ -1,0 +1,133 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+void clearStack(BuildContext context) {
+  try {
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+  } catch (e) {
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+  }
+}
+
+void clearStackHome(BuildContext context) {
+  try {
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+  } catch (e) {
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+  }
+}
+
+void clearStackName(BuildContext context, String str, [String to = "/home"]) {
+  try {
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('${str}', (Route<dynamic> route) => false);
+  } catch (e) {
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('${to}', (Route<dynamic> route) => false);
+  }
+}
+
+void clearStackShared(BuildContext context) {
+  for (int i = 0; i <= 4; i++) {
+    Navigator.pop(context);
+  }
+}
+
+
+void expire(responce, BuildContext context) {
+  try {
+    var body = json.decode(responce.body);
+    if (body['error'].toString() == "JsonWebTokenError") {
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+      Navigator.pushReplacementNamed(context, '/');
+    }
+  } catch (e) {}
+}
+
+void check(context, String flag) async
+{
+     final SharedPreferences _pref = await SharedPreferences.getInstance();
+     bool f=_pref.containsKey("accessToken");
+     if (!f && flag != "loginuser") Navigator.pushReplacementNamed(context, '/');
+}
+
+
+void clearGetX() {
+  income = 0.obs;
+  messages.clear();
+  messagesTemp.clear();
+  roomBills.clear();
+  questionRoom.clear();
+  productList.clear();
+  userPostList.clear();
+  savedList.clear();
+  myPostList.clear();
+  friendsList.clear();
+  frdsListOrigin.clear();
+  chatList.clear();
+  chatListOriginal.clear();
+  friendsListDetails.clear();
+  chatOfUserList.clear();
+  chatOfUserListData.clear();
+  consentAndHandleDetails.clear();
+  aboutMe = false.obs;
+  sizeRoom = false;
+  fontSize = 20;
+  budgetLength = 0.obs;
+  billLength = 0.obs;
+  debtLength = 0.obs;
+  paymentLength = 0.obs;
+  keyss = originalKeys;
+  room = [];
+  account = [];
+  notificationList.clear();
+  hasGetNewNotifications.value = false;
+  userName = "Loading...".obs;
+  currentId = "Loading...".obs;
+  Phone = "Loading...".obs;
+  currency = "Loading...".obs;
+  score = "Loading...".obs;
+  email = "Loading...".obs;
+  changeAvater = "Loading...".obs;
+  userId = "";
+  targetString = "".obs;
+  //  listOfCater =<Plot> [].obs;
+  isBankAccountLink.value = true;
+  trasactionsData.clear();
+  addedMembers.clear();
+  addedUser.clear();
+  isBankAccountLink.value = false;
+  cupertinoPin.value = '0';
+  balance.value = "";
+  accountName.value = "";
+  transactionChatGraph.clear();
+  labels.clear();
+  selectedButton.value = "Month";
+  graphTransaction.value = false;
+  isSplit.value = false;
+  isLend.value = false;
+  accountName.value = "";
+  accountNo.value = "0";
+  balance.value = "0";
+  selectedBank.value = "";
+  accountId.value = "";
+  displayedData.clear();
+  bankAccountLinkedList.clear();
+  FipIdsConnected.clear();
+}

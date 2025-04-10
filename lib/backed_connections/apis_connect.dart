@@ -7,6 +7,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:get/get.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 bool flag = true;
 String portNo = flag ? "192.168.1.13" : "localhost";
@@ -245,20 +247,57 @@ void printData(response, [context = ""]) {
 }
 
 void snackBarCalled(context, String text, [Color colors = Colors.black]) {
-  // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //   duration: Duration(seconds: 4),
-  //   content: Text(
-  //     text,
-  //     style: FontManager()
-  //         .getTextStyle(context, color: Colors.white, fontSize: 15),
-  //   ),
-  //   backgroundColor: colors,
-  // ));
+  showTopSnackBar(
+    Overlay.of(context),
+    Container(
+      height: 40,
+      child: CustomSnackBar.success(
+        message: text,
+        backgroundColor: Colors.green.shade600,
+        textStyle: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.bold,
+                      fontSize: 12,
+                      color: Colors.white,
+                    ),
+      ),
+    ),
+    displayDuration: const Duration(seconds: 2),
+    curve: Curves.easeOutBack,
+    reverseCurve: Curves.easeInBack,
+    animationDuration: const Duration(milliseconds: 600),
+  );
+
+
+}
+void snackBarCalledfail(context, String text, [Color colors = Colors.black]) {
+  showTopSnackBar(
+    Overlay.of(context),
+    Container(
+      height: 40,
+      child: CustomSnackBar.success(
+        message: text,
+        backgroundColor: Colors.red,
+        textStyle: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.bold,
+                      fontSize: 12,
+                      color: Colors.white,
+                    ),
+      ),
+    ),
+    displayDuration: const Duration(seconds: 2),
+    curve: Curves.easeOutBack,
+    reverseCurve: Curves.easeInBack,
+    animationDuration: const Duration(milliseconds: 600),
+  );
+
+
 }
 
 void snackBarCalledSignup(context, String text, [Color colors = Colors.black]) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    duration: Duration(seconds: 3),
+    duration: Duration(seconds: 2),
     content: Text(
       text,
       style: FontManager()

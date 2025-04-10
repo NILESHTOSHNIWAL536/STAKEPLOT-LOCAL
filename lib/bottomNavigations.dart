@@ -11,6 +11,7 @@ import "package:flutter_application_code_stakeplot/Profile/profile.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
+import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart";
 import "package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart";

@@ -200,3 +200,14 @@ List getLastTenUsers(List allUsers) {
   // Reverse the list
   return lastUsers.reversed.toList();
 }
+
+String getTimeBasedGreeting() {
+  final hour = DateTime.now().hour;
+  if (hour < 12) {
+    return "Good morning";
+  } else if (hour < 16) {
+    return "Good afternoon,";
+  } else {
+    return "Good evening,";
+  }
+}

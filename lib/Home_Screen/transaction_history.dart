@@ -62,8 +62,8 @@ class _TransactionHistoryState extends State<TransactionHistory>
   final List<Map<String, dynamic>> hiddenTransactions = [];
   final targetKey = GlobalKey();
   BuildContext? _stableContext;
-   // For smooth animations
-  Animation<double>? _swipeAnimation;// Animation for swipe offset
+  // For smooth animations
+  Animation<double>? _swipeAnimation; // Animation for swipe offset
   int? _currentSwipedIndex;
 
   @override
@@ -88,8 +88,8 @@ class _TransactionHistoryState extends State<TransactionHistory>
       }
     });
 
-    getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,isRefreshing: true);
-   
+    getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,
+        isRefreshing: true);
   }
 
   @override
@@ -97,12 +97,14 @@ class _TransactionHistoryState extends State<TransactionHistory>
     super.didChangeDependencies();
     _stableContext ??= context;
   }
-@override
-void dispose() {
-  _scrollController2.dispose();
-  // _animationController?.dispose();
-  super.dispose();
-}
+
+  @override
+  void dispose() {
+    _scrollController2.dispose();
+    // _animationController?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -119,7 +121,7 @@ void dispose() {
                       fontSize: 18,
                       color: AppColors.accentColor),
                 ),
-                if (!(widget.showIcon?? false)) ...[
+                if (!(widget.showIcon ?? false)) ...[
                   InkWell(
                     onTap: () {
                       showModal();
@@ -133,57 +135,61 @@ void dispose() {
                 ]
               ],
             ),
-          
-            Obx(()=> allOrGroupTransactionsName.value==StringConstant.allTransactions ?  getTabsForTransactions():getTabsForTransactions()),
-            
-         Obx(
-             ()=>  allOrGroupTransactionsName.value==StringConstant.allTransactions ? 
-             Obx(() => reloadHistory.value
-                ? getlist()
-                : getlist()): GroupTransactions()
-            ), 
+            (widget.showIcon ?? false)
+                ? SizedBox(
+                    height: 15,
+                  )
+                : Obx(() => allOrGroupTransactionsName.value ==
+                        StringConstant.allTransactions
+                    ? getTabsForTransactions()
+                    : getTabsForTransactions()),
+            Obx(() => allOrGroupTransactionsName.value ==
+                    StringConstant.allTransactions
+                ? Obx(() => reloadHistory.value ? getlist() : getlist())
+                : GroupTransactions()),
           ],
         ),
       ),
     );
   }
 
+  Widget getTabsForTransactions() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          tabItem(StringConstant.allTransactions),
+          tabItem(StringConstant.pollTransactions),
+        ],
+      ),
+    );
+  }
 
-Widget getTabsForTransactions(){
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 20),
-    child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                tabItem(StringConstant.allTransactions),
-                tabItem(StringConstant.pollTransactions),
-              ],
-     ),
-  );
-}
-
-
-Widget tabItem(text){
- bool f=  text==allOrGroupTransactionsName.value;
-  return  InkWell(
-    onTap: (){
+  Widget tabItem(text) {
+    bool f = text == allOrGroupTransactionsName.value;
+    return InkWell(
+      onTap: () {
         allOrGroupTransactionsName.value = text;
-    },
-    child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: f? AppColors.primaryColor:AppColors.bg5,
-                      border: Border.all(
-                        width: .5,
-                        color:  AppColors.primaryColor,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: textStyle(context: context, text:text, c: f? AppColors.bg5:AppColors.primaryColor,fontsize: 15, fontWeight: FontWeight.w500)  
-                  ),
-  );
-}
-
+      },
+      child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          decoration: BoxDecoration(
+            color: f ? AppColors.primaryColor : AppColors.bg5,
+            border: Border.all(
+              width: .5,
+              color: AppColors.primaryColor,
+            ),
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: textStyle(
+              context: context,
+              text: text,
+              c: f ? AppColors.bg5 : AppColors.primaryColor,
+              fontsize: 15,
+              fontWeight: FontWeight.w500)),
+    );
+  }
 
   Widget getListItemListTile(String no, String MorY, context) {
     return Container(
@@ -225,8 +231,9 @@ Widget tabItem(text){
       itemBuilder: (context, index) {
         if (index < transactionsHistory.length) {
           final transaction = transactionsHistory[index];
-       
-          double amount = double.parse(doubleToFixed((transaction['amount'] ?? 0.0).toString()));
+
+          double amount = double.parse(
+              doubleToFixed((transaction['amount'] ?? 0.0).toString()));
           String category = transaction['category']?.toString() ??
               'Uncategorized'; // Fixed typo and added null check
           String subcategory =
@@ -301,7 +308,9 @@ Widget tabItem(text){
               ? Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   child: const Center(
-                    child: CircularProgressIndicator(color: AppColors.primaryColor,),
+                    child: CircularProgressIndicator(
+                      color: AppColors.primaryColor,
+                    ),
                   ),
                 )
               : const SizedBox.shrink();
@@ -476,13 +485,13 @@ Widget tabItem(text){
                           decoration: BoxDecoration(
                             color: Colors.white,
                             gradient: LinearGradient(
-                      colors: [
-                        AppColors.button,
-                        Colors.white.withOpacity(0.7),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
+                              colors: [
+                                AppColors.button,
+                                Colors.white.withOpacity(0.7),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: AvatarProfileImage(
@@ -637,32 +646,33 @@ Widget tabItem(text){
 
   void animateSwipe(int index, double targetOffset) {
     if (_animationController == null) return;
-  _currentSwipedIndex = index;
-  double currentOffset = swipeOffsets[index] ?? 0.0;
+    _currentSwipedIndex = index;
+    double currentOffset = swipeOffsets[index] ?? 0.0;
 
-  _swipeAnimation = Tween<double>(begin: currentOffset, end: targetOffset)
-      .animate(CurvedAnimation(
-    parent: _animationController!,
-    curve: Curves.easeInOut,
-  ))
-    ..addListener(() {
-      setState(() {
-        if (_currentSwipedIndex == index) {
-          swipeOffsets[index] = _swipeAnimation!.value;
+    _swipeAnimation = Tween<double>(begin: currentOffset, end: targetOffset)
+        .animate(CurvedAnimation(
+      parent: _animationController!,
+      curve: Curves.easeInOut,
+    ))
+      ..addListener(() {
+        setState(() {
+          if (_currentSwipedIndex == index) {
+            swipeOffsets[index] = _swipeAnimation!.value;
+          }
+        });
+      })
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          // Optionally reset the offset to 0 if swipe is canceled or completed
+          if (targetOffset == 0.0) {
+            swipeOffsets.remove(index);
+          }
         }
       });
-    })
-    ..addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        // Optionally reset the offset to 0 if swipe is canceled or completed
-        if (targetOffset == 0.0) {
-          swipeOffsets.remove(index);
-        }
-      }
-    });
 
-  _animationController!.forward(from: 0.0);
-}
+    _animationController!.forward(from: 0.0);
+  }
+
   static Future<String?> getToken() async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     var accessToken = pref.getString("accessToken");
@@ -820,29 +830,22 @@ void hideTransaction(
       if (hidden) {
         hiddenTransactions.add(transaction);
         transactionsHistory.removeAt(index);
-      //  swipeOffsets.remove(index);
         swipeOffsets.clear(); // Clear all swipe offsets
         _animationController?.reset(); // Reset the animation controller
-        
-        // Optionally, refresh the reactive list to trigger UI update
         transactionsHistory.refresh();
+        snackBarCalled(context, "Transaction hidden Successfully");
       } else {
         hiddentrasactionsHistory.removeAt(index);
         hiddentrasactionsHistory.refresh();
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(
-                "Failed to hide transaction: ${response.statusCode} - ${response.body}")),
-      );
+       snackBarCalledfail(context, "Failed to hide transaction");
+      
     }
   } catch (e) {
+     snackBarCalledfail(context, "Error hiding transaction");
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Error hiding transaction")),
     );
   }
 }
-
-
-

@@ -59,6 +59,7 @@
 
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
@@ -130,4 +131,42 @@ class GoogleAuthService {
     await _auth.signOut();
   }
 
+}
+
+
+Future<void> handleSignInGoogle(BuildContext context) async {
+  const List<String> scopes = <String>[
+    'email',
+    'https://www.googleapis.com/auth/contacts.readonly',
+  ];
+
+  String serverClientId =
+      "191971007715-768tpapqjlkvcj4grgfi66md6fh3a89m.apps.googleusercontent.com";
+  String mobile =
+      "637011980078-s9kioj0kh6pkqebbf20h6fk45ufujsbg.apps.googleusercontent.com";
+  String web =
+      "637011980078-snckpvhmqpcog8jejihnr8ioonvf1n22.apps.googleusercontent.com";
+  // String serverClientId =
+  //     "637011980078-s9kioj0kh6pkqebbf20h6fk45ufujsbg.apps.googleusercontent.com";
+
+  // GoogleSignIn _googleSignIn = GoogleSignIn(serverClientId:serverClientId,);
+
+  try {
+    // var googleUser = await _googleSignIn.signIn();
+
+    // if (googleUser != null) {
+    // final GoogleSignInAuthentication googleAuth =
+    //     await googleUser.authentication;
+
+    // final SharedPreferences _pref = await SharedPreferences.getInstance();
+    // //  _pref.setString("accessToken", "Bearer "+accessToken);
+    // _pref.setString("accessToken", "Google "+googleAuth.accessToken.toString());
+
+    // Navigator.pushNamed(context, '/home');
+
+    // You can use the ID Token to authenticate with your backend
+    // } else {
+
+    // }
+  } catch (error) {}
 }

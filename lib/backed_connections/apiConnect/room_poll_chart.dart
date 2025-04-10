@@ -2,15 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:http/http.dart' as http;
-import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void getChats(data) async {
@@ -267,20 +264,13 @@ void createPoll(context, String question, List options, roomDetails, members,
 
 void createPollOfCommunityPost(context, String question, List options,
     roomDetails, members, String type) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  var urlPath = Uri.parse('${url}/post/createPollPost');
-  //  print(urlPath);
-  final response = await http.post(
-    Uri.parse('${urlPath}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
+  
+  String urlPath = '${url}/post/createPollPost';
+
+  var body={
       'question': question,
       'options': options,
-      'pollType': type, //roomDetails.length!=0?'room':'casual',
+      'pollType': type, 
       'roomDetails': roomDetails,
       'myVote': 'none',
       'title': "Poll is Added in the Post",
@@ -288,48 +278,33 @@ void createPollOfCommunityPost(context, String question, List options,
         'message': "description",
       },
       'isPoll': true,
-    }),
-  );
+    };
+
+  final response = await  postDataApiCall(urlPath, body);
 
   if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
-    var snackBar = SnackBar(
-      duration: Durations.long1,
-      content: Text(
-        'Sending polls to friends...!!',
-        style: FontManager().getTextStyle(
-          context,
-          color: Colors.white,
-          fontSize: 15,
-        ),
-      ),
-      backgroundColor: Colors.black,
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    var obj = jsonDecode(response.body);
-    questionRoom.add(obj['data']);
-    posting.value = false;
-    resetAndLoadData();
-    getPost();
-    Navigator.pop(context);
-  } else {
-    var snackBar = SnackBar(
-      duration: Durations.medium4,
-      content: Text(
-        'An error occurred while uploading...!',
-        style: FontManager().getTextStyle(
-          context,
-          color: Colors.white,
-          fontSize: 15,
-        ),
-      ),
-      backgroundColor: Colors.red,
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      final data = (json.decode(response.body));
+      uploadRefreshCall( data['data'],context);
+      Navigator.pop(context);
+  } else
+  {
+      snackBarCalledSignup(context, " 'An error occurred while uploading...!'", Colors.red);
   }
 }
+
+
+
+void uploadRefreshCall(postData,BuildContext context)
+{
+      getTrendingData.insert(0, postData);
+      postCount[postData["_id"]] = 0;
+      postCommentCount[postData["_id"]] = 0;
+      posting.value = false;
+      postDis.value = false;
+      getPosted.value = !getPosted.value;
+      resetAndLoadData();
+}
+
 
 void votePoll(context, String id, int index) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
