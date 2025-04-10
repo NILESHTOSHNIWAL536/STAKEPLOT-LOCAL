@@ -175,7 +175,7 @@ class _SigninState extends State<ResetOtp> {
   Widget topHeader() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 20),
-      child: Text(("Security Pin"),
+      child: Text(("Verification Code"),
           style: FontManager().getTextStyle(context,
               lWeight: FontWeight.bold, fontSize: 22, color: Colors.black)),
     );

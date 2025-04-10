@@ -129,6 +129,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                     ),
                   )
                 :SfCircularChart(
+                  
                              legend: Legend(isVisible: true, position: LegendPosition.bottom),
                             series: <CircularSeries>[
 
@@ -226,7 +227,8 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                   ],
                                 ),
                               ),
-                      )),
+                      )
+                      ),
                     ],
                   ),
                 );
