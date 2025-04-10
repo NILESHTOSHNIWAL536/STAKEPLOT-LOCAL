@@ -1,29 +1,19 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-// import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:confetti/confetti.dart';
-//import 'package:get/get.dart';
-import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
-import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -36,10 +26,11 @@ class Manualtransaction extends StatefulWidget {
 }
 
 class _ManualtransactionState extends State<Manualtransaction> {
+ 
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.sizeOf(context).width / 0.8,
-      // padding: const EdgeInsets.all(12.0),
+    
       decoration: BoxDecoration(
         color: AppColors.mt,
         borderRadius: BorderRadius.circular(16),
@@ -68,7 +59,9 @@ class _ManualtransactionState extends State<Manualtransaction> {
                             color: AppColors.accentColor)),
                     const SizedBox(height: 8),
                     InkWell(
-                      onTap: () => showCustomModal(context),
+                      onTap: () { showCustomModal(context);
+                       // player.play(UrlSource('https://www.soundjay.com/button/beep-07.wav'));
+                      },
                       child: Container(
                         height: Colorcodes.paddingSize * 1.5,
                         width: Colorcodes.paddingSize * 4,

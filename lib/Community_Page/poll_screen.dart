@@ -7,11 +7,7 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
 import './success_post.dart';
-
-//import 'dart:io';
-import 'package:flutter_polls/flutter_polls.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 
 class PollScreen extends StatefulWidget {
   final Function(Map<String, dynamic>) onPollPosted;
@@ -77,8 +73,7 @@ class _PollScreenState extends State<PollScreen> {
       if (posting.value) return;
       posting.value = true;
 
-      createPollOfCommunityPost(
-          context, question.toString(), options, {}, [], "casual");
+      createPollOfCommunityPost(context, question.toString(), options, {}, [], "casual");
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

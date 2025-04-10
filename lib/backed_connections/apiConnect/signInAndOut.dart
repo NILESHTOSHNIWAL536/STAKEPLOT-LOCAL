@@ -26,34 +26,38 @@ import 'dart:io';
 
 void clearStack(BuildContext context) {
   try {
-    Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
   } catch (e) {
-    Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
   }
 }
+
 void clearStackHome(BuildContext context) {
   try {
-    Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
   } catch (e) {
-    Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
   }
 }
 
-
-void clearStackName(BuildContext context,String str,[String to="/home"]) {
+void clearStackName(BuildContext context, String str, [String to = "/home"]) {
   try {
-    Navigator.of(context).pushNamedAndRemoveUntil('${str}', (Route<dynamic> route) => false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('${str}', (Route<dynamic> route) => false);
   } catch (e) {
-    Navigator.of(context).pushNamedAndRemoveUntil('${to}', (Route<dynamic> route) => false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('${to}', (Route<dynamic> route) => false);
   }
 }
 
-void clearStackShared(BuildContext context) 
-{
-    for(int i=0;i<=4;i++)
-    {
-        Navigator.pop(context);
-    }
+void clearStackShared(BuildContext context) {
+  for (int i = 0; i <= 4; i++) {
+    Navigator.pop(context);
+  }
 }
 
 void expire(responce, BuildContext context) {
@@ -67,7 +71,7 @@ void expire(responce, BuildContext context) {
   } catch (e) {}
 }
 
-void check(context, String flag) async { 
+void check(context, String flag) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   bool f=_pref.containsKey("accessToken");
   if (!f)
@@ -78,7 +82,6 @@ void check(context, String flag) async {
     }
     else if (flag != "loginuser") Navigator.pushReplacementNamed(context, '/');
   }
-
 }
 
 Future<void> loginUser(TextEditingController emailController,
@@ -123,8 +126,7 @@ Future<void> loginUser(TextEditingController emailController,
   if (response.statusCode == 200 || response.statusCode == 201)
    {
     final body = json.decode(response.body);
-   
-    
+
     String accessToken = body['data']['accessToken'];
     print("access token --------- $accessToken");
     _pref.setString("accessToken", "Bearer " + accessToken);
@@ -132,13 +134,14 @@ Future<void> loginUser(TextEditingController emailController,
     await initializeOneSignal(context);
     currentId.value = body['data']['_id'];
     isBankAccountLink.value = body['data']['isBankAccountLinked'];
-      // await getBankAccounts();
+    // await getBankAccounts();
     getPhoneNo(body);
-    Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
     acceptReset.value = false;
 
     // storeinmap(body, _pref, passwordController.text);
-  //   Phone.value = body['data']['phone'] ?? "";
+    //   Phone.value = body['data']['phone'] ?? "";
     // number.value = body['data']['phone']?? "";
   } else {
     acceptReset.value = false;
@@ -159,23 +162,20 @@ Future<void> loginUser(TextEditingController emailController,
   }
 }
 
-
-
-void getPhoneNo(body){
+void getPhoneNo(body) {
   List<dynamic> phoneList = body['data']['phone'] ?? [];
   String phone = "0";
 
-if (phoneList.isNotEmpty) {
-  if (phoneList[0] != "0")
-  {
-    phone = phoneList[0];
-  } else if (phoneList.length > 1 && phoneList[1] != "0") {
-    phone = phoneList[1];
+  if (phoneList.isNotEmpty) {
+    if (phoneList[0] != "0") {
+      phone = phoneList[0];
+    } else if (phoneList.length > 1 && phoneList[1] != "0") {
+      phone = phoneList[1];
+    }
   }
-}
- 
-   Phone.value = phone;
-  number.value= phone;
+
+  Phone.value = phone;
+  number.value = phone;
 }
 
 void storeinmap(body, SharedPreferences _pref, String password) {
@@ -252,7 +252,7 @@ void forceLogoutUser(
       // storeinmap(body, _pref, userpassword);
       // Phone.value = body['data']['phone'];
       // number.value = body['data']['phone'];
-       getPhoneNo(body);
+      getPhoneNo(body);
       isBankAccountLink.value = body['data']['isBankAccountLinked'];
       clearStack(context);
       Navigator.pushNamed(context, "/home");

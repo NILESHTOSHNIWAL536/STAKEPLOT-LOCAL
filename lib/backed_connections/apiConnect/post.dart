@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'dart:io' as io;
 import 'package:http/http.dart' as http;
@@ -494,29 +495,8 @@ void sn(res, context) {
 Future<Map<String, dynamic>> createPost(BuildContext context, String title,
     String description, File imageFile) async {
   try {
-    // Cloudinary upload URL
-    final url2 = Uri.parse('https://api.cloudinary.com/v1_1/deus5rcgl/upload');
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    var accessToken = pref.getString("accessToken");
 
-    // Upload image to Cloudinary
-    final request = http.MultipartRequest('POST', url2)
-      ..fields['upload_preset'] = 'zu3td0li'
-      ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
-
-    final response2 = await request.send();
-
-    if (response2.statusCode != 200) {
-      snackBarCalled(context, "Image upload failed", Colors.red);
-      return {'success': false, 'error': 'Image upload failed'};
-    }
-
-    final responseData = await response2.stream.toBytes();
-    final responseString = String.fromCharCodes(responseData);
-    final jsonMap = jsonDecode(responseString);
-    String urlPath = jsonMap['secure_url'];
-
-    // Prepare post data
+    String urlPath =await addImageToCloud2(imageFile);     //jsonMap['secure_url'];
     var body = {
       'title': title,
       'description': {'message': description},
@@ -524,31 +504,13 @@ Future<Map<String, dynamic>> createPost(BuildContext context, String title,
       'fileName': ''
     };
 
-    // Make post request
-    final urlp =
-        Uri.parse('${url}/post'); // Make sure 'url' is defined somewhere
-    final response = await http.post(
-      urlp,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-      body: jsonEncode(body),
-    );
+    String apiCall='${url}/post';
+    var response=await postDataApiCall(apiCall,body);
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
+    if (getFlagOfResponse(response))
+    {
       var postData = jsonDecode(response.body);
-
-      // Update local state
-      getTrendingData.insert(0, postData);
-      getPosted.value = !getPosted.value;
-      resetAndLoadData();
-      postCount[postData["_id"]] = 0;
-      postCommentCount[postData["_id"]] = 0;
-
-      posting.value = false;
-      postDis.value = false;
-
+      uploadRefreshCall(postData,context);
       return {
         'success': true,
         'data': postData,
@@ -581,12 +543,13 @@ void createPostWithOutImage(context, String title, String description) async {
   };
   var response = await postDataApiCall(urlPath, body);
   if (getFlagOfResponse(response)) {
-    var his = jsonDecode(response.body);
-    getTrendingData.insert(0, his);
-    resetAndLoadData();
-    getPosted.value = !getPosted.value;
-    postCount[his["_id"]] = 0;
-    postCommentCount[his["_id"]] = 0;
+      var his = jsonDecode(response.body);
+      uploadRefreshCall(his,context);
+    // getTrendingData.insert(0, his);
+    // resetAndLoadData();
+    // getPosted.value = !getPosted.value;
+    // postCount[his["_id"]] = 0;
+    // postCommentCount[his["_id"]] = 0;
   }
 }
 

@@ -134,7 +134,7 @@ void dispose() {
               ],
             ),
           
-         (widget.showIcon?? false)?SizedBox(height: 10,):   Obx(()=> allOrGroupTransactionsName.value==StringConstant.allTransactions ?  getTabsForTransactions():getTabsForTransactions()),
+            Obx(()=> allOrGroupTransactionsName.value==StringConstant.allTransactions ?  getTabsForTransactions():getTabsForTransactions()),
             
          Obx(
              ()=>  allOrGroupTransactionsName.value==StringConstant.allTransactions ? 
@@ -835,3 +835,6 @@ void hideTransaction(
     );
   }
 }
+
+
+

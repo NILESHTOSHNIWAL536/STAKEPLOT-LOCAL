@@ -114,9 +114,6 @@ class _UserListScreenState extends State<UserListScreen> {
               ...lendAmountRemainders
                   .take(2)
                   .map((data) => _buildListTile(context, data, false)),
-              ...dueAmountRemainders
-                  .take(2)
-                  .map((data) => _buildListTile(context, data, true)),
             ],
           ),
         );
@@ -217,7 +214,8 @@ Widget usersDuelist() {
   });
 }
 
-Widget _buildListTile(BuildContext context, Map<String, dynamic> data, bool isDue) {
+Widget _buildListTile(
+    BuildContext context, Map<String, dynamic> data, bool isDue) {
   return Row(
     children: [
       Container(
@@ -275,7 +273,9 @@ Widget _buildListTile(BuildContext context, Map<String, dynamic> data, bool isDu
         children: [
           InkWell(
             onTap: () async {
-              if((data["isPaid"])){return;}
+              if ((data["isPaid"])) {
+                return;
+              }
               if (isDue) {
                 int index = dueAmountRemainders
                     .indexWhere((element) => element['_id'] == data['_id']);
@@ -297,13 +297,13 @@ Widget _buildListTile(BuildContext context, Map<String, dynamic> data, bool isDu
                   lendAmountRemainders.refresh(); // Notify outer Obx
                 }
               }
-             
+
               sendNotificationsToDevice(
-                !isDue  ? data['billReceiverId'] : data['owedToId'],
+                  data['payerId'] ?? data['receiverId'],
                   context,
                   isDue
                       ? "Successfully paid your bill of ${data['amount'] ?? "0000"} to ${userName.value}."
-                      : "You need to pay lend To ${userName.value} of ${data['amount'] ?? "0000"}");
+                      : "You need to pay  To ${userName.value} of ${data['amount'] ?? "0000"}");
             },
             child: Container(
               height: MediaQuery.sizeOf(context).height * 0.03,
