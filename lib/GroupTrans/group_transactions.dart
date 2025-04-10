@@ -35,7 +35,10 @@ class _GroupTransactionsState extends State<GroupTransactions> {
 
   Widget getGroupItemList(){
 
-    return groupTransactionList.isEmpty? textStyle(context: context,text: "No grouped similar transactions Found",c:AppColors.primaryColor,fontsize: 12,fontWeight: FontWeight.bold ):Container(
+    return groupTransactionList.isEmpty? Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: textStyle(context: context,text: "No grouped similar transactions Found",c:AppColors.primaryColor,fontsize: 12,fontWeight: FontWeight.bold ),
+    ):Container(
       width: MediaQuery.of(context).size.width,
       child: ListView.builder(
         itemCount: groupTransactionList.length,
