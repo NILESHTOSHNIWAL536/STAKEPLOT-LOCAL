@@ -69,7 +69,7 @@ class TabBarUser extends StatelessWidget {
                         ),
                         const SizedBox(height: 10),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height / 1.6,
+                          height: MediaQuery.of(context).size.height / 1.68,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 12.0),

@@ -256,7 +256,7 @@ Widget siginButton(){
                             if (acceptReset.value) return;
 
                             if (emailController.text == "" ||passwordController.text == "") {
-                              snackBarCalled(context, "Please enter all fields");
+                              snackBarCalledfail(context, "Please enter all fields");
                               return;
                             }
                             

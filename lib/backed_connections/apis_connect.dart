@@ -296,15 +296,26 @@ void snackBarCalledfail(context, String text, [Color colors = Colors.black]) {
 }
 
 void snackBarCalledSignup(context, String text, [Color colors = Colors.black]) {
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    duration: Duration(seconds: 2),
-    content: Text(
-      text,
-      style: FontManager()
-          .getTextStyle(context, color: Colors.white, fontSize: 15),
+  showTopSnackBar(
+    Overlay.of(context),
+    Container(
+      height: 40,
+      child: CustomSnackBar.success(
+        message: text,
+        backgroundColor: Colors.green.shade600,
+        textStyle: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.bold,
+                      fontSize: 12,
+                      color: Colors.white,
+                    ),
+      ),
     ),
-    backgroundColor: colors,
-  ));
+    displayDuration: const Duration(seconds: 2),
+    curve: Curves.easeOutBack,
+    reverseCurve: Curves.easeInBack,
+    animationDuration: const Duration(milliseconds: 600),
+  );
 }
 
 void snackBarCalledFrds(context, String text, [Color colors = Colors.black]) {
@@ -339,27 +350,49 @@ void snackBarCalledFrds(context, String text, [Color colors = Colors.black]) {
 }
 
 void snackBarAllFeilds(context, [Color colors = Colors.red]) {
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    duration: Duration(seconds: 2),
-    content: Text(
-      "Please Enter All Feilds...",
-      style: FontManager()
-          .getTextStyle(context, color: Colors.white, fontSize: 15),
+  showTopSnackBar(
+    Overlay.of(context),
+    Container(
+      height: 40,
+      child: CustomSnackBar.success(
+        message: "Enter all fields",
+        backgroundColor: Colors.red,
+        textStyle: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.bold,
+                      fontSize: 12,
+                      color: Colors.white,
+                    ),
+      ),
     ),
-    backgroundColor: colors,
-  ));
+    displayDuration: const Duration(seconds: 2),
+    curve: Curves.easeOutBack,
+    reverseCurve: Curves.easeInBack,
+    animationDuration: const Duration(milliseconds: 600),
+  );
 }
 
 void snackBarAllFeilds2(context, text, [Color colors = Colors.red]) {
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    duration: Duration(seconds: 2),
-    content: Text(
-      text,
-      style:
-          FontManager().getTextStyle(context, color: Colors.red, fontSize: 15),
+  showTopSnackBar(
+    Overlay.of(context),
+    Container(
+      height: 40,
+      child: CustomSnackBar.success(
+        message: text,
+        backgroundColor: Colors.red,
+        textStyle: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.bold,
+                      fontSize: 12,
+                      color: Colors.white,
+                    ),
+      ),
     ),
-    backgroundColor: colors,
-  ));
+    displayDuration: const Duration(seconds: 2),
+    curve: Curves.easeOutBack,
+    reverseCurve: Curves.easeInBack,
+    animationDuration: const Duration(milliseconds: 600),
+  );
 }
 
 List getSearchData(String val, List data) {

@@ -455,6 +455,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
                             builder: (context) => TagShowmodal(
                               data: transaction,
                               index: index,
+                              isGroupTransaction: true,
                             ),
                           );
                         },

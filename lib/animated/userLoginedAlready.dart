@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
 
 class UserLoginedAlready extends StatelessWidget {
@@ -30,7 +32,7 @@ class UserLoginedAlready extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 2,
       decoration: BoxDecoration(
-          color: Colorcodes.white,
+          color: AppColors.backgroundColor,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
@@ -59,8 +61,7 @@ class UserLoginedAlready extends StatelessWidget {
                         " " +
                         {body['loggedInDevice']['device'] ?? ""}.toString());
               },
-              child: Obx(() =>isLoading.value
-                  ? CircularProgressIndicator(): getButton(context, "Logout User")))
+              child: Obx(() =>isLoading.value? getspinner(context,30): getButton(context, "Logout User")))
         ],
       ),
     );

@@ -214,7 +214,7 @@ Widget getListOfCat(BuildContext context) {
           duration: Duration(milliseconds: 500),
           opacity: opacity,
                     child: Container(
-              child: historyTransactions(widget.data,widget.isGroupTransaction? widget.data['transactionTimestamp']:widget.data['createdAt'], context),
+              child: historyTransactions(widget.data,!widget.isGroupTransaction? widget.data['transactionTimestamp']:widget.data['createdAt'], context),
                     ),
                   ),
       );
@@ -284,7 +284,7 @@ Widget getListOfCat(BuildContext context) {
   Widget historyTransactions(Map<String, dynamic> transaction, String? date,context) {
   final category = transaction['category']?.toString() ?? 'Uncategorized';
   final subcategory = transaction['subcategory']?.toString() ?? 'General';
-  final amount =  transaction[ widget.isGroupTransaction? 'amount' : 'totalAmount']?.toString() ?? '0';
+  final amount =  transaction[ !widget.isGroupTransaction? 'amount' : 'totalAmount']?.toString() ?? '0';
   final formattedDate = date != null ? formatDate(date) : 'Unknown Date';
   
     return Container(

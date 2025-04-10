@@ -8,36 +8,27 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/resetPas.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 
 Future<void> loginUser(TextEditingController emailController,TextEditingController passwordController, BuildContext context,[bool flag = false]) async {
 
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  final response = await http.post(
-    Uri.parse('${url}/user/login'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode({
-      'email': emailController.text.toString(),
-      'userpassword': passwordController.text.toString(),
-      'deviceInfo': deviceData,
-    }),
-  );
+  var response = await postDataApiCallwithOutSharedPref('${url}/user/login', {
+    'email': emailController.text.toString(),
+    'userpassword': passwordController.text.toString(),
+    'deviceInfo': deviceData,
+  });
 
   if (response.statusCode == 409)
   {
       forceLoginShowModal(context,response,emailController,passwordController); 
   }
-  if(response.statusCode == 500){
+  else if(response.statusCode == 500){
     snackBarCalledSignup(context, "Server Error!", Colors.red);
-    return;
   }
-  if (response.statusCode == 200 || response.statusCode == 201)
+  else if (getFlagOfResponse(response))
    {
-     loginCalledData(response,_pref,context);
+     loginCalledData(response,context);
   }
   else
   {
@@ -65,8 +56,9 @@ void forceLoginShowModal(context,response,emailController,passwordController)
 
 }
 
-void loginCalledData(response,pref,context) async
+void loginCalledData(response,context) async
 {
+   final SharedPreferences pref = await SharedPreferences.getInstance();
    final body = json.decode(response.body);
     String accessToken = body['data']['accessToken'];
     pref.setString("accessToken", "Bearer " + accessToken);
@@ -96,24 +88,18 @@ void getPhoneNo(body) {
 }
 
 
-void getOTP(context, String name, String email) async {
-  final response = await http.post(
-    Uri.parse('${url}/otp/send'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode({'email': email, 'name': name, 'deviceInfo': deviceData}),
-  );
-  if (response.statusCode == 200 || response.statusCode == 201) {
+void getOTP(context, String name, String email) async
+{
+  var response =await postDataApiCallwithOutSharedPref('${url}/otp/send', {'email': email, 'name': name, 'deviceInfo': deviceData});
+  if (getFlagOfResponse(response)){
     snackBarCalled(context, "Sended Otp To Email Id...!", Colors.black);
   } else {
     snackBarCalled(context, "can't send opt!", Colors.red);
   }
+
 }
 
-void forceLogoutUser(
-    sessionId, email, userpassword, context, id, deviceName) async {
-  final SharedPreferences pref = await SharedPreferences.getInstance();
+void forceLogoutUser( sessionId, email, userpassword, context, id, deviceName)async {
   try {
      var response=await postDataApiCallwithOutSharedPref('${url}/user/force-login',{
         "sessionId": sessionId,
@@ -123,28 +109,25 @@ void forceLogoutUser(
       });
     if (getFlagOfResponse(response))
     {
-      loginCalledData(response,pref,context);
-      sendNotificationsToDevice(currentId.value, context,"You have been logged out from StakePlot. Your account was logged in on ${deviceName}"); 
+      loginCalledData(response,context);
+      sendNotificationsToDevice(currentId.value, context,"You have been logged out from StakePlot...!"); 
     }else {
-      snackBarCalled(context, "can't send opt!", Colors.red);
+      snackBarCalled(context, "can't logout user..!", Colors.red);
     }
-  } catch (e) {
+  } catch (e)
+  {
     print(e);
   }
 }
 
 void getforgotPassword(context, String name, String email) async {
-  final response = await http.post(
-    Uri.parse('${url}/user/forgotPassword'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode({
+
+   var responce=await postDataApiCallwithOutSharedPref('${url}/user/forgotPassword',{
       'email': email,
-      'name': name,
-    }),
-  );
-  if (response.statusCode == 200 || response.statusCode == 201) {
+      "name": name,
+    });
+
+  if (getFlagOfResponse(responce)) {
     snackBarCalled(context, "Sended Otp To Email Id...!", Colors.black);
     Navigator.pushReplacement(
       context,
@@ -169,6 +152,6 @@ void addThisDeviceToBackendDevice(SharedPreferences pref, context) async {
 
 Future<void> addThisDeviceToBackend(deviceData, context) async
 {
-  var responce =await postDataApiCall('${url}/notify/addDeviceToNotify/', deviceData);
+    await postDataApiCall('${url}/notify/addDeviceToNotify/', deviceData);
 }
 

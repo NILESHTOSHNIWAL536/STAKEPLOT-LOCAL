@@ -57,28 +57,30 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          children: [
-          
-            topUserProfile(),
-    
-            const SizedBox(height: 60),
-    
-            Column(
-              children: [
-                Text(userName.value.toString(),
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.w600, color: AppColors.bg1)),
-               
-                        const SizedBox(height: 10),
-                   TabBarUser(userPostList: myPostList)
-              ],
-            ),
-           
-          ],
+      body: SafeArea(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: [
+            
+              topUserProfile(),
+            
+              const SizedBox(height: 60),
+            
+              Column(
+                children: [
+                  Text(userName.value.toString(),
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w600, color: AppColors.bg1)),
+                 
+                          const SizedBox(height: 10),
+                     TabBarUser(userPostList: myPostList)
+                ],
+              ),
+             
+            ],
+          ),
         ),
       ),
     );
@@ -90,20 +92,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
       clipBehavior: Clip.none,
       children: [
         // Positioned button to edit cover image
-        Positioned(
-          top: 20,
-          right: 16,
-          child: TextButton.icon(
-            onPressed: () {
-              // _pickImage(ImageSource.gallery, "cover");
-            },
-            label: const Text(
-              'Edit cover',
-              style: TextStyle(color: AppColors.bg1),
-            ),
-            icon: const Icon(Icons.edit),
-          ),
-        ),
+      
         GestureDetector(
           onTap: () {
             // Add the action to be triggered on tap, like picking an image
