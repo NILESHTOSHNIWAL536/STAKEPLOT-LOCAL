@@ -474,7 +474,15 @@ Widget tabItem(text){
                         child: Container(
                           margin: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: AppColors.button,
+                            color: Colors.white,
+                            gradient: LinearGradient(
+                      colors: [
+                        AppColors.button,
+                        Colors.white.withOpacity(0.7),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: AvatarProfileImage(

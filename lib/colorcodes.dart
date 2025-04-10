@@ -207,7 +207,9 @@ class StringConstant {
       "Its pretty much lonely over here… Try adding your friends and stay connected..!!";
   static String tribeText =
       "Connect with your friends to see whats cooking..!!";
-  static String otpText = "Enter Otp Pin Send on Email_id : ";
+  
+  static String otpText = "Enter the OTP sent to your registered email address: ";
+
   static String onboading_1 = "Welcome to Expense Manager !";
   static String onboading_2 =
       "Are You to Ready To take control of your finance?";

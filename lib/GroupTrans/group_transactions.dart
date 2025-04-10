@@ -323,52 +323,64 @@ class _GroupTransactionsState extends State<GroupTransactions>
           ],
         ),
         child: Row(
+           mainAxisAlignment: MainAxisAlignment.spaceBetween, // Align items with equal spacing
           children: [
             // Icon container
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    AppColors.primaryColor,
-                    AppColors.primaryColor.withOpacity(0.7),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+            Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.primaryColor,
+                        AppColors.primaryColor.withOpacity(0.7),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(
+                    Icons.groups_rounded,
+                    color: Colors.white,
+                    size: 28,
+                  ),
                 ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(
-                Icons.groups_rounded,
-                color: Colors.white,
-                size: 28,
-              ),
-            ),
-            const SizedBox(width: 16),
-            // Text details
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  textStyle(
-                    context: context,
-                    text: narration,
-                    c: AppColors.accentColor,
-                    fontsize: 14,
-                    fontWeight: FontWeight.w500,
+                const SizedBox(width: 16),
+                // Text details
+                Container(
+                 
+                  width: MediaQuery.sizeOf(context).width/2.7,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                     // ... existing code ...
+                      Tooltip(
+                        message: narration, // Full text to show on hover
+                        child: textStyle(
+                          context: context,
+                          text: narration,
+                          c: AppColors.accentColor,
+                          fontsize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+// ... existing code ...
+                      const SizedBox(height: 6),
+                      textStyle(
+                        context: context,
+                        text: '$count transactions',
+                        c: AppColors.primaryColor.withOpacity(0.8),
+                        fontsize: 12,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 6),
-                  textStyle(
-                    context: context,
-                    text: '$count transactions',
-                    c: AppColors.primaryColor.withOpacity(0.8),
-                    fontsize: 12,
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-            const SizedBox(width: 16),
+          //  const SizedBox(width: 16),
             // Amount
             textStyle(
               context: context,
@@ -575,23 +587,38 @@ class _GroupTransactionsState extends State<GroupTransactions>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // ... existing code ...
+                      Tooltip(
+                        message: transactionDetails['narration'] ?? 'Unnamed', // Full text to show on hover
+                        child: textStyle(
+                          context: context,
+                          text: transactionDetails['narration'] ?? 'Unnamed',
+                          c: AppColors.accentColor,
+                          fontsize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+// ... existing code ...
+                      
+                          const SizedBox(height: 6),
                           textStyle(
                             context: context,
-                            text: transactionDetails['narration'] ?? 'Unnamed',
-                            c: AppColors.accentColor,
-                            fontsize: 14,
-                            fontWeight: FontWeight.w500,
+                            text: transactionDetails['txnId'] ?? 'No ID',
+                            c: AppColors.accentColor.withOpacity(0.7),
+                            fontsize: 12,
                           ),
-                          const SizedBox(height: 6),
+                         
+                          const SizedBox(height: 4),
                           Row(
                             children: [
                               textStyle(
                                 context: context,
-                                text: transactionDetails['txnId'] ?? 'No ID',
-                                c: AppColors.accentColor.withOpacity(0.7),
+                                text: '₹${transactionDetails['amount'] ?? '0'}',
+                                c: Colors.green.shade700,
                                 fontsize: 12,
+                                fontWeight: FontWeight.w600,
                               ),
-                               const SizedBox(width: 10),
+                                const SizedBox(width: 10),
                                textStyle(
                                 context: context,
                                 text:formatWhatsAppDate(convertStringToDateTime(transactionDetails['transactionTimestamp'])),
@@ -599,14 +626,6 @@ class _GroupTransactionsState extends State<GroupTransactions>
                                 fontsize: 12,
                               ),
                             ],
-                          ),
-                          const SizedBox(height: 4),
-                          textStyle(
-                            context: context,
-                            text: '₹${transactionDetails['amount'] ?? '0'}',
-                            c: Colors.green.shade700,
-                            fontsize: 12,
-                            fontWeight: FontWeight.w600,
                           ),
                         ],
                       ),

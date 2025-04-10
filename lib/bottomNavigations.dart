@@ -1,5 +1,3 @@
-
-
 import "dart:convert";
 import "package:flutter/cupertino.dart";
 import "package:flutter/widgets.dart";
@@ -42,29 +40,24 @@ class _BottomNavigationsState extends State<BottomNavigations> {
   void initState() {
     super.initState();
   }
-  
 
   @override
   Widget build(BuildContext context) {
     //int selectedIndex = 0;
     return Container(
-      
-      height: Colorcodes.paddingSize*3.4,
+      height: Colorcodes.paddingSize * 3.4,
       padding: const EdgeInsets.only(left: 3.0, right: 3.0, bottom: 2),
       child: Card(
         elevation: Colorcodes.elevation,
-        
         color: AppColors.accentColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30), // Rounded corners
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          
           children: [
             getContainer(NavBarIcons.home, 0),
             getContainer(NavBarIcons.screen2, 1),
-        
             if (sizeRoom)
               getContainer(
                 'assets/images/room.svg',
@@ -84,7 +77,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
     );
   }
 
- Widget imageurl(String url, int index) {
+  Widget imageurl(String url, int index) {
     bool isSelected = widget.data == index;
     String iconPath = url; // Default to the passed url
 
@@ -96,62 +89,64 @@ class _BottomNavigationsState extends State<BottomNavigations> {
     } else if (url == NavBarIcons.community) {
       iconPath = isSelected ? NavBarIcons.community : NavBarIcons.community1;
     } else if (url == 'assets/images/room.svg') {
-      iconPath = url; 
-    
+      iconPath = url;
     } else if (url == svgIconPath.bottom4) {
-      iconPath = avatar.value; 
+      iconPath = avatar.value;
     }
-    bool ifAvatar=index==3 || index==4;
+    bool ifAvatar = index == 3 || index == 4;
 
     return Container(
       width: Colorcodes.paddingSize * 2.5, // Increased size of the circle
       height: Colorcodes.paddingSize * 2.5,
       decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: isSelected ? AppColors.backgroundColor:AppColors.accentColor // White background if selected
-      ),
+          shape: BoxShape.circle,
+          color: isSelected
+              ? AppColors.backgroundColor
+              : AppColors.accentColor // White background if selected
+          ),
       child: Center(
-        child: ifAvatar ? SvgPicture.asset(
-          iconPath,
-          width: Colorcodes.paddingSize * 2,
-          height: Colorcodes.paddingSize * 2.2
-          ):SvgPicture.asset(
-          iconPath,
-          width: Colorcodes.paddingSize * 1.4,
-          height: Colorcodes.paddingSize * 1.4,
-          colorFilter: isSelected 
-              ? ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn) 
-              : ColorFilter.mode(AppColors.backgroundColor, BlendMode.srcIn),
-        
-        ),
+        child: ifAvatar
+            ? SvgPicture.asset(iconPath,
+                width: Colorcodes.paddingSize * 2,
+                height: Colorcodes.paddingSize * 2.2)
+            : SvgPicture.asset(
+                iconPath,
+                width: Colorcodes.paddingSize * 1.4,
+                height: Colorcodes.paddingSize * 1.4,
+                colorFilter: isSelected
+                    ? ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn)
+                    : ColorFilter.mode(
+                        AppColors.backgroundColor, BlendMode.srcIn),
+              ),
       ),
     );
   }
+
   Widget getContainer(url, i) {
     bool isSelected =
         widget.data == i; // Check if the current index is selected
 
     return GestureDetector(
-      onLongPress: () async{
-       if (i == 2 && widget.data != i) pushName(TribeChats(),true);
-       else if (i == 0) {
+      onLongPress: () async {
+        if (i == 2 && widget.data != i)
+          pushName(TribeChats(), true);
+        else if (i == 0) {
           // Handle long press for index 0
-        } else if (i == 3 && widget.data != i) {
-        
-        }
+        } else if (i == 3 && widget.data != i) {}
       },
       onTap: () {
-        if (i == 0 && widget.data != i) pushName(HomePage());
-         else if (i == 1 && widget.data != i) pushName(PlotFinance());
+        if (i == 0 && widget.data != i)
+          pushName(HomePage());
+        else if (i == 1 && widget.data != i) pushName(PlotFinance());
 
         if (!sizeRoom) {
-          if (i == 2 && widget.data != i){
-              pushName(Community());
-            }
-          else if (i == 3 && widget.data != i) pushName(ProfileScreenDart());
+          if (i == 2 && widget.data != i) {
+            pushName(Community());
+          } else if (i == 3 && widget.data != i) pushName(ProfileScreenDart());
         } else {
           // if (i == 2 && widget.data != i) pushName(RoomHome());
-          if (i == 3 && widget.data != i) pushName(Community());
+          if (i == 3 && widget.data != i)
+            pushName(Community());
           else if (i == 4 && widget.data != i) pushName(ProfileScreenDart());
         }
 
@@ -165,21 +160,29 @@ class _BottomNavigationsState extends State<BottomNavigations> {
     );
   }
 
-  void pushName(widgetName,[bool flag=false]) {
-    
-    if(flag){
-          Navigator.push(
+  void pushName(widgetName, [bool flag = false]) {
+    if (flag) {
+        Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => widgetName,
+            PageTransition(
+                type: PageTransitionType.rightToLeft, // Slide transition from right to left
+                alignment: Alignment.center,
+                duration: const Duration(milliseconds: 500), // Duration of the transition
+                child: widgetName,
+                isIos: true,
             ),
-          );
-    }else{
-             
-                 Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => widgetName),
-                  (Route<dynamic> route) => false,
-                );
+        );
+    } else {
+        Navigator.of(context).pushAndRemoveUntil(
+            PageTransition(
+                type: PageTransitionType.rightToLeft, // Slide transition from right to left
+                alignment: Alignment.center,
+                duration: const Duration(milliseconds: 500), // Duration of the transition
+                child: widgetName,
+                isIos: true,
+            ),
+            (Route<dynamic> route) => false,
+        );
     }
     //  Navigator.push(
     //       context,
@@ -369,18 +372,15 @@ Widget logoutWidget(context, [flag = false]) {
             onTap: () async {
               //  home
               clearServarData(context);
-               final SharedPreferences _pref =
+              final SharedPreferences _pref =
                   await SharedPreferences.getInstance();
-                 
-                _pref.remove("accessToken").then((_) {
+
+              _pref.remove("accessToken").then((_) {
                 // Code to execute after token removal
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     '/', (Route<dynamic> route) => false);
                 Navigator.pushReplacementNamed(context, '/');
-
-              }).catchError((error) {
-  
-              });
+              }).catchError((error) {});
               clearGetX();
             },
             child: Container(
@@ -406,33 +406,30 @@ Widget logoutWidget(context, [flag = false]) {
   );
 }
 
-
-void clearServarData(context)async{
-              final SharedPreferences _pref =await SharedPreferences.getInstance();
-              await _pref.remove("accessToken");
-              await _pref.remove("token");
-              await _pref.remove("ConsentHandleId");
-              await _pref.remove("consentId");
-              await _pref.remove("from");
-              await _pref.remove("to");
-              await _pref.remove("sessionId");
-
-            
-
+void clearServarData(context) async {
+  final SharedPreferences _pref = await SharedPreferences.getInstance();
+  await _pref.remove("accessToken");
+  await _pref.remove("token");
+  await _pref.remove("ConsentHandleId");
+  await _pref.remove("consentId");
+  await _pref.remove("from");
+  await _pref.remove("to");
+  await _pref.remove("sessionId");
 }
 
-
- void navigateToNextPage(context) {
-    // Navigate to your desired page
-    Navigator.push(
-  context,
-  PageTransition(
-    type: PageTransitionType.bottomToTop,
-    alignment: Alignment.bottomCenter,
-    duration: const Duration(milliseconds: 2000),  // Increase duration
-    curve: Curves.easeInOut,  // Smooth transition
-    child: TransactionHistory(pageTransition: true,),
-    isIos: true,
-  ),
-);
-  }
+void navigateToNextPage(context) {
+  // Navigate to your desired page
+  Navigator.push(
+    context,
+    PageTransition(
+      type: PageTransitionType.bottomToTop,
+      alignment: Alignment.bottomCenter,
+      duration: const Duration(milliseconds: 2000), // Increase duration
+      curve: Curves.easeInOut, // Smooth transition
+      child: TransactionHistory(
+        pageTransition: true,
+      ),
+      isIos: true,
+    ),
+  );
+}

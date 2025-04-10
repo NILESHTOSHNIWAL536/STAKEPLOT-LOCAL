@@ -72,7 +72,7 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
       // padding: EdgeInsets.all(16),
       padding: EdgeInsets.symmetric(horizontal: 5,vertical: 10),
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height/1.5,
+      height: MediaQuery.of(context).size.height/1.3,
       decoration: BoxDecoration(
         color: Colorcodes.white,
         borderRadius:const BorderRadius.only(
@@ -149,7 +149,7 @@ Widget getListOfCat(BuildContext context) {
   List<MapEntry<String, dynamic>> categoryList = categories.entries.toList();
 
   return SizedBox(
-    height: MediaQuery.of(context).size.height * 0.45, // Adjust height as needed
+    height: MediaQuery.of(context).size.height * 0.6, // Adjust height as needed
     child: ListView.builder(
       itemCount: categoryList.length,
       shrinkWrap: true,

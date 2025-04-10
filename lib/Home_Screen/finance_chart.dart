@@ -1146,7 +1146,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
               if (!widget.isExpandedView)
                 Container(
                   
-                  width: screenWidth * 0.07, // Fixed width to prevent overflow
+                  width: screenWidth * 0.09, // Fixed width to prevent overflow
                   height: MediaQuery.of(context).size.height / 2.6, // Match chart height
                   child: _buildYAxisLabels(fontSizeFactor),
                 ),
