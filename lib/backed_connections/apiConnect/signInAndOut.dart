@@ -373,13 +373,17 @@ void resendOpt(context, email, name) async {
     },
     body: jsonEncode({'email': email, "name": name, 'type': 'resetPassword'}),
   );
+  print("response from otp: ${response.body}");
+
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     acceptReset.value = false;
     snackBarCalled(context, "ReSended Otp To Email Id...!", Colors.black);
+    print("Otp sent: ");
   } else {
     snackBarCalled(context, "can't send opt!", Colors.red);
+    print("response from not otp: ");
   }
 }
 

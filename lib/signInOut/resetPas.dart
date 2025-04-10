@@ -87,7 +87,7 @@ class _SigninState extends State<ResetOtp> {
   RxBool _isOtpValid = false.obs; // Validate OTP length
   TextEditingController otpController = TextEditingController();
 
-  RxInt otpCountdown3 = 30.obs;
+  RxInt otpCountdown3 = 3.obs;
   RxBool canResendOtp3 = false.obs;
   RxBool isOtpWrong3 = false.obs;
   Timer? otpTimer3;
