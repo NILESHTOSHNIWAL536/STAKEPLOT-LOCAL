@@ -93,7 +93,6 @@ void clearGetX() {
   billLength = 0.obs;
   debtLength = 0.obs;
   paymentLength = 0.obs;
-  keyss = originalKeys;
   room = [];
   account = [];
   notificationList.clear();

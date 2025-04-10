@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-// import 'package:stakeplot/fontmanager.dart';
 
 import 'Constants/font_manager.dart';
-//  password = "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"
 List<Color> color = [
   Colors.blue,
   Colors.redAccent,
@@ -40,14 +38,11 @@ class Colorcodes {
   static Color black = const Color.fromRGBO(0, 0, 0, 1);
   static Color blue = const Color.fromRGBO(62, 120, 209, 1);
   static Color cardTitle = black;
-  // static Color cardTitle=Color.fromARGB(255, 255, 255, 255);
   static Color white = Color.fromARGB(255, 255, 255, 255);
   static Color white1 = Color.fromRGBO(223, 216, 216, 1);
   static Color claimColor = Color.fromRGBO(238, 232, 169, 1);
   static Color chatHeader = Colorcodes.budgetDarkGreen;
   static Color chatBody = Colorcodes.budgetLightGreen;
-  // static Color chatHeader=Color.fromRGBO(217, 217, 217, 1);
-  // static Color chatBody=Color.fromRGBO(171, 171, 171, 1);
   static Color voucher = Color.fromRGBO(238, 232, 169, 1);
   static Color cardShade1 = Color.fromRGBO(17, 106, 123, 1);
   static Color cardShade2 = Color.fromRGBO(31, 194, 225, 1);
@@ -97,36 +92,8 @@ class Colorcodes {
   static double space = 15;
 }
 
-// class StaticCode{
 
 List namePresent = [];
-List keyss = [
-  // {
-  // 'url':"assets/trans/income.svg",
-  // 'name':"income",
-  //  'count':3
-  // },
-  {'url': "assets/trans/restaurants.svg", 'name': "restaurant", 'count': 3},
-  {'url': "assets/trans/hospital.svg", 'name': "hospital", 'count': 5},
-  {'url': "assetcs/trans/drinks.svg", 'name': "drinks", 'count': 3},
-  {'url': "assets/trans/shopping.svg", 'name': "shopping", 'count': 3},
-  {'url': "assets/trans/transport.svg", 'name': "transport", 'count': 4},
-  {'url': "assets/trans/household.svg", 'name': "household", 'count': 10},
-  {'url': "assets/trans/education.svg", 'name': "education", 'count': 4},
-  {'url': "assets/trans/smoking.svg", 'name': "smoke", 'count': 10},
-  {'url': "assets/trans/gifts.svg", 'name': "gifting", 'count': 12},
-  {'url': "assets/trans/bills.svg", 'name': "bills", 'count': 2},
-  {'url': "assets/trans/snacks.svg", 'name': "snacks", 'count': 6},
-  {
-    'url': "assets/trans/miscellaneous.svg",
-    // 'name':"movies",
-    'name': "others",
-    'count': 7
-  },
-  {'url': "assets/trans/movie.svg", 'name': "movies", 'count': 8}
-];
-
-List originalKeys = keyss;
 
 Map<String, String> imageMapForHistory = {
   "income": "assets/images2/add.svg",
@@ -198,11 +165,6 @@ class StringConstant {
   static String remainders = "Check your due and clear them off!";
   static String resetpassword =
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ";
-
-  static String calculatorurl = "assets/images/Add_round.svg";
-  static String targeturl = "assets/images/Add_round.svg";
-  static String spliturl = "assets/images/Add_round.svg";
-  static String earnUrl = "assets/images/Add_round.svg";
   static String chatText =
       "Its pretty much lonely over here… Try adding your friends and stay connected..!!";
   static String tribeText =

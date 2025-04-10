@@ -11,21 +11,14 @@ import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart'
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
-import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
-import 'package:flutter_application_code_stakeplot/model/transactions.dart';
-import 'package:flutter_application_code_stakeplot/profile.dart';
-import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:pdf/pdf.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
 
