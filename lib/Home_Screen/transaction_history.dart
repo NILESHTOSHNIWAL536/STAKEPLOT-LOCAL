@@ -1225,7 +1225,7 @@ Widget historyTransactions(
   final badgeSize = 20.0 * scaleFactor;
 
   return GestureDetector(
-    onLongPress: () {
+    onTap: () {
       if (!isManual) {
         showModalBottomSheet(
           context: context,
@@ -1299,16 +1299,19 @@ Widget historyTransactions(
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Tooltip(
-                              message: narration,
-                              child: textStyle(
-                                context: context,
-                                text: narration.length > 20
-                                    ? '${narration.substring(0, 20)}...'
-                                    : narration,
-                                c: AppColors.accentColor,
-                                fontsize: fontSizeMedium,
-                                fontWeight: FontWeight.w600,
+                            Container(
+                               width: MediaQuery.sizeOf(context).width/2.7,
+                              child: Tooltip(
+                                message: narration,
+                                child: textStyle(
+                                  context: context,
+                                  text: narration.length > 20
+                                      ? '${narration.substring(0, 20)}...'
+                                      : narration,
+                                  c: AppColors.accentColor,
+                                  fontsize: fontSizeMedium,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
                             SizedBox(height: 4 * scaleFactor),
@@ -1438,34 +1441,7 @@ Widget historyTransactions(
                       ),
                       SizedBox(width: 8 * scaleFactor),
                       // Details Action
-                      Tooltip(
-                        message: 'Details',
-                        child: GestureDetector(
-                          onTap: () {
-                            if (!isManual) {
-                              showModalBottomSheet(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return TransactionDetailsPage(
-                                      transaction: transaction);
-                                },
-                              );
-                            }
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(6 * scaleFactor),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8 * scaleFactor),
-                            ),
-                            child: Icon(
-                              Icons.info_outline_rounded,
-                              color: AppColors.primaryColor,
-                              size: iconSize,
-                            ),
-                          ),
-                        ),
-                      ),
+                      
                     ],
                   ),
                 ],

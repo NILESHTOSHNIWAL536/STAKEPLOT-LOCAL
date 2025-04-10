@@ -12,20 +12,15 @@ class TransactionDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Assuming transactionTimestamp is a DateTime or String that can be parsed
-    // String formattedDate = transaction['transactionTimestamp'] is String
-    //     ? DateFormat('MMM dd, yyyy • hh:mm a')
-    //         .format(DateTime.parse(transaction['transactionTimestamp']))
-    //     : transaction['transactionTimestamp'].toString();
     final formattedDate = transaction['transactionTimestamp'] != null
         ? formatWhatsAppDate(convertStringToDateTime(
             transaction['transactionTimestamp'].toString()))
         : 'N/A'; // Default value if transactionTimestamp is null
 
     return Scaffold(
-      backgroundColor: Colors.grey[100], // Light background like payment apps
+      backgroundColor: Colors.grey[100], // Light background
       appBar: AppBar(
-        elevation: 0, // Flat modern look
+        elevation: 0,
         backgroundColor: Colors.white,
         title: Text(
           'Transaction Details',
@@ -45,7 +40,7 @@ class TransactionDetailsPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Amount Section (Prominent)
+              // Amount Section
               Center(
                 child: Column(
                   children: [
@@ -106,28 +101,21 @@ class TransactionDetailsPage extends StatelessWidget {
                       label: 'Narration',
                       value: transaction['narration'] ?? 'N/A',
                     ),
+                    // Only show Category row if tagged
+                    if (_isCategoryTagged(
+                        transaction['category'], transaction['subcategory'])) ...[
+                      const Divider(height: 24),
+                      _buildDetailRow(
+                        context: context,
+                        label: 'Category',
+                        value: _formatCategory(
+                            transaction['category'], transaction['subcategory']),
+                      ),
+                    ],
                   ],
                 ),
               ),
-
-              // Optional: Status Chip (e.g., Success, Pending)
               const SizedBox(height: 20),
-              // Center(
-              //   child: Container(
-              //     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              //     decoration: BoxDecoration(
-              //       color: Colors.green[50],
-              //       borderRadius: BorderRadius.circular(20),
-              //     ),
-              //     child: Text(
-              //       'Completed', // Could be dynamic based on transaction status
-              //       style: TextStyle(
-              //         color: Colors.green[700],
-              //         fontWeight: FontWeight.w600,
-              //       ),
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ),
@@ -136,10 +124,11 @@ class TransactionDetailsPage extends StatelessWidget {
   }
 
   // Helper method to build detail rows
-  Widget _buildDetailRow(
-      {required BuildContext context,
-      required String label,
-      required String value}) {
+  Widget _buildDetailRow({
+    required BuildContext context,
+    required String label,
+    required String value,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -156,5 +145,24 @@ class TransactionDetailsPage extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  // Helper method to format category and subcategory
+  String _formatCategory(dynamic category, dynamic subcategory) {
+    final cat = category?.toString().trim() ?? 'Uncategorized';
+    final subcat = subcategory?.toString().trim() ?? null;
+
+    if (subcat == null || subcat.isEmpty || subcat == 'Uncategorized') {
+      return cat;
+    }
+    return '$cat - $subcat';
+  }
+
+  // Helper method to check if category is tagged
+  bool _isCategoryTagged(dynamic category, dynamic subcategory) {
+    final cat = category?.toString().trim() ?? 'Uncategorized';
+    final subcat = subcategory?.toString().trim() ?? 'Uncategorized';
+    // Consider it untagged if BOTH are Uncategorized, null, or empty
+    return !(cat == 'Uncategorized' && (subcat == 'Uncategorized' || subcat.isEmpty));
   }
 }
