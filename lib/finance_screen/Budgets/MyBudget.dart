@@ -144,9 +144,9 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
             }
             // print('Monthly spent: $monthlySpent');
 
-            // Populate budgetSpentData with backend labels
-            List<String> xLabels =
-                transactions.map((t) => t['_id'] as String).toList();
+            // Populate budgetSpentData with backend labels+
+            List<String> xLabels = transactions.map((t) => t['_id'] as String).toList();
+
             for (int i = 0; i < xLabels.length; i++) {
               String monthLabel = xLabels[i];
               budgetSpentData.add(_ChartData(

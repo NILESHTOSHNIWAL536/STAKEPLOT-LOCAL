@@ -100,7 +100,7 @@ class _MyAppState extends State<MyApp> {
       '/Budget': (context) =>  Budget(),     
       '/PlotFinance': (context) =>  PlotFinance(),     
       '/Debt': (context) =>  DebtCalculatorApp(),     
-      '/BudgetDisplay': (context) =>  BudgetDisplay(),  
+     // '/BudgetDisplay': (context) =>  BudgetDisplay(),  
       '/CreditCard':(context) => CreditCard() ,
       '/emi':(context) => Emi() ,
       '/rent_buy':(context) => RentBuy() ,

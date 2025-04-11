@@ -1168,33 +1168,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
     );
   }
 
-  Future<dynamic> showCustomFriendsModal(
-    BuildContext context,
-    double amount,
-    bool isLendMode,
-    String category,
-    String subcategory,
-  ) async {
-    return await showModalBottomSheet<dynamic>(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
-      ),
-      builder: (BuildContext context) {
-        return NewFriendsUi(
-          totalAmount: amount.toDouble(),
-          userId: currentId.value,
-          userName: userName.value,
-          userAvatar: avatar.value,
-          isLendMode: isLendMode,
-          category: category,
-          subcategory: subcategory,
-          flag: true,
-        );
-      },
-    );
-  }
+  
 Widget historyTransactions(
     Map<String, dynamic> transaction, String? date, int index) {
   final category = transaction['category']?.toString() ?? 'Uncategorized';
@@ -1484,6 +1458,35 @@ Widget historyTransactions(
     ),
   );
 }
+
+Future<dynamic> showCustomFriendsModal(
+    BuildContext context,
+    double amount,
+    bool isLendMode,
+    String category,
+    String subcategory,
+  ) async {
+    return await showModalBottomSheet<dynamic>(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+      ),
+      builder: (BuildContext context) {
+        return NewFriendsUi(
+          totalAmount: amount.toDouble(),
+          userId: currentId.value,
+          userName: userName.value,
+          userAvatar: avatar.value,
+          isLendMode: isLendMode,
+          category: category,
+          subcategory: subcategory,
+          flag: true,
+        );
+      },
+    );
+  }
+  
   BoxDecoration getBoxDecoration(int index) {
     double swipeOffset =
         (swipeOffsets[index] ?? 0.0).abs(); // Absolute value of offset

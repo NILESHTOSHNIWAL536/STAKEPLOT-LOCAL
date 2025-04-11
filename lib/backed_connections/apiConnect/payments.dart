@@ -136,14 +136,9 @@ void addBudget(BuildContext context, String name, String amount,
     final body = json.decode(response.body);
     getBudget();
     clearStackName(context, "/Budget", "/BudgetDisplay");
-    Navigator.pushNamed(context, "/BudgetDisplay");
+    Navigator.pushNamed(context, "/PlotFinance");
     snackBarCalled(context, "You have successfully added a new budget!");
-    await showDialog(
-      context: context,
-      builder: (context) => SuccessPost(
-        celebrationText: "Budget Created Successfully!",
-      ),
-    );
+   
   } else {
     snackBarCalled(context, "Failed to add the budget!", Colors.red);
   }
