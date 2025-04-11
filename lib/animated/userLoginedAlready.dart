@@ -46,8 +46,8 @@ class UserLoginedAlready extends StatelessWidget {
                   url: "assets/icons/lock.svg", width: 10, height: 10)),
           getContainer(context, body['message']),
           getContainer(context, "Device Limit Exceeded"),
-          getContainer(context, body['loggedInDevice']['device']),
-          getContainer(context, body['loggedInDevice']['brand']),
+          getContainer(context, body['loggedInDevice']['device'] ??""),
+          getContainer(context, body['loggedInDevice']['brand']?? ""),
           InkWell(
               onTap: () {
                 isLoading.value = true;

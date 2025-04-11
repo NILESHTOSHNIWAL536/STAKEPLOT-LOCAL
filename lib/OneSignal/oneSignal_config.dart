@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -149,14 +150,32 @@ try {
 
 
 
+
+
 void oneSignalAddClickListener(context)
 {
   try{
+
   OneSignal.Notifications.addClickListener((event)
   {
-  
       _handleNotificationClick(event, context);
   });
+
+   print("add call back");
+   OneSignal.Notifications.addForegroundWillDisplayListener((event) {
+      print("Notification received in foreground: ${event.notification.body}");
+      String s=event.notification.body.toString();
+      String t1="There is a problem with you bank server. Please try again later.";
+      String t2="we couldn't able to fetch your bank details, try again later";
+      String t3="Your bank account data has been successfully fetched.";
+      if(s==t1 || s==t2 || s==t3){
+              isFected.value=false;
+      }
+});
+
+
+
+
  }catch(e)
  {
    print('Error adding click listener: $e');

@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 Future<void> loginUser(TextEditingController emailController,TextEditingController passwordController, BuildContext context,[bool flag = false]) async {
-
+   
   var response = await postDataApiCallwithOutSharedPref('${url}/user/login', {
     'email': emailController.text.toString(),
     'userpassword': passwordController.text.toString(),

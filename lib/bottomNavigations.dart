@@ -280,14 +280,12 @@ Widget showUserData(BuildContext context) {
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               '/', (Route<dynamic> route) => false);
                           Navigator.pushReplacementNamed(context, '/home');
-
                           //  Navigator.pushReplacementNamed(context, '/');
                         }).catchError((error) {
                           // Error handling if token removal fails
                         });
 
                         clearGetX();
-
                         loginUser(emailController, passwordController, context);
                       },
                       child: Container(

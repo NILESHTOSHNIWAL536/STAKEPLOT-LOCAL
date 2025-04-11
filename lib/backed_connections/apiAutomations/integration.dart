@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:finvu_flutter_sdk/finvu_config.dart';
 import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -16,8 +17,8 @@ import 'package:http/http.dart' as http;
 void initFinvuManager(BuildContext context) async {
   finvuManager.initialize(
     FinvuConfig(
-       finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
-      //  finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
+        finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
+      // finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
       certificatePins: 
       [
             //  "R6wXZnQsKKyg56qFKQNytvygyr/o4Mkq1VXL5LenBYI=",
@@ -46,7 +47,7 @@ Future<String> login(context) async {
   otpReference = login.reference;
 
   }catch(e){
-    print(e);
+      print(e);
       snackBarCalled(context, e.toString());
   }
   return otpReference;
@@ -56,29 +57,20 @@ Future<String> login(context) async {
 Future<void> getConsentHandleId(context) async 
 {
 
-  final String apiUrl ="${url}/finvu/login"; // Change to your actual server URL
-  final String custId ="${number.value}@finvu"; // Replace with dynamic value if needed
-     
-   final SharedPreferences _pref = await SharedPreferences.getInstance();
-   var accessToken = _pref.getString("accessToken");
+  final String apiUrl ="${url}/finvu/login"; 
+  final String custId ="${number.value}@finvu"; 
+  var body={"custId": custId,'number':number.value};
 
   try {
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "$accessToken",
-      },
-      body: jsonEncode({"custId": custId,'number':number.value}),
-    );
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      String consentHandleId = data["consentHandleId"];
-       handleId.value=consentHandleId;
-     
-    } 
-  } catch (error)
-  {
+            var response=await postDataApiCall(apiUrl, body);
+            if (getFlagOfResponse(response))
+            {
+              final data = jsonDecode(response.body);
+              String consentHandleId = data["consentHandleId"];
+              handleId.value=consentHandleId;
+            } 
+  } catch (error){
+      print(error);
       snackBarCalled(context, error.toString());
   }
 }
