@@ -185,23 +185,25 @@ class FinanceWidgets {
   static Widget debtsPicture(
       BuildContext context, RxList<Debt> debts, Function(Debt) onDebtTap) {
     return  Obx(() => debts.isEmpty?SizedBox.shrink()
-    :SizedBox(
-      height: MediaQuery.of(context).size.height * 0.2,
-      child:
-          ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: debts.length,
-              itemBuilder: (context, index) {
-                final debt = debts[index];
-                return Padding(
-                  padding: const EdgeInsets.only(right: 16),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.85,
-                    child: CardBuilders.debtCard(context, debt, onDebtTap),
-                  ),
-                );
-              },
-            )
+    :Center(
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.2,
+        child:
+            ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: debts.length,
+                itemBuilder: (context, index) {
+                  final debt = debts[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      child: CardBuilders.debtCard(context, debt, onDebtTap),
+                    ),
+                  );
+                },
+              )
+      ),
     ));
   }
 
@@ -209,23 +211,25 @@ class FinanceWidgets {
     return Obx(() {
       final sortedBudgets = budgetList.toList()
         ..sort((a, b) => (b['createdAt'] ?? '').compareTo(a['createdAt'] ?? ''));
-      return SizedBox(
-        height: MediaQuery.of(context).size.height * 0.2,
-        child: sortedBudgets.isEmpty
+       return sortedBudgets.isEmpty
             ?SizedBox.shrink()
-            : ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: sortedBudgets.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 16),
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.85,
-                      child: CardBuilders.budgetCard(context, sortedBudgets[index]),
-                    ),
-                  );
-                },
-              ),
+            : SizedBox(
+        height: MediaQuery.of(context).size.height * 0.2,
+        child:  Center(
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: sortedBudgets.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        child: CardBuilders.budgetCard(context, sortedBudgets[index]),
+                      ),
+                    );
+                  },
+                ),
+            ),
       );
     });
   }
