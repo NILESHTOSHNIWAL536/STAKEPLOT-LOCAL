@@ -408,9 +408,8 @@ class _ExploreModalState extends State<ExploreModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
+    return SafeArea(
+      child: Padding(
           padding: const EdgeInsets.only(top: 20),
           child: Container(
                   color: AppColors.backgroundColor,
@@ -442,7 +441,7 @@ class _ExploreModalState extends State<ExploreModal> {
                     ),
                   ),
                 ),
-        ),
+        
       ),
     );
   }

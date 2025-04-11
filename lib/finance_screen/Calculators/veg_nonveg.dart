@@ -202,7 +202,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
 
   Widget calculation() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(bottom: 10,top:2),
       child: Column(
         children: [
           Padding(
@@ -212,7 +212,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
               children: [
                 GestureDetector(
                     onTap: () {
-                      splitUserAmount(context, "3000", addedMembers, "cater",
+                      splitUserAmount(context, "3000", addedMembers, "food",
                           "sub cater", friendShares);
                     },
                     child: Container(
@@ -274,7 +274,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
 
   Widget vegNonvegdata() {
     return SizedBox(
-      height: MediaQuery.of(context).size.height / 2.4,
+      height: MediaQuery.of(context).size.height / 2.5,
       child: ListView.builder(
         itemCount: addedMembers.length,
         itemBuilder: (context, index) {
@@ -353,14 +353,16 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 0),
       child: Container(
-        padding: const EdgeInsets.fromLTRB(14, 1, 14, 1),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
+        padding: const EdgeInsets.fromLTRB(10, 1, 10, 1),
+        decoration: BoxDecoration(
+          
+          borderRadius: BorderRadius.circular(4)),
         child: Column(
           children: [
             Padding(
               padding: EdgeInsets.symmetric(vertical: 3, horizontal: 5),
               child: SizedBox(
-                height: MediaQuery.sizeOf(context).height / 12,
+                height: MediaQuery.sizeOf(context).height / 14,
                 width: MediaQuery.of(context).size.width,
                 child: frdsList.isEmpty
                     ? Center(
@@ -378,8 +380,36 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                         itemBuilder: (context, index) {
                           String values = frdsList[index]['_id'];
                           return InkWell(
-                            onTap: () {},
-                            child: Column(
+                            onTap: () {
+                               setState(() {
+                                      addedUser.contains(values)
+                                          ? addedUser.remove(values)
+                                          : addedUser.add(values);
+                                      if (addedUser.contains(values)) {
+                                        addedMembers.add({
+                                          "name": frdsList[index]['name'],
+                                          "id": values,
+                                          'avatar': frdsList[index]['avatar'],
+                                          "balance": 200
+                                        });
+                                        selectedOptions[values] =
+                                            []; // Initialize for friend
+                                      } else {
+                                        List f = [];
+                                        addedMembers.forEach((element) {
+                                          if (element['id'] != values) {
+                                            f.add(element);
+                                          }
+                                        });
+                                        setState(() {
+                                          addedMembers.clear();
+                                          addedMembers.addAll(f);
+                                        });
+                                      }
+                                    });
+
+                            },
+                            child: Row(
                               children: [
                                 GestureDetector(
                                   onTap: () {
@@ -442,6 +472,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                     style: FontManager().getTextStyle(context,
                                         lWeight: FontWeight.w400,
                                         fontSize: 14,
+                                        overflow: TextOverflow.ellipsis,
                                         color: Colors.black))
                               ],
                             ),

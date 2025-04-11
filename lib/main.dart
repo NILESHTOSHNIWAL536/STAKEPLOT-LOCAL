@@ -99,7 +99,7 @@ class _MyAppState extends State<MyApp> {
       '/ShareAccountLogin': (context) =>  ShareAccountLogin(),     
       '/Budget': (context) =>  Budget(),     
       '/PlotFinance': (context) =>  PlotFinance(),     
-      '/Debt': (context) =>  DebtCalculatorApp(),     
+    //  '/Debt': (context) =>  DebtCalculatorApp(),     
      // '/BudgetDisplay': (context) =>  BudgetDisplay(),  
       '/CreditCard':(context) => CreditCard() ,
       '/emi':(context) => Emi() ,

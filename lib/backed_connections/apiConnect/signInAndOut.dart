@@ -33,7 +33,7 @@ Future<void> loginUser(TextEditingController emailController,TextEditingControll
   else
   {
      acceptReset.value = false;
-     snackBarCalledSignup(context, 'invalid credentials or server error!');
+     snackBarCalledfail(context, 'invalid credentials or server error!');
   }
 }
 

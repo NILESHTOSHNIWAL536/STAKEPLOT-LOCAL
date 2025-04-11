@@ -59,7 +59,7 @@ class _EditDetailsState extends State<EditDetails> {
   }
 
   void resetCupertinoPin(BuildContext context) {
-    print("Reset PIN dialog opened");
+   // print("Reset PIN dialog opened");
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -103,7 +103,7 @@ class _EditDetailsState extends State<EditDetails> {
           actions: [
             TextButton(
               onPressed: () {
-                print("Reset PIN dialog cancelled");
+            //    print("Reset PIN dialog cancelled");
                 Navigator.of(dialogContext).pop();
               },
               child: textStyleOnly2(
@@ -135,11 +135,13 @@ class _EditDetailsState extends State<EditDetails> {
                     print("PIN reset successful");
                     cupertinoPin.value = "0"; // Reset the global PIN
                     Navigator.of(dialogContext).pop();
+                     snackBarCalled(context, 'PIN reset successful !');
                   } else {
                     print("Failed to reset PIN: ${response.statusCode} - ${response.body}");
+                     snackBarCalledfail(context, 'Failed to reset PIN');
                   }
                 } catch (e) {
-                  print("Error occurred while resetting PIN: $e");
+                  snackBarCalledfail(context, 'Error occurred while resetting PIN');
                 }
               },
               child: textStyleOnly2(
@@ -292,11 +294,11 @@ class _EditDetailsState extends State<EditDetails> {
             getListOfBankConnected(),
             const SizedBox(height: 20),
 
-            InkWell(
-                onTap: () {
-                  editUserDetails(context, _controllers);
-                },
-                child: getButton(context, "Save Changes"))
+            // InkWell(
+            //     onTap: () {
+            //       editUserDetails(context, _controllers);
+            //     },
+            //     child: getButton(context, "Save Changes"))
           ],
         ),
       ),
