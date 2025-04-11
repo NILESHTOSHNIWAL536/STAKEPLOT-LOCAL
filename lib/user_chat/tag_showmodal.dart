@@ -113,22 +113,20 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
               onTap: (){
                   //  Change Tag
 
-                  if(widget.isGroupTransaction)
+                  if(!widget.isGroupTransaction)
                   {
                       updateTheTagOfTarnsactions(widget.data['category'], widget.data['subcategory'], widget.data['_id'], context,widget.index);
                       transactionsHistory[widget.index]['category']=widget.data['category'];
                       transactionsHistory[widget.index]['subcategory']=widget.data['subcategory'];
                       transactionsHistory.refresh();
                   }else{
-                      print("Group Transaction");
-                      print(removedGrpItemsList);
+                    
                       if(widget.data['category']==null && widget.data['subcategory']==Null){
                           snackBarCalledSignup(context, "Please select a category and subcategory",Colorcodes.red);
                           return;
                       }
                       updateTheTagOfTarnsactionsGroup(widget.data['category'], widget.data['subcategory'], widget.data['_id'], context,widget.index);
-                      setGroupTransactions.value=false;
-                      getGroupTransactions();
+                    
                   }
 
 

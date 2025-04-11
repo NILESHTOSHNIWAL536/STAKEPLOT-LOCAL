@@ -317,30 +317,42 @@ void getUserBankData(context) async {
   }
 }
 
+// void updateTheTagOfTarnsactions(category, subCategory, transactionId, context, index) async {
+//   String urlPath = "${url}/transactionauto/updateTransaction/${transactionId}";
+
+//   final SharedPreferences _pref = await SharedPreferences.getInstance();
+//   var accessToken = _pref.getString("accessToken");
+
+//   final response = await http.patch(
+//     Uri.parse('${urlPath}'),
+//     headers: <String, String>{
+//       'Content-Type': 'application/json; charset=UTF-8',
+//       "Authorization": "$accessToken",
+//     },
+//     body: jsonEncode({
+//       'category': category,
+//       'subcategory': subCategory,
+//     }),
+//   );
+//  // printData(response);
+//   if (getFlagOfResponse(response)) {
+//     Navigator.pop(context);
+//     reloadHistory.value = !reloadHistory.value;
+//   } else {}
+// }
 void updateTheTagOfTarnsactions(category, subCategory, transactionId, context, index) async {
   String urlPath = "${url}/transactionauto/updateTransaction/${transactionId}";
 
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.patch(
-    Uri.parse('${urlPath}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
+    var response =await updateDataApiCall2(urlPath, {
       'category': category,
       'subcategory': subCategory,
-    }),
-  );
- // printData(response);
-  if (getFlagOfResponse(response)) {
-    Navigator.pop(context);
-    reloadHistory.value = !reloadHistory.value;
-  } else {}
+    });
+    printData(response);
+    if (getFlagOfResponse(response)) {
+      Navigator.pop(context);
+      reloadHistory.value = !reloadHistory.value;
+    } else {}
 }
-
 void updateTheTagOfTarnsactionsGroup(category, subCategory, grpId, context, index) async {
   String urlPath = "${url}/transactionauto/grouped/${grpId}/categorize";
 
@@ -360,6 +372,8 @@ void updateTheTagOfTarnsactionsGroup(category, subCategory, grpId, context, inde
       Navigator.pop(context);
       removedGrpItemsList.clear();
       lengthOfTransactions.value=false;
+        setGroupTransactions.value=false;
+                      getGroupTransactions();
   } else {}
 }
 
