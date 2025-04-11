@@ -74,7 +74,7 @@ Future<void> oneSignalInit() async {
     String appId = "66bc1852-d40b-4ad0-8a11-5e3d0da698a2";
     OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
     OneSignal.initialize(appId);
-    OneSignal.Notifications.requestPermission(true);
+    // OneSignal.Notifications.requestPermission(true);
   } catch (e)
   {
      print('Error initializing OneSignal: $e'); 
@@ -163,3 +163,18 @@ void oneSignalAddClickListener(context)
  }
 
 }
+
+
+ Future<void> requestNotificationPermissionOncePerDay() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String today = DateTime.now().toIso8601String().substring(0, 10); 
+    String key="onesignal_permission_asked_date";
+    bool isPermissionAsked = prefs.containsKey(key);
+    String? lastAskedDate = prefs.getString(key);
+    if (!isPermissionAsked || lastAskedDate != today)
+    {
+      OneSignal.Notifications.requestPermission(true);
+      await prefs.setString(key, today);
+    } 
+    
+  }

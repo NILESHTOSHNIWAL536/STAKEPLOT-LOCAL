@@ -4,7 +4,6 @@ import 'package:flutter_application_code_stakeplot/Profile/friends.dart';
 import 'package:flutter_application_code_stakeplot/Profile/notifications.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/animated/splashScreen.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/controller.dart/userController.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/BudgetDisplay.dart';

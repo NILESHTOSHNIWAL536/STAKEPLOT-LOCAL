@@ -39,13 +39,18 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    oneSignalAddClickListener(context);
     initializeData();
   }
 
   void initializeData()   
   {
-    check(context, "homeScreen");
+    isLoginAlreadLogin();
+    oneSignalAddClickListener(context);
+    sectionReached.value=false;
+  }
+
+  void callApi()async
+  {
     getBankAccounts();
     getCategoryData();
     getAllTransaction(context);
@@ -59,7 +64,15 @@ class _HomePageState extends State<HomePage> {
     getCategoryData();
     getRemainders(context);
     getNotifications(context);
-    sectionReached.value=false;
+  }
+
+  void isLoginAlreadLogin()async{
+       bool isHome=await  check(context, "homeScreen");
+       if(isHome)
+       {
+          await requestNotificationPermissionOncePerDay();
+          callApi();
+       }
   }
 
   @override
