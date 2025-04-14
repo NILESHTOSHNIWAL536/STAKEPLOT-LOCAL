@@ -118,6 +118,7 @@ List<String> month = [
 ];
 int currentPage = 1;
 RxBool isLoadingMore = false.obs;
+RxBool loadMoreData = false.obs;
 bool hasMoreData = true;
 int m = DateTime.now().month;
 List targetsData = [];

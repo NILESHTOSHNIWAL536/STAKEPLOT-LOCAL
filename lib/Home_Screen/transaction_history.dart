@@ -1066,46 +1066,194 @@ class _TransactionHistoryState extends State<TransactionHistory>
     Navigator.pop(context);
   }
 
-  Widget getlist() {
-    return ListView.builder(
-      itemCount: transactionsHistory.length + 1,
-      shrinkWrap: true,
-      controller: _scrollController2,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        if (index < transactionsHistory.length) {
-          final transaction = transactionsHistory[index];
-
-          double amount = double.parse(
-              doubleToFixed((transaction['amount'] ?? 0.0).toString()));
-          String category = transaction['category']?.toString() ??
-              'Uncategorized'; // Fixed typo and added null check
-          String subcategory =
-              transaction['subcategory']?.toString() ?? 'General';
-
-          return Container(
-                decoration: getBoxDecoration(index),
-                child: historyTransactions(
-                    transaction,
-                    transaction['transactionTimestamp']?.toString(),
-                    index), // Ensure this is a String or null),
-              
-          );
-        } else {
-          return isLoadingMore.value
-              ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: const Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.primaryColor,
-                    ),
-                  ),
-                )
-              : const SizedBox.shrink();
-        }
-      },
-    );
+Widget getlist() {
+  // Group transactions by month and year
+  Map<String, List<Map<String, dynamic>>> groupedTransactions = {};
+  for (var transaction in transactionsHistory) {
+    String? timestamp = transaction['transactionTimestamp']?.toString();
+    if (timestamp != null) {
+      try {
+        // Parse as UTC and convert to IST
+        DateTime utcDate = DateTime.parse(timestamp).toUtc();
+        DateTime istDate = utcDate.add(Duration(hours: 5, minutes: 30));
+        // Use only year and month for grouping to avoid day boundary issues
+        String monthYearKey = DateFormat('MMMM yyyy').format(istDate); // e.g., "April 2025"
+        groupedTransactions.putIfAbsent(monthYearKey, () => []).add(transaction);
+        // Debug: Log the timestamp and its IST conversion
+        print('Timestamp: $timestamp, IST: $istDate, Grouped as: $monthYearKey');
+      } catch (e) {
+        print('Invalid timestamp: $timestamp');
+        continue;
+      }
+    }
   }
+
+  // Sort months by date (descending order)
+  List<String> sortedMonths = groupedTransactions.keys.toList();
+  sortedMonths.sort((a, b) {
+    DateTime dateA = DateFormat('MMMM yyyy')
+        .parse(a, true)
+        .toUtc()
+        .add(Duration(hours: 5, minutes: 30)); // Convert UTC to IST
+    DateTime dateB = DateFormat('MMMM yyyy')
+        .parse(b, true)
+        .toUtc()
+        .add(Duration(hours: 5, minutes: 30)); // Convert UTC to IST
+    return dateB.compareTo(dateA); // Most recent first
+  });
+
+  // Flatten the grouped transactions into a list for ListView.builder
+  List<dynamic> displayItems = [];
+  for (var monthYear in sortedMonths) {
+    displayItems.add(monthYear); // Add the month header
+    displayItems.addAll(groupedTransactions[monthYear] ?? []); // Null-safe access
+  }
+
+  // Show loader if no transactions are available
+  // if (displayItems.isEmpty) {
+  //   return const Center(
+  //     child: Padding(
+  //       padding: EdgeInsets.symmetric(vertical: 20),
+  //       child: CircularProgressIndicator(
+  //         color: AppColors.primaryColor,
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  // Add a loading indicator at the end if more data is being fetched
+  if (isLoadingMore.value) {
+    displayItems.add('loader'); // Use a distinct marker to avoid confusion
+  }
+
+  return ListView.builder(
+    itemCount: displayItems.length,
+    shrinkWrap: true,
+    controller: _scrollController2,
+    physics: const NeverScrollableScrollPhysics(),
+    itemBuilder: (context, index) {
+      final item = displayItems[index];
+      // Case 1: Month Header
+      if (item is String && item != 'loader') {
+        String monthYear = item;
+        int transactionCount = groupedTransactions[monthYear]?.length ?? 0;
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                monthYear,
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: AppColors.accentColor,
+                ),
+              ),
+              transactionCount == 0
+                  ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        color: AppColors.primaryColor,
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : Text(
+                      '$transactionCount Transaction${transactionCount == 1 ? '' : 's'}',
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w500,
+                        fontSize: 14,
+                        color: AppColors.primaryColor.withOpacity(0.7),
+                      ),
+                    ),
+            ],
+          ),
+        );
+      }
+
+      // Case 2: Transaction Item
+      else if (item is Map<String, dynamic>) {
+        final transaction = item;
+        int transactionIndex = transactionsHistory.indexOf(transaction);
+
+        return Stack(
+          children: [
+            GestureDetector(
+              onHorizontalDragUpdate: (details) {
+                scrollLeft(details, transactionIndex);
+              },
+              child: Container(
+                decoration: getBoxDecoration(transactionIndex),
+                child: historyTransactions(
+                  transaction,
+                  transaction['transactionTimestamp']?.toString(),
+                  transactionIndex,
+                ),
+              ),
+            ),
+          ],
+        );
+      }
+
+      // Case 3: Loading Indicator
+      else if (!isLoadingMore.value) {
+        return const Padding(
+          padding: EdgeInsets.symmetric(vertical: 20),
+          child: Center(
+            child: CircularProgressIndicator(
+              color: AppColors.primaryColor,
+            ),
+          ),
+        );
+      }
+
+      return transactionsHistory.isEmpty? textStyle(context: context,text: "No Transactions"):SizedBox.shrink(); // Fallback for unexpected items
+    },
+  );
+}
+  // Widget getlist() {
+  //   return ListView.builder(
+  //     itemCount: transactionsHistory.length + 1,
+  //     shrinkWrap: true,
+  //     controller: _scrollController2,
+  //     physics: const NeverScrollableScrollPhysics(),
+  //     itemBuilder: (context, index) {
+  //       if (index < transactionsHistory.length) {
+  //         final transaction = transactionsHistory[index];
+
+  //         double amount = double.parse(
+  //             doubleToFixed((transaction['amount'] ?? 0.0).toString()));
+  //         String category = transaction['category']?.toString() ??
+  //             'Uncategorized'; // Fixed typo and added null check
+  //         String subcategory =
+  //             transaction['subcategory']?.toString() ?? 'General';
+
+  //         return Container(
+  //               decoration: getBoxDecoration(index),
+  //               child: historyTransactions(
+  //                   transaction,
+  //                   transaction['transactionTimestamp']?.toString(),
+  //                   index), // Ensure this is a String or null),
+              
+  //         );
+  //       } else {
+  //         return isLoadingMore.value
+  //             ? Padding(
+  //                 padding: const EdgeInsets.symmetric(vertical: 20),
+  //                 child: const Center(
+  //                   child: CircularProgressIndicator(
+  //                     color: AppColors.primaryColor,
+  //                   ),
+  //                 ),
+  //               )
+  //             : const SizedBox.shrink();
+  //       }
+  //     },
+  //   );
+  // }
 
   void showCustomFriendsModal2(
       BuildContext context, Map<String, dynamic> transaction) {
@@ -1179,8 +1327,16 @@ Widget historyTransactions(
   final formattedDate = date != null
       ? formatWhatsAppDate(convertStringToDateTime(date))
       : 'Date';
-  final narration = transaction['narration'] ?? 'Unnamed Group';
   final type = transaction['type']?.toString() ?? '0';
+   final narration = transaction['narration'] ?? 'Unnamed Group';
+
+    List<String> parts = narration.split('/');
+    if (parts.isEmpty || parts.length==1) parts = narration.split('-');
+    if (parts.isEmpty || parts.length==1) parts = narration.split('&');
+    if (parts.isEmpty || parts.length==1) parts = narration.split(' ');
+
+    String nameOfUser=  parts.length >=4 ? parts[3] :  parts.length >= 3 ?parts[2]: parts.length >=2  ?parts[1]:parts[0];
+
   final amtColor = type == 'CREDIT'
       ? Colors.green.shade700
       : const Color.fromARGB(255, 207, 118, 113);
@@ -1273,22 +1429,23 @@ Widget historyTransactions(
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                               width: MediaQuery.sizeOf(context).width/2.7,
-                              child: Tooltip(
-                                message: narration,
+                            Tooltip(
+                              message: narration,
+                              child: Container(
+                                // height: 30,
+                                // color: Colorcodes.appBarColor,
+                                width: MediaQuery.sizeOf(context).width/2.7,
                                 child: textStyle(
                                   context: context,
-                                  text: narration.length > 20
-                                      ? '${narration.substring(0, 20)}...'
-                                      : narration,
+                                  text: nameOfUser,
                                   c: AppColors.accentColor,
                                   fontsize: fontSizeMedium,
                                   fontWeight: FontWeight.w600,
+                                  lineHeight: 1.5
                                 ),
                               ),
                             ),
-                            SizedBox(height: 4 * scaleFactor),
+                          
                             textStyle(
                               context: context,
                               text: formattedDate,

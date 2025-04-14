@@ -235,9 +235,10 @@ final Map<String, int> monthNameToIndex = {
                 onTap: () async {
                   selectedYear.value = year;
                   isYearView.value = true;
+                   isLoadingMore.value = false;
                   Navigator.pop(context);
                   transactionsHistory.clear();
-                      currentPage=1;
+                  currentPage=1;
                   getAllTransactionHistory(context, true, true);
                   updateMonthLabels();
                   await fetchYearlyData(year);
@@ -288,7 +289,8 @@ final Map<String, int> monthNameToIndex = {
                   // loadChatdataOnChnage.value = !loadChatdataOnChnage.value;
                   Navigator.pop(context);
                   transactionsHistory.clear();
-                    currentPage=1;
+                  currentPage=1;
+                   isLoadingMore.value = false;
                   getAllTransactionHistory(context, true, false);
                   await fetchMonthlyData(selectedYear.value, month);
                   // setState(() {});

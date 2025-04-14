@@ -314,15 +314,59 @@ class _SigninState extends State<SignUp> {
     String phone = phoneController.text;
     String dob = dobController.text;
 
-    if (name == "" ||
-        email == "" ||
-        password == "" ||
-        conform == "" ||
-        
-        dob == "") {
-      snackBarCalledSignup(context, "Please fill in all fields.", Colors.red);
-      return;
-    }
+  if (name.isEmpty) {
+    snackBarCalledfail(context, "Please enter a username.", Colors.red);
+    return;
+  }
+
+  if (name.length < 3) {
+    snackBarCalledfail(context, "Username must be at least 3 characters long.", Colors.red);
+    return;
+  }
+
+  if (email.isEmpty) {
+    snackBarCalledfail(context, "Please enter an email address.", Colors.red);
+    return;
+  }
+
+  // Email format validation
+  if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(email)) {
+    snackBarCalledfail(context, "Please enter a valid email address.", Colors.red);
+    return;
+  }
+
+  if (password.isEmpty) {
+    snackBarCalledfail(context, "Please enter a password.", Colors.red);
+    return;
+  }
+
+  
+  if (password.length < 8) {
+    snackBarCalledfail(context, "Password must be at least 8 characters long.", Colors.red);
+    return;
+  }
+
+  if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~])').hasMatch(password)) {
+    snackBarCalledfail(context, 
+        "Password must include uppercase, lowercase, number, and special character.", 
+        Colors.red);
+    return;
+  }
+
+  if (conform.isEmpty) {
+    snackBarCalledfail(context, "Please confirm your password.", Colors.red);
+    return;
+  }
+
+  if (password != conform) {
+    snackBarCalledfail(context, "Passwords do not match.", Colors.red);
+    return;
+  }
+
+  if (dob.isEmpty) {
+    snackBarCalledfail(context, "Please enter your date of birth.", Colors.red);
+    return;
+  }
     flag.value = true;
     final response = await http.post(
       Uri.parse('${url}/user/register'),

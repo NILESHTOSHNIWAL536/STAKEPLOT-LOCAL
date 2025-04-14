@@ -139,4 +139,6 @@ void clearGetX() {
   displayedData.clear();
   bankAccountLinkedList.clear();
   FipIdsConnected.clear();
+  transactionsHistory.clear();
+  isLoadingMore.value=false;
 }
