@@ -141,4 +141,5 @@ void clearGetX() {
   FipIdsConnected.clear();
   transactionsHistory.clear();
   isLoadingMore.value=false;
+  
 }

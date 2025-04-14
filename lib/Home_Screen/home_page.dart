@@ -20,6 +20,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/controller.dart/userController.dart';
 import 'package:flutter_application_code_stakeplot/customNoti.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
@@ -64,6 +65,7 @@ class _HomePageState extends State<HomePage> {
     getCategoryData();
     getRemainders(context);
     getNotifications(context);
+    allOrGroupTransactionsName.value = StringConstant.allTransactions;
   }
 
   void isLoginAlreadLogin()async{
