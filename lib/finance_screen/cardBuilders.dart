@@ -104,7 +104,7 @@ class CardBuilders {
 
   static Widget budgetCard(BuildContext context, dynamic data) {
     double budgetAmount = double.tryParse(data['amount']?.toString() ?? '0') ?? 0;
-    double spentAmount = 800;
+    double spentAmount = double.tryParse(data['spentAmount']?.toString() ?? '0') ?? 0;
     double percentageSpent = budgetAmount > 0 ? (spentAmount / budgetAmount) * 100 : 0;
     if (percentageSpent > 100) percentageSpent = 100;
 

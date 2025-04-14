@@ -161,43 +161,25 @@ class _BottomNavigationsState extends State<BottomNavigations> {
     );
   }
 
-  void pushName(widgetName, [bool flag = false]) {
-    if (flag) {
-        Navigator.push(
-            context,
-            PageTransition(
-                type: PageTransitionType.rightToLeft, // Slide transition from right to left
-                alignment: Alignment.center,
-                duration: const Duration(milliseconds: 500), // Duration of the transition
-                child: widgetName,
-                isIos: true,
-            ),
-        );
-    } else {
-        Navigator.of(context).pushAndRemoveUntil(
-            PageTransition(
-                type: PageTransitionType.rightToLeft, // Slide transition from right to left
-                alignment: Alignment.center,
-                duration: const Duration(milliseconds: 500), // Duration of the transition
-                child: widgetName,
-                isIos: true,
-            ),
-            (Route<dynamic> route) => false,
-        );
-    }
-    //  Navigator.push(
-    //       context,
+ void pushName(Widget widgetName, [bool flag = false]) {
+  final route = PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => widgetName,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return FadeTransition(
+        opacity: animation,
+        child: child,
+      );
+    },
+    transitionDuration: const Duration(milliseconds: 300),
+  );
 
-    // PageTransition(
-    //    type: PageTransitionType.fade,
-    //   alignment: Alignment.bottomRight,
-    //    duration: Durations.long1,
-
-    //   child: widgetName,
-    //   isIos: true,
-    // ),
-    // );
+  if (flag) {
+    Navigator.push(context, route);
+  } else {
+    Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
   }
+}
+
 
 //  handleTap(i){
 //     if (i == 0 && widget.data != i) pushName( Home());

@@ -1383,7 +1383,7 @@ class _PlotFinanceState extends State<PlotFinance> {
                 // Budget and Debt Calculator
                 Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: FinanceWidgets.budgetAndDebtCalulator(
+                  child: FinanceWidgets.additionWidgets(
                     context,
                     _navigateToCreateDebtScreen,
                   ),

@@ -833,7 +833,7 @@
 //       }
 //     } else {
 //        snackBarCalledfail(context, "Failed to hide transaction");
-      
+
 //     }
 //   } catch (e) {
 //      snackBarCalledfail(context, "Error hiding transaction");
@@ -842,12 +842,6 @@
 //     );
 //   }
 // }
-
-
-
-
-
-
 
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_transactions.dart';
@@ -862,7 +856,8 @@ import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart'
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -1065,160 +1060,167 @@ class _TransactionHistoryState extends State<TransactionHistory>
     sectionReached.value = true;
     Navigator.pop(context);
   }
-Widget getlist() {
-  // Group transactions by month and year
-  Map<String, List<Map<String, dynamic>>> groupedTransactions = {};
-  for (var transaction in transactionsHistory) {
-    String? timestamp = transaction['transactionTimestamp']?.toString();
-    if (timestamp != null) {
-      try {
-        // Parse as UTC and convert to IST
-        DateTime utcDate = DateTime.parse(timestamp).toUtc();
-        DateTime istDate = utcDate.add(Duration(hours: 5, minutes: 30));
-        // Use only year and month for grouping to avoid day boundary issues
-        String monthYearKey = DateFormat('MMMM yyyy').format(istDate); // e.g., "April 2025"
-        groupedTransactions.putIfAbsent(monthYearKey, () => []).add(transaction);
-        // Debug: Log the timestamp and its IST conversion
-        // print('Timestamp: $timestamp, IST: $istDate, Grouped as: $monthYearKey');
-      } catch (e) {
-        // print('Invalid timestamp: $timestamp');
-        continue;
+
+  Widget getlist() {
+    // Group transactions by month and year
+    Map<String, List<Map<String, dynamic>>> groupedTransactions = {};
+    for (var transaction in transactionsHistory) {
+      String? timestamp = transaction['transactionTimestamp']?.toString();
+      if (timestamp != null) {
+        try {
+          // Parse as UTC and convert to IST
+          DateTime utcDate = DateTime.parse(timestamp).toUtc();
+          DateTime istDate = utcDate.add(Duration(hours: 5, minutes: 30));
+          // Use only year and month for grouping to avoid day boundary issues
+          String monthYearKey =
+              DateFormat('MMMM yyyy').format(istDate); // e.g., "April 2025"
+          groupedTransactions
+              .putIfAbsent(monthYearKey, () => [])
+              .add(transaction);
+          // Debug: Log the timestamp and its IST conversion
+          // print('Timestamp: $timestamp, IST: $istDate, Grouped as: $monthYearKey');
+        } catch (e) {
+          // print('Invalid timestamp: $timestamp');
+          continue;
+        }
       }
     }
-  }
 
-  // Sort months by date (descending order)
-  List<String> sortedMonths = groupedTransactions.keys.toList();
-  sortedMonths.sort((a, b) {
-    DateTime dateA = DateFormat('MMMM yyyy')
-        .parse(a, true)
-        .toUtc()
-        .add(Duration(hours: 5, minutes: 30)); // Convert UTC to IST
-    DateTime dateB = DateFormat('MMMM yyyy')
-        .parse(b, true)
-        .toUtc()
-        .add(Duration(hours: 5, minutes: 30)); // Convert UTC to IST
-    return dateB.compareTo(dateA); // Most recent first
-  });
+    // Sort months by date (descending order)
+    List<String> sortedMonths = groupedTransactions.keys.toList();
+    sortedMonths.sort((a, b) {
+      DateTime dateA = DateFormat('MMMM yyyy')
+          .parse(a, true)
+          .toUtc()
+          .add(Duration(hours: 5, minutes: 30)); // Convert UTC to IST
+      DateTime dateB = DateFormat('MMMM yyyy')
+          .parse(b, true)
+          .toUtc()
+          .add(Duration(hours: 5, minutes: 30)); // Convert UTC to IST
+      return dateB.compareTo(dateA); // Most recent first
+    });
 
-  // Flatten the grouped transactions into a list for ListView.builder
-  List<dynamic> displayItems = [];
-  for (var monthYear in sortedMonths) {
-    displayItems.add(monthYear); // Add the month header
-    displayItems.addAll(groupedTransactions[monthYear] ?? []); // Null-safe access
-  }
+    // Flatten the grouped transactions into a list for ListView.builder
+    List<dynamic> displayItems = [];
+    for (var monthYear in sortedMonths) {
+      displayItems.add(monthYear); // Add the month header
+      displayItems
+          .addAll(groupedTransactions[monthYear] ?? []); // Null-safe access
+    }
 
-  // Show loader if no transactions are available
-  if (displayItems.isEmpty) {
-    return const Center(
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 20),
-        child: CircularProgressIndicator(
-          color: AppColors.primaryColor,
+    // Show loader if no transactions are available
+    if (displayItems.isEmpty) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 20),
+          child: CircularProgressIndicator(
+            color: AppColors.primaryColor,
+          ),
         ),
-      ),
+      );
+    }
+
+    // Add a loading indicator at the end if more data is being fetched
+    if (isLoadingMore.value) {
+      displayItems.add('loader'); // Use a distinct marker to avoid confusion
+    }
+
+    return ListView.builder(
+      itemCount: displayItems.length,
+      shrinkWrap: true,
+      controller: _scrollController2,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        final item = displayItems[index];
+
+        // Case 1: Month Header
+        if (item is String && item != 'loader') {
+          String monthYear = item;
+          int transactionCount = groupedTransactions[monthYear]?.length ?? 0;
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  monthYear,
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: AppColors.accentColor,
+                  ),
+                ),
+                // transactionCount == 0
+                //     ? const SizedBox(
+                //         width: 24,
+                //         height: 24,
+                //         child: CircularProgressIndicator(
+                //           color: AppColors.primaryColor,
+                //           strokeWidth: 2,
+                //         ),
+                //       )
+                //     : Text(
+                //         '$transactionCount Transaction${transactionCount == 1 ? '' : 's'}',
+                //         style: FontManager().getTextStyle(
+                //           context,
+                //           lWeight: FontWeight.w500,
+                //           fontSize: 14,
+                //           color: AppColors.primaryColor.withOpacity(0.7),
+                //         ),
+                //       ),
+              ],
+            ),
+          );
+        }
+
+        // Case 2: Transaction Item
+        else if (item is Map<String, dynamic>) {
+          final transaction = item;
+          int transactionIndex = transactionsHistory.indexOf(transaction);
+
+          double amount = double.parse(
+              doubleToFixed((transaction['amount'] ?? 0.0).toString()));
+          String category =
+              transaction['category']?.toString() ?? 'Uncategorized';
+          String subcategory =
+              transaction['subcategory']?.toString() ?? 'General';
+
+          return Stack(
+            children: [
+              GestureDetector(
+                onHorizontalDragUpdate: (details) {
+                  scrollLeft(details, transactionIndex);
+                },
+                child: Container(
+                  decoration: getBoxDecoration(transactionIndex),
+                  child: historyTransactions(
+                    transaction,
+                    transaction['transactionTimestamp']?.toString(),
+                    transactionIndex,
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
+
+        // Case 3: Loading Indicator
+        else if (item == 'loader') {
+          return const Padding(
+            padding: EdgeInsets.symmetric(vertical: 20),
+            child: Center(
+              child: CircularProgressIndicator(
+                color: AppColors.primaryColor,
+              ),
+            ),
+          );
+        }
+
+        return const SizedBox.shrink(); // Fallback for unexpected items
+      },
     );
   }
-
-  // Add a loading indicator at the end if more data is being fetched
-  if (isLoadingMore.value) {
-    displayItems.add('loader'); // Use a distinct marker to avoid confusion
-  }
-
-  return ListView.builder(
-    itemCount: displayItems.length,
-    shrinkWrap: true,
-    controller: _scrollController2,
-    physics: const NeverScrollableScrollPhysics(),
-    itemBuilder: (context, index) {
-      final item = displayItems[index];
-
-      // Case 1: Month Header
-      if (item is String && item != 'loader') {
-        String monthYear = item;
-        int transactionCount = groupedTransactions[monthYear]?.length ?? 0;
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                monthYear,
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: AppColors.accentColor,
-                ),
-              ),
-              // transactionCount == 0
-              //     ? const SizedBox(
-              //         width: 24,
-              //         height: 24,
-              //         child: CircularProgressIndicator(
-              //           color: AppColors.primaryColor,
-              //           strokeWidth: 2,
-              //         ),
-              //       )
-              //     : Text(
-              //         '$transactionCount Transaction${transactionCount == 1 ? '' : 's'}',
-              //         style: FontManager().getTextStyle(
-              //           context,
-              //           lWeight: FontWeight.w500,
-              //           fontSize: 14,
-              //           color: AppColors.primaryColor.withOpacity(0.7),
-              //         ),
-              //       ),
-            ],
-          ),
-        );
-      }
-
-      // Case 2: Transaction Item
-      else if (item is Map<String, dynamic>) {
-        final transaction = item;
-        int transactionIndex = transactionsHistory.indexOf(transaction);
-
-        double amount = double.parse(
-            doubleToFixed((transaction['amount'] ?? 0.0).toString()));
-        String category = transaction['category']?.toString() ?? 'Uncategorized';
-        String subcategory = transaction['subcategory']?.toString() ?? 'General';
-
-        return Stack(
-          children: [
-            GestureDetector(
-              onHorizontalDragUpdate: (details) {
-                scrollLeft(details, transactionIndex);
-              },
-              child: Container(
-                decoration: getBoxDecoration(transactionIndex),
-                child: historyTransactions(
-                  transaction,
-                  transaction['transactionTimestamp']?.toString(),
-                  transactionIndex,
-                ),
-              ),
-            ),
-          ],
-        );
-      }
-
-      // Case 3: Loading Indicator
-      else if (item == 'loader') {
-        return const Padding(
-          padding: EdgeInsets.symmetric(vertical: 20),
-          child: Center(
-            child: CircularProgressIndicator(
-              color: AppColors.primaryColor,
-            ),
-          ),
-        );
-      }
-
-      return const SizedBox.shrink(); // Fallback for unexpected items
-    },
-  );
-}
   // Widget getlist() {
   //   return ListView.builder(
   //     itemCount: transactionsHistory.length + 1,
@@ -1242,7 +1244,7 @@ Widget getlist() {
   //                   transaction,
   //                   transaction['transactionTimestamp']?.toString(),
   //                   index), // Ensure this is a String or null),
-              
+
   //         );
   //       } else {
   //         return isLoadingMore.value
@@ -1321,298 +1323,301 @@ Widget getlist() {
     );
   }
 
-  
-Widget historyTransactions(
-    Map<String, dynamic> transaction, String? date, int index) {
-  final category = transaction['category']?.toString() ?? 'Uncategorized';
-  final subcategory = transaction['subcategory']?.toString() ?? 'General';
-  final double amount = double.parse(
-      doubleToFixed((transaction['amount'] ?? 0.0).toString()));
-  final isManual = transaction['manualTransaction'] ?? false;
-  final formattedDate = date != null
-      ? formatWhatsAppDate(convertStringToDateTime(date))
-      : 'Date';
-  final narration = transaction['narration'] ?? 'Unnamed Group';
-  final type = transaction['type']?.toString() ?? '0';
-  final amtColor = type == 'CREDIT'
-      ? Colors.green.shade700
-      : const Color.fromARGB(255, 207, 118, 113);
-  final formatAmount = type == 'CREDIT' ? "+₹$amount" : "-₹$amount";
+  Widget historyTransactions(
+      Map<String, dynamic> transaction, String? date, int index) {
+    final category = transaction['category']?.toString() ?? 'Uncategorized';
+    final subcategory = transaction['subcategory']?.toString() ?? 'General';
+    final double amount =
+        double.parse(doubleToFixed((transaction['amount'] ?? 0.0).toString()));
+    final isManual = transaction['manualTransaction'] ?? false;
+    final formattedDate = date != null
+        ? formatWhatsAppDate(convertStringToDateTime(date))
+        : 'Date';
+    final narration = transaction['narration'] ?? 'Unnamed Group';
+    final type = transaction['type']?.toString() ?? '0';
+    final amtColor = type == 'CREDIT'
+        ? Colors.green.shade700
+        : const Color.fromARGB(255, 207, 118, 113);
+    final formatAmount = type == 'CREDIT' ? "+₹$amount" : "-₹$amount";
 
-  // Responsive scaling with MediaQuery
-  final screenWidth = MediaQuery.of(context).size.width;
-  final scaleFactor = screenWidth / 360; // Base width: 360px
-  final padding = 16.0 * scaleFactor;
-  final margin = 12.0 * scaleFactor;
-  final iconSize = 14.0 * scaleFactor; // Smaller icons for simplicity
-  final avatarSize = 40.0 * scaleFactor;
-  final fontSizeLarge = 14.0 * scaleFactor;
-  final fontSizeMedium = 12.0 * scaleFactor;
-  final fontSizeSmall = 10.0 * scaleFactor;
-  final badgeSize = 20.0 * scaleFactor;
+    // Responsive scaling with MediaQuery
+    final screenWidth = MediaQuery.of(context).size.width;
+    final scaleFactor = screenWidth / 360; // Base width: 360px
+    final padding = 16.0 * scaleFactor;
+    final margin = 12.0 * scaleFactor;
+    final iconSize = 14.0 * scaleFactor; // Smaller icons for simplicity
+    final avatarSize = 40.0 * scaleFactor;
+    final fontSizeLarge = 14.0 * scaleFactor;
+    final fontSizeMedium = 12.0 * scaleFactor;
+    final fontSizeSmall = 10.0 * scaleFactor;
+    final badgeSize = 20.0 * scaleFactor;
 
-  return GestureDetector(
-    onTap: () {
-      if (!isManual) {
-        showModalBottomSheet(
-          context: context,
-          builder: (BuildContext context) {
-            return TransactionDetailsPage(transaction: transaction);
-          },
-        );
-      }
-    },
-    child: Stack(
-      children: [
-        Container(
-          width: double.infinity,
-          margin: EdgeInsets.symmetric(vertical: margin, horizontal: margin),
-          padding: EdgeInsets.all(padding),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16 * scaleFactor),
-            gradient: LinearGradient(
-              colors: [
-                AppColors.backgroundColor.withOpacity(0.03),
-                Colors.white,
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 8 * scaleFactor,
-                offset: Offset(0, 3 * scaleFactor),
+    return GestureDetector(
+      onTap: () {
+        if (!isManual) {
+          showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return TransactionDetailsPage(transaction: transaction);
+            },
+          );
+        } else {
+          snackBarCalled(context, "This is a manual transaction ");
+        }
+      },
+      child: Stack(
+        children: [
+          Container(
+            width: double.infinity,
+            margin: EdgeInsets.symmetric(vertical: margin, horizontal: margin),
+            padding: EdgeInsets.all(padding),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16 * scaleFactor),
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.backgroundColor.withOpacity(0.03),
+                  Colors.white,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Top Row: Icon, Narration, Amount
-              Row(
-                children: [
-                  // Icon Container
-                  Container(
-                    width: avatarSize,
-                    height: avatarSize,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          AppColors.button.withOpacity(0.8),
-                          Colors.white.withOpacity(0.6),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 8 * scaleFactor,
+                  offset: Offset(0, 3 * scaleFactor),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Top Row: Icon, Narration, Amount
+                Row(
+                  children: [
+                    // Icon Container
+                    Container(
+                      width: avatarSize,
+                      height: avatarSize,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            AppColors.button.withOpacity(0.8),
+                            Colors.white.withOpacity(0.6),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(12 * scaleFactor),
                       ),
-                      borderRadius: BorderRadius.circular(12 * scaleFactor),
-                    ),
-                    child: Center(
-                      child: AvatarProfileImage(
-                        url: Categories.link +
-                            (imageMapForHistory[category.toLowerCase()] ??
-                                'default_image.png'),
-                        height: avatarSize * 0.5,
-                        width: avatarSize * 0.5,
+                      child: Center(
+                        child: AvatarProfileImage(
+                          url: Categories.link +
+                              (imageMapForHistory[category.toLowerCase()] ??
+                                  'default_image.png'),
+                          height: avatarSize * 0.5,
+                          width: avatarSize * 0.5,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: padding),
-                  // Narration and Amount
-                  Flexible(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                               width: MediaQuery.sizeOf(context).width/2.7,
-                              child: Tooltip(
-                                message: narration,
-                                child: textStyle(
-                                  context: context,
-                                  text: narration.length > 20
-                                      ? '${narration.substring(0, 20)}...'
-                                      : narration,
-                                  c: AppColors.accentColor,
-                                  fontsize: fontSizeMedium,
-                                  fontWeight: FontWeight.w600,
+                    SizedBox(width: padding),
+                    // Narration and Amount
+                    Flexible(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: MediaQuery.sizeOf(context).width / 2.7,
+                                child: Tooltip(
+                                  message: narration,
+                                  child: textStyle(
+                                    context: context,
+                                    text: narration.length > 20
+                                        ? '${narration.substring(0, 20)}...'
+                                        : narration,
+                                    c: AppColors.accentColor,
+                                    fontsize: fontSizeMedium,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
+                              SizedBox(height: 4 * scaleFactor),
+                              textStyle(
+                                context: context,
+                                text: formattedDate,
+                                c: AppColors.primaryColor.withOpacity(0.7),
+                                fontsize: fontSizeSmall,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ],
+                          ),
+                          textStyle(
+                            context: context,
+                            text: formatAmount,
+                            c: amtColor,
+                            fontsize: fontSizeLarge,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: padding / 2.5),
+                // Bottom Row: Category and Actions
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Category
+                    textStyle(
+                      context: context,
+                      text: category,
+                      c: AppColors.accentColor,
+                      fontsize: fontSizeMedium,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    // Action Icons
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Hide Transaction
+                        Tooltip(
+                          message: 'Hide',
+                          child: GestureDetector(
+                            onTap: () {
+                              hideTransaction(
+                                  index, true, context, transaction['_id']);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(6 * scaleFactor),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryColor.withOpacity(0.1),
+                                borderRadius:
+                                    BorderRadius.circular(8 * scaleFactor),
+                              ),
+                              child: Icon(
+                                Icons.visibility_off_rounded,
+                                color: AppColors.primaryColor,
+                                size: iconSize,
+                              ),
                             ),
-                            SizedBox(height: 4 * scaleFactor),
-                            textStyle(
-                              context: context,
-                              text: formattedDate,
-                              c: AppColors.primaryColor.withOpacity(0.7),
-                              fontsize: fontSizeSmall,
-                              fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        SizedBox(width: 8 * scaleFactor),
+                        // Friends Modal
+                        Tooltip(
+                          message: 'Split with Friends',
+                          child: GestureDetector(
+                            onTap: () async {
+                              await showCustomFriendsModal(
+                                context,
+                                amount,
+                                false,
+                                category,
+                                subcategory,
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(6 * scaleFactor),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryColor.withOpacity(0.1),
+                                borderRadius:
+                                    BorderRadius.circular(8 * scaleFactor),
+                              ),
+                              child: Icon(
+                                Icons.group_add_rounded,
+                                color: AppColors.primaryColor,
+                                size: iconSize,
+                              ),
                             ),
-                          ],
+                          ),
                         ),
-                        textStyle(
-                          context: context,
-                          text: formatAmount,
-                          c: amtColor,
-                          fontsize: fontSizeLarge,
-                          fontWeight: FontWeight.bold,
+                        SizedBox(width: 8 * scaleFactor),
+                        // Tag Action
+                        Tooltip(
+                          message: 'Tag',
+                          child: GestureDetector(
+                            onTap: () {
+                              tagName.value = category;
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(20)),
+                                ),
+                                builder: (context) {
+                                  return TagShowmodal(
+                                    data: transaction,
+                                    index: index,
+                                  );
+                                },
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(6 * scaleFactor),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryColor.withOpacity(0.1),
+                                borderRadius:
+                                    BorderRadius.circular(8 * scaleFactor),
+                              ),
+                              child: Icon(
+                                Icons.tag_rounded,
+                                color: AppColors.primaryColor,
+                                size: iconSize,
+                              ),
+                            ),
+                          ),
                         ),
+                        SizedBox(width: 8 * scaleFactor),
+                        // Details Action
                       ],
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: padding / 2.5),
-              // Bottom Row: Category and Actions
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Category
-                  textStyle(
-                    context: context,
-                    text: category,
-                    c: AppColors.accentColor,
-                    fontsize: fontSizeMedium,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  // Action Icons
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Hide Transaction
-                      Tooltip(
-                        message: 'Hide',
-                        child: GestureDetector(
-                          onTap: () {
-                            hideTransaction(
-                                index, true, context, transaction['_id']);
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(6 * scaleFactor),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8 * scaleFactor),
-                            ),
-                            child: Icon(
-                              Icons.visibility_off_rounded,
-                              color: AppColors.primaryColor,
-                              size: iconSize,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 8 * scaleFactor),
-                      // Friends Modal
-                      Tooltip(
-                        message: 'Split with Friends',
-                        child: GestureDetector(
-                          onTap: () async {
-                            await showCustomFriendsModal(
-                              context,
-                              amount,
-                              false,
-                              category,
-                              subcategory,
-                            );
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(6 * scaleFactor),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8 * scaleFactor),
-                            ),
-                            child: Icon(
-                              Icons.group_add_rounded,
-                              color: AppColors.primaryColor,
-                              size: iconSize,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 8 * scaleFactor),
-                      // Tag Action
-                      Tooltip(
-                        message: 'Tag',
-                        child: GestureDetector(
-                          onTap: () {
-                            tagName.value = category;
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.vertical(top: Radius.circular(20)),
-                              ),
-                              builder: (context) {
-                                return TagShowmodal(
-                                  data: transaction,
-                                  index: index,
-                                );
-                              },
-                            );
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(6 * scaleFactor),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8 * scaleFactor),
-                            ),
-                            child: Icon(
-                              Icons.tag_rounded,
-                              color: AppColors.primaryColor,
-                              size: iconSize,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 8 * scaleFactor),
-                      // Details Action
-                      
-                    ],
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-        // Manual Badge
-        if (isManual)
-          Positioned(
-            top: margin,
-            left: margin + 4,
-            child: Container(
-              width: badgeSize,
-              height: badgeSize,
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 4 * scaleFactor,
-                    offset: Offset(2 * scaleFactor, 2 * scaleFactor),
-                  ),
-                ],
-              ),
-              child: Center(
-                child: Text(
-                  'M',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSizeSmall * 0.8,
+          // Manual Badge
+          if (isManual)
+            Positioned(
+              top: margin,
+              left: margin + 4,
+              child: Container(
+                width: badgeSize,
+                height: badgeSize,
+                decoration: BoxDecoration(
+                  color: AppColors.primaryColor,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 4 * scaleFactor,
+                      offset: Offset(2 * scaleFactor, 2 * scaleFactor),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Text(
+                    'M',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: fontSizeSmall * 0.8,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 
-Future<dynamic> showCustomFriendsModal(
+  Future<dynamic> showCustomFriendsModal(
     BuildContext context,
     double amount,
     bool isLendMode,
@@ -1639,7 +1644,7 @@ Future<dynamic> showCustomFriendsModal(
       },
     );
   }
-  
+
   BoxDecoration getBoxDecoration(int index) {
     double swipeOffset =
         (swipeOffsets[index] ?? 0.0).abs(); // Absolute value of offset
@@ -1887,11 +1892,10 @@ void hideTransaction(
         hiddentrasactionsHistory.refresh();
       }
     } else {
-       snackBarCalledfail(context, "Failed to hide transaction");
-      
+      snackBarCalledfail(context, "Failed to hide transaction");
     }
   } catch (e) {
-     snackBarCalledfail(context, "Error hiding transaction");
+    snackBarCalledfail(context, "Error hiding transaction");
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Error hiding transaction")),
     );

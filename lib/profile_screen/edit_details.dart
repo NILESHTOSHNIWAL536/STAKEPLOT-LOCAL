@@ -189,20 +189,20 @@ class _EditDetailsState extends State<EditDetails> {
                     )),
                 GestureDetector(
                   onTap: () {
-                    var data = {
-                      'name': userName.value,
-                      'email': email.value,
-                    };
-                    showModalBottomSheet(
-                      isScrollControlled: true,
-                      context: context,
-                      builder: (context) {
-                        return Avatar(
-                          data: data,
-                          isEdit: true,
-                        );
-                      },
-                    );
+                    // var data = {
+                    //   'name': userName.value,
+                    //   'email': email.value,
+                    // };
+                    // showModalBottomSheet(
+                    //   isScrollControlled: true,
+                    //   context: context,
+                    //   builder: (context) {
+                    //     return Avatar(
+                    //       data: data,
+                    //       isEdit: true,
+                    //     );
+                    //   },
+                    // );
                   },
                   child: Padding(
                     padding: EdgeInsets.only(top: 8.0),
