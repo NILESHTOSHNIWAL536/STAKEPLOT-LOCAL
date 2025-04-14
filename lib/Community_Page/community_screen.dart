@@ -153,7 +153,7 @@ class _CommunityState extends State<Community> {
     return Scaffold(
       extendBody: true,
       backgroundColor: AppColors.backgroundColor,
-      bottomNavigationBar: BottomNavigations(data: 2),
+      bottomNavigationBar: SafeArea(child: BottomNavigations(data: 2)),
       body: SafeArea(
         child: Container(
           

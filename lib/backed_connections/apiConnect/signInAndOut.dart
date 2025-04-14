@@ -33,7 +33,7 @@ Future<void> loginUser(TextEditingController emailController,TextEditingControll
   else
   {
      acceptReset.value = false;
-     snackBarCalledfail(context, 'invalid credentials or server error!');
+     snackBarCalledfail(context, 'Invalid credentials');
   }
 }
 
@@ -92,9 +92,9 @@ void getOTP(context, String name, String email) async
 {
   var response =await postDataApiCallwithOutSharedPref('${url}/otp/send', {'email': email, 'name': name, 'deviceInfo': deviceData});
   if (getFlagOfResponse(response)){
-    snackBarCalled(context, "Sended Otp To Email Id...!", Colors.black);
+    snackBarCalled(context, "Sent Otp To Email Id!", Colors.black);
   } else {
-    snackBarCalled(context, "can't send opt!", Colors.red);
+    snackBarCalled(context, "can't send otp!", Colors.red);
   }
 
 }
@@ -110,9 +110,9 @@ void forceLogoutUser( sessionId, email, userpassword, context, id, deviceName)as
     if (getFlagOfResponse(response))
     {
       loginCalledData(response,context);
-      sendNotificationsToDevice(currentId.value, context,"You have been logged out from StakePlot...!"); 
+      sendNotificationsToDevice(currentId.value, context,"You have been logged out from StakePlot!"); 
     }else {
-      snackBarCalled(context, "can't logout user..!", Colors.red);
+      snackBarCalled(context, "can't logout user!", Colors.red);
     }
   } catch (e)
   {

@@ -497,7 +497,7 @@ class _ChatState extends State<Chat> {
                 //   fillColor: AppColors.button,
                 //   border: InputBorder.none,
                 // ),
-                child: InputDate("Message", TextInputType.name, search),
+                child: SafeArea(child: InputDate("Message", TextInputType.name, search)),
               ),
             ],
           ),

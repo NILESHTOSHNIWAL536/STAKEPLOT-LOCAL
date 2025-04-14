@@ -94,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context)
   {
     return Scaffold(
-      bottomNavigationBar: BottomNavigations(data: 0),
+      bottomNavigationBar: SafeArea(child: BottomNavigations(data: 0)),
       backgroundColor: AppColors.backgroundColor,
       appBar:getAppBar(),
       body: Padding(

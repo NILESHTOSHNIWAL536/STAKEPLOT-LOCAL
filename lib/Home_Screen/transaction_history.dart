@@ -1079,9 +1079,9 @@ Widget getlist() {
         String monthYearKey = DateFormat('MMMM yyyy').format(istDate); // e.g., "April 2025"
         groupedTransactions.putIfAbsent(monthYearKey, () => []).add(transaction);
         // Debug: Log the timestamp and its IST conversion
-        print('Timestamp: $timestamp, IST: $istDate, Grouped as: $monthYearKey');
+        // print('Timestamp: $timestamp, IST: $istDate, Grouped as: $monthYearKey');
       } catch (e) {
-        print('Invalid timestamp: $timestamp');
+        // print('Invalid timestamp: $timestamp');
         continue;
       }
     }
@@ -1151,24 +1151,24 @@ Widget getlist() {
                   color: AppColors.accentColor,
                 ),
               ),
-              transactionCount == 0
-                  ? const SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        color: AppColors.primaryColor,
-                        strokeWidth: 2,
-                      ),
-                    )
-                  : Text(
-                      '$transactionCount Transaction${transactionCount == 1 ? '' : 's'}',
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.w500,
-                        fontSize: 14,
-                        color: AppColors.primaryColor.withOpacity(0.7),
-                      ),
-                    ),
+              // transactionCount == 0
+              //     ? const SizedBox(
+              //         width: 24,
+              //         height: 24,
+              //         child: CircularProgressIndicator(
+              //           color: AppColors.primaryColor,
+              //           strokeWidth: 2,
+              //         ),
+              //       )
+              //     : Text(
+              //         '$transactionCount Transaction${transactionCount == 1 ? '' : 's'}',
+              //         style: FontManager().getTextStyle(
+              //           context,
+              //           lWeight: FontWeight.w500,
+              //           fontSize: 14,
+              //           color: AppColors.primaryColor.withOpacity(0.7),
+              //         ),
+              //       ),
             ],
           ),
         );

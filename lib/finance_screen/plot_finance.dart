@@ -1363,7 +1363,7 @@ class _PlotFinanceState extends State<PlotFinance> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      bottomNavigationBar: BottomNavigations(data: 1),
+      bottomNavigationBar: SafeArea(child: BottomNavigations(data: 1)),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
