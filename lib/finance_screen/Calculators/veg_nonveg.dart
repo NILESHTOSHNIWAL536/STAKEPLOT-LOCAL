@@ -828,44 +828,46 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
           },
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Fixed top section: Input fields
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildInputColumn('Veg', vegController),
-                _buildInputColumn('Non-veg', nonVegController),
-                _buildInputColumn('Alcohol', alcoholController),
-              ],
-            ),
-          ),
-          // Fixed search bar
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-            child: InputDat('Search', TextInputType.name, Textcontroller),
-          ),
-          // Scrollable section: commentedData and vegNonvegdata
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Fixed top section: Input fields
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  commentedData(),
-                  vegNonvegdata(),
+                  _buildInputColumn('Veg', vegController),
+                  _buildInputColumn('Non-veg', nonVegController),
+                  _buildInputColumn('Alcohol', alcoholController),
                 ],
               ),
             ),
-          ),
-          // Fixed bottom section: Calculation
-          Container(
-            color: AppColors.backgroundColor,
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: calculation(),
-          ),
-        ],
+            // Fixed search bar
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+              child: InputDat('Search', TextInputType.name, Textcontroller),
+            ),
+            // Scrollable section: commentedData and vegNonvegdata
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    commentedData(),
+                    vegNonvegdata(),
+                  ],
+                ),
+              ),
+            ),
+            // Fixed bottom section: Calculation
+            Container(
+              color: AppColors.backgroundColor,
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: calculation(),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -104,22 +104,24 @@ class _EmiState extends State<Emi> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appbarHeader("EMI Calculator", context),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SliderPage(
-                slidersList: slidersList,
-                onSliderValueChanged: updateSliderValue,
-              ),
-              graph(),
-              CustomExpansionTile(
-                howToUseContent: howToUseContent,
-                howItWorksContent: howItWorksContent,
-              ),
-            ],
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SliderPage(
+                  slidersList: slidersList,
+                  onSliderValueChanged: updateSliderValue,
+                ),
+                graph(),
+                CustomExpansionTile(
+                  howToUseContent: howToUseContent,
+                  howItWorksContent: howItWorksContent,
+                ),
+              ],
+            ),
           ),
         ),
       ),

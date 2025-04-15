@@ -332,23 +332,25 @@ class _AutoLoanState extends State<AutoLoan> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appbarHeader("Auto Loan Calculator", context),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SliderPage(
-                slidersList: slidersList,
-                onSliderValueChanged: updateSliderValue,
-                title: "Cars",
-              ),
-              graph(),
-              CustomExpansionTile(
-                howToUseContent: howToUseContent,
-                howItWorksContent: howItWorksContent,
-              ),
-            ],
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SliderPage(
+                  slidersList: slidersList,
+                  onSliderValueChanged: updateSliderValue,
+                  title: "Cars",
+                ),
+                graph(),
+                CustomExpansionTile(
+                  howToUseContent: howToUseContent,
+                  howItWorksContent: howItWorksContent,
+                ),
+              ],
+            ),
           ),
         ),
       ),
