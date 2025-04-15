@@ -13,6 +13,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.da
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/userstats.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:get/get.dart';
 import 'dart:io';
@@ -203,6 +204,11 @@ class _EditDetailsState extends State<EditDetails> {
                     //     );
                     //   },
                     // );
+
+                    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => UserStatsScreen()),
+    );
                   },
                   child: Padding(
                     padding: EdgeInsets.only(top: 8.0),
