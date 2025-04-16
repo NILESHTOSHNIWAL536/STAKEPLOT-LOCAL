@@ -456,14 +456,16 @@ class BottomNavigations extends StatefulWidget {
 }
 
 class _BottomNavigationsState extends State<BottomNavigations> {
-  final List<String> _tabNames = ['Home', 'Finance', 'Room', 'Community', 'Profile'];
+  final List<String> _tabNames = ['Home', 'Finance', 'Community', 'Profile'];
   @override
   void initState() {
     super.initState();
      WidgetsBinding.instance.addPostFrameCallback((_) {
       try {
-        ScreenTimeTracker().switchTab(_tabNames[widget.data]);
-        print('Initial tab set: ${_tabNames[widget.data]}');
+        if (widget.data >= 0 && widget.data < _tabNames.length) {
+          ScreenTimeTracker().switchTab(_tabNames[widget.data]);
+          print('Initial tab set: ${_tabNames[widget.data]}');
+        }
       } catch (e) {
         print('Error setting initial tab: $e');
       }
@@ -568,21 +570,15 @@ class _BottomNavigationsState extends State<BottomNavigations> {
         try {
           String tabName = _tabNames[i];
           ScreenTimeTracker().switchTab(tabName);
-          print('Tab switched to: $tabName');
-        if (i == 0 && widget.data != i)
-          pushName(HomePage());
-        else if (i == 1 && widget.data != i) pushName(PlotFinance());
-
-        if (!sizeRoom) {
-          if (i == 2 && widget.data != i) {
+          // print('Tab switched to: $tabName');
+        if (i == 0)
+            pushName(HomePage());
+          else if (i == 1)
+            pushName(PlotFinance());
+          else if (i == 2)
             pushName(Community());
-          } else if (i == 3 && widget.data != i) pushName(ProfileScreenDart());
-        } else {
-          // if (i == 2 && widget.data != i) pushName(RoomHome());
-          if (i == 3 && widget.data != i)
-            pushName(Community());
-          else if (i == 4 && widget.data != i) pushName(ProfileScreenDart());
-        }
+          else if (i == 3)
+            pushName(ProfileScreenDart());
 
         setState(() {
           widget.data = i; // Update selected index
@@ -639,12 +635,151 @@ class _BottomNavigationsState extends State<BottomNavigations> {
 // }
 }
 
+// Widget showUserData(BuildContext context) {
+//   double width = MediaQuery.of(context).size.width;
+//   double height = MediaQuery.of(context).size.height;
+
+//   List<String> loginUsers = loginUsersList.keys.toList();
+
+//   loginUsers.remove(userName.value);
+//   loginUsers.insert(0, userName.value);
+
+//   return Container(
+//     width: width,
+//     height: loginUsers.length == 0 ? height / 5 : height / 2.7,
+//     decoration: BoxDecoration(
+//       color: Colorcodes.budgetLightGreen,
+//       borderRadius: BorderRadius.only(
+//         topLeft: Radius.circular(40),
+//         topRight: Radius.circular(40),
+//       ),
+//     ),
+//     child: Column(
+//       mainAxisAlignment: MainAxisAlignment.start,
+//       crossAxisAlignment: CrossAxisAlignment.center,
+//       children: [
+//         Container(
+//           width: width / 8,
+//           height: 4,
+//           margin: EdgeInsets.symmetric(vertical: 10),
+//           decoration: BoxDecoration(
+//               color: Colorcodes.white, borderRadius: BorderRadius.circular(10)),
+//         ),
+//         loginUsers.length == 0
+//             ? SizedBox.shrink()
+//             : Container(
+//                 width: width / 1.1,
+//                 height:
+//                     loginUsers.length == 1 ? height / 5.7 / 2 : height / 5.7,
+//                 padding: EdgeInsets.all(5),
+//                 margin: EdgeInsets.symmetric(vertical: 5),
+//                 decoration: BoxDecoration(
+//                     color: Colorcodes.white,
+//                     borderRadius: BorderRadius.circular(20)),
+//                 child: ListView.builder(
+//                   itemBuilder: (context, index) {
+//                     String name = loginUsers[index];
+//                     dynamic user = loginUsersList[name];
+
+//                     return InkWell(
+//                       onTap: () async {
+//                         TextEditingController emailController =
+//                             TextEditingController(text: user['email']);
+//                         TextEditingController passwordController =
+//                             TextEditingController(text: user['password']);
+//                         final SharedPreferences _pref =
+//                             await SharedPreferences.getInstance();
+//                         _pref.remove("accessToken").then((_) {
+//                           // Code to execute after token removal
+//                           _pref.setString("accessToken", user['accessToken']);
+//                           Navigator.of(context).pushNamedAndRemoveUntil(
+//                               '/', (Route<dynamic> route) => false);
+//                           Navigator.pushReplacementNamed(context, '/home');
+
+//                           //  Navigator.pushReplacementNamed(context, '/');
+//                         }).catchError((error) {
+//                           // Error handling if token removal fails
+//                         });
+
+//                         clearGetX();
+
+//                         loginUser(emailController, passwordController, context);
+//                       },
+//                       child: Container(
+//                         padding:
+//                             EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+//                         child: Row(
+//                           children: [
+//                             AvatarProfileImage(
+//                                 url: user['avatar'], width: 16, height: 16),
+//                             Container(
+//                               width: width / 1.8,
+//                               // color: Colorcodes.bedgetBody,
+//                               child: Text(
+//                                 user['name'],
+//                                 style: FontManager().getTextStyle(context,
+//                                     lWeight: FontWeight.bold,
+//                                     fontSize: 17,
+//                                     color: Colorcodes.black),
+//                                 overflow: TextOverflow.ellipsis,
+//                               ),
+//                             ),
+//                             Obx(() => user['name'] == userName.value
+//                                 ? Container(
+//                                     alignment: Alignment.centerRight,
+//                                     child: Icon(
+//                                       Icons.check_circle_outlined,
+//                                       color: Colorcodes.budgetDarkGreen,
+//                                     ),
+//                                   )
+//                                 : SizedBox.shrink()),
+//                           ],
+//                         ),
+//                       ),
+//                     );
+//                   },
+//                   itemCount: loginUsers.length,
+//                 ),
+//               ),
+//         InkWell(
+//           onTap: () {
+//             Navigator.pop(context);
+//             Navigator.pushNamed(context, '/');
+//           },
+//           child: Center(
+//             child: Padding(
+//               padding: const EdgeInsets.only(left: 20.0, top: 10),
+//               child: Row(
+//                 children: [
+//                   CircleAvatar(
+//                       backgroundColor: Colorcodes.white,
+//                       child: AvatarProfileImage(
+//                           url: svgIconPath.account, width: 10, height: 10)),
+//                   const SizedBox(
+//                     width: 20,
+//                   ),
+//                   Text("Add StakePlot Account",
+//                       style: FontManager().getTextStyle(context,
+//                           lWeight: FontWeight.w500,
+//                           fontSize: 17,
+//                           color: Colorcodes.black)),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ),
+//         logoutWidget(context, true),
+//       ],
+//     ),
+//   );
+// }
+
+
 Widget showUserData(BuildContext context) {
   double width = MediaQuery.of(context).size.width;
   double height = MediaQuery.of(context).size.height;
 
   List<String> loginUsers = loginUsersList.keys.toList();
-
   loginUsers.remove(userName.value);
   loginUsers.insert(0, userName.value);
 
@@ -693,20 +828,11 @@ Widget showUserData(BuildContext context) {
                             TextEditingController(text: user['password']);
                         final SharedPreferences _pref =
                             await SharedPreferences.getInstance();
-                        _pref.remove("accessToken").then((_) {
-                          // Code to execute after token removal
-                          _pref.setString("accessToken", user['accessToken']);
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              '/', (Route<dynamic> route) => false);
-                          Navigator.pushReplacementNamed(context, '/home');
-
-                          //  Navigator.pushReplacementNamed(context, '/');
-                        }).catchError((error) {
-                          // Error handling if token removal fails
-                        });
-
+                        String userId = user['accessToken'] ?? user['email'];
+                        await _pref.remove("accessToken");
+                        await _pref.setString("accessToken", user['accessToken']);
+                        await ScreenTimeTracker().setUser(userId);
                         clearGetX();
-
                         loginUser(emailController, passwordController, context);
                       },
                       child: Container(
@@ -718,7 +844,6 @@ Widget showUserData(BuildContext context) {
                                 url: user['avatar'], width: 16, height: 16),
                             Container(
                               width: width / 1.8,
-                              // color: Colorcodes.bedgetBody,
                               child: Text(
                                 user['name'],
                                 style: FontManager().getTextStyle(context,
@@ -788,20 +913,20 @@ Widget logoutWidget(context, [flag = false]) {
           InkWell(
             onTap: () async {
               try {
-                print('Logging out');
+                // print('Logging out');
                 clearServarData(context);
-                ScreenTimeTracker().endSession();
+                await ScreenTimeTracker().clearUserData();
                 final SharedPreferences _pref = await SharedPreferences.getInstance();
-                await _pref.remove("accessToken").then((_) {
-                  print('Access token removed, navigating to login');
-                  Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-                  Navigator.pushReplacementNamed(context, '/');
-                }).catchError((error) {
-                  print('Error removing token: $error');
-                });
+                String? userId = _pref.getString('accessToken') ?? '';
+                await _pref.remove("accessToken");
+                await _pref.remove('login_count_${DateTime.now().toIso8601String().substring(0, 10)}_$userId');
+                await _pref.remove('login_history_$userId');
+                // print('Access token and login data removed, navigating to login');
+                Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+                Navigator.pushReplacementNamed(context, '/');
                 clearGetX();
               } catch (e) {
-                print('Logout error: $e');
+                // print('Logout error: $e');
               }
             },
             child: Container(

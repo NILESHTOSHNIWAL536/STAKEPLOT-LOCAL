@@ -487,7 +487,7 @@ class _UserListScreenState extends State<UserListScreen> {
                 if (isDue) {
                   int index = dueAmountRemainders.indexWhere((element) => element['_id'] == data['_id']);
                   if (index != -1) {
-                     duesPaid(context, index); // API call to settle
+                     duesPaid(context, index); 
                     dueAmountRemainders[index]['isPaid'] = true;
                     dueAmountRemainders[index]['billApproved'] = true;
                     dueAmountRemainders.refresh();

@@ -79,57 +79,59 @@ import 'package:shared_preferences/shared_preferences.dart';
 // }
 
 
+
 Future<void> loginUser(
     TextEditingController emailController,
     TextEditingController passwordController,
     BuildContext context,
     [bool flag = false]) async {
   try {
-    print('Attempting login for email: ${emailController.text}');
+    // print('Attempting login for email: ${emailController.text}');
     var response = await postDataApiCallwithOutSharedPref('${url}/user/login', {
       'email': emailController.text.toString(),
       'userpassword': passwordController.text.toString(),
       'deviceInfo': deviceData,
     });
 
-    print('Login response status: ${response.statusCode}');
+    // print('Login response status: ${response.statusCode}');
     if (response.statusCode == 409) {
-      print('Force login modal triggered');
+      // print('Force login modal triggered');
       forceLoginShowModal(context, response, emailController, passwordController);
     } else if (response.statusCode == 500) {
-      print('Server error during login');
+      // print('Server error during login');
       snackBarCalledSignup(context, "Server Error!", Colors.red);
     } else if (getFlagOfResponse(response)) {
-      print('Login successful, processing data');
+      // print('Login successful, processing data');
       loginCalledData(response, context);
 
-      final SharedPreferences pref = await SharedPreferences.getInstance();
-      final String todayKey = 'login_count_${DateTime.now().toIso8601String().substring(0, 10)}';
+      final pref = await SharedPreferences.getInstance();
+      final userId = pref.getString('accessToken') ?? emailController.text; // Use token or email
+      final todayKey = 'login_count_${DateTime.now().toIso8601String().substring(0, 10)}_$userId';
       int dailyLoginCount = pref.getInt(todayKey) ?? 0;
       dailyLoginCount++;
       await pref.setInt(todayKey, dailyLoginCount);
 
-      final List<String> loginHistory = pref.getStringList('login_history') ?? [];
-      final String todayEntry = '$todayKey:$dailyLoginCount';
+      final List<String> loginHistory = pref.getStringList('login_history_$userId') ?? [];
+      final todayEntry = '$todayKey:$dailyLoginCount';
       if (loginHistory.any((entry) => entry.startsWith(todayKey))) {
         loginHistory.removeWhere((entry) => entry.startsWith(todayKey));
       }
       loginHistory.add(todayEntry);
-      await pref.setStringList('login_history', loginHistory);
+      await pref.setStringList('login_history_$userId', loginHistory);
 
-      await ScreenTimeTracker().initialize();
+      await ScreenTimeTracker().setUser(userId);
       ScreenTimeTracker().startSession();
       ScreenTimeTracker().switchTab('Home');
-      print('Navigating to HomePage after login');
+      // print('Navigating to HomePage after login for $userId');
       Navigator.pushReplacementNamed(context, '/home');
     } else {
-      print('Invalid credentials');
+      // print('Invalid credentials');
       acceptReset.value = false;
       snackBarCalledfail(context, 'Invalid credentials');
     }
   } catch (e, stackTrace) {
-    print('Login error: $e');
-    print('Stack trace: $stackTrace');
+    // print('Login error: $e');
+    // print('Stack trace: $stackTrace');
     acceptReset.value = false;
     snackBarCalledfail(context, 'Login failed: $e');
   }

@@ -132,7 +132,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
 // import 'package:flutter_application_code_stakeplot/screen_time_tracker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart'; // For sizeRoom
 
 class UserStatsScreen extends StatelessWidget {
   UserStatsScreen({Key? key}) : super(key: key);
@@ -140,7 +139,7 @@ class UserStatsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tracker = ScreenTimeTracker();
-    print('UserStatsScreen using tracker instance: ${tracker.hashCode}');
+    // print('UserStatsScreen using tracker instance: ${tracker.hashCode}');
 
     return Scaffold(
       appBar: AppBar(title: const Text('User Stats')),
@@ -193,9 +192,7 @@ class UserStatsScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: tabScreenTime.entries
-                        .where((entry) => entry.key != 'Room' || sizeRoom)
-                        .map((entry) {
+                    children: tabScreenTime.entries.map((entry) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 4.0),
                         child: Text(
@@ -215,7 +212,7 @@ class UserStatsScreen extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final entry = loginHistory[index];
                         final parts = entry.split(':');
-                        final date = parts[0].replaceAll('login_count_', '');
+                        final date = parts[0].split('_')[2]; // Extract date
                         final count = parts[1];
                         return ListTile(
                           title: Text('Date: $date'),
@@ -234,7 +231,7 @@ class UserStatsScreen extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final entry = appOpenHistory[index];
                         final parts = entry.split(':');
-                        final date = parts[0].replaceAll('app_open_count_', '');
+                        final date = parts[0].split('_')[3]; // Extract date
                         final count = parts[1];
                         return ListTile(
                           title: Text('Date: $date'),
@@ -268,11 +265,12 @@ class UserStatsScreen extends StatelessWidget {
   }
 
   Future<Map<String, dynamic>> _getUserStats() async {
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    final String todayKey = 'login_count_${DateTime.now().toIso8601String().substring(0, 10)}';
+    final pref = await SharedPreferences.getInstance();
+    final userId = pref.getString('accessToken') ?? '';
+    final todayKey = 'login_count_${DateTime.now().toIso8601String().substring(0, 10)}_$userId';
     return {
       'daily_login_count': pref.getInt(todayKey) ?? 0,
-      'login_history': pref.getStringList('login_history') ?? [],
+      'login_history': pref.getStringList('login_history_$userId') ?? [],
     };
   }
 }
