@@ -8,6 +8,7 @@ import android.content.Intent
 import android.util.Log
 import android.widget.RemoteViews
 import es.antonborri.home_widget.HomeWidgetPlugin
+import android.content.SharedPreferences
 
 class PayableWidgetProvider : AppWidgetProvider() {
     override fun onUpdate(
@@ -16,21 +17,25 @@ class PayableWidgetProvider : AppWidgetProvider() {
         appWidgetIds: IntArray
     ) {
         Log.d("PayableWidget", "Updating ${appWidgetIds.size} widgets")
+        val prefs: SharedPreferences = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
+
         for (appWidgetId in appWidgetIds) {
             try {
                 Log.d("PayableWidget", "Creating RemoteViews for widget ID: $appWidgetId")
                 val views = RemoteViews(context.packageName, R.layout.payable_widget_layout)
                 val widgetData = try {
-    HomeWidgetPlugin.getData(context)
-} catch (e: Exception) {
-    Log.e("PayableWidget", "Failed to get widget data", e)
-    null
-}
+                    HomeWidgetPlugin.getData(context)
+                } catch (e: Exception) {
+                    Log.e("PayableWidget", "Failed to get widget data", e)
+                    null
+                }
 
-val toReceive = widgetData?.getString("to_receive", "None: ₹0") ?: "None: ₹0"
-val toPay = widgetData?.getString("to_pay", "None: ₹0") ?: "None: ₹0"
+                // Use widgetData if available, otherwise fall back to SharedPreferences
+                val toReceive = widgetData?.getString("to_receive", null)
+                    ?: prefs.getString("to_receive", "None: ₹0") ?: "None: ₹0"
+                val toPay = widgetData?.getString("to_pay", null)
+                    ?: prefs.getString("to_pay", "None: ₹0") ?: "None: ₹0"
 
-                
                 Log.d("PayableWidget", "Setting data: toReceive=$toReceive, toPay=$toPay")
                 views.setTextViewText(R.id.to_receive_title, "To Receive")
                 views.setTextViewText(R.id.to_receive_text, toReceive)

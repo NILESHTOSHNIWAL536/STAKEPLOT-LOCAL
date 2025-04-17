@@ -243,49 +243,49 @@ class _UserListScreenState extends State<UserListScreen> {
   void initState() {
     super.initState();
     getRemainders(context);
-     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      try {
-        print('Initializing HomeWidget with group: group.com.stakeplot.adnan.dev');
-        await HomeWidget.setAppGroupId('group.com.stakeplot.adnan.dev');
-        getRemainders(context);
-        await _updateWidget();
-      } catch (e) {
-        print('Error initializing HomeWidget: $e');
-      }
-    });
-    ever(lendAmountRemainders, (_) => _updateWidget());
-    ever(dueAmountRemainders, (_) => _updateWidget()); // Fetch data for both payables and oweds
+    //  WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //   try {
+    //     print('Initializing HomeWidget with group: group.com.stakeplot.adnan.dev');
+    //     await HomeWidget.setAppGroupId('group.com.stakeplot.adnan.dev');
+    //     getRemainders(context);
+    //     await _updateWidget();
+    //   } catch (e) {
+    //     print('Error initializing HomeWidget: $e');
+    //   }
+    // });
+    // ever(lendAmountRemainders, (_) => _updateWidget());
+    // ever(dueAmountRemainders, (_) => _updateWidget()); // Fetch data for both payables and oweds
   }
-Future<void> _updateWidget() async {
-    try {
-      String toReceive = 'None: ₹0';
-      String toPay = 'None: ₹0';
-      print('lendAmountRemainders: $lendAmountRemainders');
-      print('dueAmountRemainders: $dueAmountRemainders');
-      if (lendAmountRemainders.isNotEmpty && lendAmountRemainders.first != null) {
-        final data = lendAmountRemainders.first;
-        toReceive =
-            '${data["name"] ?? "Unknown"}: ₹${(data["amount"] ?? 0).toStringAsFixed(2)}';
-      }
-      if (dueAmountRemainders.isNotEmpty && dueAmountRemainders.first != null) {
-        final data = dueAmountRemainders.first;
-        toPay =
-            '${data["name"] ?? "Unknown"}: ₹${(data["amount"] ?? 0).toStringAsFixed(2)}';
-      }
-      print('Updating PayableWidget: toReceive=$toReceive, toPay=$toPay');
-      await HomeWidget.saveWidgetData<String>('to_receive', toReceive);
-      await HomeWidget.saveWidgetData<String>('to_pay', toPay);
-      print('Calling HomeWidget.updateWidget for PayableWidgetProvider');
-      await HomeWidget.updateWidget(
-        name: 'PayableWidgetProvider',
-        androidName: 'PayableWidgetProvider',
-        iOSName: 'PayableWidget',
-      );
-      print('HomeWidget.updateWidget completed successfully');
-    } catch (e) {
-      print('Error updating widget: $e');
-    }
-  }
+// Future<void> _updateWidget() async {
+//     try {
+//       String toReceive = 'None: ₹0';
+//       String toPay = 'None: ₹0';
+//       print('lendAmountRemainders: $lendAmountRemainders');
+//       print('dueAmountRemainders: $dueAmountRemainders');
+//       if (lendAmountRemainders.isNotEmpty && lendAmountRemainders.first != null) {
+//         final data = lendAmountRemainders.first;
+//         toReceive =
+//             '${data["name"] ?? "Unknown"}: ₹${(data["amount"] ?? 0).toStringAsFixed(2)}';
+//       }
+//       if (dueAmountRemainders.isNotEmpty && dueAmountRemainders.first != null) {
+//         final data = dueAmountRemainders.first;
+//         toPay =
+//             '${data["name"] ?? "Unknown"}: ₹${(data["amount"] ?? 0).toStringAsFixed(2)}';
+//       }
+//       print('Updating PayableWidget: toReceive=$toReceive, toPay=$toPay');
+//       await HomeWidget.saveWidgetData<String>('to_receive', toReceive);
+//       await HomeWidget.saveWidgetData<String>('to_pay', toPay);
+//       print('Calling HomeWidget.updateWidget for PayableWidgetProvider');
+//       await HomeWidget.updateWidget(
+//         name: 'PayableWidgetProvider',
+//         androidName: 'PayableWidgetProvider',
+//         iOSName: 'PayableWidget',
+//       );
+//       print('HomeWidget.updateWidget completed successfully');
+//     } catch (e) {
+//       print('Error updating widget: $e');
+//     }
+//   }
 
   @override
   Widget build(BuildContext context) {
