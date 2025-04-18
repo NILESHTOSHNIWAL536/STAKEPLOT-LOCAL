@@ -20,15 +20,27 @@ class StakeplotWidgetProvider : AppWidgetProvider() {
             try {
                 val views = RemoteViews(context.packageName, R.layout.widget_layout)
                 val widgetData = HomeWidgetPlugin.getData(context)
-                val totalSpending = widgetData.getString("total_spending", "₹0")
-                val categories = widgetData.getString("categories", "Categories: None")
-                val timestamp = widgetData.getString("timestamp", "01 Jan - 01 Jan")
+                val totalSpending = widgetData.getString("total_spending", "₹0") ?: "₹0"
+                val categories = widgetData.getString("categories", "None") ?: "None"
+                val timestamp = widgetData.getString("timestamp", "01 Jan - 01 Jan") ?: "01 Jan - 01 Jan"
+
+                // Set title, total, and timestamp
                 views.setTextViewText(R.id.widget_title, "Expenses")
                 views.setTextViewText(R.id.widget_total_spending, "Total: $totalSpending")
-                views.setTextViewText(R.id.widget_categories, categories)
                 views.setTextViewText(R.id.widget_timestamp, timestamp)
+
+                // Split categories into two columns (up to 2 per column)
+                val categoryList = categories.split("\n")
+                val leftCategories = categoryList.take(2).joinToString("\n").ifEmpty { "None" }
+                val rightCategories = categoryList.drop(2).take(2).joinToString("\n").ifEmpty { "None" }
+
+                // Set left and right column TextViews
+                views.setTextViewText(R.id.widget_categories_left, leftCategories)
+                views.setTextViewText(R.id.widget_categories_right, rightCategories)
+
                 Log.d("StakeplotWidget", "Data: total=$totalSpending, categories=$categories, time=$timestamp")
 
+                // Set click intent
                 val intent = Intent(context, MainActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                 }
