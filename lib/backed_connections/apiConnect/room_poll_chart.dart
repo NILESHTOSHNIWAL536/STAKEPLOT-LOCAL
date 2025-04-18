@@ -421,19 +421,21 @@ void getChatLoader() async {
         String type = "message...";
         try {
           type = typed == null
-              ? "message... 😎"
+              ? "message"
               : typed == "message"
                   ? element['chats']['details']['message']
                   : typed == "post"
-                      ? "Sent a post 🤪"
+                      ? "Sent a post"
                       : typed == "image"
-                          ? "Sent a image 🔥"
+                          ? "Sent a image"
                           : typed == "poll"
-                              ? "Send a poll 🤔..." :
+                              ? "Sent a poll" :
                            typed == "split"
-                              ? "Send a split bill 🥱"
-                              : "message... 😎";
-        } catch (e) {}
+                              ? "Sent a split bill"
+                              : "message";
+        } catch (e) {
+          
+        }
 
         var data = {
           '_id': key,

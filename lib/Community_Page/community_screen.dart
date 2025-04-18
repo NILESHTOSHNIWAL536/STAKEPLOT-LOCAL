@@ -153,7 +153,7 @@ class _CommunityState extends State<Community> {
     return Scaffold(
       extendBody: true,
       backgroundColor: AppColors.backgroundColor,
-      bottomNavigationBar: BottomNavigations(data: 2),
+      bottomNavigationBar: SafeArea(child: BottomNavigations(data: 2)),
       body: SafeArea(
         child: Container(
           
@@ -343,181 +343,183 @@ class _CommunityState extends State<Community> {
         final double verticalPadding =
             MediaQuery.of(context).size.height * 0.02;
 
-        return Padding(
-          padding: MediaQuery.of(context).viewInsets,
-          child: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: horizontalPadding,
-              vertical: verticalPadding,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-            ),
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height *
-                  0.9, // Limit height to 90% of screen
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: horizontalPadding / 2),
-                    child: Text(
-                      'Create Post',
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.bold,
-                        fontSize: MediaQuery.of(context).size.width *
-                            0.05, // Responsive font size
-                        color: AppColors.accentColor,
+        return SafeArea(
+          child: Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: horizontalPadding,
+                vertical: verticalPadding,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+              ),
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height *
+                    0.9, // Limit height to 90% of screen
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: horizontalPadding / 2),
+                      child: Text(
+                        'Create Post',
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.bold,
+                          fontSize: MediaQuery.of(context).size.width *
+                              0.05, // Responsive font size
+                          color: AppColors.accentColor,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: verticalPadding),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _buildOptionButton(
-                        context: context,
-                        icon: Icons.text_fields,
-                        label: 'Text',
-                        onTap: () {
-                          posting.value = false;
-                          Navigator.of(context).pop();
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            context: context,
-                            builder: (context) {
-                              return TextScreen(
-                                userInfo: post,
-                                onPostCreated: (newPost) {
-                                  setState(() {
-                                    posts.add(newPost);
-                                    k = 1;
-                                  });
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                      _buildOptionButton(
-                        context: context,
-                        icon: Icons.image_rounded,
-                        label: 'Image',
-                        onTap: () {
-                          posting.value = false;
-                          Navigator.of(context).pop();
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            context: context,
-                            builder: (context) {
-                              return ImageScreen(
-                                userInfo: post,
-                                onPostCreated: (newPost) {
-                                  setState(() {
-                                    posts.add(newPost);
-                                  });
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                      _buildOptionButton(
-                        context: context,
-                        icon: Icons.poll_outlined,
-                        label: 'Poll',
-                        onTap: () {
-                          posting.value = false;
-                          Navigator.of(context).pop();
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            context: context,
-                            builder: (context) {
-                              return Container(
-                                padding: const EdgeInsets.all(16.0),
-                                width: MediaQuery.sizeOf(context).width,
-                                child: PollScreen(
+                    SizedBox(height: verticalPadding),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _buildOptionButton(
+                          context: context,
+                          icon: Icons.text_fields,
+                          label: 'Text',
+                          onTap: () {
+                            posting.value = false;
+                            Navigator.of(context).pop();
+                            showModalBottomSheet(
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (context) {
+                                return TextScreen(
                                   userInfo: post,
-                                  onPollPosted: (pollData) {
+                                  onPostCreated: (newPost) {
                                     setState(() {
-                                      posts.add(pollData);
+                                      posts.add(newPost);
+                                      k = 1;
                                     });
-                                    Navigator.pop(context);
                                   },
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: verticalPadding),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (context) {
-                          return Container(
-                            child: ExploreModal(
-                              onPostCreated: (newPost) {
-                                setState(() {
-                                  posts.add(newPost);
-                                });
+                                );
                               },
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      margin: EdgeInsets.symmetric(
-                          horizontal: horizontalPadding / 2),
-                      padding: EdgeInsets.symmetric(
-                        vertical: verticalPadding,
-                        horizontal: horizontalPadding,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.accentColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.explore,
-                            color: AppColors.primaryColor,
-                            size: MediaQuery.of(context).size.width *
-                                0.06, // Responsive icon size
-                          ),
-                          SizedBox(width: horizontalPadding / 2),
-                          Flexible(
-                            child: Text(
-                              'Exploria',
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w600,
-                                fontSize: MediaQuery.of(context).size.width *
-                                    0.045, // Responsive font size
-                                color: AppColors.accentColor,
+                            );
+                          },
+                        ),
+                        _buildOptionButton(
+                          context: context,
+                          icon: Icons.image_rounded,
+                          label: 'Image',
+                          onTap: () {
+                            posting.value = false;
+                            Navigator.of(context).pop();
+                            showModalBottomSheet(
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (context) {
+                                return ImageScreen(
+                                  userInfo: post,
+                                  onPostCreated: (newPost) {
+                                    setState(() {
+                                      posts.add(newPost);
+                                    });
+                                  },
+                                );
+                              },
+                            );
+                          },
+                        ),
+                        _buildOptionButton(
+                          context: context,
+                          icon: Icons.poll_outlined,
+                          label: 'Poll',
+                          onTap: () {
+                            posting.value = false;
+                            Navigator.of(context).pop();
+                            showModalBottomSheet(
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (context) {
+                                return Container(
+                                  padding: const EdgeInsets.all(16.0),
+                                  width: MediaQuery.sizeOf(context).width,
+                                  child: PollScreen(
+                                    userInfo: post,
+                                    onPollPosted: (pollData) {
+                                      setState(() {
+                                        posts.add(pollData);
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: verticalPadding),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) {
+                            return Container(
+                              child: ExploreModal(
+                                onPostCreated: (newPost) {
+                                  setState(() {
+                                    posts.add(newPost);
+                                  });
+                                },
                               ),
-                              overflow: TextOverflow.ellipsis,
+                            );
+                          },
+                        );
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        margin: EdgeInsets.symmetric(
+                            horizontal: horizontalPadding / 2),
+                        padding: EdgeInsets.symmetric(
+                          vertical: verticalPadding,
+                          horizontal: horizontalPadding,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.accentColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.explore,
+                              color: AppColors.primaryColor,
+                              size: MediaQuery.of(context).size.width *
+                                  0.06, // Responsive icon size
                             ),
-                          ),
-                        ],
+                            SizedBox(width: horizontalPadding / 2),
+                            Flexible(
+                              child: Text(
+                                'Exploria',
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w600,
+                                  fontSize: MediaQuery.of(context).size.width *
+                                      0.045, // Responsive font size
+                                  color: AppColors.accentColor,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: verticalPadding),
-                ],
+                    SizedBox(height: verticalPadding),
+                  ],
+                ),
               ),
             ),
           ),

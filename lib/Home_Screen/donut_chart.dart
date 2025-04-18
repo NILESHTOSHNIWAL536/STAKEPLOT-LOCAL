@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'colors.dart';
-
+import 'package:home_widget/home_widget.dart';
   RxInt selectedIndex=(-1).obs;
   RxList<ChartData> chartData=<ChartData>[].obs;
   RxDouble totalValue = 0.0.obs;
@@ -29,7 +29,43 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
   @override
   void initState() {
     super.initState();
-    getCategoryData();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await HomeWidget.setAppGroupId('group.com.stakeplot.adnan.dev');
+      getCategoryData();
+      await _updateWidget();
+    });
+    ever(chartData, (_) => _updateWidget());
+    ever(totalValue, (_) => _updateWidget());
+  }
+ Future<void> _updateWidget() async {
+    try {
+      final total = '₹${totalValue.value.toStringAsFixed(2)}';
+      final timestamp = _getMonthlyRange();
+      String categories = 'None';
+      if (chartData.isNotEmpty) {
+        categories = chartData
+            .map(
+                (data) => '${data.category}: ₹${data.value.toStringAsFixed(2)}')
+            .join('\n');
+      }
+      print(
+          'Updating widget: total=$total, categories=$categories, time=$timestamp');
+      await HomeWidget.saveWidgetData<String>('total_spending', total);
+      await HomeWidget.saveWidgetData<String>('categories', categories);
+      await HomeWidget.saveWidgetData<String>('timestamp', timestamp);
+      print(
+          'Updating widget: total=$total, categories=$categories, time=$timestamp');
+      await HomeWidget.saveWidgetData<String>('total_spending', total);
+      await HomeWidget.saveWidgetData<String>('categories', categories);
+      await HomeWidget.saveWidgetData<String>('timestamp', timestamp);
+      await HomeWidget.updateWidget(
+        name: 'StakeplotWidgetProvider', // Match AppWidgetProvider class name
+        androidName: 'StakeplotWidgetProvider',
+        iOSName: 'StakeplotWidget',
+      );
+    } catch (e) {
+      print('Error updating widget: $e');
+    }
   }
 
   @override

@@ -63,17 +63,14 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
           width: MediaQuery.of(context).size.width,
           child: Column(
             children: [
-            
               topUserProfile(),
-            
+
               const SizedBox(height: 60),
-            
               Column(
                 children: [
                   Text(userName.value.toString(),
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.w600, color: AppColors.bg1)),
-                 
                           const SizedBox(height: 10),
                      TabBarUser(userPostList: myPostList)
                 ],
@@ -91,14 +88,14 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        // Positioned button to edit cover image
+        
       
         GestureDetector(
           onTap: () {
             // Add the action to be triggered on tap, like picking an image
           },
           child: Container(
-            height: MediaQuery.of(context).size.height / 6,
+            height: MediaQuery.of(context).size.height / 6.7,
             // height: 200,
             decoration: BoxDecoration(
               color: Colors.lightBlueAccent,

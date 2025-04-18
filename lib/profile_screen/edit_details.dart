@@ -13,10 +13,12 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.da
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/userstats.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:local_auth/local_auth.dart';
 
 class EditDetails extends StatefulWidget {
   const EditDetails({super.key});
@@ -49,6 +51,7 @@ class _EditDetailsState extends State<EditDetails> {
   void initState() {
     super.initState();
     changeAvater.value = avatar.value;
+    checkBiometricsStatus();
   }
 
   @override
@@ -57,106 +60,140 @@ class _EditDetailsState extends State<EditDetails> {
     _controllers.forEach((_, controller) => controller.dispose());
     super.dispose();
   }
+void checkBiometricsStatus() async {
+  final LocalAuthentication auth = LocalAuthentication();
 
-  void resetCupertinoPin(BuildContext context) {
-   // print("Reset PIN dialog opened");
-    showDialog(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          backgroundColor: AppColors.backgroundColor,
-          title: Row(
-            children: [
-              Icon(Icons.lock_reset, color: AppColors.primaryColor),
-              SizedBox(width: 8),
-              textStyleOnly2(
-                context: context,
-                text: "Reset PIN",
-                fontsize: 18,
-                color: AppColors.bg2,
-                fontWeight: FontWeight.bold,
-              ),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              textStyleOnly2(
-                context: context,
-                text: "Are you sure you want to reset your PIN?",
-                fontsize: 14,
-                color: AppColors.bg3,
-                fontWeight: FontWeight.w400,
-              ),
-              SizedBox(height: 8),
-              textStyleOnly2(
-                context: context,
-                text: "You'll need to set a new PIN after reset.",
-                fontsize: 12,
-                color: AppColors.bg3.withOpacity(0.7),
-                fontWeight: FontWeight.w400,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-            //    print("Reset PIN dialog cancelled");
-                Navigator.of(dialogContext).pop();
-              },
-              child: textStyleOnly2(
-                context: context,
-                text: "Cancel",
-                fontsize: 14,
-                color: AppColors.primaryColor,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red.withOpacity(0.1),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              ),
-             onPressed: () async {
-                print("Reset PIN button pressed");
-                try {
-                  final response = await updateDataApiCall3(
-                    '$url/user/updateCupertino', // Use your base URL
-                    data: {
-                      'pin': '0',
-                    },
-                  );
+  bool canCheckBiometrics = await auth.canCheckBiometrics;
+  bool isDeviceSupported = await auth.isDeviceSupported();
+  List<BiometricType> availableBiometrics = await auth.getAvailableBiometrics();
 
-                  print("Response status code: ${response.statusCode}");
-                  print("Response body: ${response.body}");
-                  if (response.statusCode == 200) {
-                    print("PIN reset successful");
-                    cupertinoPin.value = "0"; // Reset the global PIN
-                    Navigator.of(dialogContext).pop();
-                     snackBarCalled(context, 'PIN reset successful !');
-                  } else {
-                    print("Failed to reset PIN: ${response.statusCode} - ${response.body}");
-                     snackBarCalledfail(context, 'Failed to reset PIN');
-                  }
-                } catch (e) {
-                  snackBarCalledfail(context, 'Error occurred while resetting PIN');
-                }
-              },
-              child: textStyleOnly2(
-                context: context,
-                text: "Reset",
-                fontsize: 14,
-                color: Colors.red,
-                fontWeight: FontWeight.w600,
-              ),
+ 
+}
+  void resetCupertinoPin(BuildContext context) async {
+  final LocalAuthentication auth = LocalAuthentication();
+
+
+  bool isAuthenticated = false;
+
+  try {
+    bool canCheckBiometrics = await auth.canCheckBiometrics;
+    bool isDeviceSupported = await auth.isDeviceSupported();
+
+    if (canCheckBiometrics || isDeviceSupported) {
+      isAuthenticated = await auth.authenticate(
+        localizedReason: 'Authenticate to reset your PIN',
+        options: const AuthenticationOptions(
+          biometricOnly: false, // allow PIN fallback
+          stickyAuth: true,
+          useErrorDialogs: true,
+        ),
+      );
+    } else {
+      print("Device does not support biometrics or PIN");
+    }
+  } catch (e) {
+    print("Authentication error: $e");
+  }
+
+  if (!isAuthenticated) {
+    print("User failed or cancelled authentication");
+    return; // stop execution if not authenticated
+  }
+
+  // Proceed to show the Reset PIN dialog only if authenticated
+  showDialog(
+    context: context,
+    builder: (BuildContext dialogContext) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        backgroundColor: AppColors.backgroundColor,
+        title: Row(
+          children: [
+            Icon(Icons.lock_reset, color: AppColors.primaryColor),
+            SizedBox(width: 8),
+            textStyleOnly2(
+              context: context,
+              text: "Reset PIN",
+              fontsize: 18,
+              color: AppColors.bg2,
+              fontWeight: FontWeight.bold,
             ),
           ],
-        );
-      },
-    );
-  }
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            textStyleOnly2(
+              context: context,
+              text: "Are you sure you want to reset your PIN?",
+              fontsize: 14,
+              color: AppColors.bg3,
+              fontWeight: FontWeight.w400,
+            ),
+            SizedBox(height: 8),
+            textStyleOnly2(
+              context: context,
+              text: "You'll need to set a new PIN after reset.",
+              fontsize: 12,
+              color: AppColors.bg3.withOpacity(0.7),
+              fontWeight: FontWeight.w400,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              print("Reset PIN dialog cancelled");
+              Navigator.of(dialogContext).pop();
+            },
+            child: textStyleOnly2(
+              context: context,
+              text: "Cancel",
+              fontsize: 14,
+              color: AppColors.primaryColor,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          GestureDetector(
+          
+            onTap: () async {
+              print("Reset PIN button pressed");
+              try {
+                final response = await updateDataApiCall3(
+                  '$url/user/updateCupertino',
+                  data: {
+                    'pin': '0',
+                  },
+                );
+
+                print("Response status code: ${response.statusCode}");
+                print("Response body: ${response.body}");
+
+                if (response.statusCode == 200) {
+                  print("PIN reset successful");
+                  cupertinoPin.value = "0";
+                  Navigator.of(dialogContext).pop();
+                } else {
+                  print("Failed to reset PIN: ${response.statusCode} - ${response.body}");
+                }
+              } catch (e) {
+                print("Error occurred while resetting PIN: $e");
+              }
+            },
+            child: textStyleOnly2(
+              context: context,
+              text: "Reset",
+              fontsize: 14,
+              color: AppColors.primaryColor,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -189,20 +226,25 @@ class _EditDetailsState extends State<EditDetails> {
                     )),
                 GestureDetector(
                   onTap: () {
-                    var data = {
-                      'name': userName.value,
-                      'email': email.value,
-                    };
-                    showModalBottomSheet(
-                      isScrollControlled: true,
-                      context: context,
-                      builder: (context) {
-                        return Avatar(
-                          data: data,
-                          isEdit: true,
-                        );
-                      },
-                    );
+                    // var data = {
+                    //   'name': userName.value,
+                    //   'email': email.value,
+                    // };
+                    // showModalBottomSheet(
+                    //   isScrollControlled: true,
+                    //   context: context,
+                    //   builder: (context) {
+                    //     return Avatar(
+                    //       data: data,
+                    //       isEdit: true,
+                    //     );
+                    //   },
+                    // );
+
+                    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => UserStatsScreen()),
+    );
                   },
                   child: Padding(
                     padding: EdgeInsets.only(top: 8.0),

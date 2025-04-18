@@ -11,7 +11,7 @@ import 'package:get/get.dart';
 // Import CardBuilders for debtCard, budgetCard, etc.
 
 class FinanceWidgets {
-  static Widget budgetAndDebtCalulator(BuildContext context, VoidCallback onAddDebt) {
+  static Widget additionWidgets(BuildContext context, VoidCallback onAddDebt) {
     return Column(
       children: [
         Row(
@@ -184,6 +184,9 @@ class FinanceWidgets {
 
   static Widget debtsPicture(
       BuildContext context, RxList<Debt> debts, Function(Debt) onDebtTap) {
+        final screenWidth = MediaQuery.of(context).size.width;
+        final isSingleDebt = debts.length == 1;
+
     return  Obx(() => debts.isEmpty?SizedBox.shrink()
     :Center(
       child: SizedBox(
@@ -197,7 +200,7 @@ class FinanceWidgets {
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.9,
+                       width: isSingleDebt ? screenWidth * 0.9 : screenWidth * 0.8,
                       child: CardBuilders.debtCard(context, debt, onDebtTap),
                     ),
                   );
@@ -211,10 +214,13 @@ class FinanceWidgets {
     return Obx(() {
       final sortedBudgets = budgetList.toList()
         ..sort((a, b) => (b['createdAt'] ?? '').compareTo(a['createdAt'] ?? ''));
+        final isSingleBudget = sortedBudgets.length == 1;
+        final screenWidth = MediaQuery.of(context).size.width;
        return sortedBudgets.isEmpty
             ?SizedBox.shrink()
             : SizedBox(
         height: MediaQuery.of(context).size.height * 0.2,
+        
         child:  Center(
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
@@ -223,7 +229,7 @@ class FinanceWidgets {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.9,
+                       width: isSingleBudget ? screenWidth * 0.9 : screenWidth * 0.8,
                         child: CardBuilders.budgetCard(context, sortedBudgets[index]),
                       ),
                     );

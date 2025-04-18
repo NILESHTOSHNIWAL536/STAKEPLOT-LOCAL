@@ -1363,7 +1363,7 @@ class _PlotFinanceState extends State<PlotFinance> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      bottomNavigationBar: BottomNavigations(data: 1),
+      bottomNavigationBar: SafeArea(child: BottomNavigations(data: 1)),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -1383,7 +1383,7 @@ class _PlotFinanceState extends State<PlotFinance> {
                 // Budget and Debt Calculator
                 Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: FinanceWidgets.budgetAndDebtCalulator(
+                  child: FinanceWidgets.additionWidgets(
                     context,
                     _navigateToCreateDebtScreen,
                   ),

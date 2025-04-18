@@ -16,3 +16,4 @@
 -keepattributes Signature
 -keep class com.google.gson.reflect.**
 -keep class * extends com.google.gson.reflect.**
+-keep class io.flutter.plugins.localauth.** { *; }

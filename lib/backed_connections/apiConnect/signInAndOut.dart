@@ -6,37 +6,136 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/resetPas.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
-Future<void> loginUser(TextEditingController emailController,TextEditingController passwordController, BuildContext context,[bool flag = false]) async {
-   
-  var response = await postDataApiCallwithOutSharedPref('${url}/user/login', {
-    'email': emailController.text.toString(),
-    'userpassword': passwordController.text.toString(),
-    'deviceInfo': deviceData,
-  });
+// Future<void> loginUser(TextEditingController emailController,TextEditingController passwordController, BuildContext context,[bool flag = false]) async {
 
-  if (response.statusCode == 409)
-  {
-      forceLoginShowModal(context,response,emailController,passwordController); 
-  }
-  else if(response.statusCode == 500){
-    snackBarCalledSignup(context, "Server Error!", Colors.red);
-  }
-  else if (getFlagOfResponse(response))
-   {
-     loginCalledData(response,context);
-  }
-  else
-  {
-     acceptReset.value = false;
-     snackBarCalledfail(context, 'invalid credentials or server error!');
+//   var response = await postDataApiCallwithOutSharedPref('${url}/user/login', {
+//     'email': emailController.text.toString(),
+//     'userpassword': passwordController.text.toString(),
+//     'deviceInfo': deviceData,
+//   });
+
+//   if (response.statusCode == 409)
+//   {
+//       forceLoginShowModal(context,response,emailController,passwordController); 
+//   }
+//   else if(response.statusCode == 500){
+//     snackBarCalledSignup(context, "Server Error!", Colors.red);
+//   }
+//   else if (getFlagOfResponse(response))
+//    {
+//      loginCalledData(response,context);
+//   }
+//   else
+//   {
+//      acceptReset.value = false;
+//      snackBarCalledfail(context, 'Invalid credentials');
+//   }
+// }
+
+// Future<void> loginUser(
+//     TextEditingController emailController,
+//     TextEditingController passwordController,
+//     BuildContext context,
+//     [bool flag = false]) async {
+//   var response = await postDataApiCallwithOutSharedPref('${url}/user/login', {
+//     'email': emailController.text.toString(),
+//     'userpassword': passwordController.text.toString(),
+//     'deviceInfo': deviceData,
+//   });
+
+//   if (response.statusCode == 409) {
+//     forceLoginShowModal(context, response, emailController, passwordController);
+//   } else if (response.statusCode == 500) {
+//     snackBarCalledSignup(context, "Server Error!", Colors.red);
+//   } else if (getFlagOfResponse(response)) {
+//     loginCalledData(response, context);
+
+//     final SharedPreferences pref = await SharedPreferences.getInstance();
+//     final String todayKey = 'login_count_${DateTime.now().toIso8601String().substring(0, 10)}';
+//     int dailyLoginCount = pref.getInt(todayKey) ?? 0;
+//     dailyLoginCount++;
+//     await pref.setInt(todayKey, dailyLoginCount);
+
+//     final List<String> loginHistory = pref.getStringList('login_history') ?? [];
+//     final String todayEntry = '$todayKey:$dailyLoginCount';
+//     if (loginHistory.any((entry) => entry.startsWith(todayKey))) {
+//       loginHistory.removeWhere((entry) => entry.startsWith(todayKey));
+//     }
+//     loginHistory.add(todayEntry);
+//     await pref.setStringList('login_history', loginHistory);
+
+//     await ScreenTimeTracker().initialize();
+//     ScreenTimeTracker().startSession();
+//   } else {
+//     acceptReset.value = false;
+//     snackBarCalledfail(context, 'Invalid credentials');
+//   }
+// }
+
+
+
+Future<void> loginUser(
+    TextEditingController emailController,
+    TextEditingController passwordController,
+    BuildContext context,
+    [bool flag = false]) async {
+  try {
+    // print('Attempting login for email: ${emailController.text}');
+    var response = await postDataApiCallwithOutSharedPref('${url}/user/login', {
+      'email': emailController.text.toString(),
+      'userpassword': passwordController.text.toString(),
+      'deviceInfo': deviceData,
+    });
+
+    // print('Login response status: ${response.statusCode}');
+    if (response.statusCode == 409) {
+      // print('Force login modal triggered');
+      forceLoginShowModal(context, response, emailController, passwordController);
+    } else if (response.statusCode == 500) {
+      // print('Server error during login');
+      snackBarCalledSignup(context, "Server Error!", Colors.red);
+    } else if (getFlagOfResponse(response)) {
+      // print('Login successful, processing data');
+      loginCalledData(response, context);
+
+      final pref = await SharedPreferences.getInstance();
+      final userId = pref.getString('accessToken') ?? emailController.text; // Use token or email
+      final todayKey = 'login_count_${DateTime.now().toIso8601String().substring(0, 10)}_$userId';
+      int dailyLoginCount = pref.getInt(todayKey) ?? 0;
+      dailyLoginCount++;
+      await pref.setInt(todayKey, dailyLoginCount);
+
+      final List<String> loginHistory = pref.getStringList('login_history_$userId') ?? [];
+      final todayEntry = '$todayKey:$dailyLoginCount';
+      if (loginHistory.any((entry) => entry.startsWith(todayKey))) {
+        loginHistory.removeWhere((entry) => entry.startsWith(todayKey));
+      }
+      loginHistory.add(todayEntry);
+      await pref.setStringList('login_history_$userId', loginHistory);
+
+      await ScreenTimeTracker().setUser(userId);
+      ScreenTimeTracker().startSession();
+      ScreenTimeTracker().switchTab('Home');
+      // print('Navigating to HomePage after login for $userId');
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      // print('Invalid credentials');
+      acceptReset.value = false;
+      snackBarCalledfail(context, 'Invalid credentials');
+    }
+  } catch (e, stackTrace) {
+    // print('Login error: $e');
+    // print('Stack trace: $stackTrace');
+    acceptReset.value = false;
+    snackBarCalledfail(context, 'Login failed: $e');
   }
 }
-
 void forceLoginShowModal(context,response,emailController,passwordController)
  {
 
@@ -92,9 +191,9 @@ void getOTP(context, String name, String email) async
 {
   var response =await postDataApiCallwithOutSharedPref('${url}/otp/send', {'email': email, 'name': name, 'deviceInfo': deviceData});
   if (getFlagOfResponse(response)){
-    snackBarCalled(context, "Sended Otp To Email Id...!", Colors.black);
+    snackBarCalled(context, "Sent Otp To Email Id!", Colors.black);
   } else {
-    snackBarCalled(context, "can't send opt!", Colors.red);
+    snackBarCalled(context, "can't send otp!", Colors.red);
   }
 
 }
@@ -110,9 +209,9 @@ void forceLogoutUser( sessionId, email, userpassword, context, id, deviceName)as
     if (getFlagOfResponse(response))
     {
       loginCalledData(response,context);
-      sendNotificationsToDevice(currentId.value, context,"You have been logged out from StakePlot...!"); 
+      sendNotificationsToDevice(currentId.value, context,"You have been logged out from StakePlot!"); 
     }else {
-      snackBarCalled(context, "can't logout user..!", Colors.red);
+      snackBarCalled(context, "can't logout user!", Colors.red);
     }
   } catch (e)
   {

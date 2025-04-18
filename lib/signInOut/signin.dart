@@ -4,7 +4,8 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
+
+
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/google.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -32,13 +33,21 @@ class _SigninState extends State<Signin> {
   // TextEditingController passwordController =TextEditingController(text: "user63password");
   TextEditingController emailController= TextEditingController(text: "");
   TextEditingController passwordController= TextEditingController(text: "");
+   // userstats
 
   
   @override
   void initState() {
     check(context, "loginuser");
+     // userstats
+     
   }
-
+ // userstats
+  @override
+  void dispose() {
+    // Clean up
+    super.dispose();
+  }
 
 
   @override
@@ -261,6 +270,8 @@ Widget siginButton(){
                             }
                             
                             acceptReset.value = true;
+                            // userstats
+                           
                           
                             await getDeviceInfo("deviceData.value".toString(), context,emailController,passwordController);
                             

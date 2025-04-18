@@ -42,7 +42,7 @@ void getBudget() async {
       var obj = his['data'];
       budgetList.clear();
       budgetList.addAll(obj);
-      print("budgetList $budgetList");
+      print("budgetListingggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg $budgetList");
       budgetLength.value = obj.length;
     }
   } catch (e) {}

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/payable_widget_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="6dp"
+    android:background="@drawable/widget_background"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- To Receive Section -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="4dp">
+
+        <TextView
+            android:id="@+id/to_receive_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="To Receive"
+            android:textSize="15sp"
+            android:textColor="#004856"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"/>
+
+        <TextView
+            android:id="@+id/to_receive_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="None: ₹0"
+            android:textSize="13sp"
+            android:textColor="#212121"/>
+    </LinearLayout>
+
+    <!-- Divider (safe replacement using TextView) -->
+    <TextView
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="#BDBDBD"
+        android:text="" />
+
+    <!-- To Pay Section -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="4dp">
+
+        <TextView
+            android:id="@+id/to_pay_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="To Pay"
+            android:textSize="15sp"
+            android:textColor="#004856"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"/>
+
+        <TextView
+            android:id="@+id/to_pay_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="None: ₹0"
+            android:textSize="13sp"
+            android:textColor="#212121"/>
+    </LinearLayout>
+</LinearLayout>

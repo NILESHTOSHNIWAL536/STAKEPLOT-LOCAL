@@ -134,31 +134,33 @@ void calculateTripCost() {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: appbarHeader("Trip cost calculator ", context),
-        body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SliderPage(
-                    slidersList: slidersList,
-                    onSliderValueChanged: updateSliderValue,
-                    title: "Trip",
-                    onAccommodationChanged: (newAccommodation) {
-                      setState(() {
-                        selectedAccommodation = newAccommodation;
-                        calculateTripCost(); // Recalculate costs when accommodation changes
-                      });
-                    },
-                  ),
-                  graph(),
-                  CustomExpansionTile(
-                    howToUseContent: howToUseContent,
-                    howItWorksContent: howItWorksContent,
-                  ),
-                ],
-              ),
-            )));
+        body: SafeArea(
+          child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SliderPage(
+                      slidersList: slidersList,
+                      onSliderValueChanged: updateSliderValue,
+                      title: "Trip",
+                      onAccommodationChanged: (newAccommodation) {
+                        setState(() {
+                          selectedAccommodation = newAccommodation;
+                          calculateTripCost(); // Recalculate costs when accommodation changes
+                        });
+                      },
+                    ),
+                    graph(),
+                    CustomExpansionTile(
+                      howToUseContent: howToUseContent,
+                      howItWorksContent: howItWorksContent,
+                    ),
+                  ],
+                ),
+              )),
+        ));
   }
 
   Widget graph() {

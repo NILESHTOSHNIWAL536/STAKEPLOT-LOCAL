@@ -177,22 +177,24 @@ class _RentBuyState extends State<RentBuy> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appbarHeader("Rent vs Buy Calculator", context),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SliderPage(
-                slidersList: slidersList,
-                onSliderValueChanged: updateSliderValue,
-              ),
-              graph(),
-              CustomExpansionTile(
-                howToUseContent: howToUseContent,
-                howItWorksContent: howItWorksContent,
-              ),
-            ],
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SliderPage(
+                  slidersList: slidersList,
+                  onSliderValueChanged: updateSliderValue,
+                ),
+                graph(),
+                CustomExpansionTile(
+                  howToUseContent: howToUseContent,
+                  howItWorksContent: howItWorksContent,
+                ),
+              ],
+            ),
           ),
         ),
       ),

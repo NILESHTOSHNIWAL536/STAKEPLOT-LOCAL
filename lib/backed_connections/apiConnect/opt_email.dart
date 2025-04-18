@@ -60,9 +60,9 @@ void resendOptUser(context, email, name) async
 
   if (getFlagOfResponse(response)) {
     acceptReset.value = false;
-    snackBarCalled(context, "ReSended Otp To Email Id...!", Colors.black);
+    snackBarCalled(context, "Resent Otp To Email Id!", Colors.black);
   } else {
-    snackBarCalled(context, "can't send opt!", Colors.red);
+    snackBarCalled(context, "can't send otp!", Colors.red);
   }
 }
 
@@ -77,8 +77,8 @@ void resendOpt(context, email, name) async {
 
   if (getFlagOfResponse(response)) {
     acceptReset.value = false;
-    snackBarCalled(context, "ReSended Otp To Email Id...!", Colors.black);
+    snackBarCalled(context, "ReSent Otp To Email Id!", Colors.black);
   } else {
-    snackBarCalled(context, "can't send opt!", Colors.red);
+    snackBarCalled(context, "can't send otp!", Colors.red);
   }
 }

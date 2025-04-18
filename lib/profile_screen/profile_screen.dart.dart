@@ -41,7 +41,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
     print("phone value is :${Phone.value}");
     return Scaffold(
      
-      bottomNavigationBar: BottomNavigations(data: 3),
+      bottomNavigationBar: SafeArea(child: BottomNavigations(data: 3)),
       backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
         

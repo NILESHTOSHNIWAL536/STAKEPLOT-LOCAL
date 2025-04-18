@@ -301,106 +301,108 @@ Widget setPinForAccountHide(context) {
    RxInt selectedNumber1 = 0.obs; // Make first digit reactive
     RxInt selectedNumber2 = 0.obs;  // Second selected number
 
-    return Container(
-      //  color: AppColors.backgroundColor,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16), topRight: Radius.circular(16)),
-        color: AppColors.backgroundColor,
-      ),
-      width: MediaQuery.of(context).size.width,
-      height: height > 0 ? height / 3.8 : 100, // Fallback height
-      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: textStyle(
-                context: context,
-                text: "Set lock",
-                fontsize: 20,
-                fontWeight: FontWeight.bold),
-          ),
-          // First Cupertino Picker
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width / 6,
-                    height: MediaQuery.of(context).size.height /
-                        16, // Adjust height as needed
-                    child: CupertinoPicker(
-                      itemExtent: 26.0, // Height of each item
-                      onSelectedItemChanged: (int index) {
-                        selectedNumber1.value = index; // Update first number
-                      },
-                      children: List<Widget>.generate(10, (int index) {
-                        return Center(child: Text(index.toString()));
-                      }), // Numbers 0-99
-                    ),
-                  ),
-
-                  // Second Cupertino Picker
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width / 6,
-                    height: MediaQuery.of(context).size.height /
-                        16, // Adjust height as needed
-                    child: CupertinoPicker(
-                      itemExtent: 26.0, // Height of each item
-                      onSelectedItemChanged: (int index) {
-                        selectedNumber2.value = index; // Update second number
-                      },
-                      children: List<Widget>.generate(10, (int index) {
-                        return Center(child: Text(index.toString()));
-                      }), // Numbers 0-99
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 30,
-              ),
-             Obx(() {
-                String combinedInput = '${selectedNumber1.value}${selectedNumber2.value}';
-                bool isInvalidPin = combinedInput == "00";
-              
-                return InkWell(
-                  onTap: isInvalidPin
-                      ? null
-                      : () {
-                        
-                          setPasswordApiCalled(context, combinedInput);
+    return SafeArea(
+      child: Container(
+        //  color: AppColors.backgroundColor,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+          color: AppColors.backgroundColor,
+        ),
+        width: MediaQuery.of(context).size.width,
+        height: height > 0 ? height / 3.8 : 100, // Fallback height
+        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: textStyle(
+                  context: context,
+                  text: "Set lock",
+                  fontsize: 20,
+                  fontWeight: FontWeight.bold),
+            ),
+            // First Cupertino Picker
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 6,
+                      height: MediaQuery.of(context).size.height /
+                          16, // Adjust height as needed
+                      child: CupertinoPicker(
+                        itemExtent: 26.0, // Height of each item
+                        onSelectedItemChanged: (int index) {
+                          selectedNumber1.value = index; // Update first number
                         },
-                  child:  Container(
-      width: MediaQuery.of(context).size.width / 1.1,
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
-      decoration: BoxDecoration(
-        color: isInvalidPin
-            ? AppColors.bg3
-            : AppColors.primaryColor, // Button color based on validity
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: Center(
-        child: Text(
-          "Confirm",
-          style: FontManager().getTextStyle(
-            context,
-            lWeight: FontWeight.bold,
-            fontSize: 18,
-            color: AppColors.bg5,
+                        children: List<Widget>.generate(10, (int index) {
+                          return Center(child: Text(index.toString()));
+                        }), // Numbers 0-99
+                      ),
+                    ),
+      
+                    // Second Cupertino Picker
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 6,
+                      height: MediaQuery.of(context).size.height /
+                          16, // Adjust height as needed
+                      child: CupertinoPicker(
+                        itemExtent: 26.0, // Height of each item
+                        onSelectedItemChanged: (int index) {
+                          selectedNumber2.value = index; // Update second number
+                        },
+                        children: List<Widget>.generate(10, (int index) {
+                          return Center(child: Text(index.toString()));
+                        }), // Numbers 0-99
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+               Obx(() {
+                  String combinedInput = '${selectedNumber1.value}${selectedNumber2.value}';
+                  bool isInvalidPin = combinedInput == "00";
+                
+                  return InkWell(
+                    onTap: isInvalidPin
+                        ? null
+                        : () {
+                          
+                            setPasswordApiCalled(context, combinedInput);
+                          },
+                    child:  Container(
+        width: MediaQuery.of(context).size.width / 1.1,
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
+        decoration: BoxDecoration(
+          color: isInvalidPin
+              ? AppColors.bg3
+              : AppColors.primaryColor, // Button color based on validity
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Center(
+          child: Text(
+            "Confirm",
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.bold,
+              fontSize: 18,
+              color: AppColors.bg5,
+            ),
           ),
         ),
       ),
-    ),
-                );
-              }),
-            ],
-          ),
-        ],
+                  );
+                }),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

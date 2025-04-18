@@ -59,7 +59,8 @@ class _ManualtransactionState extends State<Manualtransaction> {
                             color: AppColors.accentColor)),
                     const SizedBox(height: 8),
                     InkWell(
-                      onTap: () { showCustomModal(context);
+                      onTap: () { 
+                        showCustomModal(context);
                        // player.play(UrlSource('https://www.soundjay.com/button/beep-07.wav'));
                       },
                       child: Container(
@@ -104,7 +105,7 @@ void showCustomModal(BuildContext context) {
       ),
     ),
     builder: (BuildContext context) {
-      return ModalContent(); // Use the modal widget here
+      return SafeArea(child: ModalContent()); // Use the modal widget here
     },
   );
 }

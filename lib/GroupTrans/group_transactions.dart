@@ -279,13 +279,13 @@ class _GroupTransactionsState extends State<GroupTransactions>
             fontsize: 20,
             fontWeight: FontWeight.bold,
           ),
-          const SizedBox(height: 10),
-          textStyle(
-            context: context,
-            text: "Group your transactions to see them here.",
-            c: AppColors.primaryColor.withOpacity(0.7),
-            fontsize: 14,
-          ),
+          // const SizedBox(height: 10),
+          // textStyle(
+          //   context: context,
+          //   text: "Group your transactions to see them here.",
+          //   c: AppColors.primaryColor.withOpacity(0.7),
+          //   fontsize: 14,
+          // ),
         ],
       ),
     );

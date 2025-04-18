@@ -26,6 +26,8 @@ import 'package:flutter_application_code_stakeplot/customNoti.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/userAvatar.dart';
+import 'package:home_widget/home_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 RxBool sectionReached = false.obs;
@@ -41,6 +43,18 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     initializeData();
+     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        print('Initializing HomeWidget with group: group.com.stakeplot.adnan.dev');
+        await HomeWidget.setAppGroupId('group.com.stakeplot.adnan.dev');
+        await _updateWidget();
+      } catch (e) {
+        print('Error initializing HomeWidget: $e');
+      }
+    });
+    // Update widget when lendAmountRemainders or dueAmountRemainders change
+    ever(lendAmountRemainders, (_) => _updateWidget());
+    ever(dueAmountRemainders, (_) => _updateWidget());
   }
 
   void initializeData()   
@@ -63,7 +77,8 @@ class _HomePageState extends State<HomePage> {
     getBudget();
     getHiddenTransactions(context);
     getCategoryData();
-    getRemainders(context);
+   await getRemainders(context);
+    await _updateWidget();
     getNotifications(context);
     allOrGroupTransactionsName.value = StringConstant.allTransactions;
   }
@@ -75,6 +90,51 @@ class _HomePageState extends State<HomePage> {
           await requestNotificationPermissionOncePerDay();
           callApi();
        }
+  }
+  Future<void> _updateWidget() async {
+    try {
+      String toReceive = 'None: ₹0';
+      String toPay = 'None: ₹0';
+      print('lendAmountRemainders in _updateWidget: $lendAmountRemainders');
+      print('dueAmountRemainders in _updateWidget: $dueAmountRemainders');
+      if (lendAmountRemainders.isNotEmpty && lendAmountRemainders.first != null) {
+        final data = lendAmountRemainders.first;
+        toReceive =
+            '${data["name"] ?? "Unknown"}: ₹${(data["amount"] ?? 0).toStringAsFixed(2)}';
+      }
+      if (dueAmountRemainders.isNotEmpty && dueAmountRemainders.first != null) {
+        final data = dueAmountRemainders.first;
+        toPay =
+            '${data["name"] ?? "Unknown"}: ₹${(data["amount"] ?? 0).toStringAsFixed(2)}';
+      }
+      print('Updating PayableWidget: toReceive=$toReceive, toPay=$toPay');
+      // Save to SharedPreferences for Android persistence
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('to_receive', toReceive);
+      await prefs.setString('to_pay', toPay);
+      // Save to HomeWidget (updates UserDefaults for iOS)
+      await HomeWidget.saveWidgetData<String>('to_receive', toReceive);
+      await HomeWidget.saveWidgetData<String>('to_pay', toPay);
+      print('Calling HomeWidget.updateWidget for PayableWidgetProvider');
+      await HomeWidget.updateWidget(
+        name: 'PayableWidgetProvider',
+        androidName: 'PayableWidgetProvider',
+        iOSName: 'PayableWidget',
+      );
+      print('HomeWidget.updateWidget completed successfully');
+    } catch (e) {
+      print('Error updating widget: $e');
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('to_receive', 'Error');
+      await prefs.setString('to_pay', 'Error');
+      await HomeWidget.saveWidgetData<String>('to_receive', 'Error');
+      await HomeWidget.saveWidgetData<String>('to_pay', 'Error');
+      await HomeWidget.updateWidget(
+        name: 'PayableWidgetProvider',
+        androidName: 'PayableWidgetProvider',
+        iOSName: 'PayableWidget',
+      );
+    }
   }
 
   @override
@@ -103,13 +163,14 @@ class _HomeScreenState extends State<HomeScreen> {
   {
     super.initState();
     scrollController.addListener(_onScroll);
+    
   }
 
   @override
   Widget build(BuildContext context)
   {
     return Scaffold(
-      bottomNavigationBar: BottomNavigations(data: 0),
+      bottomNavigationBar: SafeArea(child: BottomNavigations(data: 0)),
       backgroundColor: AppColors.backgroundColor,
       appBar:getAppBar(),
       body: Padding(
