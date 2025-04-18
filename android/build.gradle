@@ -10,7 +10,7 @@
 // }
 
 // allprojects {
-//     repositories {
+//     repositories {12
 //         google()
 //         mavenCentral()
 //         maven { 
