@@ -829,9 +829,20 @@ Widget showUserData(BuildContext context) {
                         final SharedPreferences _pref =
                             await SharedPreferences.getInstance();
                         String userId = user['accessToken'] ?? user['email'];
-                        await _pref.remove("accessToken");
-                        await _pref.setString("accessToken", user['accessToken']);
+                        // await _pref.remove("accessToken");
+                        // await _pref.setString("accessToken", user['accessToken']);
                         await ScreenTimeTracker().setUser(userId);
+                        _pref.remove("accessToken").then((_) {
+                          // Code to execute after token removal
+                          _pref.setString("accessToken", user['accessToken']);
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              '/', (Route<dynamic> route) => false);
+                          Navigator.pushReplacementNamed(context, '/home');
+                          //  Navigator.pushReplacementNamed(context, '/');
+                        }).catchError((error) {
+                          // Error handling if token removal fails
+                        });
+
                         clearGetX();
                         loginUser(emailController, passwordController, context);
                       },

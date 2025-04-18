@@ -926,7 +926,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
         ); // Fetch next page
       }
     });
-
+    isLoadingMore.value = false;
     getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,
         isRefreshing: true);
   }
@@ -1078,9 +1078,10 @@ class _TransactionHistoryState extends State<TransactionHistory>
               .putIfAbsent(monthYearKey, () => [])
               .add(transaction);
           // Debug: Log the timestamp and its IST conversion
-          // print('Timestamp: $timestamp, IST: $istDate, Grouped as: $monthYearKey');
+          print(
+              'Timestamp: $timestamp, IST: $istDate, Grouped as: $monthYearKey');
         } catch (e) {
-          // print('Invalid timestamp: $timestamp');
+          print('Invalid timestamp: $timestamp');
           continue;
         }
       }
@@ -1109,16 +1110,16 @@ class _TransactionHistoryState extends State<TransactionHistory>
     }
 
     // Show loader if no transactions are available
-    if (displayItems.isEmpty) {
-      return const Center(
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 20),
-          child: CircularProgressIndicator(
-            color: AppColors.primaryColor,
-          ),
-        ),
-      );
-    }
+    // if (displayItems.isEmpty) {
+    //   return const Center(
+    //     child: Padding(
+    //       padding: EdgeInsets.symmetric(vertical: 20),
+    //       child: CircularProgressIndicator(
+    //         color: AppColors.primaryColor,
+    //       ),
+    //     ),
+    //   );
+    // }
 
     // Add a loading indicator at the end if more data is being fetched
     if (isLoadingMore.value) {
@@ -1132,7 +1133,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         final item = displayItems[index];
-
         // Case 1: Month Header
         if (item is String && item != 'loader') {
           String monthYear = item;
@@ -1151,24 +1151,24 @@ class _TransactionHistoryState extends State<TransactionHistory>
                     color: AppColors.accentColor,
                   ),
                 ),
-                // transactionCount == 0
-                //     ? const SizedBox(
-                //         width: 24,
-                //         height: 24,
-                //         child: CircularProgressIndicator(
-                //           color: AppColors.primaryColor,
-                //           strokeWidth: 2,
-                //         ),
-                //       )
-                //     : Text(
-                //         '$transactionCount Transaction${transactionCount == 1 ? '' : 's'}',
-                //         style: FontManager().getTextStyle(
-                //           context,
-                //           lWeight: FontWeight.w500,
-                //           fontSize: 14,
-                //           color: AppColors.primaryColor.withOpacity(0.7),
-                //         ),
-                //       ),
+                transactionCount == 0
+                    ? const SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                          color: AppColors.primaryColor,
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : Text(
+                        '$transactionCount Transaction${transactionCount == 1 ? '' : 's'}',
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w500,
+                          fontSize: 14,
+                          color: AppColors.primaryColor.withOpacity(0.7),
+                        ),
+                      ),
               ],
             ),
           );
@@ -1178,13 +1178,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
         else if (item is Map<String, dynamic>) {
           final transaction = item;
           int transactionIndex = transactionsHistory.indexOf(transaction);
-
-          double amount = double.parse(
-              doubleToFixed((transaction['amount'] ?? 0.0).toString()));
-          String category =
-              transaction['category']?.toString() ?? 'Uncategorized';
-          String subcategory =
-              transaction['subcategory']?.toString() ?? 'General';
 
           return Stack(
             children: [
@@ -1206,7 +1199,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
         }
 
         // Case 3: Loading Indicator
-        else if (item == 'loader') {
+        else if (!isLoadingMore.value) {
           return const Padding(
             padding: EdgeInsets.symmetric(vertical: 20),
             child: Center(
@@ -1217,7 +1210,9 @@ class _TransactionHistoryState extends State<TransactionHistory>
           );
         }
 
-        return const SizedBox.shrink(); // Fallback for unexpected items
+        return transactionsHistory.isEmpty
+            ? textStyle(context: context, text: "No Transactions")
+            : SizedBox.shrink(); // Fallback for unexpected items
       },
     );
   }
@@ -1333,8 +1328,22 @@ class _TransactionHistoryState extends State<TransactionHistory>
     final formattedDate = date != null
         ? formatWhatsAppDate(convertStringToDateTime(date))
         : 'Date';
-    final narration = transaction['narration'] ?? 'Unnamed Group';
     final type = transaction['type']?.toString() ?? '0';
+    final narration = transaction['narration'] ?? 'Unnamed Group';
+
+    List<String> parts = narration.split('/');
+    if (parts.isEmpty || parts.length == 1) parts = narration.split('-');
+    if (parts.isEmpty || parts.length == 1) parts = narration.split('&');
+    if (parts.isEmpty || parts.length == 1) parts = narration.split(' ');
+
+    String nameOfUser = parts.length >= 4
+        ? parts[3]
+        : parts.length >= 3
+            ? parts[2]
+            : parts.length >= 2
+                ? parts[1]
+                : parts[0];
+
     final amtColor = type == 'CREDIT'
         ? Colors.green.shade700
         : const Color.fromARGB(255, 207, 118, 113);
@@ -1361,8 +1370,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
               return TransactionDetailsPage(transaction: transaction);
             },
           );
-        } else {
-          snackBarCalled(context, "This is a manual transaction ");
         }
       },
       child: Stack(
@@ -1429,22 +1436,21 @@ class _TransactionHistoryState extends State<TransactionHistory>
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                width: MediaQuery.sizeOf(context).width / 2.7,
-                                child: Tooltip(
-                                  message: narration,
+                              Tooltip(
+                                message: narration,
+                                child: Container(
+                                  // height: 30,
+                                  // color: Colorcodes.appBarColor,
+                                  width: MediaQuery.sizeOf(context).width / 2.7,
                                   child: textStyle(
-                                    context: context,
-                                    text: narration.length > 20
-                                        ? '${narration.substring(0, 20)}...'
-                                        : narration,
-                                    c: AppColors.accentColor,
-                                    fontsize: fontSizeMedium,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                      context: context,
+                                      text: nameOfUser,
+                                      c: AppColors.accentColor,
+                                      fontsize: fontSizeMedium,
+                                      fontWeight: FontWeight.w600,
+                                      lineHeight: 1.5),
                                 ),
                               ),
-                              SizedBox(height: 4 * scaleFactor),
                               textStyle(
                                 context: context,
                                 text: formattedDate,

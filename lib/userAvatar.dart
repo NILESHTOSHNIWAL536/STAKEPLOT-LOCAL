@@ -5,8 +5,6 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
 
-
-
 class UserAvatar extends StatelessWidget {
 String url;
 double width;

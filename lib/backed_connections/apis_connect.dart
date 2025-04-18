@@ -3,7 +3,6 @@ import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
-
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:get/get.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
@@ -118,6 +117,7 @@ List<String> month = [
 ];
 int currentPage = 1;
 RxBool isLoadingMore = false.obs;
+RxBool loadMoreData = false.obs;
 bool hasMoreData = true;
 int m = DateTime.now().month;
 List targetsData = [];
@@ -202,6 +202,10 @@ RxString nextFecthDate = "".obs;
 RxString LastFetchDate = "".obs;
 RxString fetchCount = "".obs;
 RxString BankName = "".obs;
+
+
+RxBool isFected = false.obs;
+RxInt transactionsLength = 0.obs;
 
 
 class Message {

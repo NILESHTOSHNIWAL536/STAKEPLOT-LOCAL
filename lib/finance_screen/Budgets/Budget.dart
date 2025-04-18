@@ -280,6 +280,7 @@ Widget textStyle({
   Color c = AppColors.bg1,
   FontWeight fontWeight = FontWeight.w500,
   bool iswrap = false,
+  double lineHeight=1.0 ,
 }) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.start,
@@ -288,8 +289,11 @@ Widget textStyle({
       const SizedBox(width: 7),
       Text(
         text.toString(),
-        style: FontManager().getTextStyle(context,
-            lWeight: fontWeight, fontSize: fontsize, color: c),
+        style: FontManager().getTextStyle(
+              context,
+              lWeight: fontWeight, fontSize: fontsize, color: c,
+              lineHeight: lineHeight
+            ),
         overflow: iswrap? TextOverflow.visible:TextOverflow.ellipsis,
       ),
     ],

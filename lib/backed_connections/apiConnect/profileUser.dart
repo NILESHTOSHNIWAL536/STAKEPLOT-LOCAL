@@ -20,15 +20,15 @@ void approveBill(context, id, type, notifyId) async {
   if (getFlagOfResponse(responce)) {}
 }
 
-void getRemainders(context) async {
+Future<void> getRemainders(context) async {
   String urlPath = "${url}/reminders";
   var responce = await getDataApiCall(urlPath);
   print("Response from getRemainders: ${responce.body}");
   if (getFlagOfResponse(responce)) {
     var his = jsonDecode(responce.body);
     print("Parsed response data: $his");
-    var userDue = his['data']['payables'];
-    var userDue2 = his['data']['owed'];
+    var userDue = his['data']['payables'] ?? [];
+    var userDue2 = his['data']['owed'] ?? [];
 
     dueAmountRemainders.clear();
     lendAmountRemainders.clear();
@@ -38,7 +38,14 @@ void getRemainders(context) async {
 
     print("lendAmountRemainders: $lendAmountRemainders");
     print("dueAmountRemainders: $dueAmountRemainders");
+
+    // Ensure observables notify listeners
+    dueAmountRemainders.refresh();
+    lendAmountRemainders.refresh();
+
     getdueUsers.value = !getdueUsers.value;
+  } else {
+    print("getRemainders failed: ${responce.statusCode} - ${responce.body}");
   }
 }
 

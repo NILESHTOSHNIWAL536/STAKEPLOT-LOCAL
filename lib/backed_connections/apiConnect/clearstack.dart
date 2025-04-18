@@ -60,11 +60,21 @@ void expire(responce, BuildContext context) {
   } catch (e) {}
 }
 
-void check(context, String flag) async
+Future<bool> check(context, String flag) async
 {
      final SharedPreferences _pref = await SharedPreferences.getInstance();
      bool f=_pref.containsKey("accessToken");
-     if (!f && flag != "loginuser") Navigator.pushReplacementNamed(context, '/');
+    //  if (!f && flag != "loginuser") Navigator.pushReplacementNamed(context, '/');
+    if(!f && flag != "loginuser"){
+         Navigator.pushReplacementNamed(context, '/');
+         return false;
+    }
+
+    if(flag=="loginuser")
+    {
+         return false;
+    }
+    return true;
 }
 
 
@@ -129,4 +139,7 @@ void clearGetX() {
   displayedData.clear();
   bankAccountLinkedList.clear();
   FipIdsConnected.clear();
+  transactionsHistory.clear();
+  isLoadingMore.value=false;
+  
 }

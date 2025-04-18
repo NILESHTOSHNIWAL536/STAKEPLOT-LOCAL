@@ -62,8 +62,7 @@ void seletedBankUpdateInfo(id, context) async {
 }
 
 void getAllTransaction(context) async {
-  var response = await getDataApiCall(
-      "${url}/transactionauto/getTransactions/${currentPage}");
+  var response = await getDataApiCall("${url}/transactionauto/getTransactions/${currentPage}");
   expire(response, context);
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
@@ -113,22 +112,26 @@ Future<void> getAllTransactionHistory(
         : "${url}/transactionauto/getTransactions/${currentPage}";
 
     var response = await getDataApiCall(urlPath);
-    print("Tranaction history details : ${response.body}");
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       var obj = data['data'];
+    
       if (obj != null && obj is List<dynamic>) {
-        if (isRefreshing) {
+        if (isRefreshing)
+        {
           transactionsHistory.clear(); // Clear only on refresh
         }
 
         transactionsHistory.addAll(obj);
 
         // Stop loading indicator if no more transactions exist
-        if (obj.isEmpty || obj.length < 20) {
+        if (obj.isEmpty || obj.length < 20)
+        {
           hasMoreData = false;
+          isLoadingMore.value = true;
+        } else
+        {
           isLoadingMore.value = false;
-        } else {
           currentPage++;
         }
 
@@ -142,9 +145,8 @@ Future<void> getAllTransactionHistory(
       }
     }
   } catch (e) {
-  } finally {
-    isLoadingMore.value = false;
-  }
+      print("erro in the tran his "+e.toString());
+  } 
 }
 
 void extractTransaction(bool isYearView, List obj) {

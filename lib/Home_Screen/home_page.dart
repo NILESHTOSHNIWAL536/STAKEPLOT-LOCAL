@@ -20,6 +20,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/controller.dart/userController.dart';
 import 'package:flutter_application_code_stakeplot/customNoti.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
@@ -41,7 +42,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    oneSignalAddClickListener(context);
     initializeData();
      WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
@@ -59,10 +59,16 @@ class _HomePageState extends State<HomePage> {
 
   void initializeData()   
   {
-    check(context, "homeScreen");
+    isLoginAlreadLogin();
+    oneSignalAddClickListener(context);
+    sectionReached.value=false;
+  }
+
+  void callApi()async
+  {
     getBankAccounts();
     getCategoryData();
-    getAllTransaction(context);
+    //getAllTransaction(context);
     getPost();
     getAck();
     getBudget();
@@ -71,16 +77,26 @@ class _HomePageState extends State<HomePage> {
     getBudget();
     getHiddenTransactions(context);
     getCategoryData();
-    getRemainders(context);
+   await getRemainders(context);
+    await _updateWidget();
     getNotifications(context);
-    sectionReached.value=false;
+    allOrGroupTransactionsName.value = StringConstant.allTransactions;
   }
- Future<void> _updateWidget() async {
+
+  void isLoginAlreadLogin()async{
+       bool isHome=await  check(context, "homeScreen");
+       if(isHome)
+       {
+          await requestNotificationPermissionOncePerDay();
+          callApi();
+       }
+  }
+  Future<void> _updateWidget() async {
     try {
       String toReceive = 'None: ₹0';
       String toPay = 'None: ₹0';
-      print('lendAmountRemainders: $lendAmountRemainders');
-      print('dueAmountRemainders: $dueAmountRemainders');
+      print('lendAmountRemainders in _updateWidget: $lendAmountRemainders');
+      print('dueAmountRemainders in _updateWidget: $dueAmountRemainders');
       if (lendAmountRemainders.isNotEmpty && lendAmountRemainders.first != null) {
         final data = lendAmountRemainders.first;
         toReceive =
@@ -92,11 +108,11 @@ class _HomePageState extends State<HomePage> {
             '${data["name"] ?? "Unknown"}: ₹${(data["amount"] ?? 0).toStringAsFixed(2)}';
       }
       print('Updating PayableWidget: toReceive=$toReceive, toPay=$toPay');
-      // Save to SharedPreferences for persistence
+      // Save to SharedPreferences for Android persistence
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('to_receive', toReceive);
       await prefs.setString('to_pay', toPay);
-      // Save to HomeWidget
+      // Save to HomeWidget (updates UserDefaults for iOS)
       await HomeWidget.saveWidgetData<String>('to_receive', toReceive);
       await HomeWidget.saveWidgetData<String>('to_pay', toPay);
       print('Calling HomeWidget.updateWidget for PayableWidgetProvider');
@@ -108,7 +124,7 @@ class _HomePageState extends State<HomePage> {
       print('HomeWidget.updateWidget completed successfully');
     } catch (e) {
       print('Error updating widget: $e');
-       final prefs = await SharedPreferences.getInstance();
+      final prefs = await SharedPreferences.getInstance();
       await prefs.setString('to_receive', 'Error');
       await prefs.setString('to_pay', 'Error');
       await HomeWidget.saveWidgetData<String>('to_receive', 'Error');
@@ -120,6 +136,7 @@ class _HomePageState extends State<HomePage> {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return HomeScreen();

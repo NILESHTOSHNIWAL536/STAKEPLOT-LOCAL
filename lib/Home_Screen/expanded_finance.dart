@@ -40,7 +40,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
   @override
   void initState() {
     super.initState();
-    isLoadingMore.value=false;
+    // isLoadingMore.value=false;
     currentPage=1;
      hasMoreData = true;
      currentDays.value = List.from(widget.days);

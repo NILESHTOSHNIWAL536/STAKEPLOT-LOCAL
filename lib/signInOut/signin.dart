@@ -272,6 +272,7 @@ Widget siginButton(){
                             acceptReset.value = true;
                             // userstats
                            
+                          
                             await getDeviceInfo("deviceData.value".toString(), context,emailController,passwordController);
                             
                            

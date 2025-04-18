@@ -1367,6 +1367,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     currentPage = 1;
     selectedButton.value = widget.selectedButton.value;
     currentChartData.value = widget.chartData;
+    isLoadingMore.value=false;
     Navigator.push(
       context,
       MaterialPageRoute(

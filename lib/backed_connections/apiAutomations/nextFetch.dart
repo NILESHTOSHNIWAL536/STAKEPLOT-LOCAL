@@ -1,19 +1,16 @@
 import 'dart:async';
-import 'dart:io';
-// import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-// import 'package:workmanager/workmanager.dart';
-// import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 String convertToIso8601(String date) {
   // Parse the input date string to a DateTime object
@@ -70,7 +67,12 @@ class _RotatingIconState extends State<Nextfetch>
             width: MediaQuery.of(context).size.width / 1.1,
             child: Row(
               children: [
-                InkWell(
+              isFected.value? Container(
+                height: 30,
+                width: 30,
+                margin: EdgeInsets.only(right: 10),
+                child: Spinner(size: 30,)
+                ): InkWell(
                   onTap: () => showFetchModal(context),
                   child: RotationTransition(
                       turns: Tween(begin: 0.0, end: 1.0)
@@ -87,14 +89,15 @@ class _RotatingIconState extends State<Nextfetch>
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: textStyle(
                       context: context,
-                      text: "Next fetch on :",
+                      text: isFected.value? "Hang tight! We're fetching the latest info for you.": "Next fetch on :",
                       fontWeight: FontWeight.bold,
                       c: AppColors.bg1,
-                      fontsize: 13),
+                      fontsize:  isFected.value? 10 : 13
+                    ),
                 ),
                 textStyle(
                     context: context,
-                    text: "Monday, 9:00 AM",
+                    text: isFected.value?"": "Monday, 9:00 AM",
                     // text: currentTime.value,
                     fontWeight: FontWeight.bold,
                     c: AppColors.primaryColor,
@@ -405,6 +408,10 @@ class _RotatingIconState extends State<Nextfetch>
             item["sessionId"], item["custId"], item['lastFetch']);
       });
     }
+    // store data in shared preferences
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setString("fetchingData",consentAndHandleDetails.toString());
+    isFected.value=true;
     Navigator.pop(context);
   }
 }
