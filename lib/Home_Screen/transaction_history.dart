@@ -1151,24 +1151,24 @@ class _TransactionHistoryState extends State<TransactionHistory>
                     color: AppColors.accentColor,
                   ),
                 ),
-                transactionCount == 0
-                    ? const SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(
-                          color: AppColors.primaryColor,
-                          strokeWidth: 2,
-                        ),
-                      )
-                    : Text(
-                        '$transactionCount Transaction${transactionCount == 1 ? '' : 's'}',
-                        style: FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.w500,
-                          fontSize: 14,
-                          color: AppColors.primaryColor.withOpacity(0.7),
-                        ),
-                      ),
+                // transactionCount == 0
+                //     ? const SizedBox(
+                //         width: 24,
+                //         height: 24,
+                //         child: CircularProgressIndicator(
+                //           color: AppColors.primaryColor,
+                //           strokeWidth: 2,
+                //         ),
+                //       )
+                //     : Text(
+                //         '$transactionCount Transaction${transactionCount == 1 ? '' : 's'}',
+                //         style: FontManager().getTextStyle(
+                //           context,
+                //           lWeight: FontWeight.w500,
+                //           fontSize: 14,
+                //           color: AppColors.primaryColor.withOpacity(0.7),
+                //         ),
+                //       ),
               ],
             ),
           );

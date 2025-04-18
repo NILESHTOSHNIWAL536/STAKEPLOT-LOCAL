@@ -241,10 +241,10 @@ void checkBiometricsStatus() async {
                     //   },
                     // );
 
-                    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => UserStatsScreen()),
-    );
+    //                 Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => UserStatsScreen()),
+    // );
                   },
                   child: Padding(
                     padding: EdgeInsets.only(top: 8.0),
