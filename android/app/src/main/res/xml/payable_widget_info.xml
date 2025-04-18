@@ -7,6 +7,6 @@
     android:initialLayout="@layout/payable_widget_layout"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
-    android:previewImage="@mipmap/launcher_icon">
+    android:previewImage="@mipmap/widget_preview">
    
 </appwidget-provider>

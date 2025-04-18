@@ -60,8 +60,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
   final targetKey = GlobalKey();
   BuildContext? _stableContext;
   // For smooth animations
-  Animation<double>? _swipeAnimation; // Animation for swipe offset
-  int? _currentSwipedIndex;
+ 
 
   @override
   void initState() {
@@ -97,7 +96,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
   @override
   void dispose() {
     _scrollController2.dispose();
-    // _animationController?.dispose();
+   
     super.dispose();
   }
 
@@ -349,22 +348,13 @@ class _TransactionHistoryState extends State<TransactionHistory>
           final transaction = item;
           int transactionIndex = transactionsHistory.indexOf(transaction);
 
-          return Stack(
-            children: [
-              GestureDetector(
-                onHorizontalDragUpdate: (details) {
-                  scrollLeft(details, transactionIndex);
-                },
-                child: Container(
-                  decoration: getBoxDecoration(transactionIndex),
-                  child: historyTransactions(
-                    transaction,
-                    transaction['transactionTimestamp']?.toString(),
-                    transactionIndex,
-                  ),
-                ),
-              ),
-            ],
+          return Container(
+            
+            child: historyTransactions(
+              transaction,
+              transaction['transactionTimestamp']?.toString(),
+              transactionIndex,
+            ),
           );
         }
 
@@ -825,86 +815,9 @@ class _TransactionHistoryState extends State<TransactionHistory>
     );
   }
 
-  BoxDecoration getBoxDecoration(int index) {
-    double swipeOffset =
-        (swipeOffsets[index] ?? 0.0).abs(); // Absolute value of offset
-    double totalSwipeDistance = 90.0; // Total swipe distance
-    double mixStart = totalSwipeDistance * 0.7; // Start mixing at 70% (63.0)
-    double swipeProgress;
-
-    if (swipeOffset <= mixStart) {
-      // Before the last 30%, no mixing (fully opaque)
-      swipeProgress = 0.0;
-    } else {
-      // In the last 30%, calculate progress from mixStart (63.0) to totalSwipeDistance (90.0)
-      swipeProgress =
-          (swipeOffset - mixStart) / (totalSwipeDistance - mixStart);
-      swipeProgress =
-          swipeProgress.clamp(0.0, 1.0); // Ensure it stays between 0 and 1
-    }
-
-    return BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.centerLeft,
-        end: Alignment.centerRight,
-        stops: const [
-          0.0,
-          0.7,
-          1.0
-        ], // Gradient stops: 0% to 70% solid, 70% to 100% mixing
-        colors: [
-          AppColors.backgroundColor, // Solid color up to 70%
-          AppColors.backgroundColor, // Still solid at 70%
-          AppColors.backgroundColor
-              .withOpacity(1.0 - swipeProgress), // Mixing in last 30%
-        ],
-      ),
-    );
-  }
-
-  void scrollLeft(DragUpdateDetails details, int index) {
-    setState(() {
-      // Reset other items' offsets
-      swipeOffsets.forEach((key, value) {
-        if (key != index) {
-          swipeOffsets[key] = 0.0;
-        }
-      });
-
-      // Determine target offset based on drag direction
-      double targetOffset = details.delta.dx < 0 ? -90.0 : 0.0;
-      animateSwipe(index, targetOffset);
-    });
-  }
-
-  void animateSwipe(int index, double targetOffset) {
-    if (_animationController == null) return;
-    _currentSwipedIndex = index;
-    double currentOffset = swipeOffsets[index] ?? 0.0;
-
-    _swipeAnimation = Tween<double>(begin: currentOffset, end: targetOffset)
-        .animate(CurvedAnimation(
-      parent: _animationController!,
-      curve: Curves.easeInOut,
-    ))
-      ..addListener(() {
-        setState(() {
-          if (_currentSwipedIndex == index) {
-            swipeOffsets[index] = _swipeAnimation!.value;
-          }
-        });
-      })
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          // Optionally reset the offset to 0 if swipe is canceled or completed
-          if (targetOffset == 0.0) {
-            swipeOffsets.remove(index);
-          }
-        }
-      });
-
-    _animationController!.forward(from: 0.0);
-  }
+  
+ 
+  
 
   static Future<String?> getToken() async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
