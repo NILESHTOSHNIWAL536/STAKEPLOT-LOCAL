@@ -100,6 +100,7 @@ Future<void> getAllTransactionHistory(
     BuildContext context, bool flag, bool isYearView,
     {bool isRefreshing = false}) async {
    if (isLoadingMore.value) return; // Prevent multiple API calls
+   loadingDelay.value=true;
   try {
     isLoadingMore.value = true;
     String type = isYearView
@@ -144,10 +145,13 @@ Future<void> getAllTransactionHistory(
       } else {
         snackBarCalled(context, "No transaction data available");
       }
+
     }
   } catch (e) {
       print("erro in the tran his "+e.toString());
   } 
+
+  loadingDelay.value=false;
 }
 
 void extractTransaction(bool isYearView, List obj) {

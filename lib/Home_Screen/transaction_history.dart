@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/animated/pdf.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/bill.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -379,7 +380,11 @@ class _TransactionHistoryState extends State<TransactionHistory>
           );
         }
 
-        return transactionsHistory.isEmpty
+        return loadingDelay.value?
+            Container(
+              width: 50,height: 50,
+              child:Spinner()
+            ):  transactionsHistory.isEmpty 
             ? textStyle(context: context, text: "No Transactions")
             : SizedBox.shrink(); // Fallback for unexpected items
       },
