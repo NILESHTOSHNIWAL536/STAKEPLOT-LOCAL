@@ -1,4 +1,5 @@
 
+
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_transactions.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
@@ -37,12 +38,14 @@ class TransactionHistory extends StatefulWidget {
   final bool? isYearView;
   final bool? isflag;
   final bool? showIcon;
+   bool expandedPage;
   bool pageTransition;
   TransactionHistory(
       {this.isflag = false,
       this.showIcon = false,
       this.isYearView = false,
       this.pageTransition = false,
+      this.expandedPage = false,
       super.key});
   // const TransactionHistory({super.key});
 
@@ -64,7 +67,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
   void initState() {
     super.initState();
     _stableContext = context;
-    currentPage = 1;
+    if(!widget.expandedPage) currentPage = 1;
 
     // getAllTransactionHistory(context, widget.isflag!, widget.isYearView!);
     _animationController = AnimationController(
@@ -81,9 +84,8 @@ class _TransactionHistoryState extends State<TransactionHistory>
         ); // Fetch next page
       }
     });
-    isLoadingMore.value = false;
-    getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,
-        isRefreshing: true);
+    if(!widget.expandedPage) isLoadingMore.value=false;
+    getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,isRefreshing: true);
   }
 
   @override
@@ -133,14 +135,27 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 ? SizedBox(
                     height: 15,
                   )
-                : Obx(() => allOrGroupTransactionsName.value ==
-                        StringConstant.allTransactions
+                : Obx(() => allOrGroupTransactionsName.value == StringConstant.allTransactions
                     ? getTabsForTransactions()
                     : getTabsForTransactions()),
-            Obx(() => allOrGroupTransactionsName.value ==
-                    StringConstant.allTransactions
-                ? Obx(() => reloadHistory.value ? getlist() : getlist())
-                : GroupTransactions()),
+
+                    //  getlist()
+            // Obx(() => reloadHistory.value ? getlist() : getlist())
+        // (widget.showIcon ?? false)? Obx(() => reloadHistory.value ? getlist() : getlist()):
+        //        Obx(() => allOrGroupTransactionsName.value ==
+        //             StringConstant.allTransactions
+        //         ? Obx(() => reloadHistory.value ? getlist() : getlist())
+        //         : GroupTransactions()),
+        Obx(() {
+            if (widget.showIcon ?? false) {
+              return reloadHistory.value ? getlist() : getlist();
+            } else {
+              return allOrGroupTransactionsName.value == StringConstant.allTransactions
+                  ? (reloadHistory.value ? getlist() : getlist())
+                  : GroupTransactions();
+            }
+          })
+
           ],
         ),
       ),
@@ -587,7 +602,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                                 child: Container(
                                   // height: 30,
                                   // color: Colorcodes.appBarColor,
-                                  width: MediaQuery.sizeOf(context).width / 2.9,
+                                  width: MediaQuery.sizeOf(context).width / 3,
                                   child: textStyle(
                                       context: context,
                                       text: nameOfUser,

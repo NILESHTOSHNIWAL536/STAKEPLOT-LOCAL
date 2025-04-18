@@ -1,13 +1,18 @@
 import 'dart:convert';
 
+import 'package:finvu_flutter_sdk/finvu_config.dart';
+import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
+import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -142,4 +147,31 @@ void clearGetX() {
   transactionsHistory.clear();
   isLoadingMore.value=false;
   
+}
+
+RxMap<String,String> ListOfBankImages=RxMap();
+
+void initialMap(context)async
+{
+  
+  // var isConnected = await finvuManager.isConnected();
+  // print("isConnected");
+  // if (!isConnected) {return;}
+  // print(isConnected);
+
+  
+  // try{
+  // List<FinvuFIPInfo>  fipDis = await finvuManager.fipsAllFIPOptions();
+
+  // fipDis.forEach((FinvuFIPInfo bankData){
+  //       ListOfBankImages[bankData.productName.toString()]=bankData.productIconUri.toString();
+  // });
+  // }catch(e)
+  // {
+  //    print(e);    
+  // }
+
+  // print("ListOfBankImages");
+  // print(ListOfBankImages);
+
 }

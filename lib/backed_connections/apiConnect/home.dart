@@ -99,7 +99,7 @@ void getHiddenTransactions(context) async {
 Future<void> getAllTransactionHistory(
     BuildContext context, bool flag, bool isYearView,
     {bool isRefreshing = false}) async {
-  if (isLoadingMore.value) return; // Prevent multiple API calls
+   if (isLoadingMore.value) return; // Prevent multiple API calls
   try {
     isLoadingMore.value = true;
     String type = isYearView
@@ -112,7 +112,8 @@ Future<void> getAllTransactionHistory(
         : "${url}/transactionauto/getTransactions/${currentPage}";
 
     var response = await getDataApiCall(urlPath);
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200)
+    {
       var data = jsonDecode(response.body);
       var obj = data['data'];
     

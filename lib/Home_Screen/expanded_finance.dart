@@ -40,20 +40,20 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
   @override
   void initState() {
     super.initState();
-    // isLoadingMore.value=false;
-    currentPage=1;
+     currentPage=1;
      hasMoreData = true;
      currentDays.value = List.from(widget.days);
      getAllTransactionHistory(context, true, isYearView.value);
      updateMonthLabels();
      filterDataForSelectedMonth();
-    scrollController.addListener(_onScroll);
+     scrollController.addListener(_onScroll);
   }
 
 
   void callBackApi()
   {
       currentPage = 1;
+      isLoadingMore.value=false;
       getAllTransactionHistory(context,false,false,isRefreshing: true);
   }
   
@@ -240,11 +240,13 @@ Widget  transactionsHistoryList() {
                             isYearView: isYearView.value,
                             isflag: true,
                             showIcon: true,
+                            expandedPage: true,
                           )
                         : TransactionHistory(
                             isYearView: isYearView.value,
                             isflag: true,
                              showIcon: true,
+                              expandedPage: true,
                           ));
   }
 

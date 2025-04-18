@@ -159,7 +159,7 @@ Widget getTextFeilds(){
     return Column(
         children: [
                    const SizedBox(
-                      height: 30,
+                      height: 10,
                     ),
                     TextFeildWidget(
                         textEditingController: emailController,
