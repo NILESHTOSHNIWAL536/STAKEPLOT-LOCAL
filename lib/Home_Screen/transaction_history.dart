@@ -931,9 +931,8 @@ class _TransactionHistoryState extends State<TransactionHistory>
         ); // Fetch next page
       }
     });
-
-    getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,
-        isRefreshing: true);
+    isLoadingMore.value=false;
+    getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,isRefreshing: true);
   }
 
   @override

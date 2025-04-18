@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
   {
     getBankAccounts();
     getCategoryData();
-    getAllTransaction(context);
+    // getAllTransaction(context);
     getPost();
     getAck();
     getBudget();

@@ -54,6 +54,7 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
   void callBackApi()
   {
       currentPage = 1;
+      isLoadingMore.value=false;
       getAllTransactionHistory(context,false,false,isRefreshing: true);
   }
   
