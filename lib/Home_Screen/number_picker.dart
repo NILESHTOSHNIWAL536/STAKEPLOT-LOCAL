@@ -67,39 +67,66 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
   Widget avatarSlider2() {
     return bankAccountLinkedList.isEmpty
         ? AvatarProfileImage(url: bankImage, width: 10, height: 10)
-        : GFCarousel(
-            viewportFraction: 1.0,
-            reverse: false,
-            enlargeMainPage: false,
-            autoPlay: false,
-            enableInfiniteScroll: false,
-
-            items: bankAccountLinkedList.map(
-              (data) {
-                return Padding(
-                  
-                  padding: const EdgeInsets.all(2.0),
-                  child: getListViewBankInfo(data),
+        :PageView.builder(
+                  itemCount: bankAccountLinkedList.length,
+                  controller: PageController(viewportFraction: 1.0),
+                   onPageChanged: (index) {
+                      if (bankAccountLinkedList.isEmpty) return;
+                      accountId.value = bankAccountLinkedList[index]['accountId'] ?? "";
+                      LastFetchDate.value = bankAccountLinkedList[index]['lastFetch'].toString();
+                      nextFecthDate.value = bankAccountLinkedList[index]['nextFetch'].toString();
+                      fetchCount.value = bankAccountLinkedList[index]['fetchCount'].toString();
+                      BankName.value = bankAccountLinkedList[index]['bankName'].toString();
+                      calledFunctionToFetchData(context);
+                    },
+                  itemBuilder: (context, index) {
+                    return AnimatedBuilder(
+                      animation: PageController(viewportFraction: 1.0),
+                      builder: (context, child) {
+                        return Transform.scale(
+                          scale: 1.0, // customize scale effect
+                          child: child,
+                        );
+                      },
+                      child: Padding(
+                        padding:  EdgeInsets.fromLTRB(0,2,2,2),
+                        child: getListViewBankInfo(bankAccountLinkedList[index]),
+                      ),
+                    );
+                  },
                 );
-              },
-            ).toList(),
-            onPageChanged: (index) {
-              if (bankAccountLinkedList.isEmpty) return;
-              accountId.value = bankAccountLinkedList[index]['accountId'] ?? "";
-              LastFetchDate.value =  bankAccountLinkedList[index]['lastFetch'].toString() ;
-              nextFecthDate.value =  bankAccountLinkedList[index]['nextFetch'].toString() ;
-              fetchCount.value =  bankAccountLinkedList[index]['fetchCount'].toString();
-              BankName.value =  bankAccountLinkedList[index]['bankName'].toString();
-              calledFunctionToFetchData(context);
-            },
-          );
+
+        // : GFCarousel(
+        //     viewportFraction: 1.0,
+        //     reverse: false,
+        //     enlargeMainPage: true,
+        //     autoPlay: false,
+        //     enableInfiniteScroll: false,
+            
+        //     items: bankAccountLinkedList.map(
+        //       (data) {
+        //         return Padding(
+        //           padding: EdgeInsets.symmetric(horizontal: 0, vertical: 2),
+        //           child: getListViewBankInfo(data),
+        //         );
+        //       },
+        //     ).toList(),
+        //     onPageChanged: (index) {
+        //       if (bankAccountLinkedList.isEmpty) return;
+        //       accountId.value = bankAccountLinkedList[index]['accountId'] ?? "";
+        //       LastFetchDate.value =  bankAccountLinkedList[index]['lastFetch'].toString() ;
+        //       nextFecthDate.value =  bankAccountLinkedList[index]['nextFetch'].toString() ;
+        //       fetchCount.value =  bankAccountLinkedList[index]['fetchCount'].toString();
+        //       BankName.value =  bankAccountLinkedList[index]['bankName'].toString();
+        //       calledFunctionToFetchData(context);
+        //     },
+          // );
   }
 
   Widget getListViewBankInfo(data) {
     int randomIndex = Random().nextInt(lock.length);
     if (randomIndex == lock.length) randomIndex = 0;
     return Container(
-
        // width: MediaQuery.sizeOf(context).width/1.1,
         padding: EdgeInsets.symmetric(
             horizontal: Colorcodes.paddingHorizontal,
