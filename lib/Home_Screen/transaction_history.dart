@@ -1441,7 +1441,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                                 child: Container(
                                   // height: 30,
                                   // color: Colorcodes.appBarColor,
-                                  width: MediaQuery.sizeOf(context).width / 2.7,
+                                  width: MediaQuery.sizeOf(context).width / 2.9,
                                   child: textStyle(
                                       context: context,
                                       text: nameOfUser,
