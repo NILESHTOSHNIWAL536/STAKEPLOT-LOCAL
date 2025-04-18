@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/cardAnimations.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/donut_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
@@ -188,6 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(
                 height: 10,
               ),
+             
               
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.51,
@@ -206,6 +208,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: MediaQuery.of(context).size.height * 0.46,
                 child: TransactionGraph(),
               ),
+
+         
+              //  Padding(
+              //    padding: const EdgeInsets.fromLTRB(10,0,10,10),
+              //    child: InsightsScreen(),
+              //  ),
+
               
            //   UserListScreen(),
       
