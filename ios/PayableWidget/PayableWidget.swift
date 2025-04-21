@@ -125,7 +125,6 @@
 //     }
 // }
 
-
 import WidgetKit
 import SwiftUI
 
@@ -162,7 +161,6 @@ struct PayableProvider: TimelineProvider {
             toPay: toPay.isEmpty ? "Error" : toPay
         )
 
-        // Align with Android's 24-hour update period
         let refreshDate = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
         let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
         completion(timeline)
@@ -181,11 +179,10 @@ struct PayableWidgetEntryView: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            // To Receive
             VStack(alignment: .leading, spacing: 4) {
                 Text("To Receive")
                     .font(.system(size: family == .systemSmall ? 13 : 15, weight: .bold))
-                    .foregroundColor(Color(hex: "004856")) // Match Android title color
+                    .foregroundColor(Color(hex: "004856"))
                 Text(entry.toReceive)
                     .font(.system(size: family == .systemSmall ? 11 : 13))
                     .foregroundColor(.black)
@@ -195,12 +192,10 @@ struct PayableWidgetEntryView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, family == .systemSmall ? 6 : 8)
 
-            // Divider
             Rectangle()
-                .fill(Color(hex: "BDBDBD")) // Match Android divider color
+                .fill(Color(hex: "BDBDBD"))
                 .frame(width: 1)
 
-            // To Pay
             VStack(alignment: .leading, spacing: 4) {
                 Text("To Pay")
                     .font(.system(size: family == .systemSmall ? 13 : 15, weight: .bold))
@@ -226,6 +221,7 @@ struct PayableWidgetEntryView: View {
         .containerBackground(for: .widget) {
             Color.white
         }
+        .widgetURL(URL(string: "stakeplot://finance")) // Add tap handler
     }
 }
 

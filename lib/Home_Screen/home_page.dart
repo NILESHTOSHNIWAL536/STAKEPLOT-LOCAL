@@ -96,8 +96,7 @@ class _HomePageState extends State<HomePage> {
     try {
       String toReceive = 'None: ₹0';
       String toPay = 'None: ₹0';
-      print('lendAmountRemainders in _updateWidget: $lendAmountRemainders');
-      print('dueAmountRemainders in _updateWidget: $dueAmountRemainders');
+     
       if (lendAmountRemainders.isNotEmpty && lendAmountRemainders.first != null) {
         final data = lendAmountRemainders.first;
         toReceive =
@@ -108,7 +107,7 @@ class _HomePageState extends State<HomePage> {
         toPay =
             '${data["name"] ?? "Unknown"}: ₹${(data["amount"] ?? 0).toStringAsFixed(2)}';
       }
-      print('Updating PayableWidget: toReceive=$toReceive, toPay=$toPay');
+     
       // Save to SharedPreferences for Android persistence
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('to_receive', toReceive);
@@ -116,15 +115,15 @@ class _HomePageState extends State<HomePage> {
       // Save to HomeWidget (updates UserDefaults for iOS)
       await HomeWidget.saveWidgetData<String>('to_receive', toReceive);
       await HomeWidget.saveWidgetData<String>('to_pay', toPay);
-      print('Calling HomeWidget.updateWidget for PayableWidgetProvider');
+     
       await HomeWidget.updateWidget(
         name: 'PayableWidgetProvider',
         androidName: 'PayableWidgetProvider',
         iOSName: 'PayableWidget',
       );
-      print('HomeWidget.updateWidget completed successfully');
+      
     } catch (e) {
-      print('Error updating widget: $e');
+     
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('to_receive', 'Error');
       await prefs.setString('to_pay', 'Error');
