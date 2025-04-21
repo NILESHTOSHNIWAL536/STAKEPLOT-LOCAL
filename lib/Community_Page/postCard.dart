@@ -211,13 +211,10 @@ class _PostCardState extends State<PostCard> {
                                     vertical: Colorcodes.borderRadius),
                                 child: Center(
                                   child: GFImageOverlay(
-                                    width:
-                                        MediaQuery.of(context).size.width / 1.2,
-                                    height: MediaQuery.of(context).size.height /
-                                        2.7,
+                                    width:MediaQuery.of(context).size.width / 1.2,
+                                    height: MediaQuery.of(context).size.height /2.7,
                                     boxFit: BoxFit.fill,
-                                    borderRadius: BorderRadius.circular(
-                                        Colorcodes.borderRadius),
+                                    borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
                                     image: NetworkImage(dataObj['image']),
                                   ),
                                 ),

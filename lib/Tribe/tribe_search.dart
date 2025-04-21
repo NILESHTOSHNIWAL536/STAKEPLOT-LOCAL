@@ -163,9 +163,9 @@ class _TribeSearchState extends State<TribeSearch> {
       setState(() {
         frdsList = obj;
         frdsListOrigin = obj;
-
-        frdsList = getLastTenUsers(frdsListOrigin);
+        // frdsList = getLastTenUsers(frdsListOrigin);
         frdsThere = true;
+        frdsList =[]; //getLastTenUsers(getSearchData("", frdsListOrigin));
       });
     } else {}
   }
@@ -195,7 +195,7 @@ class _TribeSearchState extends State<TribeSearch> {
             !frdsThere
                 ? Loader()
                 : frdsList.isEmpty
-                    ? Text("No Users Found...!")
+                    ? Text(search.text.isEmpty?"":"No Users Found...!")
                     : Column(
                         children: frdsList
                             .map((data) => profileContainer(data))
@@ -220,8 +220,8 @@ class _TribeSearchState extends State<TribeSearch> {
             controller: Textcontroller,
             onChanged: (value) {
               setState(() {
-                frdsList =
-                    getLastTenUsers(getSearchData(value, frdsListOrigin));
+                if(value=="")frdsList=[];
+                else frdsList = getLastTenUsers(getSearchData(value, frdsListOrigin));
               });
             },
             decoration: InputDecoration(
@@ -255,13 +255,14 @@ class _TribeSearchState extends State<TribeSearch> {
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       child: Center(
           child: InkWell(
-        onTap: () {
+        onTap: ()
+        {
           
           getDis(data);
           getStatus(data);
           getConnections(data);
-
           showmodalWidget(data);
+
         },
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),

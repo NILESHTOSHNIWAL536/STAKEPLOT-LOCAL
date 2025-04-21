@@ -147,9 +147,9 @@ void forceLoginShowModal(context,response,emailController,passwordController)
       ),
       builder: (context) {
         return UserLoginedAlready(
-            data: response.body,
-            email: emailController.text,
-            userpassword: passwordController.text);
+            data: response.body ?? "",
+            email: emailController.text ?? "",
+            userpassword: passwordController.text??"");
       },
     );
 

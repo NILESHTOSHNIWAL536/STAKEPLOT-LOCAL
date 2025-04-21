@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
 
   void callApi()async
   {
-     if (!mounted) return;
+    if (!mounted) return;
     getBankAccounts();
     getCategoryData();
     getPost();
