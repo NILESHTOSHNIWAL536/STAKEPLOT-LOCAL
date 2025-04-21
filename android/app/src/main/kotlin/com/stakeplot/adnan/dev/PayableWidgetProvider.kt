@@ -45,10 +45,11 @@ class PayableWidgetProvider : AppWidgetProvider() {
                 Log.d("PayableWidget", "Setting PendingIntent for widget ID: $appWidgetId")
                 val intent = Intent(context, MainActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    putExtra("navigate_to_tab", "finance")
                 }
-                val pendingIntent = PendingIntent.getActivity(
+                  val pendingIntent = PendingIntent.getActivity(
                     context,
-                    1,
+                    appWidgetId, // Unique request code per widget
                     intent,
                     PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                 )

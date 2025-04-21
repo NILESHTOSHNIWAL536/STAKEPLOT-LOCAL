@@ -210,10 +210,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
 
          
-              //  Padding(
-              //    padding: const EdgeInsets.fromLTRB(10,0,10,10),
-              //    child: InsightsScreen(),
-              //  ),
+               Padding(
+                 padding: const EdgeInsets.fromLTRB(10,0,10,10),
+                 child: InsightsScreen(),
+               ),
 
               
            //   UserListScreen(),

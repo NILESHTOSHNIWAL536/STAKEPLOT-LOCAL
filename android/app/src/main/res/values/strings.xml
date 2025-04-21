@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Stakeplot</string>
+    <string name="payable_widget_description">Shows amounts to receive and pay from individuals.</string>
+    <string name="stakeplot_widget_description">Displays your expenses in a two-column layout with total spending.</string>
+</resources>
