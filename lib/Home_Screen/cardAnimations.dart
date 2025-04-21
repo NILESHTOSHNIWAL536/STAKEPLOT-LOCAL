@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:card_swiper/card_swiper.dart';
-import 'dart:math';
 
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 
 class InsightsScreen extends StatefulWidget {
   const InsightsScreen({Key? key}) : super(key: key);

@@ -165,7 +165,10 @@ class _HomeScreenState extends State<HomeScreen> {
     scrollController.addListener(_onScroll);
     
   }
-
+ void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context)
   {
@@ -219,9 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
       
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.5,
-                child: Obx(() => setDonectChat.value
-                    ? DoughnutChartExample()
-                    : DoughnutChartExample()),
+                child:DoughnutChartExample()
               ),
             
                TransactionHistory(key: _transactionHistoryKey,),
