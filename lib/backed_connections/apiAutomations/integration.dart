@@ -17,8 +17,8 @@ import 'package:http/http.dart' as http;
 void initFinvuManager(BuildContext context) async {
   finvuManager.initialize(
     FinvuConfig(
-        finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
-      // finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
+        // finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
+      finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
       certificatePins: 
       [
             //  "R6wXZnQsKKyg56qFKQNytvygyr/o4Mkq1VXL5LenBYI=",
@@ -77,9 +77,16 @@ Future<void> getConsentHandleId(context) async
 
 Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
  try {
+
     final String apiUrl ="${url}/finvu/fetchData"; 
     final String custId ="${number.value}@finvu"; 
-  
+
+    // print({
+    //     "token": "",
+    //     "handleId": handleId.value,
+    //     "custId": custId,
+    //     "images": bankImgMap,
+    //   });
 
    final SharedPreferences pref = await SharedPreferences.getInstance();
    String accessToken=pref.getString("accessToken").toString(); 
@@ -94,6 +101,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
         "token": "",
         "handleId": handleId.value,
         "custId": custId,
+        // "images": bankImgMap,
       }),
     );
 
@@ -114,6 +122,21 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
 
 }
 
+
+
+ void storeMapOfImagesInBackend() async
+ {
+    //  var urlPath = url +"/transaction/storeBankUrl/" ;
+    //  var body = bankImageAndid ;
+    //  print(body);
+    //  var response =await postDataApiCall(urlPath, body);
+    //  if(getFlagOfResponse(response))
+    //  {
+    //     var json=jsonDecode(response.body);
+    //     print(json);
+    //  }
+
+ }
 
 
  void getLinkedAccountInfo() async {

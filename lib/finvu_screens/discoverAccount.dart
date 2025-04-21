@@ -4,6 +4,7 @@ import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -29,6 +30,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   @override
   void initState() {
     super.initState();
+    bankImageAndid.clear();
     getData();
     getFetch.value = false;
   }
@@ -37,7 +39,12 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
     fipDis = await finvuManager.fipsAllFIPOptions();
     fipDisOrginal.clear();
     fipDisOrginal.addAll(fipDis);
-  getBanks.value = !getBanks.value;
+
+    fipDis.forEach((FinvuFIPInfo bankData){
+      bankImageAndid[bankData.fipId]=bankData.productIconUri.toString();
+    });
+
+    getBanks.value = !getBanks.value;
   }
 
   @override
@@ -105,6 +112,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   }
 
   Widget getListOfFinvuBanks() {
+   
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height / 1.59,
@@ -148,7 +156,6 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-         
          
           InkWell(
             onTap: (){
@@ -276,11 +283,11 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
 
   void getBankAccount() {
     if (listOfBankAccount.isEmpty) {
-      snackBarCalled(
-          context, "Pick atleast one bank to proceed", Colorcodes.red);
+      snackBarCalled(context, "Pick atleast one bank to proceed", Colorcodes.red);
       return;
     } else {
-      //  listOfBankAccount
+    
+      storeMapOfImagesInBackend();
       Navigator.push(
         context,
         MaterialPageRoute(

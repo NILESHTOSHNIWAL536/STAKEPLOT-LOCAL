@@ -17,6 +17,7 @@ import 'package:flutter_application_code_stakeplot/main.dart';
 
 // Reactive variables (unchanged)
 RxMap<String, List<FinvuDiscoveredAccountInfo>> listOfAccountAdded = <String, List<FinvuDiscoveredAccountInfo>>{}.obs;
+RxMap<String, String> bankImgMap = <String, String>{}.obs;
 RxMap<String, FinvuFIPDetails> FinvuFIPDetailsList = <String, FinvuFIPDetails>{}.obs;
 RxMap<String, int> accountCountList = <String, int>{}.obs;
 RxList accountAdded = [].obs;
@@ -326,11 +327,11 @@ class _LinkingAccountState extends State<LinkingAccount> {
     );
   }
 
-  Widget getListOfFinvuBanksAccounts(List<FinvuDiscoveredAccountInfo> account, FinvuFIPDetails fipDetails) {
+  Widget getListOfFinvuBanksAccounts(List<FinvuDiscoveredAccountInfo> account, FinvuFIPDetails fipDetails,FinvuFIPInfo bankInfo) {
     loopCount.value++;
     return account.isEmpty
         ? getNoBankAccount()
-        : Column(children: account.map((bankData) => getBackUi(bankData, fipDetails)).toList());
+        : Column(children: account.map((bankData) => getBackUi(bankData, fipDetails,bankInfo)).toList());
   }
 
   void LinkingBank(FinvuFIPDetails fipDetails, String fipId, FinvuFIPInfo info) async {
@@ -529,7 +530,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
     }
   }
 
-  Widget getBackUi(FinvuDiscoveredAccountInfo bankData, FinvuFIPDetails fipDetails) {
+  Widget getBackUi(FinvuDiscoveredAccountInfo bankData, FinvuFIPDetails fipDetails,FinvuFIPInfo bankInfo) {
 
     String id = bankData.accountReferenceNumber.toString();
     String maskedAccountNumber = bankData.maskedAccountNumber.toString();
@@ -551,7 +552,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
               ],
             ),
             Spacer(),
-            checkBoxForAccountLink(bankData, fipDetails, id,maskedAccountNumber),
+            checkBoxForAccountLink(bankData, fipDetails, id,maskedAccountNumber,bankInfo),
           ],
         ),
       ),
@@ -570,14 +571,14 @@ class _LinkingAccountState extends State<LinkingAccount> {
     );
   }
 
-  Widget checkBoxForAccountLink(bankData,FinvuFIPDetails fipDetails, id,String maskedAccountNumber) {
+  Widget checkBoxForAccountLink(bankData,FinvuFIPDetails fipDetails, id,String maskedAccountNumber,FinvuFIPInfo bankInfo) {
     return Obx(() =>
         FipIdsConnected.contains(maskedAccountNumber)? SizedBox.shrink():
         listofLinkedAccount.contains(id)
-        ? Obx(() => addAccount.value ? getcheckBox(id) : getcheckBox(id))
+        ? Obx(() => addAccount.value ? getcheckBox(id,bankInfo) : getcheckBox(id,bankInfo))
         : Checkbox(
             value: accountAdded.contains(bankData.accountReferenceNumber),
-            onChanged: (b) => addAccountToMap(fipDetails.fipId, bankData.accountReferenceNumber, bankData),
+            onChanged: (b) => addAccountToMap(fipDetails.fipId, bankData.accountReferenceNumber, bankData,bankInfo),
             activeColor: AppColors.primaryColor,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4 * textScale)),
           )
@@ -599,7 +600,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
     );
   }
 
-  Future<Widget> linkedaccoutnData(bankData,int index) async {
+  Future<Widget> linkedaccoutnData(FinvuFIPInfo bankData,int index) async {
     String fipId = bankData.fipId;
     FinvuFIPInfo finvuFIPInfo = bankData;
     FinvuFIPDetails fipDetails;
@@ -629,7 +630,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
 
     return Container(
       width: MediaQuery.of(context).size.width,
-      child: getListOfFinvuBanksAccounts(info, fipDetails),
+      child: getListOfFinvuBanksAccounts(info, fipDetails,bankData),
     );
   }
 
@@ -678,10 +679,12 @@ class _LinkingAccountState extends State<LinkingAccount> {
     );
   }
 
-  void addAccountToMap(String fipId, String accountReferenceNumber, FinvuDiscoveredAccountInfo bankData) {
+  void addAccountToMap(String fipId, String accountReferenceNumber, FinvuDiscoveredAccountInfo bankData,FinvuFIPInfo bankInfo) {
     bool flag = accountAdded.contains(accountReferenceNumber);
+    
     if (flag) {
       accountAdded.remove(accountReferenceNumber);
+    
       if (listOfAccountAdded.containsKey(fipId)) {
         listOfAccountAdded[fipId]!.removeWhere((account) => account.accountReferenceNumber == accountReferenceNumber);
         if (listOfAccountAdded[fipId]!.isEmpty) listOfAccountAdded.remove(fipId);
@@ -695,7 +698,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
     accountAdded.refresh();
   }
 
-  Widget getcheckBox(String fipId) {
+  Widget getcheckBox(String fipId,FinvuFIPInfo bankInfo) {
     return Padding(
       padding: EdgeInsets.only(left: 10 * textScale),
       child: Container(
@@ -708,8 +711,10 @@ class _LinkingAccountState extends State<LinkingAccount> {
           onChanged: (value) {
             if (seletedAccountIds.contains(fipId)) {
               seletedAccountIds.remove(fipId);
+              bankImgMap.remove(bankInfo.fipId);
             } else {
               seletedAccountIds.add(fipId);
+              bankImgMap[bankInfo.fipId]=bankInfo.productIconUri.toString();
             }
             addAccount.value = !addAccount.value;
           },

@@ -614,6 +614,7 @@ class _AccessState extends State<Access> {
         children: [
           InkWell(
             onTap: () {
+              // print(bankImgMap);
               approveConsentRequest();
             },
             child: Container(
