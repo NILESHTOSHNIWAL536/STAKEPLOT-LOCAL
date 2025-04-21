@@ -67,9 +67,9 @@ class _HomePageState extends State<HomePage> {
 
   void callApi()async
   {
+     if (!mounted) return;
     getBankAccounts();
     getCategoryData();
-    // getAllTransaction(context);
     getPost();
     getAck();
     getBudget();
@@ -78,10 +78,10 @@ class _HomePageState extends State<HomePage> {
     getBudget();
     getHiddenTransactions(context);
     getCategoryData();
-   await getRemainders(context);
-    await _updateWidget();
     getNotifications(context);
     allOrGroupTransactionsName.value = StringConstant.allTransactions;
+    await getRemainders(context);
+    await _updateWidget();
   }
 
   void isLoginAlreadLogin()async{
@@ -93,10 +93,11 @@ class _HomePageState extends State<HomePage> {
        }
   }
   Future<void> _updateWidget() async {
+      final prefs = await SharedPreferences.getInstance();
     try {
       String toReceive = 'None: ₹0';
       String toPay = 'None: ₹0';
-     
+       
       if (lendAmountRemainders.isNotEmpty && lendAmountRemainders.first != null) {
         final data = lendAmountRemainders.first;
         toReceive =
@@ -107,24 +108,18 @@ class _HomePageState extends State<HomePage> {
         toPay =
             '${data["name"] ?? "Unknown"}: ₹${(data["amount"] ?? 0).toStringAsFixed(2)}';
       }
-     
-      // Save to SharedPreferences for Android persistence
-      final prefs = await SharedPreferences.getInstance();
       await prefs.setString('to_receive', toReceive);
       await prefs.setString('to_pay', toPay);
       // Save to HomeWidget (updates UserDefaults for iOS)
       await HomeWidget.saveWidgetData<String>('to_receive', toReceive);
       await HomeWidget.saveWidgetData<String>('to_pay', toPay);
-     
       await HomeWidget.updateWidget(
         name: 'PayableWidgetProvider',
         androidName: 'PayableWidgetProvider',
         iOSName: 'PayableWidget',
       );
-      
     } catch (e) {
-     
-      final prefs = await SharedPreferences.getInstance();
+    
       await prefs.setString('to_receive', 'Error');
       await prefs.setString('to_pay', 'Error');
       await HomeWidget.saveWidgetData<String>('to_receive', 'Error');
@@ -163,12 +158,8 @@ class _HomeScreenState extends State<HomeScreen> {
   {
     super.initState();
     scrollController.addListener(_onScroll);
-    
   }
- void dispose() {
-    scrollController.dispose();
-    super.dispose();
-  }
+
   @override
   Widget build(BuildContext context)
   {
@@ -209,23 +200,16 @@ class _HomeScreenState extends State<HomeScreen> {
                SizedBox(
                 height: MediaQuery.of(context).size.height * 0.46,
                 child: TransactionGraph(),
-              ),
-
-         
-               Padding(
-                 padding: const EdgeInsets.fromLTRB(10,0,10,10),
-                 child: InsightsScreen(),
                ),
-
-              
-           //   UserListScreen(),
-      
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.5,
                 child:DoughnutChartExample()
               ),
-            
-               TransactionHistory(key: _transactionHistoryKey,),
+             SizedBox(
+                height: MediaQuery.of(context).size.height * 0.5,
+                child:InsightsScreen()
+              ),
+               TransactionHistory(),
             
     
             ],

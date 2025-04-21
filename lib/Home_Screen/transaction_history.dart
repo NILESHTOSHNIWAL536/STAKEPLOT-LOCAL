@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_transactions.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
@@ -9,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/animated/pdf.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/bill.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -371,7 +370,11 @@ class _TransactionHistoryState extends State<TransactionHistory>
           );
         }
 
-        return transactionsHistory.isEmpty
+        return loadingDelay.value?
+            Container(
+              width: 50,height: 50,
+              child:Spinner()
+            ):  transactionsHistory.isEmpty 
             ? textStyle(context: context, text: "No Transactions")
             : SizedBox.shrink(); // Fallback for unexpected items
       },
@@ -481,6 +484,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
 
   Widget historyTransactions(
       Map<String, dynamic> transaction, String? date, int index) {
+    String logo = transaction['bankLogo']?.toString() ?? "";
     final category = transaction['category']?.toString() ?? 'Uncategorized';
     final subcategory = transaction['subcategory']?.toString() ?? 'General';
     final double amount =
@@ -505,9 +509,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 ? parts[1]
                 : parts[0];
 
-    final amtColor = type == 'CREDIT'
-        ? Colors.green.shade700
-        : const Color.fromARGB(255, 207, 118, 113);
+    final amtColor = type == 'CREDIT' ? Colors.green.shade700 : const Color.fromARGB(255, 207, 118, 113);
     final formatAmount = type == 'CREDIT' ? "+₹$amount" : "-₹$amount";
 
     // Responsive scaling with MediaQuery
@@ -639,18 +641,29 @@ class _TransactionHistoryState extends State<TransactionHistory>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     // Category
-                    textStyle(
-                      context: context,
-                      text: category,
-                      c: AppColors.accentColor,
-                      fontsize: fontSizeMedium,
-                      fontWeight: FontWeight.w600,
+                    Container(
+                      width: MediaQuery.sizeOf(context).width / 3,
+                      child: textStyle(
+                        context: context,
+                        text: category,
+                        c: AppColors.accentColor,
+                        fontsize: fontSizeMedium,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     // Action Icons
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         // Hide Transaction
+                   logo==""? SizedBox.shrink():
+                        Image.network(
+                          logo,
+                          width: 30,
+                          height: 30,
+                          fit: BoxFit.fitWidth,
+                        ),
+                       SizedBox(width: 8 * scaleFactor),
                         Tooltip(
                           message: 'Hide',
                           child: GestureDetector(
