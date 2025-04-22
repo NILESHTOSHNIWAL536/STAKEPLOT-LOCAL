@@ -384,7 +384,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
             // Amount
             textStyle(
               context: context,
-              text: '₹$totalAmount',
+              text: '₹${formatMoneyIndian(totalAmount)}',
               c: Colors.green.shade700,
               fontsize: 14,
               fontWeight: FontWeight.bold,
@@ -614,7 +614,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
                             children: [
                               textStyle(
                                 context: context,
-                                text: '₹${transactionDetails['amount'] ?? '0'}',
+                                text: '₹${formatMoneyIndian(transactionDetails['amount'].toString())}',
                                 c: Colors.green.shade700,
                                 fontsize: 12,
                                 fontWeight: FontWeight.w600,

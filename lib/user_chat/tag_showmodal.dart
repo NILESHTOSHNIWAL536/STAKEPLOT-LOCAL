@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -357,7 +358,7 @@ Widget getListOfCat(BuildContext context) {
             child: Column(
               children: [
                 textStyle(
-                  text: '₹$amount',
+                  text: '₹${formatMoneyIndian(amount.toString())}',
                   context: context,
                   fontWeight: FontWeight.bold,
                   fontsize: 15,

@@ -1085,7 +1085,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     if (_scrollController?.hasClients == true) {
       int currentIndex = getCurrentDateIndex(widget.days.cast<String>());
       double labelWidth = widget.selectedButton.value == 'Week' ? 50.0 : 60.0;
-      double scrollOffset = (currentIndex-1) * labelWidth;
+      double scrollOffset = (currentIndex-4) * labelWidth;
 
       double maxScrollExtent = _scrollController!.position.maxScrollExtent;
       if (scrollOffset > maxScrollExtent) {
