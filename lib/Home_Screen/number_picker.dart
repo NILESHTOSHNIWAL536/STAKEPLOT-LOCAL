@@ -286,7 +286,6 @@ Widget setPinForAccountHide(context) {
         ),
       );
     } else {
-      print("Showing locker widget");
       return locker(context);
     }
   });
@@ -465,7 +464,6 @@ Widget setPinForAccountHide(context) {
       },
       itemBuilder: (context) {
         return bankAccountLinkedList.map<PopupMenuEntry<String>>((e) {
-          print(e);
           return getItemOfListPopupMenuItem(
               e['bankName'], e['fipId'], e, e['bankId']);
         }).toList(); // Ensure it returns List<PopupMenuEntry<String>>

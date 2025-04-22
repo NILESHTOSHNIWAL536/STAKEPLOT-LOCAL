@@ -45,10 +45,10 @@ class DebtService {
 
   static Future<List<Debt>> fetchDebts() async {
     try {
-      print("Attempting to fetch debts."); // Debug statement
+    // Debug statement
       var accessToken = await getToken();
       if (accessToken == null) {
-       print("Error: No access token available");
+      
         return [];
       }
 

@@ -97,7 +97,6 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
 
   void saveDebt() async {
     if (_formKey.currentState!.validate()) {
-        print('Form is valid. Preparing to save debt.'); // Debug statement
       Map<String, dynamic> debtData = {
         'name': _name,
         'type': _loanType.toLowerCase(),
@@ -106,15 +105,14 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
         'durationMonths': _durationMonths,
         'startDate': _date.toIso8601String(),
       };
-        print('Debt data: $debtData'); // Debug statement
+       // Debug statement
 
       try {
         Map<String, dynamic>? response = await DebtService.createDebt(debtData);
-         print('Response from DebtService: $response'); // Debug statement
+      
 
         if (response != null) {
-           print('Debt created successfully: $response');
-
+          
           if (context.mounted) {
             // Ensure the widget is still in the tree
             Navigator.pop(
@@ -131,13 +129,13 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
             showSuccessTopSnackBar(context, "Debt created successfully!");
           }
         } else {
-           print('Failed to create debt. No valid response received.');
+        
         }
       } catch (e) {
-         print('Error creating debt: $e');
+       
       }
     } else {
-       print('Form is invalid.'); // Debug statement
+     // Debug statement
     }
   }
 
@@ -254,9 +252,9 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                 // check the issue with continue...
                 GestureDetector(
                   onTap: () {
-                    print('Continue button tapped.'); // Debug statement
+                   // Debug statement
                     saveDebt();
-                    print('saveDebt function called.'); // Debug statement
+                    // Debug statement
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width / 1.1,

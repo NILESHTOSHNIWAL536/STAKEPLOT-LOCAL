@@ -39,7 +39,6 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
 
   @override
   Widget build(BuildContext context, ) {
-    print("phone value is :${Phone.value}");
     return Scaffold(
      
       bottomNavigationBar: SafeArea(child: BottomNavigations(data: 3)),
@@ -287,9 +286,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
 
             try {
               var response = await postDataApiCall("${url}/user/logout", {});
-              printData(response);
             } catch (e) {
-              print(e);
             }
 
             await _pref.remove("token");

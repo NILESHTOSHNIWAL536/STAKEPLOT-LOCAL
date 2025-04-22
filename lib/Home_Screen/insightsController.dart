@@ -41,32 +41,29 @@ class InsightsController extends GetxController {
     }
   }
 Future<void> getHomePageMoneyMapInsights(BuildContext context) async {
-    print('Insights money map Controller: getHomePageInsights called');
+  
     try {
-      print('InsightsController money map Controller: Calling API: ${url}/transactionauto/get-money-map-messages');
+    
       var response = await getDataApiCall("${url}/transactionauto/get-money-map-messages");
-      print('InsightsControllermoney map Controller: API response status code: ${response.statusCode}');
+      
 
       if (response.statusCode == 200) {
-        print('InsightsController: API call successful, parsing response...');
+      
         var his = jsonDecode(response.body);
-        print('InsightsController: Parsed response: $his');
+      
         var obj = his['data'] as List;
-        print('InsightsController: Data extracted: $obj');
+     
 
         totalInSightsMoneyMap.clear();
-        print('InsightsController: Cleared totalInSights, adding new data...');
+     
         totalInSightsMoneyMap.addAll(obj.map((item) => item as Map<String, dynamic>).toList());
-        print('InsightsController: Updated totalInSights: $totalInSightsMoneyMap');
+      
 
         getTotalInsightsHistorytotalMoneyMap.value = !getTotalInsightsHistorytotalMoneyMap.value;
-        print('InsightsController: Toggled getTotalInsightsHistory: ${getTotalInsightsHistory.value}');
       } else {
-        print('InsightsController: API call failed with status code: ${response.statusCode}');
-        print('InsightsController: Response body: ${response.body}');
+        
       }
     } catch (e) {
-      print('InsightsController: Error in getHomePageInsights: $e');
     }
   }
 

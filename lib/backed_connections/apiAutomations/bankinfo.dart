@@ -18,7 +18,7 @@ RxMap bankImagemap = {}.obs;
 
 Future<void> getBankAccounts() async {
   var response =await getDataApiCall("${url}/transactionauto/get-banks-linked/");
-  printData(response);
+
 
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
@@ -94,9 +94,9 @@ void getWeeklyfetchData(
       'FROM': last,
     }),
   );
-  printData(response);
+
   if (response.statusCode == 200) {
-    print(response.body);
+   
   }
 }
 

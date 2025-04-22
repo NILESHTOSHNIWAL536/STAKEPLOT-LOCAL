@@ -943,7 +943,6 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
           SizedBox(height: 10),
           GestureDetector(
             onTap: () {
-              print('Calculate button tapped...');
               _calculateShares();
             },
             child: getButton(context, "Calculate"),

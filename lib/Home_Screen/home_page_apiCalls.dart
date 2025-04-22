@@ -401,7 +401,7 @@ void duesPaid(BuildContext context, int index) async {
     
   } catch (e) {
     snackBarCalled(context, "Error settling due");
-    print("Error in duesPaid: $e");
+  
   }
 }
 
@@ -413,11 +413,11 @@ void settleAmount(
       'splittedUserId': endUser,
     };
     final response = await updateDataApiCall(apiUrl, body);
-    printData(response);
+   
     
   } catch (e) {
     snackBarCalled(context, "Error settling due");
-    print("Error in duesPaid: $e");
+  
   }
 
 }
@@ -440,29 +440,28 @@ void declineAmount(
 Future<void> getHomePageInsights(context) async {
  
   try {
-    print('Calling API: ${url}/transactionauto/get-headsup-messages');
+   
     var response = await getDataApiCall("${url}/transactionauto/get-headsup-messages");
-    print('API response status code: ${response.statusCode}');
+  
     
     if (response.statusCode == 200) {
-      print('API call successful, parsing response...');
+    
       var his = jsonDecode(response.body);
-      print('Parsed response: $his');
+    
       var obj = his['data'];
-      print('Data extracted: $obj');
+    
       
       totalInSights.clear();
-      print('Cleared totalInSights, adding new data...');
+   
       totalInSights.addAll(obj);
-      print('Updated totalInSights: $totalInSights');
+    
       
       getTotalInsightsHistory.value = !getTotalInsightsHistory.value;
-      print('Toggled getTotalInsightsHistory: ${getTotalInsightsHistory.value}');
+     
     } else {
-      print('API call failed with status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      
     }
   } catch (e) {
-    print('Error in getHomePageInsights: $e');
+   
   }
 }

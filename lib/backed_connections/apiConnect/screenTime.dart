@@ -217,11 +217,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ScreenTimeTracker with WidgetsBindingObserver {
   static final ScreenTimeTracker _instance = ScreenTimeTracker._internal();
   factory ScreenTimeTracker() {
-    print('Accessing ScreenTimeTracker instance: ${_instance.hashCode}');
     return _instance;
   }
   ScreenTimeTracker._internal() {
-    print('ScreenTimeTracker created: ${this.hashCode}');
     initialize();
   }
 

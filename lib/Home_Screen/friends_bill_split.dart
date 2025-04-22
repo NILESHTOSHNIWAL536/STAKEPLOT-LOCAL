@@ -159,11 +159,11 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                   child: InkWell(
                     onTap: () async {
                       if (addedMembers.isNotEmpty) {
-                        print("Added members: $addedMembers");
+                      
                         if (widget.isLendMode) {
-                          print("Lend mode activated");
+                        
                           if (addedMembers.length > 1) {
-                            print("More than one friend selected for lending");
+                          
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                   content: Text(
@@ -173,7 +173,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                           }
                           Navigator.pop(context, addedMembers[0]);
                         } else {
-                          print("Proceeding to amount entry modal");
+                         
                           Navigator.pop(context);
                           final amounts = await showAmountEntryModal(
                             context,
@@ -182,20 +182,20 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                           );
 
                           if (amounts != null) {
-                            print("Amounts received: $amounts");
+                           
                             Navigator.pop(context, amounts);
                           }
                           ;
                           if (amounts != null) {
-                            print("Returning amounts for split: $amounts");
+                          
                             Navigator.pop(context, amounts);
                           } else {
-                            print("No amounts received");
+                           
                           }
                         }
                         
                       } else {
-                        print("No friends selected");
+                      
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content:

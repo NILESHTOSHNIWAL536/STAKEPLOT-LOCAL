@@ -12,7 +12,7 @@ RxBool setGroupTransactions = false.obs;
 void getGroupTransactions() async {
   var res =
       await getDataApiCall("${url}/transactionauto/get-grouped-transactions");
-  print("group transactions ${res.body}");
+
   if (getFlagOfResponse(res)) {
     var data = jsonDecode(res.body);
     data = data['data'];

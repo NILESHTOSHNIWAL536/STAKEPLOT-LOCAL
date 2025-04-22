@@ -387,7 +387,6 @@ class _SigninState extends State<SignUp> {
 
     var responce = jsonDecode(response.body);
 
-    print(responce);
 
     bool boolvar = responce['success'];
 

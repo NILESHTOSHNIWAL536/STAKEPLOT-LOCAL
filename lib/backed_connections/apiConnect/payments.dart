@@ -42,7 +42,7 @@ void getBudget() async {
       var obj = his['data'];
       budgetList.clear();
       budgetList.addAll(obj);
-      print("budgetListingggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg $budgetList");
+    
       budgetLength.value = obj.length;
     }
   } catch (e) {}
@@ -514,9 +514,9 @@ void sendNotificationsToDevice(id, context, msg) async {
     }),
   );
 
-  printData(response);
+ 
    }catch(e){
-    print("Error in sendNotificationsToDevice: $e");
+   
 }
 }
 

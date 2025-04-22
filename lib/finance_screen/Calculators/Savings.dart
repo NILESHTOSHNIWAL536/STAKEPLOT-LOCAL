@@ -101,10 +101,8 @@ class _SavingsState extends State<Savings> {
       endBalance = double.parse(totalSavings.toStringAsFixed(2));
       interestEarned = double.parse(totalInterest.toStringAsFixed(2));
       goalProgress = double.parse(((currentSavings / targetAmount) * 100).toStringAsFixed(2));
-      print(currentSavings);
       remainingAmount = targetAmount - currentSavings;
       remainingAmount = remainingAmount < 0 ? 0 : remainingAmount;
-      print(remainingAmount);
     });
   }
 

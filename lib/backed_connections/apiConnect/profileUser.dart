@@ -23,10 +23,10 @@ void approveBill(context, id, type, notifyId) async {
 Future<void> getRemainders(context) async {
   String urlPath = "${url}/reminders";
   var responce = await getDataApiCall(urlPath);
-  print("Response from getRemainders: ${responce.body}");
+ 
   if (getFlagOfResponse(responce)) {
     var his = jsonDecode(responce.body);
-    print("Parsed response data: $his");
+   
     var userDue = his['data']['payables'] ?? [];
     var userDue2 = his['data']['owed'] ?? [];
 
@@ -36,8 +36,7 @@ Future<void> getRemainders(context) async {
     dueAmountRemainders.addAll(userDue); //payables
     lendAmountRemainders.addAll(userDue2); //owed
 
-    print("lendAmountRemainders: $lendAmountRemainders");
-    print("dueAmountRemainders: $dueAmountRemainders");
+   
 
     // Ensure observables notify listeners
     dueAmountRemainders.refresh();
@@ -45,7 +44,6 @@ Future<void> getRemainders(context) async {
 
     getdueUsers.value = !getdueUsers.value;
   } else {
-    print("getRemainders failed: ${responce.statusCode} - ${responce.body}");
   }
 }
 

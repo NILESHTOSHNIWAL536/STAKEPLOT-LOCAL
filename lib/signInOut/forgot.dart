@@ -171,7 +171,6 @@ class _SigninState extends State<ForgotPassword> {
                             BorderRadius.circular(Colorcodes.borderRadius10)),
                     child: InkWell(
                       onTap: () {
-                        print(" tapped");
 
                         if (nameController.text == "" ||
                             emailController.text == "") {

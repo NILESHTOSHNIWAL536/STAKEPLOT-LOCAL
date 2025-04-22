@@ -463,49 +463,49 @@ class _BottomNavigationsState extends State<BottomNavigations> {
       try {
         if (widget.data >= 0 && widget.data < _tabNames.length) {
           ScreenTimeTracker().switchTab(_tabNames[widget.data]);
-          print('Initial tab set: ${_tabNames[widget.data]}');
+         
         }
         handleWidgetNavigation();
       } catch (e) {
-        print('Error setting initial tab: $e');
+       
       }
     });
   }
 
   void handleWidgetNavigation() async {
-    print("BottomNavigations: Handling widget navigation");
+   
     try {
       // Android intent
       final route =
           await SystemChannels.platform.invokeMethod('getInitialRoute');
-      print("BottomNavigations: Route received: $route");
+   
       if (route != null && route is Map) {
         if (route['navigate_to_tab'] == 'finance') {
-          print('BottomNavigations: Processing finance intent');
+       
           setState(() {
             widget.data = 1;
           });
           ScreenTimeTracker().switchTab(_tabNames[1]);
           pushName(PlotFinance());
-          print('BottomNavigations: Navigated to Finance via intent');
+         
         }
       }
 
       // iOS deep link (for future support)
       const channel = MethodChannel('com.stakeplot.adnan.dev/navigation');
       channel.setMethodCallHandler((call) async {
-        print("BottomNavigations: MethodChannel called: ${call.method}");
+       
         if (call.method == 'navigateToFinance') {
           setState(() {
             widget.data = 1;
           });
           ScreenTimeTracker().switchTab(_tabNames[1]);
           pushName(PlotFinance());
-          print('BottomNavigations: Navigated to Finance via deep link');
+          
         }
       });
     } catch (e) {
-      print('BottomNavigations: Navigation error: $e');
+     
     }
   }
 
@@ -607,7 +607,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
         try {
           String tabName = _tabNames[i];
           ScreenTimeTracker().switchTab(tabName);
-          // print('Tab switched to: $tabName');
+         
           if (i == 0)
             pushName(HomePage());
           else if (i == 1)
@@ -620,7 +620,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
             widget.data = i; // Update selected index
           });
         } catch (e) {
-          print('Error switching tab: $e');
+         
         }
       },
       child: Container(
@@ -958,7 +958,7 @@ Widget logoutWidget(context, [flag = false]) {
           InkWell(
             onTap: () async {
               try {
-                // print('Logging out');
+              
                 clearServarData(context);
                 await ScreenTimeTracker().clearUserData();
                 final SharedPreferences _pref =
@@ -968,13 +968,13 @@ Widget logoutWidget(context, [flag = false]) {
                 await _pref.remove(
                     'login_count_${DateTime.now().toIso8601String().substring(0, 10)}_$userId');
                 await _pref.remove('login_history_$userId');
-                // print('Access token and login data removed, navigating to login');
+                
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     '/', (Route<dynamic> route) => false);
                 Navigator.pushReplacementNamed(context, '/');
                 clearGetX();
               } catch (e) {
-                // print('Logout error: $e');
+                
               }
             },
             child: Container(

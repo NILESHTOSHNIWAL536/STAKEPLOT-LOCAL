@@ -207,7 +207,6 @@ class _ExploreModalState extends State<ExploreModal> {
           .writeAsBytes(bytes);
       return file;
     } catch (e) {
-      print('Error saving cropped image: $e');
       return null;
     }
   }
@@ -245,7 +244,6 @@ class _ExploreModalState extends State<ExploreModal> {
 
       return file;
     } catch (e) {
-      print('Error cropping image: $e');
       return null;
     }
   }
@@ -284,7 +282,6 @@ class _ExploreModalState extends State<ExploreModal> {
    
     if (locationNameController.text.isEmpty ||
         locationAddressController.text.isEmpty) {
-      print('Validation failed: Required fields are empty');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill in all required fields')),
       );
@@ -292,7 +289,7 @@ class _ExploreModalState extends State<ExploreModal> {
     }
 
     setState(() => _isSubmitting = true); // Show loading indicator
-    print('Submitting post...');
+   
 
     List<Map<String, dynamic>> budget = [];
     for (int i = 0; i < _textControllers.length; i++) {
@@ -723,8 +720,7 @@ class _ExploreModalState extends State<ExploreModal> {
     // );
     return GestureDetector(
       onTap: () {
-        print("heyyy");
-        print("isEnabled $isEnabled");
+      
         isEnabled ? _submitPost() : null;
       },
       child: _isSubmitting

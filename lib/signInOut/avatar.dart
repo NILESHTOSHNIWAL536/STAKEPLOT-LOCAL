@@ -327,7 +327,6 @@ void storeData(context, data, String opt, Avatarurl) async {
 
   try {
     var data2 = jsonDecode(response.body);
-    print(data2);
     bool boolvar = data2['success'];
 
     acceptReset.value = false;
@@ -340,7 +339,6 @@ void storeData(context, data, String opt, Avatarurl) async {
     String accessToken = body['data'];
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     _pref.setString("accessToken", "Bearer " + accessToken);
-    print(accessToken);
     clearStack(context);
     Navigator.pushReplacementNamed(context, '/ShareAccountLogin');
   } catch (e) {

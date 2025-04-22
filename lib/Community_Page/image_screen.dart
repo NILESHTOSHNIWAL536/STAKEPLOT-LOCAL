@@ -74,8 +74,7 @@ class _ImageScreenState extends State<ImageScreen> {
 
       return file;
     } catch (e) {
-      print(
-          'Error cropping image: $e'); // Log error instead of showing snackbar
+      // Log error instead of showing snackbar
       return null;
     }
   }
@@ -241,8 +240,7 @@ class _ImageScreenState extends State<ImageScreen> {
                           Get.to(() => const SuccessPost(celebrationText: "Posted",));
                         }
                       } catch (e) {
-                        print(
-                            'Error posting: $e'); // Log error instead of showing snackbar
+                        // Log error instead of showing snackbar
                       } finally {
                         if (mounted) {
                           posting.value = false;

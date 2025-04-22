@@ -247,10 +247,9 @@ class _TransactionHistoryState extends State<TransactionHistory>
               .putIfAbsent(monthYearKey, () => [])
               .add(transaction);
           // Debug: Log the timestamp and its IST conversion
-          print(
-              'Timestamp: $timestamp, IST: $istDate, Grouped as: $monthYearKey');
+          
         } catch (e) {
-          print('Invalid timestamp: $timestamp');
+         
           continue;
         }
       }
@@ -970,7 +969,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
 void hideTransaction(
     int index, bool hidden, BuildContext context, String id) async {
   final transaction = transactionsHistory[index];
-  print("transaction hide 1 $transaction");
   final transactionId = transaction['_id']?.toString();
   if (transactionId == null) {
     //   print("Error: Transaction ID is null");
@@ -980,8 +978,6 @@ void hideTransaction(
   final apiUrl = "$url/transactionauto/updateTransaction/$id";
   try {
     final response = await updateDataApiCall2(apiUrl, {"Hidden": hidden});
-    print("Hidden: $apiUrl");
-    printData(response);
     if (getFlagOfResponse(response)) {
       if (hidden) {
         hiddenTransactions.add(transaction);
