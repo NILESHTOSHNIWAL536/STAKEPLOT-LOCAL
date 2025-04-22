@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/animated/bankSlider.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
@@ -178,7 +179,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                Obx(()=> Text(
-                  '\u{20B9} ${(hideBackAccountPassword.value || cupertinoPin.value == "0") ? data['currentBalance'] : lock[randomIndex]}',
+                  '\u{20B9} ${(hideBackAccountPassword.value || cupertinoPin.value == "0") ? formatMoneyIndian(data['currentBalance']) : lock[randomIndex]}',
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.bold,
                       fontSize: 20,

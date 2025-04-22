@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -29,6 +30,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
   @override
   void initState() {
     super.initState();
+    selectedIndex.value=-1;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await HomeWidget.setAppGroupId('group.com.stakeplot.adnan.dev');
       getCategoryData();
@@ -48,13 +50,11 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                 (data) => '${data.category}: ₹${data.value.toStringAsFixed(2)}')
             .join('\n');
       }
-      print(
-          'Updating widget: total=$total, categories=$categories, time=$timestamp');
+      
       await HomeWidget.saveWidgetData<String>('total_spending', total);
       await HomeWidget.saveWidgetData<String>('categories', categories);
       await HomeWidget.saveWidgetData<String>('timestamp', timestamp);
-      print(
-          'Updating widget: total=$total, categories=$categories, time=$timestamp');
+     
       await HomeWidget.saveWidgetData<String>('total_spending', total);
       await HomeWidget.saveWidgetData<String>('categories', categories);
       await HomeWidget.saveWidgetData<String>('timestamp', timestamp);
@@ -204,7 +204,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                       CrossAxisAlignment.center,
                                   children: [
                                  Text(
-                                      'Expenses: ${chartData[selectedIndex.value].category}',
+                                      'Expenses: ${chartData[selectedIndex.value>=chartData.length?chartData.length-1:selectedIndex.value].category}',
                                       style: FontManager().getTextStyle(
                                           context,
                                           lWeight: FontWeight.bold,
@@ -222,7 +222,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      'Amount: \₹${chartData[selectedIndex.value].value.toStringAsFixed(2)}',
+                                      'Amount: \₹${formatMoneyIndian(chartData[selectedIndex.value>=chartData.length?chartData.length-1:selectedIndex.value].value.toStringAsFixed(2))}',
                                       style: FontManager().getTextStyle(
                                           context,
                                           lWeight: FontWeight.bold,
@@ -253,7 +253,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      'Amount: \₹${totalValue.toStringAsFixed(2)}',
+                                      'Amount: \₹${formatMoneyIndian(totalValue.toStringAsFixed(2))}',
                                       style: FontManager().getTextStyle(
                                           context,
                                           lWeight: FontWeight.bold,
@@ -277,7 +277,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
      return Row(
                   children: [
                    Obx(()=> Text(
-                      '\₹${totalValue.toStringAsFixed(2)}',
+                      '\₹${formatMoneyIndian(totalValue.toStringAsFixed(2))}',
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.bold,
                           fontSize: 18,

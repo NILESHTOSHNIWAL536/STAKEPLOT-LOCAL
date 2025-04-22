@@ -218,3 +218,22 @@ String avaterUrlPath(String name)
     if(name.isEmpty)return "assets/avatars/a.svg";
     return "assets/avatars/"+name[0].toString().toLowerCase()+".svg";
 }
+
+String formatMoneyIndian(String value)
+ {
+  if (value.isEmpty) return '0';
+  try {
+    // Remove commas if user input already has them
+    final number = double.parse(value.replaceAll(',', ''));
+
+    // Format using Indian locale
+    final formatter = NumberFormat.currency(
+      locale: 'en_IN',
+      symbol: '',
+      decimalDigits: number.truncateToDouble() == number ? 0 : 2,
+    );
+    return formatter.format(number).trim();
+  } catch (e) {
+    return '0';
+  }
+}
