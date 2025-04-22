@@ -9,8 +9,8 @@ import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 bool flag = true;
-String portNo = flag ? "192.168.1.12" : "localhost";
-String urlWithLocallHost = flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String portNo = flag ? "192.168.1.8" : "localhost";
+String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Feilds";
 RxString expenses = "Loading....".obs;
@@ -75,7 +75,7 @@ RxInt budgetLength = 0.obs;
 RxInt billLength = 0.obs;
 RxInt debtLength = 0.obs;
 RxInt paymentLength = 0.obs;
-String userAvatar = "assets/images2/user.svg";
+String userAvatar = "assets/avatars/a.svg";
 RxString userAvatarProfile = "assets/images2/user.svg".obs;
 RxString userName = "Loading...".obs;
 RxString dob = "Loading...".obs;
@@ -203,6 +203,7 @@ RxString nextFecthDate = "".obs;
 RxString LastFetchDate = "".obs;
 RxString fetchCount = "".obs;
 RxString BankName = "".obs;
+RxString BankUrl = "".obs;
 
 
 RxBool isFected = false.obs;

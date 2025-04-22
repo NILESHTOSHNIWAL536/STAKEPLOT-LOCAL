@@ -208,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     : DoughnutChartExample()),
               ),
             
-               TransactionHistory(),
+              TransactionHistory(key:_transactionHistoryKey),
             
     
             ],
@@ -226,12 +226,15 @@ class _HomeScreenState extends State<HomeScreen> {
         automaticallyImplyLeading: false,
         actions: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               GestureDetector(
                 onTap: (){
                    navigatorToMyOwnPage(context);
                 },
-                child: UserAvatar(url: avatar.value, width: 15, height: 15)),
+                child: UserAvatar(url: avaterUrlPath(userName.value), width: 30, height: 13)),
+                // child: UserAvatar(url: avatar.value, width: 15, height: 15)),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
@@ -220,9 +221,9 @@ void checkBiometricsStatus() async {
             Column(
               children: [
                 Obx(() => AvatarProfileImage(
-                      url: changeAvater.value,
-                      width: 10,
-                      height: 10,
+                      url: avaterUrlPath(userName.value),
+                      width: 14,
+                      height: 9,
                     )),
                 GestureDetector(
                   onTap: () {
@@ -247,10 +248,10 @@ void checkBiometricsStatus() async {
     // );
                   },
                   child: Padding(
-                    padding: EdgeInsets.only(top: 8.0),
+                    padding: EdgeInsets.only(top: 0.0),
                     child: textStyleOnly2(
                       context: context,
-                      text: "Change Profile Picture",
+                      text: "",
                       fontsize: 14,
                       color: AppColors.bg3,
                       fontWeight: FontWeight.w400,
@@ -348,13 +349,13 @@ void checkBiometricsStatus() async {
   }
 
   Widget getListOfBankConnected() {
+
     return Container(
       child: Column(
         children: [
           Column(
             children: bankAccountLinkedList.map((e) {
-              return _buildAccountDetails(
-                  e['bankName'], e['maskedAccNumber'], e);
+              return _buildAccountDetails(e['bankName'], e['maskedAccNumber'], e,e['bankLogo']);
             }).toList(),
           ),
           const SizedBox(
@@ -452,13 +453,18 @@ void checkBiometricsStatus() async {
     );
   }
 
-  Widget _buildAccountDetails(String bankName, String accountNumber, var data) {
+  Widget _buildAccountDetails(String bankName, String accountNumber, var data,String logo) {
     return Card(
       //shape: ,
       elevation: 2,
       color: AppColors.mt,
       child: ListTile(
-        //  leading: AvatarProfileImage(url:  bankImagemap[bankName] ?? avatarUser.value, width: 10, height: 10),
+         leading: Image.network(
+                          logo,
+                          width: 30,
+                          height: 30,
+                          fit: BoxFit.fitWidth,
+            ),
         title: textStyleOnly2(
           context: context,
           text: bankName,

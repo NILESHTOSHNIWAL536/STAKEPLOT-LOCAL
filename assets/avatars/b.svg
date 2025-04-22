@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="134" height="134" viewBox="0 0 134 134">
+	<defs>
+		<filter id="filter3711457759" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feComponentTransfer in="SourceAlpha" result="componentTransfer7289636215">
+				<feFuncR type="linear" slope="0" intercept="0"/>
+				<feFuncG type="linear" slope="0" intercept="0"/>
+				<feFuncB type="linear" slope="0" intercept="0"/>
+				<feFuncA type="linear" slope="10000" intercept="0"/>
+			</feComponentTransfer>
+			<feComponentTransfer in="componentTransfer7289636215" result="componentTransfer0926641566">
+				<feFuncA type="linear" slope="0.1" intercept="0"/>
+			</feComponentTransfer>
+			<feMorphology operator="erode" radius="4" in="componentTransfer0926641566" result="morphology9208888309"/>
+			<feOffset dx="0" dy="4" in="morphology9208888309" result="offset3857775039"/>
+			<feGaussianBlur stdDeviation="3" in="offset3857775039" result="gaussianBlur4804811579"/>
+			<feComponentTransfer in="SourceAlpha" result="componentTransfer5874986818">
+				<feFuncR type="linear" slope="0" intercept="0"/>
+				<feFuncG type="linear" slope="0" intercept="0"/>
+				<feFuncB type="linear" slope="0" intercept="0"/>
+				<feFuncA type="linear" slope="10000" intercept="0"/>
+			</feComponentTransfer>
+			<feComponentTransfer in="componentTransfer5874986818" result="componentTransfer5206814895">
+				<feFuncA type="linear" slope="0.1" intercept="0"/>
+			</feComponentTransfer>
+			<feMorphology operator="erode" radius="3" in="componentTransfer5206814895" result="morphology4725022016"/>
+			<feOffset dx="0" dy="10" in="morphology4725022016" result="offset7332434595"/>
+			<feGaussianBlur stdDeviation="7.5" in="offset7332434595" result="gaussianBlur0518717416"/>
+			<feMerge>
+				<feMergeNode in="gaussianBlur4804811579"/>
+				<feMergeNode in="gaussianBlur0518717416"/>
+				<feMergeNode in="SourceGraphic"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g filter="url(#filter3711457759)">
+		<path transform="matrix(1 0 0 1 12 2)" d="M55 0C24.6243 0 0 24.6243 0 55L0 55.0825C0 85.4582 24.5418 110 54.9175 110L55 110C85.3757 110 110 85.4582 110 55.0825L110 55C110 24.6243 85.4582 0 55.0825 0L55 0Z" fill-rule="nonzero" fill="rgb(0, 0, 0)" fill-opacity="0.002"/>
+		<defs>
+			<linearGradient id="linearGradient7406444204" gradientTransform="matrix(77.7817 77.7817 -77.7817 77.7817 55 -22.7817)" gradientUnits="userSpaceOnUse" x1="0" y1="0.5" x2="1" y2="0.5">
+				<stop offset="0" stop-color="rgb(255, 255, 255)"/>
+				<stop offset="1" stop-color="rgb(248, 246, 242)"/>
+			</linearGradient>
+		</defs>
+		<path transform="matrix(1 0 0 1 12 2)" d="M55 0C24.6243 0 0 24.6243 0 55L0 55.0825C0 85.4582 24.5418 110 54.9175 110L55 110C85.3757 110 110 85.4582 110 55.0825L110 55C110 24.6243 85.4582 0 55.0825 0L55 0Z" fill-rule="nonzero" fill="url(#linearGradient7406444204)"/>
+		<path transform="matrix(1 0 0 1 12 2)" d="M-0 55C0 24.6243 24.6243 -0 55 -0L55 0C85.3757 0 110 24.6243 110 55L110 55C110 85.3757 85.3757 110 55 110L55 110C24.6243 110 -0 85.3757 -0 55L0 55ZM55 1C25.1766 1 1 25.1766 1 55L1 55C1 84.8234 25.1766 109 55 109L55 109C84.8234 109 109 84.8234 109 55L109 55C109 25.1766 84.8234 1 55 1L55 1Z" fill-rule="nonzero" fill="rgb(212, 175, 55)" fill-opacity="0.2"/>
+		<defs>
+			<clipPath id="clipPath9546823526">
+				<path transform="matrix(1 0 0 1 12 2)" d="M55 0C24.6243 0 0 24.6243 0 55L0 55.0825C0 85.4582 24.5418 110 54.9175 110L55 110C85.3757 110 110 85.4582 110 55.0825L110 55C110 24.6243 85.4582 0 55.0825 0L55 0Z" fill-rule="nonzero"/>
+			</clipPath>
+		</defs>
+		<g clip-path="url(#clipPath9546823526)">
+			<g opacity="0.2">
+				<defs>
+					<clipPath id="clipPath0421057193">
+						<path transform="matrix(1 0 0 1 27 17)" d="M0 0L80 0L80 80L0 80L0 0Z" fill-rule="nonzero"/>
+					</clipPath>
+				</defs>
+				<g clip-path="url(#clipPath0421057193)">
+					<defs>
+						<clipPath id="clipPath7784395862">
+							<path transform="matrix(1 0 0 1 27 17)" d="M0 0L80 0L80 80L0 80L0 0Z" fill-rule="nonzero"/>
+						</clipPath>
+					</defs>
+					<g clip-path="url(#clipPath7784395862)">
+						<path transform="matrix(1 0 0 1 27.0022 17)" d="M37.5134 0.65625C39.0447 -0.21875 40.9353 -0.21875 42.4822 0.65625L69.326 15.9844L69.9978 16.25L69.9978 16.3906L77.4822 20.6719C79.4509 21.7969 80.4197 24.1094 79.8416 26.2969C79.2634 28.4844 77.2791 30.0156 75.0134 30.0156L4.99782 30.0156C2.73219 30.0156 0.74782 28.4844 0.169695 26.2969C-0.40843 24.1094 0.56032 21.7969 2.52907 20.6719L9.99782 16.3906L9.99782 16.25L10.6853 16L37.5134 0.65625ZM9.99782 35L19.9978 35L19.9978 65L26.2478 65L26.2478 35L36.2478 35L36.2478 65L43.7478 65L43.7478 35L53.7478 35L53.7478 65L59.9978 65L59.9978 35L69.9978 35L69.9978 65.6719C70.0916 65.7188 70.1853 65.7812 70.2791 65.8438L77.7791 70.8438C79.6072 72.0625 80.4353 74.3438 79.7947 76.4531C79.1541 78.5625 77.2009 80 74.9978 80L4.99782 80C2.79469 80 0.857195 78.5625 0.21657 76.4531C-0.424055 74.3438 0.388445 72.0625 2.23219 70.8438L9.73219 65.8438C9.82594 65.7812 9.91969 65.7344 10.0134 65.6719L10.0134 35L9.99782 35Z" fill-rule="nonzero" fill="rgb(212, 175, 55)"/>
+					</g>
+				</g>
+			</g>
+			<path transform="matrix(1 0 0 1 50 32)" d="M33.8379 37.9551Q33.8379 42.584 30.542 45.792Q27.2461 49 20.7568 49L2.51953 49L2.51953 45.1621L7.44141 45.1621L7.44141 13.8438L2.51953 13.8438L2.51953 10.0059L20.4639 10.0059Q26.3965 10.0059 29.3115 12.584Q32.2266 15.1621 32.2266 19.3662Q32.2266 22.4863 30.3662 24.8301Q28.5059 27.1592 25.5029 27.7598L25.5029 27.9941Q29.7656 28.6533 31.8018 31.4512Q33.8379 34.2344 33.8379 37.9551ZM27.5391 20.377Q27.5391 16.7148 25.459 15.2793Q23.3936 13.8438 19.7461 13.8438L11.8213 13.8438L11.8213 27.042L19.5557 27.042Q23.042 27.042 25.2832 25.3281Q27.5391 23.6143 27.5391 20.377ZM29.165 37.7207Q29.165 34.4248 27.2021 32.5352Q25.2539 30.6455 21.416 30.6455L11.8213 30.6455L11.8213 45.1621L19.9805 45.1621Q24.1846 45.1621 26.6748 43.3896Q29.165 41.6172 29.165 37.7207Z" fill-rule="nonzero" fill="rgb(27, 54, 93)"/>
+		</g>
+	</g>
+</svg>

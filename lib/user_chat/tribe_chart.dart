@@ -2,6 +2,7 @@ import "dart:convert";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
+import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart";
@@ -9,6 +10,7 @@ import "package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import "package:flutter_application_code_stakeplot/bottomNavigations.dart";
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
 import "package:flutter_application_code_stakeplot/loader.dart";
+import "package:flutter_application_code_stakeplot/userAvatar.dart";
 import "package:flutter_application_code_stakeplot/user_chat/chat.dart";
 import "package:get/get.dart";
 import "package:shared_preferences/shared_preferences.dart";
@@ -278,11 +280,16 @@ class _TribeSearchState extends State<TribeChats> {
               //width: width / 1,
               child: Row(
                 children: [
-                  AvatarProfileImage(
-                    url: item['avatar'] ?? userAvatar,
-                    width: 10,
-                    height: 16,
-                  ),
+                  // AvatarProfileImage(
+                  //   url: item['avatar'] ?? userAvatar,
+                  //   width: 10,
+                  //   height: 16,
+                  // ),
+                    UserAvatar(
+                                url:avaterUrlPath(item['name']),
+                                width: 10,
+                                height: 15,
+                    ),
                   const SizedBox(width: 8),
                   Container(
                     width: width >= 500

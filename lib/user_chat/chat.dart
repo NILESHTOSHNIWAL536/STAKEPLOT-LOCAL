@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/exploreCard.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/userDetails.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart';
+import 'package:flutter_application_code_stakeplot/userAvatar.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/fullScreen.dart';
 import 'package:get/get_rx/get_rx.dart';
 // import 'package:getwidget/components/image/gf_image_overlay.dart';
@@ -440,16 +442,18 @@ class _ChatState extends State<Chat> {
                           onTap: () {
                             pushDetails();
                           },
-                          child: AvatarProfileImage(
-                              url: data['avatar'] ?? "assets/avatar/menp3.svg",
+                          child: UserAvatar(
+                              url:avaterUrlPath(data['name']),
                               width: 8,
-                              height: 17)),
+                              height: 17
+                        )),
                       GestureDetector(
                         onTap: () {
                           
                           pushDetails();
                         },
                         child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 2),
                           width: MediaQuery.of(context).size.width / 1.7,
                           child: Text(
                             data['name'],
@@ -646,7 +650,7 @@ class _ChatState extends State<Chat> {
 
   Widget profilepath(boolFlag) {
     return chatAvatartImage(
-        url: boolFlag ? path : data['avatar'], width: 20, height: 20);
+        url: boolFlag ? path : avaterUrlPath(data['name']), width: 17, height: 16);
   }
 
   Widget textIsme(msg, bool isme) {
@@ -1128,11 +1132,11 @@ class _ChatState extends State<Chat> {
                       Container(
                         child: Row(
                           children: [
-                            AvatarProfileImage(
-                              url: dataObj["author"]['avatar'],
-                              width: 20,
-                              height: 20,
-                            ),
+                             UserAvatar(
+                                url:avaterUrlPath( dataObj["author"]['name']),
+                                width: 15,
+                                height: 15,
+                              ),
                             const SizedBox(
                               width: 5,
                             ),

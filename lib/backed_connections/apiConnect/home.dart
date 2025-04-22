@@ -17,20 +17,21 @@ void getAck() async {
 }
 
 void setPasswordApiCalled(context, String password) async {
-  print("setPasswordApiCalled: Attempting to set PIN = $password");
+ 
   if (password == "00") {
-    print("Error: Cannot set PIN to '00'");
-
+       snackBarCalledfail(context, "Unable to set the PIN 00 except 00 try other!", Colors.red);
     return; // Exit the function without setting the PIN
   }
+
   var urlPath = '${url}/user/cupertino/';
   final response = await postDataApiCall(urlPath, {
     'pin': password.toString(),
   });
+
   if (getFlagOfResponse(response)) {
     cupertinoPin.value = password;
-    snackBarCalled(
-        context, "Your PIN has been set successfully!", Colors.black);
+    
+    snackBarCalled(context, "Your PIN has been set successfully!", Colors.black);
   } else {
     snackBarCalled(context, "Unable to set the PIN!", Colors.red);
   }

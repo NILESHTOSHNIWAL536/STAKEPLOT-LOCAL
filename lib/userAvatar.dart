@@ -15,25 +15,30 @@ UserAvatar({ Key? key,required this.url,required this.width,required this.height
   Widget build(BuildContext context){
     //  url="https://lh3.googleusercontent.com/a/ACg8ocKYmUXUyRRJMokLs9MV_LdZsO3-x8WJJGTOtPw41A72KO-4QMaF=s96-c";
     return  Container(
-        margin: EdgeInsets.symmetric(horizontal: 5),
-        padding: EdgeInsetsDirectional.all(4),
+        margin: EdgeInsets.only(top: 4),
+        // padding: EdgeInsetsDirectional.all(2),
         alignment: Alignment.center,
-        child: isSvgUrl(url)? SvgPicture.asset(url.toString().trim(),
-              width: MediaQuery.of(context).size.width/ width,
-              height: MediaQuery.of(context).size.height/ height,
-        ):Container(
-           width: MediaQuery.of(context).size.width /width,
-           height: MediaQuery.of(context).size.height/height,
-           padding: EdgeInsets.all(0),
-          //  color: Colorcodes.appBarColor,
-          child: GFImageOverlay(     
-                                shape: BoxShape.circle,
-                                boxFit: BoxFit.contain,
-                                image: NetworkImage(url),
-                                colorFilter:ColorFilter.mode(Colors.black.withOpacity(0.0),
-                                BlendMode.exclusion
-                        ),
-                 ),
+        // color: Colorcodes.red,
+        child: isSvgUrl(url)? Center(
+          child: SvgPicture.asset(url.toString().trim(),
+                width: MediaQuery.of(context).size.width/ width,
+                height: MediaQuery.of(context).size.height/ height,
+          ),
+        ):Center(
+          child: Container(
+             width: MediaQuery.of(context).size.width /width,
+             height: MediaQuery.of(context).size.height/height,
+             padding: EdgeInsets.all(0),
+            //  color: Colorcodes.appBarColor,
+            child: GFImageOverlay(     
+                                  shape: BoxShape.circle,
+                                  boxFit: BoxFit.contain,
+                                  image: NetworkImage(url),
+                                  colorFilter:ColorFilter.mode(Colors.black.withOpacity(0.0),
+                                  BlendMode.exclusion
+                          ),
+                   ),
+          ),
         )
         
     );

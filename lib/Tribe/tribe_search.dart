@@ -12,6 +12,7 @@ import "package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import "package:flutter_application_code_stakeplot/loader.dart";
 import "package:flutter_application_code_stakeplot/profile.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart";
+import "package:flutter_svg/svg.dart";
 import "package:get/get.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import 'package:http/http.dart' as http;
@@ -282,7 +283,7 @@ class _TribeSearchState extends State<TribeSearch> {
                       // width: MediaQuery.of(context).size.width/8,
                       // height: MediaQuery.of(context).size.height/18,
                       child: AvatarProfileImage(
-                          url: data['avatarType'] ?? userAvatar,
+                          url:avaterUrlPath( data['name'] ?? userAvatar) ,
                           width: 20,
                           height: 20)),
                   const SizedBox(
@@ -358,9 +359,17 @@ void showmodalWidget(data){
                   children: [
                    networkFriends("Network",count.toString(),Icons.person_2_outlined),
                     CircleAvatar(
-                      radius: 50,
-                      child: ProfileImage(url:avatar  ??""),
+                  radius: 50,
+                  backgroundColor: Colors.transparent,
+                  child: ClipOval(
+                    child: SvgPicture.asset(
+                      avaterUrlPath(data['name']),
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
                     ),
+                  ),
+                ),
                     networkFriends("Posts",getTrendingData.length.toString(),Icons.post_add),
                   ],
                 ),

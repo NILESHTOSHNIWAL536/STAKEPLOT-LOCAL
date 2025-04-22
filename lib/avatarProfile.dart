@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
@@ -20,6 +21,7 @@ AvatarProfileImage({ Key? key,required this.url,required this.width,required thi
         margin: EdgeInsets.symmetric(horizontal: 5),
         padding: EdgeInsetsDirectional.all(4),
         alignment: Alignment.center,
+        // color: AppColors.primaryColor,
         child: isSvgUrl(url)? SvgPicture.asset(url.toString().trim(),
               width: MediaQuery.of(context).size.width/ width,
               height: MediaQuery.of(context).size.height/ height,

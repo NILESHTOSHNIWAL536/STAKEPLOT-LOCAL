@@ -77,6 +77,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                       nextFecthDate.value = bankAccountLinkedList[index]['nextFetch'].toString();
                       fetchCount.value = bankAccountLinkedList[index]['fetchCount'].toString();
                       BankName.value = bankAccountLinkedList[index]['bankName'].toString();
+                      BankUrl.value = bankAccountLinkedList[index]['bankLogo'].toString();
                       calledFunctionToFetchData(context);
                     },
                   itemBuilder: (context, index) {
@@ -140,12 +141,23 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(height: Colorcodes.borderRadius10),
-            Text(
-              data['bankName'],
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.normal,
-                  fontSize: 18,
-                  color: AppColors.backgroundColor),
+            Row(
+              children: [
+                 Image.network(
+                          data['bankLogo'],
+                          width: 30,
+                          height: 30,
+                          fit: BoxFit.fitWidth,
+            ),
+             SizedBox(width: Colorcodes.borderRadius10),
+                Text(
+                  data['bankName'],
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.normal,
+                      fontSize: 18,
+                      color: AppColors.backgroundColor),
+                ),
+              ],
             ),
             SizedBox(height: Colorcodes.borderRadius),
             Text(
@@ -165,13 +177,13 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+               Obx(()=> Text(
                   '\u{20B9} ${(hideBackAccountPassword.value || cupertinoPin.value == "0") ? data['currentBalance'] : lock[randomIndex]}',
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.bold,
                       fontSize: 20,
                       color: AppColors.backgroundColor),
-                ),
+               )),
                 //  locker(context),
                 setPinForAccountHide(context)
               ],
@@ -237,14 +249,13 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
   }
 Widget setPinForAccountHide(context) {
   return Obx(() {
-    print("setPinForAccountHide: cupertinoPin.value = ${cupertinoPin.value}");
     if (cupertinoPin.value == "0" || cupertinoPin.value.isEmpty) { // Handle empty case too
-      print("Showing Set Pin button");
+     
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 5),
         child: InkWell(
           onTap: () {
-            print("Set Pin button tapped");
+          
             showModalBottomSheet(
               context: context,
               backgroundColor: Colorcodes.appBarColor,

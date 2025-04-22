@@ -211,3 +211,10 @@ String getTimeBasedGreeting() {
     return "Good evening,";
   }
 }
+
+
+String avaterUrlPath(String name)
+{
+    if(name.isEmpty)return "assets/avatars/a.svg";
+    return "assets/avatars/"+name[0].toString().toLowerCase()+".svg";
+}

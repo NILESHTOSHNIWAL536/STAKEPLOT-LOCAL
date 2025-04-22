@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/exploreCard.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
@@ -147,11 +148,16 @@ class _PostCardState extends State<PostCard> {
                           child: Row(
                             children: [
                               UserAvatar(
-                                url: dataObj["author"]['avatar'],
+                                url:avaterUrlPath( dataObj["author"]['name']),
                                 width: 10,
                                 height: 15,
                               ),
-                              const SizedBox(width: 10),
+                              // UserAvatar(
+                              //   url: dataObj["author"]['avatar'],
+                              //   width: 10,
+                              //   height: 15,
+                              // ),
+                              const SizedBox(width: 2),
                               Text(
                                 (dataObj["author"]['name']),
                                 style: FontManager().getTextStyle(context,

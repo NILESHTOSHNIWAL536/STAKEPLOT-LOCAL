@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/tabBarUser.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -188,8 +190,8 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
 
 
   Widget topUserProfile(data){
-     String avatar= data['avatarType'] !=null ? data['avatarType']
-    :data['avatar']!=null?data['avatar']:userAvatar;
+    //  String avatar= data['avatarType'] !=null ? data['avatarType']
+    // :data['avatar']!=null?data['avatar']:userAvatar;
 
      return  Stack(
                 clipBehavior: Clip.none,
@@ -255,10 +257,18 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
                     left: MediaQuery.of(context).size.width / 2 - 50,
                     child: GestureDetector(
                       // onTap: () => _pickImage(ImageSource.gallery, "profile"),
-                      child: CircleAvatar(
-                        radius: 50,
-                        child: ProfileImage(url:avatar  ??""),
-                      ),
+                      child:CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Colors.transparent,
+                  child: ClipOval(
+                    child: SvgPicture.asset(
+                      avaterUrlPath(data['name']),
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
                     ),
                   ),
                 ],
