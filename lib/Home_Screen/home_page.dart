@@ -208,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     : DoughnutChartExample()),
               ),
             
-              TransactionHistory(key:_transactionHistoryKey),
+              TransactionHistory(),
             
     
             ],

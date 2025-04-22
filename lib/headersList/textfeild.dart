@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
@@ -57,8 +58,13 @@ class TextFeildWidget extends StatelessWidget {
               },
               maxLength: heading == "PhoneNo" ? 10 : null,
               obscureText: flag ? false : show.value,
+               inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                     LowerCaseTextFormatter(),
+                  ],
               decoration: InputDecoration(
                   // contentPadding: EdgeInsets.all(0),
+                  
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                   filled: true,
@@ -77,6 +83,7 @@ class TextFeildWidget extends StatelessWidget {
                     size: 30,
                     color: AppColors.primaryColor,
                   ),
+                  
                   suffixIcon: flag
                       ? null
                       : Obx(() => InkWell(
@@ -158,6 +165,11 @@ class TextFeildWidgetPassword extends StatelessWidget {
                     onChanged: (s) {
                       acceptReset.value = false;
                     },
+                     inputFormatters:
+                     [
+                       FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                      
+                    ],
                     decoration: InputDecoration(
                         // contentPadding: EdgeInsets.all(0),
                         contentPadding:
@@ -199,6 +211,19 @@ class TextFeildWidgetPassword extends StatelessWidget {
             ),
           ),
         )));
+  }
+}
+
+class LowerCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    return TextEditingValue(
+      text: newValue.text.toLowerCase(),
+      selection: newValue.selection,
+    );
   }
 }
 
