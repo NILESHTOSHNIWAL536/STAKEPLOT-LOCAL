@@ -763,7 +763,7 @@ class _FinancePageState extends State<FinancePage> {
       final scrollOffset = widget.scrollController.offset;
       final targetOffset =
           position.dy - scrollOffset - MediaQuery.of(context).size.height / 8;
-      // print("targetOffset $targetOffset");
+       print("targetOffset $targetOffset");
       widget.scrollController.animateTo(
         targetOffset > 0 ? targetOffset : 0,
         duration: Duration(milliseconds: 500),

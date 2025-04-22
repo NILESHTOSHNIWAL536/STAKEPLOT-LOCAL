@@ -203,9 +203,11 @@ class _HomeScreenState extends State<HomeScreen> {
                ),
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.5,
-                child: Obx(() => setDonectChat.value
-                    ? DoughnutChartExample()
-                    : DoughnutChartExample()),
+                child:DoughnutChartExample()
+              ),
+             SizedBox(
+                height: MediaQuery.of(context).size.height * 0.5,
+                child:InsightsScreen()
               ),
             
               TransactionHistory(),

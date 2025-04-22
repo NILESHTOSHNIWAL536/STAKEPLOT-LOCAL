@@ -282,7 +282,7 @@ class _SigninState extends State<SignUp> {
       MaterialPageRoute(
         builder: (context) => conform(
           data: data,
-          url: "assets/avatar/menp1.svg",
+          url: "assets/avatar/FRAME-2.svg",
         ),
       ),
     );

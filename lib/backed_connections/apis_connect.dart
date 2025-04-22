@@ -15,7 +15,7 @@ String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Feilds";
 RxString expenses = "Loading....".obs;
 RxString aboutUS = "".obs;
-RxString avatar = "assets/avatar/menp1.svg".obs;
+RxString avatar = "assets/avatar/FRAME-2.svg".obs;
 RxString avatarUser = "assets/avatar/menp1.svg".obs;
 RxMap deviceData={}.obs;
 RxList frdsList = [].obs;
@@ -100,6 +100,8 @@ RxBool getInsights = false.obs;
 RxBool allOrGroupTransactions = true.obs;
 RxString accountId = "".obs;
 RxString allOrGroupTransactionsName = "All".obs;
+RxList totalInSights = [].obs;
+RxBool getTotalInsightsHistory = false.obs;
 List<String> month = [
   "",
   "January",

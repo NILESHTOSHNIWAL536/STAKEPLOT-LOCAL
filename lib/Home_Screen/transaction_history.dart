@@ -663,7 +663,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                           height: 30,
                           fit: BoxFit.fitWidth,
                         ),
-                        const SizedBox(width: 20,),
+                       SizedBox(width: 8 * scaleFactor),
                         Tooltip(
                           message: 'Hide',
                           child: GestureDetector(
