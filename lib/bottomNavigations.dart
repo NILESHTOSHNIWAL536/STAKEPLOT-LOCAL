@@ -573,7 +573,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
               : AppColors.accentColor // White background if selected
           ),
       child: Center(
-        child: ifAvatar?UserAvatar(url: avaterUrlPath(userName.value), width: 25, height: 11)
+        child: ifAvatar? Obx(()=> UserAvatar(url: avaterUrlPath(userName.value), width: 25, height: 11))
             // ? SvgPicture.asset(iconPath,
             //     width: Colorcodes.paddingSize * 2.2,
             //     height: Colorcodes.paddingSize * 2.7)

@@ -439,7 +439,6 @@ class _InsightsScreenState extends State<InsightsScreen>
   Widget getMoneyMap() {
     return Container(
       width: double.infinity,
-      
       padding: ResponsiveUtils.getPadding(context),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

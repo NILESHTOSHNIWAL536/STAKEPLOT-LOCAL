@@ -164,10 +164,10 @@ void loginCalledData(response,context) async
     await initializeOneSignal(context);
     currentId.value = body['data']['_id'];
     isBankAccountLink.value = body['data']['isBankAccountLinked'];
+    acceptReset.value = false;
     getPhoneNo(body);
      await getBankAccounts();
     Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
-    acceptReset.value = false;
 }
 
 

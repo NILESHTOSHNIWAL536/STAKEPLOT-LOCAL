@@ -235,7 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: (){
                    navigatorToMyOwnPage(context);
                 },
-                child: UserAvatar(url: avaterUrlPath(userName.value), width: 30, height: 13)),
+                child: Obx(()=> UserAvatar(url: avaterUrlPath(userName.value), width: 30, height: 13))),
                 // child: UserAvatar(url: avatar.value, width: 15, height: 15)),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
