@@ -1,6 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:card_swiper/card_swiper.dart';
-import 'dart:math';
+import 'package:flutter_application_code_stakeplot/Home_Screen/insightsController.dart';
+import 'package:get/get.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+
+// Utility class for responsive sizing
+class ResponsiveUtils {
+  static double getCardWidth(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    if (width > 1200) return 500;
+    if (width > 600) return 450;
+    return width * 0.85;
+  }
+
+  static double getCardHeight(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    return height * 0.35;
+  }
+
+  static double getFontSize(BuildContext context, double baseSize) {
+    final scale = MediaQuery.of(context).textScaler.scale(1.0);
+    return baseSize * scale;
+  }
+
+  static EdgeInsets getPadding(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    return EdgeInsets.symmetric(
+      horizontal: width > 600 ? 12.0 : 8.0,
+      vertical: width > 600 ? 10.0 : 8.0,
+    );
+  }
+}
 
 class InsightsScreen extends StatefulWidget {
   const InsightsScreen({Key? key}) : super(key: key);
@@ -17,26 +48,9 @@ class _InsightsScreenState extends State<InsightsScreen>
   late Animation<double> _scaleAnimation;
   late Animation<double> _tiltAnimation;
   int _currentCardIndex = 0;
-
-  // Sample data for insights cards with rupee symbol
-  final List<Map<String, dynamic>> _insightsData = [
-    {
-      'title': 'Heads up',
-      'message': 'Travel expenses dropped by 40% this month-working from home, eh?',
-    },
-    {
-      'title': 'Heads up',
-      'message': '₹0 spent on Zomato and Swiggy this week – chef test in the house? 👨‍🍳',
-    },
-    {
-      'title': 'Heads up',
-      'message': 'You\'ve saved ₹120 more this month compared to your average.',
-    },
-    {
-      'title': 'Heads up',
-      'message': 'Your subscription renewal is due in 3 days.',
-    },
-  ];
+  bool _isLoading = true;
+  String? _errorMessage;
+  final InsightsController _controller = Get.put(InsightsController());
 
   final List<Map<String, dynamic>> _navigationItems = [
     {
@@ -47,27 +61,52 @@ class _InsightsScreenState extends State<InsightsScreen>
     },
     {
       'title': 'Money Map',
-      'icon': Icons.attach_money,
+      'icon': Icons.currency_rupee_rounded,
       'color': Colors.grey,
       'backgroundColor': Colors.grey[300],
     },
   ];
 
-  // Function to dynamically assign icons based on text content
   IconData getIconForInsight(String title, String message) {
-    if (message.contains('Travel') || message.toLowerCase().contains('travel')) {
-      return Icons.flight;
-    } else if (message.toLowerCase().contains('Zomato')) {
-      return Icons.shopping_cart;
-    } else if (message.toLowerCase().contains('saved')) {
-      return Icons.savings;
-    } else if (message.contains('subscription') || message.toLowerCase().contains('subscription')) {
-      return Icons.subscriptions;
+    final lowerMessage = message.toLowerCase();
+    const keywordIconMap = {
+      'saved': Icons.savings,
+      'save': Icons.savings,
+      'savings': Icons.savings,
+      'shopping': Icons.shopping_cart,
+      'shop': Icons.shopping_cart,
+      'purchase': Icons.shopping_cart,
+      'purchases': Icons.shopping_cart,
+      'zomato': Icons.restaurant,
+      'swiggy': Icons.restaurant,
+      'dining': Icons.restaurant,
+      'food': Icons.restaurant,
+      'chef': Icons.restaurant,
+      'travel': Icons.flight,
+      'trip': Icons.flight,
+      'journey': Icons.flight,
+      'subscription': Icons.subscriptions,
+      'subscribe': Icons.subscriptions,
+      'warning': Icons.warning,
+      'overboard': Icons.warning,
+      'overspend': Icons.warning,
+      'expensive': Icons.currency_rupee_rounded,
+      'cost': Icons.currency_rupee_rounded,
+      'spent': Icons.currency_rupee_rounded,
+      'category': Icons.category,
+      'budget': Icons.account_balance_wallet,
+      'pocket': Icons.account_balance_wallet,
+      'money': Icons.account_balance_wallet,
+    };
+
+    for (final entry in keywordIconMap.entries) {
+      if (lowerMessage.contains(entry.key)) {
+        return entry.value;
+      }
     }
-    return Icons.info; // Fallback icon
+    return Icons.info;
   }
 
-  // Function to assign colors based on index or content
   Color getColorForInsight(int index) {
     const colors = [
       Color.fromARGB(255, 36, 55, 57),
@@ -82,23 +121,38 @@ class _InsightsScreenState extends State<InsightsScreen>
   void initState() {
     super.initState();
     _swiperController = SwiperController();
-
-    // Initialize animation controller
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 400),
     );
-
-    _scaleAnimation = Tween<double>(begin: 0.85, end: 1.0).animate(
+    _scaleAnimation = Tween<double>(begin: 0.9, end: 1.0).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic),
     );
-
-    // Add tilt animation for cards
-    _tiltAnimation = Tween<double>(begin: -0.05, end: 0.05).animate(
+    _tiltAnimation = Tween<double>(begin: -0.03, end: 0.03).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
-
+    _fetchInsights();
     _animationController.forward();
+  }
+
+  Future<void> _fetchInsights() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+      _currentCardIndex = 0;
+    });
+    try {
+      await _controller.getHomePageInsights(context);
+      setState(() {
+        _isLoading = false;
+        _swiperController.move(0, animation: false);
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _errorMessage = 'Failed to load insights. Please try again.';
+      });
+    }
   }
 
   @override
@@ -117,120 +171,247 @@ class _InsightsScreenState extends State<InsightsScreen>
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 2.2,
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(20),
-      ),
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height * 0.55,
+      
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final bool isWideScreen = constraints.maxWidth > 600;
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  'Your Insights',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[800],
+          return Obx(() {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: ResponsiveUtils.getPadding(context),
+                  child: Text(
+                    'Your Insights',
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.bold,
+                      fontSize: ResponsiveUtils.getFontSize(context, 18),
+                      color: AppColors.bg3.withOpacity(0.9),
+                    ),
+                    semanticsLabel: 'Your Insights',
                   ),
                 ),
-              ),
-              // Main content area with animated stacked cards
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Center(
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        maxWidth: isWideScreen ? 500 : 400,
-                        maxHeight: 320,
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: ResponsiveUtils.getCardWidth(context),
+                          maxHeight: ResponsiveUtils.getCardHeight(context),
+                        ),
+                        child: _buildContent(),
                       ),
-                      child: _insightsData.isEmpty
-                          ? const Center(child: Text('No insights available'))
-                          : Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Expanded(
-                                  child: Swiper(
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return AnimatedBuilder(
-                                        animation: _animationController,
-                                        builder: (context, child) {
-                                          return Transform(
-                                            transform: Matrix4.identity()
-                                              ..scale(_scaleAnimation.value)
-                                              ..rotateZ(_currentCardIndex == index
-                                                  ? _tiltAnimation.value
-                                                  : 0),
-                                            alignment: Alignment.center,
-                                            child: child,
-                                          );
-                                        },
-                                        child: InsightCard(
-                                          title: _insightsData[index]['title'],
-                                          message: _insightsData[index]['message'],
-                                          color: getColorForInsight(index),
-                                          icon: getIconForInsight(
-                                            _insightsData[index]['title'],
-                                            _insightsData[index]['message'],
-                                          ),
-                                          width: isWideScreen ? 450 : 350,
-                                        ),
-                                      );
-                                    },
-                                    itemCount: _insightsData.length,
-                                    controller: _swiperController,
-                                    layout: SwiperLayout.TINDER,
-                                    itemWidth: isWideScreen ? 450 : 350,
-                                    itemHeight: 220,
-                                    loop: true,
-                                    duration: 400,
-                                    autoplay: false,
-                                    onIndexChanged: (index) {
-                                      setState(() {
-                                        _currentCardIndex = index;
-                                        _animationController.reset();
-                                        _animationController.forward();
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
                     ),
                   ),
                 ),
-              ),
-              getMoneyMap(),
-            ],
-          );
+                //_buildPagination(),
+                getMoneyMap(),
+              ],
+            );
+          });
         },
       ),
     );
   }
 
+  Widget _buildContent() {
+    if (_isLoading) {
+      return _buildCustomLoading();
+    }
+    if (_errorMessage != null) {
+      return _buildErrorWidget();
+    }
+    if (_controller.totalInSights.isEmpty) {
+      return _buildEmptyState();
+    }
+
+    final insights = _controller.totalInSights.isNotEmpty
+        ? _controller.totalInSights[0]['insights'] as List? ?? []
+        : [];
+
+    if (insights.isEmpty) {
+      return _buildEmptyState();
+    }
+
+    if (insights.length == 1) {
+      final message = insights[0] as String;
+      return Semantics(
+        label: 'Insight card: $message',
+        child: InsightCard(
+          title: 'Heads up',
+          message: message,
+          color: getColorForInsight(0),
+          icon: getIconForInsight('Heads up', message),
+          width: ResponsiveUtils.getCardWidth(context),
+        ),
+      );
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Expanded(
+          child: Swiper(
+            itemBuilder: (BuildContext context, int index) {
+              if (index >= insights.length || index < 0) {
+                _swiperController.move(0, animation: false);
+                return const SizedBox.shrink();
+              }
+              final message = insights[index] as String;
+              return AnimatedBuilder(
+                animation: _animationController,
+                builder: (context, child) {
+                  return Transform(
+                    transform: Matrix4.identity()
+                      ..scale(_scaleAnimation.value)
+                      ..rotateZ(_currentCardIndex == index ? _tiltAnimation.value : 0),
+                    alignment: Alignment.center,
+                    child: Semantics(
+                      label: 'Insight card ${index + 1} of ${insights.length}: $message',
+                      child: child,
+                    ),
+                  );
+                },
+                child: InsightCard(
+                  title: 'Heads up',
+                  message: message,
+                  color: getColorForInsight(index),
+                  icon: getIconForInsight('Heads up', message),
+                  width: ResponsiveUtils.getCardWidth(context),
+                ),
+              );
+            },
+            itemCount: insights.length,
+            controller: _swiperController,
+            layout: SwiperLayout.TINDER,
+            itemWidth: ResponsiveUtils.getCardWidth(context),
+            itemHeight: ResponsiveUtils.getCardHeight(context),
+            loop: insights.length >= 2,
+            duration: 400,
+            autoplay: false,
+            onIndexChanged: (index) {
+              if (index >= 0 && index < insights.length) {
+                setState(() {
+                  _currentCardIndex = index;
+                  _animationController.reset();
+                  _animationController.forward();
+                });
+              } else {
+                _swiperController.move(0, animation: false);
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCustomLoading() {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 800),
+      width: ResponsiveUtils.getCardWidth(context),
+      height: ResponsiveUtils.getCardHeight(context),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(AppColors.bg3),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorWidget() {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.error_outline,
+            color: Colors.red,
+            size: ResponsiveUtils.getFontSize(context, 40),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            _errorMessage!,
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.w600,
+              fontSize: ResponsiveUtils.getFontSize(context, 16),
+              color: Colors.red.withOpacity(0.9),
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: _fetchInsights,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.bg3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            ),
+            child: Text(
+              'Retry',
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.bold,
+                fontSize: ResponsiveUtils.getFontSize(context, 14),
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Text(
+        'No insights available',
+        style: FontManager().getTextStyle(
+          context,
+          lWeight: FontWeight.w600,
+          fontSize: ResponsiveUtils.getFontSize(context, 16),
+          color: AppColors.bg3.withOpacity(0.7),
+        ),
+        semanticsLabel: 'No insights available',
+      ),
+    );
+  }
+
+
   Widget getMoneyMap() {
     return Container(
-      width: MediaQuery.of(context).size.width / 1.1,
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      width: double.infinity,
+      padding: ResponsiveUtils.getPadding(context),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: List.generate(
           _navigationItems.length,
-          (index) => NavItem(
-            title: _navigationItems[index]['title'],
-            icon: _navigationItems[index]['icon'],
-            isSelected: _selectedIndex == index,
-            color: _navigationItems[index]['color'],
-            backgroundColor: _navigationItems[index]['backgroundColor'],
-            onTap: () => _onItemTapped(index),
+          (index) => Expanded(
+            child: NavItem(
+              title: _navigationItems[index]['title'],
+              icon: _navigationItems[index]['icon'],
+              isSelected: _selectedIndex == index,
+              color: _navigationItems[index]['color'],
+              backgroundColor: _navigationItems[index]['backgroundColor'],
+              onTap: () => _onItemTapped(index),
+            ),
           ),
         ),
       ),
@@ -261,29 +442,19 @@ class NavItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedScale(
-        scale: isSelected ? 1.1 : 1.0,
+        scale: isSelected ? 1.05 : 1.0,
         duration: const Duration(milliseconds: 200),
-        curve: Curves.easeOut,
+        curve: Curves.easeOutCubic,
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-          decoration: BoxDecoration(
-            color: isSelected ? backgroundColor.withOpacity(0.1) : Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: isSelected
-                ? [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    ),
-                  ]
-                : [],
-          ),
+          margin: const EdgeInsets.symmetric(horizontal: 4.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
+         
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 50,
-                height: 50,
+                width: MediaQuery.sizeOf(context).width/10,
+                height: MediaQuery.sizeOf(context).height/12,
                 decoration: BoxDecoration(
                   color: isSelected ? backgroundColor : Colors.grey[200],
                   shape: BoxShape.circle,
@@ -298,17 +469,19 @@ class NavItem extends StatelessWidget {
                 child: Icon(
                   icon,
                   color: isSelected ? Colors.white : Colors.grey[600],
-                  size: 26,
+                  size: ResponsiveUtils.getFontSize(context, 22),
                 ),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 8),
               Text(
                 title,
-                style: TextStyle(
-                  color: isSelected ? color : Colors.grey[600],
-                  fontWeight: FontWeight.w600,
-                  fontSize: 13,
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w600,
+                  fontSize: ResponsiveUtils.getFontSize(context, 13),
+                  color: isSelected ? color : Colors.grey,
                 ),
+                textAlign: TextAlign.center,
               ),
             ],
           ),
@@ -340,59 +513,70 @@ class InsightCard extends StatelessWidget {
       tag: 'card-$title',
       child: Container(
         width: width,
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [color, color.withOpacity(0.92)],
+            colors: [
+              color,
+              color.withOpacity(0.92),
+            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withOpacity(0.15),
               blurRadius: 12,
               offset: const Offset(0, 6),
               spreadRadius: 2,
+            ),
+            BoxShadow(
+              color: Colors.white.withOpacity(0.1),
+              blurRadius: 12,
+              offset: const Offset(-4, -4),
             ),
           ],
         ),
         child: Stack(
           children: [
-            // Background icon with reduced opacity
             Positioned(
-              right: 10,
-              bottom: 10,
+              right: 16,
+              bottom: 16,
               child: Opacity(
-                opacity: 0.25, // Slightly increased for visibility, adjust as needed
+                opacity: 0.25,
                 child: Icon(
                   icon,
-                  size: 100,
+                  size: ResponsiveUtils.getFontSize(context, 80),
                   color: Colors.white,
                 ),
               ),
             ),
-            // Card content (fully opaque)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.bold,
+                    fontSize: ResponsiveUtils.getFontSize(context, 26),
                     color: Colors.white,
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 0.5,
                   ),
                 ),
-                const SizedBox(height: 10),
-                Text(
-                  message,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    height: 1.4,
+                const SizedBox(height: 12),
+                Flexible(
+                  child: Text(
+                    message,
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w600,
+                      fontSize: ResponsiveUtils.getFontSize(context, 18),
+                      color: Colors.white.withOpacity(0.95),
+                    ),
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],

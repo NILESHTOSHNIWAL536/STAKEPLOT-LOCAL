@@ -437,7 +437,7 @@ void declineAmount(
   }
 }
 
-void getHomePageInsights(context) async {
+Future<void> getHomePageInsights(context) async {
  
   try {
     print('Calling API: ${url}/transactionauto/get-headsup-messages');
