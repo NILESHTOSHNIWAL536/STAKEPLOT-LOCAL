@@ -62,8 +62,8 @@ class _InsightsScreenState extends State<InsightsScreen>
     {
       'title': 'Money Map',
       'icon': Icons.currency_rupee_rounded,
-      'color': Colors.grey,
-      'backgroundColor': Colors.grey[300],
+      'color': const Color(0xFF00565E),
+      'backgroundColor': const Color(0xFF00565E),
     },
   ];
 
@@ -131,7 +131,7 @@ class _InsightsScreenState extends State<InsightsScreen>
     _tiltAnimation = Tween<double>(begin: -0.03, end: 0.03).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
-    _fetchInsights();
+    _fetchInsights(); // Initial fetch for "Heads up"
     _animationController.forward();
   }
 
@@ -155,6 +155,26 @@ class _InsightsScreenState extends State<InsightsScreen>
     }
   }
 
+  Future<void> _fetchInsightsMoneyMap() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+      _currentCardIndex = 0;
+    });
+    try {
+      await _controller.getHomePageMoneyMapInsights(context);
+      setState(() {
+        _isLoading = false;
+        _swiperController.move(0, animation: false);
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _errorMessage = 'Failed to load Money Map insights. Please try again.';
+      });
+    }
+  }
+
   @override
   void dispose() {
     _swiperController.dispose();
@@ -165,7 +185,18 @@ class _InsightsScreenState extends State<InsightsScreen>
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      _currentCardIndex = 0; // Reset swiper index
+      _swiperController.move(0, animation: false); // Reset swiper
+      _animationController.reset();
+      _animationController.forward();
     });
+
+    // Fetch data based on selected item
+    if (index == 0) {
+      _fetchInsights(); // "Heads up"
+    } else if (index == 1) {
+      _fetchInsightsMoneyMap(); // "Money Map"
+    }
   }
 
   @override
@@ -173,7 +204,7 @@ class _InsightsScreenState extends State<InsightsScreen>
     return Container(
       width: double.infinity,
       height: MediaQuery.of(context).size.height * 0.55,
-      
+     
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Obx(() {
@@ -207,7 +238,7 @@ class _InsightsScreenState extends State<InsightsScreen>
                     ),
                   ),
                 ),
-                //_buildPagination(),
+                
                 getMoneyMap(),
               ],
             );
@@ -224,12 +255,18 @@ class _InsightsScreenState extends State<InsightsScreen>
     if (_errorMessage != null) {
       return _buildErrorWidget();
     }
-    if (_controller.totalInSights.isEmpty) {
+
+    // Select insights based on _selectedIndex
+    final insightsList = _selectedIndex == 0
+        ? _controller.totalInSights
+        : _controller.totalInSightsMoneyMap;
+
+    if (insightsList.isEmpty) {
       return _buildEmptyState();
     }
 
-    final insights = _controller.totalInSights.isNotEmpty
-        ? _controller.totalInSights[0]['insights'] as List? ?? []
+    final insights = insightsList.isNotEmpty
+        ? insightsList[0]['insights'] as List? ?? []
         : [];
 
     if (insights.isEmpty) {
@@ -241,10 +278,10 @@ class _InsightsScreenState extends State<InsightsScreen>
       return Semantics(
         label: 'Insight card: $message',
         child: InsightCard(
-          title: 'Heads up',
+          title: _navigationItems[_selectedIndex]['title'],
           message: message,
           color: getColorForInsight(0),
-          icon: getIconForInsight('Heads up', message),
+          icon: getIconForInsight(_navigationItems[_selectedIndex]['title'], message),
           width: ResponsiveUtils.getCardWidth(context),
         ),
       );
@@ -276,10 +313,10 @@ class _InsightsScreenState extends State<InsightsScreen>
                   );
                 },
                 child: InsightCard(
-                  title: 'Heads up',
+                  title: _navigationItems[_selectedIndex]['title'],
                   message: message,
                   color: getColorForInsight(index),
-                  icon: getIconForInsight('Heads up', message),
+                  icon: getIconForInsight(_navigationItems[_selectedIndex]['title'], message),
                   width: ResponsiveUtils.getCardWidth(context),
                 ),
               );
@@ -356,7 +393,7 @@ class _InsightsScreenState extends State<InsightsScreen>
           ),
           const SizedBox(height: 16),
           ElevatedButton(
-            onPressed: _fetchInsights,
+            onPressed: _selectedIndex == 0 ? _fetchInsights : _fetchInsightsMoneyMap,
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.bg3,
               shape: RoundedRectangleBorder(
@@ -382,18 +419,53 @@ class _InsightsScreenState extends State<InsightsScreen>
   Widget _buildEmptyState() {
     return Center(
       child: Text(
-        'No insights available',
+        'No ${_navigationItems[_selectedIndex]['title']} insights available',
         style: FontManager().getTextStyle(
           context,
           lWeight: FontWeight.w600,
           fontSize: ResponsiveUtils.getFontSize(context, 16),
           color: AppColors.bg3.withOpacity(0.7),
         ),
-        semanticsLabel: 'No insights available',
+        semanticsLabel: 'No ${_navigationItems[_selectedIndex]['title']} insights available',
       ),
     );
   }
 
+  Widget _buildPagination() {
+    if (_isLoading || _errorMessage != null) {
+      return const SizedBox.shrink();
+    }
+    final insightsList = _selectedIndex == 0
+        ? _controller.totalInSights
+        : _controller.totalInSightsMoneyMap;
+    if (insightsList.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    final insights = insightsList[0]['insights'] as List? ?? [];
+    if (insights.length <= 1) return const SizedBox.shrink();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          insights.length,
+          (index) => AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            margin: const EdgeInsets.symmetric(horizontal: 4.0),
+            width: _currentCardIndex == index ? 12.0 : 8.0,
+            height: 8.0,
+            decoration: BoxDecoration(
+              color: _currentCardIndex == index
+                  ? AppColors.bg3
+                  : Colors.grey.withOpacity(0.4),
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget getMoneyMap() {
     return Container(
@@ -448,13 +520,12 @@ class NavItem extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 4.0),
           padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
-         
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: MediaQuery.sizeOf(context).width/10,
-                height: MediaQuery.sizeOf(context).height/12,
+                width: MediaQuery.of(context).size.width / 10,
+                height: MediaQuery.of(context).size.height / 12,
                 decoration: BoxDecoration(
                   color: isSelected ? backgroundColor : Colors.grey[200],
                   shape: BoxShape.circle,

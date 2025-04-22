@@ -7,13 +7,45 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 class InsightsController extends GetxController {
   final RxList<Map<String, dynamic>> totalInSights = <Map<String, dynamic>>[].obs;
   final RxBool getTotalInsightsHistory = false.obs;
+  final RxList<Map<String, dynamic>> totalInSightsMoneyMap = <Map<String, dynamic>>[].obs;
+  final RxBool getTotalInsightsHistorytotalMoneyMap = false.obs;
+
 
   Future<void> getHomePageInsights(BuildContext context) async {
-    print('InsightsController: getHomePageInsights called');
+   // print('InsightsController: getHomePageInsights called');
     try {
-      print('InsightsController: Calling API: ${url}/transactionauto/get-headsup-messages');
+      // print('InsightsController: Calling API: ${url}/transactionauto/get-headsup-messages');
       var response = await getDataApiCall("${url}/transactionauto/get-headsup-messages");
-      print('InsightsController: API response status code: ${response.statusCode}');
+      // print('InsightsController: API response status code: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        // print('InsightsController: API call successful, parsing response...');
+        var his = jsonDecode(response.body);
+        // print('InsightsController: Parsed response: $his');
+        var obj = his['data'] as List;
+        // print('InsightsController: Data extracted: $obj');
+
+        totalInSights.clear();
+        // print('InsightsController: Cleared totalInSights, adding new data...');
+        totalInSights.addAll(obj.map((item) => item as Map<String, dynamic>).toList());
+        // print('InsightsController: Updated totalInSights: $totalInSights');
+
+        getTotalInsightsHistory.value = !getTotalInsightsHistory.value;
+        // print('InsightsController: Toggled getTotalInsightsHistory: ${getTotalInsightsHistory.value}');
+      } else {
+        // print('InsightsController: API call failed with status code: ${response.statusCode}');
+        // print('InsightsController: Response body: ${response.body}');
+      }
+    } catch (e) {
+      // print('InsightsController: Error in getHomePageInsights: $e');
+    }
+  }
+Future<void> getHomePageMoneyMapInsights(BuildContext context) async {
+    print('Insights money map Controller: getHomePageInsights called');
+    try {
+      print('InsightsController money map Controller: Calling API: ${url}/transactionauto/get-money-map-messages');
+      var response = await getDataApiCall("${url}/transactionauto/get-money-map-messages");
+      print('InsightsControllermoney map Controller: API response status code: ${response.statusCode}');
 
       if (response.statusCode == 200) {
         print('InsightsController: API call successful, parsing response...');
@@ -22,12 +54,12 @@ class InsightsController extends GetxController {
         var obj = his['data'] as List;
         print('InsightsController: Data extracted: $obj');
 
-        totalInSights.clear();
+        totalInSightsMoneyMap.clear();
         print('InsightsController: Cleared totalInSights, adding new data...');
-        totalInSights.addAll(obj.map((item) => item as Map<String, dynamic>).toList());
-        print('InsightsController: Updated totalInSights: $totalInSights');
+        totalInSightsMoneyMap.addAll(obj.map((item) => item as Map<String, dynamic>).toList());
+        print('InsightsController: Updated totalInSights: $totalInSightsMoneyMap');
 
-        getTotalInsightsHistory.value = !getTotalInsightsHistory.value;
+        getTotalInsightsHistorytotalMoneyMap.value = !getTotalInsightsHistorytotalMoneyMap.value;
         print('InsightsController: Toggled getTotalInsightsHistory: ${getTotalInsightsHistory.value}');
       } else {
         print('InsightsController: API call failed with status code: ${response.statusCode}');
@@ -37,4 +69,9 @@ class InsightsController extends GetxController {
       print('InsightsController: Error in getHomePageInsights: $e');
     }
   }
+
 }
+
+                         
+                         
+                             
