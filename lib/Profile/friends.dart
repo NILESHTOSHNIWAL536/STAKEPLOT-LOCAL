@@ -129,19 +129,19 @@ class _FriendsState extends State<Friends> {
         },
         child: Container(
           
-          padding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+          padding: EdgeInsets.symmetric(vertical: 2, horizontal: 3),
           decoration: BoxDecoration(
             
               //  color:const Color.fromRGBO(249, 246, 238, 1),
               borderRadius: BorderRadius.circular(10)),
           width: MediaQuery.of(context).size.width / 1.1,
           child: Row(
+             mainAxisAlignment: MainAxisAlignment.start,
+             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               AvatarProfileImage(
-                  url: data['avatar'] ?? userAvatar, width: 10, height: 16),
-              const SizedBox(
-                width: 10,
-              ),
+                  url:avaterUrlPath(data['name']), width: 15, height: 15),
+             
               Text((data['name']),
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.w500,

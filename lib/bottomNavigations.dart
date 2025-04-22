@@ -421,6 +421,7 @@ import "package:flutter/material.dart";
 import "package:flutter_application_code_stakeplot/Community_Page/community_screen.dart";
 import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
+import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/home_page.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart";
 
@@ -432,6 +433,7 @@ import "package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart";
 import "package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/profile_screen.dart.dart";
+import "package:flutter_application_code_stakeplot/userAvatar.dart";
 
 import "package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart";
 
@@ -557,7 +559,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
     } else if (url == 'assets/images/room.svg') {
       iconPath = url;
     } else if (url == svgIconPath.bottom4) {
-      iconPath = avatar.value;
+      iconPath = avaterUrlPath(userName.value);
     }
     bool ifAvatar = index == 3 || index == 4;
 
@@ -571,10 +573,10 @@ class _BottomNavigationsState extends State<BottomNavigations> {
               : AppColors.accentColor // White background if selected
           ),
       child: Center(
-        child: ifAvatar
-            ? SvgPicture.asset(iconPath,
-                width: Colorcodes.paddingSize * 2,
-                height: Colorcodes.paddingSize * 2.2)
+        child: ifAvatar?UserAvatar(url: avaterUrlPath(userName.value), width: 25, height: 11)
+            // ? SvgPicture.asset(iconPath,
+            //     width: Colorcodes.paddingSize * 2.2,
+            //     height: Colorcodes.paddingSize * 2.7)
             : SvgPicture.asset(
                 iconPath,
                 width: Colorcodes.paddingSize * 1.4,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/NavigatorScreens/userNavigator.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
@@ -54,14 +55,13 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             // Profile section
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   child: chatAvatartImage(
-                      url: avatar.value, width: 12, height: 12),
-                  // backgroundImage: NetworkImage(post['profilePic']),
-                  // radius: 24,
+                      url: avaterUrlPath(userName.value), width: 12, height: 12),
                 ),
-                const SizedBox(width: 10),
+               
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

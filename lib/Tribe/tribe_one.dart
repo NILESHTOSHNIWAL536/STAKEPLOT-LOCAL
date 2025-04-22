@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
-import "dart:convert";
-import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_application_code_stakeplot/Community_Page/postCard.dart";
 import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
+import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_search.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_share.dart";
@@ -15,7 +14,6 @@ import "package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import "package:flutter_application_code_stakeplot/bottomNavigations.dart";
 import "package:flutter_application_code_stakeplot/model/comment.dart";
 import "package:flutter_application_code_stakeplot/profile.dart";
-import "package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart";
 import "package:flutter_svg/svg.dart";
 import "package:get/get.dart";
 import "package:page_transition/page_transition.dart";
@@ -337,8 +335,7 @@ class _TribeHomeState extends State<TribeUnique> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Column(
-                        children: indexArray
-                            .map((index) =>
+                        children: indexArray.map((index) =>
                                 dataComments(commentList[index], index))
                             .toList(),
                       ),
@@ -394,7 +391,7 @@ class _TribeHomeState extends State<TribeUnique> {
                     //   color: Colors.black,
                     // ),
                     AvatarProfileImage(
-                        url: data.author!.avatar.toString(),
+                        url: avaterUrlPath(data.author!.name.toString()),
                         width: 15,
                         height: 20),
                     const SizedBox(
@@ -874,7 +871,7 @@ class _TribeHomeState extends State<TribeUnique> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AvatarProfileImage(
-                url: replayObj.author!.avatar.toString(),
+                url: avaterUrlPath(replayObj.author!.name.toString()),
                 width: 15,
                 height: 20),
             const SizedBox(

@@ -75,7 +75,7 @@ RxInt budgetLength = 0.obs;
 RxInt billLength = 0.obs;
 RxInt debtLength = 0.obs;
 RxInt paymentLength = 0.obs;
-String userAvatar = "assets/images2/user.svg";
+String userAvatar = "assets/avatars/a.svg";
 RxString userAvatarProfile = "assets/images2/user.svg".obs;
 RxString userName = "Loading...".obs;
 RxString dob = "Loading...".obs;
@@ -205,6 +205,7 @@ RxString nextFecthDate = "".obs;
 RxString LastFetchDate = "".obs;
 RxString fetchCount = "".obs;
 RxString BankName = "".obs;
+RxString BankUrl = "".obs;
 
 
 RxBool isFected = false.obs;

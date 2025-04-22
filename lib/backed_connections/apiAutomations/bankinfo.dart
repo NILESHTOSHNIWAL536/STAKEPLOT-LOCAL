@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,8 +17,7 @@ RxList consentAndHandleDetails = [].obs;
 RxMap bankImagemap = {}.obs;
 
 Future<void> getBankAccounts() async {
-  var response =
-      await getDataApiCall("${url}/transactionauto/get-banks-linked/");
+  var response =await getDataApiCall("${url}/transactionauto/get-banks-linked/");
   printData(response);
 
   if (getFlagOfResponse(response)) {
@@ -47,6 +47,7 @@ Future<void> getBankAccounts() async {
         bankAccountLinkedList.add({
           'bankId': bank['bankId'],
           'bankName': bank['bankName'],
+          'bankLogo': bank['bankLogo'] ?? bankImage,
           'fipId': bank['fipId'],
           'accountId': account['accountId'],
           'maskedAccNumber': account['maskedAccNumber'],
@@ -65,6 +66,7 @@ Future<void> getBankAccounts() async {
               nextFecthDate.value =  bankAccountLinkedList[0]['nextFetch'].toString() ;
               fetchCount.value =  bankAccountLinkedList[0]['fetchCount'].toString();
               BankName.value =  bankAccountLinkedList[0]['bankName'].toString();
+              BankUrl.value =  bankAccountLinkedList[0]['bankLogo'].toString();
          }
 
   loadBanks.value = false;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -9,6 +10,8 @@ import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/tabBarUser.dart';
+import 'package:flutter_application_code_stakeplot/userAvatar.dart';
+import 'package:flutter_svg/svg.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
@@ -138,9 +141,22 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
           child: GestureDetector(
             // onTap: () => _pickImage(ImageSource.gallery, "profile"),
             child: CircleAvatar(
-              radius: 50,
-              child: ProfileImage(url: avatar.value),
-            ),
+                  radius: 50,
+                  backgroundColor: Colors.transparent,
+                  child: ClipOval(
+                    child: SvgPicture.asset(
+                      avaterUrlPath(userName.value),
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+            // child: CircleAvatar(
+            //   radius: 50,
+            //   // backgroundImage: AssetImage(avaterUrlPath(userName.value)),
+            //   child: Center(child: UserAvatar(url: avaterUrlPath(userAvatarProfile.value),height: 10,width: 10,)),
+            // ),
           ),
         ),
       ],

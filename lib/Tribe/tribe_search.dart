@@ -12,6 +12,7 @@ import "package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import "package:flutter_application_code_stakeplot/loader.dart";
 import "package:flutter_application_code_stakeplot/profile.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart";
+import "package:flutter_svg/svg.dart";
 import "package:get/get.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import 'package:http/http.dart' as http;
@@ -163,9 +164,9 @@ class _TribeSearchState extends State<TribeSearch> {
       setState(() {
         frdsList = obj;
         frdsListOrigin = obj;
-
-        frdsList = getLastTenUsers(frdsListOrigin);
+        // frdsList = getLastTenUsers(frdsListOrigin);
         frdsThere = true;
+        frdsList =[]; //getLastTenUsers(getSearchData("", frdsListOrigin));
       });
     } else {}
   }
@@ -195,7 +196,7 @@ class _TribeSearchState extends State<TribeSearch> {
             !frdsThere
                 ? Loader()
                 : frdsList.isEmpty
-                    ? Text("No Users Found...!")
+                    ? Text(search.text.isEmpty?"":"No Users Found...!")
                     : Column(
                         children: frdsList
                             .map((data) => profileContainer(data))
@@ -220,8 +221,8 @@ class _TribeSearchState extends State<TribeSearch> {
             controller: Textcontroller,
             onChanged: (value) {
               setState(() {
-                frdsList =
-                    getLastTenUsers(getSearchData(value, frdsListOrigin));
+                if(value=="")frdsList=[];
+                else frdsList = getLastTenUsers(getSearchData(value, frdsListOrigin));
               });
             },
             decoration: InputDecoration(
@@ -255,13 +256,14 @@ class _TribeSearchState extends State<TribeSearch> {
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       child: Center(
           child: InkWell(
-        onTap: () {
+        onTap: ()
+        {
           
           getDis(data);
           getStatus(data);
           getConnections(data);
-
           showmodalWidget(data);
+
         },
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
@@ -281,7 +283,7 @@ class _TribeSearchState extends State<TribeSearch> {
                       // width: MediaQuery.of(context).size.width/8,
                       // height: MediaQuery.of(context).size.height/18,
                       child: AvatarProfileImage(
-                          url: data['avatarType'] ?? userAvatar,
+                          url:avaterUrlPath( data['name'] ?? userAvatar) ,
                           width: 20,
                           height: 20)),
                   const SizedBox(
@@ -357,9 +359,17 @@ void showmodalWidget(data){
                   children: [
                    networkFriends("Network",count.toString(),Icons.person_2_outlined),
                     CircleAvatar(
-                      radius: 50,
-                      child: ProfileImage(url:avatar  ??""),
+                  radius: 50,
+                  backgroundColor: Colors.transparent,
+                  child: ClipOval(
+                    child: SvgPicture.asset(
+                      avaterUrlPath(data['name']),
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
                     ),
+                  ),
+                ),
                     networkFriends("Posts",getTrendingData.length.toString(),Icons.post_add),
                   ],
                 ),

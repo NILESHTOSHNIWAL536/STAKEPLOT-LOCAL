@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
@@ -226,15 +227,27 @@ class _RotatingIconState extends State<Nextfetch>
                       ),
                     ),
         
-                    Container(
-                      alignment: Alignment.topLeft,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: textStyle(
-                          context: context,
-                          text: BankName.value,
-                          fontsize: 16,
-                          c: AppColors.primaryColor,
-                          fontWeight: FontWeight.w600),
+                    Row(
+                      children: [
+                         SizedBox(width: Colorcodes.borderRadius10),
+                         Image.network(
+                          BankUrl.value,
+                          width: 30,
+                          height: 30,
+                          fit: BoxFit.fitWidth,
+                      ),
+                      SizedBox(width: Colorcodes.borderRadius10),
+                        Container(
+                          alignment: Alignment.topLeft,
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: textStyle(
+                              context: context,
+                              text: BankName.value,
+                              fontsize: 16,
+                              c: AppColors.primaryColor,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ],
                     ),
         
                     // Info Cards

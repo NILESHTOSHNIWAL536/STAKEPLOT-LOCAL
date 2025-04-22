@@ -16,7 +16,7 @@ class ResponsiveUtils {
 
   static double getCardHeight(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    return height * 0.35;
+    return height * 0.25;
   }
 
   static double getFontSize(BuildContext context, double baseSize) {
@@ -204,7 +204,6 @@ class _InsightsScreenState extends State<InsightsScreen>
     return Container(
       width: double.infinity,
       height: MediaQuery.of(context).size.height * 0.55,
-     
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Obx(() {
@@ -238,7 +237,6 @@ class _InsightsScreenState extends State<InsightsScreen>
                     ),
                   ),
                 ),
-                
                 getMoneyMap(),
               ],
             );
@@ -281,7 +279,8 @@ class _InsightsScreenState extends State<InsightsScreen>
           title: _navigationItems[_selectedIndex]['title'],
           message: message,
           color: getColorForInsight(0),
-          icon: getIconForInsight(_navigationItems[_selectedIndex]['title'], message),
+          icon: getIconForInsight(
+              _navigationItems[_selectedIndex]['title'], message),
           width: ResponsiveUtils.getCardWidth(context),
         ),
       );
@@ -304,10 +303,13 @@ class _InsightsScreenState extends State<InsightsScreen>
                   return Transform(
                     transform: Matrix4.identity()
                       ..scale(_scaleAnimation.value)
-                      ..rotateZ(_currentCardIndex == index ? _tiltAnimation.value : 0),
+                      ..rotateZ(_currentCardIndex == index
+                          ? _tiltAnimation.value
+                          : 0),
                     alignment: Alignment.center,
                     child: Semantics(
-                      label: 'Insight card ${index + 1} of ${insights.length}: $message',
+                      label:
+                          'Insight card ${index + 1} of ${insights.length}: $message',
                       child: child,
                     ),
                   );
@@ -316,7 +318,8 @@ class _InsightsScreenState extends State<InsightsScreen>
                   title: _navigationItems[_selectedIndex]['title'],
                   message: message,
                   color: getColorForInsight(index),
-                  icon: getIconForInsight(_navigationItems[_selectedIndex]['title'], message),
+                  icon: getIconForInsight(
+                      _navigationItems[_selectedIndex]['title'], message),
                   width: ResponsiveUtils.getCardWidth(context),
                 ),
               );
@@ -393,7 +396,8 @@ class _InsightsScreenState extends State<InsightsScreen>
           ),
           const SizedBox(height: 16),
           ElevatedButton(
-            onPressed: _selectedIndex == 0 ? _fetchInsights : _fetchInsightsMoneyMap,
+            onPressed:
+                _selectedIndex == 0 ? _fetchInsights : _fetchInsightsMoneyMap,
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.bg3,
               shape: RoundedRectangleBorder(
@@ -426,43 +430,8 @@ class _InsightsScreenState extends State<InsightsScreen>
           fontSize: ResponsiveUtils.getFontSize(context, 16),
           color: AppColors.bg3.withOpacity(0.7),
         ),
-        semanticsLabel: 'No ${_navigationItems[_selectedIndex]['title']} insights available',
-      ),
-    );
-  }
-
-  Widget _buildPagination() {
-    if (_isLoading || _errorMessage != null) {
-      return const SizedBox.shrink();
-    }
-    final insightsList = _selectedIndex == 0
-        ? _controller.totalInSights
-        : _controller.totalInSightsMoneyMap;
-    if (insightsList.isEmpty) {
-      return const SizedBox.shrink();
-    }
-    final insights = insightsList[0]['insights'] as List? ?? [];
-    if (insights.length <= 1) return const SizedBox.shrink();
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(
-          insights.length,
-          (index) => AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            margin: const EdgeInsets.symmetric(horizontal: 4.0),
-            width: _currentCardIndex == index ? 12.0 : 8.0,
-            height: 8.0,
-            decoration: BoxDecoration(
-              color: _currentCardIndex == index
-                  ? AppColors.bg3
-                  : Colors.grey.withOpacity(0.4),
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ),
-        ),
+        semanticsLabel:
+            'No ${_navigationItems[_selectedIndex]['title']} insights available',
       ),
     );
   }
@@ -470,6 +439,7 @@ class _InsightsScreenState extends State<InsightsScreen>
   Widget getMoneyMap() {
     return Container(
       width: double.infinity,
+      
       padding: ResponsiveUtils.getPadding(context),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -589,7 +559,7 @@ class InsightCard extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               color,
-              color.withOpacity(0.92),
+              color.withOpacity(0.96),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -637,18 +607,18 @@ class InsightCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                Flexible(
-                  child: Text(
-                    message,
-                    style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.w600,
-                      fontSize: ResponsiveUtils.getFontSize(context, 18),
-                      color: Colors.white.withOpacity(0.95),
-                    ),
-                    maxLines: 4,
-                    overflow: TextOverflow.ellipsis,
+                Text(
+                  message,
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w600,
+                    lineHeight: 1.2,
+                    
+                    fontSize: ResponsiveUtils.getFontSize(context, 18),
+                    color: Colors.white.withOpacity(0.95),
                   ),
+                  maxLines: null,
+                  overflow: TextOverflow.visible,
                 ),
               ],
             ),

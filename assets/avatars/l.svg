@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="134" height="134" viewBox="0 0 134 134">
+	<defs>
+		<filter id="filter1797403384" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feComponentTransfer in="SourceAlpha" result="componentTransfer2959394193">
+				<feFuncR type="linear" slope="0" intercept="0"/>
+				<feFuncG type="linear" slope="0" intercept="0"/>
+				<feFuncB type="linear" slope="0" intercept="0"/>
+				<feFuncA type="linear" slope="10000" intercept="0"/>
+			</feComponentTransfer>
+			<feComponentTransfer in="componentTransfer2959394193" result="componentTransfer7966467006">
+				<feFuncA type="linear" slope="0.1" intercept="0"/>
+			</feComponentTransfer>
+			<feMorphology operator="erode" radius="4" in="componentTransfer7966467006" result="morphology7426659444"/>
+			<feOffset dx="0" dy="4" in="morphology7426659444" result="offset7266321467"/>
+			<feGaussianBlur stdDeviation="3" in="offset7266321467" result="gaussianBlur8903007025"/>
+			<feComponentTransfer in="SourceAlpha" result="componentTransfer5243603321">
+				<feFuncR type="linear" slope="0" intercept="0"/>
+				<feFuncG type="linear" slope="0" intercept="0"/>
+				<feFuncB type="linear" slope="0" intercept="0"/>
+				<feFuncA type="linear" slope="10000" intercept="0"/>
+			</feComponentTransfer>
+			<feComponentTransfer in="componentTransfer5243603321" result="componentTransfer9756820375">
+				<feFuncA type="linear" slope="0.1" intercept="0"/>
+			</feComponentTransfer>
+			<feMorphology operator="erode" radius="3" in="componentTransfer9756820375" result="morphology1499723757"/>
+			<feOffset dx="0" dy="10" in="morphology1499723757" result="offset3486812217"/>
+			<feGaussianBlur stdDeviation="7.5" in="offset3486812217" result="gaussianBlur3408493882"/>
+			<feMerge>
+				<feMergeNode in="gaussianBlur8903007025"/>
+				<feMergeNode in="gaussianBlur3408493882"/>
+				<feMergeNode in="SourceGraphic"/>
+			</feMerge>
+		</filter>
+	</defs>
+	<g filter="url(#filter1797403384)">
+		<path transform="matrix(1 0 0 1 12 2)" d="M55 0C24.6243 0 0 24.6243 0 55L0 55.0825C0 85.4582 24.5418 110 54.9175 110L55 110C85.3757 110 110 85.4582 110 55.0825L110 55C110 24.6243 85.4582 0 55.0825 0L55 0Z" fill-rule="nonzero" fill="rgb(0, 0, 0)" fill-opacity="0.002"/>
+		<defs>
+			<linearGradient id="linearGradient1092220565" gradientTransform="matrix(77.7817 77.7817 -77.7817 77.7817 55 -22.7817)" gradientUnits="userSpaceOnUse" x1="0" y1="0.5" x2="1" y2="0.5">
+				<stop offset="0" stop-color="rgb(255, 255, 255)"/>
+				<stop offset="1" stop-color="rgb(248, 246, 242)"/>
+			</linearGradient>
+		</defs>
+		<path transform="matrix(1 0 0 1 12 2)" d="M55 0C24.6243 0 0 24.6243 0 55L0 55.0825C0 85.4582 24.5418 110 54.9175 110L55 110C85.3757 110 110 85.4582 110 55.0825L110 55C110 24.6243 85.4582 0 55.0825 0L55 0Z" fill-rule="nonzero" fill="url(#linearGradient1092220565)"/>
+		<path transform="matrix(1 0 0 1 12 2)" d="M-0 55C0 24.6243 24.6243 -0 55 -0L55 0C85.3757 0 110 24.6243 110 55L110 55C110 85.3757 85.3757 110 55 110L55 110C24.6243 110 -0 85.3757 -0 55L0 55ZM55 1C25.1766 1 1 25.1766 1 55L1 55C1 84.8234 25.1766 109 55 109L55 109C84.8234 109 109 84.8234 109 55L109 55C109 25.1766 84.8234 1 55 1L55 1Z" fill-rule="nonzero" fill="rgb(212, 175, 55)" fill-opacity="0.2"/>
+		<defs>
+			<clipPath id="clipPath5804631568">
+				<path transform="matrix(1 0 0 1 12 2)" d="M55 0C24.6243 0 0 24.6243 0 55L0 55.0825C0 85.4582 24.5418 110 54.9175 110L55 110C85.3757 110 110 85.4582 110 55.0825L110 55C110 24.6243 85.4582 0 55.0825 0L55 0Z" fill-rule="nonzero"/>
+			</clipPath>
+		</defs>
+		<g clip-path="url(#clipPath5804631568)">
+			<g opacity="0.2">
+				<defs>
+					<clipPath id="clipPath3902931216">
+						<path transform="matrix(1 0 0 1 27 17)" d="M0 0L80 0L80 80L0 80L0 0Z" fill-rule="nonzero"/>
+					</clipPath>
+				</defs>
+				<g clip-path="url(#clipPath3902931216)">
+					<defs>
+						<clipPath id="clipPath2736823213">
+							<path transform="matrix(1 0 0 1 27 17)" d="M0 0L80 0L80 80L0 80L0 0Z" fill-rule="nonzero"/>
+						</clipPath>
+					</defs>
+					<g clip-path="url(#clipPath2736823213)">
+						<path transform="matrix(1 0 0 1 32 17)" d="M15 0C6.71875 0 0 6.71875 0 15L0 65C0 73.2812 6.71875 80 15 80L60 80L65 80C67.7656 80 70 77.7656 70 75C70 72.2344 67.7656 70 65 70L65 60C67.7656 60 70 57.7656 70 55L70 5C70 2.23438 67.7656 0 65 0L60 0L15 0ZM15 60L55 60L55 70L15 70C12.2344 70 10 67.7656 10 65C10 62.2344 12.2344 60 15 60ZM20 22.5C20 21.125 21.125 20 22.5 20L52.5 20C53.875 20 55 21.125 55 22.5C55 23.875 53.875 25 52.5 25L22.5 25C21.125 25 20 23.875 20 22.5ZM22.5 30L52.5 30C53.875 30 55 31.125 55 32.5C55 33.875 53.875 35 52.5 35L22.5 35C21.125 35 20 33.875 20 32.5C20 31.125 21.125 30 22.5 30Z" fill-rule="nonzero" fill="rgb(212, 175, 55)"/>
+					</g>
+				</g>
+			</g>
+			<path transform="matrix(1 0 0 1 53 28)" d="M30.6592 45L2.51953 45L2.51953 41.1621L7.44141 41.1621L7.44141 9.84375L2.51953 9.84375L2.51953 6.00586L18.3545 6.00586L18.3545 9.84375L11.8213 9.84375L11.8213 41.1621L26.7627 41.1621L27.9639 32.2266L31.8604 32.5195L30.6592 45Z" fill-rule="nonzero" fill="rgb(27, 54, 93)"/>
+		</g>
+	</g>
+</svg>
