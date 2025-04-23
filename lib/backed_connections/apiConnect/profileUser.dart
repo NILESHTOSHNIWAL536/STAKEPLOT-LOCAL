@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
@@ -166,8 +167,9 @@ void getUserInfomations() async {
     getuserPost(data['_id']);
     getSaved();
     currentId.value = data['_id'];
-    avatar.value = data['avatarType'].toString();
     userName.value = data['name'];
+    avatar.value = avaterUrlPath(userName.value);
+    userAvatar=avatar.value;
     email.value = data['email'];
     currency.value = data['currency'];
     score.value = data['score'].toString();

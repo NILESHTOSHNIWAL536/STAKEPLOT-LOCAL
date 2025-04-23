@@ -45,7 +45,7 @@ class TransactionDetailsPage extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      '₹${transaction['amount']}',
+                      '₹${formatMoneyIndian(transaction['amount'].toString())}',
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.bold,
                           fontSize: 36,

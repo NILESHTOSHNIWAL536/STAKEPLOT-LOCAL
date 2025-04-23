@@ -486,8 +486,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
     String logo = transaction['bankLogo']?.toString() ?? "";
     final category = transaction['category']?.toString() ?? 'Uncategorized';
     final subcategory = transaction['subcategory']?.toString() ?? 'General';
-    final double amount =
-        double.parse(doubleToFixed((transaction['amount'] ?? 0.0).toString()));
+    final double amount =double.parse(doubleToFixed((transaction['amount'] ?? 0.0).toString()));
     final isManual = transaction['manualTransaction'] ?? false;
     final formattedDate = date != null
         ? formatWhatsAppDate(convertStringToDateTime(date))
@@ -509,8 +508,8 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 : parts[0];
 
     final amtColor = type == 'CREDIT' ? Colors.green.shade700 : const Color.fromARGB(255, 207, 118, 113);
-    final formatAmount = type == 'CREDIT' ? "+₹$amount" : "-₹$amount";
-
+    final formatAmount = type == 'CREDIT' ? "+₹${formatMoneyIndian(amount.toString())}" : "-₹${formatMoneyIndian(amount.toString())}";
+      
     // Responsive scaling with MediaQuery
     final screenWidth = MediaQuery.of(context).size.width;
     final scaleFactor = screenWidth / 360; // Base width: 360px

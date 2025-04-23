@@ -200,7 +200,8 @@ class _SigninState extends State<SignUp> {
               textEditingController: emailController,
               heading: "Email",
               keyBoard: TextInputType.emailAddress,
-              lableText: "johndoe@gmail.com"),
+              lableText: "johndoe@gmail.com"
+          ),
           Obx(() => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -318,6 +319,10 @@ class _SigninState extends State<SignUp> {
     snackBarCalledfail(context, "Please enter a username.", Colors.red);
     return;
   }
+  if (!RegExp(r'^[a-zA-Z]').hasMatch(name)) {
+  snackBarCalledfail(context, "Username must start with a letter (A-Z or a-z).", Colors.red);
+  return;
+ }
 
   if (name.length < 3) {
     snackBarCalledfail(context, "Username must be at least 3 characters long.", Colors.red);

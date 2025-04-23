@@ -146,7 +146,7 @@ void clearGetX() {
   FipIdsConnected.clear();
   transactionsHistory.clear();
   isLoadingMore.value=false;
-  
+  isFected.value=false;
 }
 
 RxMap<String,String> ListOfBankImages=RxMap();

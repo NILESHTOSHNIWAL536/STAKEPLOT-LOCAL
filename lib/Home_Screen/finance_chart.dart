@@ -804,8 +804,8 @@ class _FinancePageState extends State<FinancePage> {
                   children: [
                     Obx(() => Text(
                           getGraphData.value
-                              ? '₹${doubleToFixed(totalDebitValue.toString())}'
-                              : '₹${doubleToFixed(totalDebitValue.toString())}',
+                              ? '₹${formatMoneyIndian(doubleToFixed(totalDebitValue.toString()))}'
+                              : '₹${formatMoneyIndian(doubleToFixed(totalDebitValue.toString()))}',
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.bold,
                               fontSize: fontSizeFactor * 4,

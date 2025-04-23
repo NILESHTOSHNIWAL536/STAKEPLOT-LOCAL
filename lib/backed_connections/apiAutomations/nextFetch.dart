@@ -416,6 +416,7 @@ class _RotatingIconState extends State<Nextfetch>
     await getBankAccounts();
     if (consentAndHandleDetails.isNotEmpty) 
     {
+      
       consentAndHandleDetails.forEach((item) {
         getWeeklyfetchData(item["consentId"], item["consendHandleId"],
             item["sessionId"], item["custId"], item['lastFetch']);
