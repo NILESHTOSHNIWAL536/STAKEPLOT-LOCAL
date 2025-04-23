@@ -173,9 +173,6 @@ void oneSignalAddClickListener(context)
       }
 });
 
-
-
-
  }catch(e)
  {
    print('Error adding click listener: $e');
