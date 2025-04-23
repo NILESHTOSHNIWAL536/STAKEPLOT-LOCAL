@@ -50,8 +50,7 @@ void splitUserAmount(context, String amount, List members, String name,
     splitID.value = body['id']['_id'];
 
     nameList.forEach((e) {
-      sendNotificationsToDevice(e['id'], context,
-          "${userName.value} has shared a split bill..Of ${name} totaling ${e['amount']}");
+      sendNotificationsToDevice(e['id'], context,"${userName.value} has shared a split bill..Of ${name} totaling ${e['amount']}","/remainder");
     });
 
     snackBarCalled(
@@ -175,11 +174,12 @@ void splitUserAmount2(
           memberId,
           context,
           "${userName.value} has sent you a Split Bill of $name for $perFriendShare",
+          "/remainder"
         );
         print("Notification sent to $memberName");
-      } catch (notificationError) {
-        snackBarCalled(
-            context, "split successful, but notification failed for $memberId");
+      } catch (notificationError) 
+      {
+        snackBarCalled(context, "split successful, but notification failed for $memberId");
         print("Notification failed for $memberId: $notificationError");
       }
     }

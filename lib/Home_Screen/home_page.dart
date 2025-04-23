@@ -48,14 +48,14 @@ class _HomePageState extends State<HomePage> {
       try {
         print('Initializing HomeWidget with group: group.com.stakeplot.adnan.dev');
         await HomeWidget.setAppGroupId('group.com.stakeplot.adnan.dev');
-        await _updateWidget();
+        await updateWidget();
       } catch (e) {
         print('Error initializing HomeWidget: $e');
       }
     });
     // Update widget when lendAmountRemainders or dueAmountRemainders change
-    ever(lendAmountRemainders, (_) => _updateWidget());
-    ever(dueAmountRemainders, (_) => _updateWidget());
+    ever(lendAmountRemainders, (_) => updateWidget());
+    ever(dueAmountRemainders, (_) => updateWidget());
   }
 
   void initializeData()   
@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> {
     getNotifications(context);
     allOrGroupTransactionsName.value = StringConstant.allTransactions;
     await getRemainders(context);
-    await _updateWidget();
+    await updateWidget();
   }
 
   void isLoginAlreadLogin()async{
@@ -92,45 +92,7 @@ class _HomePageState extends State<HomePage> {
           callApi();
        }
   }
-  Future<void> _updateWidget() async {
-      final prefs = await SharedPreferences.getInstance();
-    try {
-      String toReceive = 'None: ₹0';
-      String toPay = 'None: ₹0';
-       
-      if (lendAmountRemainders.isNotEmpty && lendAmountRemainders.first != null) {
-        final data = lendAmountRemainders.first;
-        toReceive =
-            '${data["name"] ?? "Unknown"}: ₹${(data["amount"] ?? 0).toStringAsFixed(2)}';
-      }
-      if (dueAmountRemainders.isNotEmpty && dueAmountRemainders.first != null) {
-        final data = dueAmountRemainders.first;
-        toPay =
-            '${data["name"] ?? "Unknown"}: ₹${(data["amount"] ?? 0).toStringAsFixed(2)}';
-      }
-      await prefs.setString('to_receive', toReceive);
-      await prefs.setString('to_pay', toPay);
-      // Save to HomeWidget (updates UserDefaults for iOS)
-      await HomeWidget.saveWidgetData<String>('to_receive', toReceive);
-      await HomeWidget.saveWidgetData<String>('to_pay', toPay);
-      await HomeWidget.updateWidget(
-        name: 'PayableWidgetProvider',
-        androidName: 'PayableWidgetProvider',
-        iOSName: 'PayableWidget',
-      );
-    } catch (e) {
-    
-      await prefs.setString('to_receive', 'Error');
-      await prefs.setString('to_pay', 'Error');
-      await HomeWidget.saveWidgetData<String>('to_receive', 'Error');
-      await HomeWidget.saveWidgetData<String>('to_pay', 'Error');
-      await HomeWidget.updateWidget(
-        name: 'PayableWidgetProvider',
-        androidName: 'PayableWidgetProvider',
-        iOSName: 'PayableWidget',
-      );
-    }
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -147,8 +109,10 @@ class HomeScreen extends StatefulWidget {
    
 
 class _HomeScreenState extends State<HomeScreen> {
+  final ScrollController scrollControllerHome = ScrollController();
   final ScrollController scrollController = ScrollController();
   final GlobalKey _transactionHistoryKey = GlobalKey();
+  final ScrollController scrollController2 = ScrollController();
   var setDonectChat = false.obs; 
   var getHistory = false.obs; 
   
@@ -157,7 +121,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState()
   {
     super.initState();
-    scrollController.addListener(_onScroll);
+     Future.delayed(Duration(seconds: 5),() {
+        scrollControllerHome.addListener(_onScroll);
+     });
   }
 
   @override
@@ -170,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
         child: SingleChildScrollView(
-          controller: scrollController,
+            controller: scrollControllerHome,
           child: Column(
             children: [
               Nextfetch(),
@@ -265,8 +231,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
    void _onScroll() {
 
-    scrollController.addListener(() {
-          if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 50)
+    scrollControllerHome.addListener(() {
+          if (scrollControllerHome.position.pixels >= scrollControllerHome.position.maxScrollExtent - 50)
           {
                 getAllTransactionHistory(context,false,false); // Fetch next page
           }

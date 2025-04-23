@@ -206,8 +206,7 @@ class _InsightsScreenState extends State<InsightsScreen>
       height: MediaQuery.of(context).size.height * 0.55,
       child: LayoutBuilder(
         builder: (context, constraints) {
-          return Obx(() {
-            return Column(
+          return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
@@ -240,7 +239,6 @@ class _InsightsScreenState extends State<InsightsScreen>
                 getMoneyMap(),
               ],
             );
-          });
         },
       ),
     );

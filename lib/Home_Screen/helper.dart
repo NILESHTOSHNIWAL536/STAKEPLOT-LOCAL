@@ -1,5 +1,8 @@
 import 'dart:math';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:home_widget/home_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final Map<int, Map<String, double>> weekData = {
   for (int i = 0; i < 5; i++)
@@ -237,3 +240,44 @@ String formatMoneyIndian(String value)
     return '0';
   }
 }
+
+
+  Future<void> updateWidget() async {
+      final prefs = await SharedPreferences.getInstance();
+    try {
+      String toReceive = 'None: ₹0';
+      String toPay = 'None: ₹0';
+       
+      if (lendAmountRemainders.isNotEmpty && lendAmountRemainders.first != null) {
+        final data = lendAmountRemainders.first;
+        toReceive =
+            '${data["name"] ?? "Unknown"}: ₹${(data["amount"] ?? 0).toStringAsFixed(2)}';
+      }
+      if (dueAmountRemainders.isNotEmpty && dueAmountRemainders.first != null) {
+        final data = dueAmountRemainders.first;
+        toPay =
+            '${data["name"] ?? "Unknown"}: ₹${(data["amount"] ?? 0).toStringAsFixed(2)}';
+      }
+      await prefs.setString('to_receive', toReceive);
+      await prefs.setString('to_pay', toPay);
+      // Save to HomeWidget (updates UserDefaults for iOS)
+      await HomeWidget.saveWidgetData<String>('to_receive', toReceive);
+      await HomeWidget.saveWidgetData<String>('to_pay', toPay);
+      await HomeWidget.updateWidget(
+        name: 'PayableWidgetProvider',
+        androidName: 'PayableWidgetProvider',
+        iOSName: 'PayableWidget',
+      );
+    } catch (e) {
+    
+      await prefs.setString('to_receive', 'Error');
+      await prefs.setString('to_pay', 'Error');
+      await HomeWidget.saveWidgetData<String>('to_receive', 'Error');
+      await HomeWidget.saveWidgetData<String>('to_pay', 'Error');
+      await HomeWidget.updateWidget(
+        name: 'PayableWidgetProvider',
+        androidName: 'PayableWidgetProvider',
+        iOSName: 'PayableWidget',
+      );
+    }
+  }

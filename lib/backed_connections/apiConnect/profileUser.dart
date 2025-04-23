@@ -289,7 +289,7 @@ void addLendUserAmount(
         context, "The lend amount has been sent to users!", Colors.black);
     members.forEach((e) {
       sendNotificationsToDevice(e['id'], context,
-          "${userName.value} Has Send U a Lend Bill..Of ${name} Of ${amount}");
+          "${userName.value} Has Send U a Lend Bill..Of ${name} Of ${amount}","/remainder");
     });
 
     addTransaction(amount, "Lend Bill", name, context, 'cash', true);
@@ -340,7 +340,7 @@ void splitUserAmount(context, String amount, List members, String name) async {
 
     members.forEach((e) {
       sendNotificationsToDevice(e['id'], context,
-          "${userName.value} Has Send U a Split Bill..Of ${name} Of ${amount}");
+          "${userName.value} Has Send U a Split Bill..Of ${name} Of ${amount}","/remainder");
     });
 
     snackBarCalled(

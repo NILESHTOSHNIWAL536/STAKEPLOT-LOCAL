@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
@@ -339,8 +340,7 @@ class _TribeHomeState extends State<TribeShare> {
                 "roomId": userToSend,
               });
               index++;
-              sendNotificationsToDevice(rec, context,
-                  "Hey there! 👋, ${userName.value} has shared a post 📩. Please check it out 🛒 ");
+              sendNotificationsToDevice(rec, context,"Hey there! 👋, ${userName.value} has shared a post 📩. Please check it out 🛒 ","/chat/${currentId.value}");
             });
             Navigator.pop(context);
           },
@@ -398,7 +398,7 @@ class _TribeHomeState extends State<TribeShare> {
                         children: [
                           Center(
                               child: AvatarProfileImage(
-                                  url: frdsList[index]['avatar'] ?? userAvatar,
+                                  url: avaterUrlPath(frdsList[index]['name'] ?? userAvatar),
                                   width: 8,
                                   height: 18)),
                           // const SizedBox(width:  10,),

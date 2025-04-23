@@ -159,12 +159,12 @@ class _SigninState extends State<ResetOtp> {
                                  mainAxisAlignment: MainAxisAlignment.center,
                                  children: [
             
-                                       InputDate("email/phone number",TextInputType.number,emailController,0),
-                                       InputDate("username",TextInputType.number,passwordController,1),
-                                       InputDate("Date of birth",TextInputType.number,passwordController,2),
-                                       InputDate("password",TextInputType.number,passwordController,3),
-                                       InputDate("password",TextInputType.number,passwordController,4),
-                                       InputDate("password",TextInputType.number,passwordController,5),
+                                       InputDate("email/phone number",TextInputType.number,_controllers[0],0),
+                                       InputDate("username",TextInputType.number,_controllers[1],1),
+                                       InputDate("Date of birth",TextInputType.number,_controllers[2],2),
+                                       InputDate("password",TextInputType.number,_controllers[3],3),
+                                       InputDate("password",TextInputType.number,_controllers[4],4),
+                                       InputDate("password",TextInputType.number,_controllers[5],5),
                                  ],
                              ),
                        
@@ -187,7 +187,8 @@ class _SigninState extends State<ResetOtp> {
                                    child: InkWell(
                                                               onTap: (){
                                        String opt="";
-                                             
+                                       print("--------------------------------------");
+                                             print( _controllers.length);
                                          for(int i=0;i< _controllers.length;i++)
                                           { 
                                                 if(_controllers[i].text==""){
@@ -197,6 +198,7 @@ class _SigninState extends State<ResetOtp> {
                                           }
 
                                           _controllers.forEach((element) { 
+                                            print(element.text);
                                                opt += element.text;
                                           });
                                            acceptReset.value=true;

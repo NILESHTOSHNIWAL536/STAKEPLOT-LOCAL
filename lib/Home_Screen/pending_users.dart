@@ -18,13 +18,15 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UserListScreen extends StatefulWidget {
+class UserListScreen extends StatefulWidget
+{
   final bool isPayable; // true for payables, false for oweds
 
   const UserListScreen({Key? key, required this.isPayable}) : super(key: key);
 
   @override
   State<UserListScreen> createState() => _UserListScreenState();
+
 }
 
 class _UserListScreenState extends State<UserListScreen> {
@@ -165,6 +167,7 @@ class _UserListScreenState extends State<UserListScreen> {
                   isDue
                       ? 'Successfully paid your bill of ${data['amount'] ?? "0000"} to ${userName.value}.'
                       : 'You need to pay ${data['amount'] ?? "0000"} to ${userName.value}.',
+                   "/remainder"
                 );
               },
               child: Container(

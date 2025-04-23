@@ -496,7 +496,7 @@ void getUserLend(context) async {
   }
 }
 
-void sendNotificationsToDevice(id, context, msg) async {
+void sendNotificationsToDevice(id, context, msg,[String screen="/home"]) async {
   String urlPath = "${url}/reminders/sendNotifications/ToDevice";
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
@@ -511,6 +511,7 @@ void sendNotificationsToDevice(id, context, msg) async {
     body: jsonEncode({
       'id': id,
       'message': msg,
+      'screen':screen
     }),
   );
 

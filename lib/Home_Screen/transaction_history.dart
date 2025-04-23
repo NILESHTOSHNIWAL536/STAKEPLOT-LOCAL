@@ -83,7 +83,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
         ); // Fetch next page
       }
     });
-    if(!widget.expandedPage) isLoadingMore.value=false;
+    // if(!widget.expandedPage) isLoadingMore.value=false;
     getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,isRefreshing: true);
   }
 

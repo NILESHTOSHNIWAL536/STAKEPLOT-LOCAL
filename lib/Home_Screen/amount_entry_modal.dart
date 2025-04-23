@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart';
 
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
@@ -200,7 +201,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                   Row(
                     children: [
                       AvatarProfileImage(
-                        url: widget.userAvatar,
+                        url: avaterUrlPath(widget.userName),
                         width: 10,
                         height: 20,
                       ),
@@ -261,7 +262,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                       Row(
                         children: [
                           AvatarProfileImage(
-                            url: friend['avatar'] ?? widget.userAvatar,
+                            url:avaterUrlPath( friend['name'] ?? widget.userAvatar),
                             width: 10,
                             height: 20,
                           ),
@@ -561,7 +562,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         sendNotificationsToDevice(
           member['id'],
           context,
-          "${userName.value} has sent you a Split Bill of $category ($subcategory) for ₹$formattedAmount",
+          "${userName.value} has sent you a Split Bill of $category ($subcategory) for ₹$formattedAmount","/chat"
         );
         addSocketMessage(
           [member],

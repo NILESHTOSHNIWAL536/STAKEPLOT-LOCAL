@@ -836,7 +836,7 @@ class _ModalContentState extends State<ModalContent>
         sendNotificationsToDevice(
           member['id'],
           context,
-          "${userName.value} has sent you a Split Bill of $name for ₹$formattedAmount",
+          "${userName.value} has sent you a Split Bill of $name for ₹$formattedAmount","/chat"
         );
       }
 
@@ -902,8 +902,7 @@ class _ModalContentState extends State<ModalContent>
       });
       snackBarCalled(context,
           "Lend amount has been successfully sent to users!", Colors.black);
-      addTransaction(
-          amount, "Lend Bill (${subCategories})", name, context, 'cash', false);
+      addTransaction( amount, "Lend Bill (${subCategories})", name, context, 'cash', false);
       getUserLend(context);
     } else {
       snackBarCalled(

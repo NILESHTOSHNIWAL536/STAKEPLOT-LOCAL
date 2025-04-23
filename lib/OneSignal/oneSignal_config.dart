@@ -1,13 +1,13 @@
 
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/pending_users.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -38,22 +38,52 @@ Future<void> initializeOneSignal(BuildContext context) async {
 
 }
 
-
 void _handleNotificationClick(OSNotificationClickEvent event, BuildContext context) {
 
-  try {
-    print("user clicked on notification: $event");
-    String? screen = event.notification.additionalData?['screen'];
-      Navigator.pushNamed(context, "/Notifications");
-    print("user clicked on notification with screen: $screen");
-    if (screen != null) {
-    } else {
-      print("No screen specified in additional data.");
-    }
-  } catch (e) {
+  try 
+  {
+        String screen = event.notification.additionalData?['screen'];
+        navigateScreens(context,screen);
+  } 
+  catch (e)
+  {
     print('Error handling notification click: $e');
   }
 
+}
+
+
+void navigateScreens(context,screen){
+   if(screen.toString().contains("chat"))
+    {
+           Navigator.pushNamed(context, '/TribeChats');
+    }
+    else  if(screen.toString().contains("friends"))
+    { 
+            Navigator.pushNamed(context, '/Friends');
+    }
+   else if(screen.toString().contains("post"))
+    {
+            Navigator.pushNamed(context, '/post');
+    }
+   else if(screen.toString().contains("remainder"))
+    {
+           Navigator.push(
+            context,
+            PageTransition(
+              type: PageTransitionType.bottomToTop,
+              alignment: Alignment.bottomCenter,
+              duration: const Duration(milliseconds: 2000), // Increase duration
+              curve: Curves.easeInOut, // Smooth transition
+              child:UserListScreen(isPayable: true,),
+              isIos: true,
+            ),
+          );
+    }
+    else
+    {
+     Navigator.pushNamed(context, "/Notifications");
+    }
 }
 
 // void navigateScreen(context) {
@@ -161,9 +191,8 @@ void oneSignalAddClickListener(context)
       _handleNotificationClick(event, context);
   });
 
-   print("add call back");
    OneSignal.Notifications.addForegroundWillDisplayListener((event) {
-      print("Notification received in foreground: ${event.notification.body}");
+      
       String s=event.notification.body.toString();
       String t1="There is a problem with you bank server. Please try again later.";
       String t2="we couldn't able to fetch your bank details, try again later";

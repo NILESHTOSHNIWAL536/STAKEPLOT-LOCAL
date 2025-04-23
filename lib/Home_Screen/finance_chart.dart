@@ -719,7 +719,6 @@ import 'dart:math';
 import 'package:flutter_application_code_stakeplot/Constants/customButton.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/expanded_finance.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
@@ -728,10 +727,8 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
 import './colors.dart';
-import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class FinancePage extends StatefulWidget {
@@ -755,22 +752,21 @@ class _FinancePageState extends State<FinancePage> {
     calledFunctionToFetchData(context);
   }
 
-  void _scrollToTransactionHistory() {
-    final RenderObject? renderObject =
-        widget.transactionHistoryKey.currentContext?.findRenderObject();
-    if (renderObject != null && renderObject is RenderBox) {
-      final position = renderObject.localToGlobal(Offset.zero);
-      final scrollOffset = widget.scrollController.offset;
-      final targetOffset =
-          position.dy - scrollOffset - MediaQuery.of(context).size.height / 8;
-       print("targetOffset $targetOffset");
-      widget.scrollController.animateTo(
-        targetOffset > 0 ? targetOffset : 0,
-        duration: Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
-    } else {}
-  }
+  // void _scrollToTransactionHistory() {
+  //   final RenderObject? renderObject =
+  //       widget.transactionHistoryKey.currentContext?.findRenderObject();
+  //   if (renderObject != null && renderObject is RenderBox) {
+  //     final position = renderObject.localToGlobal(Offset.zero);
+  //     final scrollOffset = widget.scrollController.offset;
+  //     final targetOffset =
+  //         position.dy - scrollOffset - MediaQuery.of(context).size.height / 8;
+  //     widget.scrollController.animateTo(
+  //       targetOffset > 0 ? targetOffset : 0,
+  //       duration: Duration(milliseconds: 500),
+  //       curve: Curves.easeInOut,
+  //     );
+  //   } else {}
+  // }
 
   int _getDaysInCurrentMonth() {
     final now = DateTime.now();
@@ -868,7 +864,7 @@ class _FinancePageState extends State<FinancePage> {
                 ),
                 CustomButton(
                   onTap: () {
-                    _scrollToTransactionHistory();
+                    // _scrollToTransactionHistory();
                   },
                   text: 'History',
                   fontSize: fontSizeFactor * 2.8,
@@ -1087,7 +1083,11 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       double labelWidth = widget.selectedButton.value == 'Week' ? 50.0 : 60.0;
       double scrollOffset = (currentIndex-4) * labelWidth;
 
-      double maxScrollExtent = _scrollController!.position.maxScrollExtent;
+      double maxScrollExtent = 0;
+      if (_scrollController != null && _scrollController!.hasClients) {
+        maxScrollExtent = _scrollController!.position.maxScrollExtent;
+      }
+
       if (scrollOffset > maxScrollExtent) {
         scrollOffset = maxScrollExtent;
       } else if (scrollOffset < 0) {

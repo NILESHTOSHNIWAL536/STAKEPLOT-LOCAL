@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/amount_entry_modal.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
@@ -109,7 +110,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                       padding: const EdgeInsets.all(0.0),
                                       child: Center(
                                         child: AvatarProfileImage(
-                                          url: element['avatar'] ??
+                                          url: avaterUrlPath(element['name'])??
                                               widget.userAvatar,
                                           width: 10,
                                           height: 20,
@@ -311,7 +312,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                       children: [
                                         Center(
                                           child: AvatarProfileImage(
-                                            url: frdsList[index]['avatar'] ??
+                                            url: avaterUrlPath( frdsList[index]['name'] )??
                                                 widget.userAvatar,
                                             width: 8,
                                             height: 18,
