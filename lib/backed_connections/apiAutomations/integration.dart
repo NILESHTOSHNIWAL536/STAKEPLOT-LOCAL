@@ -189,7 +189,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
  number.value="";
  consentUserId.value="";
  handleId.value="";
-    debugPrint('getConsentHandleStatus');
+   debugPrint('getConsentHandleStatus');
 }
 
 

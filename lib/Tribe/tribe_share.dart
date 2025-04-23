@@ -340,8 +340,7 @@ class _TribeHomeState extends State<TribeShare> {
                 "roomId": userToSend,
               });
               index++;
-              sendNotificationsToDevice(rec, context,
-                  "Hey there! 👋, ${userName.value} has shared a post 📩. Please check it out 🛒 ");
+              sendNotificationsToDevice(rec, context,"Hey there! 👋, ${userName.value} has shared a post 📩. Please check it out 🛒 ","/chat/${currentId.value}");
             });
             Navigator.pop(context);
           },
@@ -399,7 +398,7 @@ class _TribeHomeState extends State<TribeShare> {
                         children: [
                           Center(
                               child: AvatarProfileImage(
-                                  url: avaterUrlPath( frdsList[index]['name'] ?? userAvatar),
+                                  url: avaterUrlPath(frdsList[index]['name'] ?? userAvatar),
                                   width: 8,
                                   height: 18)),
                           // const SizedBox(width:  10,),

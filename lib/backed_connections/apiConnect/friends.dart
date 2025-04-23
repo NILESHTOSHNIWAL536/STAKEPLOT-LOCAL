@@ -10,7 +10,7 @@ void   addUserAsFrd(id,context)async
     var response=await postDataApiCall(urlPath, {});
       if(getFlagOfResponse(response))
       {
-            sendNotificationsToDevice(id,context,"${userName.value} has accepted your friend request..");
+            sendNotificationsToDevice(id,context,"${userName.value} has accepted your friend request..","/friends");
             snackBarCalled(context,"Adding user as a friend...!",Colors.black);      
       }else{
            snackBarCalled(context,"Unable to add friend!",Colors.red);

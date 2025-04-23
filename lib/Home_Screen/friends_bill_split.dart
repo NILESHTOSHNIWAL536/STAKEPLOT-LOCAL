@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/amount_entry_modal.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/lendMessage.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
@@ -12,7 +14,6 @@ import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 
 import 'package:get/get.dart';
-
 
 RxList addedUser = [].obs;
 RxList addedMembers = [].obs;
@@ -109,7 +110,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                       padding: const EdgeInsets.all(0.0),
                                       child: Center(
                                         child: AvatarProfileImage(
-                                          url: element['avatar'] ??
+                                          url: avaterUrlPath(element['name']) ??
                                               widget.userAvatar,
                                           width: 10,
                                           height: 20,
@@ -154,16 +155,66 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                     )
                   : const SizedBox.shrink(),
               commentedData(),
+              // if (widget.showContinueButton)
+              //   Center(
+              //     child: InkWell(
+              //       onTap: () async {
+              //         if (addedMembers.isNotEmpty) {
+
+              //           if (widget.isLendMode) {
+
+              //             if (addedMembers.length > 1) {
+
+              //               ScaffoldMessenger.of(context).showSnackBar(
+              //                 const SnackBar(
+              //                     content: Text(
+              //                         'Please select only one friend for lending')),
+              //               );
+              //               return;
+              //             }
+              //             Navigator.pop(context, addedMembers[0]);
+              //           } else {
+
+              //             Navigator.pop(context);
+              //             final amounts = await showAmountEntryModal(
+              //               context,
+              //               widget.category ?? 'Uncategorized',
+              //               widget.subcategory ?? 'General',
+              //             );
+
+              //             if (amounts != null) {
+
+              //               Navigator.pop(context, amounts);
+              //             }
+              //             ;
+              //             if (amounts != null) {
+
+              //               Navigator.pop(context, amounts);
+              //             } else {
+
+              //             }
+              //           }
+
+              //         } else {
+
+              //           ScaffoldMessenger.of(context).showSnackBar(
+              //             const SnackBar(
+              //                 content:
+              //                     Text('Please select at least one friend')),
+              //           );
+              //         }
+              //       },
+              //       child: getButton(context, "Continue"),
+              //     ),
+              //   ),
+
               if (widget.showContinueButton)
                 Center(
                   child: InkWell(
                     onTap: () async {
                       if (addedMembers.isNotEmpty) {
-                      
                         if (widget.isLendMode) {
-                        
                           if (addedMembers.length > 1) {
-                          
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                   content: Text(
@@ -171,9 +222,42 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                             );
                             return;
                           }
-                          Navigator.pop(context, addedMembers[0]);
+                          // Show LendDetailsModal
+                          final Map<String, String?>? lendDetails =
+                              await showModalBottomSheet<Map<String, String?>>(
+                            context: context,
+                            isScrollControlled: true,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(18)),
+                            ),
+                            builder: (BuildContext context) {
+                              return LendDetailsModal(
+                                amount: widget.totalAmount,
+                                member: addedMembers[0],
+                                category: widget.category ?? 'Uncategorized',
+                                subCategory: widget.subcategory ?? 'General',
+                                onConfirm: () {},
+                              );
+                            },
+                          );
+
+                          if (lendDetails != null) {
+                            // Return a map with member details, message, and due date
+                            Navigator.pop(context, {
+                              'member': addedMembers[0],
+                              'message': lendDetails['message'],
+                              'dueDate': lendDetails['dueDate'],
+                            });
+                          } else {
+                            // User dismissed the modal without confirming
+                            snackBarCalled(
+                                context, "Please provide lend details");
+                            // ScaffoldMessenger.of(context).showSnackBar(
+                            //   const SnackBar(content: Text('Lend details not provided')),
+                            // );
+                          }
                         } else {
-                         
                           Navigator.pop(context);
                           final amounts = await showAmountEntryModal(
                             context,
@@ -182,20 +266,10 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                           );
 
                           if (amounts != null) {
-                           
                             Navigator.pop(context, amounts);
-                          }
-                          ;
-                          if (amounts != null) {
-                          
-                            Navigator.pop(context, amounts);
-                          } else {
-                           
                           }
                         }
-                        
                       } else {
-                      
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content:
@@ -311,7 +385,8 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                       children: [
                                         Center(
                                           child: AvatarProfileImage(
-                                            url: frdsList[index]['avatar'] ??
+                                            url: avaterUrlPath(
+                                                    frdsList[index]['name']) ??
                                                 widget.userAvatar,
                                             width: 8,
                                             height: 18,

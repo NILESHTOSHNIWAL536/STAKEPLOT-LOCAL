@@ -1,5 +1,7 @@
 import 'package:finvu_flutter_sdk/finvu_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
+import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
 import 'package:flutter_application_code_stakeplot/Profile/friends.dart';
 import 'package:flutter_application_code_stakeplot/Profile/notifications.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
@@ -60,8 +62,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    super.initState();
-    initPlatformState();
+      super.initState();
+      initPlatformState();
+      // WidgetsBinding.instance.addPostFrameCallback((_){
+      //   oneSignalAddClickListener(context);
+      // });
   }
 
   Future<void> initPlatformState() async {
@@ -109,6 +114,8 @@ class _MyAppState extends State<MyApp> {
       '/ForgotPassword':(context) => ForgotPassword() ,
       '/OnboardingScreen':(context) => OnboardingScreen() ,
       '/editDetails':(context) => EditDetails() ,
+      '/post':(context) => Community() ,
+    
       
     });
   }

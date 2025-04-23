@@ -5,11 +5,14 @@ import 'package:flutter_application_code_stakeplot/signInOut/reset.dart';
 import 'package:page_transition/page_transition.dart';
 
 void checkEmail(context, email, otp, name) async {
+ 
+
   var response=await postDataApiCallwithOutSharedPref('${url}/otp/verify-otp', {
       'email': email,
       "otp": otp.toString(),
     });
-
+ print(response.body);
+ print(response.body);
   if (getFlagOfResponse(response))
   {
     snackBarCalled(context, "Accepted Opt...!", Colors.black);

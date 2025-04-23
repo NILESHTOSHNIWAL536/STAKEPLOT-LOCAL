@@ -306,7 +306,7 @@ class _SigninState extends State<ResetOtp> {
             ),
             enableActiveFill: true,
             textStyle: TextStyle(fontSize: 20, color: Colors.black),
-            onSubmitted: (value) {
+            onChanged: (value) {
               _otpCode.value = value;
               _isOtpValid.value = value.length == _otpCodeLength;
               if (_isOtpValid.value) {

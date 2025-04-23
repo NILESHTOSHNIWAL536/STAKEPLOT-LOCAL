@@ -5,6 +5,7 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/lendMessage.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
@@ -836,7 +837,7 @@ class _ModalContentState extends State<ModalContent>
         sendNotificationsToDevice(
           member['id'],
           context,
-          "${userName.value} has sent you a Split Bill of $name for ₹$formattedAmount",
+          "${userName.value} has sent you a Split Bill of $name for ₹$formattedAmount","/chat"
         );
       }
 
@@ -891,6 +892,8 @@ class _ModalContentState extends State<ModalContent>
         "subcategory": subCategories,
         "type": "Lend Money",
         "amount": amount,
+         'message':messageController.text.toString(),
+        'dueDate': selectedDueDate.toString().substring(0,10)
       }),
     );
 
@@ -902,8 +905,7 @@ class _ModalContentState extends State<ModalContent>
       });
       snackBarCalled(context,
           "Lend amount has been successfully sent to users!", Colors.black);
-      addTransaction(
-          amount, "Lend Bill (${subCategories})", name, context, 'cash', false);
+      addTransaction( amount, "Lend Bill (${subCategories})", name, context, 'cash', false);
       getUserLend(context);
     } else {
       snackBarCalled(

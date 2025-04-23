@@ -913,7 +913,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                       sendNotificationsToDevice(
                         key,
                         context,
-                        "You need to pay lend To ${userName.value} of ${value!['Total'] ?? "0000"}",
+                        "You need to pay lend To ${userName.value} of ${value!['Total'] ?? "0000"}","/remainder"
                       );
                     });
                   },
@@ -1357,7 +1357,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
 
       nameList.forEach((e) {
         sendNotificationsToDevice(e['id'], context,
-            "${userName.value} has sent u a split bill for ${name} Of ${e['amount']}");
+            "${userName.value} has sent u a split bill for ${name} Of ${e['amount']}","/chat");
       });
 
       addSocketMessage(nameList, amount.toString(), "Calculation".toString(),
