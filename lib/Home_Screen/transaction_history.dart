@@ -35,7 +35,7 @@ class TransactionHistory extends StatefulWidget {
   final bool? isYearView;
   final bool? isflag;
   final bool? showIcon;
-   bool expandedPage;
+  bool expandedPage;
   bool pageTransition;
   TransactionHistory(
       {this.isflag = false,
@@ -58,13 +58,12 @@ class _TransactionHistoryState extends State<TransactionHistory>
   final targetKey = GlobalKey();
   BuildContext? _stableContext;
   // For smooth animations
- 
 
   @override
   void initState() {
     super.initState();
     _stableContext = context;
-    if(!widget.expandedPage) currentPage = 1;
+    if (!widget.expandedPage) currentPage = 1;
 
     // getAllTransactionHistory(context, widget.isflag!, widget.isYearView!);
     // _animationController = AnimationController(
@@ -82,7 +81,8 @@ class _TransactionHistoryState extends State<TransactionHistory>
       }
     });
     // if(!widget.expandedPage) isLoadingMore.value=false;
-    getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,isRefreshing: true);
+    getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,
+        isRefreshing: true);
   }
 
   @override
@@ -94,7 +94,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
   @override
   void dispose() {
     _scrollController2.dispose();
-   
+
     super.dispose();
   }
 
@@ -132,27 +132,28 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 ? SizedBox(
                     height: 15,
                   )
-                : Obx(() => allOrGroupTransactionsName.value == StringConstant.allTransactions
+                : Obx(() => allOrGroupTransactionsName.value ==
+                        StringConstant.allTransactions
                     ? getTabsForTransactions()
                     : getTabsForTransactions()),
 
-                    //  getlist()
+            //  getlist()
             // Obx(() => reloadHistory.value ? getlist() : getlist())
-        // (widget.showIcon ?? false)? Obx(() => reloadHistory.value ? getlist() : getlist()):
-        //        Obx(() => allOrGroupTransactionsName.value ==
-        //             StringConstant.allTransactions
-        //         ? Obx(() => reloadHistory.value ? getlist() : getlist())
-        //         : GroupTransactions()),
-        Obx(() {
-            if (widget.showIcon ?? false) {
-              return reloadHistory.value ? getlist() : getlist();
-            } else {
-              return allOrGroupTransactionsName.value == StringConstant.allTransactions
-                  ? (reloadHistory.value ? getlist() : getlist())
-                  : GroupTransactions();
-            }
-          })
-
+            // (widget.showIcon ?? false)? Obx(() => reloadHistory.value ? getlist() : getlist()):
+            //        Obx(() => allOrGroupTransactionsName.value ==
+            //             StringConstant.allTransactions
+            //         ? Obx(() => reloadHistory.value ? getlist() : getlist())
+            //         : GroupTransactions()),
+            Obx(() {
+              if (widget.showIcon ?? false) {
+                return reloadHistory.value ? getlist() : getlist();
+              } else {
+                return allOrGroupTransactionsName.value ==
+                        StringConstant.allTransactions
+                    ? (reloadHistory.value ? getlist() : getlist())
+                    : GroupTransactions();
+              }
+            })
           ],
         ),
       ),
@@ -197,8 +198,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
     );
   }
 
-  
-
   void changeTheBool() {
     sectionReached.value = true;
     Navigator.pop(context);
@@ -207,6 +206,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
   Widget getlist() {
     // Group transactions by month and year
     Map<String, List<Map<String, dynamic>>> groupedTransactions = {};
+    print(transactionsHistory);
     for (var transaction in transactionsHistory) {
       String? timestamp = transaction['transactionTimestamp']?.toString();
       if (timestamp != null) {
@@ -221,9 +221,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
               .putIfAbsent(monthYearKey, () => [])
               .add(transaction);
           // Debug: Log the timestamp and its IST conversion
-          
         } catch (e) {
-         
           continue;
         }
       }
@@ -278,7 +276,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
         // Case 1: Month Header
         if (item is String && item != 'loader') {
           String monthYear = item;
-         // int transactionCount = groupedTransactions[monthYear]?.length ?? 0;
+          // int transactionCount = groupedTransactions[monthYear]?.length ?? 0;
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             child: Row(
@@ -295,7 +293,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 ),
                 // transactionCount == 0
                 //     ? const SizedBox(
-               
               ],
             ),
           );
@@ -307,7 +304,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
           int transactionIndex = transactionsHistory.indexOf(transaction);
 
           return Container(
-            
             child: historyTransactions(
               transaction: transaction,
               date: transaction['transactionTimestamp']?.toString(),
@@ -319,7 +315,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
               isHiddenScreen: false,
             ),
           );
-        } 
+        }
 
         // Case 3: Loading Indicator
         else if (!isLoadingMore.value) {
@@ -333,20 +329,14 @@ class _TransactionHistoryState extends State<TransactionHistory>
           );
         }
 
-        return loadingDelay.value?
-            Container(
-              width: 50,height: 50,
-              child:Spinner()
-            ):  transactionsHistory.isEmpty 
-            ? textStyle(context: context, text: "No Transactions")
-            : SizedBox.shrink(); // Fallback for unexpected items
+        return loadingDelay.value
+            ? Container(width: 50, height: 50, child: Spinner())
+            : transactionsHistory.isEmpty
+                ? textStyle(context: context, text: "No Transactions")
+                : SizedBox.shrink(); // Fallback for unexpected items
       },
     );
   }
- 
-  
-
- 
 
   void extractTransaction(bool isYearView, List obj) {
     // print("------------------------ extra called...");
@@ -375,7 +365,4 @@ class _TransactionHistoryState extends State<TransactionHistory>
       }
     });
   }
-
- 
 }
-
