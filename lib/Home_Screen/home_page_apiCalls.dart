@@ -4,6 +4,7 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
+import "package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart";
@@ -367,10 +368,8 @@ class ThousandsFormatter extends TextInputFormatter {
 
   String formatDateTime(String dateString) {
   DateTime dateTime = DateTime.parse(dateString).toLocal();
-  // print("dateString");
-  // print(dateString);
+  
   String formattedDate = DateFormat("dd MMM yyyy hh:mm a").format(dateTime);
-  //print(formattedDate);
   return formattedDate;
 }
 
@@ -452,16 +451,48 @@ Future<void> getHomePageInsights(context) async {
     
       
       totalInSights.clear();
-   
       totalInSights.addAll(obj);
-    
-      
+
       getTotalInsightsHistory.value = !getTotalInsightsHistory.value;
-     
     } else {
       
     }
   } catch (e) {
    
+  }
+}
+
+void hideTransaction(
+    int index, bool hidden, BuildContext context, String id) async {
+  final transaction = transactionsHistory[index];
+  final transactionId = transaction['_id']?.toString();
+  if (transactionId == null) {
+    //   print("Error: Transaction ID is null");
+    return;
+  }
+  //  /67e7d5f43afa9db7fcc3f29c
+  final apiUrl = "$url/transactionauto/updateTransaction/$id";
+  try {
+    final response = await updateDataApiCall2(apiUrl, {"Hidden": hidden});
+    if (getFlagOfResponse(response)) {
+      if (hidden) {
+        hiddenTransactions.add(transaction);
+        transactionsHistory.removeAt(index);
+        // Clear all swipe offsets
+       // Reset the animation controller
+        transactionsHistory.refresh();
+        snackBarCalled(context, "Transaction hidden Successfully");
+      } else {
+        hiddentrasactionsHistory.removeAt(index);
+        hiddentrasactionsHistory.refresh();
+      }
+    } else {
+      snackBarCalledfail(context, "Failed to hide transaction");
+    }
+  } catch (e) {
+    snackBarCalledfail(context, "Error hiding transaction");
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Error hiding transaction")),
+    );
   }
 }

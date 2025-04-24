@@ -536,7 +536,7 @@ class _ModalContentState extends State<ModalContent>
                 await showCustomFriendsModal(context, amount ?? 0.0, false);
             if (result != null && addedMembers.isNotEmpty) {
               // print("buttonsWidget: Split mode - Received amounts: $result");
-              splitUserAmount(
+              splitUserAmountManualTransaction(
                 context,
                 amount.toString(),
                 addedMembers,
@@ -664,7 +664,7 @@ class _ModalContentState extends State<ModalContent>
     isLend.value = false;
     isSplit.value = false;
     if (isSplitAmount)
-      splitUserAmount(context, amount, addedMembers, categories, subCategories);
+      splitUserAmountManualTransaction(context, amount, addedMembers, categories, subCategories);
     else
       addLendUserAmount(
           context, amount, addedMembers, categories, subCategories);
@@ -735,7 +735,7 @@ class _ModalContentState extends State<ModalContent>
     );
   }
 
-  void splitUserAmount(
+  void splitUserAmountManualTransaction(
     BuildContext context,
     String totalAmount,
     List members,

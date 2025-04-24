@@ -104,10 +104,10 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
     final startOfMonth = DateTime(now.year, now.month, 1);
     final currentDay = now; // Use current date as the end date
 
-    return '${_formatDate(startOfMonth)} - ${_formatDate(currentDay)}';
+    return '${_formatDateDonut(startOfMonth)} - ${_formatDateDonut(currentDay)}';
   }
 
-  String _formatDate(DateTime date) {
+  String _formatDateDonut(DateTime date) {
     return '${date.day.toString().padLeft(2, '0')} ${_getMonthName(date.month)} ${date.year}';
   }
 

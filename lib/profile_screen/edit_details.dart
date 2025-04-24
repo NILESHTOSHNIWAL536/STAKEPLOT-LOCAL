@@ -238,16 +238,16 @@ void checkBiometricsStatus() async {
                     //   },
                     // );
 
-    //                 Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => UserStatsScreen()),
-    // );
+                    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => UserStatsScreen()),
+    );
                   },
                   child: Padding(
                     padding: EdgeInsets.only(top: 0.0),
                     child: textStyleOnly2(
                       context: context,
-                      text: "",
+                      text: "vvv",
                       fontsize: 14,
                       color: AppColors.bg3,
                       fontWeight: FontWeight.w400,
