@@ -616,13 +616,9 @@ class _ModalContentState extends State<ModalContent>
                       selectedSubCategory2.toString(), true);
                 } else if (isLend.value && addedMembers.isNotEmpty) {
                   if (addedMembers.length > 1) {
-                    snackBarCalled(
-                        context,
-                        "Please select only one friend for lending",
-                        Colors.red);
+                    snackBarCalled(context,"Please select only one friend for lending",Colors.red);
                     return;
                   }
-                  //   print("continueButton: Lending ${amount.toString()} to ${addedMembers[0]['id']}");
                   addLendUserAmount(
                     context,
                     amount.toString(),
@@ -891,17 +887,19 @@ class _ModalContentState extends State<ModalContent>
         "subcategory": subCategories,
         "type": "Lend Money",
         "amount": amount,
+        'message':"Nilesh toshniwal",
+        'dueDate':"2025-03-12"
       }),
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
+
       members.forEach((e) {
         sendNotificationsToDevice(e['id'], context,
             "${userName.value} has sent u a lend bill..Of ${name} Of ${amount}");
       });
-      snackBarCalled(context,
-          "Lend amount has been successfully sent to users!", Colors.black);
+      snackBarCalled(context,"Lend amount has been successfully sent to users!", Colors.black);
       addTransaction( amount, "Lend Bill (${subCategories})", name, context, 'cash', false);
       getUserLend(context);
     } else {

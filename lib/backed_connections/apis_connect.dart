@@ -10,7 +10,7 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 bool flag = true;
 String portNo = flag ? "192.168.1.12" : "localhost";
-String urlWithLocallHost = flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Feilds";
 RxString expenses = "Loading....".obs;
@@ -194,8 +194,7 @@ RxMap<String, int> postExploriaCommentCount = <String, int>{}.obs;
 RxMap<String, int> supportExploriaCount = <String, int>{}.obs;
 
   final RxList<String> monthLabels = <String>[].obs;
-  final Rx<Map<String, List<double>>> currentChartData =
-      Rx<Map<String, List<double>>>({});
+  final Rx<Map<String, List<double>>> currentChartData = Rx<Map<String, List<double>>>({});
   final RxList<String> currentDays = <String>[].obs;
   // final RxBool isYearView = false.obs;
   final RxBool isLoading = false.obs;

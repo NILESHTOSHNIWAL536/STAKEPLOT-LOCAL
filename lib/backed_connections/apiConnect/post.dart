@@ -91,8 +91,7 @@ Future<Map<String, dynamic>> createPost(BuildContext context, String title,
         'data': postData,
       };
     } else {
-      snackBarCalled(
-          context, "Server error: ${response.statusCode}", Colors.red);
+      snackBarCalled(context, "Server error: ${response.statusCode}", Colors.red);
       return {
         'success': false,
         'error': 'Server error: ${response.statusCode}',

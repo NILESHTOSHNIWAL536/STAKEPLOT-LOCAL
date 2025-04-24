@@ -96,7 +96,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
   @override
   void dispose() {
     _scrollController2.dispose();
-   
     super.dispose();
   }
 
@@ -240,16 +239,11 @@ class _TransactionHistoryState extends State<TransactionHistory>
           // Parse as UTC and convert to IST
           DateTime utcDate = DateTime.parse(timestamp).toUtc();
           DateTime istDate = utcDate.add(Duration(hours: 5, minutes: 30));
-          // Use only year and month for grouping to avoid day boundary issues
-          String monthYearKey =
-              DateFormat('MMMM yyyy').format(istDate); // e.g., "April 2025"
-          groupedTransactions
-              .putIfAbsent(monthYearKey, () => [])
-              .add(transaction);
-          // Debug: Log the timestamp and its IST conversion
-          print(
-              'Timestamp: $timestamp, IST: $istDate, Grouped as: $monthYearKey');
-        } catch (e) {
+          String monthYearKey = DateFormat('MMMM yyyy').format(istDate); // e.g., "April 2025"
+          groupedTransactions.putIfAbsent(monthYearKey, () => []).add(transaction);
+         
+        } catch (e) 
+        {
           print('Invalid timestamp: $timestamp');
           continue;
         }
@@ -482,8 +476,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
     );
   }
 
-  Widget historyTransactions(
-      Map<String, dynamic> transaction, String? date, int index) {
+  Widget historyTransactions(Map<String, dynamic> transaction, String? date, int index) {
     String logo = transaction['bankLogo']?.toString() ?? "";
     final category = transaction['category']?.toString() ?? 'Uncategorized';
     final subcategory = transaction['subcategory']?.toString() ?? 'General';
@@ -1002,4 +995,5 @@ void hideTransaction(
       const SnackBar(content: Text("Error hiding transaction")),
     );
   }
+  
 }

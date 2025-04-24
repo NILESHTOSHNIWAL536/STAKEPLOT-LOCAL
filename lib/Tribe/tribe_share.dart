@@ -340,7 +340,7 @@ class _TribeHomeState extends State<TribeShare> {
                 "roomId": userToSend,
               });
               index++;
-              sendNotificationsToDevice(rec, context,"Hey there! 👋, ${userName.value} has shared a post 📩. Please check it out 🛒 ","/chat/${currentId.value}");
+              sendNotificationsToDevice(rec, context,"Hey there! 👋, ${userName.value} has shared a post 📩. Please check it out 🛒 ","/chat/${currentId.value}",widget.dataObj['title'],widget.dataObj['image']);
             });
             Navigator.pop(context);
           },
