@@ -73,9 +73,8 @@ class _HomePageState extends State<HomePage> {
     getBudget();
     getUserInfomations();
     getUserLend(context);
-    getBudget();
     getHiddenTransactions(context);
-    getCategoryData();
+    
     getNotifications(context);
     allOrGroupTransactionsName.value = StringConstant.allTransactions;
     await getRemainders(context);

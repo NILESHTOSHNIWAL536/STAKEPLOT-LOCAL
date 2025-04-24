@@ -163,26 +163,28 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
     return Scaffold(
       backgroundColor: AppColors.bg5,
       // appBar: AppBar(),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          children: [
-            // Top Cover and Profile Picture
-            topUserProfile(widget.data),
-           
-            const SizedBox(height: 60),
-            
-            Text(widget.data['name'].toString(),
-                style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.w600,
-                    //fontSize: MediaQuery.of(context).size.width * 0.04,
-                    //fontSize: 12,
-                    color: AppColors.bg1)),
-            
-              TabBarUser(userPostList: getTrendingData),
-           
-          ],
+      body: SafeArea(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: [
+              // Top Cover and Profile Picture
+              topUserProfile(widget.data),
+             
+              const SizedBox(height: 60),
+              
+              Text(widget.data['name'].toString(),
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.w600,
+                      //fontSize: MediaQuery.of(context).size.width * 0.04,
+                      //fontSize: 12,
+                      color: AppColors.bg1)),
+              
+                TabBarUser(userPostList: getTrendingData),
+             
+            ],
+          ),
         ),
       ),
     );

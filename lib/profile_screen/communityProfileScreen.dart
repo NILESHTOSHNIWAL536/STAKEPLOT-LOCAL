@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
-import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
+
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
-import 'package:flutter_application_code_stakeplot/profile.dart';
+
 import 'package:flutter_application_code_stakeplot/profile_screen/tabBarUser.dart';
-import 'package:flutter_application_code_stakeplot/userAvatar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
