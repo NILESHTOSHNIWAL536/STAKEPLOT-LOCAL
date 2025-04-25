@@ -19,19 +19,20 @@ Widget historyTransactions({
   required String? date,
   required int index,
   required BuildContext context,
-  required Function(int, bool, BuildContext, String) onHide, // Callback for hide/unhide
+  required Function(int, bool, BuildContext, String)
+      onHide, // Callback for hide/unhide
   bool showBankLogo = false, // Whether to show bank logo
   String? bankLogo, // Bank logo URL
   bool isHiddenScreen = false, // Flag to differentiate hide vs unhide
 }) {
   final category = transaction['category']?.toString() ?? 'Uncategorized';
   final subcategory = transaction['subcategory']?.toString() ?? 'General';
-  final double amount = double.parse(
-      doubleToFixed((transaction['amount'] ?? 0.0).toString()));
+  final double amount =
+      double.parse(doubleToFixed((transaction['amount'] ?? 0.0).toString()));
+  final amountT = formatMoneyIndian(amount.toString());
   final isManual = transaction['manualTransaction'] ?? false;
-  final formattedDate = date != null
-      ? formatWhatsAppDate(convertStringToDateTime(date))
-      : 'Date';
+  final formattedDate =
+      date != null ? formatWhatsAppDate(convertStringToDateTime(date)) : 'Date';
   final narration = transaction['narration'] ?? 'Unnamed Group';
   List<String> parts = narration.split('/');
   if (parts.isEmpty || parts.length == 1) parts = narration.split('-');
@@ -49,7 +50,7 @@ Widget historyTransactions({
   final amtColor = type == 'CREDIT'
       ? Colors.green.shade700
       : const Color.fromARGB(255, 207, 118, 113);
-  final formatAmount = type == 'CREDIT' ? "+₹$amount" : "-₹$amount";
+  final formatAmount = type == 'CREDIT' ? "+₹$amountT" : "-₹$amountT";
 
   // Responsive scaling with MediaQuery
   final screenWidth = MediaQuery.of(context).size.width;
@@ -103,7 +104,8 @@ Widget historyTransactions({
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: screenWidth * 0.02),
+                      padding:
+                          EdgeInsets.symmetric(vertical: screenWidth * 0.02),
                       child: textStyleOnly2(
                         context: context,
                         text: message,
@@ -236,7 +238,7 @@ Widget historyTransactions({
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              width: MediaQuery.sizeOf(context).width / 2.7,
+                              width: MediaQuery.sizeOf(context).width / 2.9,
                               child: Tooltip(
                                 message: narration,
                                 child: textStyle(
@@ -291,14 +293,18 @@ Widget historyTransactions({
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       // Bank Logo (if applicable)
-                      if (showBankLogo && bankLogo != null && bankLogo.isNotEmpty)
+                      if (showBankLogo &&
+                          bankLogo != null &&
+                          bankLogo.isNotEmpty)
                         Image.network(
                           bankLogo,
                           width: 30,
                           height: 30,
                           fit: BoxFit.fitWidth,
                         ),
-                      if (showBankLogo && bankLogo != null && bankLogo.isNotEmpty)
+                      if (showBankLogo &&
+                          bankLogo != null &&
+                          bankLogo.isNotEmpty)
                         SizedBox(width: 8 * scaleFactor),
                       // Hide/Unhide Transaction
                       Tooltip(
@@ -312,16 +318,16 @@ Widget historyTransactions({
                               confirmText: "Yes",
                             );
                             if (confirmed) {
-                              onHide(
-                                  index, !isHiddenScreen, context, transaction['_id']);
-                              
+                              onHide(index, !isHiddenScreen, context,
+                                  transaction['_id']);
                             }
                           },
                           child: Container(
                             padding: EdgeInsets.all(6 * scaleFactor),
                             decoration: BoxDecoration(
                               color: AppColors.primaryColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8 * scaleFactor),
+                              borderRadius:
+                                  BorderRadius.circular(8 * scaleFactor),
                             ),
                             child: Icon(
                               isHiddenScreen
@@ -351,7 +357,8 @@ Widget historyTransactions({
                             padding: EdgeInsets.all(6 * scaleFactor),
                             decoration: BoxDecoration(
                               color: AppColors.primaryColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8 * scaleFactor),
+                              borderRadius:
+                                  BorderRadius.circular(8 * scaleFactor),
                             ),
                             child: Icon(
                               Icons.group_add_rounded,
@@ -372,8 +379,8 @@ Widget historyTransactions({
                               context: context,
                               isScrollControlled: true,
                               shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.vertical(top: Radius.circular(20)),
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20)),
                               ),
                               builder: (context) {
                                 return TagShowmodal(
@@ -387,7 +394,8 @@ Widget historyTransactions({
                             padding: EdgeInsets.all(6 * scaleFactor),
                             decoration: BoxDecoration(
                               color: AppColors.primaryColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8 * scaleFactor),
+                              borderRadius:
+                                  BorderRadius.circular(8 * scaleFactor),
                             ),
                             child: Icon(
                               Icons.tag_rounded,
