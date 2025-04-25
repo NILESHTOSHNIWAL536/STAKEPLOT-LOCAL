@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:intl/intl.dart';
 
 class WidgetManager {
   static Future<void> initialize() async {

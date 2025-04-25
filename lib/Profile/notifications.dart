@@ -495,8 +495,7 @@ class _NotificationsState extends State<Notifications> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        avatar.isNotEmpty
-            ? UserAvatar(
+        avatar.isNotEmpty? UserAvatar(
                 url: avaterUrlPath(avatar),
                 width: MediaQuery.of(context).size.width * 0.06,
                 height: MediaQuery.of(context).size.width * 0.06,

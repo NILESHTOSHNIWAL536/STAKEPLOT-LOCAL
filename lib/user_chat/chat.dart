@@ -653,48 +653,67 @@ class _ChatState extends State<Chat> {
         url: boolFlag ? path : avaterUrlPath(data['name']), width: 17, height: 16);
   }
 
-  Widget textIsme(msg, bool isme) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3.0),
-      child: Container(
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width / 1.4,
-        ),
-        padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        decoration: BoxDecoration(
-          color: isme ? AppColors.primaryColor : null,
-          borderRadius: BorderRadius.only(
-            bottomRight: isme ? Radius.zero : Radius.circular(10),
-            topLeft: Radius.circular(10.0),
-            topRight: Radius.circular(10.0),
-            bottomLeft: !isme ? Radius.zero : Radius.circular(10),
-          ),
-          gradient: !isme
-              ? LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [
-                    AppColors.mt,
-                    AppColors.mt,
-                  ],
-                )
-              : null,
-
-          //  border: Border.all(
-          //     width: .5,
-          //     color: Colorcodes.poll1
-          // )
-        ),
-        child: Text(msg,
-            style: FontManager().getTextStyle(context,
-                lWeight: FontWeight.w400,
-                fontSize: 15,
-                letterSpacing: 0.0,
-                color: isme ? AppColors.backgroundColor : AppColors.bg1)),
+  Widget textIsme(String msg, bool isme) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 3.0),
+    child: Container(
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width / 1.4,
       ),
-    );
-  }
-
+      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: isme ? AppColors.primaryColor : null,
+        borderRadius: BorderRadius.only(
+          bottomRight: isme ? Radius.zero : Radius.circular(10),
+          topLeft: Radius.circular(10.0),
+          topRight: Radius.circular(10.0),
+          bottomLeft: !isme ? Radius.zero : Radius.circular(10),
+        ),
+        gradient: !isme
+            ? LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [
+                  AppColors.mt,
+                  AppColors.mt,
+                ],
+              )
+            : null,
+      ),
+      child: SelectableText(
+        msg,
+        style: FontManager().getTextStyle(
+          context,
+          lWeight: FontWeight.w400,
+          fontSize: 15,
+          letterSpacing: 0.0,
+          color: isme ? AppColors.backgroundColor : AppColors.bg1,
+        ),
+        textAlign: TextAlign.left,
+        onTap: () {
+          // Optional: Handle tap if needed
+        },
+        contextMenuBuilder: (context, editableTextState) {
+          return AdaptiveTextSelectionToolbar(
+            anchors: editableTextState.contextMenuAnchors,
+            children: [
+              TextSelectionToolbarTextButton(
+                padding: EdgeInsets.all(8),
+                child: Text('Copy'),
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: msg));
+                  //Navigator.of(context).pop(); // Close the context menu
+                 
+                },
+              ),
+              // Add more options like 'Select All' if needed
+            ],
+          );
+        },
+      ),
+    ),
+  );
+}
   Widget InputDate(
     String labelText,
     TextInputType keyboardType,
@@ -723,6 +742,7 @@ class _ChatState extends State<Chat> {
         decoration: InputDecoration(
           hintText: labelText,
           filled: true,
+          fillColor: Colors.white,
           // prefixIcon: IconButton(
           //   icon: Icon(
           //     Icons.emoji_emotions,

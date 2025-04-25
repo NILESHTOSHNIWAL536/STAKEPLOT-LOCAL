@@ -296,6 +296,36 @@ String formatMoneyIndian(String value)
     return DateFormat('d MMM yyyy').format(date); // Format as Aug 2024
   }
 
+  String getMonthName(int month) {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
+    return months[month - 1];
+  }
+
+String getMonthlyRange() {
+    final now = DateTime.now();
+    final startOfMonth = DateTime(now.year, now.month, 1);
+    final currentDay = now; // Use current date as the end date
+
+    return '${_formatDateDonut(startOfMonth)} - ${_formatDateDonut(currentDay)}';
+  }
+
+  String _formatDateDonut(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')} ${getMonthName(date.month)} ${date.year}';
+  }
+
 
   void showModalForPdfDownload(BuildContext context) {
     getPdgLoader.value = false;

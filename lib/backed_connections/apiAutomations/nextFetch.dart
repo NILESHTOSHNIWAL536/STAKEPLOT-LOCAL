@@ -98,7 +98,7 @@ class _RotatingIconState extends State<Nextfetch>
                 ),
                 textStyle(
                     context: context,
-                    text: isFected.value?"": "Monday, 9:00 AM",
+                    text: isFected.value?"": "Friday, 8:00 AM",
                     // text: currentTime.value,
                     fontWeight: FontWeight.bold,
                     c: AppColors.primaryColor,

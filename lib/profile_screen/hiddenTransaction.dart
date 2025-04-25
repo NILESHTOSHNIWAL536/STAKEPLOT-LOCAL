@@ -59,6 +59,8 @@ class _HiddenTransactionsScreenState extends State<HiddenTransactionsScreen> {
             date: transaction['transactionTimestamp'],
             index: index,
             context: context,
+            showBankLogo: true,
+            bankLogo: transaction['bankLogo']?.toString(),
             onHide: hideTransaction, // Pass the hideTransaction function
             isHiddenScreen: true, // Indicate this is the hidden screen
           );

@@ -478,8 +478,7 @@ void hideTransaction(
       if (hidden) {
         hiddenTransactions.add(transaction);
         transactionsHistory.removeAt(index);
-        // Clear all swipe offsets
-       // Reset the animation controller
+       
         transactionsHistory.refresh();
         snackBarCalled(context, "Transaction hidden Successfully");
       } else {
@@ -491,8 +490,6 @@ void hideTransaction(
     }
   } catch (e) {
     snackBarCalledfail(context, "Error hiding transaction");
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Error hiding transaction")),
-    );
+   
   }
 }

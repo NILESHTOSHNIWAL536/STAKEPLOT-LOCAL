@@ -134,7 +134,7 @@ Future<void> loginUser(TextEditingController emailController,
     // print('Login error: $e');
     // print('Stack trace: $stackTrace');
     acceptReset.value = false;
-    snackBarCalledfail(context, 'Login failed: $e');
+    snackBarCalledfail(context, 'Login failed');
   }
 }
 

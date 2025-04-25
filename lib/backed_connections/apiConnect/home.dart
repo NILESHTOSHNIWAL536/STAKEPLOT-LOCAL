@@ -17,9 +17,9 @@ void getAck() async {
 }
 
 void setPasswordApiCalled(context, String password) async {
- 
   if (password == "00") {
-       snackBarCalledfail(context, "Unable to set the PIN 00 except 00 try other!", Colors.red);
+    snackBarCalledfail(
+        context, "Unable to set the PIN 00 except 00 try other!", Colors.red);
     return; // Exit the function without setting the PIN
   }
 
@@ -30,8 +30,9 @@ void setPasswordApiCalled(context, String password) async {
 
   if (getFlagOfResponse(response)) {
     cupertinoPin.value = password;
-    
-    snackBarCalled(context, "Your PIN has been set successfully!", Colors.black);
+
+    snackBarCalled(
+        context, "Your PIN has been set successfully!", Colors.black);
   } else {
     snackBarCalled(context, "Unable to set the PIN!", Colors.red);
   }
@@ -63,7 +64,8 @@ void seletedBankUpdateInfo(id, context) async {
 }
 
 void getAllTransaction(context) async {
-  var response = await getDataApiCall("${url}/transactionauto/getTransactions/${1}");
+  var response =
+      await getDataApiCall("${url}/transactionauto/getTransactions/${1}");
   expire(response, context);
   printData(response);
   if (response.statusCode == 200) {
@@ -94,6 +96,7 @@ void getHiddenTransactions(context) async {
     var obj = her['data'];
     hiddentrasactionsHistory.clear();
     hiddentrasactionsHistory.addAll(obj);
+    print("hidden-------------------$hiddentrasactionsHistory");
     getHiddenHistory.value = !getHiddenHistory.value;
   } else {}
 }
@@ -101,8 +104,8 @@ void getHiddenTransactions(context) async {
 Future<void> getAllTransactionHistory(
     BuildContext context, bool flag, bool isYearView,
     {bool isRefreshing = false}) async {
-   if (isLoadingMore.value) return; // Prevent multiple API calls
-   loadingDelay.value=true;
+  if (isLoadingMore.value) return; // Prevent multiple API calls
+  loadingDelay.value = true;
   try {
     isLoadingMore.value = true;
     String type = isYearView
@@ -115,26 +118,22 @@ Future<void> getAllTransactionHistory(
         : "${url}/transactionauto/getTransactions/${currentPage}";
 
     var response = await getDataApiCall(urlPath);
-    if (response.statusCode == 200)
-    {
+    if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       var obj = data['data'];
-    
+
       if (obj != null && obj is List<dynamic>) {
-        if (isRefreshing)
-        {
+        if (isRefreshing) {
           transactionsHistory.clear(); // Clear only on refresh
         }
 
         transactionsHistory.addAll(obj);
 
         // Stop loading indicator if no more transactions exist
-        if (obj.isEmpty || obj.length < 20)
-        {
+        if (obj.isEmpty || obj.length < 20) {
           hasMoreData = false;
           isLoadingMore.value = true;
-        } else
-        {
+        } else {
           isLoadingMore.value = false;
           currentPage++;
         }
@@ -147,13 +146,12 @@ Future<void> getAllTransactionHistory(
       } else {
         snackBarCalled(context, "No transaction data available");
       }
-
     }
   } catch (e) {
-      print("erro in the tran his "+e.toString());
-  } 
+    print("erro in the tran his " + e.toString());
+  }
 
-  loadingDelay.value=false;
+  loadingDelay.value = false;
 }
 
 void extractTransaction(bool isYearView, List obj) {

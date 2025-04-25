@@ -213,7 +213,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
         try {
           // Parse as UTC and convert to IST
           DateTime utcDate = DateTime.parse(timestamp).toUtc();
-          DateTime istDate = utcDate.add(Duration(hours: 5, minutes: 30));
+          DateTime istDate = utcDate.subtract(Duration(hours: 5, minutes: 30));
           // Use only year and month for grouping to avoid day boundary issues
           String monthYearKey =
               DateFormat('MMMM yyyy').format(istDate); // e.g., "April 2025"
@@ -233,11 +233,11 @@ class _TransactionHistoryState extends State<TransactionHistory>
       DateTime dateA = DateFormat('MMMM yyyy')
           .parse(a, true)
           .toUtc()
-          .add(Duration(hours: 5, minutes: 30)); // Convert UTC to IST
+          .subtract(Duration(hours: 5, minutes: 30)); // Convert UTC to IST
       DateTime dateB = DateFormat('MMMM yyyy')
           .parse(b, true)
           .toUtc()
-          .add(Duration(hours: 5, minutes: 30)); // Convert UTC to IST
+          .subtract(Duration(hours: 5, minutes: 30)); // Convert UTC to IST
       return dateB.compareTo(dateA); // Most recent first
     });
 

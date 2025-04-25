@@ -105,6 +105,8 @@ dependencies:
   home_widget: ^0.7.0+1
   flutter_swiper_view: ^1.1.8
   card_swiper: ^3.0.1
+  
+  flutter_background_service: ^5.1.0
 
 dev_dependencies:
   flutter_test:
