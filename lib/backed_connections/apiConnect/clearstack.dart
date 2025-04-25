@@ -4,8 +4,10 @@ import 'package:finvu_flutter_sdk/finvu_config.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/insightsController.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -84,8 +86,19 @@ Future<bool> check(context, String flag) async
 }
 
 
-void clearGetX() {
-  income = 0.obs;
+Future<void> storeDeviceInfo()async
+{
+    var json = await getUserStats();
+    var responce=await postDataApiCall("${url}/deviceScreenTime/", json);
+    if(getFlagOfResponse(responce))
+    {
+        printData(responce);
+    }
+}
+
+
+void clearGetX(){
+   income = 0.obs;
   messages.clear();
   messagesTemp.clear();
   roomBills.clear();

@@ -267,11 +267,9 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
       children: [
         InkWell(
           onTap: () async {
-            final SharedPreferences _pref =
-                await SharedPreferences.getInstance();
-
+             await storeDeviceInfo();
+            final SharedPreferences _pref =await SharedPreferences.getInstance();
             // Remove tokens and other session data
-
             await _pref.remove("ConsentHandleId");
             await _pref.remove("consentId");
             await _pref.remove("from");

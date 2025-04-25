@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/number_picker.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transactions_graph.dart';
 import 'package:flutter_application_code_stakeplot/NavigatorScreens/userNavigator.dart';
+import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
@@ -39,6 +40,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final UserController userController = Get.find<UserController>();
+  late AppLifecycleHandler lifecycleHandler;
 
   @override
   void initState() {
@@ -82,6 +84,8 @@ class _HomePageState extends State<HomePage> {
     allOrGroupTransactionsName.value = StringConstant.allTransactions;
     await getRemainders(context);
     await updateWidget();
+     lifecycleHandler = AppLifecycleHandler(currentId.value); // Replace with actual user ID
+    WidgetsBinding.instance.addObserver(lifecycleHandler);
   }
 
   void isLoginAlreadLogin()async{

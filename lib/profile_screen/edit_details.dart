@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
-import 'package:flutter_application_code_stakeplot/main.dart';
-import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/userstats.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:get/get.dart';
@@ -242,16 +236,16 @@ void checkBiometricsStatus() async {
                     //   },
                     // );
 
-    //                 Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => UserStatsScreen()),
-    // );
+                    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => UserStatsScreen()),
+    );
                   },
                   child: Padding(
                     padding: EdgeInsets.only(top: 0.0),
                     child: textStyleOnly2(
                       context: context,
-                      text: "",
+                      text: "vv",
                       fontsize: 14,
                       color: AppColors.bg3,
                       fontWeight: FontWeight.w400,

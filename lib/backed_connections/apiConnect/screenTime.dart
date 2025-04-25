@@ -1,215 +1,3 @@
-// import 'dart:async';
-// import 'package:flutter/material.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-
-// class ScreenTimeTracker with WidgetsBindingObserver {
-//   static final ScreenTimeTracker _instance = ScreenTimeTracker._internal();
-//   factory ScreenTimeTracker() {
-//     // print('Accessing ScreenTimeTracker instance: ${_instance.hashCode}');
-//     return _instance;
-//   }
-//   ScreenTimeTracker._internal() {
-//     // print('ScreenTimeTracker created: ${this.hashCode}');
-//     initialize();
-//   }
-
-//   DateTime? _sessionStartTime;
-//   int _totalScreenTimeSeconds = 0;
-//   Timer? _timer;
-//   final ValueNotifier<int> screenTimeNotifier = ValueNotifier<int>(0);
-//   bool _isLoggedIn = false;
-//   int _dailyAppOpenCount = 0;
-//   List<String> _appOpenHistory = [];
-//   List<String> _appEventLog = []; // Stores open/close timestamps
-//   DateTime? _lastResumeTime; // Prevents duplicate resumes
-
-//   Future<void> initialize() async {
-//     WidgetsBinding.instance.addObserver(this);
-//     await _loadTotalScreenTime();
-//     await _loadAppOpenData();
-//     await _loadAppEventLog();
-//   }
-
-//   Future<void> _loadTotalScreenTime() async {
-//     final SharedPreferences pref = await SharedPreferences.getInstance();
-//     _totalScreenTimeSeconds = pref.getInt('total_screen_time') ?? 0;
-//     screenTimeNotifier.value = _totalScreenTimeSeconds;
-//     // print('Loaded total screen time: $_totalScreenTimeSeconds seconds');
-//   }
-
-//   Future<void> _saveTotalScreenTime() async {
-//     final SharedPreferences pref = await SharedPreferences.getInstance();
-//     await pref.setInt('total_screen_time', _totalScreenTimeSeconds);
-//     screenTimeNotifier.value = _totalScreenTimeSeconds;
-//     // print('Saved total screen time: $_totalScreenTimeSeconds seconds');
-//   }
-
-//   Future<void> _loadAppOpenData() async {
-//     final SharedPreferences pref = await SharedPreferences.getInstance();
-//     final String todayKey = 'app_open_count_${DateTime.now().toIso8601String().substring(0, 10)}';
-//     _dailyAppOpenCount = pref.getInt(todayKey) ?? 0;
-//     _appOpenHistory = pref.getStringList('app_open_history') ?? [];
-//     // print('Loaded app open count: $_dailyAppOpenCount, history: $_appOpenHistory');
-//   }
-
-//   Future<void> _saveAppOpenData() async {
-//     final SharedPreferences pref = await SharedPreferences.getInstance();
-//     final String todayKey = 'app_open_count_${DateTime.now().toIso8601String().substring(0, 10)}';
-//     await pref.setInt(todayKey, _dailyAppOpenCount);
-//     if (_appOpenHistory.any((entry) => entry.startsWith(todayKey))) {
-//       _appOpenHistory.removeWhere((entry) => entry.startsWith(todayKey));
-//     }
-//     _appOpenHistory.add('$todayKey:$_dailyAppOpenCount');
-//     await pref.setStringList('app_open_history', _appOpenHistory);
-//     // print('Saved app open count: $_dailyAppOpenCount, history: $_appOpenHistory');
-//   }
-
-//   Future<void> _loadAppEventLog() async {
-//     final SharedPreferences pref = await SharedPreferences.getInstance();
-//     _appEventLog = pref.getStringList('app_event_log') ?? [];
-//     // print('Loaded app event log: $_appEventLog');
-//   }
-
-//   Future<void> _saveAppEventLog() async {
-//     final SharedPreferences pref = await SharedPreferences.getInstance();
-//     await pref.setStringList('app_event_log', _appEventLog);
-//     // print('Saved app event log: $_appEventLog');
-//   }
-
-//   void startSession() {
-//     if (!_isLoggedIn) {
-//       _isLoggedIn = true;
-//       _sessionStartTime = DateTime.now();
-//       _startTimer();
-//       // print('Session started at: $_sessionStartTime, instance: ${this.hashCode}');
-//     }
-//   }
-
-//   void endSession() {
-//     if (_isLoggedIn && _sessionStartTime != null) {
-//       final duration = DateTime.now().difference(_sessionStartTime!).inSeconds;
-//       _totalScreenTimeSeconds += duration;
-//       // print('Session ended. Duration: $duration seconds. Total: $_totalScreenTimeSeconds seconds, instance: ${this.hashCode}');
-//       _sessionStartTime = null;
-//       _isLoggedIn = false;
-//       _stopTimer();
-//       _saveTotalScreenTime();
-//     }
-//   }
-
-//   void _startTimer() {
-//     _stopTimer();
-//     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-//       if (_isLoggedIn && _sessionStartTime != null) {
-//         final currentDuration = DateTime.now().difference(_sessionStartTime!).inSeconds;
-//         final total = _totalScreenTimeSeconds + currentDuration;
-//         screenTimeNotifier.value = total;
-//         // print('Timer tick: isLoggedIn=$_isLoggedIn, sessionStart=$_sessionStartTime, currentDuration=$currentDuration, total=$total, instance=${this.hashCode}');
-//       } else {
-//         // print('Timer stopped: isLoggedIn=$_isLoggedIn, sessionStart=$_sessionStartTime, instance=${this.hashCode}');
-//         timer.cancel();
-//       }
-//     });
-//   }
-
-//   void _stopTimer() {
-//     _timer?.cancel();
-//     _timer = null;
-//     // print('Timer stopped, instance: ${this.hashCode}');
-//   }
-
-//   void incrementAppOpenCount() {
-//     final now = DateTime.now();
-//     final String today = now.toIso8601String().substring(0, 10);
-//     final String todayKey = 'app_open_count_$today';
-
-//     // Reset count for new day
-//     if (_appOpenHistory.isEmpty || !_appOpenHistory.any((entry) => entry.startsWith(todayKey))) {
-//       _dailyAppOpenCount = 0;
-//     }
-
-//     _dailyAppOpenCount++;
-//     _appEventLog.add('Opened: ${now.toIso8601String()}');
-//     _saveAppOpenData();
-//     _saveAppEventLog();
-//     // print('App opened. Count: $_dailyAppOpenCount, event: Opened at ${now.toIso8601String()}, instance: ${this.hashCode}');
-//   }
-
-//   void logAppClose() {
-//     final now = DateTime.now();
-//     _appEventLog.add('Closed: ${now.toIso8601String()}');
-//     _saveAppEventLog();
-//     // print('App closed at: ${now.toIso8601String()}, instance: ${this.hashCode}');
-//   }
-
-//   int getDailyAppOpenCount() {
-//     final String today = DateTime.now().toIso8601String().substring(0, 10);
-//     final String todayKey = 'app_open_count_$today';
-//     if (_appOpenHistory.isEmpty || !_appOpenHistory.any((entry) => entry.startsWith(todayKey))) {
-//       return _dailyAppOpenCount > 0 ? _dailyAppOpenCount : 0;
-//     }
-//     return _dailyAppOpenCount;
-//   }
-
-//   List<String> getAppOpenHistory() {
-//     return _appOpenHistory;
-//   }
-
-//   List<String> getAppEventLog() {
-//     return _appEventLog;
-//   }
-
-//   int getTotalScreenTime() {
-//     final currentDuration = _isLoggedIn && _sessionStartTime != null
-//         ? DateTime.now().difference(_sessionStartTime!).inSeconds
-//         : 0;
-//     return _totalScreenTimeSeconds + currentDuration;
-//   }
-
-//   String formatScreenTime(int totalSeconds) {
-//     final hours = totalSeconds ~/ 3600;
-//     final minutes = (totalSeconds % 3600) ~/ 60;
-//     final seconds = totalSeconds % 60;
-//     return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
-//   }
-
-//   @override
-//   void didChangeAppLifecycleState(AppLifecycleState state) {
-//     // print('AppLifecycleState: $state, isLoggedIn=$_isLoggedIn, instance: ${this.hashCode}');
-//     if (state == AppLifecycleState.resumed) {
-//       final now = DateTime.now();
-//       // Only increment if enough time has passed to avoid duplicate resumes
-//       if (_lastResumeTime == null || now.difference(_lastResumeTime!).inSeconds > 2) {
-//         incrementAppOpenCount();
-//         _lastResumeTime = now;
-//       }
-//       if (_isLoggedIn && _sessionStartTime == null) {
-//         _sessionStartTime = DateTime.now();
-//         _startTimer();
-//         // print('Session resumed at: $_sessionStartTime, instance: ${this.hashCode}');
-//       }
-//     } else if (state == AppLifecycleState.paused) {
-//       logAppClose();
-//       if (_isLoggedIn && _sessionStartTime != null) {
-//         final duration = DateTime.now().difference(_sessionStartTime!).inSeconds;
-//         _totalScreenTimeSeconds += duration;
-//         _sessionStartTime = null;
-//         _stopTimer();
-//         _saveTotalScreenTime();
-//         // print('Session paused. Duration: $duration seconds. Total: $_totalScreenTimeSeconds seconds, instance: ${this.hashCode}');
-//       }
-//     }
-//   }
-
-//   void dispose() {
-//     _stopTimer();
-//     endSession();
-//     WidgetsBinding.instance.removeObserver(this);
-//     screenTimeNotifier.dispose();
-//     // print('ScreenTimeTracker disposed, instance: ${this.hashCode}');
-//   }
-// }
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -252,8 +40,10 @@ class ScreenTimeTracker with WidgetsBindingObserver {
     }
   }
 
-  Future<void> setUser(String userId) async {
-    if (_userId != userId) {
+  Future<void> setUser(String userId,[flag=false]) async
+   {
+    if (_userId != userId || flag)
+    {
       await clearUserData(); // Clear previous user data
       _userId = userId;
       await _loadUserData();
@@ -261,7 +51,8 @@ class ScreenTimeTracker with WidgetsBindingObserver {
     }
   }
 
-  Future<void> clearUserData() async {
+  Future<void> clearUserData() async
+  {
     _totalScreenTimeSeconds = 0;
     _dailyAppOpenCount = 0;
     _appOpenHistory = [];
