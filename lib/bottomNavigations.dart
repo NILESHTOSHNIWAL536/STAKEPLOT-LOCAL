@@ -855,8 +855,8 @@ Widget showUserData(BuildContext context) {
 
                     return InkWell(
                       onTap: () async {
-                        TextEditingController emailController =
-                            TextEditingController(text: user['email']);
+                           clearGetX();
+                        TextEditingController emailController =TextEditingController(text: user['email']);
                         TextEditingController passwordController =
                             TextEditingController(text: user['password']);
                         final SharedPreferences _pref =
@@ -876,7 +876,7 @@ Widget showUserData(BuildContext context) {
                           // Error handling if token removal fails
                         });
 
-                        clearGetX();
+                     
                         loginUser(emailController, passwordController, context);
                       },
                       child: Container(
@@ -965,8 +965,7 @@ Widget logoutWidget(context, [flag = false]) {
                     await SharedPreferences.getInstance();
                 String? userId = _pref.getString('accessToken') ?? '';
                 await _pref.remove("accessToken");
-                await _pref.remove(
-                    'login_count_${DateTime.now().toIso8601String().substring(0, 10)}_$userId');
+                await _pref.remove('login_count_${DateTime.now().toIso8601String().substring(0, 10)}_$userId');
                 await _pref.remove('login_history_$userId');
                 
                 Navigator.of(context).pushNamedAndRemoveUntil(

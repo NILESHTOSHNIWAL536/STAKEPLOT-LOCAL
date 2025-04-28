@@ -1,10 +1,16 @@
 import 'dart:convert';
+import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_transactions.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_details.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/transactionhistoryWidget.dart';
+import 'package:flutter_application_code_stakeplot/animated/pdf.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/bill.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:http/http.dart' as http;
@@ -249,17 +255,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
           .addAll(groupedTransactions[monthYear] ?? []); // Null-safe access
     }
 
-    // Show loader if no transactions are available
-    // if (displayItems.isEmpty) {
-    //   return const Center(
-    //     child: Padding(
-    //       padding: EdgeInsets.symmetric(vertical: 20),
-    //       child: CircularProgressIndicator(
-    //         color: AppColors.primaryColor,
-    //       ),
-    //     ),
-    //   );
-    // }
+   
 
     // Add a loading indicator at the end if more data is being fetched
     if (isLoadingMore.value) {
@@ -305,14 +301,10 @@ class _TransactionHistoryState extends State<TransactionHistory>
 
           return Container(
             child: historyTransactions(
-              transaction: transaction,
-              date: transaction['transactionTimestamp']?.toString(),
-              index: transactionIndex,
-              context: context,
-              onHide: hideTransaction,
-              showBankLogo: true,
-              bankLogo: transaction['bankLogo']?.toString(),
-              isHiddenScreen: false,
+              transaction,
+              transaction['transactionTimestamp']?.toString(),
+              transactionIndex,context,
+              true
             ),
           );
         }
@@ -337,7 +329,55 @@ class _TransactionHistoryState extends State<TransactionHistory>
       },
     );
   }
+  // Widget getlist() {
+  //   return ListView.builder(
+  //     itemCount: transactionsHistory.length + 1,
+  //     shrinkWrap: true,
+  //     controller: _scrollController2,
+  //     physics: const NeverScrollableScrollPhysics(),
+  //     itemBuilder: (context, index) {
+  //       if (index < transactionsHistory.length) {
+  //         final transaction = transactionsHistory[index];
 
+  //         double amount = double.parse(
+  //             doubleToFixed((transaction['amount'] ?? 0.0).toString()));
+  //         String category = transaction['category']?.toString() ??
+  //             'Uncategorized'; // Fixed typo and added null check
+  //         String subcategory =
+  //             transaction['subcategory']?.toString() ?? 'General';
+
+  //         return Container(
+  //               decoration: getBoxDecoration(index),
+  //               child: historyTransactions(
+  //                   transaction,
+  //                   transaction['transactionTimestamp']?.toString(),
+  //                   index), // Ensure this is a String or null),
+
+  //         );
+  //       } else {
+  //         return isLoadingMore.value
+  //             ? Padding(
+  //                 padding: const EdgeInsets.symmetric(vertical: 20),
+  //                 child: const Center(
+  //                   child: CircularProgressIndicator(
+  //                     color: AppColors.primaryColor,
+  //                   ),
+  //                 ),
+  //               )
+  //             : const SizedBox.shrink();
+  //       }
+  //     },
+  //   );
+  // }
+
+  
+
+  
+ 
+  
+
+  
+ 
   void extractTransaction(bool isYearView, List obj) {
     // print("------------------------ extra called...");
     // print(isYearView);
@@ -365,4 +405,106 @@ class _TransactionHistoryState extends State<TransactionHistory>
       }
     });
   }
+
+  bool isCurrentYear(String date, int y) {
+    try {
+      DateTime parsedDate = DateTime.parse(date); // Parse the date string
+      return parsedDate.year == y; // Compare year
+    } catch (e) {
+      return false; // Return false if parsing fails
+    }
+  }
+
+  void showModal() {
+    getPdgLoader.value = false;
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: MediaQuery.of(context).size.height / 2,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+            color: Colors.white,
+          ),
+          child: Column(
+            children: [
+              Center(child: Container()),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    textStyle(
+                        context: context,
+                        text: "Download Statement",
+                        fontsize: 14,
+                        fontWeight: FontWeight.w500),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Icon(
+                        Icons.close_outlined,
+                        size: 20,
+                        color: AppColors.accentColor,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              getListItemListTile("30", "days", context),
+              getListItemListTile("60", "days", context),
+              getListItemListTile("6", "months", context),
+              getListItemListTile("1", "year", context),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: InkWell(
+                    onTap: () async {
+                      getPdgLoader.value = true;
+                      getPdf(context, selectedValue, selectedValueType);
+                    },
+                    child: Obx(() => getPdgLoader.value
+                        ? getspinner(context, "")
+                        : getButton(context, "Continue"))),
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+  }
+
+
+
+Widget getIconAvtar(double avatarSize,String category,double scaleFactor) {
+  return Container(
+                        width: avatarSize,
+                        height: avatarSize,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              AppColors.button.withOpacity(0.8),
+                              Colors.white.withOpacity(0.6),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(12 * scaleFactor),
+                        ),
+                        child: Center(
+                          child: AvatarProfileImage(
+                            url: Categories.link +
+                                (imageMapForHistory[category.toLowerCase()] ??
+                                    'default_image.png'),
+                            height: avatarSize * 0.5,
+                            width: avatarSize * 0.5,
+                          ),
+                        ),
+                      );
 }

@@ -24,10 +24,10 @@ void approveBill(context, id, type, notifyId) async {
 Future<void> getRemainders(context) async {
   String urlPath = "${url}/reminders";
   var responce = await getDataApiCall(urlPath);
- 
+
   if (getFlagOfResponse(responce)) {
     var his = jsonDecode(responce.body);
-   
+
     var userDue = his['data']['payables'] ?? [];
     var userDue2 = his['data']['owed'] ?? [];
 
@@ -44,8 +44,7 @@ Future<void> getRemainders(context) async {
     lendAmountRemainders.refresh();
 
     getdueUsers.value = !getdueUsers.value;
-  } else {
-  }
+  } else {}
 }
 
 void getNotifications(context) async {
@@ -169,7 +168,7 @@ void getUserInfomations() async {
     currentId.value = data['_id'];
     userName.value = data['name'];
     avatar.value = avaterUrlPath(userName.value);
-    userAvatar=avatar.value;
+    userAvatar = avatar.value;
     email.value = data['email'];
     currency.value = data['currency'];
     score.value = data['score'].toString();

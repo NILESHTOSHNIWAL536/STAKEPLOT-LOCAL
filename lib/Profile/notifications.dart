@@ -3,9 +3,11 @@ import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
+import "package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart";
+import "package:flutter_application_code_stakeplot/Profile/autocategroies.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends.dart";
@@ -86,14 +88,17 @@ class _NotificationsState extends State<Notifications> {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            return Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: constraints.maxWidth * 0.04,
-                vertical: constraints.maxHeight * 0.01,
+            return Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.symmetric(horizontal: constraints.maxWidth * 0.04,vertical: constraints.maxHeight * 0.01,),
+              child: SingleChildScrollView(
+                child: Expanded(
+                  child: Obx(() => myNotificationBool.value
+                      ? _buildNotificationList()
+                      : _buildNotificationList()),
+                ),
               ),
-              child: Obx(() => myNotificationBool.value
-                  ? _buildNotificationList()
-                  : _buildNotificationList()),
             );
           },
         ),
@@ -104,7 +109,7 @@ class _NotificationsState extends State<Notifications> {
  Widget _buildNotificationList() {
   return notificationList.isEmpty && flag.value
       ? const Loader()
-      : notificationList.isEmpty
+      :( notificationList.isEmpty && autoTransactionList.isEmpty)
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -137,44 +142,53 @@ class _NotificationsState extends State<Notifications> {
                 ],
               ),
             )
-          : ListView.builder(
-              itemCount: notificationList.length,
-              itemBuilder: (context, index) {
-                var e = notificationList[index];
-                var notifyId = e['_id'] as String?;
-                return Dismissible(
-                  key: Key(notifyId ?? index.toString()),
-                  direction: DismissDirection.endToStart,
-                  onDismissed: (direction) {
-                    _deleteNotification(notifyId);
-                  },
-                  background: Container(
-                    // Match the margin and decoration of the foreground card
-                    margin: EdgeInsets.symmetric(
-                        vertical: MediaQuery.of(context).size.height * 0.008),
-                    decoration: BoxDecoration(
-                      color: Colors.redAccent,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
-                          blurRadius: 6,
-                          offset: const Offset(0, 2),
+          : Column(
+            children: [
+                AutocategroiesTransactions(),
+              Container(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                    itemCount: notificationList.length,
+                    itemBuilder: (context, index) {
+                      var e = notificationList[index];
+                      var notifyId = e['_id'] as String?;
+                      return Dismissible(
+                        key: Key(notifyId ?? index.toString()),
+                        direction: DismissDirection.endToStart,
+                        onDismissed: (direction) {
+                          _deleteNotification(notifyId);
+                        },
+                        background: Container(
+                          // Match the margin and decoration of the foreground card
+                          margin: EdgeInsets.symmetric(
+                              vertical: MediaQuery.of(context).size.height * 0.008),
+                          decoration: BoxDecoration(
+                            color: Colors.redAccent,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.1),
+                                blurRadius: 6,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          // Match padding with the foreground card
+                          padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
+                          alignment: Alignment.centerRight,
+                          child: const Padding(
+                            padding: EdgeInsets.only(right: 20),
+                            child: Icon(Icons.delete, color: Colors.white),
+                          ),
                         ),
-                      ],
-                    ),
-                    // Match padding with the foreground card
-                    padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
-                    alignment: Alignment.centerRight,
-                    child: const Padding(
-                      padding: EdgeInsets.only(right: 20),
-                      child: Icon(Icons.delete, color: Colors.white),
-                    ),
+                        child: _buildNotificationCard(e),
+                      );
+                    },
                   ),
-                  child: _buildNotificationCard(e),
-                );
-              },
-            );
+              ),
+            ],
+          );
 }
   Widget _buildNotificationCard(Map<String, dynamic> e) {
     var notifyId = e['_id'] as String?;
@@ -210,6 +224,11 @@ class _NotificationsState extends State<Notifications> {
                 ),
               ),
             ),
+            SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+
+          
+
+            SizedBox(width: MediaQuery.of(context).size.width * 0.03),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),

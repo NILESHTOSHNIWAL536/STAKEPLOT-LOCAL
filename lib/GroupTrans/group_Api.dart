@@ -4,10 +4,12 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:get/get.dart';
 
 RxList groupTransactionList = [].obs;
+RxList autoTransactionList = [].obs;
 RxList removedGrpItemsList = [].obs;
 RxBool reloadremovedTransactions = false.obs;
 RxBool lengthOfTransactions = false.obs;
 RxBool setGroupTransactions = false.obs;
+RxBool setAutoTransactions = false.obs;
 
 void getGroupTransactions() async {
   var res =

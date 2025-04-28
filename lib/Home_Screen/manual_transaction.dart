@@ -874,8 +874,7 @@ class _ModalContentState extends State<ModalContent>
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
 
-    final response = await http.post(
-      Uri.parse('${url}/bill'),
+    final response = await http.post(Uri.parse('${url}/bill'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Authorization": "$accessToken",
@@ -888,7 +887,7 @@ class _ModalContentState extends State<ModalContent>
         "subcategory": subCategories,
         "type": "Lend Money",
         "amount": amount,
-         'message':messageController.text.toString(),
+        'message':messageController.text.toString(),
         'dueDate': selectedDueDate.toString().substring(0,10)
       }),
     );

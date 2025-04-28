@@ -12,6 +12,7 @@ List<Color> color = [
 ];
 
 class Colorcodes {
+  static Color green = Colors.green.shade700;
   static Color budgetDarkGreen = const Color.fromRGBO(0, 208, 158, 1);
   static Color budgetLightGreen = const Color.fromRGBO(223, 247, 226, 1);
   static Color mainTheamColor = const Color.fromRGBO(249, 246, 238, 1);

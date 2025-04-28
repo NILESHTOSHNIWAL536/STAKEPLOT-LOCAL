@@ -83,30 +83,35 @@ Future<void> loginUser(TextEditingController emailController,
     TextEditingController passwordController, BuildContext context,
     [bool flag = false]) async {
   try {
-    // print('Attempting login for email: ${emailController.text}');
     var response = await postDataApiCallwithOutSharedPref('${url}/user/login', {
       'email': emailController.text.toString(),
       'userpassword': passwordController.text.toString(),
       'deviceInfo': deviceData,
     });
 
-    // print('Login response status: ${response.statusCode}');
     if (response.statusCode == 409) {
-      // print('Force login modal triggered');
-      forceLoginShowModal(
-          context, response, emailController, passwordController);
+      forceLoginShowModal(context, response, emailController, passwordController);
     } else if (response.statusCode == 500) {
-      // print('Server error during login');
       snackBarCalledSignup(context, "Server Error!", Colors.red);
     } else if (getFlagOfResponse(response)) {
-      // print('Login successful, processing data');
       loginCalledData(response, context);
+      await screenDataLocalStorage();
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      acceptReset.value = false;
+      snackBarCalledfail(context, 'Invalid credentials');
+    }
+  } catch (e, stackTrace) {
+    acceptReset.value = false;
+    snackBarCalledfail(context, 'Login failed: $e');
+  }
+}
 
+Future<void> screenDataLocalStorage()async 
+{
       final pref = await SharedPreferences.getInstance();
-      final userId = pref.getString('accessToken') ??
-          emailController.text; // Use token or email
-      final todayKey =
-          'login_count_${DateTime.now().toIso8601String().substring(0, 10)}_$userId';
+      String userId = pref.getString('accessToken').toString(); 
+      final todayKey = 'login_count_${DateTime.now().toIso8601String().substring(0, 10)}_$userId';
       int dailyLoginCount = pref.getInt(todayKey) ?? 0;
       dailyLoginCount++;
       await pref.setInt(todayKey, dailyLoginCount);
@@ -123,19 +128,6 @@ Future<void> loginUser(TextEditingController emailController,
       await ScreenTimeTracker().setUser(userId);
       ScreenTimeTracker().startSession();
       ScreenTimeTracker().switchTab('Home');
-      // print('Navigating to HomePage after login for $userId');
-      Navigator.pushReplacementNamed(context, '/home');
-    } else {
-      // print('Invalid credentials');
-      acceptReset.value = false;
-      snackBarCalledfail(context, 'Invalid credentials');
-    }
-  } catch (e, stackTrace) {
-    // print('Login error: $e');
-    // print('Stack trace: $stackTrace');
-    acceptReset.value = false;
-    snackBarCalledfail(context, 'Login failed');
-  }
 }
 
 void forceLoginShowModal(
