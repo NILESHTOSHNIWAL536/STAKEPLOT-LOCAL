@@ -32,7 +32,7 @@ Widget historyTransactions({
   final amountT = formatMoneyIndian(amount.toString());
   final isManual = transaction['manualTransaction'] ?? false;
   final formattedDate =
-      date != null ? formatWhatsAppDate(convertStringToDateTime(date)) : 'Date';
+      date != null ? (isManual?formatWhatsAppDate(convertStringToDateTime(date)):formatWhatsAppDate4(convertStringToDateTime(date)) ): 'Date';
   final narration = transaction['narration'] ?? 'Unnamed Group';
   List<String> parts = narration.split('/');
   if (parts.isEmpty || parts.length == 1) parts = narration.split('-');
