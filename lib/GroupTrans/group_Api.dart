@@ -4,15 +4,15 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:get/get.dart';
 
 RxList groupTransactionList = [].obs;
+RxList autoTransactionList = [].obs;
 RxList removedGrpItemsList = [].obs;
 RxBool reloadremovedTransactions = false.obs;
 RxBool lengthOfTransactions = false.obs;
 RxBool setGroupTransactions = false.obs;
+RxBool setAutoTransactions = false.obs;
 
 void getGroupTransactions() async {
-  var res =
-      await getDataApiCall("${url}/transactionauto/get-grouped-transactions");
-  print("group transactions ${res.body}");
+  var res = await getDataApiCall("${url}/transactionauto/get-grouped-transactions");
   if (getFlagOfResponse(res)) {
     var data = jsonDecode(res.body);
     data = data['data'];

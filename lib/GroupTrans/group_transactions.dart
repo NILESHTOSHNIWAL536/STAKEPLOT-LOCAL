@@ -205,6 +205,7 @@ import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart'
 import 'package:get/get.dart';
 
 class GroupTransactions extends StatefulWidget {
+
   const GroupTransactions({Key? key}) : super(key: key);
 
   @override
@@ -279,21 +280,14 @@ class _GroupTransactionsState extends State<GroupTransactions>
             fontsize: 20,
             fontWeight: FontWeight.bold,
           ),
-          // const SizedBox(height: 10),
-          // textStyle(
-          //   context: context,
-          //   text: "Group your transactions to see them here.",
-          //   c: AppColors.primaryColor.withOpacity(0.7),
-          //   fontsize: 14,
-          // ),
+          
         ],
       ),
     );
   }
 
   // Group card
-  Widget _buildGroupCard(
-      BuildContext context, Map<String, dynamic> transaction, int index) {
+  Widget _buildGroupCard(BuildContext context, Map<String, dynamic> transaction, int index) {
     final narration = transaction['narrationPattern'] ?? 'Unnamed Group';
     final count = transaction['count']?.toString() ?? '0';
     final totalAmount = transaction['totalAmount']?.toString() ?? '0';

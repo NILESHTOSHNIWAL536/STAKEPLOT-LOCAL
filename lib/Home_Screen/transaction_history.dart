@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_transactions.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_details.dart';
 import 'package:flutter_application_code_stakeplot/animated/pdf.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/bill.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
@@ -272,17 +275,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
           .addAll(groupedTransactions[monthYear] ?? []); // Null-safe access
     }
 
-    // Show loader if no transactions are available
-    // if (displayItems.isEmpty) {
-    //   return const Center(
-    //     child: Padding(
-    //       padding: EdgeInsets.symmetric(vertical: 20),
-    //       child: CircularProgressIndicator(
-    //         color: AppColors.primaryColor,
-    //       ),
-    //     ),
-    //   );
-    // }
+   
 
     // Add a loading indicator at the end if more data is being fetched
     if (isLoadingMore.value) {
@@ -347,7 +340,8 @@ class _TransactionHistoryState extends State<TransactionHistory>
             child: historyTransactions(
               transaction,
               transaction['transactionTimestamp']?.toString(),
-              transactionIndex,
+              transactionIndex,context,
+              true
             ),
           );
         }
@@ -476,318 +470,10 @@ class _TransactionHistoryState extends State<TransactionHistory>
     );
   }
 
-  Widget historyTransactions(Map<String, dynamic> transaction, String? date, int index) {
-    String logo = transaction['bankLogo']?.toString() ?? "";
-    final category = transaction['category']?.toString() ?? 'Uncategorized';
-    final subcategory = transaction['subcategory']?.toString() ?? 'General';
-    final double amount =double.parse(doubleToFixed((transaction['amount'] ?? 0.0).toString()));
-    final isManual = transaction['manualTransaction'] ?? false;
-    final formattedDate = date != null
-        ? formatWhatsAppDate(convertStringToDateTime(date))
-        : 'Date';
-    final type = transaction['type']?.toString() ?? '0';
-    final narration = transaction['narration'] ?? 'Unnamed Group';
 
-    List<String> parts = narration.split('/');
-    if (parts.isEmpty || parts.length == 1) parts = narration.split('-');
-    if (parts.isEmpty || parts.length == 1) parts = narration.split('&');
-    if (parts.isEmpty || parts.length == 1) parts = narration.split(' ');
 
-    String nameOfUser = parts.length >= 4
-        ? parts[3]
-        : parts.length >= 3
-            ? parts[2]
-            : parts.length >= 2
-                ? parts[1]
-                : parts[0];
 
-    final amtColor = type == 'CREDIT' ? Colors.green.shade700 : const Color.fromARGB(255, 207, 118, 113);
-    final formatAmount = type == 'CREDIT' ? "+₹${formatMoneyIndian(amount.toString())}" : "-₹${formatMoneyIndian(amount.toString())}";
-      
-    // Responsive scaling with MediaQuery
-    final screenWidth = MediaQuery.of(context).size.width;
-    final scaleFactor = screenWidth / 360; // Base width: 360px
-    final padding = 16.0 * scaleFactor;
-    final margin = 12.0 * scaleFactor;
-    final iconSize = 14.0 * scaleFactor; // Smaller icons for simplicity
-    final avatarSize = 40.0 * scaleFactor;
-    final fontSizeLarge = 14.0 * scaleFactor;
-    final fontSizeMedium = 12.0 * scaleFactor;
-    final fontSizeSmall = 10.0 * scaleFactor;
-    final badgeSize = 20.0 * scaleFactor;
 
-    return GestureDetector(
-      onTap: () {
-        if (!isManual) {
-          showModalBottomSheet(
-            context: context,
-            builder: (BuildContext context) {
-              return TransactionDetailsPage(transaction: transaction);
-            },
-          );
-        }
-      },
-      child: Stack(
-        children: [
-          Container(
-            width: double.infinity,
-            margin: EdgeInsets.symmetric(vertical: margin, horizontal: margin),
-            padding: EdgeInsets.all(padding),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16 * scaleFactor),
-              gradient: LinearGradient(
-                colors: [
-                  AppColors.backgroundColor.withOpacity(0.03),
-                  Colors.white,
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 8 * scaleFactor,
-                  offset: Offset(0, 3 * scaleFactor),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Top Row: Icon, Narration, Amount
-                Row(
-                  children: [
-                    // Icon Container
-                    Container(
-                      width: avatarSize,
-                      height: avatarSize,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            AppColors.button.withOpacity(0.8),
-                            Colors.white.withOpacity(0.6),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(12 * scaleFactor),
-                      ),
-                      child: Center(
-                        child: AvatarProfileImage(
-                          url: Categories.link +
-                              (imageMapForHistory[category.toLowerCase()] ??
-                                  'default_image.png'),
-                          height: avatarSize * 0.5,
-                          width: avatarSize * 0.5,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: padding),
-                    // Narration and Amount
-                    Flexible(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Tooltip(
-                                message: narration,
-                                child: Container(
-                                  // height: 30,
-                                  // color: Colorcodes.appBarColor,
-                                  width: MediaQuery.sizeOf(context).width / 3,
-                                  child: textStyle(
-                                      context: context,
-                                      text: nameOfUser,
-                                      c: AppColors.accentColor,
-                                      fontsize: fontSizeMedium,
-                                      fontWeight: FontWeight.w600,
-                                      lineHeight: 1.5),
-                                ),
-                              ),
-                              textStyle(
-                                context: context,
-                                text: formattedDate,
-                                c: AppColors.primaryColor.withOpacity(0.7),
-                                fontsize: fontSizeSmall,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ],
-                          ),
-                          textStyle(
-                            context: context,
-                            text: formatAmount,
-                            c: amtColor,
-                            fontsize: fontSizeLarge,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: padding / 2.5),
-                // Bottom Row: Category and Actions
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Category
-                    Container(
-                      width: MediaQuery.sizeOf(context).width / 3,
-                      child: textStyle(
-                        context: context,
-                        text: category,
-                        c: AppColors.accentColor,
-                        fontsize: fontSizeMedium,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    // Action Icons
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // Hide Transaction
-                   logo==""? SizedBox.shrink():
-                        Image.network(
-                          logo,
-                          width: 30,
-                          height: 30,
-                          fit: BoxFit.fitWidth,
-                        ),
-                       SizedBox(width: 8 * scaleFactor),
-                        Tooltip(
-                          message: 'Hide',
-                          child: GestureDetector(
-                            onTap: () {
-                              hideTransaction(
-                                  index, true, context, transaction['_id']);
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(6 * scaleFactor),
-                              decoration: BoxDecoration(
-                                color: AppColors.primaryColor.withOpacity(0.1),
-                                borderRadius:
-                                    BorderRadius.circular(8 * scaleFactor),
-                              ),
-                              child: Icon(
-                                Icons.visibility_off_rounded,
-                                color: AppColors.primaryColor,
-                                size: iconSize,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 8 * scaleFactor),
-                        // Friends Modal
-                        Tooltip(
-                          message: 'Split with Friends',
-                          child: GestureDetector(
-                            onTap: () async {
-                              await showCustomFriendsModal(
-                                context,
-                                amount,
-                                false,
-                                category,
-                                subcategory,
-                              );
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(6 * scaleFactor),
-                              decoration: BoxDecoration(
-                                color: AppColors.primaryColor.withOpacity(0.1),
-                                borderRadius:
-                                    BorderRadius.circular(8 * scaleFactor),
-                              ),
-                              child: Icon(
-                                Icons.group_add_rounded,
-                                color: AppColors.primaryColor,
-                                size: iconSize,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 8 * scaleFactor),
-                        // Tag Action
-                        Tooltip(
-                          message: 'Tag',
-                          child: GestureDetector(
-                            onTap: () {
-                              tagName.value = category;
-                              showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(20)),
-                                ),
-                                builder: (context) {
-                                  return TagShowmodal(
-                                    data: transaction,
-                                    index: index,
-                                  );
-                                },
-                              );
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(6 * scaleFactor),
-                              decoration: BoxDecoration(
-                                color: AppColors.primaryColor.withOpacity(0.1),
-                                borderRadius:
-                                    BorderRadius.circular(8 * scaleFactor),
-                              ),
-                              child: Icon(
-                                Icons.tag_rounded,
-                                color: AppColors.primaryColor,
-                                size: iconSize,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 8 * scaleFactor),
-                        // Details Action
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          // Manual Badge
-          if (isManual)
-            Positioned(
-              top: margin,
-              left: margin + 4,
-              child: Container(
-                width: badgeSize,
-                height: badgeSize,
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 4 * scaleFactor,
-                      offset: Offset(2 * scaleFactor, 2 * scaleFactor),
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Text(
-                    'M',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: fontSizeSmall * 0.8,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
 
   Future<dynamic> showCustomFriendsModal(
     BuildContext context,
@@ -957,7 +643,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
       },
     );
   }
-}
+  }
 
 void hideTransaction(
     int index, bool hidden, BuildContext context, String id) async {
@@ -996,4 +682,32 @@ void hideTransaction(
     );
   }
   
+}
+
+
+Widget getIconAvtar(double avatarSize,String category,double scaleFactor) {
+  return Container(
+                        width: avatarSize,
+                        height: avatarSize,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              AppColors.button.withOpacity(0.8),
+                              Colors.white.withOpacity(0.6),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(12 * scaleFactor),
+                        ),
+                        child: Center(
+                          child: AvatarProfileImage(
+                            url: Categories.link +
+                                (imageMapForHistory[category.toLowerCase()] ??
+                                    'default_image.png'),
+                            height: avatarSize * 0.5,
+                            width: avatarSize * 0.5,
+                          ),
+                        ),
+                      );
 }

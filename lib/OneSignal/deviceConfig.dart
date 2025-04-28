@@ -33,7 +33,6 @@ class AppLifecycleHandler extends WidgetsBindingObserver {
       String? userid=await getToken();
       await ScreenTimeTracker().setUser(userid.toString(),true);
       await screenDataLocalStorage();
-
       sendNotificationsToDevice(userId,"App closed","The app has been closed. Please check your app for any updates or issues.",);
     } catch (e){
       print('Error sending close event: $e');

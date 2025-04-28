@@ -12,6 +12,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/transactions_grap
 import 'package:flutter_application_code_stakeplot/NavigatorScreens/userNavigator.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
@@ -81,6 +82,8 @@ class _HomePageState extends State<HomePage> {
     getHiddenTransactions(context);
     getCategoryData();
     getNotifications(context);
+    getAllAutoTransactions();
+    getAllTransaction(context);
     allOrGroupTransactionsName.value = StringConstant.allTransactions;
     await getRemainders(context);
     await updateWidget();
@@ -144,6 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               Nextfetch(),
+              TransactionHistory(),
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.23,
                 child: NumberPickerScreen(),

@@ -119,6 +119,7 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
                       updateTheTagOfTarnsactions(widget.data['category'], widget.data['subcategory'], widget.data['_id'], context,widget.index);
                       transactionsHistory[widget.index]['category']=widget.data['category'];
                       transactionsHistory[widget.index]['subcategory']=widget.data['subcategory'];
+                      transactionsHistory[widget.index]['needsReview']=false;
                       transactionsHistory.refresh();
                   }else{
                     
