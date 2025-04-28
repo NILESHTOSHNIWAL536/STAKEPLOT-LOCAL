@@ -41,7 +41,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final UserController userController = Get.find<UserController>();
-  late AppLifecycleHandler lifecycleHandler;
+  // late AppLifecycleHandler lifecycleHandler;
 
   @override
   void initState() {
@@ -87,8 +87,8 @@ class _HomePageState extends State<HomePage> {
     allOrGroupTransactionsName.value = StringConstant.allTransactions;
     await getRemainders(context);
     await updateWidget();
-     lifecycleHandler = AppLifecycleHandler(currentId.value); // Replace with actual user ID
-    WidgetsBinding.instance.addObserver(lifecycleHandler);
+    //  lifecycleHandler = AppLifecycleHandler(currentId.value); // Replace with actual user ID
+    // WidgetsBinding.instance.addObserver(lifecycleHandler);
   }
 
   void isLoginAlreadLogin()async{
