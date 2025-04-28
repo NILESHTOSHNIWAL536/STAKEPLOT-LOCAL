@@ -31,7 +31,9 @@ Future<void> addTagToTransactions(context,transactionId,bool flag,int index)asyn
 {
 
   // http://localhost:5000/api/v1/transactionauto/verify-pending-transaction/:transactionId/:isCorrect
-   var res =await postDataApiCall("${url}/transactionauto/verify-pending-transaction/${transactionId}/${flag}",{});
+   var res =await postDataApiCall("${url}/transactionauto/verify-pending-transaction/${transactionId}/${flag}",{
+      "flag":flag
+   });
   
   if(getFlagOfResponse(res))
   {

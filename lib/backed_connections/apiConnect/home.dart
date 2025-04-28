@@ -68,8 +68,8 @@ void getAllTransaction(context) async {
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-    trasactionsHistory.clear();
-    trasactionsHistory.addAll(obj);
+    transactionsHistory.clear();
+    transactionsHistory.addAll(obj);
     reloadHistory.value = !reloadHistory.value;
   } else {}
 }

@@ -147,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               Nextfetch(),
-              TransactionHistory(),
+             
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.23,
                 child: NumberPickerScreen(),
