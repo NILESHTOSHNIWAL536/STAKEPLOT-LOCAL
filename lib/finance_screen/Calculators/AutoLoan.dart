@@ -206,6 +206,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/expansionTile.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
@@ -361,15 +362,15 @@ class _AutoLoanState extends State<AutoLoan> {
     return PieChartGraph(
       title: "Auto Loan Details:",
       graphData: [
-        {'title': 'Total Loan Cost: ₹${totalLoanCost.toStringAsFixed(2)}', 'value': totalLoanCost},
-        {'title': 'Annual Maintenance: ₹${annualMaintenanceCost.toStringAsFixed(2)}', 'value': annualMaintenanceCost},
-        {'title': 'Depreciation Value: ₹${depreciationValue.toStringAsFixed(2)}', 'value': depreciationValue},
+        {'title': 'Total Loan Cost: ₹${formatMoneyIndian(totalLoanCost.toStringAsFixed(2))}', 'value': totalLoanCost},
+        {'title': 'Annual Maintenance: ₹${formatMoneyIndian(annualMaintenanceCost.toStringAsFixed(2))}', 'value': annualMaintenanceCost},
+        {'title': 'Depreciation Value: ₹${formatMoneyIndian(depreciationValue.toStringAsFixed(2))}', 'value': depreciationValue},
       ],
       graphDisc: [
-        {'title': 'Monthly Loan Payment:', 'amount': "₹${monthlyLoanPayment.toStringAsFixed(2)}"},
-        {'title': 'Total Loan Cost:', 'amount': "₹${totalLoanCost.toStringAsFixed(2)}"},
-        {'title': 'Annual Maintenance:', 'amount': "₹${annualMaintenanceCost.toStringAsFixed(2)}"},
-        {'title': 'Depreciation Value:', 'amount': "₹${depreciationValue.toStringAsFixed(2)}"},
+        {'title': 'Monthly Loan Payment:', 'amount': "₹${formatMoneyIndian(monthlyLoanPayment.toStringAsFixed(2))}"},
+        {'title': 'Total Loan Cost:', 'amount': "₹${formatMoneyIndian(totalLoanCost.toStringAsFixed(2))}"},
+        {'title': 'Annual Maintenance:', 'amount': "₹${formatMoneyIndian(annualMaintenanceCost.toStringAsFixed(2))}"},
+        {'title': 'Depreciation Value:', 'amount': "₹${formatMoneyIndian(depreciationValue.toStringAsFixed(2))}"},
       ],
     );
   }

@@ -199,20 +199,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
                 clipBehavior: Clip.none,
                 children: [
                   // Positioned button to edit cover image
-                  Positioned(
-                    top: 20,
-                    right: 16,
-                    child: TextButton.icon(
-                      onPressed: () {
-                        // _pickImage(ImageSource.gallery, "cover");
-                      },
-                      label: const Text(
-                        'Edit cover',
-                        style: TextStyle(color: AppColors.bg1),
-                      ),
-                      icon: const Icon(Icons.edit),
-                    ),
-                  ),
+                  
                   GestureDetector(
                     onTap: () {
                       // Add the action to be triggered on tap, like picking an image

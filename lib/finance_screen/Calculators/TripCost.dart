@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
@@ -167,28 +168,28 @@ void calculateTripCost() {
     return PieChartGraph(
       title: "Trip Cost Breakdown:",
       graphData: [
-        {'title': 'Travel Cost :₹${doubleToFixed(travelCost.toString())}',
+        {'title': 'Travel Cost :₹${formatMoneyIndian(doubleToFixed(travelCost.toString()))}',
          'value': travelCost},
         {
-          'title': 'Accommodation Cost: ₹${doubleToFixed((accommodationCostPerDay * numberOfDays).toString())}',
+          'title': 'Accommodation Cost: ₹${formatMoneyIndian(doubleToFixed((accommodationCostPerDay * numberOfDays).toString()))}',
           'value': accommodationCostPerDay * numberOfDays
         },
-        {'title': 'Daily Expenses: ₹${doubleToFixed((dailyExpenses * numberOfDays).toString())}',
+        {'title': 'Daily Expenses: ₹${formatMoneyIndian(doubleToFixed((dailyExpenses * numberOfDays).toString()))}',
          'value': dailyExpenses * numberOfDays
          },
         {
-          'title': 'Entertainment Budget: ₹${doubleToFixed(entertainmentBudget.toString())}',
+          'title': 'Entertainment Budget: ₹${formatMoneyIndian(doubleToFixed(entertainmentBudget.toString()))}',
           'value': entertainmentBudget
         },
       ],
       graphDisc: [
         {
           'title': 'Total Trip Cost:',
-          'amount': "₹${totalCost.toStringAsFixed(0)}"
+          'amount': "₹${formatMoneyIndian(totalCost.toStringAsFixed(0))}"
         },
         {
           'title': 'Cost Per Member:',
-          'amount': "₹${costPerMember.toStringAsFixed(0)}"
+          'amount': "₹${formatMoneyIndian(costPerMember.toStringAsFixed(0))}"
         },
       ],
     );

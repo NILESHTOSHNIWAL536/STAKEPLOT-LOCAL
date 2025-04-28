@@ -85,7 +85,7 @@ class CardBuilders {
                       Flexible(
                         child: globalText(
                           context: context,
-                          text: '₹${debt.amount.toStringAsFixed(2)}',
+                          text: '₹${formatMoneyIndian(debt.amount.toStringAsFixed(2))}',
                           fontWeight: FontWeight.w600,
                           fontsize: 14,
                           color: AppColors.primaryColor,
@@ -346,7 +346,7 @@ class CardBuilders {
           const SizedBox(height: 8),
           globalText(
             context: context,
-            text: '₹${totalAmount.toStringAsFixed(2)}',
+            text: '₹${formatMoneyIndian(totalAmount.toStringAsFixed(2))}',
             fontsize: 16,
             fontWeight: FontWeight.bold,
           ),

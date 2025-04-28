@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/expansionTile.dart';
@@ -205,12 +206,12 @@ class _RentBuyState extends State<RentBuy> {
     return PieChartGraph(
       title: "Rent vs Buy Details:",
       graphData: [
-        {'title': 'Total Buy Cost: ₹${totalBuyingCost.toStringAsFixed(0)}', 'value': totalBuyingCost},
-        {'title': 'Total Renting Cost: ₹${totalRentingCost.toStringAsFixed(0)}', 'value': totalRentingCost},
+        {'title': 'Total Buy Cost: ₹${formatMoneyIndian(totalBuyingCost.toStringAsFixed(0))}', 'value': totalBuyingCost},
+        {'title': 'Total Renting Cost: ₹${formatMoneyIndian(totalRentingCost.toStringAsFixed(0))}', 'value': totalRentingCost},
       ],
       graphDisc: [
-        {'title': 'Total Cost of Renting:', 'amount': "₹${totalRentingCost.toStringAsFixed(0)}"},
-        {'title': 'Total Cost of Buying:', 'amount': "₹${totalBuyingCost.toStringAsFixed(0)}"},
+        {'title': 'Total Cost of Renting:', 'amount': "₹${formatMoneyIndian(totalRentingCost.toStringAsFixed(0))}"},
+        {'title': 'Total Cost of Buying:', 'amount': "₹${formatMoneyIndian(totalBuyingCost.toStringAsFixed(0))}"},
       ],
     );
   }

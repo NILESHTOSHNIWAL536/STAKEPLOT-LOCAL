@@ -392,14 +392,21 @@ class _CommunityState extends State<Community> {
                               isScrollControlled: true,
                               context: context,
                               builder: (context) {
-                                return TextScreen(
-                                  userInfo: post,
-                                  onPostCreated: (newPost) {
-                                    setState(() {
-                                      posts.add(newPost);
-                                      k = 1;
-                                    });
-                                  },
+                                return Container(
+                                   decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(16),topRight: Radius.circular(16))
+
+                                  ),
+                                  child: TextScreen(
+                                    userInfo: post,
+                                    onPostCreated: (newPost) {
+                                      setState(() {
+                                        posts.add(newPost);
+                                        k = 1;
+                                      });
+                                    },
+                                  ),
                                 );
                               },
                             );
@@ -416,13 +423,20 @@ class _CommunityState extends State<Community> {
                               isScrollControlled: true,
                               context: context,
                               builder: (context) {
-                                return ImageScreen(
-                                  userInfo: post,
-                                  onPostCreated: (newPost) {
-                                    setState(() {
-                                      posts.add(newPost);
-                                    });
-                                  },
+                                return Container(
+                                   decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(16),topRight: Radius.circular(16))
+
+                                  ),
+                                  child: ImageScreen(
+                                    userInfo: post,
+                                    onPostCreated: (newPost) {
+                                      setState(() {
+                                        posts.add(newPost);
+                                      });
+                                    },
+                                  ),
                                 );
                               },
                             );
@@ -441,7 +455,13 @@ class _CommunityState extends State<Community> {
                               builder: (context) {
                                 return Container(
                                   padding: const EdgeInsets.all(16.0),
+                                  
                                   width: MediaQuery.sizeOf(context).width,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(16),topRight: Radius.circular(16))
+
+                                  ),
                                   child: PollScreen(
                                     userInfo: post,
                                     onPollPosted: (pollData) {

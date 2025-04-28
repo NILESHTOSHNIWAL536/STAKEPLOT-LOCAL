@@ -243,7 +243,7 @@ Widget historyTransactions({
                                 message: narration,
                                 child: textStyle(
                                   context: context,
-                                  text: nameOfUser,
+                                  text:  !isManual?nameOfUser:narration,
                                   c: AppColors.accentColor,
                                   fontsize: fontSizeMedium,
                                   fontWeight: FontWeight.w600,

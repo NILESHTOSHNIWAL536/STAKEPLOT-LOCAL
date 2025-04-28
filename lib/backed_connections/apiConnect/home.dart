@@ -96,7 +96,6 @@ void getHiddenTransactions(context) async {
     var obj = her['data'];
     hiddentrasactionsHistory.clear();
     hiddentrasactionsHistory.addAll(obj);
-    print("hidden-------------------$hiddentrasactionsHistory");
     getHiddenHistory.value = !getHiddenHistory.value;
   } else {}
 }

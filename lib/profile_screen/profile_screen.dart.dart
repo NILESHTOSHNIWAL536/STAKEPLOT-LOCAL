@@ -238,7 +238,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                             WebViewController controller = WebViewController()
                               ..setJavaScriptMode(JavaScriptMode.unrestricted)
                               ..loadRequest(Uri.parse(
-                                  "https://stakeplot.com/privacy-policy"));
+                                  "https://stakeplot.com/Privacypolicy"));
                             Navigator.push(
                               context,
                               MaterialPageRoute(
