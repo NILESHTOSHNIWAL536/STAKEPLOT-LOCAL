@@ -66,7 +66,7 @@ void seletedBankUpdateInfo(id, context) async {
 
 void getAllTransaction(context) async {
   var response =
-      await getDataApiCall("${url}/transactionauto/getTransactions/${1}");
+      await getDataApiCall("${url}/transactionauto/getTransactions/${1}/empty");
   expire(response, context);
   printData(response);
   if (response.statusCode == 200) {
