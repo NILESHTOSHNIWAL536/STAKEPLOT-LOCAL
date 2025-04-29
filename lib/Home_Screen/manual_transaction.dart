@@ -5,6 +5,7 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/lendMessage.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
@@ -26,11 +27,9 @@ class Manualtransaction extends StatefulWidget {
 }
 
 class _ManualtransactionState extends State<Manualtransaction> {
- 
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.sizeOf(context).width / 0.8,
-    
       decoration: BoxDecoration(
         color: AppColors.mt,
         borderRadius: BorderRadius.circular(16),
@@ -59,9 +58,9 @@ class _ManualtransactionState extends State<Manualtransaction> {
                             color: AppColors.accentColor)),
                     const SizedBox(height: 8),
                     InkWell(
-                      onTap: () { 
+                      onTap: () {
                         showCustomModal(context);
-                       // player.play(UrlSource('https://www.soundjay.com/button/beep-07.wav'));
+                        // player.play(UrlSource('https://www.soundjay.com/button/beep-07.wav'));
                       },
                       child: Container(
                         height: Colorcodes.paddingSize * 1.5,
@@ -81,14 +80,13 @@ class _ManualtransactionState extends State<Manualtransaction> {
                   ],
                 ),
               ),
-             
             ],
           ),
-           AvatarProfileImage(
-                url: LikeComment.manualTransaction,
-                height: 10,
-                width: 14,
-              )
+          AvatarProfileImage(
+            url: LikeComment.manualTransaction,
+            height: 10,
+            width: 14,
+          )
         ],
       ),
     );
@@ -535,7 +533,7 @@ class _ModalContentState extends State<ModalContent>
                 await showCustomFriendsModal(context, amount ?? 0.0, false);
             if (result != null && addedMembers.isNotEmpty) {
               // print("buttonsWidget: Split mode - Received amounts: $result");
-              splitUserAmount(
+              splitUserAmountManualTransaction(
                 context,
                 amount.toString(),
                 addedMembers,
@@ -616,7 +614,10 @@ class _ModalContentState extends State<ModalContent>
                       selectedSubCategory2.toString(), true);
                 } else if (isLend.value && addedMembers.isNotEmpty) {
                   if (addedMembers.length > 1) {
-                    snackBarCalled(context,"Please select only one friend for lending",Colors.red);
+                    snackBarCalled(
+                        context,
+                        "Please select only one friend for lending",
+                        Colors.red);
                     return;
                   }
                   addLendUserAmount(
@@ -659,7 +660,8 @@ class _ModalContentState extends State<ModalContent>
     isLend.value = false;
     isSplit.value = false;
     if (isSplitAmount)
-      splitUserAmount(context, amount, addedMembers, categories, subCategories);
+      splitUserAmountManualTransaction(
+          context, amount, addedMembers, categories, subCategories);
     else
       addLendUserAmount(
           context, amount, addedMembers, categories, subCategories);
@@ -703,7 +705,6 @@ class _ModalContentState extends State<ModalContent>
       socket.emit("LoadCharts", {
         "roomId": userToSend,
       });
-      
     });
   }
 
@@ -730,7 +731,7 @@ class _ModalContentState extends State<ModalContent>
     );
   }
 
-  void splitUserAmount(
+  void splitUserAmountManualTransaction(
     BuildContext context,
     String totalAmount,
     List members,
@@ -830,10 +831,10 @@ class _ModalContentState extends State<ModalContent>
         String formattedAmount = memberAmount.toStringAsFixed(2);
         // print("splitUserAmount: Sending notification to ${member['id']} with amount: $formattedAmount");
         sendNotificationsToDevice(
-          member['id'],
-          context,
-          "${userName.value} has sent you a Split Bill of $name for ₹$formattedAmount","/chat"
-        );
+            member['id'],
+            context,
+            "${userName.value} has sent you a Split Bill of $name for ₹$formattedAmount",
+            "/chat");
       }
 
       // Send socket messages with individual amounts
@@ -887,10 +888,12 @@ class _ModalContentState extends State<ModalContent>
         "subcategory": subCategories,
         "type": "Lend Money",
         "amount": amount,
-        'message':"Nilesh toshniwal",
-        'dueDate':"2025-03-12"
+        'message': messageController.text.toString(),
+        'dueDate': selectedDueDate.toString().substring(0, 10)
       }),
     );
+    print("fadskjfhasdjfhafjdslfhl");
+    print(selectedDueDate);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
@@ -899,11 +902,16 @@ class _ModalContentState extends State<ModalContent>
         sendNotificationsToDevice(e['id'], context,
             "${userName.value} has sent u a lend bill..Of ${name} Of ${amount}");
       });
-      snackBarCalled(context,"Lend amount has been successfully sent to users!", Colors.black);
-      addTransaction( amount, "Lend Bill (${subCategories})", name, context, 'cash', false);
+
+      snackBarCalled(context,
+          "Lend amount has been successfully sent to users!", Colors.black);
+      addTransaction(
+          amount, "Lend Bill (${subCategories})", name, context, 'cash', false);
       getUserLend(context);
+      messageController.clear();
+      selectedDueDate = null;
     } else {
-      snackBarCalled(
+      snackBarCalledfail(
           context, "An error occurred while trying to lend money!", Colors.red);
     }
     acceptReset.value = false;

@@ -84,14 +84,11 @@ void checkBiometricsStatus() async {
         ),
       );
     } else {
-      print("Device does not support biometrics or PIN");
     }
   } catch (e) {
-    print("Authentication error: $e");
   }
 
   if (!isAuthenticated) {
-    print("User failed or cancelled authentication");
     return; // stop execution if not authenticated
   }
 
@@ -139,7 +136,7 @@ void checkBiometricsStatus() async {
         actions: [
           TextButton(
             onPressed: () {
-              print("Reset PIN dialog cancelled");
+             
               Navigator.of(dialogContext).pop();
             },
             child: textStyleOnly2(
@@ -153,7 +150,7 @@ void checkBiometricsStatus() async {
           GestureDetector(
           
             onTap: () async {
-              print("Reset PIN button pressed");
+           
               try {
                 final response = await updateDataApiCall3(
                   '$url/user/updateCupertino',
@@ -162,18 +159,17 @@ void checkBiometricsStatus() async {
                   },
                 );
 
-                print("Response status code: ${response.statusCode}");
-                print("Response body: ${response.body}");
+               
 
                 if (response.statusCode == 200) {
-                  print("PIN reset successful");
+                
                   cupertinoPin.value = "0";
                   Navigator.of(dialogContext).pop();
                 } else {
-                  print("Failed to reset PIN: ${response.statusCode} - ${response.body}");
+                 
                 }
               } catch (e) {
-                print("Error occurred while resetting PIN: $e");
+              
               }
             },
             child: textStyleOnly2(
@@ -245,7 +241,7 @@ void checkBiometricsStatus() async {
                     padding: EdgeInsets.only(top: 0.0),
                     child: textStyleOnly2(
                       context: context,
-                      text: "vv",
+                      text: "vvv",
                       fontsize: 14,
                       color: AppColors.bg3,
                       fontWeight: FontWeight.w400,

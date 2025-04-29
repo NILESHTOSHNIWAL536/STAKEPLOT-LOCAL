@@ -102,8 +102,7 @@ class _PostCardState extends State<PostCard> {
               onTap: flag
                   ? null
                   : () {
-                      print(
-                          'uploadData: Navigating to TribeUnique for post ID: ${dataObj["_id"]}');
+                     
                       Navigator.push(
                         context,
                         PageRouteBuilder(
@@ -361,11 +360,11 @@ class _PostCardState extends State<PostCard> {
       )),
       onSelected: (value) {
         if (value == 0 && userId == userName.value) {
-           print("value $value");
+         
           deletePost(id, context);
         }
         if (value == 1) {
-          print(value);
+        
           showModalBottomSheet(
             context: context,
             builder: (context) {
@@ -465,7 +464,7 @@ class _PostCardState extends State<PostCard> {
           BarSeries<SalesData, String>(
             dataSource: chartData,
             onPointTap: (pointInteractionDetails) {
-              print(widget.flag);
+             
               if (widget.flag) return;
               Navigator.push(
                   context,

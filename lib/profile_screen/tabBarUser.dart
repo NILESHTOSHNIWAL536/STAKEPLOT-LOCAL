@@ -88,6 +88,10 @@ class TabBarUser extends StatelessWidget {
 
 
    Widget feedWidgets(String type) {
+  final hasPosts = userPostList.any((item) => !(item['isPoll'] ?? false));
+    if (!hasPosts) {
+      return buildEmptyState( 'No Posts Found', 'This user hasn\'t shared any posts yet.');
+    }
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -109,6 +113,10 @@ class TabBarUser extends StatelessWidget {
   }
 
   Widget pollWidgets(String type) {
+     final hasPolls = userPostList.any((item) => item['isPoll'] ?? false);
+    if (!hasPolls) {
+      return buildEmptyState( 'No Polls Found', 'This user hasn\'t created any polls yet.');
+    }
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -126,6 +134,51 @@ class TabBarUser extends StatelessWidget {
       ),
     );
   }
-
+Widget buildEmptyState(String title, String subtitle) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Icon for visual appeal
+          Icon(
+            Icons.info_outline,
+            size: 60,
+            color: AppColors.bg1.withOpacity(0.5),
+          ),
+          const SizedBox(height: 16),
+          // Title
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: AppColors.bg1,
+            ),
+          ),
+          const SizedBox(height: 8),
+          // Subtitle
+         
+          // Optional: Subtle decorative container
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.primaryColor.withOpacity(0.2)),
+            ),
+            child: Text(
+              'Check back later!',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: AppColors.primaryColor,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
 }
+
+

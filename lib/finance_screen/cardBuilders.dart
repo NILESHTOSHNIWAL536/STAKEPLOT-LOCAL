@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/MyBudget.dart';
@@ -10,7 +11,8 @@ import 'package:get/get.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class CardBuilders {
-  static Widget debtCard(BuildContext context, Debt debt, Function(Debt) onTap) {
+  static Widget debtCard(
+      BuildContext context, Debt debt, Function(Debt) onTap) {
     return GestureDetector(
       onTap: () => onTap(debt),
       child: Container(
@@ -83,7 +85,7 @@ class CardBuilders {
                       Flexible(
                         child: globalText(
                           context: context,
-                          text: '₹${debt.amount.toStringAsFixed(2)}',
+                          text: '₹${formatMoneyIndian(debt.amount.toStringAsFixed(2))}',
                           fontWeight: FontWeight.w600,
                           fontsize: 14,
                           color: AppColors.primaryColor,
@@ -103,9 +105,13 @@ class CardBuilders {
   }
 
   static Widget budgetCard(BuildContext context, dynamic data) {
-    double budgetAmount = double.tryParse(data['amount']?.toString() ?? '0') ?? 0;
-    double spentAmount = double.tryParse(data['spentAmount']?.toString() ?? '0') ?? 0;
-    double percentageSpent = budgetAmount > 0 ? (spentAmount / budgetAmount) * 100 : 0;
+    double budgetAmount =
+        double.tryParse(data['amount']?.toString() ?? '0') ?? 0;
+    double spentAmount =
+        double.tryParse(data['spentAmount']?.toString() ?? '0') ?? 0;
+   
+    double percentageSpent =
+        budgetAmount > 0 ? (spentAmount / budgetAmount) * 100 : 0;
     if (percentageSpent > 100) percentageSpent = 100;
 
     List<ChartData> chartData = [
@@ -161,7 +167,8 @@ class CardBuilders {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyBudgetScreen(data: data)),
+                MaterialPageRoute(
+                    builder: (context) => MyBudgetScreen(data: data)),
               );
             },
             child: Padding(
@@ -188,7 +195,8 @@ class CardBuilders {
                         const SizedBox(height: 6),
                         globalText(
                           context: context,
-                          text: data['budgetPeriod']?.toString() ?? 'Unknown Period',
+                          text: data['budgetPeriod']?.toString() ??
+                              'Unknown Period',
                           fontWeight: FontWeight.w500,
                           fontsize: 13,
                           color: Colors.grey[600]!,
@@ -208,7 +216,7 @@ class CardBuilders {
                             Flexible(
                               child: globalText(
                                 context: context,
-                                text: '₹${budgetAmount.toStringAsFixed(2)}',
+                                text: '₹${formatMoneyIndian(budgetAmount.toStringAsFixed(2))}',
                                 fontWeight: FontWeight.w600,
                                 fontsize: 14,
                                 color: AppColors.primaryColor,
@@ -230,7 +238,7 @@ class CardBuilders {
                             Flexible(
                               child: globalText(
                                 context: context,
-                                text: '₹${spentAmount.toStringAsFixed(2)}',
+                                text: '₹${formatMoneyIndian(spentAmount.toStringAsFixed(2))}',
                                 fontWeight: FontWeight.w500,
                                 fontsize: 12,
                                 color: Colors.redAccent,
@@ -245,7 +253,9 @@ class CardBuilders {
                           text: '${percentageSpent.toStringAsFixed(1)}% Spent',
                           fontWeight: FontWeight.w500,
                           fontsize: 12,
-                          color: percentageSpent > 80 ? Colors.redAccent : AppColors.primaryColor,
+                          color: percentageSpent > 80
+                              ? Colors.redAccent
+                              : AppColors.primaryColor,
                         ),
                       ],
                     ),
@@ -299,13 +309,15 @@ class CardBuilders {
   static Widget buildSummaryCard(
       BuildContext context, String title, RxList list, Color color) {
     final pendingItems = list
-        .where((item) => !(item is Map<String, dynamic> && (item['isPaid'] ?? false)))
+        .where((item) =>
+            !(item is Map<String, dynamic> && (item['isPaid'] ?? false)))
         .map((item) => item as Map<String, dynamic>)
         .toList();
 
     final totalAmount = pendingItems.fold<double>(
       0.0,
-      (sum, item) => sum + (double.tryParse(item['amount']?.toString() ?? '0') ?? 0),
+      (sum, item) =>
+          sum + (double.tryParse(item['amount']?.toString() ?? '0') ?? 0),
     );
 
     return Container(
@@ -334,7 +346,7 @@ class CardBuilders {
           const SizedBox(height: 8),
           globalText(
             context: context,
-            text: '₹${totalAmount.toStringAsFixed(2)}',
+            text: '₹${formatMoneyIndian(totalAmount.toStringAsFixed(2))}',
             fontsize: 16,
             fontWeight: FontWeight.bold,
           ),

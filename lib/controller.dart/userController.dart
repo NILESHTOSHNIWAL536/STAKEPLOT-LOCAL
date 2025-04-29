@@ -74,7 +74,7 @@ class UserController extends GetxController {
         }
       }
     } catch (e) {
-      print("Error fetching user info: $e");
+     
     }
   }
 }

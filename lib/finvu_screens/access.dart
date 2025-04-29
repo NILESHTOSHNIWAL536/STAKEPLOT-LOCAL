@@ -684,7 +684,7 @@ class _AccessState extends State<Access> {
       snackBarCalled(context, "Consent request approved successfully.");
    
       FetchTransactionFromFinvuApi(context);
-      
+
     } catch (e) {
       skipOrLets.value = "Skip";
       snackBarCalled(context, "An error occurred while approving the consent request.");

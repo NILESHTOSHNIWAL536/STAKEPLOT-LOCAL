@@ -67,7 +67,7 @@ Widget child;
                               Navigator.pushNamed(context, '/Notifications');
                           },
                           child: SvgPicture.asset(HomePageIcons.notification,
-                              height: 30, width: 15,color: Colorcodes.black,),
+                              height: 22, width: 10,color: Colorcodes.black,),
                                        ),
                      ),
              Obx(()=> !hasGetNewNotifications.value?   SizedBox.shrink():   Positioned(

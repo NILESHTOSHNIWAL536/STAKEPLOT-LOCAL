@@ -4,6 +4,7 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
+import "package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart";
@@ -367,10 +368,8 @@ class ThousandsFormatter extends TextInputFormatter {
 
   String formatDateTime(String dateString) {
   DateTime dateTime = DateTime.parse(dateString).toLocal();
-  // print("dateString");
-  // print(dateString);
+  
   String formattedDate = DateFormat("dd MMM yyyy hh:mm a").format(dateTime);
-  //print(formattedDate);
   return formattedDate;
 }
 
@@ -401,7 +400,7 @@ void duesPaid(BuildContext context, int index) async {
     
   } catch (e) {
     snackBarCalled(context, "Error settling due");
-    print("Error in duesPaid: $e");
+  
   }
 }
 
@@ -413,11 +412,11 @@ void settleAmount(
       'splittedUserId': endUser,
     };
     final response = await updateDataApiCall(apiUrl, body);
-    printData(response);
+   
     
   } catch (e) {
     snackBarCalled(context, "Error settling due");
-    print("Error in duesPaid: $e");
+  
   }
 
 }
@@ -440,29 +439,57 @@ void declineAmount(
 Future<void> getHomePageInsights(context) async {
  
   try {
-    print('Calling API: ${url}/transactionauto/get-headsup-messages');
+   
     var response = await getDataApiCall("${url}/transactionauto/get-headsup-messages");
-    print('API response status code: ${response.statusCode}');
+  
     
     if (response.statusCode == 200) {
-      print('API call successful, parsing response...');
+    
       var his = jsonDecode(response.body);
-      print('Parsed response: $his');
+    
       var obj = his['data'];
-      print('Data extracted: $obj');
+    
       
       totalInSights.clear();
-      print('Cleared totalInSights, adding new data...');
       totalInSights.addAll(obj);
-      print('Updated totalInSights: $totalInSights');
-      
+
       getTotalInsightsHistory.value = !getTotalInsightsHistory.value;
-      print('Toggled getTotalInsightsHistory: ${getTotalInsightsHistory.value}');
     } else {
-      print('API call failed with status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      
     }
   } catch (e) {
-    print('Error in getHomePageInsights: $e');
+   
+  }
+}
+
+void hideTransaction(
+    int index, bool hidden, BuildContext context, String id) async {
+  final transaction = transactionsHistory[index];
+  final transactionId = transaction['_id']?.toString();
+  if (transactionId == null) {
+    //   print("Error: Transaction ID is null");
+    return;
+  }
+  //  /67e7d5f43afa9db7fcc3f29c
+  final apiUrl = "$url/transactionauto/updateTransaction/$id";
+  try {
+    final response = await updateDataApiCall2(apiUrl, {"Hidden": hidden});
+    if (getFlagOfResponse(response)) {
+      if (hidden) {
+        hiddenTransactions.add(transaction);
+        transactionsHistory.removeAt(index);
+       
+        transactionsHistory.refresh();
+        snackBarCalled(context, "Transaction hidden Successfully");
+      } else {
+        hiddentrasactionsHistory.removeAt(index);
+        hiddentrasactionsHistory.refresh();
+      }
+    } else {
+      snackBarCalledfail(context, "Failed to hide transaction");
+    }
+  } catch (e) {
+    snackBarCalledfail(context, "Error hiding transaction");
+   
   }
 }

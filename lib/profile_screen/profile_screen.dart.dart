@@ -20,6 +20,7 @@ import 'package:flutter_application_code_stakeplot/profile_screen/edit_Details.d
 import 'package:flutter_application_code_stakeplot/profile_screen/hiddenTransaction.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/webView.dart';
 import 'package:http/http.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -37,17 +38,44 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
     getHiddenTransactions(context);
   }
 
+  Future<bool> authenticateUser(BuildContext context) async {
+    final LocalAuthentication auth = LocalAuthentication();
+    bool isAuthenticated = false;
+
+    try {
+      bool canCheckBiometrics = await auth.canCheckBiometrics;
+      bool isDeviceSupported = await auth.isDeviceSupported();
+
+      if (canCheckBiometrics || isDeviceSupported) {
+        isAuthenticated = await auth.authenticate(
+          localizedReason: 'Authenticate to view hidden transactions',
+          options: const AuthenticationOptions(
+            biometricOnly: false, // Allow PIN fallback
+            stickyAuth: true,
+            useErrorDialogs: true,
+            
+          ),
+        );
+      } else {
+        snackBarCalledfail(context,
+            'Biometric authentication is not available on this device.');
+        // Optionally show a message if biometrics are not available
+        
+      }
+    } catch (e) {}
+
+    return isAuthenticated;
+  }
+
   @override
-  Widget build(BuildContext context, ) {
-    print("phone value is :${Phone.value}");
+  Widget build(
+    BuildContext context,
+  ) {
     return Scaffold(
-     
       bottomNavigationBar: SafeArea(child: BottomNavigations(data: 3)),
       backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
-        
         child: Container(
-          
           padding: const EdgeInsets.only(top: 5, left: 16, right: 16),
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
@@ -59,9 +87,10 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
               children: [
                 Container(
                   child: chatAvatartImage(
-                      url: avaterUrlPath(userName.value), width: 12, height: 12),
+                      url: avaterUrlPath(userName.value),
+                      width: 12,
+                      height: 12),
                 ),
-               
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,7 +109,6 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                 fontSize: 10,
                                 color: AppColors.bg1)),
                       ),
-                      
                       Text(number.value,
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.w400,
@@ -179,14 +207,21 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                     child: Column(
                       children: [
                         InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    HiddenTransactionsScreen(),
-                              ),
-                            );
+                          onTap: () async {
+                            bool isAuthenticated =
+                                await authenticateUser(context);
+                            if (isAuthenticated) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      HiddenTransactionsScreen(),
+                                ),
+                              );
+                            } else {
+                              snackBarCalledfail(context,
+                                  'Authentication failed. Please try again.');
+                            }
                           },
                           child: _buildOption(
                               ProfileImage(
@@ -203,7 +238,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                             WebViewController controller = WebViewController()
                               ..setJavaScriptMode(JavaScriptMode.unrestricted)
                               ..loadRequest(Uri.parse(
-                                  "https://stakeplot.com/privacy-policy"));
+                                  "https://stakeplot.com/Privacypolicy"));
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -285,10 +320,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
 
             try {
               var response = await postDataApiCall("${url}/user/logout", {});
-              printData(response);
-            } catch (e) {
-              print(e);
-            }
+            } catch (e) {}
 
             await _pref.remove("token");
             await _pref.remove("accessToken");

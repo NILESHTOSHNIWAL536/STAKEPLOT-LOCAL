@@ -29,10 +29,10 @@ class Signin extends StatefulWidget {
 class _SigninState extends State<Signin> {
   // TextEditingController emailController = TextEditingController();
   // TextEditingController passwordController = TextEditingController();
-  TextEditingController emailController=TextEditingController(text: "velugottlasaikiran@gmail.com");
-  TextEditingController passwordController =TextEditingController(text: "Kiran@123");
-  // TextEditingController emailController= TextEditingController(text: "");
-  // TextEditingController passwordController= TextEditingController(text: "");
+  // TextEditingController emailController=TextEditingController(text: "velugottlasaikiran@gmail.com");
+  // TextEditingController passwordController =TextEditingController(text: "Kiran@123");
+  TextEditingController emailController= TextEditingController(text: "");
+  TextEditingController passwordController= TextEditingController(text: "");
 
   
   @override
@@ -224,8 +224,6 @@ Widget signinWith(){
       ),
     );
 }
-
-
 Widget containerIconSiginWith(IconData icon,Color color){
    return InkWell(
     onTap: ()async{
@@ -241,10 +239,6 @@ Widget containerIconSiginWith(IconData icon,Color color){
      ),
    );
 }
-
-
-
-
 Widget siginButton(){
     return 
                     Center(

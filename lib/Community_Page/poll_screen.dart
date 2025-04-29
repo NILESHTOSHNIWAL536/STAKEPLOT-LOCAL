@@ -102,6 +102,7 @@ class _PollScreenState extends State<PollScreen> {
     return pollSubmitted
         ? const SuccessPost(celebrationText: "Posted",)
         : Container(
+          
             child: AnimatedPadding(
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context)

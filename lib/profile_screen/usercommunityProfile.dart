@@ -163,26 +163,28 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
     return Scaffold(
       backgroundColor: AppColors.bg5,
       // appBar: AppBar(),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          children: [
-            // Top Cover and Profile Picture
-            topUserProfile(widget.data),
-           
-            const SizedBox(height: 60),
-            
-            Text(widget.data['name'].toString(),
-                style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.w600,
-                    //fontSize: MediaQuery.of(context).size.width * 0.04,
-                    //fontSize: 12,
-                    color: AppColors.bg1)),
-            
-              TabBarUser(userPostList: getTrendingData),
-           
-          ],
+      body: SafeArea(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: [
+              // Top Cover and Profile Picture
+              topUserProfile(widget.data),
+             
+              const SizedBox(height: 60),
+              
+              Text(widget.data['name'].toString(),
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.w600,
+                      //fontSize: MediaQuery.of(context).size.width * 0.04,
+                      //fontSize: 12,
+                      color: AppColors.bg1)),
+              
+                TabBarUser(userPostList: getTrendingData),
+             
+            ],
+          ),
         ),
       ),
     );
@@ -197,20 +199,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
                 clipBehavior: Clip.none,
                 children: [
                   // Positioned button to edit cover image
-                  Positioned(
-                    top: 20,
-                    right: 16,
-                    child: TextButton.icon(
-                      onPressed: () {
-                        // _pickImage(ImageSource.gallery, "cover");
-                      },
-                      label: const Text(
-                        'Edit cover',
-                        style: TextStyle(color: AppColors.bg1),
-                      ),
-                      icon: const Icon(Icons.edit),
-                    ),
-                  ),
+                  
                   GestureDetector(
                     onTap: () {
                       // Add the action to be triggered on tap, like picking an image

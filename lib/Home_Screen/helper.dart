@@ -1,5 +1,12 @@
 import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
+import 'package:flutter_application_code_stakeplot/animated/pdf.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+import 'package:get/get.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -123,6 +130,50 @@ String formatWhatsAppDate(DateTime date) {
     return "${DateFormat('d MMM y').format(date)}, $timeFormat"; // e.g., 7 Apr 2025, 10:30 AM
   }
 }
+
+String formatWhatsAppDate4(DateTime date) {
+  // Remove toLocal() if not needed, or adjust properly
+  DateTime now = DateTime.now();
+  DateTime today = DateTime(now.year, now.month, now.day);
+  DateTime yesterday = today.subtract(Duration(days: 1));
+  DateTime tomorrow = today.add(Duration(days: 1));
+  DateTime weekStart = today.subtract(Duration(days: today.weekday));
+  DateTime weekEnd = weekStart.add(Duration(days: 7));
+
+  String timeFormat = DateFormat('h:mm a').format(date);
+
+  // Check if the date is today
+  if (date.year == today.year &&
+      date.month == today.month &&
+      date.day == today.day) {
+    return "Today, $timeFormat";
+  }
+  // Check if the date is yesterday
+  else if (date.year == yesterday.year &&
+      date.month == yesterday.month &&
+      date.day == yesterday.day) {
+    return "Yesterday, $timeFormat";
+  }
+  // Check if the date is tomorrow
+  else if (date.year == tomorrow.year &&
+      date.month == tomorrow.month &&
+      date.day == tomorrow.day) {
+    return "Tomorrow, $timeFormat";
+  }
+  // Check if the date is within the current week (past or future)
+  else if (date.isAfter(weekStart) && date.isBefore(weekEnd)) {
+    return "${DateFormat('EEE').format(date)}, $timeFormat"; // Mon, 10:30 AM
+  }
+  // Same year, different week
+  else if (date.year == now.year) {
+    return "${DateFormat('d MMM').format(date)}, $timeFormat"; // 7 Apr, 10:30 AM
+  }
+  // Different year
+  else {
+    return "${DateFormat('d MMM y').format(date)}, $timeFormat"; // 7 Apr 2025, 10:30 AM
+  }
+}
+
 String formatWhatsAppDate3(DateTime date) {
   date = date.toLocal().add(Duration(hours: 5, minutes: 30));;
   // Adjust for 5:30 offset
@@ -243,6 +294,8 @@ String formatMoneyIndian(String value)
 
 
   Future<void> updateWidget() async {
+
+
       final prefs = await SharedPreferences.getInstance();
     try {
       String toReceive = 'None: ₹0';
@@ -280,4 +333,130 @@ String formatMoneyIndian(String value)
         iOSName: 'PayableWidget',
       );
     }
+  }
+
+   String formatDate(String dateString) {
+    DateTime date = DateTime.parse(dateString);
+    return DateFormat('d MMM yyyy').format(date); // Format as Aug 2024
+  }
+
+  String getMonthName(int month) {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
+    return months[month - 1];
+  }
+
+String getMonthlyRange() {
+    final now = DateTime.now();
+    final startOfMonth = DateTime(now.year, now.month, 1);
+    final currentDay = now; // Use current date as the end date
+
+    return '${_formatDateDonut(startOfMonth)} - ${_formatDateDonut(currentDay)}';
+  }
+
+  String _formatDateDonut(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')} ${getMonthName(date.month)} ${date.year}';
+  }
+
+
+  void showModalForPdfDownload(BuildContext context) {
+    getPdgLoader.value = false;
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: MediaQuery.of(context).size.height / 2,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+            color: Colors.white,
+          ),
+          child: Column(
+            children: [
+              Center(child: Container()),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    textStyle(
+                        context: context,
+                        text: "Download Statement",
+                        fontsize: 14,
+                        fontWeight: FontWeight.w500),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Icon(
+                        Icons.close_outlined,
+                        size: 20,
+                        color: AppColors.accentColor,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              getListItemListTile("30", "days", context),
+              getListItemListTile("60", "days", context),
+              getListItemListTile("6", "months", context),
+              getListItemListTile("1", "year", context),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: InkWell(
+                    onTap: () async {
+                      getPdgLoader.value = true;
+                      getPdf(context, selectedValue, selectedValueType);
+                    },
+                    child: Obx(() => getPdgLoader.value
+                        ? getspinner(context, "")
+                        : getButton(context, "Continue"))),
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+   Widget getListItemListTile(String no, String MorY, context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.primaryColor, width: 0.2),
+      ),
+      child: Obx(() => ListTile(
+            title: textStyle(
+                context: context,
+                text: no + " ${MorY}",
+                fontsize: 15,
+                fontWeight: FontWeight.w500),
+            trailing: Radio<String>(
+              value: no, // Assign a unique value for each radio button
+              groupValue: selectedValue.value, // The currently selected value
+              onChanged: (value) {
+                selectedValue.value = value!;
+                selectedValueType.value = MorY;
+              },
+            ),
+          )),
+    );
   }

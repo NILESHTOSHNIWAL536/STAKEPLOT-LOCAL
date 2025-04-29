@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/expansionTile.dart';
@@ -132,12 +133,12 @@ class _EmiState extends State<Emi> {
     return PieChartGraph(
       title: "EMI Details",
       graphData: [
-        {'title': "Principal: ₹${loanAmount.toStringAsFixed(0)}", 'value': loanAmount},
+        {'title': "Principal: ₹${formatMoneyIndian(loanAmount.toStringAsFixed(0))}", 'value': loanAmount},
         {'title': "Interest: ₹${totalInterestPaid.toStringAsFixed(0)}", 'value': totalInterestPaid},
       ],
       graphDisc: [
-        {'title': 'EMI:', 'amount': "₹${emi.toStringAsFixed(2)}"},
-        {'title': 'Total Interest Paid:', 'amount': "₹${totalInterestPaid.toStringAsFixed(0)}"},
+        {'title': 'EMI:', 'amount': "₹${formatMoneyIndian(emi.toStringAsFixed(2))}"},
+        {'title': 'Total Interest Paid:', 'amount': "₹${formatMoneyIndian(totalInterestPaid.toStringAsFixed(0))}"},
       ],
     );
   }

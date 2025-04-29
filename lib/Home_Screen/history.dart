@@ -1,9 +1,12 @@
   import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_details.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/hiddenTransaction.dart';
@@ -16,12 +19,13 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date, int i
     final double amount =double.parse(doubleToFixed((transaction['amount'] ?? 0.0).toString()));
     final isManual = transaction['manualTransaction'] ?? false;
     final formattedDate = date != null
-        ? formatWhatsAppDate(convertStringToDateTime(date))
+        ? formatWhatsAppDate4(convertStringToDateTime(date))
         : 'Date';
     final type = transaction['type']?.toString() ?? '0';
     final narration = transaction['narration'] ?? 'Unnamed Group';
     final id = transaction['_id'] ?? 'Unnamed Group';
     bool isReview = transaction['needsReview'] ?? true;
+    
 
    if(hideReview && isReview)return SizedBox.shrink();
 
@@ -144,7 +148,7 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date, int i
                                     width: MediaQuery.sizeOf(context).width / 3,
                                     child: textStyle(
                                         context: context,
-                                        text: nameOfUser,
+                                        text: !isManual?nameOfUser:narration,
                                         c: AppColors.accentColor,
                                         fontsize: fontSizeMedium,
                                         fontWeight: FontWeight.w600,
@@ -277,10 +281,131 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date, int i
                           Tooltip(
                             message: 'Hide',
                             child: GestureDetector(
+
                               onTap: () {
-                                hideTransaction(
-                                    index, true, context, transaction['_id']);
-                              },
+  //       // Show confirmation dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            double screenWidth = MediaQuery.sizeOf(context).width;
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              elevation: 4,
+              backgroundColor: Colors.transparent, // For custom container
+              child: Container(
+                width: screenWidth * 0.85, // 85% of screen width
+                padding: EdgeInsets.all(screenWidth * 0.05),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.white,
+                      Colors.grey[50]!,
+                    ],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 12,
+                      spreadRadius: 2,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Content
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: screenWidth * 0.02),
+                      child: textStyleOnly2(
+                        context: context,
+                        text:
+                            "Do you want to hide this transaction?",
+                        fontsize: screenWidth < 400 ? 14 : 16,
+                        color: AppColors.bg1,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+
+                    // Divider
+                    Divider(
+                      color: Colors.grey[200],
+                      thickness: 1,
+                      height: screenWidth * 0.06,
+                    ),
+
+                    // Actions
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: screenWidth * 0.06,
+                              vertical: screenWidth * 0.03,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: textStyleOnly2(
+                            context: context,
+                            text: "No",
+                            fontsize: screenWidth < 400 ? 14 : 16,
+                            color: AppColors.bg1.withOpacity(0.7),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Container(
+                          width: 1,
+                          height: screenWidth * 0.06,
+                          color: Colors.grey[200],
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            hideTransaction(
+                                index, true, context, transaction['_id']);
+                            Navigator.of(context).pop();
+                          },
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: screenWidth * 0.06,
+                              vertical: screenWidth * 0.03,
+                            ),
+                            backgroundColor:
+                                AppColors.primaryColor.withOpacity(0.1),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: textStyleOnly2(
+                            context: context,
+                            text: "Yes",
+                            fontsize: screenWidth < 400 ? 14 : 16,
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
                               child: Container(
                                 padding: EdgeInsets.all(6 * scaleFactor),
                                 decoration: BoxDecoration(
@@ -302,7 +427,7 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date, int i
                             message: 'Split with Friends',
                             child: GestureDetector(
                               onTap: () async {
-                                await showCustomFriendsModal(
+                                await showCustomFriendsModalTransactionHistory(
                                   context,
                                   amount,
                                   false,
@@ -371,6 +496,35 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date, int i
                 );
   }
 
+
+// Reusable showCustomFriendsModal function (extracted for completeness)
+Future<dynamic> showCustomFriendsModalTransactionHistory(
+  BuildContext context,
+  double amount,
+  bool isLendMode,
+  String category,
+  String subcategory,
+) async {
+  return await showModalBottomSheet<dynamic>(
+    context: context,
+    isScrollControlled: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+    ),
+    builder: (BuildContext context) {
+      return NewFriendsUi(
+        totalAmount: amount.toDouble(),
+        userId: currentId.value,
+        userName: userName.value,
+        userAvatar: avatar.value,
+        isLendMode: isLendMode,
+        category: category,
+        subcategory: subcategory,
+        flag: true,
+      );
+    },
+  );
+}
 
   Widget getTagButton(transaction, index, category,context,narration_id) {
     return Row(

@@ -249,4 +249,3 @@ Future<void> addThisDeviceToBackend(deviceData, context) async
 {
     await postDataApiCall('${url}/notify/addDeviceToNotify/', deviceData);
 }
-

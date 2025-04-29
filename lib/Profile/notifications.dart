@@ -351,6 +351,7 @@ class _NotificationsState extends State<Notifications> {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       if (!isFetchedData && avatar.isNotEmpty)
+    //     print("-----------------------${(!isFetchedData && avatar.isNotEmpty)}");
         UserAvatar(
           url: avaterUrlPath(avatar),
           width: 20,
@@ -452,7 +453,7 @@ class _NotificationsState extends State<Notifications> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         UserAvatar(
-          url: avatar,
+          url: avaterUrlPath(avatar),
           width: MediaQuery.of(context).size.width * 0.06,
           height: MediaQuery.of(context).size.width * 0.06,
         ),
@@ -513,9 +514,8 @@ class _NotificationsState extends State<Notifications> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        avatar.isNotEmpty
-            ? UserAvatar(
-                url: avatar,
+        avatar.isNotEmpty? UserAvatar(
+                url: avaterUrlPath(avatar),
                 width: MediaQuery.of(context).size.width * 0.06,
                 height: MediaQuery.of(context).size.width * 0.06,
               )

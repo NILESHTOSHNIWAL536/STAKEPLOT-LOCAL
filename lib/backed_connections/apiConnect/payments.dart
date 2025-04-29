@@ -42,7 +42,7 @@ void getBudget() async {
       var obj = his['data'];
       budgetList.clear();
       budgetList.addAll(obj);
-      print("budgetListingggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg $budgetList");
+    
       budgetLength.value = obj.length;
     }
   } catch (e) {}
@@ -517,9 +517,9 @@ void sendNotificationsToDevice(id, context, msg,[String screen="/home",String ti
     }),
   );
 
-  printData(response);
+ 
    }catch(e){
-    print("Error in sendNotificationsToDevice: $e");
+   
 }
 }
 
@@ -545,3 +545,4 @@ Future<String?> getToken() async {
     return accessToken;
   }
 }
+ 

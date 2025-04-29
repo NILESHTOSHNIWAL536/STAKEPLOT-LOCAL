@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/expansionTile.dart';
@@ -101,10 +102,8 @@ class _SavingsState extends State<Savings> {
       endBalance = double.parse(totalSavings.toStringAsFixed(2));
       interestEarned = double.parse(totalInterest.toStringAsFixed(2));
       goalProgress = double.parse(((currentSavings / targetAmount) * 100).toStringAsFixed(2));
-      print(currentSavings);
       remainingAmount = targetAmount - currentSavings;
       remainingAmount = remainingAmount < 0 ? 0 : remainingAmount;
-      print(remainingAmount);
     });
   }
 
@@ -170,11 +169,11 @@ class _SavingsState extends State<Savings> {
     return PieChartGraph(
       title: "Savings Goal Progress:",
       graphData: [
-        {'title': 'Remaining Amount: ₹${remainingAmount.toStringAsFixed(0)}', 'value': remainingAmount},
-        {'title': 'Current Savings: ₹${currentSavings.toStringAsFixed(0)}', 'value': currentSavings}, // Updated to use endBalance
+        {'title': 'Remaining Amount: ₹${formatMoneyIndian(remainingAmount.toStringAsFixed(0))}', 'value': remainingAmount},
+        {'title': 'Current Savings: ₹${formatMoneyIndian(currentSavings.toStringAsFixed(0))}', 'value': currentSavings}, // Updated to use endBalance
       ],
       graphDisc: [
-        {'title': 'End Balance:', 'amount': "₹${endBalance.toStringAsFixed(2)}"},
+        {'title': 'End Balance:', 'amount': "₹${formatMoneyIndian(endBalance.toStringAsFixed(2))}"},
         {'title': 'Interest Earned:', 'amount': "₹${interestEarned.toStringAsFixed(2)}"},
         {'title': 'Progress:', 'amount': "${goalProgress.toStringAsFixed(2)}%"},
       ],

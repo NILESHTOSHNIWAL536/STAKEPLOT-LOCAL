@@ -60,53 +60,74 @@ class _RotatingIconState extends State<Nextfetch>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Obx(() => consentAndHandleDetails.isEmpty
+  @override
+Widget build(BuildContext context) {
+  return Obx(() {
+    // Format nextFetchDate for display
+    String formattedNextFetch = '';
+    try {
+      if (nextFecthDate.value.isNotEmpty) {
+        DateTime nextFetchDateTime = DateTime.parse(nextFecthDate.value);
+        formattedNextFetch = formatWhatsAppDate2(nextFetchDateTime); // Format the date
+      } else {
+        formattedNextFetch = 'Not scheduled'; // Fallback if empty
+      }
+    } catch (e) {
+      print("Error parsing nextFecthDate: $e");
+      formattedNextFetch = 'Not scheduled'; // Fallback on error
+    }
+
+    return consentAndHandleDetails.isEmpty
         ? SizedBox.shrink()
         : Container(
-            //color: Colors.red,
             width: MediaQuery.of(context).size.width / 1.1,
             child: Row(
               children: [
-              isFected.value? Container(
-                height: 30,
-                width: 30,
-                margin: EdgeInsets.only(right: 10),
-                child: Spinner(size: 30,)
-                ): InkWell(
-                  onTap: () => showFetchModal(context),
-                  child: RotationTransition(
-                      turns: Tween(begin: 0.0, end: 1.0)
-                          .animate(CurvedAnimation(
-                            parent: _controller,
-                            curve: Curves.linear,
-                          ))
-                          .drive(Tween(
-                              begin: 1.0, end: 0.0)), // Reverse the rotation
-                      child: AvatarProfileImage(
-                          url: HomePageIcons.fetch, width: 25, height: 25)),
-                ),
+                isFected.value
+                    ? Container(
+                        height: 30,
+                        width: 30,
+                        margin: EdgeInsets.only(right: 10),
+                        child: Spinner(size: 30),
+                      )
+                    : InkWell(
+                        onTap: () => showFetchModal(context),
+                        child: RotationTransition(
+                            turns: Tween(begin: 0.0, end: 1.0).animate(
+                              CurvedAnimation(
+                                parent: _controller,
+                                curve: Curves.linear,
+                              ),
+                            ).drive(Tween(begin: 1.0, end: 0.0)),
+                            child: AvatarProfileImage(
+                                url: HomePageIcons.fetch,
+                                width: 25,
+                                height: 25)),
+                      ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: textStyle(
-                      context: context,
-                      text: isFected.value? "Hang tight! We're fetching the latest info for you.": "Next fetch on :",
-                      fontWeight: FontWeight.bold,
-                      c: AppColors.bg1,
-                      fontsize:  isFected.value? 10 : 13
-                    ),
+                    context: context ,
+                    text: isFected.value
+                        ? "Hang tight! We're fetching the latest info for you."
+                        : "Next fetch on:",
+                    fontWeight: FontWeight.bold,
+                    c: AppColors.bg1,
+                    fontsize: isFected.value ? 10 : 13,
+                  ),
                 ),
                 textStyle(
-                    context: context,
-                    text: isFected.value?"": "Monday, 9:00 AM",
-                    // text: currentTime.value,
-                    fontWeight: FontWeight.bold,
-                    c: AppColors.primaryColor,
-                    fontsize: 13),
+                  context: context,
+                  text: isFected.value ? "" : formattedNextFetch,
+                  fontWeight: FontWeight.bold,
+                  c: AppColors.primaryColor,
+                  fontsize: 13,
+                ),
               ],
             ),
-          ));
-  }
+          );
+  });
+}
 
   String getTime() {
     DateTime now = DateTime.now();
@@ -127,7 +148,6 @@ class _RotatingIconState extends State<Nextfetch>
 
   showFetchModal(BuildContext context) {
     if (consentAndHandleDetails.isEmpty || consentAndHandleDetails[0] == null) {
-     
       return; // Exit early if data is invalid
     }
 
@@ -169,47 +189,45 @@ class _RotatingIconState extends State<Nextfetch>
     // Get screen width for responsive sizing
     final double screenWidth = MediaQuery.of(context).size.width;
 
-  // Format dates (assuming formatWhatsAppDate exists or define it below)
-  
+    // Format dates (assuming formatWhatsAppDate exists or define it below)
 
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-    ),
-    backgroundColor: Colors.transparent,
-    builder: (context) {
-  
-      return SafeArea(
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: Container(
-            width: MediaQuery.of(context).size.width, // Full screen width
-            padding: EdgeInsets.all(screenWidth * 0.06), // Responsive padding
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.white,
-                  Colors.grey[50]!,
-                ],
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 20,
-                  spreadRadius: 5,
-                  offset: const Offset(0, -5),
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return SafeArea(
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: Container(
+              width: MediaQuery.of(context).size.width, // Full screen width
+              padding: EdgeInsets.all(screenWidth * 0.06), // Responsive padding
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(24)),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.white,
+                    Colors.grey[50]!,
+                  ],
                 ),
-        
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 20,
+                    spreadRadius: 5,
+                    offset: const Offset(0, -5),
+                  ),
                 ],
               ),
               child: SingleChildScrollView(
@@ -226,17 +244,17 @@ class _RotatingIconState extends State<Nextfetch>
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
-        
+
                     Row(
                       children: [
-                         SizedBox(width: Colorcodes.borderRadius10),
-                         Image.network(
+                        SizedBox(width: Colorcodes.borderRadius10),
+                        Image.network(
                           BankUrl.value,
                           width: 30,
                           height: 30,
                           fit: BoxFit.fitWidth,
-                      ),
-                      SizedBox(width: Colorcodes.borderRadius10),
+                        ),
+                        SizedBox(width: Colorcodes.borderRadius10),
                         Container(
                           alignment: Alignment.topLeft,
                           padding: const EdgeInsets.symmetric(vertical: 10),
@@ -249,7 +267,7 @@ class _RotatingIconState extends State<Nextfetch>
                         ),
                       ],
                     ),
-        
+
                     // Info Cards
                     _buildInfoCard(
                       context: context,
@@ -266,11 +284,11 @@ class _RotatingIconState extends State<Nextfetch>
                     _buildInfoCard(
                       context: context,
                       title: 'Fetch Count',
-        
+
                       value: '${fetchCount.value}/5',
                       // ...
                     ),
-        
+
                     fetchCount.value == "5"
                         ? SizedBox.shrink()
                         : Padding(
@@ -283,7 +301,7 @@ class _RotatingIconState extends State<Nextfetch>
                                 c: AppColors.primaryColor,
                                 fontWeight: FontWeight.bold),
                           ),
-        
+
                     // Question
                     // SizedBox(height: screenWidth * 0.06),
                     fetchCount.value == "5"
@@ -295,10 +313,10 @@ class _RotatingIconState extends State<Nextfetch>
                             color: AppColors.bg1,
                             fontWeight: FontWeight.w500,
                           ),
-        
+
                     // Buttons
                     SizedBox(height: screenWidth * 0.03),
-        
+
                     fetchCount.value == "5"
                         ? textStyleOnly2(
                             context: context,
@@ -313,8 +331,6 @@ class _RotatingIconState extends State<Nextfetch>
                               ElevatedButton(
                                 onPressed: () {
                                   checkAndFetchData();
-                                  
-                                  
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.primaryColor,
@@ -369,7 +385,7 @@ class _RotatingIconState extends State<Nextfetch>
               ),
             ),
           ),
-      );
+        );
       },
     );
   }
@@ -414,9 +430,7 @@ class _RotatingIconState extends State<Nextfetch>
 
   void checkAndFetchData() async {
     await getBankAccounts();
-    if (consentAndHandleDetails.isNotEmpty) 
-    {
-      
+    if (consentAndHandleDetails.isNotEmpty) {
       consentAndHandleDetails.forEach((item) {
         getWeeklyfetchData(item["consentId"], item["consendHandleId"],
             item["sessionId"], item["custId"], item['lastFetch']);
@@ -424,8 +438,9 @@ class _RotatingIconState extends State<Nextfetch>
     }
     // store data in shared preferences
     final SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.setString("fetchingData",consentAndHandleDetails.toString());
-    isFected.value=true;
+    pref.setString("fetchingData", consentAndHandleDetails.toString());
+    isFected.value = true;
+    
     Navigator.pop(context);
   }
 }

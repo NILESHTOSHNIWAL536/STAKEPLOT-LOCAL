@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -13,11 +14,6 @@ import 'package:intl/intl.dart';
 import 'dart:math' as math;
 
 class MyBudgetScreen extends StatefulWidget {
-
-
-
-
-  
   final Map<String, dynamic> data;
 
   MyBudgetScreen({required this.data});
@@ -102,7 +98,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
               ? data['data']['finalResult']['transactions'] ?? []
               : data['transactions'] ?? [];
           //  print(`Budget type: ${data['data']['categoryWiseSpendings']}`);
-       //   print(data['data']['categoryWiseSpendings']);
+          //   print(data['data']['categoryWiseSpendings']);
           // print('Transactions after assignment: $transactions');
 
           categoryWiseSpendings = List<Map<String, dynamic>>.from(
@@ -145,7 +141,8 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
             // print('Monthly spent: $monthlySpent');
 
             // Populate budgetSpentData with backend labels+
-            List<String> xLabels = transactions.map((t) => t['_id'] as String).toList();
+            List<String> xLabels =
+                transactions.map((t) => t['_id'] as String).toList();
 
             for (int i = 0; i < xLabels.length; i++) {
               String monthLabel = xLabels[i];
@@ -248,14 +245,15 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
               SizedBox(height: 16),
               _buildBudgetSummary(),
               SizedBox(height: 16),
-             _buildContentSection()
+              _buildContentSection()
             ],
           ),
         ),
       ),
     );
   }
-Widget _buildContentSection() {
+
+  Widget _buildContentSection() {
     // Check if budgetSpentData is empty or all values are zero
     bool hasNoData = budgetSpentData.isEmpty ||
         budgetSpentData.every((item) => item.y == 0.0);
@@ -317,13 +315,13 @@ Widget _buildContentSection() {
         children: [
           _buildText('Budget amount', Colors.grey),
           SizedBox(height: 8),
-          _buildText(
-              '₹ ${widget.data['amount'].toString()}', AppColors.primaryColor,
+          _buildText('₹ ${formatMoneyIndian(widget.data['amount'].toString())}',
+              AppColors.primaryColor,
               fontSize: 20, fontWeight: FontWeight.w500),
           SizedBox(height: 16),
           _buildRow(
             'Amount spent',
-            '₹ $totalSpent',
+            '₹ ${formatMoneyIndian(totalSpent.toString())}',
             Colors.black,
           ),
           SizedBox(height: 8),
@@ -380,7 +378,7 @@ Widget _buildContentSection() {
             fontSize: 18, fontWeight: FontWeight.bold),
         SizedBox(height: 8),
         SizedBox(
-          height: MediaQuery.sizeOf(context).height/3,
+          height: MediaQuery.sizeOf(context).height / 3,
           child: LineChartSample(
               budgetData: budgetSpentData, budgetType: budgetType),
         ),
@@ -449,7 +447,6 @@ Widget _buildContentSection() {
       ),
     );
   }
-
 
   Widget graph() {
     return PieChartGraph(

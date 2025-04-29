@@ -10,7 +10,7 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 bool flag = true;
 String portNo = flag ? "192.168.29.59" : "localhost";
-String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String urlWithLocallHost = flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Feilds";
 RxString expenses = "Loading....".obs;
@@ -102,6 +102,7 @@ RxString accountId = "".obs;
 RxString allOrGroupTransactionsName = "All".obs;
 RxList totalInSights = [].obs;
 RxBool getTotalInsightsHistory = false.obs;
+
 List<String> month = [
   "",
   "January",

@@ -399,8 +399,7 @@ class _TextScreenState extends State<TextScreen> {
 
       return file;
     } catch (e) {
-      print(
-          'Error cropping image: $e'); // Log error instead of showing snackbar
+     // Log error instead of showing snackbar
       return null;
     }
   }

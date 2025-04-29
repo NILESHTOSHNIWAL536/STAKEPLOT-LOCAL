@@ -8,7 +8,6 @@ import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/animated/splashScreen.dart';
 import 'package:flutter_application_code_stakeplot/controller.dart/userController.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/BudgetDisplay.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Emi.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Rent_Buy.dart';
@@ -16,7 +15,6 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Sa
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/TripCost.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/credit_card.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/veg_nonveg.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Debts/Debt.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';

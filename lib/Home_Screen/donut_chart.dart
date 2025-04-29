@@ -39,35 +39,60 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
     ever(chartData, (_) => _updateWidget());
     ever(totalValue, (_) => _updateWidget());
   }
- Future<void> _updateWidget() async {
-    try {
-      final total = '₹${totalValue.value.toStringAsFixed(2)}';
-      final timestamp = _getMonthlyRange();
-      String categories = 'None';
-      if (chartData.isNotEmpty) {
-        categories = chartData
-            .map(
-                (data) => '${data.category}: ₹${data.value.toStringAsFixed(2)}')
-            .join('\n');
-      }
+//  Future<void> _updateWidget() async {
+//     try {
+//       final total = '₹${totalValue.value.toStringAsFixed(2)}';
+//       final timestamp = getMonthlyRange();
+//       String categories = 'None';
+//       if (chartData.isNotEmpty) {
+//         categories = chartData
+//             .map(
+//                 (data) => '${data.category}: ₹${data.value.toStringAsFixed(2)}')
+//             .join('\n');
+//       }
       
-      await HomeWidget.saveWidgetData<String>('total_spending', total);
-      await HomeWidget.saveWidgetData<String>('categories', categories);
-      await HomeWidget.saveWidgetData<String>('timestamp', timestamp);
+//       await HomeWidget.saveWidgetData<String>('total_spending', total);
+//       await HomeWidget.saveWidgetData<String>('categories', categories);
+//       await HomeWidget.saveWidgetData<String>('timestamp', timestamp);
      
-      await HomeWidget.saveWidgetData<String>('total_spending', total);
-      await HomeWidget.saveWidgetData<String>('categories', categories);
-      await HomeWidget.saveWidgetData<String>('timestamp', timestamp);
-      await HomeWidget.updateWidget(
-        name: 'StakeplotWidgetProvider', // Match AppWidgetProvider class name
-        androidName: 'StakeplotWidgetProvider',
-        iOSName: 'StakeplotWidget',
-      );
-    } catch (e) {
-      print('Error updating widget: $e');
+//       await HomeWidget.saveWidgetData<String>('total_spending', total);
+//       await HomeWidget.saveWidgetData<String>('categories', categories);
+//       await HomeWidget.saveWidgetData<String>('timestamp', timestamp);
+//       await HomeWidget.updateWidget(
+//         name: 'StakeplotWidgetProvider', // Match AppWidgetProvider class name
+//         androidName: 'StakeplotWidgetProvider',
+//         iOSName: 'StakeplotWidget',
+//       );
+//     } catch (e) {
+//       print('Error updating widget: $e');
+//     }
+//   }
+Future<void> _updateWidget() async {
+  try {
+    final total = '₹${totalValue.value.toStringAsFixed(2)}';
+    final timestamp = getMonthlyRange();
+    String categories = 'None';
+    if (chartData.isNotEmpty) {
+      categories = chartData
+          .map((data) => '${data.category}: ₹${data.value.toStringAsFixed(2)}')
+          .join('\n');
     }
-  }
 
+    // Save data only once
+    await HomeWidget.saveWidgetData<String>('total_spending', total);
+    await HomeWidget.saveWidgetData<String>('categories', categories);
+    await HomeWidget.saveWidgetData<String>('timestamp', timestamp);
+
+    // Update widget
+    await HomeWidget.updateWidget(
+      name: 'StakeplotWidgetProvider',
+      androidName: 'StakeplotWidgetProvider',
+      iOSName: 'StakeplotWidget',
+    );
+  } catch (e) {
+    print('Error updating widget: $e');
+  }
+}
   @override
   Widget build(BuildContext context) {
     return  Container(
@@ -99,38 +124,10 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
     );
   }
 
- String _getMonthlyRange() {
-    final now = DateTime.now();
-    final startOfMonth = DateTime(now.year, now.month, 1);
-    final currentDay = now; // Use current date as the end date
-
-    return '${_formatDate(startOfMonth)} - ${_formatDate(currentDay)}';
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day.toString().padLeft(2, '0')} ${_getMonthName(date.month)} ${date.year}';
-  }
-
+ 
   
 
-  String _getMonthName(int month) {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec'
-    ];
-    return months[month - 1];
-  }
-
+  
 
 
   Widget getGraph(isLargeScreen){
@@ -213,7 +210,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      '${_getMonthlyRange()}',
+                                      '${getMonthlyRange()}',
                                       style: FontManager().getTextStyle(
                                           context,
                                           lWeight: FontWeight.normal,
@@ -244,7 +241,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                                             color: AppColors.accentColor)),
                                     const SizedBox(height: 8),
                                     Text(
-                                      '${_getMonthlyRange()}',
+                                      '${getMonthlyRange()}',
                                       style: FontManager().getTextStyle(
                                           context,
                                           lWeight: FontWeight.normal,

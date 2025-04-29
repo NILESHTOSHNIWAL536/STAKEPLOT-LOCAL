@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/GroupTrans/group_transactions
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_details.dart';
 import 'package:flutter_application_code_stakeplot/animated/pdf.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
@@ -33,14 +34,14 @@ RxString selectedValueType = "days".obs;
 RxBool getPdgLoader = false.obs;
 RxMap<int, double> swipeOffsets = <int, double>{}.obs;
 RxList<Map<String, dynamic>> hiddenTransactions = <Map<String, dynamic>>[].obs;
-AnimationController? _animationController;
+// AnimationController? _animationController;
 
 class TransactionHistory extends StatefulWidget {
   /// Optional
   final bool? isYearView;
   final bool? isflag;
   final bool? showIcon;
-   bool expandedPage;
+  bool expandedPage;
   bool pageTransition;
   TransactionHistory(
       {this.isflag = false,
@@ -63,20 +64,27 @@ class _TransactionHistoryState extends State<TransactionHistory>
   final targetKey = GlobalKey();
   BuildContext? _stableContext;
   // For smooth animations
- 
+
 
   @override
   void initState() {
     super.initState();
     _stableContext = context;
-    if(!widget.expandedPage) currentPage = 1;
+    //  Future.delayed(Duration(seconds: 5),() {
+       
+    //  });
+
+    if (!widget.expandedPage) currentPage = 1;
 
     // getAllTransactionHistory(context, widget.isflag!, widget.isYearView!);
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-    );
+    // _animationController = AnimationController(
+    //   vsync: this,
+    //   duration: const Duration(milliseconds: 200),
+    // );
     _scrollController2.addListener(() {
+      print("object");
+      print(_scrollController2.position.pixels);
+      print(_scrollController2.position.maxScrollExtent);
       if (_scrollController2.position.pixels >=
           _scrollController2.position.maxScrollExtent - 100) {
         getAllTransactionHistory(
@@ -87,7 +95,8 @@ class _TransactionHistoryState extends State<TransactionHistory>
       }
     });
     // if(!widget.expandedPage) isLoadingMore.value=false;
-    getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,isRefreshing: true);
+    getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,
+        isRefreshing: true);
   }
 
   @override
@@ -96,11 +105,12 @@ class _TransactionHistoryState extends State<TransactionHistory>
     _stableContext ??= context;
   }
 
-  @override
-  void dispose() {
-    _scrollController2.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _scrollController2.dispose();
+
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +122,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Transaction History',
+                  'Transaction History' ,
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.bold,
                       fontSize: 18,
@@ -121,7 +131,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 if (!(widget.showIcon ?? false)) ...[
                   InkWell(
                     onTap: () {
-                      showModal();
+                      showModalForPdfDownload(context);
                     },
                     child: const Icon(
                       Icons.backup_sharp,
@@ -136,27 +146,28 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 ? SizedBox(
                     height: 15,
                   )
-                : Obx(() => allOrGroupTransactionsName.value == StringConstant.allTransactions
+                : Obx(() => allOrGroupTransactionsName.value ==
+                        StringConstant.allTransactions
                     ? getTabsForTransactions()
                     : getTabsForTransactions()),
 
-                    //  getlist()
+            //  getlist()
             // Obx(() => reloadHistory.value ? getlist() : getlist())
-        // (widget.showIcon ?? false)? Obx(() => reloadHistory.value ? getlist() : getlist()):
-        //        Obx(() => allOrGroupTransactionsName.value ==
-        //             StringConstant.allTransactions
-        //         ? Obx(() => reloadHistory.value ? getlist() : getlist())
-        //         : GroupTransactions()),
-        Obx(() {
-            if (widget.showIcon ?? false) {
-              return reloadHistory.value ? getlist() : getlist();
-            } else {
-              return allOrGroupTransactionsName.value == StringConstant.allTransactions
-                  ? (reloadHistory.value ? getlist() : getlist())
-                  : GroupTransactions();
-            }
-          })
-
+            // (widget.showIcon ?? false)? Obx(() => reloadHistory.value ? getlist() : getlist()):
+            //        Obx(() => allOrGroupTransactionsName.value ==
+            //             StringConstant.allTransactions
+            //         ? Obx(() => reloadHistory.value ? getlist() : getlist())
+            //         : GroupTransactions()),
+            Obx(() {
+              if (widget.showIcon ?? false) {
+                return reloadHistory.value ? getlist() : getlist();
+              } else {
+                return allOrGroupTransactionsName.value ==
+                        StringConstant.allTransactions
+                    ? (reloadHistory.value ? getlist() : getlist())
+                    : GroupTransactions();
+              }
+            })
           ],
         ),
       ),
@@ -201,32 +212,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
     );
   }
 
-  Widget getListItemListTile(String no, String MorY, context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.primaryColor, width: 0.2),
-      ),
-      child: Obx(() => ListTile(
-            title: textStyle(
-                context: context,
-                text: no + " ${MorY}",
-                fontsize: 15,
-                fontWeight: FontWeight.w500),
-            trailing: Radio<String>(
-              value: no, // Assign a unique value for each radio button
-              groupValue: selectedValue.value, // The currently selected value
-              onChanged: (value) {
-                selectedValue.value = value!;
-                selectedValueType.value = MorY;
-              },
-            ),
-          )),
-    );
-  }
-
   void changeTheBool() {
     sectionReached.value = true;
     Navigator.pop(context);
@@ -241,13 +226,15 @@ class _TransactionHistoryState extends State<TransactionHistory>
         try {
           // Parse as UTC and convert to IST
           DateTime utcDate = DateTime.parse(timestamp).toUtc();
-          DateTime istDate = utcDate.add(Duration(hours: 5, minutes: 30));
-          String monthYearKey = DateFormat('MMMM yyyy').format(istDate); // e.g., "April 2025"
-          groupedTransactions.putIfAbsent(monthYearKey, () => []).add(transaction);
-         
-        } catch (e) 
-        {
-          print('Invalid timestamp: $timestamp');
+          DateTime istDate = utcDate.subtract(Duration(hours: 5, minutes: 30));
+          // Use only year and month for grouping to avoid day boundary issues
+          String monthYearKey =
+              DateFormat('MMMM yyyy').format(istDate); // e.g., "April 2025"
+          groupedTransactions
+              .putIfAbsent(monthYearKey, () => [])
+              .add(transaction);
+          // Debug: Log the timestamp and its IST conversion
+        } catch (e) {
           continue;
         }
       }
@@ -259,11 +246,11 @@ class _TransactionHistoryState extends State<TransactionHistory>
       DateTime dateA = DateFormat('MMMM yyyy')
           .parse(a, true)
           .toUtc()
-          .add(Duration(hours: 5, minutes: 30)); // Convert UTC to IST
+          .subtract(Duration(hours: 5, minutes: 30)); // Convert UTC to IST
       DateTime dateB = DateFormat('MMMM yyyy')
           .parse(b, true)
           .toUtc()
-          .add(Duration(hours: 5, minutes: 30)); // Convert UTC to IST
+          .subtract(Duration(hours: 5, minutes: 30)); // Convert UTC to IST
       return dateB.compareTo(dateA); // Most recent first
     });
 
@@ -292,7 +279,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
         // Case 1: Month Header
         if (item is String && item != 'loader') {
           String monthYear = item;
-          int transactionCount = groupedTransactions[monthYear]?.length ?? 0;
+          // int transactionCount = groupedTransactions[monthYear]?.length ?? 0;
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             child: Row(
@@ -309,22 +296,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 ),
                 // transactionCount == 0
                 //     ? const SizedBox(
-                //         width: 24,
-                //         height: 24,
-                //         child: CircularProgressIndicator(
-                //           color: AppColors.primaryColor,
-                //           strokeWidth: 2,
-                //         ),
-                //       )
-                //     : Text(
-                //         '$transactionCount Transaction${transactionCount == 1 ? '' : 's'}',
-                //         style: FontManager().getTextStyle(
-                //           context,
-                //           lWeight: FontWeight.w500,
-                //           fontSize: 14,
-                //           color: AppColors.primaryColor.withOpacity(0.7),
-                //         ),
-                //       ),
               ],
             ),
           );
@@ -336,7 +307,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
           int transactionIndex = transactionsHistory.indexOf(transaction);
 
           return Container(
-            
             child: historyTransactions(
               transaction,
               transaction['transactionTimestamp']?.toString(),
@@ -358,13 +328,11 @@ class _TransactionHistoryState extends State<TransactionHistory>
           );
         }
 
-        return loadingDelay.value?
-            Container(
-              width: 50,height: 50,
-              child:Spinner()
-            ):  transactionsHistory.isEmpty 
-            ? textStyle(context: context, text: "No Transactions")
-            : SizedBox.shrink(); // Fallback for unexpected items
+        return loadingDelay.value
+            ? Container(width: 50, height: 50, child: Spinner())
+            : transactionsHistory.isEmpty
+                ? textStyle(context: context, text: "No Transactions")
+                : SizedBox.shrink(); // Fallback for unexpected items
       },
     );
   }
@@ -409,140 +377,14 @@ class _TransactionHistoryState extends State<TransactionHistory>
   //   );
   // }
 
-  void showCustomFriendsModal2(
-      BuildContext context, Map<String, dynamic> transaction) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
-      ),
-      builder: (BuildContext modalContext) {
-        return StatefulBuilder(
-          builder: (BuildContext modalContext, StateSetter setModalState) {
-            return Container(
-              height: MediaQuery.of(modalContext).size.height / 1.9,
-              decoration: const BoxDecoration(
-                color: AppColors.backgroundColor,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
-              ),
-              child: Column(
-                children: [
-                  // Expanded(
-                  //     child: FriendsUi(
-                  //   flag: false,
-                  // )),
-                  Obx(() => addedMembers.isNotEmpty
-                      ? Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: InkWell(
-                            onTap: () async {
-                              try {
-                                double amount = double.parse(
-                                    transaction["amount"].toString());
-                                double sharePerFriend =
-                                    amount / (addedMembers.length + 1);
-
-                                splitUserAmount2(
-                                  _stableContext ?? context,
-                                  amount.toString(),
-                                  addedMembers.toList(),
-                                  transaction["category"].toString(),
-                                  transaction["subcategory"].toString(),
-                                  sharePerFriend.toString(),
-                                );
-                                Navigator.pop(modalContext);
-                              } catch (e) {
-                                snackBarCalled(
-                                    context, "Error splitting Amount");
-                              }
-                            },
-                            child: getButton(modalContext, "Continue"),
-                          ),
-                        )
-                      : const SizedBox.shrink()),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-
-
-
-
-
-  Future<dynamic> showCustomFriendsModal(
-    BuildContext context,
-    double amount,
-    bool isLendMode,
-    String category,
-    String subcategory,
-  ) async {
-    return await showModalBottomSheet<dynamic>(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
-      ),
-      builder: (BuildContext context) {
-        return NewFriendsUi(
-          totalAmount: amount.toDouble(),
-          userId: currentId.value,
-          userName: userName.value,
-          userAvatar: avatar.value,
-          isLendMode: isLendMode,
-          category: category,
-          subcategory: subcategory,
-          flag: true,
-        );
-      },
-    );
-  }
+  
 
   
  
   
 
-  static Future<String?> getToken() async {
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    var accessToken = pref.getString("accessToken");
-
-    if (accessToken == null) {
-      // print("No access token found in SharedPreferences");
-      return null;
-    } else {
-      //  print("Token: $accessToken");
-      return accessToken;
-    }
-  }
-
-  Future<http.Response> updateDataApiCall(
-      String url, Map<String, dynamic> body) async {
-    try {
-      var accessToken = await getToken();
-      final response = await http.patch(
-        Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          "Authorization": "$accessToken",
-        },
-        body: jsonEncode(body),
-      );
-      return response;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  String formatDate(String dateString) {
-    DateTime date = DateTime.parse(dateString);
-    return DateFormat("dd MMM yyyy").format(date);
-  }
-
+  
+ 
   void extractTransaction(bool isYearView, List obj) {
     // print("------------------------ extra called...");
     // print(isYearView);
@@ -645,44 +487,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
   }
   }
 
-void hideTransaction(
-    int index, bool hidden, BuildContext context, String id) async {
-  final transaction = transactionsHistory[index];
-  print("transaction hide 1 $transaction");
-  final transactionId = transaction['_id']?.toString();
-  if (transactionId == null) {
-    //   print("Error: Transaction ID is null");
-    return;
-  }
-  //  /67e7d5f43afa9db7fcc3f29c
-  final apiUrl = "$url/transactionauto/updateTransaction/$id";
-  try {
-    final response = await updateDataApiCall2(apiUrl, {"Hidden": hidden});
-    print("Hidden: $apiUrl");
-    printData(response);
-    if (getFlagOfResponse(response)) {
-      if (hidden) {
-        hiddenTransactions.add(transaction);
-        transactionsHistory.removeAt(index);
-        swipeOffsets.clear(); // Clear all swipe offsets
-        _animationController?.reset(); // Reset the animation controller
-        transactionsHistory.refresh();
-        snackBarCalled(context, "Transaction hidden Successfully");
-      } else {
-        hiddentrasactionsHistory.removeAt(index);
-        hiddentrasactionsHistory.refresh();
-      }
-    } else {
-      snackBarCalledfail(context, "Failed to hide transaction");
-    }
-  } catch (e) {
-    snackBarCalledfail(context, "Error hiding transaction");
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Error hiding transaction")),
-    );
-  }
-  
-}
 
 
 Widget getIconAvtar(double avatarSize,String category,double scaleFactor) {
@@ -711,3 +515,4 @@ Widget getIconAvtar(double avatarSize,String category,double scaleFactor) {
                         ),
                       );
 }
+

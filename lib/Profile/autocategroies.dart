@@ -60,7 +60,7 @@ class _GroupTransactionsState extends State<AutocategroiesTransactions>
           return historyTransactions(
               transaction,
               transaction['transactionTimestamp']?.toString(),
-              index,context
+              index,context,true
             );
         }).toList(),
       ),

@@ -24,10 +24,10 @@ void approveBill(context, id, type, notifyId) async {
 Future<void> getRemainders(context) async {
   String urlPath = "${url}/reminders";
   var responce = await getDataApiCall(urlPath);
-  print("Response from getRemainders: ${responce.body}");
+
   if (getFlagOfResponse(responce)) {
     var his = jsonDecode(responce.body);
-    print("Parsed response data: $his");
+
     var userDue = his['data']['payables'] ?? [];
     var userDue2 = his['data']['owed'] ?? [];
 
@@ -37,17 +37,14 @@ Future<void> getRemainders(context) async {
     dueAmountRemainders.addAll(userDue); //payables
     lendAmountRemainders.addAll(userDue2); //owed
 
-    print("lendAmountRemainders: $lendAmountRemainders");
-    print("dueAmountRemainders: $dueAmountRemainders");
+   
 
     // Ensure observables notify listeners
     dueAmountRemainders.refresh();
     lendAmountRemainders.refresh();
 
     getdueUsers.value = !getdueUsers.value;
-  } else {
-    print("getRemainders failed: ${responce.statusCode} - ${responce.body}");
-  }
+  } else {}
 }
 
 void getNotifications(context) async {
@@ -171,7 +168,7 @@ void getUserInfomations() async {
     currentId.value = data['_id'];
     userName.value = data['name'];
     avatar.value = avaterUrlPath(userName.value);
-    userAvatar=avatar.value;
+    userAvatar = avatar.value;
     email.value = data['email'];
     currency.value = data['currency'];
     score.value = data['score'].toString();
@@ -251,118 +248,118 @@ String getCurrentFormattedDate() {
   return formattedDate;
 }
 
-void addLendUserAmount(
-    context, String amount, List members, String name) async {
-  // List nameList=[];
-  // members.forEach((element) {
-  //      nameList.add(
-  //        {
-  //           'member':(element['id']),
-  //           'markAsComplete':false,
-  //        }
-  //      );
-  // });
+// void addLendUserAmount(
+//     context, String amount, List members, String name) async {
+//   // List nameList=[];
+//   // members.forEach((element) {
+//   //      nameList.add(
+//   //        {
+//   //           'member':(element['id']),
+//   //           'markAsComplete':false,
+//   //        }
+//   //      );
+//   // });
 
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
+//   final SharedPreferences _pref = await SharedPreferences.getInstance();
+//   var accessToken = _pref.getString("accessToken");
 
-  final response = await http.post(
-    Uri.parse('${url}/bill'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
-      "name": name,
-      "amount": amount,
-      "billReceiverId": members[0]['id'],
-      "subcategory": 'Lend Money',
-      "Avatar": members[0]['avatar'],
-      "userName": members[0]['name'],
-      'dueDate': getCurrentFormattedDate(),
-    }),
-  );
+//   final response = await http.post(
+//     Uri.parse('${url}/bill'),
+//     headers: <String, String>{
+//       'Content-Type': 'application/json; charset=UTF-8',
+//       "Authorization": "$accessToken",
+//     },
+//     body: jsonEncode({
+//       "name": name,
+//       "amount": amount,
+//       "billReceiverId": members[0]['id'],
+//       "subcategory": 'Lend Money',
+//       "Avatar": members[0]['avatar'],
+//       "userName": members[0]['name'],
+//       'dueDate': getCurrentFormattedDate(),
+//     }),
+//   );
 
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
-    snackBarCalled(
-        context, "The lend amount has been sent to users!", Colors.black);
-    members.forEach((e) {
-      sendNotificationsToDevice(e['id'], context,
-          "${userName.value} Has Send U a Lend Bill..Of ${name} Of ${amount}","/remainder");
-    });
+//   if (response.statusCode == 200 || response.statusCode == 201) {
+//     final body = json.decode(response.body);
+//     snackBarCalled(
+//         context, "The lend amount has been sent to users!", Colors.black);
+//     members.forEach((e) {
+//       sendNotificationsToDevice(e['id'], context,
+//           "${userName.value} Has Send U a Lend Bill..Of ${name} Of ${amount}","/remainder");
+//     });
 
-    addTransaction(amount, "Lend Bill", name, context, 'cash', true);
-    getUserLend(context);
-    //   Navigator.push(
-    //   context,
-    //   PageTransition(
-    //     type: PageTransitionType.fade,
-    //      duration: Durations.long1,
-    //     child: Home_Screen(),
-    //     isIos: true,
-    //   ),
-    // );
-    // }
-  } else {
-    snackBarCalled(context, "can't split error!", Colors.red);
-  }
-  acceptReset.value = false;
-}
+//     addTransaction(amount, "Lend Bill", name, context, 'cash', true);
+//     getUserLend(context);
+//     //   Navigator.push(
+//     //   context,
+//     //   PageTransition(
+//     //     type: PageTransitionType.fade,
+//     //      duration: Durations.long1,
+//     //     child: Home_Screen(),
+//     //     isIos: true,
+//     //   ),
+//     // );
+//     // }
+//   } else {
+//     snackBarCalled(context, "can't split error!", Colors.red);
+//   }
+//   acceptReset.value = false;
+// }
 
-void splitUserAmount(context, String amount, List members, String name) async {
-  List nameList = [];
-  members.forEach((element) {
-    nameList.add({'member': (element['id']), 'markAsComplete': false});
-  });
+// void splitUserAmount(context, String amount, List members, String name) async {
+//   List nameList = [];
+//   members.forEach((element) {
+//     nameList.add({'member': (element['id']), 'markAsComplete': false});
+//   });
 
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
+//   final SharedPreferences _pref = await SharedPreferences.getInstance();
+//   var accessToken = _pref.getString("accessToken");
 
-  final response = await http.post(
-    Uri.parse('${url}/split'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
-      "name": name,
-      "amount": amount,
-      "paymentStatus": nameList,
-      "image": ''
-    }),
-  );
+//   final response = await http.post(
+//     Uri.parse('${url}/split'),
+//     headers: <String, String>{
+//       'Content-Type': 'application/json; charset=UTF-8',
+//       "Authorization": "$accessToken",
+//     },
+//     body: jsonEncode({
+//       "name": name,
+//       "amount": amount,
+//       "paymentStatus": nameList,
+//       "image": ''
+//     }),
+//   );
 
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
+//   if (response.statusCode == 200 || response.statusCode == 201) {
+//     final body = json.decode(response.body);
 
-    splitID.value = body['id']['_id'];
+//     splitID.value = body['id']['_id'];
 
-    members.forEach((e) {
-      sendNotificationsToDevice(e['id'], context,
-          "${userName.value} Has Send U a Split Bill..Of ${name} Of ${amount}","/remainder");
-    });
+//     members.forEach((e) {
+//       sendNotificationsToDevice(e['id'], context,
+//           "${userName.value} Has Send U a Split Bill..Of ${name} Of ${amount}","/remainder");
+//     });
 
-    snackBarCalled(
-        context, "The split amount has been sent to users!", Colors.black);
-    addTransaction(amount, "Split Bill", name, context, 'cash', true);
+//     snackBarCalled(
+//         context, "The split amount has been sent to users!", Colors.black);
+//     addTransaction(amount, "Split Bill", name, context, 'cash', true);
 
-    // addSocketMessage(members);
-    //   Navigator.push(
-    //   context,
-    //   PageTransition(
-    //     type: PageTransitionType.fade,
-    //      duration: Durations.long1,
-    //     child: Home(),
-    //     isIos: true,
-    //   ),
-    // );
-    // }
-  } else {
-    snackBarCalled(context, "can't split error!", Colors.red);
-  }
-  acceptReset.value = false;
-}
+//     // addSocketMessage(members);
+//     //   Navigator.push(
+//     //   context,
+//     //   PageTransition(
+//     //     type: PageTransitionType.fade,
+//     //      duration: Durations.long1,
+//     //     child: Home(),
+//     //     isIos: true,
+//     //   ),
+//     // );
+//     // }
+//   } else {
+//     snackBarCalled(context, "can't split error!", Colors.red);
+//   }
+//   acceptReset.value = false;
+// }
 
 void aboutuser(context, String about) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();

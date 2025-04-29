@@ -186,6 +186,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/Slider.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/expansionTile.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
@@ -335,7 +336,7 @@ class _CreditCardState extends State<CreditCard> {
     return PieChartGraph(
       title: "Breakdown",
       graphData: [
-        {'title': 'Principal: ₹${cardBalance.toStringAsFixed(0)}', 'value': cardBalance},
+        {'title': 'Principal: ₹${formatMoneyIndian(cardBalance.toStringAsFixed(0))}', 'value': cardBalance},
         {'title': 'Interest: ₹${totalInterestPaid.toStringAsFixed(0)}', 'value': totalInterestPaid},
       ],
       graphDisc: [
