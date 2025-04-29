@@ -719,6 +719,8 @@ import 'dart:math';
 import 'package:flutter_application_code_stakeplot/Constants/customButton.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/expanded_finance.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/transactionHistoryScreen.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
@@ -865,6 +867,12 @@ class _FinancePageState extends State<FinancePage> {
                 CustomButton(
                   onTap: () {
                     // _scrollToTransactionHistory();
+      //                Navigator.push(
+      //    context,
+      //    MaterialPageRoute(
+      //        builder: (context) =>TransactionHistoryScreen()),
+      //  );
+                  
                   },
                   text: 'History',
                   fontSize: fontSizeFactor * 2.8,

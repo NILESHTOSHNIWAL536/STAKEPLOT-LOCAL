@@ -27,11 +27,9 @@ class Manualtransaction extends StatefulWidget {
 }
 
 class _ManualtransactionState extends State<Manualtransaction> {
- 
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.sizeOf(context).width / 0.8,
-    
       decoration: BoxDecoration(
         color: AppColors.mt,
         borderRadius: BorderRadius.circular(16),
@@ -60,9 +58,9 @@ class _ManualtransactionState extends State<Manualtransaction> {
                             color: AppColors.accentColor)),
                     const SizedBox(height: 8),
                     InkWell(
-                      onTap: () { 
+                      onTap: () {
                         showCustomModal(context);
-                       // player.play(UrlSource('https://www.soundjay.com/button/beep-07.wav'));
+                        // player.play(UrlSource('https://www.soundjay.com/button/beep-07.wav'));
                       },
                       child: Container(
                         height: Colorcodes.paddingSize * 1.5,
@@ -82,14 +80,13 @@ class _ManualtransactionState extends State<Manualtransaction> {
                   ],
                 ),
               ),
-             
             ],
           ),
-           AvatarProfileImage(
-                url: LikeComment.manualTransaction,
-                height: 10,
-                width: 14,
-              )
+          AvatarProfileImage(
+            url: LikeComment.manualTransaction,
+            height: 10,
+            width: 14,
+          )
         ],
       ),
     );
@@ -617,7 +614,10 @@ class _ModalContentState extends State<ModalContent>
                       selectedSubCategory2.toString(), true);
                 } else if (isLend.value && addedMembers.isNotEmpty) {
                   if (addedMembers.length > 1) {
-                    snackBarCalled(context,"Please select only one friend for lending",Colors.red);
+                    snackBarCalled(
+                        context,
+                        "Please select only one friend for lending",
+                        Colors.red);
                     return;
                   }
                   addLendUserAmount(
@@ -660,7 +660,8 @@ class _ModalContentState extends State<ModalContent>
     isLend.value = false;
     isSplit.value = false;
     if (isSplitAmount)
-      splitUserAmountManualTransaction(context, amount, addedMembers, categories, subCategories);
+      splitUserAmountManualTransaction(
+          context, amount, addedMembers, categories, subCategories);
     else
       addLendUserAmount(
           context, amount, addedMembers, categories, subCategories);
@@ -704,7 +705,6 @@ class _ModalContentState extends State<ModalContent>
       socket.emit("LoadCharts", {
         "roomId": userToSend,
       });
-      
     });
   }
 
@@ -831,10 +831,10 @@ class _ModalContentState extends State<ModalContent>
         String formattedAmount = memberAmount.toStringAsFixed(2);
         // print("splitUserAmount: Sending notification to ${member['id']} with amount: $formattedAmount");
         sendNotificationsToDevice(
-          member['id'],
-          context,
-          "${userName.value} has sent you a Split Bill of $name for ₹$formattedAmount","/chat"
-        );
+            member['id'],
+            context,
+            "${userName.value} has sent you a Split Bill of $name for ₹$formattedAmount",
+            "/chat");
       }
 
       // Send socket messages with individual amounts
@@ -874,7 +874,8 @@ class _ModalContentState extends State<ModalContent>
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
 
-    final response = await http.post(Uri.parse('${url}/bill'),
+    final response = await http.post(
+      Uri.parse('${url}/bill'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Authorization": "$accessToken",
@@ -887,10 +888,12 @@ class _ModalContentState extends State<ModalContent>
         "subcategory": subCategories,
         "type": "Lend Money",
         "amount": amount,
-        'message':messageController.text.toString(),
-        'dueDate': selectedDueDate.toString().substring(0,10)
+        'message': messageController.text.toString(),
+        'dueDate': selectedDueDate.toString().substring(0, 10)
       }),
     );
+    print("fadskjfhasdjfhafjdslfhl");
+    print(selectedDueDate);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
@@ -899,11 +902,16 @@ class _ModalContentState extends State<ModalContent>
         sendNotificationsToDevice(e['id'], context,
             "${userName.value} has sent u a lend bill..Of ${name} Of ${amount}");
       });
-      snackBarCalled(context,"Lend amount has been successfully sent to users!", Colors.black);
-      addTransaction( amount, "Lend Bill (${subCategories})", name, context, 'cash', false);
+
+      snackBarCalled(context,
+          "Lend amount has been successfully sent to users!", Colors.black);
+      addTransaction(
+          amount, "Lend Bill (${subCategories})", name, context, 'cash', false);
       getUserLend(context);
+      messageController.clear();
+      selectedDueDate = null;
     } else {
-      snackBarCalled(
+      snackBarCalledfail(
           context, "An error occurred while trying to lend money!", Colors.red);
     }
     acceptReset.value = false;

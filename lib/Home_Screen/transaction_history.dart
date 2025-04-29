@@ -508,3 +508,4 @@ Widget getIconAvtar(double avatarSize,String category,double scaleFactor) {
                         ),
                       );
 }
+

@@ -76,9 +76,6 @@ class _LendDetailsModalState extends State<LendDetailsModal> {
       'dueDate': selectedDueDate!.toIso8601String(),
     });
     widget.onConfirm();
-    // Clear global state to prevent reuse
-    messageController.clear();
-    selectedDueDate = null;
   }
 
   @override
