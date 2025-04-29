@@ -10,10 +10,10 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 bool flag = true;
 String portNo = flag ? "192.168.1.9" : "localhost";
-String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String urlWithLocallHost = flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
-String valid = "Please Enter All Feilds";
-RxString expenses = "Loading....".obs;
+String valid = "Please Enter All Fields";
+RxString expenses = "Loading".obs;
 RxString aboutUS = "".obs;
 RxString avatar = "assets/avatar/FRAME-2.svg".obs;
 RxString avatarUser = "assets/avatar/menp1.svg".obs;

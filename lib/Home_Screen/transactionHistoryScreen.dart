@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
+
+final TextEditingController searchController = TextEditingController();
 
 class TransactionHistoryScreen extends StatefulWidget {
   const TransactionHistoryScreen({super.key});
@@ -13,23 +17,31 @@ class TransactionHistoryScreen extends StatefulWidget {
 }
 
 class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
-  final TextEditingController _searchController = TextEditingController();
   final RxList<Map<String, dynamic>> filteredTransactions = RxList<Map<String, dynamic>>([]);
+    final ScrollController scrollController = ScrollController();
+
 
   @override
   void initState() {
     super.initState();
     // Initialize filtered transactions with all transactions
-   
+    scrollController.addListener(_onScroll);
+
   }
 
-  // 
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
+void _onScroll() {
+    scrollController.addListener(() async{
+      // print("scrollController");
+      // print("Scroll position: ${scrollController.position.pixels}");
+      // print("Max scroll extent: ${scrollController.position.maxScrollExtent}");
+          if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 100)
+          {
+               getAllTransactionHistory(context, false, false);
+          }
+    });
+  
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -49,39 +61,58 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-        child: Column(
-          children: [
-            // Search Bar
-            TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Search transactions...',
-                prefixIcon: const Icon(Icons.search, color: AppColors.accentColor),
-                filled: true,
-                fillColor: AppColors.bg5,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
+      body: Container(
+        height: MediaQuery.of(context).size.height/1.1,
+        width: MediaQuery.of(context).size.width/.1,
+        child: SingleChildScrollView(
+        controller: scrollController,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Search Bar
+              TextField(
+                controller: searchController,
+                onChanged: (value) {
+                     onChanedAutoTransactionStatus(context);
+                },
+                decoration: InputDecoration(
+                  hintText: 'Search transactions...',
+                  prefixIcon: const Icon(Icons.search, color: AppColors.accentColor),
+                  filled: true,
+                  fillColor: AppColors.bg5,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
+                style: const TextStyle(color: AppColors.accentColor),
               ),
-              style: const TextStyle(color: AppColors.accentColor),
-            ),
-            const SizedBox(height: 10),
-            // Transaction History
-            Expanded(
-              child: TransactionHistory(
-                isflag: false,
-                isYearView: false,
-                showIcon: false,
-                expandedPage: true, // Set to true to indicate full page
-                pageTransition: true,
-              ),
-            ),
-          ],
+              const SizedBox(height: 10),
+
+              // Transaction History
+             transactionsHistoryList()
+            ],
+          ),
         ),
       ),
     );
   }
+
+
+  Widget  transactionsHistoryList() {
+    return  Obx(() => loadChatdataOnChnage.value
+                        ? TransactionHistory(
+                            isYearView: isYearView.value,
+                            isflag: true,
+                            showIcon: true,
+                            expandedPage: true,
+                          )
+                        : TransactionHistory(
+                            isYearView: isYearView.value,
+                            isflag: true,
+                             showIcon: true,
+                              expandedPage: true,
+                          ));
+  }
+
 }

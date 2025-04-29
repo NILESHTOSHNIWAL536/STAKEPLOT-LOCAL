@@ -65,10 +65,15 @@ class _TransactionHistoryState extends State<TransactionHistory>
   BuildContext? _stableContext;
   // For smooth animations
 
+
   @override
   void initState() {
     super.initState();
     _stableContext = context;
+    //  Future.delayed(Duration(seconds: 5),() {
+       
+    //  });
+
     if (!widget.expandedPage) currentPage = 1;
 
     // getAllTransactionHistory(context, widget.isflag!, widget.isYearView!);
@@ -77,6 +82,9 @@ class _TransactionHistoryState extends State<TransactionHistory>
     //   duration: const Duration(milliseconds: 200),
     // );
     _scrollController2.addListener(() {
+      print("object");
+      print(_scrollController2.position.pixels);
+      print(_scrollController2.position.maxScrollExtent);
       if (_scrollController2.position.pixels >=
           _scrollController2.position.maxScrollExtent - 100) {
         getAllTransactionHistory(
@@ -97,12 +105,12 @@ class _TransactionHistoryState extends State<TransactionHistory>
     _stableContext ??= context;
   }
 
-  @override
-  void dispose() {
-    _scrollController2.dispose();
+  // @override
+  // void dispose() {
+  //   _scrollController2.dispose();
 
-    super.dispose();
-  }
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +122,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Transaction History',
+                  'Transaction History' ,
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.bold,
                       fontSize: 18,
@@ -212,7 +220,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
   Widget getlist() {
     // Group transactions by month and year
     Map<String, List<Map<String, dynamic>>> groupedTransactions = {};
-    print(transactionsHistory);
     for (var transaction in transactionsHistory) {
       String? timestamp = transaction['transactionTimestamp']?.toString();
       if (timestamp != null) {

@@ -59,7 +59,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
         ),
       ),
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 2,
+     // height: MediaQuery.of(context).size.height / 2,
       child: Padding(
         padding: const EdgeInsets.only(top: 24, left: 18, right: 18),
         child: SingleChildScrollView(

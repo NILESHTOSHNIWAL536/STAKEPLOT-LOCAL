@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/number_picker.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
@@ -65,7 +66,7 @@ void seletedBankUpdateInfo(id, context) async {
 
 void getAllTransaction(context) async {
   var response =
-      await getDataApiCall("${url}/transactionauto/getTransactions/${1}");
+      await getDataApiCall("${url}/transactionauto/getTransactions/${1}/empty");
   expire(response, context);
   printData(response);
   if (response.statusCode == 200) {
@@ -102,9 +103,10 @@ void getHiddenTransactions(context) async {
 
 Future<void> getAllTransactionHistory(
     BuildContext context, bool flag, bool isYearView,
-    {bool isRefreshing = false}) async {
-  if (isLoadingMore.value) return; // Prevent multiple API calls
-  loadingDelay.value = true;
+    {bool isRefreshing = false}) async 
+  {
+   if (isLoadingMore.value) return; // Prevent multiple API calls
+   loadingDelay.value=true;
   try {
     isLoadingMore.value = true;
     String type = isYearView
@@ -112,9 +114,10 @@ Future<void> getAllTransactionHistory(
         : selectedYear.value.toString() +
             "-" +
             selectedMonth.value.toString().padLeft(2, '0');
+    String text=searchController.text.trim()==""?"empty":searchController.text;
     String urlPath = flag
         ? "${url}/transactionauto/get-monthly-transactions-history/${accountId.value}/${type}/${currentPage}"
-        : "${url}/transactionauto/getTransactions/${currentPage}";
+        : "${url}/transactionauto/getTransactions/${currentPage}/${text}";
 
     var response = await getDataApiCall(urlPath);
     if (response.statusCode == 200) {
@@ -132,6 +135,7 @@ Future<void> getAllTransactionHistory(
         if (obj.isEmpty || obj.length < 20) {
           hasMoreData = false;
           isLoadingMore.value = true;
+         
         } else {
           isLoadingMore.value = false;
           currentPage++;
