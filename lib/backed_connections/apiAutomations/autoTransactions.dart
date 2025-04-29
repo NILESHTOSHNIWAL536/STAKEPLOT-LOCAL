@@ -44,3 +44,11 @@ Future<void> addTagToTransactions(context,transactionId,bool flag,int index)asyn
   }
 
 }
+
+
+void onChanedAutoTransactionStatus(context)async
+{
+     currentPage=1;
+     isLoadingMore.value=false;
+     getAllTransactionHistory(context,false,false);
+}

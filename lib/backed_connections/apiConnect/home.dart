@@ -99,7 +99,8 @@ void getHiddenTransactions(context) async {
 
 Future<void> getAllTransactionHistory(
     BuildContext context, bool flag, bool isYearView,
-    {bool isRefreshing = false}) async {
+    {bool isRefreshing = false}) async 
+  {
    if (isLoadingMore.value) return; // Prevent multiple API calls
    loadingDelay.value=true;
   try {
@@ -111,7 +112,7 @@ Future<void> getAllTransactionHistory(
             selectedMonth.value.toString().padLeft(2, '0');
     String urlPath = flag
         ? "${url}/transactionauto/get-monthly-transactions-history/${accountId.value}/${type}/${currentPage}"
-        : "${url}/transactionauto/getTransactions/${currentPage}";
+        : "${url}/transactionauto/getTransactions/${currentPage}/${"food"}";
 
     var response = await getDataApiCall(urlPath);
     if (response.statusCode == 200)
