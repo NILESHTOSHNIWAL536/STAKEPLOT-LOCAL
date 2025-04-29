@@ -17,6 +17,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:get/get.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void clearStack(BuildContext context) {
@@ -81,6 +82,7 @@ Future<bool> check(context, String flag) async
     {
          return false;
     }
+
     
     return true;
 }

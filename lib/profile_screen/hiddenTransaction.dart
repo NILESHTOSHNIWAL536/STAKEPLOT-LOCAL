@@ -710,6 +710,7 @@ Widget historyTransactions(
   );
 }
 }
+
 Future<dynamic> showCustomFriendsModal(
     BuildContext context,
     double amount,

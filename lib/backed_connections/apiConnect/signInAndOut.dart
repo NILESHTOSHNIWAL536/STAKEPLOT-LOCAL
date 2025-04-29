@@ -131,6 +131,7 @@ Future<void> screenDataLocalStorage()async
       ScreenTimeTracker().startSession();
       ScreenTimeTracker().switchTab('Home');
 }
+
 void forceLoginShowModal(context,response,emailController,passwordController)
  {
 

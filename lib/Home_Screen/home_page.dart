@@ -30,18 +30,20 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/userAvatar.dart';
 import 'package:home_widget/home_widget.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 RxBool sectionReached = false.obs;
-class HomePage extends StatefulWidget {
+
+class HomePage extends StatefulWidget
+{
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   final UserController userController = Get.find<UserController>();
-  // late AppLifecycleHandler lifecycleHandler;
+  late AppLifecycleHandler lifecycleHandler;
 
   @override
   void initState() {
@@ -87,8 +89,8 @@ class _HomePageState extends State<HomePage> {
     allOrGroupTransactionsName.value = StringConstant.allTransactions;
     await getRemainders(context);
     await updateWidget();
-    //  lifecycleHandler = AppLifecycleHandler(currentId.value); // Replace with actual user ID
-    // WidgetsBinding.instance.addObserver(lifecycleHandler);
+    lifecycleHandler = AppLifecycleHandler(currentId.value); // Replace with actual user ID
+   WidgetsBinding.instance.addObserver(lifecycleHandler);
   }
 
   void isLoginAlreadLogin()async{
