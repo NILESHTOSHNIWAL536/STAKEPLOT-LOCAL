@@ -867,11 +867,12 @@ class _FinancePageState extends State<FinancePage> {
                 CustomButton(
                   onTap: () {
                     // _scrollToTransactionHistory();
-      //                Navigator.push(
-      //    context,
-      //    MaterialPageRoute(
-      //        builder: (context) =>TransactionHistoryScreen()),
-      //  );
+                    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const TransactionHistoryScreen(),
+      ),
+    );
                   
                   },
                   text: 'History',
