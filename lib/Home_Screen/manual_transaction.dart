@@ -892,8 +892,7 @@ class _ModalContentState extends State<ModalContent>
         'dueDate': selectedDueDate.toString().substring(0, 10)
       }),
     );
-    print("fadskjfhasdjfhafjdslfhl");
-    print(selectedDueDate);
+   
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
