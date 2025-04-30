@@ -296,6 +296,7 @@ class _UserListScreenState extends State<UserListScreen> {
   }
 
   Widget _buildCard(BuildContext context, Map<String, dynamic> data, bool isDue) {
+    final bool isLendAmount = data['category']?.toString().toLowerCase() == 'lend money';
     return Card(
       elevation: 2,
       color: Colors.white,
@@ -396,6 +397,19 @@ class _UserListScreenState extends State<UserListScreen> {
                           ),
                         ],
                       ),
+                       // New due date display for lends only
+                                        if (isLendAmount && data['dueDate'] != null) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          'Due Date: ${DateFormat('d MMMM yyyy').format(DateTime.parse(data['dueDate']))}',
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight.w400,
+                            fontSize: 10,
+                            color: AppColors.accentColor.withOpacity(0.6),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),

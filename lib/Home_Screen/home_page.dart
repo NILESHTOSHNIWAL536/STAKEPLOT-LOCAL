@@ -177,14 +177,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: MediaQuery.of(context).size.height * 0.46,
                 child: TransactionGraph(),
                ),
+                SizedBox(
+                height: MediaQuery.of(context).size.height * 0.5,
+                child:InsightsScreen()
+              ),
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.5,
                 child:DoughnutChartExample()
               ),
-             SizedBox(
-                height: MediaQuery.of(context).size.height * 0.5,
-                child:InsightsScreen()
-              ),
+            
             
               TransactionHistory(),
             

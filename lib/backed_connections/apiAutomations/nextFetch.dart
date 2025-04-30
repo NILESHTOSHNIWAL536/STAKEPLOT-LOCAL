@@ -22,7 +22,7 @@ String convertToIso8601(String date) {
 
   // Convert the UTC DateTime object to ISO 8601 string
   String isoString = dateTimeUtc.toIso8601String();
-  print("iosString");
+ 
   return isoString;
 }
 
@@ -59,7 +59,7 @@ class _RotatingIconState extends State<Nextfetch>
     // checkAndFetchData();
   }
 
-  @override
+ 
   @override
 Widget build(BuildContext context) {
   return Obx(() {
@@ -275,6 +275,7 @@ Widget build(BuildContext context) {
                       value: formattedLastFetch,
                     ),
                     SizedBox(height: screenWidth * 0.04),
+                    
                     _buildInfoCard(
                       context: context,
                       title: 'Next Fetch',
