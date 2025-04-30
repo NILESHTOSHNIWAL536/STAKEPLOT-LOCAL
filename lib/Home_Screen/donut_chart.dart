@@ -282,7 +282,7 @@ Future<void> _updateWidget() async {
                     )),
                     
                   ],
-                );
+    );
   }
 }
 

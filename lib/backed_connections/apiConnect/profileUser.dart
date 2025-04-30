@@ -25,8 +25,12 @@ Future<void> getRemainders(context) async {
   String urlPath = "${url}/reminders";
   var responce = await getDataApiCall(urlPath);
 
+ 
+
   if (getFlagOfResponse(responce)) {
     var his = jsonDecode(responce.body);
+
+   
 
     var userDue = his['data']['payables'] ?? [];
     var userDue2 = his['data']['owed'] ?? [];
@@ -44,7 +48,9 @@ Future<void> getRemainders(context) async {
     lendAmountRemainders.refresh();
 
     getdueUsers.value = !getdueUsers.value;
-  } else {}
+  } else {
+   
+  }
 }
 
 void getNotifications(context) async {

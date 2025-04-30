@@ -481,16 +481,7 @@ class _TribeHomeState extends State<TribeShare> {
               filled: true,
               hintText: lableText,
 
-              // enabledBorder: OutlineInputBorder(
-              //     // borderRadius: BorderRadius.circular(40),
-              //     borderSide: BorderSide(color: Colorcodes.budgetDarkGreen
-              //         // color: Color.fromRGBO(249, 246, 238, 1)
-              //         )),
-              // focusedBorder: OutlineInputBorder(
-              //     // borderRadius: BorderRadius.circular(40),
-              //     borderSide: BorderSide(color: Colorcodes.budgetDarkGreen
-              //         // color: Color.fromRGBO(249, 246, 238, 1)
-              //         )),
+              
               fillColor: AppColors.mt,
               border: OutlineInputBorder(
                 borderRadius:

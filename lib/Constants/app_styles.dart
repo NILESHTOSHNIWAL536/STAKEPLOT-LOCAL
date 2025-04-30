@@ -45,7 +45,7 @@ class Categories {
   static String current = "TDS.svg";
   static String education = "Education.svg";
   static String commerce = "Commerce.svg";
-
+  
 
 
   static List<String> categoriesList = [
@@ -311,7 +311,7 @@ class BudgetSubCategories {
     "Fashion": "${connect}fashion.svg",
     "Fabrics": "${connect}fabric.svg",
     "kart": "${connect}kart.svg",
-    "shopping": "${connect}Shopping.svg",
+    "Shopping": "${connect}Shopping.svg",
     "ratnadeep": "${connect}ratnadeep.svg",
     "Mobiles": "${connect}Mobile.svg",
     "lifestyle": "${connect}lifestyle.svg",
@@ -551,7 +551,7 @@ class Expansioncalculator {
         "Shopping": [
             "Shoppers", "Mart", "WestSide", "Electronics", "Supermarket", "Amazon", "Flipkart",
             "Fashion", "Fabrics", "kart", 
-            "shopping", "ratnadeep", "Mobiles", "lifestyle",
+             "ratnadeep", "Mobiles", "lifestyle",
             "market", "more", "shop",
             "max", "zudio", "centro"
         ],

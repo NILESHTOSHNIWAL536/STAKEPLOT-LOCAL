@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dar
 import 'package:flutter_application_code_stakeplot/Home_Screen/donut_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/manual_transaction.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/pending_users.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/number_picker.dart';
@@ -80,7 +81,9 @@ class _HomePageState extends State<HomePage> {
     getBudget();
     getUserInfomations();
     getUserLend(context);
+    getBudget();
     getHiddenTransactions(context);
+    getCategoryData();
     getNotifications(context);
     getAllAutoTransactions();
     getAllTransaction(context);
@@ -176,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: MediaQuery.of(context).size.height * 0.46,
                 child: TransactionGraph(),
                ),
-               SizedBox(
+                SizedBox(
                 height: MediaQuery.of(context).size.height * 0.5,
                 child:InsightsScreen()
               ),
@@ -184,9 +187,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: MediaQuery.of(context).size.height * 0.5,
                 child:DoughnutChartExample()
               ),
-             
             
-              TransactionHistory(),
+            
+             // TransactionHistory(),
             
     
             ],

@@ -224,11 +224,8 @@ class _NotificationsState extends State<Notifications> {
                 ),
               ),
             ),
-            SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-
-          
-
-            SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+           
+            //SizedBox(width: MediaQuery.of(context).size.width * 0.03),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
@@ -298,7 +295,8 @@ class _NotificationsState extends State<Notifications> {
         return _buildMessageCard(
             "${e['username'] ?? 'Someone'} $status your Lent request for ${e['name'] ?? 'unknown'}, worth ₹${e['amount'] ?? '400'}",
             e['from_id'] as String? ?? "",
-            e['from_name'] as String? ?? "",
+            //modified here for user avtar from  -----
+            e['username'] as String? ?? "", //from_name
             time);
       case "lendSettled":
         return _buildMessageCard(
@@ -390,7 +388,7 @@ class _NotificationsState extends State<Notifications> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        UserAvatar(
+         UserAvatar(
           url: avaterUrlPath(avatar),
           width: MediaQuery.of(context).size.width * 0.06,
           height: MediaQuery.of(context).size.width * 0.06,

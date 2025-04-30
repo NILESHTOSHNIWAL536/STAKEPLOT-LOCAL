@@ -59,9 +59,14 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
         ),
       ),
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 2,
+     // height: MediaQuery.of(context).size.height / 2,
       child: Padding(
-        padding: const EdgeInsets.only(top: 24, left: 18, right: 18),
+        padding: EdgeInsets.only(
+          top: 24,
+          left: 18,
+          right: 18,
+          bottom: MediaQuery.of(context).viewInsets.bottom, // Adjust for keyboard
+        ),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -280,6 +285,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                     child: getButton(context, "Continue"),
                   ),
                 ),
+                const SizedBox(height: 16),
             ],
           ),
         ),
