@@ -120,7 +120,7 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
 
                 if(widget.isTag)
                 {
-                    if(widget.data['category']==null && widget.data['subcategory']==Null){
+                    if(widget.data['category']==null && widget.data['subcategory']==null){
                         snackBarCalledSignup(context, "Please select a category and subcategory",Colorcodes.red);
                         return;
                     }                         
@@ -135,9 +135,9 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
                         context,
                         index,
                       );
-                      // transactionsHistory[index]['category'] = widget.data['category'];
-                      // transactionsHistory[index]['subcategory'] = widget.data['subcategory'];
-                      // transactionsHistory[index]['needsReview'] = false;
+                      transactionsHistory[index]['category'] = widget.data['category'];
+                      transactionsHistory[index]['subcategory'] = widget.data['subcategory'];
+                      transactionsHistory[index]['needsReview'] = false;
                     }
                   });
                     getAllTransaction(context);
