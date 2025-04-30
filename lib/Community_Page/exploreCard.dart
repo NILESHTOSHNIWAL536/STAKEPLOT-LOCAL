@@ -207,7 +207,7 @@ class _ExploreCardState extends State<ExploreCard> {
                   "Place: ${widget.extractdata['place']['name']}",
                   style: FontManager().getTextStyle(
                     context,
-                    lWeight: FontWeight.bold,
+                    lWeight: FontWeight.w500,
                     fontSize: _getResponsiveFontSize(context, 14),
                     color: AppColors.bg1,
                   ),

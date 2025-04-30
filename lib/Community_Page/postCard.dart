@@ -200,7 +200,7 @@ class _PostCardState extends State<PostCard> {
                                 child: Text(
                                   (dataObj['title']),
                                   style: FontManager().getTextStyle(context,
-                                      lWeight: FontWeight.bold,
+                                      lWeight: FontWeight.w500,
                                       fontSize: 16,
                                       color: AppColors.bg1),
                                 ),

@@ -80,8 +80,7 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date, int i
         },
         onLongPress: (){
           showCheckBox.value=true;
-          print("showCheckBox");
-          print(showCheckBox);
+          
           
         },
         child: Container(

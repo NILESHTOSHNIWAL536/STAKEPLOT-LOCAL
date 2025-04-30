@@ -45,7 +45,18 @@ class Categories {
   static String current = "TDS.svg";
   static String education = "Education.svg";
   static String commerce = "Commerce.svg";
-  
+  static String groceries = "Groceries.svg";
+  static String income = "income.svg";
+  static String personalTransfer = "PersonalTransfer.svg";
+  static String personalTransferReceived = "PersonalTransferReceived.svg";
+  /*
+  Groceries: SUPRDAILY, GROCERY, SPENCER'S, METRO CASH, VEGETABLE, FRUIT, Ratnadeep, dmart, Veggie, kirana, General Store, milk
+
+Income: NEFT, NEFT CR, PRINC PAYOUT, INT PAYOUT, Salary, credit interest, BIL, INF, zerodhabroking, credit
+
+Personal Transfer: POS, CASH WDL, ATM, To:
+
+Personal Transfer Received: UPI-CR, UPI CR*/
 
 
   static List<String> categoriesList = [
@@ -66,7 +77,7 @@ class Categories {
     sports,
     subscription,
     support,
-    travel
+    travel,
   ];
 }
 
@@ -255,6 +266,10 @@ class BudgetCategories {
      "Commerce": Categories.commerce,//
     "snacks": Categories.snacks,//
     "Entertainment": Categories.entertainment,//
+    "Groceries":Categories.groceries,
+    "Income":Categories.income,
+    "Personal Transfer":Categories.personalTransfer,
+    "Personal Transfer Received":Categories.personalTransferReceived,
    
   };
 
@@ -490,6 +505,10 @@ class BudgetSubCategories {
     "imax": "${connect}Imax.svg",
     "Escape": "${connect}escape.svg",
     "Adventures": "${connect}adventures.svg",
+
+    //Groceries
+    
+    
   };
 
   static final List<String> categories = listofSubCategories.keys.toList();
