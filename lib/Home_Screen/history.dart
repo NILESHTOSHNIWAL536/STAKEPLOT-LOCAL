@@ -11,6 +11,11 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/hiddenTransaction.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
+import 'package:get/get.dart';
+
+  RxMap<String, String> redioButton = <String, String>{}.obs;
+  RxMap<String, int> redioButtonIndex = <String, int>{}.obs;
+  RxBool showCheckBox=true.obs;
 
 Widget historyTransactions(Map<String, dynamic> transaction, String? date, int index,context,[bool hideReview=false]) {
     String logo = transaction['bankLogo']?.toString() ?? "";
@@ -57,136 +62,171 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date, int i
     final fontSizeSmall = 10.0 * scaleFactor;
     final badgeSize = 20.0 * scaleFactor;
 
-    return GestureDetector(
-      onTap: () {
-        if (!isManual) {
-          showModalBottomSheet(
-            context: context,
-            builder: (BuildContext context) {
-              return TransactionDetailsPage(transaction: transaction);
-            },
-          );
-        }
+    return WillPopScope(
+      onWillPop: () async {
+        showCheckBox.value=false;
+        return true;
       },
-      child: Column(
-        children: [
-
-          Container(
-            width: double.infinity,
-            margin: EdgeInsets.symmetric(vertical: margin, horizontal: margin),
-            // padding: EdgeInsets.all(padding),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16 * scaleFactor),
-              border:!isReview? null:Border.all(
-                color: Colorcodes.red,
-                width:  0.5,
-              ),
-              gradient: LinearGradient(
-                colors: [
-                  AppColors.backgroundColor.withOpacity(0.03),
-                  Colors.white,
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 8 * scaleFactor,
-                  offset: Offset(0, 3 * scaleFactor),
-                ),
-              ],
+      child: GestureDetector(
+        onTap: () {
+          if (!isManual) {
+            showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context) {
+                return TransactionDetailsPage(transaction: transaction);
+              },
+            );
+          }
+        },
+        onLongPress: (){
+          showCheckBox.value=true;
+          print("showCheckBox");
+          print(showCheckBox);
+          
+        },
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          margin: EdgeInsets.symmetric(vertical: margin, horizontal: margin),
+          // padding: EdgeInsets.all(padding),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16 * scaleFactor),
+            border:!isReview? null:Border.all(
+              color: Colorcodes.red,
+              width:  0.5,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-              (isManual || isReview) ? reviewTagTransactions(isReview,scaleFactor, isManual, margin, badgeSize, fontSizeSmall,context,index,id):SizedBox(height: padding,),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: padding),
-                  child: Row(
-                    children: [
-                      // Icon Container
-                      getIconAvtar(avatarSize, category, scaleFactor),
-                      // Container(
-                      //   width: avatarSize,
-                      //   height: avatarSize,
-                      //   decoration: BoxDecoration(
-                      //     gradient: LinearGradient(
-                      //       colors: [
-                      //         AppColors.button.withOpacity(0.8),
-                      //         Colors.white.withOpacity(0.6),
-                      //       ],
-                      //       begin: Alignment.topLeft,
-                      //       end: Alignment.bottomRight,
-                      //     ),
-                      //     borderRadius: BorderRadius.circular(12 * scaleFactor),
-                      //   ),
-                      //   child: Center(
-                      //     child: AvatarProfileImage(
-                      //       url: Categories.link +
-                      //           (imageMapForHistory[category.toLowerCase()] ??
-                      //               'default_image.png'),
-                      //       height: avatarSize * 0.5,
-                      //       width: avatarSize * 0.5,
-                      //     ),
-                      //   ),
-                      // ),
-                      SizedBox(width: padding),
-                      // Narration and Amount
-                      Flexible(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+            gradient: LinearGradient(
+              colors: [
+                AppColors.backgroundColor.withOpacity(0.03),
+                Colors.white,
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 8 * scaleFactor,
+                offset: Offset(0, 3 * scaleFactor),
+              ),
+            ],
+          ),
+          child: Obx(()=> Row(
+            children: [
+            !showCheckBox.value? SizedBox.shrink(): Container(
+                height: 30,
+                width: 30,
+                child: Checkbox(
+                        value: redioButton.containsKey('${transaction['_id']}'),
+                        onChanged: (bool? isChecked) {
+                          String id = '${transaction['_id']}';
+      
+                          if (isChecked == true) {
+                            redioButton[id] = id; // Add entry
+                            redioButtonIndex[id] = index; // Add entry
+                          } else {
+                            redioButton.remove(id); // Remove entry
+                            redioButtonIndex.remove(id);
+                          }
+                        },
+                         shape: const CircleBorder(), // Makes it rounded
+                          side:  BorderSide(color: AppColors.primaryColor), // Optional: border color
+                          checkColor: Colors.white, // Tick mark color
+                          activeColor: AppColors.primaryColor,  // Fill color when checked
+                      ),
+            ),
+              Container(
+                width: MediaQuery.of(context).size.width/(!showCheckBox.value?1.1:1.2),
+                padding: EdgeInsets.only(top: padding, bottom: padding),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                  (isManual || isReview) ? reviewTagTransactions(isReview,scaleFactor, isManual, margin, badgeSize, fontSizeSmall,context,index,id):SizedBox(height: padding,),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: padding),
+                      child: Row(
+                        children: [
+                          // Icon Container
+                          getIconAvtar(avatarSize, category, scaleFactor),
+                          // Container(
+                          //   width: avatarSize,
+                          //   height: avatarSize,
+                          //   decoration: BoxDecoration(
+                          //     gradient: LinearGradient(
+                          //       colors: [
+                          //         AppColors.button.withOpacity(0.8),
+                          //         Colors.white.withOpacity(0.6),
+                          //       ],
+                          //       begin: Alignment.topLeft,
+                          //       end: Alignment.bottomRight,
+                          //     ),
+                          //     borderRadius: BorderRadius.circular(12 * scaleFactor),
+                          //   ),
+                          //   child: Center(
+                          //     child: AvatarProfileImage(
+                          //       url: Categories.link +
+                          //           (imageMapForHistory[category.toLowerCase()] ??
+                          //               'default_image.png'),
+                          //       height: avatarSize * 0.5,
+                          //       width: avatarSize * 0.5,
+                          //     ),
+                          //   ),
+                          // ),
+                          SizedBox(width: padding),
+                          // Narration and Amount
+                          Flexible(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Tooltip(
-                                  message: narration,
-                                  child: Container(
-                                    // height: 30,
-                                    // color: Colorcodes.appBarColor,
-                                    width: MediaQuery.sizeOf(context).width / 3,
-                                    child: textStyle(
-                                        context: context,
-                                        text: !isManual?nameOfUser:narration,
-                                        c: AppColors.accentColor,
-                                        fontsize: fontSizeMedium,
-                                        fontWeight: FontWeight.w600,
-                                        lineHeight: 1.5),
-                                  ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Tooltip(
+                                      message: narration,
+                                      child: Container(
+                                        // height: 30,
+                                        // color: Colorcodes.appBarColor,
+                                        width: MediaQuery.sizeOf(context).width / 3,
+                                        child: textStyle(
+                                            context: context,
+                                            text: !isManual?nameOfUser:narration,
+                                            c: AppColors.accentColor,
+                                            fontsize: fontSizeMedium,
+                                            fontWeight: FontWeight.w600,
+                                            lineHeight: 1.5),
+                                      ),
+                                    ),
+                                    textStyle(
+                                      context: context,
+                                      text: formattedDate,
+                                      c: AppColors.primaryColor.withOpacity(0.7),
+                                      fontsize: fontSizeSmall,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ],
                                 ),
                                 textStyle(
                                   context: context,
-                                  text: formattedDate,
-                                  c: AppColors.primaryColor.withOpacity(0.7),
-                                  fontsize: fontSizeSmall,
-                                  fontWeight: FontWeight.w400,
+                                  text: formatAmount,
+                                  c: amtColor,
+                                  fontsize: fontSizeLarge,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ],
                             ),
-                            textStyle(
-                              context: context,
-                              text: formatAmount,
-                              c: amtColor,
-                              fontsize: fontSizeLarge,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    // Bottom Row: Category and Actions
+                    getIconsForHideUpdateSplit(iconSize, padding, category, amount, logo, context, index, subcategory, transaction,isReview,id),
+                   (isManual || isReview)?SizedBox(height: 0,):SizedBox(height: padding/2,),
+                    
+                  ],
                 ),
-                // Bottom Row: Category and Actions
-                getIconsForHideUpdateSplit(iconSize, padding, category, amount, logo, context, index, subcategory, transaction,isReview,id),
-               (isManual || isReview)?SizedBox(height: 0,):SizedBox(height: padding/2,),
-              ],
-            ),
-          ),
-          // Manual Badge
-          
-            
-        ],
+              ),
+            ],
+          )),
+        ),
       ),
     );
   }

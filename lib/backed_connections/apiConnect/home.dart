@@ -68,7 +68,7 @@ void getAllTransaction(context) async {
   var response =
       await getDataApiCall("${url}/transactionauto/getTransactions/${1}/empty");
   expire(response, context);
-  printData(response);
+  // printData(response);
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];

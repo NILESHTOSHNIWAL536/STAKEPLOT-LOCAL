@@ -719,6 +719,7 @@ import 'dart:math';
 import 'package:flutter_application_code_stakeplot/Constants/customButton.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/expanded_finance.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
@@ -813,7 +814,7 @@ class _FinancePageState extends State<FinancePage> {
                     Obx(() {
                       String displayText = '';
                       if (selectedButton.value == 'Week') {
-                        displayText = 'This week';
+                        displayText =weekOfThis.value; //'This week';
                       } else if (selectedButton.value == 'Month') {
                         displayText = 'This month';
                       }
@@ -971,13 +972,13 @@ class _FinancePageState extends State<FinancePage> {
                       : AppColors.backgroundColor,
                 ),
                 child: Center(
-                  child: Text(
-                    'Week',
+                  child:Obx(()=> Text(
+                    weekOfThis.value,
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.normal,
-                        fontSize: fontSizeFactor * 3.4,
+                        fontSize: fontSizeFactor * 3,
                         color: AppColors.accentColor),
-                  ),
+                  )),
                 ),
               ),
             ),

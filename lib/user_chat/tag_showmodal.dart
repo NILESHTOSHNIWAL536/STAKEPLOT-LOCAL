@@ -7,8 +7,10 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
@@ -19,11 +21,13 @@ import 'package:intl/intl.dart';
 RxString tagName="".obs;
 RxBool loadAgain=false.obs;
 
-class TagShowmodal extends StatefulWidget {
+class TagShowmodal extends StatefulWidget
+{
 var data;
 int index;
 bool isGroupTransaction=false;
- TagShowmodal({ Key? key ,required this.data,required  this.index,this.isGroupTransaction=false }) : super(key: key);
+bool isTag=false;
+TagShowmodal({ Key? key ,required this.data,required  this.index,this.isGroupTransaction=false,this.isTag=false }) : super(key: key);
 
   @override
   State<TagShowmodal> createState() => _TagShowmodalState();
@@ -114,7 +118,38 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
               onTap: (){
                   //  Change Tag
 
-                  if(!widget.isGroupTransaction)
+                if(widget.isTag)
+                {
+                    if(widget.data['category']==null && widget.data['subcategory']==Null){
+                        snackBarCalledSignup(context, "Please select a category and subcategory",Colorcodes.red);
+                        return;
+                    }                         
+                    redioButton.forEach((key, id) {
+                    final index = redioButtonIndex[id];
+
+                    if (index != null) {
+                      updateTheTagOfTarnsactions(
+                        widget.data['category'],
+                        widget.data['subcategory'],
+                        id,
+                        context,
+                        index,
+                      );
+                      // transactionsHistory[index]['category'] = widget.data['category'];
+                      // transactionsHistory[index]['subcategory'] = widget.data['subcategory'];
+                      // transactionsHistory[index]['needsReview'] = false;
+                    }
+                  });
+                    getAllTransaction(context);
+                    redioButton.clear();
+                    redioButtonIndex.clear();
+                    tagName.value="";  
+                    showCheckBox.value=false;
+                    transactionsHistory.refresh();
+                    Navigator.pop(context);
+                   
+                }
+                else if(!widget.isGroupTransaction)
                   {
                       updateTheTagOfTarnsactions(widget.data['category'], widget.data['subcategory'], widget.data['_id'], context,widget.index);
                       transactionsHistory[widget.index]['category']=widget.data['category'];
