@@ -472,13 +472,14 @@ void hideTransaction(
   }
   //  /67e7d5f43afa9db7fcc3f29c
   final apiUrl = "$url/transactionauto/updateTransaction/$id";
+
   try {
     final response = await updateDataApiCall2(apiUrl, {"Hidden": hidden});
+    printData(response);
     if (getFlagOfResponse(response)) {
       if (hidden) {
         hiddenTransactions.add(transaction);
         transactionsHistory.removeAt(index);
-       
         transactionsHistory.refresh();
         snackBarCalled(context, "Transaction hidden Successfully");
       } else {
@@ -489,6 +490,7 @@ void hideTransaction(
       snackBarCalledfail(context, "Failed to hide transaction");
     }
   } catch (e) {
+    print(e);
     snackBarCalledfail(context, "Error hiding transaction");
    
   }

@@ -118,29 +118,94 @@ class _TransactionHistoryState extends State<TransactionHistory>
       child: Container(
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Transaction History' ,
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: AppColors.accentColor),
-                ),
-                if (!(widget.showIcon ?? false)) ...[
-                  InkWell(
-                    onTap: () {
-                      showModalForPdfDownload(context);
-                    },
-                    child: const Icon(
-                      Icons.backup_sharp,
-                      size: 30,
-                      color: AppColors.accentColor,
-                    ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Transaction History' ,
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: AppColors.accentColor),
                   ),
-                ]
-              ],
+              
+                Obx(()=>  redioButton.isNotEmpty?InkWell(onTap: (){
+              
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (_) =>
+                                   Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: MediaQuery.of(context).size.height/4.45,
+                                     decoration: const BoxDecoration(
+                                      color: AppColors.mt,
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(20),
+                                        topRight: Radius.circular(20),
+                                      )),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                         InkWell(
+                                          onTap: (){
+                                            hideSelectedTransactions(context,true);
+                                            showCheckBox.value = false;
+                                          },
+                                          child: textStyle(text:'Hide Transactions',context:context,fontsize: 16,fontWeight: FontWeight.w500,c: AppColors.accentColor),
+                                        ),
+                                         Padding(
+                                           padding: const EdgeInsets.symmetric(vertical: 20),
+                                           child: Divider(thickness: 1,),
+                                         ),
+                                        InkWell(
+                                          onTap: ()
+                                          {
+                                                tagName.value = "Untagged";
+                                                
+                                                showModalBottomSheet(
+                                                  context: context,
+                                                  isScrollControlled: true,
+                                                 
+                                                  shape: const RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.vertical(
+                                                        top: Radius.circular(20)),
+                                                  ),
+                                                  builder: (context) {
+                                                    return TagShowmodal(
+                                                      data: transactionsHistory.isNotEmpty?transactionsHistory[redioButtonIndex.values.first]:{},
+                                                      index: 0,
+                                                      isTag: true,
+                                                    );
+                                                  },
+                                                );
+                                          },
+                                          child: textStyle(text:'Tag Transactions',context:context,fontsize: 16,fontWeight: FontWeight.w500,c: AppColors.accentColor),
+                                        ),
+
+                                      ],
+                                    )
+                                  ),
+                                );
+              
+                  },child: Icon(Icons.tag_sharp,size: 30,)):SizedBox.shrink()),
+              
+                  if (!(widget.showIcon ?? false)) ...[
+                    InkWell(
+                      onTap: () {
+                        showModalForPdfDownload(context);
+                      },
+                      child: const Icon(
+                        Icons.backup_sharp,
+                        size: 30,
+                        color: AppColors.accentColor,
+                      ),
+                    ),
+                  ]
+                ],
+              ),
             ),
             (widget.showIcon ?? false)
                 ? SizedBox(
@@ -516,3 +581,16 @@ Widget getIconAvtar(double avatarSize,String category,double scaleFactor) {
                       );
 }
 
+
+void hideSelectedTransactions(BuildContext context, bool hidden) {
+  int index = 0; // Or get from another list/map if you have matching indexes
+
+  redioButton.forEach((id, value) {
+    hideTransaction(redioButtonIndex[id]??0, hidden, context, id);
+    index++;
+  });
+
+  redioButton.clear(); // Optionally clear selection after hiding
+  redioButtonIndex.clear(); // Optionally clear selection after hiding
+  Navigator.pop(context);
+}

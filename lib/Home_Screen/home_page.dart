@@ -33,6 +33,7 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 RxBool sectionReached = false.obs;
+RxString weekOfThis="This week".obs;
 
 class HomePage extends StatefulWidget
 {
@@ -83,6 +84,7 @@ class _HomePageState extends State<HomePage> {
     getNotifications(context);
     getAllAutoTransactions();
     getAllTransaction(context);
+    getAllContstant(context);
     allOrGroupTransactionsName.value = StringConstant.allTransactions;
     await getRemainders(context);
     await updateWidget();
