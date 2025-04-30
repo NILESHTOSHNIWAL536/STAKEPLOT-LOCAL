@@ -85,7 +85,8 @@ class CardBuilders {
                       Flexible(
                         child: globalText(
                           context: context,
-                          text: '₹${formatMoneyIndian(debt.amount.toStringAsFixed(2))}',
+                          text:
+                              '₹${formatMoneyIndian(debt.amount.toStringAsFixed(2))}',
                           fontWeight: FontWeight.w600,
                           fontsize: 14,
                           color: AppColors.primaryColor,
@@ -109,7 +110,7 @@ class CardBuilders {
         double.tryParse(data['amount']?.toString() ?? '0') ?? 0;
     double spentAmount =
         double.tryParse(data['spentAmount']?.toString() ?? '0') ?? 0;
-   
+
     double percentageSpent =
         budgetAmount > 0 ? (spentAmount / budgetAmount) * 100 : 0;
     if (percentageSpent > 100) percentageSpent = 100;
@@ -216,7 +217,8 @@ class CardBuilders {
                             Flexible(
                               child: globalText(
                                 context: context,
-                                text: '₹${formatMoneyIndian(budgetAmount.toStringAsFixed(2))}',
+                                text:
+                                    '₹${formatMoneyIndian(budgetAmount.toStringAsFixed(2))}',
                                 fontWeight: FontWeight.w600,
                                 fontsize: 14,
                                 color: AppColors.primaryColor,
@@ -238,7 +240,8 @@ class CardBuilders {
                             Flexible(
                               child: globalText(
                                 context: context,
-                                text: '₹${formatMoneyIndian(spentAmount.toStringAsFixed(2))}',
+                                text:
+                                    '₹${formatMoneyIndian(spentAmount.toStringAsFixed(2))}',
                                 fontWeight: FontWeight.w500,
                                 fontsize: 12,
                                 color: Colors.redAccent,

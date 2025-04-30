@@ -1675,54 +1675,189 @@ Widget textStyleModel(context, str, id, [flag = false]) {
   );
 }
 
-Widget showModel(context, id, [flag = false]) {
-  return Container(
-    width: MediaQuery.of(context).size.width,
-    height: MediaQuery.of(context).size.height / 2.3,
+// Widget showModel(context, id, [flag = false]) {
+//   return Container(
+//     width: MediaQuery.of(context).size.width,
+//     height: MediaQuery.of(context).size.height / 2.3,
+//     decoration: BoxDecoration(
+//         color: Colorcodes.white,
+//         borderRadius: const BorderRadius.only(
+//             topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+//     child: Column(
+//       // mainAxisAlignment: ,,
+//       mainAxisAlignment: MainAxisAlignment.center,
+//       crossAxisAlignment: CrossAxisAlignment.center,
+//       children: [
+//         Text(
+//           "Report",
+//           style: FontManager().getTextStyle(
+//             context,
+//             fontSize: 20,
+//             lWeight: FontWeight.bold,
+//           ),
+//         ),
+//         const SizedBox(
+//           height: 20,
+//         ),
+//         Padding(
+//           padding: const EdgeInsets.symmetric(horizontal: 20),
+//           child: textStyleModel(context,
+//               "Helps us to understand the issue, and look into it.", id, flag),
+//         ),
+//         const SizedBox(
+//           height: 20,
+//         ),
+//         textStyleModel(context, "I am not interested.", id, flag),
+//         dividerCalled(),
+//         textStyleModel(context, "Harassment or hateful speech", id, flag),
+//         dividerCalled(),
+//         textStyleModel(context, "Self-harm or suicide", id, flag),
+//         dividerCalled(),
+//         textStyleModel(context, "Adult content", id, flag),
+//         dividerCalled(),
+//         textStyleModel(context, "False information or misleading", id, flag),
+//         dividerCalled(),
+//         textStyleModel(context, "Spam", id, flag),
+//       ],
+//     ),
+//   );
+// }
+
+Widget showModel(BuildContext context, String id, [bool flag = false]) {
+  return AnimatedContainer(
+    duration: const Duration(milliseconds: 300),
+    curve: Curves.easeInOut,
+    height: MediaQuery.of(context).size.height * 0.55,
     decoration: BoxDecoration(
-        color: Colorcodes.white,
-        borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+      color: Colors.white,
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.1),
+          blurRadius: 10,
+          spreadRadius: 2,
+        ),
+      ],
+    ),
     child: Column(
-      // mainAxisAlignment: ,,
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          "Report",
-          style: FontManager().getTextStyle(
-            context,
-            fontSize: 20,
-            lWeight: FontWeight.bold,
+        // Header
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Column(
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                "Report Content",
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+              ),
+            ],
           ),
         ),
-        const SizedBox(
-          height: 20,
+        // Report Options
+        Expanded(
+          child: ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            itemCount: reportOptions.length,
+            separatorBuilder: (context, index) => Divider(
+              height: 1,
+              color: Colors.grey[200],
+            ),
+            itemBuilder: (context, index) {
+              final option = reportOptions[index];
+              return InkWell(
+                onTap: () {
+                  // Handle report submission with id and flag
+                  Navigator.pop(context);
+                  // Add your reporting logic here using id and flag
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        option['title']!,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontWeight: option['isDescription'] == true
+                                  ? FontWeight.w400
+                                  : FontWeight.w500,
+                              color: option['isDescription'] == true
+                                  ? Colors.grey[600]
+                                  : Colors.black,
+                            ),
+                      ),
+                      if (option['subtitle']!.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text(
+                            option['subtitle']!,
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: Colors.grey[500],
+                                    ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: textStyleModel(context,
-              "Helps us to understand the issue, and look into it.", id, flag),
+        // Cancel Button
+        SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: TextButton(
+              onPressed: () => Navigator.pop(context),
+              style: TextButton.styleFrom(
+                minimumSize: const Size(double.infinity, 48),
+                backgroundColor: Colors.grey[100],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(
+                'Cancel',
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Colors.grey[800],
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+            ),
+          ),
         ),
-        const SizedBox(
-          height: 20,
-        ),
-        textStyleModel(context, "I am not interested.", id, flag),
-        dividerCalled(),
-        textStyleModel(context, "Harassment or hateful speech", id, flag),
-        dividerCalled(),
-        textStyleModel(context, "Self-harm or suicide", id, flag),
-        dividerCalled(),
-        textStyleModel(context, "Adult content", id, flag),
-        dividerCalled(),
-        textStyleModel(context, "False information or misleading", id, flag),
-        dividerCalled(),
-        textStyleModel(context, "Spam", id, flag),
       ],
     ),
   );
 }
 
+// Report options data
+const List<Map<String, dynamic>> reportOptions = [
+  {
+    'title': 'Helps us understand the issue',
+    'subtitle': 'Provide details about the problem',
+    'isDescription': true
+  },
+  {'title': 'Not interested', 'subtitle': ''},
+  {'title': 'Harassment or hateful speech', 'subtitle': ''},
+  {'title': 'Self-harm or suicide', 'subtitle': ''},
+  {'title': 'Adult content', 'subtitle': ''},
+  {'title': 'False information or misleading', 'subtitle': ''},
+  {'title': 'Spam', 'subtitle': ''},
+];
 Widget dividerCalled() {
   return Divider(
     thickness: .3,

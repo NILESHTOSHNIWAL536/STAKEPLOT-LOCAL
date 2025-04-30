@@ -31,9 +31,9 @@
 //   void initState() {
 //     super.initState();
 //     getRemainders(context);
-   
+
 //   }
-  
+
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
@@ -147,7 +147,7 @@
 //                 if (isDue) {
 //                   int index = dueAmountRemainders.indexWhere((element) => element['_id'] == data['_id']);
 //                   if (index != -1) {
-//                      duesPaid(context, index); 
+//                      duesPaid(context, index);
 //                     dueAmountRemainders[index]['isPaid'] = true;
 //                     dueAmountRemainders[index]['billApproved'] = true;
 //                     dueAmountRemainders.refresh();
@@ -209,8 +209,6 @@
 //     );
 //   }
 // }
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -219,7 +217,6 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCall
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_application_code_stakeplot/userAvatar.dart';
 import 'package:get/get.dart';
@@ -360,20 +357,23 @@ class _UserListScreenState extends State<UserListScreen> {
                         children: [
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            width: MediaQuery.sizeOf(context).width / 5.3,
                             decoration: BoxDecoration(
                               color: AppColors.accentColor.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Text(
-                              data['category'] ?? 'Untagged',
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w500,
-                                fontSize: 10,
-                                color: AppColors.accentColor,
+                            child: Center(
+                              child: Text(
+                                data['category'] ?? 'Untagged',
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w500,
+                                  fontSize: 10,
+                                  color: AppColors.accentColor,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
                               ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -394,11 +394,12 @@ class _UserListScreenState extends State<UserListScreen> {
                                 maxLines: 1,
                               ),
                             ),
+
                           ),
                         ],
                       ),
-                       // New due date display for lends only
-                                        if (isLendAmount && data['dueDate'] != null) ...[
+                      // Due date display for lends only
+                      if (isLendAmount && data['dueDate'] != null) ...[
                         const SizedBox(height: 4),
                         Text(
                           'Due Date: ${DateFormat('d MMMM yyyy').format(DateTime.parse(data['dueDate']))}',
@@ -424,26 +425,47 @@ class _UserListScreenState extends State<UserListScreen> {
                     children: [
                       InkWell(
                         onTap: () async {
-                          if ((data['isPaid'] ?? false)) return;
+                          // Check if the action is already completed
+                          if (isDue && (data['isPaid'] ?? false)) {
+                            snackBarCalled(context, 'This bill has already been requested.');
+                            return;
+                          } else if (!isDue && (data['reminderSent'] ?? false)) {
+                            snackBarCalled(context, 'Reminder already sent.');
+                            return;
+                          }
+
+                          String message;
                           if (isDue) {
+                            // Handle "Settle Now" for due amounts
                             int index = dueAmountRemainders
                                 .indexWhere((element) => element['_id'] == data['_id']);
                             if (index != -1) {
-                              duesPaid(context, index);
+                               duesPaid(context, index);
                               dueAmountRemainders[index]['isPaid'] = true;
                               dueAmountRemainders[index]['billApproved'] = true;
                               dueAmountRemainders.refresh();
-                              
+                              message = 'Payment request has been initiated!';
+                            } else {
+                              message = 'Error: Payment not found.';
                             }
                           } else {
+                            // Handle "Send Reminder" for lend amounts
                             int index = lendAmountRemainders
                                 .indexWhere((element) => element['_id'] == data['_id']);
                             if (index != -1) {
+                              lendAmountRemainders[index]['reminderSent'] = true;
                               lendAmountRemainders.refresh();
-                              
+                              message = 'Reminder sent successfully!';
+                            } else {
+                              message = 'Error: Reminder not found.';
                             }
                           }
-                          sendNotificationsToDevice(
+
+                          // Show SnackBar
+                          snackBarCalled(context, message);
+
+                          // Send notification
+                           sendNotificationsToDevice(
                             data['payerId'] ?? data['receiverId'],
                             context,
                             isDue
@@ -456,7 +478,7 @@ class _UserListScreenState extends State<UserListScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: (data['isPaid'] ?? false)
+                            color: (isDue && (data['isPaid'] ?? false)) || (!isDue && (data['reminderSent'] ?? false))
                                 ? AppColors.button.withOpacity(0.5)
                                 : AppColors.button,
                             boxShadow: [
@@ -468,11 +490,17 @@ class _UserListScreenState extends State<UserListScreen> {
                             ],
                           ),
                           child: Text(
-                            (data['isPaid'] ?? false)
-                                ? 'Requested'
-                                : (data['billApproved'] ?? true)
-                                    ? (isDue ? 'Settle Now' : 'Send Reminder')
-                                    : (isDue ? 'Awaiting Settlement' : 'Awaiting Approval'),
+                            isDue
+                                ? (data['isPaid'] ?? false)
+                                    ? 'Requested'
+                                    : (data['billApproved'] ?? true)
+                                        ? 'Settle Now'
+                                        : 'Awaiting Settlement'
+                                : (data['reminderSent'] ?? false)
+                                    ? 'Reminder Sent'
+                                    : (data['billApproved'] ?? true)
+                                        ? 'Send Reminder'
+                                        : 'Awaiting Approval',
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
                             style: FontManager().getTextStyle(
