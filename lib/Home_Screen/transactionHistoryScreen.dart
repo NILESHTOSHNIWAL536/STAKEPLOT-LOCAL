@@ -76,7 +76,7 @@ void _onScroll() {
                      onChanedAutoTransactionStatus(context);
                 },
                 decoration: InputDecoration(
-                  hintText: 'Search transactions...',
+                  hintText: 'Search transactions',
                   prefixIcon: const Icon(Icons.search, color: AppColors.accentColor),
                   filled: true,
                   fillColor: AppColors.bg5,
@@ -88,7 +88,6 @@ void _onScroll() {
                 style: const TextStyle(color: AppColors.accentColor),
               ),
               const SizedBox(height: 10),
-
               // Transaction History
              transactionsHistoryList()
             ],
@@ -104,13 +103,14 @@ void _onScroll() {
                         ? TransactionHistory(
                             isYearView: isYearView.value,
                             isflag: true,
-                            showIcon: true,
+                            showIcon: false,
                             expandedPage: true,
+
                           )
                         : TransactionHistory(
                             isYearView: isYearView.value,
                             isflag: true,
-                             showIcon: true,
+                             showIcon: false,
                               expandedPage: true,
                           ));
   }

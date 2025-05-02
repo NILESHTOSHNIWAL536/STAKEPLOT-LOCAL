@@ -60,7 +60,7 @@ class TextFeildWidget extends StatelessWidget {
               obscureText: flag ? false : show.value,
                inputFormatters: [
                     FilteringTextInputFormatter.deny(RegExp(r'\s')),
-                     LowerCaseTextFormatter(),
+                    //  LowerCaseTextFormatter(),
                   ],
               decoration: InputDecoration(
                   // contentPadding: EdgeInsets.all(0),

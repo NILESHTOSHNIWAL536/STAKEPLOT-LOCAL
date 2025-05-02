@@ -112,7 +112,6 @@ void getAutoMationsTransactionsWeekly() async {
 
 void getAutoMationsTransactionsCustom(date, context,
     [weekORmonth = 'month', String? endDate]) async {
- 
   if (accountId.value.trim().toString() == "") return;
 
   String urlPath = endDate != null && weekORmonth == 'Custom'
@@ -120,7 +119,7 @@ void getAutoMationsTransactionsCustom(date, context,
       : "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date";
 
   var response = await getDataApiCall(urlPath);
-  
+
   trasactionsDataDebitWeekly.clear();
 
   List<String> labelsLocal = [];
@@ -136,16 +135,13 @@ void getAutoMationsTransactionsCustom(date, context,
       try {
         String nulldata = (his['data']['debitChangePercentage']).toString();
         totalDebitValuePercent.value =
-            double.parse( nulldata=="null"?"0":nulldata );
+            double.parse(nulldata == "null" ? "0" : nulldata);
         totalDebitValue.value =
             double.parse((his['data']['totalDebit']).toString());
-      } catch (e) {
-        
-      }
-     
+      } catch (e) {}
+
       maxYValue.value =
           double.parse((his['data']['maxAmount'] ?? 500.0).toString());
-      
 
       if (maxYValue.value == 0) maxYValue.value = 500.0;
 
@@ -278,7 +274,6 @@ List<String> getDaysInMonth(String yearMonth) {
   return days;
 }
 
-
 String getCurrentMonth() {
   DateTime now = DateTime.now();
   String year = now.year.toString();
@@ -287,9 +282,10 @@ String getCurrentMonth() {
 }
 
 String getCurrentWeek() {
-  final now = DateTime.now();
+  final now = DateTime.now().subtract(Duration(days: 7));
   final year = now.year;
   String s = '$year-W${now.weekOfYear.toString().padLeft(2, '0')}';
+  print("dfsjafslkfjaslkfjdlkj : $s");
   return s;
 }
 
@@ -340,43 +336,45 @@ void getUserBankData(context) async {
 //     reloadHistory.value = !reloadHistory.value;
 //   } else {}
 // }
-void updateTheTagOfTarnsactions(category, subCategory, transactionId, context, index) async {
+void updateTheTagOfTarnsactions(
+    category, subCategory, transactionId, context, index) async {
   String urlPath = "${url}/transactionauto/updateTransaction/${transactionId}";
 
-    var response =await updateDataApiCall2(urlPath, {
-      'category': category,
-      'subcategory': subCategory,
-    });
-    print(category);
-    print(subCategory);
-    print(urlPath);
-    printData(response);
-    if (getFlagOfResponse(response)) {
-      Navigator.pop(context);
-      reloadHistory.value = !reloadHistory.value;
-    } else {}
+  var response = await updateDataApiCall2(urlPath, {
+    'category': category,
+    'subcategory': subCategory,
+  });
+  print(category);
+  print(subCategory);
+  print(urlPath);
+  printData(response);
+  if (getFlagOfResponse(response)) {
+    Navigator.pop(context);
+    reloadHistory.value = !reloadHistory.value;
+  } else {}
 }
-void updateTheTagOfTarnsactionsGroup(category, subCategory, grpId, context, index) async {
+
+void updateTheTagOfTarnsactionsGroup(
+    category, subCategory, grpId, context, index) async {
   String urlPath = "${url}/transactionauto/grouped/${grpId}/categorize";
 
-  var body={
-      'category': category,
-      'subcategory': subCategory,
-      "removedTransactions": removedGrpItemsList,
-    };
+  var body = {
+    'category': category,
+    'subcategory': subCategory,
+    "removedTransactions": removedGrpItemsList,
+  };
 
-  var response =await postDataApiCall(urlPath, body);
+  var response = await postDataApiCall(urlPath, body);
 
-  if (getFlagOfResponse(response))
-  {
-       getAllTransaction(context);
-      reloadHistory.value = !reloadHistory.value;
-      Navigator.pop(context);
-      Navigator.pop(context);
-      removedGrpItemsList.clear();
-      lengthOfTransactions.value=false;
-        setGroupTransactions.value=false;
-                      getGroupTransactions();
+  if (getFlagOfResponse(response)) {
+    getAllTransaction(context);
+    reloadHistory.value = !reloadHistory.value;
+    Navigator.pop(context);
+    Navigator.pop(context);
+    removedGrpItemsList.clear();
+    lengthOfTransactions.value = false;
+    setGroupTransactions.value = false;
+    getGroupTransactions();
   } else {}
 }
 
@@ -439,10 +437,12 @@ void addTransaction(String amount, String subCategory, String categories,
 
   if (response.statusCode == 200) {
     final body = json.decode(response.body);
-    if (!isSplit)snackBarCalled(context, "Transaction has been successfully saved!",AppColors.pollSelected);
+    if (!isSplit)
+      snackBarCalled(context, "Transaction has been successfully saved!",
+          AppColors.pollSelected);
     // getAllTransaction(context);
     transactionsHistory.insert(0, body['data'][0]);
-    reloadHistory.value = ! reloadHistory.value;
+    reloadHistory.value = !reloadHistory.value;
     getCategoryData();
     setDonectChat.value = !setDonectChat.value;
     processChartData();
@@ -498,7 +498,6 @@ void processChartData() {
 }
 
 void getTransaction(context) async {
-
   var response = await getDataApiCall("${url}/transaction/history");
 
   if (response.statusCode == 200) {
@@ -570,20 +569,17 @@ void getAutoMationsTransactionsCustomoverall(date, context,
   String urlPath = endDate != null && weekORmonths == 'custom'
       ? "$url/transactionauto/getWholeTransactionsGraph/${weekORmonths.toLowerCase()}/$date,${getNextDay(endDate)}"
       : "$url/transactionauto/getWholeTransactionsGraph/${weekORmonths.toLowerCase()}/$date";
- 
- 
+
   var response = await getDataApiCall(urlPath);
-  
+
   trasactionsDataDebitWeeklyoverall.clear();
- 
+
   List<String> labelsLocal = [];
   List<double> debitList = [];
 
   if (getFlagOfResponse(response)) {
-  
     var his = jsonDecode(response.body);
     transactionChatGraphoverall.clear();
-  
 
     // Declare dataoverall outside the try block
     Map dataoverall = his['data']['result'];
@@ -600,7 +596,6 @@ void getAutoMationsTransactionsCustomoverall(date, context,
       }
 
       if (weekORmonths == 'custom' && endDate != null) {
-      
         DateTime startDate = DateTime.parse(date);
         DateTime end = DateTime.parse(endDate);
 
@@ -625,7 +620,6 @@ void getAutoMationsTransactionsCustomoverall(date, context,
           }
         });
       } else if (weekORmonths == 'week') {
-     
         labelsLocal =
             getWeekDays(); // ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
         debitList = List.filled(7, 0.0);
@@ -644,7 +638,6 @@ void getAutoMationsTransactionsCustomoverall(date, context,
           }
         });
       } else {
-      
         DateTime startDate =
             DateTime.parse("$date-01"); // Ensure full date for month
         int daysInMonth = DateTime(startDate.year, startDate.month + 1, 0).day;
@@ -664,7 +657,6 @@ void getAutoMationsTransactionsCustomoverall(date, context,
         });
       }
     } catch (e) {
-    
       maxYValueoverall.value = 500.0;
       if (labelsLocal.isEmpty) {
         if (weekORmonths == 'custom' && endDate != null) {
@@ -724,13 +716,11 @@ void getAutoMationsTransactionsCustomoverall(date, context,
     }
 
     transactionChatGraphoverall['debited'] = debitList;
- 
 
     getGraphDataoverall.value = false;
     labels2.assignAll(labelsLocal);
     getGraphDataoverall.value = true;
   } else {
- 
     if (weekORmonths == 'custom' && endDate != null) {
       DateTime startDate = DateTime.parse(date);
       DateTime end = DateTime.parse(endDate);

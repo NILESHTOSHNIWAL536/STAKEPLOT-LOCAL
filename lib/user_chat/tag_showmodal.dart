@@ -125,9 +125,11 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
                         return;
                     }                         
                     redioButton.forEach((key, id) {
-                    final index = redioButtonIndex[id];
+                    // final index = redioButtonIndex[id];
+                        //  final index = transactionsHistory.indexWhere((t) => t['_id'] == id);
+                        final index = transactionsHistory.indexWhere((t) => t['_id'] == id);
 
-                    if (index != null) {
+                   if (index != null) {
                       updateTheTagOfTarnsactions(
                         widget.data['category'],
                         widget.data['subcategory'],

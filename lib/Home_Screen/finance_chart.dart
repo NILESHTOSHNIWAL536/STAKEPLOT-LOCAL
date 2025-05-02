@@ -98,7 +98,7 @@ class _FinancePageState extends State<FinancePage> {
                     Obx(() {
                       String displayText = '';
                       if (selectedButton.value == 'Week') {
-                        displayText = weekOfThis.value; //'This week';
+                        displayText = "Last week"; //'This week';
                       } else if (selectedButton.value == 'Month') {
                         displayText = 'This month';
                       }
@@ -237,34 +237,34 @@ class _FinancePageState extends State<FinancePage> {
                 ),
               ),
             ),
-            SizedBox(width: screenWidth * 0.02),
-            GestureDetector(
-              onTap: () {
-                selectedButton.value = 'Week';
-                // getGraphData.value = false;
-                getAutoMationsTransactionsCustom(
-                    getCurrentWeek(), context, 'Week');
-              },
-              child: Container(
-                height: 35,
-                width: screenWidth * 0.15,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: selectedButton.value == 'Week'
-                      ? AppColors.button
-                      : AppColors.backgroundColor,
-                ),
-                child: Center(
-                  child: Obx(() => Text(
-                        weekOfThis.value,
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.normal,
-                            fontSize: fontSizeFactor * 3,
-                            color: AppColors.accentColor),
-                      )),
-                ),
-              ),
-            ),
+            // SizedBox(width: screenWidth * 0.02),
+            // GestureDetector(
+            //   onTap: () {
+            //     selectedButton.value = 'Week';
+            //     // getGraphData.value = false;
+            //     getAutoMationsTransactionsCustom(
+            //         getCurrentWeek(), context, 'Week');
+            //   },
+            //   child: Container(
+            //     height: 35,
+            //     width: screenWidth * 0.15,
+            //     decoration: BoxDecoration(
+            //       borderRadius: BorderRadius.circular(16),
+            //       color: selectedButton.value == 'Week'
+            //           ? AppColors.button
+            //           : AppColors.backgroundColor,
+            //     ),
+            //     child: Center(
+            //       child: Text(
+            //             "Last Week",
+            //             style: FontManager().getTextStyle(context,
+            //                 lWeight: FontWeight.normal,
+            //                 fontSize: fontSizeFactor * 3,
+            //                 color: AppColors.accentColor),
+            //           )),
+            //     ),
+            //   ),
+        
             SizedBox(width: screenWidth * 0.02),
             GestureDetector(
               onTap: () {
@@ -318,18 +318,19 @@ class LineChartWidget extends StatefulWidget {
   @override
   State<LineChartWidget> createState() => _LineChartWidgetState();
 }
-
 class _LineChartWidgetState extends State<LineChartWidget> {
   double maxYValue = 10000;
-  ScrollController?
-      _scrollController; // Make nullable to avoid late initialization issues
+  ScrollController? _scrollController;
+  ValueNotifier<bool> isTooltipVisible = ValueNotifier<bool>(false);
+  ValueNotifier<Map<String, dynamic>> tooltipData =
+      ValueNotifier<Map<String, dynamic>>({});
 
   int getCurrentDateIndex(List<String> labels) {
     final now = DateTime.now();
     if (widget.selectedButton.value == 'Week') {
-      return now.weekday % 7; // 0 for Sunday, 1 for Monday, etc.
+      return now.weekday % 7;
     } else {
-      return now.day - 1; // 0-based index for day of month
+      return now.day - 1;
     }
   }
 
@@ -364,9 +365,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       maxYValue = [
         widget.chartData["credited"] ?? [],
         widget.chartData["debited"] ?? []
-      ]
-          .expand((x) => x)
-          .reduce((value, element) => value > element ? value : element);
+      ].expand((x) => x).reduce((value, element) => value > element ? value : element);
     }
     if (!maxYValue.isFinite || maxYValue == 0) {
       maxYValue = 1000.0;
@@ -397,10 +396,10 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   @override
   void dispose() {
     _scrollController?.dispose();
+    isTooltipVisible.dispose();
+    tooltipData.dispose();
     super.dispose();
   }
-
-  ValueNotifier<bool> isTooltipVisible = ValueNotifier<bool>(false);
 
   @override
   Widget build(BuildContext context) {
@@ -445,9 +444,8 @@ class _LineChartWidgetState extends State<LineChartWidget> {
             children: [
               if (!widget.isExpandedView)
                 Container(
-                  width: screenWidth * 0.09, // Fixed width to prevent overflow
-                  height: MediaQuery.of(context).size.height /
-                      2.6, // Match chart height
+                  width: screenWidth * 0.09,
+                  height: MediaQuery.of(context).size.height / 2.6,
                   child: _buildYAxisLabels(fontSizeFactor),
                 ),
               Expanded(
@@ -475,13 +473,80 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                     shape: BoxShape.circle,
                   ),
                   child: AvatarProfileImage(
-                    url: Sign.maximise, // Verify this URI
+                    url: Sign.maximise,
                     width: 36,
                     height: 36,
                   ),
                 ),
               ),
             ),
+          ValueListenableBuilder<Map<String, dynamic>>(
+            valueListenable: tooltipData,
+            builder: (context, data, child) {
+              if (!data.containsKey('visible') || !data['visible']) {
+                return SizedBox.shrink();
+              }
+              return Positioned(
+                left: data['x']?.toDouble() ?? 0,
+                top: data['y']?.toDouble() ?? 0,
+                child: _buildCustomTooltip(data, fontSizeFactor),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCustomTooltip(Map<String, dynamic> data, double fontSizeFactor) {
+    final String date = data['date'] ?? '';
+    final double credited = data['credited'] ?? 0.0;
+    final double debited = data['debited'] ?? 0.0;
+
+    return Container(
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.black87,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 4,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Date: $date',
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.bold,
+              fontSize: fontSizeFactor * 2.5,
+              color: Colors.white,
+            ),
+          ),
+          SizedBox(height: 4),
+          Text(
+            'Credited: ₹${credited.toStringAsFixed(2)}',
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.normal,
+              fontSize: fontSizeFactor * 2.5,
+              color: Colors.white,
+            ),
+          ),
+          Text(
+            'Debited: ₹${debited.toStringAsFixed(2)}',
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.normal,
+              fontSize: fontSizeFactor * 2.5,
+              color: Colors.white,
+            ),
+          ),
         ],
       ),
     );
@@ -527,12 +592,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
           ? screenWidth * 0.85
           : max(chartWidth, screenWidth * 0.85),
       height: MediaQuery.of(context).size.height / 2.6,
-      child: Transform.translate(
-        offset: widget.selectedButton.value == 'Week'
-            ? Offset(-20, 0)
-            : widget.selectedButton.value == 'Month'
-                ? Offset(-35, 0)
-                : Offset(-25, 0),
+      child:  Transform.translate(
+        offset: widget.selectedButton.value == 'Week'? Offset(-5, 0)
+            : widget.selectedButton.value == 'Month'? Offset(-35, 0): Offset(-25, 0),
         child: SfCartesianChart(
           borderWidth: 0,
           plotAreaBorderWidth: 0,
@@ -566,8 +628,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
           ),
           tooltipBehavior: TooltipBehavior(
             enable: true,
-            builder: (dynamic data, dynamic point, dynamic series,
-                int pointIndex, int seriesIndex) {
+            builder: (dynamic data, dynamic point, dynamic series, int pointIndex, int seriesIndex) {
               final ChartData chartData = data as ChartData;
               String label = seriesIndex == 1 ? 'Credited' : 'Debited';
               isTooltipVisible.value = false;
@@ -617,7 +678,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 width: 4,
                 shape: DataMarkerType.pentagon,
               ),
-              onPointTap: (ChartPointDetails details) {},
+              onPointTap: (ChartPointDetails details) {
+                _showCustomTooltip(details, creditedData, debitedData, fontSizeFactor);
+              },
             ),
             SplineSeries<ChartData, String>(
               dataSource: debitedData,
@@ -635,7 +698,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 width: 4,
                 shape: DataMarkerType.circle,
               ),
-              onPointTap: (ChartPointDetails details) {},
+              onPointTap: (ChartPointDetails details) {
+                _showCustomTooltip(details, creditedData, debitedData, fontSizeFactor);
+              },
             ),
             SplineAreaSeries<ChartData, String>(
               dataSource: debitedData,
@@ -659,6 +724,38 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         ),
       ),
     );
+  }
+
+  void _showCustomTooltip(
+      ChartPointDetails details,
+      List<ChartData> creditedData,
+      List<ChartData> debitedData,
+      double fontSizeFactor) {
+    final int pointIndex = details.pointIndex ?? 0;
+    final String date = creditedData[pointIndex].x;
+    final double credited = creditedData[pointIndex].y;
+    final double debited = debitedData[pointIndex].y;
+
+    // Calculate tooltip position (approximate)
+    double labelWidth = widget.selectedButton.value == 'Week' ? 50.0 : 60.0;
+    double xPosition = pointIndex * labelWidth + 20; // Adjust based on chart offset
+    double yPosition = MediaQuery.of(context).size.height / 2.6 - 100; // Position above chart
+
+    tooltipData.value = {
+      'visible': true,
+      'date': date,
+      'credited': credited,
+      'debited': debited,
+      'x': xPosition,
+      'y': yPosition,
+    };
+
+    // Hide tooltip after a delay or on next tap
+    Future.delayed(Duration(seconds: 3), () {
+      if (mounted) {
+        tooltipData.value = {'visible': false};
+      }
+    });
   }
 
   void navToExpanded() {
@@ -736,3 +833,4 @@ class ChartData {
   final String x;
   final double y;
 }
+

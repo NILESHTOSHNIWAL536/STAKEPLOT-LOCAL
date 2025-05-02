@@ -57,29 +57,31 @@ void clearStackShared(BuildContext context) {
   }
 }
 
-void expire(responce, BuildContext context) {
+void expire(response, BuildContext context) {
   try {
-    var body = json.decode(responce.body);
+    var body = json.decode(response.body);
     if (body['error'].toString() == "JsonWebTokenError") {
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-      Navigator.pushReplacementNamed(context, '/');
+      Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
     }
-  } catch (e) {}
+  } catch (e) {
+    // Optionally log the error
+    debugPrint("Error in expire(): $e");
+  }
 }
 
-Future<bool> check(context, String flag) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  bool f = _pref.containsKey("accessToken");
-  //  if (!f && flag != "loginuser") Navigator.pushReplacementNamed(context, '/');
-  if (!f && flag != "loginuser") {
-    Navigator.pushReplacementNamed(context, '/');
-    return false;
-  }
 
-  if (flag == "loginuser") {
-    return false;
-  }
+Future<bool> check(context, String flag) async {
+  // final SharedPreferences _pref = await SharedPreferences.getInstance();
+  // bool f = _pref.containsKey("accessToken");
+  // //  if (!f && flag != "loginuser") Navigator.pushReplacementNamed(context, '/');
+  // if (!f && flag != "loginuser") {
+  //   Navigator.pushReplacementNamed(context, '/');
+  //   return false;
+  // }
+
+  // if (flag == "loginuser") {
+  //   return false;
+  // }
 
   return true;
 }
