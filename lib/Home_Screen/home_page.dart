@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/cardAnimations.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/donut_chart.dart';
@@ -140,63 +143,74 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context)
   {
-    return Scaffold(
-      bottomNavigationBar: SafeArea(child: BottomNavigations(data: 0)),
-      backgroundColor: AppColors.backgroundColor,
-      appBar:getAppBar(),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
-        child: SingleChildScrollView(
-            controller: scrollControllerHome,
-          child: Column(
-            children: [
-              Nextfetch(),
-             
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.23,
-                child: NumberPickerScreen(),
-              ),
-            
-              const SizedBox(
-                height: 10,
-              ),
-             
-              
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.51,
-                child: FinancePage(
-                  scrollController: scrollController,
-                  transactionHistoryKey:_transactionHistoryKey ,
-                ),
-              ),
-          
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.16,
-                child: Manualtransaction(),
-              ),
-    
-               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.46,
-                child: TransactionGraph(),
-               ),
+    return WillPopScope(
+      onWillPop: () async {
+        // Exit the app when back button is pressed on Home
+        // if (Platform.isAndroid) {
+        //   SystemNavigator.pop(); // preferred for Android
+        // } else {
+        // }
+          exit(0); // fallback for other platforms
+        // return false; // don't pop route
+      },
+      child: Scaffold(
+        bottomNavigationBar: SafeArea(child: BottomNavigations(data: 0)),
+        backgroundColor: AppColors.backgroundColor,
+        appBar:getAppBar(),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
+          child: SingleChildScrollView(
+              controller: scrollControllerHome,
+            child: Column(
+              children: [
+                Nextfetch(),
+               
                 SizedBox(
-                height: MediaQuery.of(context).size.height * 0.5,
-                child:InsightsScreen()
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.5,
-                child:DoughnutChartExample()
-              ),
+                  height: MediaQuery.of(context).size.height * 0.23,
+                  child: NumberPickerScreen(),
+                ),
+              
+                const SizedBox(
+                  height: 10,
+                ),
+               
+                
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.51,
+                  child: FinancePage(
+                    scrollController: scrollController,
+                    transactionHistoryKey:_transactionHistoryKey ,
+                  ),
+                ),
             
-            
-             // TransactionHistory(),
-            
-    
-            ],
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.16,
+                  child: Manualtransaction(),
+                ),
+      
+                 SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.46,
+                  child: TransactionGraph(),
+                 ),
+                  SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  child:InsightsScreen()
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  child:DoughnutChartExample()
+                ),
+              
+              
+               // TransactionHistory(),
+              
+      
+              ],
+            ),
           ),
         ),
+        
       ),
-      
     );
   }
 

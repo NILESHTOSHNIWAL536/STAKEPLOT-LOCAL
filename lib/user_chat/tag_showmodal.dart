@@ -125,9 +125,10 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
                         return;
                     }                         
                     redioButton.forEach((key, id) {
-                    final index = redioButtonIndex[id];
+                    // final index = redioButtonIndex[id];
+                         final index = transactionsHistory.indexWhere((t) => t['_id'] == id);
 
-                    if (index != null) {
+                   if (index != null) {
                       updateTheTagOfTarnsactions(
                         widget.data['category'],
                         widget.data['subcategory'],
@@ -140,13 +141,15 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
                       transactionsHistory[index]['needsReview'] = false;
                     }
                   });
-                    getAllTransaction(context);
+                   // getAllTransaction(context);
                     redioButton.clear();
                     redioButtonIndex.clear();
                     tagName.value="";  
                     showCheckBox.value=false;
                     transactionsHistory.refresh();
                     Navigator.pop(context);
+                    Navigator.pop(context);
+
                    
                 }
                 else if(!widget.isGroupTransaction)

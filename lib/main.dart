@@ -20,6 +20,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransactio
 import 'package:flutter_application_code_stakeplot/finvu_screens/discoverAccount.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/firebase_options.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/authScreen.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_details.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/forgot.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
@@ -85,7 +86,8 @@ class _MyAppState extends State<MyApp> {
       ),
       
       debugShowCheckedModeBanner: false,
-       initialRoute: '/home', 
+      initialRoute: '/splash', 
+ 
   routes:
     {  
       '/splash': (context) =>  SplashScreen(),   

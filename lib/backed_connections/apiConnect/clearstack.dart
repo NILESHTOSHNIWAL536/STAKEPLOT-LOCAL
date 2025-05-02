@@ -57,51 +57,45 @@ void clearStackShared(BuildContext context) {
   }
 }
 
-
-void expire(responce, BuildContext context) {
+void expire(response, BuildContext context) {
   try {
-    var body = json.decode(responce.body);
+    var body = json.decode(response.body);
     if (body['error'].toString() == "JsonWebTokenError") {
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-      Navigator.pushReplacementNamed(context, '/');
+      Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
     }
-  } catch (e) {}
-}
-
-Future<bool> check(context, String flag) async
-{
-     final SharedPreferences _pref = await SharedPreferences.getInstance();
-     bool f=_pref.containsKey("accessToken");
-    //  if (!f && flag != "loginuser") Navigator.pushReplacementNamed(context, '/');
-    if(!f && flag != "loginuser"){
-         Navigator.pushReplacementNamed(context, '/');
-         return false;
-    }
-
-    if(flag=="loginuser")
-    {
-         return false;
-    }
-
-    
-    return true;
+  } catch (e) {
+    // Optionally log the error
+    debugPrint("Error in expire(): $e");
+  }
 }
 
 
-Future<void> storeDeviceInfo()async
-{
-    var json = await getUserStats();
-    var responce=await postDataApiCall("${url}/deviceScreenTime/", json);
-    if(getFlagOfResponse(responce))
-    {
-        printData(responce);
-    }
+Future<bool> check(context, String flag) async {
+  // final SharedPreferences _pref = await SharedPreferences.getInstance();
+  // bool f = _pref.containsKey("accessToken");
+  // //  if (!f && flag != "loginuser") Navigator.pushReplacementNamed(context, '/');
+  // if (!f && flag != "loginuser") {
+  //   Navigator.pushReplacementNamed(context, '/');
+  //   return false;
+  // }
+
+  // if (flag == "loginuser") {
+  //   return false;
+  // }
+
+  return true;
 }
 
+Future<void> storeDeviceInfo() async {
+  var json = await getUserStats();
+  var responce = await postDataApiCall("${url}/deviceScreenTime/", json);
+  if (getFlagOfResponse(responce)) {
+    printData(responce);
+  }
+}
 
-void clearGetX(){
-   income = 0.obs;
+void clearGetX() {
+  income = 0.obs;
   messages.clear();
   messagesTemp.clear();
   roomBills.clear();
@@ -162,21 +156,19 @@ void clearGetX(){
   bankAccountLinkedList.clear();
   FipIdsConnected.clear();
   transactionsHistory.clear();
-  isLoadingMore.value=false;
-  isFected.value=false;
+  isLoadingMore.value = false;
+  isFected.value = false;
+  currentPage = 1;
 }
 
-RxMap<String,String> ListOfBankImages=RxMap();
+RxMap<String, String> ListOfBankImages = RxMap();
 
-void initialMap(context)async
-{
-  
+void initialMap(context) async {
   // var isConnected = await finvuManager.isConnected();
   // print("isConnected");
   // if (!isConnected) {return;}
   // print(isConnected);
 
-  
   // try{
   // List<FinvuFIPInfo>  fipDis = await finvuManager.fipsAllFIPOptions();
 
@@ -185,24 +177,18 @@ void initialMap(context)async
   // });
   // }catch(e)
   // {
-  //    print(e);    
+  //    print(e);
   // }
 
   // print("ListOfBankImages");
   // print(ListOfBankImages);
-
 }
 
+void getAllContstant(context) async {
+  var responce = await getDataApiCall("${url}/constant/weekmonth");
 
-void getAllContstant(context)async
-{
-
-   var responce=await getDataApiCall("${url}/constant/weekmonth");
-   
-   if(getFlagOfResponse(responce))
-   {
-        var data=jsonDecode(responce.body);
-        weekOfThis.value=data['data']['week'];
-   }
-
+  if (getFlagOfResponse(responce)) {
+    var data = jsonDecode(responce.body);
+    weekOfThis.value = data['data']['week'];
+  }
 }
