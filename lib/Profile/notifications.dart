@@ -91,6 +91,7 @@ class _NotificationsState extends State<Notifications> {
             return Container(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
+             
               padding: EdgeInsets.symmetric(horizontal: constraints.maxWidth * 0.04,vertical: constraints.maxHeight * 0.01,),
               child: SingleChildScrollView(
                 child: Expanded(
@@ -335,7 +336,8 @@ class _NotificationsState extends State<Notifications> {
         return _buildMessageCard(
             "You have cleared your $ty of ${(double.tryParse(e['amount']?.toString() ?? '0') ?? 0).toStringAsFixed(1)} for the item: ${e['name'] ?? 'unknown'}",
             e['id'] as String? ?? "",
-            e['avatarType'] as String? ?? "",
+            // modified here from avatarType to from_name
+            e['from_name'] as String? ?? "",
             time);
       default:
         return const SizedBox(child: Text("Unknown notification type"));

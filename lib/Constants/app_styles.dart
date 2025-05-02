@@ -18,7 +18,6 @@ class HomePageIcons {
   static String refresh = "assets/icons/Home-page/Refresh.svg";
   static String fetch = "assets/icons/Home-page/fetch.svg";
   static String none = "assets/icons/Home-page/none.svg";
-
 }
 
 class Categories {
@@ -57,7 +56,6 @@ Income: NEFT, NEFT CR, PRINC PAYOUT, INT PAYOUT, Salary, credit interest, BIL, I
 Personal Transfer: POS, CASH WDL, ATM, To:
 
 Personal Transfer Received: UPI-CR, UPI CR*/
-
 
   static List<String> categoriesList = [
     alcohal,
@@ -250,34 +248,31 @@ class BudgetCategories {
     "Bills": Categories.bills,
     "Subscriptions": Categories.subscription,
     "Events": Categories.events,
-    "Personal Care": Categories.personalCare,//
+    "Personal Care": Categories.personalCare, //
     "Services": Categories.services,
     "Emi": Categories.emi,
     "Investments": Categories.bills,
     "Insurance": Categories.insurance,
     "Support": Categories.support,
-     "Current": Categories.current, //
+    "Current": Categories.current, //
     "Children": Categories.children,
     "Pet Care": Categories.petCare,
     "Sports": Categories.sports,
     "Alcohol": Categories.alcohal,
     "Hobbies": Categories.hobbies,
     "Education": Categories.education,
-     "Commerce": Categories.commerce,//
-    "snacks": Categories.snacks,//
-    "Entertainment": Categories.entertainment,//
-    "Groceries":Categories.groceries,
-    "Income":Categories.income,
-    "Personal Transfer":Categories.personalTransfer,
-    "Personal Transfer Received":Categories.personalTransferReceived,
-   
+    "Commerce": Categories.commerce, //
+    "snacks": Categories.snacks, //
+    "Entertainment": Categories.entertainment, //
+    "Groceries": Categories.groceries,
+    "Income": Categories.income,
+    "Personal Transfer": Categories.personalTransfer,
+    "Personal Transfer Received": Categories.personalTransferReceived,
   };
 
   static List<String> categories =
       listofCategories.keys.map((key) => key.toString()).toList();
 }
-
-
 
 class BudgetSubCategories {
   static const String connect = "assets/icons/subCategoryIcons/";
@@ -308,16 +303,16 @@ class BudgetSubCategories {
     "coffee": "${connect}coffee.svg",
     "eats": "${connect}eats.svg",
     "Frankie": "${connect}Frankie.svg",
-    "kirana": "${connect}kirana.svg",
+   // "kirana": "${connect}kirana.svg",
     "Store": "${connect}Store.svg",
-    "General Store": "${connect}general_store.svg",
+   // "General Store": "${connect}general_store.svg",
     "rasoi": "${connect}rasoi.svg",
     "fish": "${connect}fish.svg",
-    "milk": "${connect}milk.svg",
+   // "milk": "${connect}milk.svg",
 
     // Shopping
     "Shoppers": "${connect}shoppers.svg",
-    "Mart": "${connect}mart.svg",
+   // "Mart": "${connect}mart.svg",
     "WestSide": "${connect}westside.svg",
     "Electronics": "${connect}electronics.svg",
     "Supermarket": "${connect}Supermarket.svg",
@@ -327,7 +322,7 @@ class BudgetSubCategories {
     "Fabrics": "${connect}fabric.svg",
     "kart": "${connect}kart.svg",
     "Shopping": "${connect}Shopping.svg",
-    "ratnadeep": "${connect}ratnadeep.svg",
+  //  "ratnadeep": "${connect}ratnadeep.svg",
     "Mobiles": "${connect}Mobile.svg",
     "lifestyle": "${connect}lifestyle.svg",
     "market": "${connect}Market.svg",
@@ -378,7 +373,8 @@ class BudgetSubCategories {
     "Netflix": "${connect}Netflix.svg",
     "PrimeVideo": "${connect}Primevideo.svg",
     "Spotify": "${connect}Spotify.svg",
-    "Jio Hotstar": "${connect}Jio_hotstar.svg", // Note: "Hotstar" was "Jio Hotstar" in your code
+    "Jio Hotstar":
+        "${connect}Jio_hotstar.svg", // Note: "Hotstar" was "Jio Hotstar" in your code
     "appleServices": "${connect}appleservices.svg",
     "disney": "${connect}Disney.svg",
 
@@ -402,7 +398,7 @@ class BudgetSubCategories {
     "Carpenter": "${connect}Carpenter.svg",
     "Electrician": "${connect}Electrician.svg",
     "Plumber": "${connect}plumber.svg",
-    "Bike/Car Service": "${connect}Bike/Car_service.svg", // Fixed path separator
+    "Bike/Car Service":"${connect}Bike/Car_service.svg", // Fixed path separator
     "Events": "${connect}Events.svg",
     "Service": "${connect}Service.svg",
     "Bike": "${connect}Bike.svg",
@@ -507,12 +503,45 @@ class BudgetSubCategories {
     "Adventures": "${connect}adventures.svg",
 
     //Groceries
+    "SUPRDAILY": "${connect}suprdaily.svg",
+    "GROCERY": Categories.groceries,
+    "SPENCER'S": "${connect}suprdaily.svg",
+    "VEGETABLE": "${connect}vegetables.svg",
+    "FRUIT": "${connect}fruit.svg",
+    "Ratnadeep": "${connect}ratnadeep.svg",
+    "dmart": "${connect}mart.svg",
+    "kirana": "${connect}kirana.svg",
+    "General Store": "${connect}general_store.svg",
+    "milk": "${connect}milk.svg",
+
+    //Income
+    "NEFT":"${connect}neft.svg",
+    "NEFT CR":"${connect}neft.svg",
+    "PRINC PAYOUT":"${connect}princPayout.svg",
+//    "INT PAYOUT":,
+    "Salary":"${connect}Salary.svg",
+    "credit interest":"${connect}creditInterest.svg",
+    "BIL":"${connect}neft.svg",
+    "INF":"${connect}neft.svg",
+    "zerodhabroking":"${connect}zerodhabroking.svg",
+    "credit":"${connect}Credit.svg",
     
+    //Personal transfer
+    "POS":"${connect}POS.svg",
+    "CASH WDL":"${connect}cashWDL.svg",
+    "ATM":"${connect}ATM.svg",
+    "To:":Categories.personalTransfer,
+
+    //Personal transfer received
+    "UPI-CR":"${connect}scanner.svg",
+
     
+
   };
 
   static final List<String> categories = listofSubCategories.keys.toList();
 }
+
 class BudgetCategories2 {
   static Map<String, dynamic> listofCategories = {
     "Food": Categories.food,
@@ -535,9 +564,9 @@ class BudgetCategories2 {
     "Snacks": Categories.snacks,
     "Entertainment": Categories.entertainment,
     // "Investments": Categories.Investments,
-     "Current": Categories.current,//
+    "Current": Categories.current, //
     // "Education": Categories.,
-     "Commerce": Categories.commerce
+    "Commerce": Categories.commerce
   };
 
   static List<String> categories =
@@ -557,107 +586,215 @@ class Expansioncalculator {
   ];
 }
 
+final Map<String, List<String>> categories = {
+  "Food": [
+    "Swiggy",
+    "Zomato",
+    "Restaurant",
+    "Cafe",
+    "Pizza",
+    "Dairy",
+    "Tea",
+    "Chai",
+    "canteen",
+    "Bistro",
+    "Mcdonalds",
+    "kfc",
+    "subway",
+    "dominos",
+    "Dhaba",
+    "Chicken",
+    "Italia",
+    "bawarchi",
+    "cafe",
+    "Tiffin",
+    "meals",
+    "Vegetables",
+    "udupi",
+    "coffee",
+    "eats",
+    "Frankie",
+  //  "kirana",
+    "Store",
+   // "General Store",
+    "rasoi",
+    "fish",
+   // "milk"
+  ],
+  "Shopping": [
+    "Shoppers",
+   // "Mart",
+    "WestSide",
+    "Electronics",
+    "Supermarket",
+    "Amazon",
+    "Flipkart",
+    "Fashion",
+    "Fabrics",
+    "kart",
+   // "ratnadeep",
+    "Mobiles",
+    "lifestyle",
+    "market",
+    "more",
+    "shop",
+    "max",
+    "zudio",
+    "centro"
+  ],
+  "Travel": [
+    "Fuel",
+    "Petrol",
+    "Ola",
+    "Uber",
+    "Metro",
+    "Traffic polic",
+    "puncture",
+    "Mobility",
+    "Travels",
+    "Transport",
+    "Filling",
+    "Rapido",
+    "Tgsrtc",
+    "irctc"
+  ],
+  "Health": ["Medical", "Pharmacy", "Hospital", "Medplus"],
+  "Bills": [
+    "Electricity",
+    "Water",
+    "Gas",
+    "Internet",
+    "Mobile Recharge",
+    "Rent",
+    "DTH",
+    "AIRTEL",
+    "JIO",
+    "Solutions",
+    "godaddy",
+    "hostinger",
+    "bpcl"
+  ],
+  "Subscriptions": [
+    "Netflix",
+    "PrimeVideo",
+    "Spotify",
+    "Jio Hotstar",
+    "appleServices",
+    "disney"
+  ],
+  "Events": [
+    "Weddings",
+    "Birthday",
+    "Festival",
+    "Anniversary",
+    "Flowers",
+    "pubs",
+    "Gift"
+  ],
+  "Personal Care": ["Salon", "Spa", "Haircare", "Skincare"],
+  "Services": [
+    "Housemaid",
+    "Carpenter",
+    "Electrician",
+    "Plumber",
+    "Bike/Car Service",
+    "Hardware/sanitary Workshop",
+    "Events",
+    "Service",
+    "Bike",
+    "Auto",
+    "hardware",
+    "sanitary",
+    "communications",
+    "traders",
+    "Enterprises",
+    "solutions"
+  ],
+  "Emi": ["Eazypay", "slice", "postpaid"],
+  "Investments": ["MutualFund", "Stocks", "Gold"],
+  "Insurance": ["Life Insurance", "Vehicle Insurance", "POLICYBAZAAR"],
+  "Support": ["Charity"],
+  "Current": ["TDS"],
+  "Children": [
+    "School Fees",
+    "Tuitions",
+    "Baby store",
+    "miniklub",
+    "uniforms",
+    "baby care",
+    "children"
+  ],
+  "Pet Care": ["Pet"],
+  "Sports": ["Gym Membership", "Sports Equipment", "Snooker", "cricket", "box"],
+  "Alcohol": ["Liquor", "Wine", "Cigarettes"],
+  "Hobbies": ["Photography", "Gardening"],
+  "Education": ["Stationary", "Fees", "institute", "college"],
+  "Commerce": [
+    "Amazon",
+    "Flipkart",
+    "Myntra",
+    "Nykaa",
+    "Blinkit",
+    "zepto",
+    "Grofers",
+    "Bluedart",
+    "ekart"
+  ],
+  "snacks": [
+    "juice",
+    "Sweets",
+    "Chai",
+    "Biscuit",
+    "Thickshake",
+    "chocolate",
+    "Ice cream",
+    "chat",
+    "mithai",
+    "Bakes",
+    "Bakery",
+    "Cakes",
+    "Tea",
+    "chips",
+    "confectioners",
+    "cool drink"
+  ],
+  "Entertainment": [
+    "Bookmyshow",
+    "district",
+    "gokarting",
+    "gaming",
+    "Entertainment",
+    "pvr",
+    "cinepolis",
+    "imax",
+    "Escape",
+    "Adventures"
+  ],
 
+  "Groceries": [
+    "SUPRDAILY", "GROCERY", "SPENCER'S",  "VEGETABLE", "FRUIT", "Ratnadeep", "dmart", "kirana", "General Store", "milk"],
+  "Income": ["NEFT", "NEFT CR", "PRINC PAYOUT", "Salary", "credit interest", "BIL", "INF", "zerodhabroking", "credit"],
+  
+  "Personal Transfer": ["POS", "CASH WDL", "ATM"," To:"],
 
- final Map<String, List<String>> categories = {
-   "Food": [
-            "Swiggy", "Zomato", "Restaurant", "Cafe", "Pizza", "Dairy", "Tea", "Chai",
-            "canteen", "Bistro", "Mcdonalds", "kfc", "subway", "dominos", "Dhaba",
-            "Chicken", "Italia", "bawarchi", "cafe", "Tiffin", "meals", "Vegetables",
-            "udupi", "coffee", "eats", "Frankie", "kirana", "Store", "General Store",
-            "rasoi", "fish", "milk"
-        ],
-        "Shopping": [
-            "Shoppers", "Mart", "WestSide", "Electronics", "Supermarket", "Amazon", "Flipkart",
-            "Fashion", "Fabrics", "kart", 
-             "ratnadeep", "Mobiles", "lifestyle",
-            "market", "more", "shop",
-            "max", "zudio", "centro"
-        ],
-        "Travel": [
-            "Fuel", "Petrol", "Ola", "Uber", "Metro",
-            "Traffic polic", "puncture", "Mobility",
-            "Travels", "Transport", "Filling",
-            "Rapido", "Tgsrtc", "irctc"
-        ],
-        "Health": ["Medical", "Pharmacy", "Hospital", "Medplus"],
-        "Bills": [
-            "Electricity", "Water", "Gas", "Internet", "Mobile Recharge", "Rent",
-            "DTH", "AIRTEL", "JIO",
-             "Solutions", "godaddy",
-            "hostinger", "bpcl"
-        ],
-        "Subscriptions": [
-            "Netflix", "PrimeVideo", "Spotify", "Jio Hotstar",
-            "appleServices", "disney"
-        ],
-        "Events": [
-            "Weddings", "Birthday", "Festival", "Anniversary",
-            "Flowers", "pubs", "Gift"
-        ],
-        "Personal Care": ["Salon", "Spa", "Haircare", "Skincare"],
-        "Services": [
-            "Housemaid", "Carpenter", "Electrician", "Plumber",
-            "Bike/Car Service", "Hardware/sanitary Workshop", "Events",
-            "Service", "Bike", "Auto",
-            "hardware", "sanitary", "communications",
-            "traders", "Enterprises", "solutions"
-        ],
-        "Emi": ["Eazypay", "slice", "postpaid"],
-        "Investments": ["MutualFund", "Stocks", "Gold"],
-        "Insurance": ["Life Insurance", "Vehicle Insurance", "POLICYBAZAAR"],
-        "Support": ["Charity"],
-        "Current": ["TDS"],
-        "Children": [
-            "School Fees", "Tuitions",
-            "Baby store", "miniklub", "uniforms",
-            "baby care", "children"
-        ],
-        "Pet Care": [
-            "Pet"
-        ],
-        "Sports": [
-            "Gym Membership", "Sports Equipment",
-            "Snooker", "cricket", "box"
-        ],
-        "Alcohol": ["Liquor", "Wine", "Cigarettes"],
-        "Hobbies": ["Photography", "Gardening"],
-        "Education": [
-            "Stationary", "Fees",
-            "institute", "college"
-        ],
-        "Commerce": [
-            "Amazon", "Flipkart", "Myntra", "Nykaa",
-            "Blinkit", "zepto", "Grofers", "Bluedart", "ekart"
-        ],
-        "snacks": [
-            "juice", "Sweets", "Chai", "Biscuit", "Thickshake",
-            "chocolate", "Ice cream", "chat", "mithai",
-            "Bakes", "Bakery", "Cakes", "Tea", "chips",
-            "confectioners", "cool drink"
-        ],
-        "Entertainment": [
-            "Bookmyshow", "district", "gokarting", "gaming",
-            "Entertainment", "pvr", "cinepolis", "imax",
-            "Escape", "Adventures"
-        ]
-  };
+  "Personal Transfer Received": ["UPI-CR",]
+};
 
-  class OnboardingImages {
+class OnboardingImages {
   static String connection = "assets/onboarding/";
   static String page11 = "assets/onboarding/page11.svg";
   static String page12 = "assets/onboarding/page12.svg";
   static String page13 = "assets/onboarding/page13.svg";
   static String page14 = "assets/onboarding/page14.svg";
-   static String page21 = "assets/onboarding/page21.svg";
-    static String page22 = "assets/onboarding/page22.svg";
-     static String page23 = "assets/onboarding/page23.svg";
-static String p1 = "assets/onboarding/page311.png";
-static String p2 = "assets/onboarding/Avatar1.png";
-static String p3 = "assets/onboarding/Avatar2.png";
-static String p4 = "assets/onboarding/Avatar3.png";
-static String p5 = "assets/onboarding/Avatar4.png";
-static String p6 = "assets/onboarding/Avatar6.png";
+  static String page21 = "assets/onboarding/page21.svg";
+  static String page22 = "assets/onboarding/page22.svg";
+  static String page23 = "assets/onboarding/page23.svg";
+  static String p1 = "assets/onboarding/page311.png";
+  static String p2 = "assets/onboarding/Avatar1.png";
+  static String p3 = "assets/onboarding/Avatar2.png";
+  static String p4 = "assets/onboarding/Avatar3.png";
+  static String p5 = "assets/onboarding/Avatar4.png";
+  static String p6 = "assets/onboarding/Avatar6.png";
   static String page311 = "assets/onboarding/page311.svg";
   static String page322 = "assets/onboarding/page322.svg";
   static String page323 = "assets/onboarding/page323.svg";

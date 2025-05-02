@@ -106,7 +106,7 @@ Future<void> loginUser(
     }
   } catch (e, stackTrace) {
     acceptReset.value = false;
-    snackBarCalledfail(context, 'Login failed: $e');
+    snackBarCalledfail(context, 'Login failed, Try again');
   }
 }
 

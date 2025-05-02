@@ -1,5 +1,6 @@
 import 'package:finvu_flutter_sdk/finvu_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
 import 'package:flutter_application_code_stakeplot/Profile/friends.dart';
@@ -36,6 +37,7 @@ FinvuManager finvuManager = FinvuManager();
 void main()async {
   Get.put(UserController());
   checkFirebase();
+  
   runApp(const MyApp());
 }
 
