@@ -91,6 +91,7 @@ class _HomePageState extends State<HomePage> {
     getAllAutoTransactions();
     getAllTransaction(context);
     getAllContstant(context);
+    getCustomCategory(context);
     allOrGroupTransactionsName.value = StringConstant.allTransactions;
     await getRemainders(context);
     await updateWidget();
@@ -264,8 +265,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 getAllTransactionHistory(context,false,false); // Fetch next page
           }
     });
-  }
-
 }
-
+}
 
