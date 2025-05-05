@@ -74,22 +74,25 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
         appBar: appbarWidget(),
         body:  SingleChildScrollView(
               controller: scrollController,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                     _buildMonthYearSelector(fontSizeFactor, screenWidth),
-
-                    Obx(()=> isLoading.value ? Center(child: CircularProgressIndicator()) :  getLineGraph(screenHeight)),
-
-                   const SizedBox(
-                      height: 10,
-                    ),
-      
-                    transactionsHistoryList(),
-                         
-                  ],
-                ),
+              child: Column(
+                children: [
+                   Padding(
+                     padding: const EdgeInsets.all(8.0),
+                     child: _buildMonthYearSelector(fontSizeFactor, screenWidth),
+                   ),
+              
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Obx(()=> isLoading.value ? Center(child: CircularProgressIndicator()) :  getLineGraph(screenHeight,screenWidth)),
+                  ),
+              
+                 const SizedBox(
+                    height: 10,
+                  ),
+                    
+                  transactionsHistoryList(),
+                       
+                ],
               ),
             )),
     );
@@ -97,9 +100,10 @@ class _ExpandedChartViewState extends State<ExpandedChartView> {
 
 
 
-Widget getLineGraph(screenHeight){
+Widget getLineGraph(screenHeight,screenWidth){
     return  Container(
                         height: screenHeight / 2.6,
+                        width: screenWidth /1.1,
                         child: LineChartWidget(
                           chartData: currentChartData.value,
                           days: isYearView.value ? monthLabels : currentDays,

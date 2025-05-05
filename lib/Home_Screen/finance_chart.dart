@@ -610,6 +610,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
             minorTickLines: const MinorTickLines(size: 0),
             interval: 1,
             maximumLabels: dataLength,
+            
           ),
           primaryYAxis: NumericAxis(
             isVisible: false,
@@ -678,9 +679,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 width: 4,
                 shape: DataMarkerType.pentagon,
               ),
-              onPointTap: (ChartPointDetails details) {
-                _showCustomTooltip(details, creditedData, debitedData, fontSizeFactor);
-              },
+             
             ),
             SplineSeries<ChartData, String>(
               dataSource: debitedData,
@@ -698,9 +697,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 width: 4,
                 shape: DataMarkerType.circle,
               ),
-              onPointTap: (ChartPointDetails details) {
-                _showCustomTooltip(details, creditedData, debitedData, fontSizeFactor);
-              },
+             
             ),
             SplineAreaSeries<ChartData, String>(
               dataSource: debitedData,
@@ -726,38 +723,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     );
   }
 
-  void _showCustomTooltip(
-      ChartPointDetails details,
-      List<ChartData> creditedData,
-      List<ChartData> debitedData,
-      double fontSizeFactor) {
-    final int pointIndex = details.pointIndex ?? 0;
-    final String date = creditedData[pointIndex].x;
-    final double credited = creditedData[pointIndex].y;
-    final double debited = debitedData[pointIndex].y;
-
-    // Calculate tooltip position (approximate)
-    double labelWidth = widget.selectedButton.value == 'Week' ? 50.0 : 60.0;
-    double xPosition = pointIndex * labelWidth + 20; // Adjust based on chart offset
-    double yPosition = MediaQuery.of(context).size.height / 2.6 - 100; // Position above chart
-
-    tooltipData.value = {
-      'visible': true,
-      'date': date,
-      'credited': credited,
-      'debited': debited,
-      'x': xPosition,
-      'y': yPosition,
-    };
-
-    // Hide tooltip after a delay or on next tap
-    Future.delayed(Duration(seconds: 3), () {
-      if (mounted) {
-        tooltipData.value = {'visible': false};
-      }
-    });
-  }
-
+  
   void navToExpanded() {
     selectedYear.value = DateTime.now().year;
     selectedMonth.value = DateTime.now().month;

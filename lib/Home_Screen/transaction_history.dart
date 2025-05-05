@@ -63,13 +63,12 @@
 //   BuildContext? _stableContext;
 //   // For smooth animations
 
-
 //   @override
 //   void initState() {
 //     super.initState();
 //     _stableContext = context;
 //     //  Future.delayed(Duration(seconds: 5),() {
-       
+
 //     //  });
 
 //     if (!widget.expandedPage) currentPage = 1;
@@ -128,9 +127,9 @@
 //                         fontSize: 18,
 //                         color: AppColors.accentColor),
 //                   ),
-              
+
 //                 Obx(()=>  redioButton.isNotEmpty?InkWell(onTap: (){
-              
+
 //                                 showModalBottomSheet(
 //                                   context: context,
 //                                   builder: (_) =>
@@ -162,11 +161,11 @@
 //                                           onTap: ()
 //                                           {
 //                                                 tagName.value = "Untagged";
-                                                
+
 //                                                 showModalBottomSheet(
 //                                                   context: context,
 //                                                   isScrollControlled: true,
-                                                 
+
 //                                                   shape: const RoundedRectangleBorder(
 //                                                     borderRadius: BorderRadius.vertical(
 //                                                         top: Radius.circular(20)),
@@ -187,9 +186,9 @@
 //                                     )
 //                                   ),
 //                                 );
-              
+
 //                   },child: Icon(Icons.tag_sharp,size: 30,)):SizedBox.shrink()),
-              
+
 //                   if (!(widget.showIcon ?? false)) ...[
 //                     InkWell(
 //                       onTap: () {
@@ -325,8 +324,6 @@
 //           .addAll(groupedTransactions[monthYear] ?? []); // Null-safe access
 //     }
 
-   
-
 //     // Add a loading indicator at the end if more data is being fetched
 //     if (isLoadingMore.value) {
 //       displayItems.add('loader'); // Use a distinct marker to avoid confusion
@@ -440,14 +437,6 @@
 //   //   );
 //   // }
 
-  
-
-  
- 
-  
-
-  
- 
 //   void extractTransaction(bool isYearView, List obj) {
 //     // print("------------------------ extra called...");
 //     // print(isYearView);
@@ -550,8 +539,6 @@
 //   }
 //   }
 
-
-
 // Widget getIconAvtar(double avatarSize,String category,double scaleFactor) {
 //   return Container(
 //                         width: avatarSize,
@@ -579,7 +566,6 @@
 //                       );
 // }
 
-
 // void hideSelectedTransactions(BuildContext context, bool hidden) {
 //   int index = 0; // Or get from another list/map if you have matching indexes
 
@@ -592,7 +578,6 @@
 //   redioButtonIndex.clear(); // Optionally clear selection after hiding
 //   Navigator.pop(context);
 // }
-
 
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
@@ -653,19 +638,18 @@ class TransactionHistory extends StatefulWidget {
 class _TransactionHistoryState extends State<TransactionHistory>
     with SingleTickerProviderStateMixin {
   final _scrollController2 = ScrollController();
-  final Map<int, double> swipeOffsets = {};
+
   final List<Map<String, dynamic>> hiddenTransactions = [];
   final targetKey = GlobalKey();
   BuildContext? _stableContext;
   // For smooth animations
-
 
   @override
   void initState() {
     super.initState();
     _stableContext = context;
     //  Future.delayed(Duration(seconds: 5),() {
-       
+
     //  });
 
     if (!widget.expandedPage) currentPage = 1;
@@ -717,87 +701,109 @@ class _TransactionHistoryState extends State<TransactionHistory>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Transaction History' ,
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: AppColors.accentColor),
-                  ),
-              
-                Obx(()=>  redioButton.isNotEmpty?InkWell(onTap: (){
-              
-                                showModalBottomSheet(
-                                  context: context,
-                                  builder: (_) =>
-                                   Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: MediaQuery.of(context).size.height/4.45,
-                                     decoration: const BoxDecoration(
-                                      color: AppColors.mt,
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(20),
-                                        topRight: Radius.circular(20),
-                                      )),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                         InkWell(
-                                          onTap: (){
-                                            hideSelectedTransactions(context,true);
-                                            showCheckBox.value = false;
-                                          },
-                                          child: textStyle(text:'Hide Transactions',context:context,fontsize: 16,fontWeight: FontWeight.w500,c: AppColors.accentColor),
-                                        ),
-                                         Padding(
-                                           padding: const EdgeInsets.symmetric(vertical: 20),
-                                           child: Divider(thickness: 1,),
-                                         ),
-                                        InkWell(
-                                          onTap: ()
-                                          {
-                                                tagName.value = "Untagged";
-                                                
-                                                showModalBottomSheet(
-                                                  context: context,
-                                                  isScrollControlled: true,
-                                                 
-                                                  shape: const RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.vertical(
-                                                        top: Radius.circular(20)),
-                                                  ),
-                                                  builder: (context) {
-                                                    return TagShowmodal(
-                                                      data: transactionsHistory.isNotEmpty?transactionsHistory[redioButtonIndex.values.first]:{},
-                                                      index: 0,
-                                                      isTag: true,
-                                                    );
-                                                  },
-                                                );
-                                          },
-                                          child: textStyle(text:'Tag Transactions',context:context,fontsize: 16,fontWeight: FontWeight.w500,c: AppColors.accentColor),
-                                        ),
+                  // Text(
+                  //   'Transaction History' ,
+                  //   style: FontManager().getTextStyle(context,
+                  //       lWeight: FontWeight.bold,
+                  //       fontSize: 18,
+                  //       color: AppColors.accentColor),
+                  // ),
 
-                                      ],
-                                    )
-                                  ),
-                                );
-              
-                  },child: Icon(Icons.trending_up,size: 30,)):SizedBox.shrink()),
-              
-                  if (!(widget.showIcon ?? false)) ...[
-                    InkWell(
-                      onTap: () {
-                        showModalForPdfDownload(context);
-                      },
-                      child: const Icon(
-                        Icons.backup_sharp,
-                        size: 30,
-                        color: AppColors.accentColor,
-                      ),
-                    ),
-                  ]
+                  // Obx(() => redioButton.isNotEmpty
+                  //     ? InkWell(
+                  //         onTap: () {
+                  //           showModalBottomSheet(
+                  //             context: context,
+                  //             builder: (_) => Container(
+                  //                 width: MediaQuery.of(context).size.width,
+                  //                 height:
+                  //                     MediaQuery.of(context).size.height / 4.45,
+                  //                 decoration: const BoxDecoration(
+                  //                     color: AppColors.mt,
+                  //                     borderRadius: BorderRadius.only(
+                  //                       topLeft: Radius.circular(20),
+                  //                       topRight: Radius.circular(20),
+                  //                     )),
+                  //                 child: Column(
+                  //                   mainAxisAlignment: MainAxisAlignment.center,
+                  //                   crossAxisAlignment:
+                  //                       CrossAxisAlignment.center,
+                  //                   children: [
+                  //                     InkWell(
+                  //                       onTap: () {
+                  //                         hideSelectedTransactions(
+                  //                             context, true);
+                  //                         showCheckBox.value = false;
+                  //                       },
+                  //                       child: textStyle(
+                  //                           text: 'Hide Transactions',
+                  //                           context: context,
+                  //                           fontsize: 16,
+                  //                           fontWeight: FontWeight.w500,
+                  //                           c: AppColors.accentColor),
+                  //                     ),
+                  //                     Padding(
+                  //                       padding: const EdgeInsets.symmetric(
+                  //                           vertical: 20),
+                  //                       child: Divider(
+                  //                         thickness: 1,
+                  //                       ),
+                  //                     ),
+                  //                     InkWell(
+                  //                       onTap: () {
+                  //                         tagName.value = "Untagged";
+
+                  //                         showModalBottomSheet(
+                  //                           context: context,
+                  //                           isScrollControlled: true,
+                  //                           shape: const RoundedRectangleBorder(
+                  //                             borderRadius:
+                  //                                 BorderRadius.vertical(
+                  //                                     top: Radius.circular(20)),
+                  //                           ),
+                  //                           builder: (context) {
+                  //                             return TagShowmodal(
+                  //                               data: transactionsHistory
+                  //                                       .isNotEmpty
+                  //                                   ? transactionsHistory[
+                  //                                       redioButtonIndex
+                  //                                           .values.first]
+                  //                                   : {},
+                  //                               index: 0,
+                  //                               isTag: true,
+                  //                             );
+                  //                           },
+                  //                         );
+                  //                       },
+                  //                       child: textStyle(
+                  //                           text: 'Tag Transactions',
+                  //                           context: context,
+                  //                           fontsize: 16,
+                  //                           fontWeight: FontWeight.w500,
+                  //                           c: AppColors.accentColor),
+                  //                     ),
+                  //                   ],
+                  //                 )),
+                  //           );
+                  //         },
+                  //         child: Icon(
+                  //           Icons.trending_up,
+                  //           size: 30,
+                  //         ))
+                  //     : SizedBox.shrink()),
+
+                  // if (!(widget.showIcon ?? false)) ...[
+                  //   InkWell(
+                  //     onTap: () {
+                  //       showModalForPdfDownload(context);
+                  //     },
+                  //     child: const Icon(
+                  //       Icons.backup_sharp,
+                  //       size: 30,
+                  //       color: AppColors.accentColor,
+                  //     ),
+                  //   ),
+                  // ]
                 ],
               ),
             ),
@@ -805,10 +811,12 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 ? SizedBox(
                     height: 15,
                   )
-                : Obx(() => allOrGroupTransactionsName.value ==
-                        StringConstant.allTransactions
-                    ? getTabsForTransactions()
-                    : getTabsForTransactions()),
+                : Obx(() => redioButton.isNotEmpty
+                    ? getTagHideButtons()
+                    : allOrGroupTransactionsName.value ==
+                            StringConstant.allTransactions
+                        ? getTabsForTransactions()
+                        : getTabsForTransactions()),
 
             //  getlist()
             // Obx(() => reloadHistory.value ? getlist() : getlist())
@@ -826,51 +834,145 @@ class _TransactionHistoryState extends State<TransactionHistory>
                     ? (reloadHistory.value ? getlist() : getlist())
                     : GroupTransactions();
               }
-            })
+            }),
           ],
         ),
       ),
     );
   }
 
-  Widget getTabsForTransactions() {
+  Widget getTagHideButtons() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          tabItem(StringConstant.allTransactions),
-          tabItem(StringConstant.pollTransactions),
+          actionButton(
+            text: 'Tag',
+            onTap: () {
+              tagName.value = "Untagged";
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                ),
+                builder: (context) {
+                  return TagShowmodal(
+                    data: transactionsHistory.isNotEmpty &&
+                            redioButtonIndex.isNotEmpty
+                        ? transactionsHistory[redioButtonIndex.values.first]
+                        : {},
+                    index: 0,
+                    isTag: true,
+                  );
+                },
+              );
+            },
+          ),
+          const SizedBox(width: 10), // Spacing between buttons
+          actionButton(
+            text: 'Hide',
+            onTap: () {
+              hideSelectedTransactions(context, true);
+              showCheckBox.value = false;
+            },
+          ),
         ],
       ),
     );
   }
 
-  Widget tabItem(text) {
-    bool f = text == allOrGroupTransactionsName.value;
+  Widget actionButton({required String text, required VoidCallback onTap}) {
     return InkWell(
-      onTap: () {
-        allOrGroupTransactionsName.value = text;
-      },
+      onTap: onTap,
+      splashColor: AppColors.primaryColor.withOpacity(0.2),
       child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-          decoration: BoxDecoration(
-            color: f ? AppColors.primaryColor : AppColors.bg5,
-            border: Border.all(
-              width: .5,
-              color: AppColors.primaryColor,
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+        decoration: BoxDecoration(
+          color: AppColors.mt, // Match modal background for consistency
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.accentColor.withOpacity(0.1),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
             ),
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: textStyle(
-              context: context,
-              text: text,
-              c: f ? AppColors.bg5 : AppColors.primaryColor,
-              fontsize: 15,
-              fontWeight: FontWeight.w500)),
+          ],
+        ),
+        child: textStyle(
+          context: context,
+          text: text,
+          c: AppColors.accentColor,
+          fontsize: 16,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
     );
   }
 
+ Widget getTabsForTransactions() {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        tabItem(StringConstant.allTransactions),
+        //const SizedBox(width: 12), // Space between tabs
+        tabItem(StringConstant.pollTransactions),
+      ],
+    ),
+  );
+}
+
+Widget tabItem(String text) {
+  bool isSelected = text == allOrGroupTransactionsName.value;
+  // Calculate width based on screen size for responsiveness
+  double tabWidth = (MediaQuery.of(context).size.width - 44) / 2; // 44 = 16*2 padding + 12 spacing
+  return InkWell(
+    onTap: () {
+      allOrGroupTransactionsName.value = text;
+    },
+    child: Container(
+      width: tabWidth,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: isSelected ? AppColors.primaryColor : AppColors.bg5,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          
+          color: isSelected ? AppColors.primaryColor : AppColors.bg1,
+        ),
+        gradient: isSelected
+            ? LinearGradient(
+                colors: [
+                  AppColors.primaryColor,
+                  AppColors.primaryColor.withOpacity(0.8),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )
+            : null,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Center(
+        child: textStyle(
+          context: context,
+          text: text,
+          c: isSelected ? AppColors.bg5 : AppColors.primaryColor,
+          fontsize: 14,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    ),
+  );
+}
   void changeTheBool() {
     sectionReached.value = true;
     Navigator.pop(context);
@@ -921,8 +1023,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
           .addAll(groupedTransactions[monthYear] ?? []); // Null-safe access
     }
 
-   
-
     // Add a loading indicator at the end if more data is being fetched
     if (isLoadingMore.value) {
       displayItems.add('loader'); // Use a distinct marker to avoid confusion
@@ -967,11 +1067,11 @@ class _TransactionHistoryState extends State<TransactionHistory>
 
           return Container(
             child: historyTransactions(
-              transaction,
-              transaction['transactionTimestamp']?.toString(),
-              transactionIndex,context,
-              true
-            ),
+                transaction,
+                transaction['transactionTimestamp']?.toString(),
+                transactionIndex,
+                context,
+                true),
           );
         }
 
@@ -1036,14 +1136,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
   //   );
   // }
 
-  
-
-  
- 
-  
-
-  
- 
   void extractTransaction(bool isYearView, List obj) {
     // print("------------------------ extra called...");
     // print(isYearView);
@@ -1144,43 +1236,39 @@ class _TransactionHistoryState extends State<TransactionHistory>
       },
     );
   }
-  }
-
-
-
-Widget getIconAvtar(double avatarSize,String category,double scaleFactor) {
-  return Container(
-                        width: avatarSize,
-                        height: avatarSize,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              AppColors.button.withOpacity(0.8),
-                              Colors.white.withOpacity(0.6),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.circular(12 * scaleFactor),
-                        ),
-                        child: Center(
-                          child: AvatarProfileImage(
-                            url: Categories.link +
-                                (imageMapForHistory[category.toLowerCase()] ??
-                                    'default_image.png'),
-                            height: avatarSize * 0.5,
-                            width: avatarSize * 0.5,
-                          ),
-                        ),
-                      );
 }
 
+Widget getIconAvtar(double avatarSize, String category, double scaleFactor) {
+  return Container(
+    width: avatarSize,
+    height: avatarSize,
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        colors: [
+          AppColors.button.withOpacity(0.8),
+          Colors.white.withOpacity(0.6),
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+      borderRadius: BorderRadius.circular(12 * scaleFactor),
+    ),
+    child: Center(
+      child: AvatarProfileImage(
+        url: Categories.link +
+            (imageMapForHistory[category.toLowerCase()] ?? 'default_image.png'),
+        height: avatarSize * 0.5,
+        width: avatarSize * 0.5,
+      ),
+    ),
+  );
+}
 
 void hideSelectedTransactions(BuildContext context, bool hidden) {
   int index = 0; // Or get from another list/map if you have matching indexes
 
   redioButton.forEach((id, value) {
-    hideTransaction(redioButtonIndex[id]??0, hidden, context, id);
+    hideTransaction(redioButtonIndex[id] ?? 0, hidden, context, id);
     index++;
   });
 

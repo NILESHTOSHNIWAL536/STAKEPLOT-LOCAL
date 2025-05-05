@@ -148,31 +148,31 @@ class _TransactionGraphState extends State<TransactionGraph> {
               ),
             ),
             SizedBox(width: screenWidth * 0.02),
-            GestureDetector(
-              onTap: () {
-                selectedButton2.value = 'week';
-                getAutoMationsTransactionsCustomoverall(getCurrentWeekoverall(), context, 'week');
-              },
-              child: Container(
-                height: 35,
-                width: screenWidth * 0.15,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: selectedButton2.value == 'week'
-                      ? AppColors.button
-                      : AppColors.backgroundColor,
-                ),
-                child: Center(
-                  child:Obx(()=> Text(
-                    weekOfThis.value,
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
-                        fontSize: fontSizeFactor * 3,
-                        color: AppColors.accentColor),
-                  )),
-                ),
-              ),
-            ),
+            // GestureDetector(
+            //   onTap: () {
+            //     selectedButton2.value = 'week';
+            //     getAutoMationsTransactionsCustomoverall(getCurrentWeekoverall(), context, 'week');
+            //   },
+            //   child: Container(
+            //     height: 35,
+            //     width: screenWidth * 0.15,
+            //     decoration: BoxDecoration(
+            //       borderRadius: BorderRadius.circular(16),
+            //       color: selectedButton2.value == 'week'
+            //           ? AppColors.button
+            //           : AppColors.backgroundColor,
+            //     ),
+            //     child: Center(
+            //       child:Obx(()=> Text(
+            //         weekOfThis.value,
+            //         style: FontManager().getTextStyle(context,
+            //             lWeight: FontWeight.normal,
+            //             fontSize: fontSizeFactor * 3,
+            //             color: AppColors.accentColor),
+            //       )),
+            //     ),
+            //   ),
+            // ),
             SizedBox(width: screenWidth * 0.02),
             GestureDetector(
               onTap: () {
