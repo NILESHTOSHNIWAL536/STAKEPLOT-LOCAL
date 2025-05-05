@@ -14,6 +14,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/user_chat/openShowModal.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -39,10 +40,14 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
   late Animation<Offset> _animation;
   double opacity = 0.0;
 
+ TextEditingController nameController=TextEditingController();
+  RxBool customSelections=false.obs;
+  RxString UrlPathImage="".obs;
 
   @override
   void initState() {
     super.initState();
+       UrlPathImage.value = Categories.link +imageMapForHistory[widget.data['category'].toLowerCase()]!;
       _controller = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 1000),
@@ -89,7 +94,9 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
         child: Column(
             children: [
                     topHeader(context),
-                    Obx(()=> loadAgain.value?  selectedItem(context):selectedItem(context)),
+                   Obx(()=> loadAgain.value?  selectedItem(context):selectedItem(context)),
+                   Obx(()=> getCustomCategoryList(context)),
+                    const SizedBox(height: 10,),
                     getListOfCat(context),
             ], 
         ),
@@ -97,6 +104,45 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
 
     );
   }
+
+
+ Widget getCustomCategoryList(context){
+    return customCategoryList.isEmpty? SizedBox.shrink():Container(
+      width: MediaQuery.of(context).size.width/1.1,
+      height: 70,
+      alignment: Alignment.center ,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: customCategoryList.map((e) {
+                return InkWell(
+                  onTap: () {
+                    widget.data['category'] = e['name'];
+                    widget.data['subcategory'] = "";
+                    tagName.value = e['name'];
+                    UrlPathImage.value = e['imageUrl'];
+                    loadAgain.value = !loadAgain.value;
+                    customSelections.value = true;
+                  },
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(5),
+                        child: AvatarProfileImage(
+                          url:  (e['imageUrl']),
+                          height: 30,
+                          width: 30,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      textStyle(context: context,text: e['name'], fontsize: 14, fontWeight: FontWeight.bold, c: widget.data['category'] == e['name'] ? AppColors.bg2 : AppColors.primaryColor),
+                    ],
+                  ),
+                );
+              }).toList(),
+      ),
+    );
+  }
+
 
  Widget topHeader(context){
     return Padding(
@@ -114,69 +160,86 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
                 ),
               ),
              textStyle(context: context,text:"Tag transaction",fontsize: 18,fontWeight: FontWeight.bold),
-             InkWell(
-              onTap: (){
-                  //  Change Tag
-
-                if(widget.isTag)
-                {
-                    if(widget.data['category']==null && widget.data['subcategory']==null){
-                        snackBarCalledSignup(context, "Please select a category and subcategory",Colorcodes.red);
-                        return;
-                    }                         
-                    redioButton.forEach((key, id) {
-                    // final index = redioButtonIndex[id];
-                        //  final index = transactionsHistory.indexWhere((t) => t['_id'] == id);
-                        final index = transactionsHistory.indexWhere((t) => t['_id'] == id);
-
-                   if (index != null) {
-                      updateTheTagOfTarnsactions(
-                        widget.data['category'],
-                        widget.data['subcategory'],
-                        id,
-                        context,
-                        index,
-                      );
-                      transactionsHistory[index]['category'] = widget.data['category'];
-                      transactionsHistory[index]['subcategory'] = widget.data['subcategory'];
-                      transactionsHistory[index]['needsReview'] = false;
-                    }
-                  });
-                   // getAllTransaction(context);
-                    redioButton.clear();
-                    redioButtonIndex.clear();
-                    tagName.value="";  
-                    showCheckBox.value=false;
-                    transactionsHistory.refresh();
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-
-                   
-                }
-                else if(!widget.isGroupTransaction)
-                  {
-                      updateTheTagOfTarnsactions(widget.data['category'], widget.data['subcategory'], widget.data['_id'], context,widget.index);
-                      transactionsHistory[widget.index]['category']=widget.data['category'];
-                      transactionsHistory[widget.index]['subcategory']=widget.data['subcategory'];
-                      transactionsHistory[widget.index]['needsReview']=false;
-                      transactionsHistory.refresh();
-                  }else{
-                    
-                      if(widget.data['category']==null && widget.data['subcategory']==Null){
-                          snackBarCalledSignup(context, "Please select a category and subcategory",Colorcodes.red);
-                          return;
-                      }
-                      updateTheTagOfTarnsactionsGroup(widget.data['category'], widget.data['subcategory'], widget.data['_id'], context,widget.index);
-                    
-                  }
-
-
-              },
-               child: Icon(
-                  CupertinoIcons.checkmark_alt,
-                   size: 30,
-                   color: AppColors.green,
+             Row(
+               children: [
+              
+              InkWell(
+                  onTap: (){
+                       openShowModalCate(context, nameController,  transactionsHistory[widget.index]['narration']??"");
+                  },
+                  child: Icon(
+                    CupertinoIcons.add,
+                     size: 30,
+                     color: AppColors.bg1,
+                  ),
                 ),
+
+
+
+                 InkWell(
+                  onTap: (){
+                      //  Change Tag
+                 
+                    if(widget.isTag)
+                    {
+                        if(widget.data['category']==null && widget.data['subcategory']==null){
+                            snackBarCalledSignup(context, "Please select a category and subcategory",Colorcodes.red);
+                            return;
+                        }                         
+                        redioButton.forEach((key, id) {
+                        // final index = redioButtonIndex[id];
+                             final index = transactionsHistory.indexWhere((t) => t['_id'] == id);
+                 
+                       if (index != null) {
+                          updateTheTagOfTarnsactions(
+                            widget.data['category'],
+                            widget.data['subcategory'],
+                            id,
+                            context,
+                            index,
+                          );
+                          transactionsHistory[index]['category'] = widget.data['category'];
+                          transactionsHistory[index]['subcategory'] = widget.data['subcategory'];
+                          transactionsHistory[index]['needsReview'] = false;
+                        }
+                      });
+                       // getAllTransaction(context);
+                        redioButton.clear();
+                        redioButtonIndex.clear();
+                        tagName.value="";  
+                        showCheckBox.value=false;
+                        transactionsHistory.refresh();
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                 
+                       
+                    }
+                    else if(!widget.isGroupTransaction)
+                      {
+                          updateTheTagOfTarnsactions(widget.data['category'], widget.data['subcategory'], widget.data['_id'], context,widget.index);
+                          transactionsHistory[widget.index]['category']=widget.data['category'];
+                          transactionsHistory[widget.index]['subcategory']=widget.data['subcategory'];
+                          transactionsHistory[widget.index]['needsReview']=false;
+                          transactionsHistory.refresh();
+                      }else{
+                        
+                          if(widget.data['category']==null && widget.data['subcategory']==Null){
+                              snackBarCalledSignup(context, "Please select a category and subcategory",Colorcodes.red);
+                              return;
+                          }
+                          updateTheTagOfTarnsactionsGroup(widget.data['category'], widget.data['subcategory'], widget.data['_id'], context,widget.index);
+                        
+                      }
+                 
+                 
+                  },
+                   child: Icon(
+                      CupertinoIcons.checkmark_alt,
+                       size: 30,
+                       color: AppColors.green,
+                    ),
+                 ),
+               ],
              ),
           ],
       ),
@@ -227,6 +290,8 @@ Widget getListOfCat(BuildContext context) {
               groupValue: tagName.value,
               activeColor: AppColors.primaryColor,
               onChanged: (value) {
+                  UrlPathImage.value = Categories.link +imageMapForHistory[widget.data['category'].toLowerCase()]!;
+                  customSelections.value = false;
                   tagName.value = value!;
                   widget.data['category']=value;
                   widget.data['subcategory']="";
@@ -282,8 +347,11 @@ Widget getListOfCat(BuildContext context) {
         onTap: (){
              widget.data['category']=main;
              widget.data['subcategory']=s;
-              tagName.value = main!;
+            tagName.value = main!;
+            customSelections.value = false;
+               UrlPathImage.value = Categories.link +imageMapForHistory[widget.data['category'].toLowerCase()]!;
              loadAgain.value=!loadAgain.value;
+
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -353,11 +421,11 @@ Widget getListOfCat(BuildContext context) {
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: AvatarProfileImage(
-                      url: Categories.link +(imageMapForHistory[category.toLowerCase()] ?? 'default_image.png'),
+                    child:Obx(()=> AvatarProfileImage(
+                      url:  UrlPathImage.value ,//: Categories.link +(imageMapForHistory[category.toLowerCase()] ?? 'default_image.png'),
                       height: 16,
                       width: 20,
-                    ),
+                    )),
                   ),
                 ),
                 const SizedBox(width: 5),

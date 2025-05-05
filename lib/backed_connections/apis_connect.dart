@@ -58,6 +58,7 @@ RxList myPostList = [].obs;
 RxList friendsList = [].obs;
 RxList chatList = [].obs;
 RxList chatListOriginal = [].obs;
+RxList customCategoryList = [].obs;
 RxMap friendsListDetails = {}.obs;
 RxMap chatOfUserList = {}.obs;
 RxMap chatOfUserListData = {}.obs;

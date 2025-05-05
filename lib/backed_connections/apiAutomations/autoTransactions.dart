@@ -4,6 +4,7 @@
 
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
@@ -52,4 +53,44 @@ void onChanedAutoTransactionStatus(context)async
      isLoadingMore.value=false;
      transactionsHistory.clear();
      getAllTransactionHistory(context,false,false);
+}
+
+
+void getCustomCategory(context)async
+{
+  var res = await getDataApiCall("${url}/custom/custom-category");
+  if(getFlagOfResponse(res))
+  {
+    var data = jsonDecode(res.body);
+    print(data);
+    data = data['categories'];
+    customCategoryList.clear();
+    customCategoryList.addAll(data);
+    customCategoryList.refresh();
+  }
+}
+
+void postCustomCategory(context,name,urlPath,narr)async
+{
+  var body =
+  {
+    "name":name,
+    "imageUrl":urlPath,
+    "narration":narr
+  };
+  print(body);
+  
+  var res = await postDataApiCall("${url}/custom/custom-category",body);
+  printData(res);
+  if(getFlagOfResponse(res))
+  {
+    var data = jsonDecode(res.body);
+    data = data["data"]['categories'];
+    customCategoryList.clear();
+    customCategoryList.addAll(data);
+    customCategoryList.refresh();
+    Navigator.pop(context);
+    snackBarCalled(context, "Category Added Successfully", Colors.green);
+  }
+
 }

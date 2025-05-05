@@ -926,6 +926,7 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/lendMessage.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
@@ -946,6 +947,14 @@ class Manualtransaction extends StatefulWidget {
 }
 
 class _ManualtransactionState extends State<Manualtransaction> {
+
+ @override
+  void initState()
+  {
+    super.initState();
+     getCustomCategory(context);
+  }
+
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.sizeOf(context).width / 0.8,
@@ -1188,6 +1197,7 @@ class _ModalContentState extends State<ModalContent>
                           const SizedBox(height: 8),
                           if (isCategoryFieldExpanded) ...[
                             categoryExpandedWidget(),
+                            // getListOfCustomCategory(),
                           ],
 
                           // Subcategories List (Visible after category is selected)
@@ -1359,19 +1369,27 @@ class _ModalContentState extends State<ModalContent>
   Widget categoryExpandedWidget() {
     return Expanded(
       child: ListView.builder(
-        itemCount: filteredCategories.length,
-        itemBuilder: (BuildContext context, int index) {
-          String category = filteredCategories[index];
+        itemCount: filteredCategories.length+customCategoryList.length,
+        itemBuilder: (BuildContext context, int index)
+        {
+          bool f=(index>=filteredCategories.length);
+          print(f);
+          String category =  f ?customCategoryList[index-filteredCategories.length]['name']:filteredCategories[index];
           String urlPath = "";
-          try {
-            urlPath = Categories.link +
-                BudgetCategories.listofCategories[
-                    BudgetCategories.listofCategories.keys.elementAt(index)];
-          } catch (e) {}
 
+       if(!f){
+          try {
+            urlPath = Categories.link + BudgetCategories.listofCategories[BudgetCategories.listofCategories.keys.elementAt(index)];
+          } catch (e) {}
+       }else
+       {
+           urlPath= customCategoryList[index-filteredCategories.length]['imageUrl'];
+       }
+
+    
           return ListTile(
             //leading: const Icon(Icons.category),
-
+    
             leading: Container(
               height: 40,
               width: 40,
@@ -1388,17 +1406,76 @@ class _ModalContentState extends State<ModalContent>
                     color: AppColors.accentColor)),
             onTap: () {
               setState(() {
+                if(f){
+                  selectedCategory = category;
+                  selectedSubCategory="";
+                   isCategoryFieldExpanded = false; 
+                 _isAmountFieldFocused = false;
+                 categoryFieldController.text ='$selectedCategory';
+              // isSplitbill = true; // Uncomment if needed
+              fin = '$selectedCategory ($selectedSubCategory)';
+              selectedCategory2 = selectedCategory;
+              _isAmountFieldFocused = false; // Prevent amount field refocus
+                FocusScope.of(context).unfocus(); 
+              resetToInitialScreen();
+                }else{
                 selectedCategory = category;
                 categoryFieldController.text = category; // Update text field
                 isCategoryFieldExpanded = false; 
                 _isAmountFieldFocused = false; // Prevent amount field refocus
                 FocusScope.of(context).unfocus(); // Collapse the list
+                }
               });
             },
           );
         },
       ),
     );
+  }
+
+
+  Widget getListOfCustomCategory() {
+    return   Expanded(
+  child: ListView.builder(
+    itemCount: customCategoryList.length,
+    itemBuilder: (BuildContext context, int index) {
+      final category = customCategoryList[index];
+      final categoryName = category['name'] ?? '';
+      final imageUrl = category['imageUrl'] ?? '';
+
+      return ListTile(
+        leading: Container(
+          height: 40,
+          width: 40,
+          child: AvatarProfileImage(
+            url: imageUrl,
+            width: 4,
+            height: 4,
+          ),
+        ),
+        title: Text(
+          categoryName,
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.normal,
+            fontSize: 16,
+            color: AppColors.accentColor,
+          ),
+        ),
+        onTap: () {
+          setState(() {
+            selectedCategory = categoryName;
+            categoryFieldController.text = categoryName;
+            isCategoryFieldExpanded = false;
+            _isAmountFieldFocused = false;
+            FocusScope.of(context).unfocus();
+          });
+        },
+      );
+    },
+  ),
+);
+    
   }
 
   Widget subcategoryWidget() {
@@ -1409,7 +1486,6 @@ class _ModalContentState extends State<ModalContent>
         // Get the URL path for the subcategory's icon from BudgetSubCategories
         String urlPath = BudgetSubCategories.listofSubCategories[subCategory] ??
             "assets/icons/subCategoryIcons/default.svg";
-
         return GestureDetector(
           onTap: () {
             setState(() {
