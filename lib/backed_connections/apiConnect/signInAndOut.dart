@@ -223,7 +223,7 @@ void getforgotPassword(context, String name, String email) async {
     });
 
   if (getFlagOfResponse(responce)) {
-    snackBarCalled(context, "Sended Otp To Email Id...!", Colors.black);
+    snackBarCalled(context, "Sent OTP To Email Id", Colors.black);
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(

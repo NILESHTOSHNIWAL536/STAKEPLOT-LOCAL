@@ -170,7 +170,7 @@ class StringConstant {
   static String tribeText =
       "Connect with your friends to see whats cooking..!!";
   
-  static String otpText = "Enter the OTP sent to your registered email address: ";
+  static String otpText = "Enter the OTP sent to your registered email address";
 
   static String onboading_1 = "Welcome to Expense Manager !";
   static String onboading_2 =
