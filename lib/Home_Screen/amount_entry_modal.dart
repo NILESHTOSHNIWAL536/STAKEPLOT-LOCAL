@@ -5,8 +5,11 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/transactionHistoryScreen.dart';
 
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 
 import 'dart:convert';
@@ -24,6 +27,7 @@ class AmountEntryModal extends StatefulWidget {
   final String userName;
   final String userAvatar;
   bool flag = true;
+  bool ismanual = true;
   final String? cate;
   final String? subcate;
 
@@ -35,8 +39,10 @@ class AmountEntryModal extends StatefulWidget {
       required this.userName,
       required this.userAvatar,
       this.flag = true,
+      this.ismanual = true,
       this.cate,
-      this.subcate})
+      this.subcate
+      })
       : super(key: key);
 
   @override
@@ -380,6 +386,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                           widget.cate ?? 'Uncategorized',
                           widget.subcate ?? 'General',
                           amounts: amounts,
+                          ismanual: widget.ismanual,
                         );
                         Navigator.pop(
                             context); // Pop after processing when flag is true
@@ -451,7 +458,8 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
     List members,
     String category,
     String subcategory, {
-    Map<String, double>? amounts, // Manual amounts including user's share
+    Map<String, double>? amounts, 
+    bool ismanual = true,
   }) async {
    
     double? parsedTotalAmount = double.tryParse(totalAmount);
@@ -538,6 +546,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         "subcategory": subcategory,
         "category": category,
         "amount": calculatedTotal,
+        "ismanual": ismanual,
         "paymentStatus": nameList,
         "image": '',
       }),
@@ -547,7 +556,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
       splitID.value = body['id']['_id'];
-
+      
       // Send notifications and socket messages with individual amounts
       for (var member in members) {
         double memberAmount = amounts?[member['id']] ??
@@ -566,6 +575,10 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
           splitID.value,
           parsedTotalAmount,
         );
+        // searchController.clear();
+        // currentPage=1;
+        // isLoadingMore.value=false;
+        // getAllTransaction(context);
       }
 
       snackBarCalled(context, "Split amount sent to users!", Colors.black);

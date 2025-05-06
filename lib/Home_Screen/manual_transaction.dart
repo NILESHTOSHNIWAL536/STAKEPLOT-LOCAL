@@ -1831,6 +1831,7 @@ class _ModalContentState extends State<ModalContent>
         "amount": calculatedTotal,
         "paymentStatus": nameList,
         "image": '',
+        "ismanual": true,
       }),
     );
     // print("splitUserAmount: API request sent with paymentStatus: $nameList");
@@ -1868,6 +1869,10 @@ class _ModalContentState extends State<ModalContent>
         addSocketMessage(members, amountPerPerson.toString(), name,
             splitID.value, parsedTotalAmount);
       }
+         currentPage=1;
+        isLoadingMore.value=false;
+        searchController.clear();
+        getAllTransaction(context);
 
       // print("splitUserAmount: Split successful, showing celebration");
       snackBarCalled(

@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_details.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
@@ -472,12 +473,14 @@ Widget getIconsForHideUpdateSplit(double iconSize, double padding, String catego
                       message: 'Split with Friends',
                       child: GestureDetector(
                         onTap: () async {
+                           FocusScope.of(context).unfocus();
                           await showCustomFriendsModalTransactionHistory(
                             context,
                             amount,
                             false,
                             category,
                             subcategory,
+                            false
                           );
                         },
                         child: Container(
@@ -545,6 +548,7 @@ Future<dynamic> showCustomFriendsModalTransactionHistory(
   bool isLendMode,
   String category,
   String subcategory,
+ [ bool ismanulTransaction=false]
 ) async {
   return await showModalBottomSheet<dynamic>(
     context: context,
@@ -562,6 +566,7 @@ Future<dynamic> showCustomFriendsModalTransactionHistory(
         category: category,
         subcategory: subcategory,
         flag: true,
+        ismanual: false,
       );
     },
   );
