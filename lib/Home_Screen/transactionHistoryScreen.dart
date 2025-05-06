@@ -51,10 +51,7 @@ void _onScroll() {
   Widget build(BuildContext context) {
     return  WillPopScope(
       onWillPop: () async {
-         currentPage = 1;
-        isLoadingMore.value = false;
-        getAllTransaction(context);
-        searchController.clear();
+        clearData();
         Navigator.pop(context);
         return true;
       },
@@ -79,10 +76,7 @@ void _onScroll() {
         size: 24, // Slightly smaller for balance
       ),
       onPressed: (){
-        currentPage = 1;
-        isLoadingMore.value = false;
-        getAllTransaction(context);
-        searchController.clear();
+       clearData();
         Navigator.pop(context);
       },
       splashRadius: 20, // Smaller splash radius for a subtle effect
@@ -167,10 +161,7 @@ void _onScroll() {
                         ? IconButton(
                             icon: const Icon(Icons.clear, color: AppColors.accentColor),
                             onPressed: () {
-                             searchController.clear();
-                             currentPage = 1;
-                             isLoadingMore.value = false;
-                             getAllTransaction(context);
+                                clearData();
                               // Unfocus the search field
                             },
                           )
@@ -206,6 +197,12 @@ void _onScroll() {
     );
   }
 
+ void clearData(){
+                            searchController.clear();
+                             currentPage = 1;
+                             isLoadingMore.value = false;
+                             getAllTransaction(context);
+ }
 
   Widget  transactionsHistoryList() {
     return  Obx(() => loadChatdataOnChnage.value
