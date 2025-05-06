@@ -131,16 +131,16 @@ class _SigninState extends State<ForgotPassword> {
             //   ),
             // ),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: TextFeildWidget(
-                textEditingController: nameController,
-                heading: "Username",
-                keyBoard: TextInputType.name,
-                lableText: "Username",
-                icon: Icons.person_3_outlined,
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(vertical: 10),
+            //   child: TextFeildWidget(
+            //     textEditingController: nameController,
+            //     heading: "Username",
+            //     keyBoard: TextInputType.name,
+            //     lableText: "Username",
+            //     icon: Icons.person_3_outlined,
+            //   ),
+            // ),
 
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
@@ -152,7 +152,7 @@ class _SigninState extends State<ForgotPassword> {
             ),
 
             SizedBox(
-              height: Colorcodes.paddingSize * 2,
+              height: Colorcodes.paddingSize ,
             ),
 
             Center(
@@ -172,9 +172,9 @@ class _SigninState extends State<ForgotPassword> {
                     child: InkWell(
                       onTap: () {
 
-                        if (nameController.text == "" ||
+                        if (
                             emailController.text == "") {
-                          snackBarAllFeilds(context, Colors.red);
+                          snackBarCalledfail(context, "Please enter a valid email address.");
                           return;
                         }
 

@@ -15,7 +15,7 @@ void checkEmail(context, email, otp, name) async {
  print(response.body);
   if (getFlagOfResponse(response))
   {
-    snackBarCalled(context, "Accepted Opt...!", Colors.black);
+    snackBarCalled(context, "OTP Accepted!", Colors.black);
     acceptReset.value = false;
     Navigator.pushReplacement(
         context,
@@ -31,7 +31,7 @@ void checkEmail(context, email, otp, name) async {
         ));
   } else {
     acceptReset.value = false;
-    snackBarCalled(context, "Invalid Opt...!", Colors.red);
+    snackBarCalled(context, "Invalid OTP!", Colors.red);
   }
 }
 
@@ -44,11 +44,11 @@ void changePassword(context, email, p1, p2) async
       "confirmNewPassword": p2,
     });
   if (getFlagOfResponse(response)) {
-    snackBarCalledSignup(context, "Password changed...!", Colors.black);
+    snackBarCalledSignup(context, "Password changed!", Colors.black);
     Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
     Navigator.pushNamed(context, "/");
   } else {
-    snackBarCalled(context, "Can't change...!", Colors.red);
+    snackBarCalled(context, "Can't change!", Colors.red);
   }
 }
 
@@ -80,8 +80,8 @@ void resendOpt(context, email, name) async {
 
   if (getFlagOfResponse(response)) {
     acceptReset.value = false;
-    snackBarCalled(context, "ReSent Otp To Email Id!", Colors.black);
+    snackBarCalled(context, "OTP has been resent to your email!", Colors.black);
   } else {
-    snackBarCalled(context, "can't send otp!", Colors.red);
+    snackBarCalled(context, "Unable to send OTP, Please try again", Colors.red);
   }
 }
