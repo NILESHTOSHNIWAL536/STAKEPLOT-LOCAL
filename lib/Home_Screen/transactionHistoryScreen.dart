@@ -51,6 +51,8 @@ void _onScroll() {
   Widget build(BuildContext context) {
     return  WillPopScope(
       onWillPop: () async {
+         currentPage = 1;
+        isLoadingMore.value = false;
         getAllTransaction(context);
         searchController.clear();
         Navigator.pop(context);
@@ -77,6 +79,8 @@ void _onScroll() {
         size: 24, // Slightly smaller for balance
       ),
       onPressed: (){
+        currentPage = 1;
+        isLoadingMore.value = false;
         getAllTransaction(context);
         searchController.clear();
         Navigator.pop(context);
@@ -162,7 +166,13 @@ void _onScroll() {
                          suffixIcon: searchController.text.isNotEmpty
                         ? IconButton(
                             icon: const Icon(Icons.clear, color: AppColors.accentColor),
-                            onPressed: () => searchController.clear(),
+                            onPressed: () {
+                             searchController.clear();
+                             currentPage = 1;
+                             isLoadingMore.value = false;
+                             getAllTransaction(context);
+                              // Unfocus the search field
+                            },
                           )
                         : null,
                         filled: true,
