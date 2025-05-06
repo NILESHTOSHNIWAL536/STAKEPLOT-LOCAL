@@ -47,7 +47,7 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
   @override
   void initState() {
     super.initState();
-       UrlPathImage.value = Categories.link +imageMapForHistory[widget.data['category'].toLowerCase()]!;
+       UrlPathImage.value =  getIconPath(widget.data['category'].toLowerCase());
       _controller = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 1000),
@@ -72,6 +72,13 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
     });
   }
 
+  String getIconPath(String category)
+  {
+
+    if(imageMapForHistory.containsKey(category))return Categories.link + imageMapForHistory[category]!;
+    return Categories.link + Categories.groceries;
+
+  }
 
   @override
   Widget build(BuildContext context)
@@ -290,7 +297,7 @@ Widget getListOfCat(BuildContext context) {
               groupValue: tagName.value,
               activeColor: AppColors.primaryColor,
               onChanged: (value) {
-                  UrlPathImage.value = Categories.link +imageMapForHistory[widget.data['category'].toLowerCase()]!;
+                  UrlPathImage.value = getIconPath(widget.data['category'].toLowerCase());
                   customSelections.value = false;
                   tagName.value = value!;
                   widget.data['category']=value;
@@ -299,7 +306,7 @@ Widget getListOfCat(BuildContext context) {
               },
             )),
              AvatarProfileImage(
-                     url: Categories.link +(imageMapForHistory[s.toLowerCase()] ?? 'default_image.png'),
+                     url:  getIconPath(s.toLowerCase()),
                     height: 30,
                     width: 30,
              ),
@@ -349,7 +356,7 @@ Widget getListOfCat(BuildContext context) {
              widget.data['subcategory']=s;
             tagName.value = main!;
             customSelections.value = false;
-               UrlPathImage.value = Categories.link +imageMapForHistory[widget.data['category'].toLowerCase()]!;
+               UrlPathImage.value = getIconPath(widget.data['category'].toLowerCase());
              loadAgain.value=!loadAgain.value;
 
         },

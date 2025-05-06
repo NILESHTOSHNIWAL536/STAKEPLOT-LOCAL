@@ -1743,6 +1743,7 @@ class _ModalContentState extends State<ModalContent>
           userName: userName.value,
           userAvatar: avatar.value,
           isLendMode: isLendMode,
+          
         );
       },
     );
