@@ -28,6 +28,7 @@ class NewFriendsUi extends StatefulWidget {
   final String? category;
   final String? subcategory;
   final bool flag;
+  final bool ismanual;
   const NewFriendsUi({
     Key? key,
     this.showContinueButton = true,
@@ -39,6 +40,7 @@ class NewFriendsUi extends StatefulWidget {
     this.category,
     this.subcategory,
     this.flag = false,
+    this.ismanual = true,
   }) : super(key: key);
 
   @override
@@ -314,6 +316,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
           cate: category,
           subcate: subcategory,
           flag: widget.flag,
+          ismanual: widget.ismanual,
         );
       },
     );

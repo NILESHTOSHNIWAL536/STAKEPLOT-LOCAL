@@ -4,7 +4,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDe
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 class DebtService {
   static String baseUrl = '${url}/debt';
 
@@ -41,6 +41,23 @@ class DebtService {
     //  print("Error occurred while creating debt: $e"); // Debug statement
     }
     return null;
+  }
+static Future<bool> deleteDebt(String debtId) async {
+    try {
+      var accessToken = await getToken();
+      if (accessToken == null) {
+        return false;
+      }
+      final String apiUrl = '$baseUrl/$debtId';   
+ var response = await deleteDataApiCall(apiUrl);
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
   }
 
   static Future<List<Debt>> fetchDebts() async {

@@ -377,7 +377,7 @@ String getMonthlyRange() {
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: MediaQuery.of(context).size.height / 2,
+          height: MediaQuery.of(context).size.height / 2.4,
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(30),
@@ -416,7 +416,8 @@ String getMonthlyRange() {
               getListItemListTile("30", "days", context),
               getListItemListTile("60", "days", context),
               getListItemListTile("6", "months", context),
-              getListItemListTile("1", "year", context),
+              // getListItemListTile("1", "year", context),
+              SizedBox(height: 10,),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: InkWell(

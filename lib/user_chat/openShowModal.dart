@@ -8,81 +8,90 @@ import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
+RxString cateName = "".obs;
 
-RxString cateName="".obs;
-
-void openShowModalCate(BuildContext context, TextEditingController nameController,String narr) {
+void openShowModalCate(
+    BuildContext context, TextEditingController nameController, String narr) {
   showModalBottomSheet(
     context: context,
-    isScrollControlled: true,
+    isScrollControlled: true, // Allows the modal to resize with the keyboard
     backgroundColor: Colors.transparent,
     builder: (context) => Container(
-      height: MediaQuery.of(context).size.height /3,
+      // Flexible height to accommodate keyboard
+      height: MediaQuery.of(context).size.height / 3 +
+          MediaQuery.of(context).viewInsets.bottom,
       width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      child:Column(
-          children: [
+      child: SingleChildScrollView(
+        // Makes content scrollable when keyboard appears
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom, // Adjusts for keyboard
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min, // Only take needed space
+            children: [
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.02,
               ),
-               TextFeildWidget(
-                        textEditingController: nameController,
-                        heading: "Category Name",
-                        keyBoard: TextInputType.emailAddress,
-                        lableText: "Enter Category Name",
-                        icon: Icons.category,
-                ),
-
+              TextFeildWidget(
+                textEditingController: nameController,
+                heading: "Category Name",
+                keyBoard: TextInputType.emailAddress,
+                lableText: "Enter Category Name",
+                icon: Icons.category,
+              ),
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.02,
               ),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                    getImageContainer(Categories.link+Categories.alcohal),
-                    getImageContainer(Categories.link+Categories.food),
-                    getImageContainer(Categories.link+Categories.health),
+                  getImageContainer(Categories.link + Categories.alcohal),
+                  getImageContainer(Categories.link + Categories.food),
+                  getImageContainer(Categories.link + Categories.health),
                 ],
               ),
-
-               SizedBox(
+              SizedBox(
                 height: MediaQuery.of(context).size.height * 0.02,
               ),
-
               InkWell(
                 onTap: () {
-                   postCustomCategory(context, nameController.text, cateName.value, narr);
+                  postCustomCategory(context, nameController.text, cateName.value, narr);
                 },
-                child: getButton(context, "Add Category")),
-
-
-          ],
-      ) ,
+                child: getButton(context, "Add Category"),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.02,
+              ), // Extra space for padding
+            ],
+          ),
+        ),
+      ),
     ),
   );
 }
 
-
 Widget getImageContainer(String imagePath) {
-  return Obx(()=> InkWell(
-    onTap: () => {
-      cateName.value = imagePath,
-      print(cateName.value),
-    },
-    child: Container(
-      height: 50,
-      width: 50,
-      margin: EdgeInsets.symmetric(horizontal: 3),
-      decoration: BoxDecoration(
-         color: cateName.value==imagePath?Colorcodes.greyLight:Colorcodes.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: AvatarProfileImage(url: imagePath, width: 10, height: 10),
-    ),
-  ));
+  return Obx(() => InkWell(
+        onTap: () {
+          cateName.value = imagePath;
+          debugPrint('Selected category image: ${cateName.value}');
+        },
+        child: Container(
+          height: 50,
+          width: 50,
+          margin: const EdgeInsets.symmetric(horizontal: 3),
+          decoration: BoxDecoration(
+            color: cateName.value == imagePath ? Colorcodes.greyLight : Colorcodes.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: AvatarProfileImage(url: imagePath, width: 10, height: 10),
+        ),
+      ));
 }

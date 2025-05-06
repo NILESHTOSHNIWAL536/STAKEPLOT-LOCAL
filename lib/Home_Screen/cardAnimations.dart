@@ -212,7 +212,7 @@ class _InsightsScreenState extends State<InsightsScreen>
                 Padding(
                   padding: ResponsiveUtils.getPadding(context),
                   child: Text(
-                    'Your Insights',
+                    'Your Highlights',
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.bold,

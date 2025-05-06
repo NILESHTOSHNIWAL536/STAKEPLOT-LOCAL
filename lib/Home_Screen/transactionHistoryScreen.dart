@@ -10,197 +10,213 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:get/get.dart';
 
 final TextEditingController searchController = TextEditingController();
+FocusNode focusNodeSearchFeild = FocusNode();
 
 class TransactionHistoryScreen extends StatefulWidget {
   const TransactionHistoryScreen({super.key});
 
   @override
-  State<TransactionHistoryScreen> createState() => _TransactionHistoryScreenState();
+  State<TransactionHistoryScreen> createState() =>
+      _TransactionHistoryScreenState();
 }
 
 class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
-  final RxList<Map<String, dynamic>> filteredTransactions = RxList<Map<String, dynamic>>([]);
-    final ScrollController scrollController = ScrollController();
-
+  final RxList<Map<String, dynamic>> filteredTransactions =
+      RxList<Map<String, dynamic>>([]);
+  final ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     // Initialize filtered transactions with all transactions
     scrollController.addListener(_onScroll);
-
   }
 
-void _onScroll() {
-    scrollController.addListener(() async{
+  void _onScroll() {
+    scrollController.addListener(() async {
       // print("scrollController");
       // print("Scroll position: ${scrollController.position.pixels}");
       // print("Max scroll extent: ${scrollController.position.maxScrollExtent}");
-          if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 100)
-          {
-               getAllTransactionHistory(context, false, false);
-          }
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent - 100) {
+        getAllTransactionHistory(context, false, false);
+      }
     });
-  
   }
-
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-     appBar: AppBar(
- // Flat design for a modern look
-  title: Text(
-    'History',
-    style: FontManager().getTextStyle(
-      context,
-      lWeight: FontWeight.w600, // Slightly bolder for emphasis
-      fontSize: 18, // Slightly larger for better readability
-      color: AppColors.accentColor,
-    ),
-  ),
-   // Center the title for symmetry
-  leading: IconButton(
-    icon: Icon(
-      Icons.arrow_back_ios, // More refined back icon
-      color: AppColors.accentColor,
-      size: 24, // Slightly smaller for balance
-    ),
-    onPressed: () => Navigator.pop(context),
-    splashRadius: 20, // Smaller splash radius for a subtle effect
-  ),
-  actions: [
-    Padding(
-      padding: const EdgeInsets.only(right: 16.0), // Proper spacing
-      child: InkWell(
-        onTap: () {
-          showModalForPdfDownload(context);
-        },
-        splashColor: AppColors.accentColor.withOpacity(0.2), // Subtle splash effect
-        borderRadius: BorderRadius.circular(12), // Rounded ripple effect
-        child: Container(
-          padding: const EdgeInsets.all(8.0), 
-                   decoration: BoxDecoration(
-            color: Colors.grey.withOpacity(0.1), // Added filled color grey
-            borderRadius: BorderRadius.circular(16), // Added rounded borders
-          ), // Comfortable tap area// Comfortable tap area
-        
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.download_for_offline, // Modern, appealing download icon
-                size: 15, // Slightly smaller to balance with text
-                color: AppColors.accentColor,
-              ),
-              const SizedBox(width: 2), // Spacing between icon and text
-              Text(
-                'My Statement',
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.w600, // Semi-bold for readability
-                  fontSize: 10, // Compact to fit AppBar
-                  color: AppColors.accentColor,
-                ),
-              ),
-            ])
-        ),
-      ),
-    ),
-  ],
- 
-),
-
-       body: Column(
-        children: [
-          // Fixed Search Bar
-          Container(
-            color: AppColors.backgroundColor, // Match Scaffold background
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              height: MediaQuery.of(context).size.height * 0.06,
-              decoration: BoxDecoration(
-                color: AppColors.bg5,
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: TextField(
-                controller: searchController,
-                onChanged: (value) {
-                  onChanedAutoTransactionStatus(context);
-                },
-                decoration: InputDecoration(
-                  hintText: 'Search transactions',
-                  hintStyle: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w400,
-                    fontSize: 14,
-                    color: AppColors.likesharecommentCount,
-                  ),
-                  prefixIcon: const Icon(Icons.search, color: AppColors.accentColor),
-                  suffixIcon: searchController.text.isNotEmpty
-                      ? IconButton(
-                          icon: const Icon(Icons.clear, color: AppColors.accentColor),
-                          onPressed: () => searchController.clear(),
-                        )
-                      : null,
-                  filled: true,
-                  fillColor: AppColors.bg5,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide(color: AppColors.accentColor, width: 1),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide(color: AppColors.accentColor, width: 2),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                ),
-                style: const TextStyle(color: AppColors.accentColor),
-              ),
+    return WillPopScope(
+      onWillPop: () async {
+        clearData();
+        Navigator.pop(context);
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundColor,
+        appBar: AppBar(
+          // Flat design for a modern look
+          title: Text(
+            'History',
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.w600, // Slightly bolder for emphasis
+              fontSize: 18, // Slightly larger for better readability
+              color: AppColors.accentColor,
             ),
           ),
-          // Scrollable Transaction History
-          Container(
-            height: MediaQuery.sizeOf(context).height/1.25,
-            width: MediaQuery.sizeOf(context).height,
-            child: SingleChildScrollView(
-              controller: scrollController,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10),
+          // Center the title for symmetry
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios, // More refined back icon
+              color: AppColors.accentColor,
+              size: 24, // Slightly smaller for balance
+            ),
+            onPressed: () {
+              clearData();
+              Navigator.pop(context);
+            },
+            splashRadius: 20, // Smaller splash radius for a subtle effect
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0), // Proper spacing
+              child: InkWell(
+                onTap: () {
+                  showModalForPdfDownload(context);
+                },
+                splashColor: AppColors.accentColor
+                    .withOpacity(0.2), // Subtle splash effect
+                borderRadius:
+                    BorderRadius.circular(12), // Rounded ripple effect
+                child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey
+                          .withOpacity(0.1), // Added filled color grey
+                      borderRadius:
+                          BorderRadius.circular(16), // Added rounded borders
+                    ), // Comfortable tap area// Comfortable tap area
+
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      Icon(
+                        Icons
+                            .download_for_offline, // Modern, appealing download icon
+                        size: 15, // Slightly smaller to balance with text
+                        color: AppColors.accentColor,
+                      ),
+                      const SizedBox(width: 2), // Spacing between icon and text
+                      Text(
+                        'My Statement',
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w600, // Semi-bold for readability
+                          fontSize: 10, // Compact to fit AppBar
+                          color: AppColors.accentColor,
+                        ),
+                      ),
+                    ])),
+              ),
+            ),
+          ],
+        ),
+        body: Column(
+          children: [
+            // Fixed Search Bar
+            Container(
+              color: AppColors.backgroundColor, // Match Scaffold background
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                height: MediaQuery.of(context).size.height * 0.06,
+                decoration: BoxDecoration(
+                  color: AppColors.bg5,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: TextField(
+                  controller: searchController,
+                  focusNode: focusNodeSearchFeild,
+                  onChanged: (value) {
+                    onChanedAutoTransactionStatus(context);
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Search transactions',
+                    hintStyle: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w400,
+                      fontSize: 14,
+                      color: AppColors.likesharecommentCount,
+                    ),
+                    prefixIcon:
+                        const Icon(Icons.search, color: AppColors.accentColor),
+                    suffixIcon: searchController.text.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.clear,
+                                color: AppColors.accentColor),
+                            onPressed: () {
+                              clearData();
+                            },
+                          )
+                        : null,
+                    filled: true,
+                    fillColor: AppColors.bg5,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide.none,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide:
+                          BorderSide(color: AppColors.accentColor, width: 1),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide:
+                          BorderSide(color: AppColors.accentColor, width: 2),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 15),
+                  ),
+                  style: const TextStyle(color: AppColors.accentColor),
+                ),
+              ),
+            ),
+            // Scrollable Transaction History
+            Container(
+              height: MediaQuery.sizeOf(context).height / 1.25,
+              width: MediaQuery.sizeOf(context).height,
+             
+              child: SingleChildScrollView(
+                controller: scrollController,
                 child: transactionsHistoryList(),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-
     );
   }
 
-
-  Widget  transactionsHistoryList() {
-    return  Obx(() => loadChatdataOnChnage.value
-                        ? TransactionHistory(
-                            isYearView: isYearView.value,
-                            isflag: true,
-                            showIcon: false,
-                            expandedPage: true,
-
-                          )
-                        : TransactionHistory(
-                            isYearView: isYearView.value,
-                            isflag: true,
-                             showIcon: false,
-                              expandedPage: true,
-                          ));
+  void clearData() {
+    searchController.clear();
+    currentPage = 1;
+    isLoadingMore.value = false;
+    getAllTransaction(context);
   }
 
+  Widget transactionsHistoryList() {
+    return Obx(() => loadChatdataOnChnage.value
+        ? TransactionHistory(
+            isYearView: isYearView.value,
+            isflag: true,
+            showIcon: false,
+            expandedPage: true,
+          )
+        : TransactionHistory(
+            isYearView: isYearView.value,
+            isflag: true,
+            showIcon: false,
+            expandedPage: true,
+          ));
+  }
 }
-
-

@@ -1,19 +1,13 @@
 
-import 'dart:convert';
-import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_transactions.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_details.dart';
 import 'package:flutter_application_code_stakeplot/animated/pdf.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
-
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -32,10 +26,9 @@ RxString selectedValueType = "days".obs;
 RxBool getPdgLoader = false.obs;
 RxMap<int, double> swipeOffsets = <int, double>{}.obs;
 RxList<Map<String, dynamic>> hiddenTransactions = <Map<String, dynamic>>[].obs;
-// AnimationController? _animationController;
 
 class TransactionHistory extends StatefulWidget {
-  /// Optional
+ 
   final bool? isYearView;
   final bool? isflag;
   final bool? showIcon;
@@ -48,7 +41,6 @@ class TransactionHistory extends StatefulWidget {
       this.pageTransition = false,
       this.expandedPage = false,
       super.key});
-  // const TransactionHistory({super.key});
 
   @override
   State<TransactionHistory> createState() => _TransactionHistoryState();
@@ -79,9 +71,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
     //   duration: const Duration(milliseconds: 200),
     // );
     _scrollController2.addListener(() {
-      print("object");
-      print(_scrollController2.position.pixels);
-      print(_scrollController2.position.maxScrollExtent);
+     
       if (_scrollController2.position.pixels >=
           _scrollController2.position.maxScrollExtent - 100) {
         getAllTransactionHistory(
@@ -108,7 +98,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
       child: Container(
         child: Column(
           children: [
-            
             (widget.showIcon ?? false)
                 ? SizedBox(
                     height: 15,
@@ -119,14 +108,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
                             StringConstant.allTransactions
                         ? getTabsForTransactions()
                         : getTabsForTransactions()),
-
-            //  getlist()
-            // Obx(() => reloadHistory.value ? getlist() : getlist())
-            // (widget.showIcon ?? false)? Obx(() => reloadHistory.value ? getlist() : getlist()):
-            //        Obx(() => allOrGroupTransactionsName.value ==
-            //             StringConstant.allTransactions
-            //         ? Obx(() => reloadHistory.value ? getlist() : getlist())
-            //         : GroupTransactions()),
             Obx(() {
               if (widget.showIcon ?? false) {
                 return reloadHistory.value ? getlist() : getlist();
@@ -446,47 +427,7 @@ Widget tabItem(String text) {
       },
     );
   }
-  // Widget getlist() {
-  //   return ListView.builder(
-  //     itemCount: transactionsHistory.length + 1,
-  //     shrinkWrap: true,
-  //     controller: _scrollController2,
-  //     physics: const NeverScrollableScrollPhysics(),
-  //     itemBuilder: (context, index) {
-  //       if (index < transactionsHistory.length) {
-  //         final transaction = transactionsHistory[index];
-
-  //         double amount = double.parse(
-  //             doubleToFixed((transaction['amount'] ?? 0.0).toString()));
-  //         String category = transaction['category']?.toString() ??
-  //             'Uncategorized'; // Fixed typo and added null check
-  //         String subcategory =
-  //             transaction['subcategory']?.toString() ?? 'General';
-
-  //         return Container(
-  //               decoration: getBoxDecoration(index),
-  //               child: historyTransactions(
-  //                   transaction,
-  //                   transaction['transactionTimestamp']?.toString(),
-  //                   index), // Ensure this is a String or null),
-
-  //         );
-  //       } else {
-  //         return isLoadingMore.value
-  //             ? Padding(
-  //                 padding: const EdgeInsets.symmetric(vertical: 20),
-  //                 child: const Center(
-  //                   child: CircularProgressIndicator(
-  //                     color: AppColors.primaryColor,
-  //                   ),
-  //                 ),
-  //               )
-  //             : const SizedBox.shrink();
-  //       }
-  //     },
-  //   );
-  // }
-
+  
   void extractTransaction(bool isYearView, List obj) {
     // print("------------------------ extra called...");
     // print(isYearView);
