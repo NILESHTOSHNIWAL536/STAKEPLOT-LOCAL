@@ -358,14 +358,28 @@ pw.Widget firstPage(
           ],
         ),
 
+     pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          mainAxisAlignment: pw.MainAxisAlignment.end,
+          children: [
             pw.Container(
               width: 200,
-              alignment: pw.Alignment.topRight,
+              // alignment: pw.Alignment.topRight,
               child: pw.Text(
-                "Bank Address :"+address,
+               "Bank Address : ",
                 textAlign: pw.TextAlign.right,
               ),
             ),
+            pw.Container(
+              width: 200,
+              // alignment: pw.Alignment.topRight,
+              child: pw.Text(
+               address,
+                textAlign: pw.TextAlign.right,
+              ),
+            ),
+          ]
+        ),
           ],
         ),
       ],
