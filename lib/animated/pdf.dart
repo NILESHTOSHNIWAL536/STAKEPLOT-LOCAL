@@ -21,7 +21,7 @@ RxInt startIndex = 0.obs;
 
 void getPdf(BuildContext context, RxString selectedValue,
     RxString selectedValueType) async {
-  var response = await getDataApiCall("http://192.168.1.18:5000/api/v1/transactionauto/get-previous-transactions/${getPreviousDate(int.parse(selectedValue.value), selectedValueType.value)}/${accountIdPdf.value}",);
+  var response = await getDataApiCall("${url}/transactionauto/get-previous-transactions/${getPreviousDate(int.parse(selectedValue.value), selectedValueType.value)}/${accountIdPdf.value}",);
   startIndex.value=0;
   bankLogo.value =getBankLogo();
   print(bankLogo.value);
@@ -149,7 +149,7 @@ printDoc(data, context, title) {
 
 pw.Widget buildPDFTable(data, context, start,bool flag) {
   final pdfContainers = <pw.Widget>[];
-  int no = flag? 8: selectedValue.value == "6" ? 22 : 15;
+  int no = flag? 10: selectedValue.value == "6" ? 22 : 15;
   for (var i = start; i < data.length; i += no) {
     List chunk = data.sublist(i, (i + no > data.length) ? data.length : i + no);
     startIndex.value += chunk.length;
@@ -345,10 +345,15 @@ pw.Widget firstPage(
             // ),
         pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
+          mainAxisAlignment: pw.MainAxisAlignment.end,
           children: [
             pw.Text("Name: ${profile['holder']['name']}"),
-            pw.Text("Email: ${profile['holder']['email']}"),
-            pw.Text("Mobile: ${profile['holder']['mobile']}"),
+             pw.Container(
+                    width: PdfPageFormat.a4.availableWidth / 2,
+                    child: pw.Text("Address: ${profile['holder']['address']}"),
+            ),
+             pw.SizedBox(height: 12),
+            if(profile['holder']['email'] is String && profile['holder']['email'].toString().trim().isNotEmpty)pw.Text("Email: ${profile['holder']['email']}"),
             pw.Text("DOB: ${profile['holder']['dob']}"),
           ],
         ),
@@ -357,7 +362,7 @@ pw.Widget firstPage(
               width: 200,
               alignment: pw.Alignment.topRight,
               child: pw.Text(
-                address,
+                "Bank Address :"+address,
                 textAlign: pw.TextAlign.right,
               ),
             ),
@@ -370,76 +375,7 @@ pw.Widget firstPage(
 
 
 
-pw.Widget firstPage2(logo, Map<String, dynamic> profile, Map<String, dynamic> summary,address,BankName,accountNo) {
-  return pw.Container(
-    padding: pw.EdgeInsets.all(10),
-    decoration: pw.BoxDecoration(
-      border: pw.Border(
-        bottom: pw.BorderSide(color: PdfColors.black, width: 1),
-      ),
-    ),
-    child: pw.Column(
-      crossAxisAlignment: pw.CrossAxisAlignment.start,
-      children: [
-        pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
-          children: [
-           pw.Row(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-             children: [
-               pw.Image(logo, width: 40, height: 40),
-                pw.SizedBox(width: 10),
-               pw.Text(
-                    BankName,
-                    style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
-                  ),
 
-
-             ]
-           ),
-            pw.SizedBox(height: 10),
-            pw.Expanded(
-              child: pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  
-                  pw.Text("Name: ${profile['holder']['name']}"),
-                  pw.Container(
-                    width: PdfPageFormat.a4.availableWidth / 2,
-                    child: pw.Text("Address: ${profile['holder']['address']}"),
-                  ),
-                  pw.Text("Email: ${profile['holder']['email']}"),
-                  // pw.Text("Mobile: ${profile['holder']['mobile']}"),
-                  pw.Text("DOB: ${profile['holder']['dob']}"),
-                ],
-              ),
-            ),
-          ],
-        ),
-        pw.SizedBox(height: 10),
-        pw.Row(
-          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-          children: [
-            pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                pw.Text("Account No: ${accountNo}"),
-                pw.Text("Branch: ${summary['data']['branch']}"),
-              ],
-            ),
-            pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                pw.Text("IFSC: ${summary['data']['ifscCode']}"),
-                pw.Text("Opening Date: ${summary['data']['openingDate'].toString().split('T')[0]}"),
-              ],
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
-}
 
 
 
