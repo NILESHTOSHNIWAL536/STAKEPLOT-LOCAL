@@ -24,6 +24,7 @@ RxBool reloadHistory = false.obs;
 RxString selectedValue = "30".obs;
 RxString selectedValueType = "days".obs;
 RxBool getPdgLoader = false.obs;
+RxString bankLogo = "".obs;
 RxMap<int, double> swipeOffsets = <int, double>{}.obs;
 RxList<Map<String, dynamic>> hiddenTransactions = <Map<String, dynamic>>[].obs;
 
@@ -71,9 +72,10 @@ class _TransactionHistoryState extends State<TransactionHistory>
     //   duration: const Duration(milliseconds: 200),
     // );
     _scrollController2.addListener(() {
-     
-      if (_scrollController2.position.pixels >=
-          _scrollController2.position.maxScrollExtent - 100) {
+       print("scrollController");
+      print("Scroll position: ${_scrollController2.position.pixels}");
+      print("Max scroll extent: ${_scrollController2.position.maxScrollExtent}");
+      if (_scrollController2.position.pixels >=_scrollController2.position.maxScrollExtent - 100) {
         getAllTransactionHistory(
           context,
           widget.isflag!,

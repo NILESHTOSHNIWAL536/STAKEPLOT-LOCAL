@@ -118,9 +118,7 @@ Future<void> getAllTransactionHistory(
             "-" +
             selectedMonth.value.toString().padLeft(2, '0');
     String text=searchController.text.trim()==""?"empty":searchController.text;
-    String urlPath = flag
-        ? "${url}/transactionauto/get-monthly-transactions-history/${accountId.value}/${type}/${currentPage}"
-        : "${url}/transactionauto/getTransactions/${currentPage}/${text}";
+    String urlPath = flag? "${url}/transactionauto/get-monthly-transactions-history/${accountId.value}/${type}/${currentPage}": "${url}/transactionauto/getTransactions/${currentPage}/${text}";
 
     var response = await getDataApiCall(urlPath);
     if (response.statusCode == 200) {
@@ -138,7 +136,6 @@ Future<void> getAllTransactionHistory(
         if (obj.isEmpty || obj.length < 20) {
           hasMoreData = false;
           isLoadingMore.value = true;
-         
         } else {
           isLoadingMore.value = false;
           currentPage++;

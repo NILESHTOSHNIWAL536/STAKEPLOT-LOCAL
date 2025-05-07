@@ -1,8 +1,10 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/animated/pdf.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -495,6 +497,34 @@ String getMonthlyRange() {
           }).toList()));
   }
 
+
+  Widget getHeader(context,text){
+    return Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    textStyle(
+                        context: context,
+                        text: text,
+                        fontsize: 14,
+                        fontWeight: FontWeight.w500),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Icon(
+                        Icons.close_outlined,
+                        size: 20,
+                        color: AppColors.accentColor,
+                      ),
+                    )
+                  ],
+                ),
+              );
+  }
+
   void showModalForPdfDownload(BuildContext context) {
     getPdgLoader.value = false;
     showModalBottomSheet(
@@ -512,30 +542,7 @@ String getMonthlyRange() {
           child: Column(
             children: [
               Center(child: Container()),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    textStyle(
-                        context: context,
-                        text: "Download Statement",
-                        fontsize: 14,
-                        fontWeight: FontWeight.w500),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Icon(
-                        Icons.close_outlined,
-                        size: 20,
-                        color: AppColors.accentColor,
-                      ),
-                    )
-                  ],
-                ),
-              ),
+              getHeader(context, "Download Statement"),
               const SizedBox(height: 20),
               getListItemListTile("30", "days", context),
               getListItemListTile("60", "days", context),
@@ -585,3 +592,73 @@ String getMonthlyRange() {
           )),
     );
   }
+
+
+
+Widget getCheckBoxwithText(context,text){
+    return Container(
+             decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.primaryColor, width: 0.2),
+              ),
+              margin: const EdgeInsets.symmetric(vertical: 4,horizontal: 7),
+               child: Obx(()=> ListTile(
+                    leading: Container(
+                      width: 40,
+                      height: 40,
+                      child: Icon(Icons.credit_card),
+                    ),
+                    title: textStyle(
+                        context: context,
+                        text: text,
+                        fontsize: 15,
+                        fontWeight: FontWeight.w500),
+                      trailing: Radio<String>(
+                      value: text, // Assign a unique value for each radio button
+                      groupValue: accountIdPdf.value , // The currently selected value
+                      onChanged: (value) {
+                        accountIdPdf.value = value!;
+                      },
+                    ),
+                  ))
+    );
+}
+
+
+ Widget filterTransaction(context)
+ {
+    return Container(
+      height:  MediaQuery.of(context).size.height /(bankAccountLinkedList.length<=1? 3:2.2),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+                   getHeader(context, "Select Filter"),
+                   getCheckBoxwithText(context, "Credit"),
+                   getCheckBoxwithText(context, "Debit"),
+                   bankAccountLinkedList.length>=2? getBankAccountList(context):SizedBox.shrink(),
+                   const SizedBox(height: 10),
+                  
+                   InkWell(
+                    onTap: (){
+                      searchController.text=accountIdPdf.value.toLowerCase();
+                      onChanedAutoTransactionStatus(context);
+                      Navigator.pop(context);
+                    },
+                    child: getButton(context, "Apply Filter")),
+          ],
+        ),
+      ),
+    );
+ }
+
+
+ String getBankLogo()
+  {
+  for (var bankAccount in bankAccountLinkedList) {
+    if (bankAccount['accountId'] == accountIdPdf.value) {
+      return bankAccount['bankLogo'];
+    }
+  }
+
+  return bankImage; // return null if no match found
+}

@@ -1,8 +1,10 @@
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -12,52 +14,82 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:http/http.dart' as http;
+
 
 RxInt startIndex = 0.obs;
 
 void getPdf(BuildContext context, RxString selectedValue,
     RxString selectedValueType) async {
-  var response = await getDataApiCall(
-      "${url}/transactionauto/get-previous-transactions/${getPreviousDate(int.parse(selectedValue.value), selectedValueType.value)}/${accountIdPdf.value}",);
-
+  var response = await getDataApiCall("http://192.168.1.18:5000/api/v1/transactionauto/get-previous-transactions/${getPreviousDate(int.parse(selectedValue.value), selectedValueType.value)}/${accountIdPdf.value}",);
+  startIndex.value=0;
+  bankLogo.value =getBankLogo();
+  print(bankLogo.value);
+  printData(response);
   if (getFlagOfResponse(response)) {
     var obj = jsonDecode(response.body);
-    List list = obj['data'];
-    print(list);
+    List list = obj['data']['transactions'];
     if (list.length > 0) {
-      generatePdf(PdfPageFormat.legal, "StakePlot", list, context);
+      generatePdf(PdfPageFormat.legal, "StakePlot", list, context,obj['data']['profile'][0],obj['data']['summary'][0],obj['data']['bankAddress'],obj['data']['bankName'],obj['data']['account']['maskedAccNumber']);
     }
   }
 }
 
-Future<pw.MemoryImage> loadLogo() async {
+
+Future<pw.MemoryImage> loadLogoNetwork(String url) async {
+  final response = await http.get(Uri.parse(url));
+  if (response.statusCode == 200) {
+    return pw.MemoryImage(response.bodyBytes);
+  } else {
+    throw Exception('Failed to load image from $url');
+  }
+}
+
+Future<pw.MemoryImage> loadLogo(path) async {
   final ByteData bytes =
-      await rootBundle.load('assets/app_icon.png'); // Correct path
+      await rootBundle.load(path); // Correct path
   final Uint8List byteList = bytes.buffer.asUint8List();
   return pw.MemoryImage(byteList);
 }
 
 Future<void> generatePdf(
-    PdfPageFormat format, String title, List data, contextBui) async {
+    PdfPageFormat format, String title, List data, contextBui,profile,summary,String address,String BankName,String accountNo) async {
   final pdf = pw.Document();
-  final logo = await loadLogo(); // Load the logo
+  final logo = await loadLogo('assets/app_icon.png'); // Load the logo
+  final logo2 = await loadLogoNetwork(bankLogo.value); // Load the logo
   try {
-    while (startIndex.value < data.length) {
-      print(startIndex.value);
-      pdf.addPage(
+
+    pdf.addPage(
         pw.MultiPage(
-          pageFormat:
-              PdfPageFormat.a4.copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
+          pageFormat:PdfPageFormat.a4.copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
           orientation: pw.PageOrientation.portrait,
-          header: (context) => tableHeaderCell1(logo),
+          header: (context) => firstPage(logo2,profile,summary,address,BankName,accountNo),
           footer: (context) => tableFootercell(logo, context),
           build: (context) {
-            return [
-              buildPDFTable(data, contextBui, startIndex.value),
+            return 
+            [
+              buildPDFTable(data, contextBui, startIndex.value,true),
             ];
           },
         ),
       );
+
+    while (startIndex.value < data.length) {
+     
+      pdf.addPage(
+        pw.MultiPage(
+          pageFormat:PdfPageFormat.a4.copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
+          orientation: pw.PageOrientation.portrait,
+          header: (context) => tableHeaderCell1(logo2,profile,summary,address,BankName),
+          footer: (context) => tableFootercell(logo, context),
+          build: (context) {
+            return [
+              buildPDFTable(data, contextBui, startIndex.value,false),
+            ];
+          },
+        ),
+      );
+
     }
   } catch (e) {
     print("error" + e.toString());
@@ -115,9 +147,9 @@ printDoc(data, context, title) {
       ]);
 }
 
-pw.Widget buildPDFTable(data, context, start) {
+pw.Widget buildPDFTable(data, context, start,bool flag) {
   final pdfContainers = <pw.Widget>[];
-  int no = selectedValue.value == "6" ? 22 : 15;
+  int no = flag? 8: selectedValue.value == "6" ? 22 : 15;
   for (var i = start; i < data.length; i += no) {
     List chunk = data.sublist(i, (i + no > data.length) ? data.length : i + no);
     startIndex.value += chunk.length;
@@ -129,7 +161,8 @@ pw.Widget buildPDFTable(data, context, start) {
             tableContent(chunk), // Ensure tableContent handles chunk properly
       ),
     );
-    if (pdfContainers.length == 18) break;
+
+    if (flag || pdfContainers.length == 18) break;
   }
 
   return pw.Column(
@@ -212,7 +245,7 @@ pw.Widget tableHeaderCell(String text) {
   );
 }
 
-pw.Widget tableHeaderCell1(logo) {
+pw.Widget tableHeaderCell1(logo,profile,s,address,BankName) {
   return pw.Container(
     padding: pw.EdgeInsets.all(8),
     decoration: pw.BoxDecoration(
@@ -226,8 +259,8 @@ pw.Widget tableHeaderCell1(logo) {
       children: [
         pw.Image(logo, width: 30, height: 30),
         pw.SizedBox(width: 10),
-        pw.Text(
-          "Transaction Statement for ${number.value}",
+        pw.Text( BankName,
+          // "Transaction Statement for ${profile['holder']['name']}",
           style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
         ),
         // Logo on the left
@@ -235,6 +268,155 @@ pw.Widget tableHeaderCell1(logo) {
     ),
   );
 }
+
+
+
+pw.Widget firstPage(
+  logo,
+  Map<String, dynamic> profile,
+  Map<String, dynamic> summary,
+  String address,
+  String bankName,
+  String accountNo,
+) {
+  return pw.Container(
+    padding: pw.EdgeInsets.all(10),
+    decoration: pw.BoxDecoration(
+      border: pw.Border(
+        bottom: pw.BorderSide(color: PdfColors.black, width: 1),
+      ),
+    ),
+    child: pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        // Bank logo and name row
+        pw.Row(
+          crossAxisAlignment: pw.CrossAxisAlignment.center,
+          children: [
+            pw.Image(logo, width: 40, height: 40),
+            pw.SizedBox(width: 10),
+            pw.Text(
+              bankName,
+              style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold),
+            ),
+          ],
+        ),
+
+        pw.SizedBox(height: 12),
+
+        // Profile Info
+        pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            pw.Text("Name: ${profile['holder']['name']}"),
+            pw.Text("Email: ${profile['holder']['email']}"),
+            pw.Text("Mobile: ${profile['holder']['mobile']}"),
+            pw.Text("DOB: ${profile['holder']['dob']}"),
+          ],
+        ),
+
+        pw.SizedBox(height: 12),
+
+        // Account Info Row
+        pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Text("Account No: $accountNo"),
+                pw.Text("Branch: ${summary['data']['branch']}"),
+                pw.Text("IFSC: ${summary['data']['ifscCode']}"),
+                pw.Text("Opening Date: ${summary['data']['openingDate'].toString().split('T')[0]}"),
+              ],
+            ),
+            pw.Container(
+              width: 200,
+              alignment: pw.Alignment.topRight,
+              child: pw.Text(
+                address,
+                textAlign: pw.TextAlign.right,
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+
+
+pw.Widget firstPage2(logo, Map<String, dynamic> profile, Map<String, dynamic> summary,address,BankName,accountNo) {
+  return pw.Container(
+    padding: pw.EdgeInsets.all(10),
+    decoration: pw.BoxDecoration(
+      border: pw.Border(
+        bottom: pw.BorderSide(color: PdfColors.black, width: 1),
+      ),
+    ),
+    child: pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+           pw.Row(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+             children: [
+               pw.Image(logo, width: 40, height: 40),
+                pw.SizedBox(width: 10),
+               pw.Text(
+                    BankName,
+                    style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
+                  ),
+
+
+             ]
+           ),
+            pw.SizedBox(height: 10),
+            pw.Expanded(
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  
+                  pw.Text("Name: ${profile['holder']['name']}"),
+                  pw.Text("Email: ${profile['holder']['email']}"),
+                  pw.Text("Mobile: ${profile['holder']['mobile']}"),
+                  pw.Text("DOB: ${profile['holder']['dob']}"),
+                ],
+              ),
+            ),
+          ],
+        ),
+        pw.SizedBox(height: 10),
+        pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+          children: [
+            pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Text("Account No: ${accountNo}"),
+                pw.Text("Branch: ${summary['data']['branch']}"),
+              ],
+            ),
+            pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Text("IFSC: ${summary['data']['ifscCode']}"),
+                pw.Text("Opening Date: ${summary['data']['openingDate'].toString().split('T')[0]}"),
+              ],
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+
+
 
 // Helper function for single-line table cells
 pw.Widget tableCell(String text) {

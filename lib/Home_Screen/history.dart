@@ -331,9 +331,6 @@ Widget getIconsForHideUpdateSplit(double iconSize, double padding, String catego
                     // Hide Transaction
                     SizedBox(width: 8 * scaleFactor),
                       (() {
-                      print('Is review ???: $isReview');
-                      print('Logo URL: $logo');
-                      print('Transaction Data: $transaction'); // Log full transaction
                       return SizedBox.shrink();
                     })(),
                     !isValidUrl(logo)

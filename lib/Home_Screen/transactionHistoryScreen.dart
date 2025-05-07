@@ -36,10 +36,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
 
 void _onScroll() {
     scrollController.addListener(() async{
-      // print("scrollController");
-      // print("Scroll position: ${scrollController.position.pixels}");
-      // print("Max scroll extent: ${scrollController.position.maxScrollExtent}");
-          if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 100)
+  
+          if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 50)
           {
                getAllTransactionHistory(context, false, false);
           }
@@ -148,7 +146,7 @@ void _onScroll() {
                 children: [
                   // Search Bar
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                      height: MediaQuery.of(context).size.height * 0.06,
@@ -157,57 +155,43 @@ void _onScroll() {
                     borderRadius: BorderRadius.circular(30),
                     
                   ),
-                      child: TextField(
-                        controller: searchController,
-                        focusNode: focusNodeSearchFeild,
-                        onChanged: (value) {
-                             onChanedAutoTransactionStatus(context);
-                        },
-                        decoration: InputDecoration(
-                          hintText: 'Search transactions',
-                          hintStyle:FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.w400,
-                        fontSize: 14,
-                        color: AppColors.likesharecommentCount,
-                      ),
-                          prefixIcon: const Icon(Icons.search, color: AppColors.accentColor),
-                           suffixIcon: searchController.text.isNotEmpty
-                          ? IconButton(
-                              icon: const Icon(Icons.clear, color: AppColors.accentColor),
-                              onPressed: () {
-                                  clearData(f: true);
-                                // Unfocus the search field
-                              },
-                            )
-                          : null,
-                          filled: true,
-                          fillColor: AppColors.bg5,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30), // Changed to 30 for more circular appearance
-                            borderSide: BorderSide.none,
-                          ),
-                          enabledBorder: OutlineInputBorder( // Added for the enabled state
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(color: AppColors.accentColor, width: 1), // Border color when enabled
-                          ),
-                          focusedBorder: OutlineInputBorder( // Added for the focused state
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(color: AppColors.accentColor, width: 2), // Border color when focused
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15), 
-                        ),
-                        style: const TextStyle(color: AppColors.accentColor),
+                      child: Row(
+                        children: [
+                           getTextFeild(),
+                          TextButton(onPressed: ()
+                          { 
+                             showModalBottomSheet(context: context, builder: (_)=>
+                             Container(
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                color: AppColors.bg5,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
+                              ),
+                              child: filterTransaction(context)
+                              ));
+                          }, 
+                           child: Text("Filter",style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: AppColors.primaryColor),),
+                          )
+                        ],
                       ),
                     ),
                   ),
                   const SizedBox(height: 10),
                   // Transaction History
                  Container(
-                  height: MediaQuery.sizeOf(context).height/1.25,
+                   height: MediaQuery.sizeOf(context).height/1.25,
                    child: SingleChildScrollView(
-                    controller: scrollController,
-                    child: transactionsHistoryList()),
+                     controller: scrollController,
+                     child: Expanded(
+                       child: transactionsHistoryList(),
+                     ),
+                   ),
                  )
                 ],
               ),
@@ -244,6 +228,54 @@ void _onScroll() {
                              showIcon: false,
                               expandedPage: true,
                           ));
+  }
+  
+ Widget getTextFeild() {
+    return Container(
+                            width: MediaQuery.of(context).size.width /1.3,
+                            child: TextField(
+                              controller: searchController,
+                              focusNode: focusNodeSearchFeild,
+                              onChanged: (value) {
+                                   onChanedAutoTransactionStatus(context);
+                              },
+                              decoration: InputDecoration(
+                                hintText: 'Search transactions',
+                                hintStyle:FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w400,
+                              fontSize: 14,
+                              color: AppColors.likesharecommentCount,
+                            ),
+                                prefixIcon: const Icon(Icons.search, color: AppColors.accentColor),
+                                 suffixIcon: searchController.text.isNotEmpty
+                                ? IconButton(
+                                    icon: const Icon(Icons.clear, color: AppColors.accentColor),
+                                    onPressed: () {
+                                        clearData(f: true);
+                                      // Unfocus the search field
+                                    },
+                                  )
+                                : null,
+                                filled: true,
+                                fillColor: AppColors.bg5,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30), // Changed to 30 for more circular appearance
+                                  borderSide: BorderSide.none,
+                                ),
+                                enabledBorder: OutlineInputBorder( // Added for the enabled state
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide(color: AppColors.accentColor, width: 1), // Border color when enabled
+                                ),
+                                focusedBorder: OutlineInputBorder( // Added for the focused state
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide(color: AppColors.accentColor, width: 2), // Border color when focused
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15), 
+                              ),
+                              style: const TextStyle(color: AppColors.accentColor),
+                            ),
+                          );
   }
 
 }
