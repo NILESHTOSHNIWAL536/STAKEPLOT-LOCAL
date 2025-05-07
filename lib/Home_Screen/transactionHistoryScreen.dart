@@ -138,75 +138,81 @@ void _onScroll() {
        
       ),
       
-        body: Container(
-          height: MediaQuery.of(context).size.height/1.1,
-          width: MediaQuery.of(context).size.width/.1,
-          child: SingleChildScrollView(
-          controller: scrollController,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Search Bar
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                   height: MediaQuery.of(context).size.height * 0.06,
-                   decoration: BoxDecoration(
-                  color: AppColors.bg5,
-                  borderRadius: BorderRadius.circular(30),
-                  
-                ),
-                    child: TextField(
-                      controller: searchController,
-                      focusNode: focusNodeSearchFeild,
-                      onChanged: (value) {
-                           onChanedAutoTransactionStatus(context);
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'Search transactions',
-                        hintStyle:FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.w400,
-                      fontSize: 14,
-                      color: AppColors.likesharecommentCount,
-                    ),
-                        prefixIcon: const Icon(Icons.search, color: AppColors.accentColor),
-                         suffixIcon: searchController.text.isNotEmpty
-                        ? IconButton(
-                            icon: const Icon(Icons.clear, color: AppColors.accentColor),
-                            onPressed: () {
-                                clearData(f: true);
-                              // Unfocus the search field
-                            },
-                          )
-                        : null,
-                        filled: true,
-                        fillColor: AppColors.bg5,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30), // Changed to 30 for more circular appearance
-                          borderSide: BorderSide.none,
-                        ),
-                        enabledBorder: OutlineInputBorder( // Added for the enabled state
-                          borderRadius: BorderRadius.circular(30),
-                          borderSide: BorderSide(color: AppColors.accentColor, width: 1), // Border color when enabled
-                        ),
-                        focusedBorder: OutlineInputBorder( // Added for the focused state
-                          borderRadius: BorderRadius.circular(30),
-                          borderSide: BorderSide(color: AppColors.accentColor, width: 2), // Border color when focused
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15), 
+       body: Column(
+          children: [
+            Container(
+             // height: MediaQuery.of(context).size.height/1.1,
+              width: MediaQuery.of(context).size.width/.1,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Search Bar
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                     height: MediaQuery.of(context).size.height * 0.06,
+                     decoration: BoxDecoration(
+                    color: AppColors.bg5,
+                    borderRadius: BorderRadius.circular(30),
+                    
+                  ),
+                      child: TextField(
+                        controller: searchController,
+                        focusNode: focusNodeSearchFeild,
+                        onChanged: (value) {
+                             onChanedAutoTransactionStatus(context);
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Search transactions',
+                          hintStyle:FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: AppColors.likesharecommentCount,
                       ),
-                      style: const TextStyle(color: AppColors.accentColor),
+                          prefixIcon: const Icon(Icons.search, color: AppColors.accentColor),
+                           suffixIcon: searchController.text.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(Icons.clear, color: AppColors.accentColor),
+                              onPressed: () {
+                                  clearData(f: true);
+                                // Unfocus the search field
+                              },
+                            )
+                          : null,
+                          filled: true,
+                          fillColor: AppColors.bg5,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30), // Changed to 30 for more circular appearance
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder( // Added for the enabled state
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(color: AppColors.accentColor, width: 1), // Border color when enabled
+                          ),
+                          focusedBorder: OutlineInputBorder( // Added for the focused state
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(color: AppColors.accentColor, width: 2), // Border color when focused
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15), 
+                        ),
+                        style: const TextStyle(color: AppColors.accentColor),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                // Transaction History
-               transactionsHistoryList()
-              ],
+                  const SizedBox(height: 10),
+                  // Transaction History
+                 Container(
+                  height: MediaQuery.sizeOf(context).height/1.25,
+                   child: SingleChildScrollView(
+                    controller: scrollController,
+                    child: transactionsHistoryList()),
+                 )
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -215,7 +221,8 @@ void _onScroll() {
  void clearData({bool f=false})
  {
                              searchController.clear();
-                             if(f){
+                             if(f)
+                             {
                               currentPage = 1;
                               isLoadingMore.value = false;
                               getAllTransaction(context);
