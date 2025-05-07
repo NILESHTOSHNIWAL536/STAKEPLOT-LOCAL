@@ -225,7 +225,7 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date, int i
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 10),
-                      child: getIconsForHideUpdateSplit(iconSize, padding, category, amount, logo, context, index, subcategory, transaction, isReview, id),
+                      child: getIconsForHideUpdateSplit(iconSize, padding, category, amount, logo, context, index, subcategory, transaction, isReview, id,isManual),
                     ),
                     (isManual || isReview) ? SizedBox(height: 0) : SizedBox(height: padding / 2),
                   ],
@@ -291,7 +291,7 @@ Widget reviewTagTransactions(bool isReview, double scaleFactor, bool isManual, d
   );
 }
 
-Widget getIconsForHideUpdateSplit(double iconSize, double padding, String category, double amount, String logo, BuildContext context, int index, String subcategory, Map<String, dynamic> transaction, bool isReview, String id) {
+Widget getIconsForHideUpdateSplit(double iconSize, double padding, String category, double amount, String logo, BuildContext context, int index, String subcategory, Map<String, dynamic> transaction, bool isReview, String id,bool isManual) {
   // Responsive scaling with MediaQuery
   final screenWidth = MediaQuery.of(context).size.width;
   final scaleFactor = screenWidth / 360; // Base width: 360px
@@ -337,7 +337,7 @@ Widget getIconsForHideUpdateSplit(double iconSize, double padding, String catego
                       return SizedBox.shrink();
                     })(),
                     !isValidUrl(logo)
-                        ? Icon(Icons.account_balance, size: 22, color: AppColors.primaryColor) // Fallback icon
+                        ? !isManual?Icon(Icons.account_balance, size: 22, color: AppColors.primaryColor):SizedBox.shrink()// Fallback icon
                         : Image.network(
                             logo,
                             width: 22,

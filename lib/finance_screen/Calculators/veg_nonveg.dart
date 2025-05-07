@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -218,8 +217,8 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    splitUserAmountFood(context, "3000", addedMembers, "food",
-                        "Veg & Non Veg", friendShares);
+                    splitUserAmountFood(context, "3000", addedMembers,
+                        "foodie split", "Veg & Non Veg", friendShares);
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width / 2.2,
@@ -244,11 +243,14 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                 GestureDetector(
                   onTap: () {
                     friendShares.forEach((key, value) {
-                      sendNotificationsToDevice(
-                        key,
-                        context,
-                        "You need to pay lend To ${userName.value} of ${value!['Total'] ?? "0000"}","/remainder"
-                      );
+                      if (key != currentId.value) {
+                        // added this line for excluding current user in notify
+                        sendNotificationsToDevice(
+                            key,
+                            context,
+                            "${userName.value} has shared the foodie expense of ${value!['Total'] ?? "0000"}",
+                            "/remainder");
+                      }
                     });
                   },
                   child: Container(
@@ -286,125 +288,130 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
     );
   }
 
- Widget vegNonvegdata() {
-  return ListView.builder(
-    shrinkWrap: true, // Takes only the space it needs
-    physics: NeverScrollableScrollPhysics(), // Parent SingleChildScrollView handles scrolling
-    itemCount: addedMembers.length,
-    itemBuilder: (context, index) {
-      var friend = addedMembers[index];
-      String? friendId = friend['id'];
-       bool isCurrentUser = friendId == currentId.value;
+  Widget vegNonvegdata() {
+    return ListView.builder(
+      shrinkWrap: true, // Takes only the space it needs
+      physics:
+          NeverScrollableScrollPhysics(), // Parent SingleChildScrollView handles scrolling
+      itemCount: addedMembers.length,
+      itemBuilder: (context, index) {
+        var friend = addedMembers[index];
+        String? friendId = friend['id'];
+        bool isCurrentUser = friendId == currentId.value;
 
-      return ListTile(
-        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Stack(
-  alignment: Alignment.topRight,
-  children: [
-    AvatarProfileImage(
-      url: friend['avatar'] ?? userAvatar,
-      width: 8,
-      height: 18,
-    ),
-    if (!isCurrentUser)
-     GestureDetector(
-      onTap: () {
-        addedMembers.removeWhere((member) => member['id'] == friendId);
-        addedUser.remove(friendId);
-        selectedOptions.remove(friendId);
-        _calculateShares();
-      },
-      child: Container(
-        padding: EdgeInsets.all(2),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-        ),
-        child: Icon(
-          Icons.close,
-          size: 16,
-          color: Colors.red,
-        ),
-      ),
-    ),
-  ],
-),
-SizedBox(width: 8), // Space between avatar and name
-                Text(
-                  friend['name'] ?? 'Unknown',
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w500,
-                    fontSize: 16,
-                    color: AppColors.bg1,
+        return ListTile(
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Stack(
+                    alignment: Alignment.topRight,
+                    children: [
+                      AvatarProfileImage(
+                        url: friend['avatar'] ?? userAvatar,
+                        width: 8,
+                        height: 18,
+                      ),
+                      if (!isCurrentUser)
+                        GestureDetector(
+                          onTap: () {
+                            addedMembers.removeWhere(
+                                (member) => member['id'] == friendId);
+                            addedUser.remove(friendId);
+                            selectedOptions.remove(friendId);
+                            _calculateShares();
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.close,
+                              size: 16,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Text(
-                  '₹${friendShares[friendId]?['Total']?.toStringAsFixed(2) ?? "0.00"}',
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w500,
-                    fontSize: 16,
-                    color: AppColors.bg3,
+                  SizedBox(width: 8), // Space between avatar and name
+                  Text(
+                    friend['name'] ?? 'Unknown',
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w500,
+                      fontSize: 16,
+                      color: AppColors.bg1,
+                    ),
                   ),
-                ),
-                SizedBox(width: 8), // Space before remove icon
-               
-              ],
-            ),
-          ],
-        ),
-        subtitle: Wrap(
-          children: options.map((option) {
-            bool isSelected = selectedOptions[friendId]?.contains(option) == true;
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: ChoiceChip(
-                label: Text(
-                  option,
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w700,
-                    fontSize: 14,
-                    color: AppColors.primaryColor,
-                  ),
-                ),
-                selected: isSelected,
-                showCheckmark: false,
-                selectedColor: AppColors.button,
-                onSelected: (selected) {
-                  setState(() {
-                    if (friendId != null) {
-                      if (selected) {
-                        selectedOptions.putIfAbsent(friendId, () => []).add(option);
-                      } else {
-                        selectedOptions[friendId]?.remove(option);
-                        if (selectedOptions[friendId]?.isEmpty ?? false) {
-                          selectedOptions.remove(friendId);
-                        }
-                      }
-                      _calculateShares();
-                    }
-                  });
-                },
+                ],
               ),
-            );
-          }).toList(),
-        ),
-      );
-    },
-  );
-}
+              Row(
+                children: [
+                  Text(
+                    '₹${friendShares[friendId]?['Total']?.toStringAsFixed(2) ?? "0.00"}',
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w500,
+                      fontSize: 16,
+                      color: AppColors.bg3,
+                    ),
+                  ),
+                  SizedBox(width: 8), // Space before remove icon
+                ],
+              ),
+            ],
+          ),
+          subtitle: Wrap(
+            children: options.map((option) {
+              bool isSelected =
+                  selectedOptions[friendId]?.contains(option) == true;
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: ChoiceChip(
+                  label: Text(
+                    option,
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w700,
+                      fontSize: 14,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                  selected: isSelected,
+                  showCheckmark: false,
+                  selectedColor: AppColors.button,
+                  onSelected: (selected) {
+                    setState(() {
+                      if (friendId != null) {
+                        if (selected) {
+                          selectedOptions
+                              .putIfAbsent(friendId, () => [])
+                              .add(option);
+                        } else {
+                          selectedOptions[friendId]?.remove(option);
+                          if (selectedOptions[friendId]?.isEmpty ?? false) {
+                            selectedOptions.remove(friendId);
+                          }
+                        }
+                        _calculateShares();
+                      }
+                    });
+                  },
+                ),
+              );
+            }).toList(),
+          ),
+        );
+      },
+    );
+  }
+
   Widget commentedData() {
     List limitedFriends = frdsList.take(4).toList();
 
@@ -523,8 +530,8 @@ SizedBox(width: 8), // Space between avatar and name
     );
   }
 
-  Widget InputDat(
-      String labelText, TextInputType keyboard, TextEditingController textController) {
+  Widget InputDat(String labelText, TextInputType keyboard,
+      TextEditingController textController) {
     return Center(
       child: Container(
         width: MediaQuery.of(context).size.width / 1.1,
@@ -664,8 +671,21 @@ SizedBox(width: 8), // Space between avatar and name
       });
     });
 
+
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
+
+    final requestBody = {
+      "name": name,
+      "subcategory": subCategories,
+      "category:": name,
+      "amount": totalAmount,
+      "paymentStatus": nameList,
+      "image": '',
+      'isVegNonVeg': true,
+    };
+
+  
 
     final response = await http.post(
       Uri.parse('${url}/split'),
@@ -673,15 +693,7 @@ SizedBox(width: 8), // Space between avatar and name
         'Content-Type': 'application/json; charset=UTF-8',
         "Authorization": "$accessToken",
       },
-      body: jsonEncode({
-        "name": name,
-        "subcategory": subCategories,
-        "category:": name,
-        "amount": totalAmount,
-        "paymentStatus": nameList,
-        "image": '',
-        'isVegNonVeg': true,
-      }),
+      body: jsonEncode(requestBody),
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -689,8 +701,17 @@ SizedBox(width: 8), // Space between avatar and name
       splitID.value = body['id']['_id'];
 
       nameList.forEach((e) {
-        sendNotificationsToDevice(e['id'], context,
-            "${userName.value} has sent u a split bill for ${name} Of ${e['amount']}","/chat");
+        for (var e in nameList) {
+          if (e['id'] != currentId.value) {
+            // Log notification details
+           
+            sendNotificationsToDevice(
+                e['id'],
+                context,
+                "${userName.value} has sent you a ${name} Of ${e['amount']}",
+                "/chat");
+          }
+        }
       });
 
       addSocketMessage(nameList, amount.toString(), "Calculation".toString(),
