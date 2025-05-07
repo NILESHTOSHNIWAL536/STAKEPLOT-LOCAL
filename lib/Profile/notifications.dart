@@ -322,6 +322,21 @@ class _NotificationsState extends State<Notifications> {
             "bill",
              e['from_to'] as String? ?? "",notifyId.toString());
 
+
+      case "deleteAccountSplit":
+        return _buildMessageCard(
+            "${e['from_name'] ?? 'This user'} has deleted their account, but some split amounts are still pending.",
+            e['bill_id'] as String? ?? "",
+            e['from_name'] as String? ?? "",
+            time);
+
+      case "deleteAccountLend":
+        return _buildMessageCard(
+            "${e['from_name'] ?? 'This user'} has deleted their account, but some lend amounts are still pending.",
+            e['bill_id'] as String? ?? "",
+            e['from_name'] as String? ?? "",
+            time);
+
       case "splitApprovalRequest":
         return _buildApprovalCard(
             "${e['from_name'] ?? 'Someone'} has requested approval for settling ${e['name'] ?? 'unknown'} with an amount of ${e['amount'] ?? '00'}",
@@ -330,6 +345,7 @@ class _NotificationsState extends State<Notifications> {
             time,
             "split",
             e['from_to'] as String? ?? "",notifyId.toString());
+
       case "clearLend":
       case "clearSplit":
         String ty = type == "clearLend" ? "lend" : "split";

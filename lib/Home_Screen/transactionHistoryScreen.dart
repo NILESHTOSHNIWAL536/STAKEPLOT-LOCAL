@@ -54,82 +54,87 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
       },
       child: Scaffold(
         backgroundColor: AppColors.backgroundColor,
-        appBar: AppBar(
-          // Flat design for a modern look
-          title: Text(
-            'History',
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.w600, // Slightly bolder for emphasis
-              fontSize: 18, // Slightly larger for better readability
-              color: AppColors.accentColor,
-            ),
-          ),
-          // Center the title for symmetry
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios, // More refined back icon
-              color: AppColors.accentColor,
-              size: 24, // Slightly smaller for balance
-            ),
-            onPressed: () {
-              clearData();
-              Navigator.pop(context);
-            },
-            splashRadius: 20, // Smaller splash radius for a subtle effect
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 16.0), // Proper spacing
-              child: InkWell(
-                onTap: () {
-                  showModalForPdfDownload(context);
-                },
-                splashColor: AppColors.accentColor
-                    .withOpacity(0.2), // Subtle splash effect
-                borderRadius:
-                    BorderRadius.circular(12), // Rounded ripple effect
-                child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      color: Colors.grey
-                          .withOpacity(0.1), // Added filled color grey
-                      borderRadius:
-                          BorderRadius.circular(16), // Added rounded borders
-                    ), // Comfortable tap area// Comfortable tap area
-
-                    child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      Icon(
-                        Icons
-                            .download_for_offline, // Modern, appealing download icon
-                        size: 15, // Slightly smaller to balance with text
-                        color: AppColors.accentColor,
-                      ),
-                      const SizedBox(width: 2), // Spacing between icon and text
-                      Text(
-                        'My Statement',
-                        style: FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.w600, // Semi-bold for readability
-                          fontSize: 10, // Compact to fit AppBar
-                          color: AppColors.accentColor,
-                        ),
-                      ),
-                    ])),
-              ),
-            ),
-          ],
+       appBar: AppBar(
+       // Flat design for a modern look
+        title: Text(
+      'History',
+      style: FontManager().getTextStyle(
+        context,
+        lWeight: FontWeight.w600, // Slightly bolder for emphasis
+        fontSize: 18, // Slightly larger for better readability
+        color: AppColors.accentColor,
+      ),
         ),
-        body: Column(
-          children: [
-            // Fixed Search Bar
-            Container(
-              color: AppColors.backgroundColor, // Match Scaffold background
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                height: MediaQuery.of(context).size.height * 0.06,
-                decoration: BoxDecoration(
+         // Center the title for symmetry
+        leading: IconButton(
+      icon: Icon(
+        Icons.arrow_back_ios, // More refined back icon
+        color: AppColors.accentColor,
+        size: 24, // Slightly smaller for balance
+      ),
+      onPressed: (){
+       clearData();
+        Navigator.pop(context);
+      },
+      splashRadius: 20, // Smaller splash radius for a subtle effect
+        ),
+        actions: [
+      Padding(
+        padding: const EdgeInsets.only(right: 16.0), // Proper spacing
+        child: InkWell(
+          onTap: () {
+            showModalForPdfDownload(context);
+          },
+          splashColor: AppColors.accentColor.withOpacity(0.2), // Subtle splash effect
+          borderRadius: BorderRadius.circular(12), // Rounded ripple effect
+          child: Container(
+            padding: const EdgeInsets.all(8.0), 
+                     decoration: BoxDecoration(
+              color: Colors.grey.withOpacity(0.1), // Added filled color grey
+              borderRadius: BorderRadius.circular(16), // Added rounded borders
+            ), // Comfortable tap area// Comfortable tap area
+          
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.download_for_offline, // Modern, appealing download icon
+                  size: 15, // Slightly smaller to balance with text
+                  color: AppColors.accentColor,
+                ),
+                const SizedBox(width: 2), // Spacing between icon and text
+                Text(
+                  'My Statement',
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w600, // Semi-bold for readability
+                    fontSize: 10, // Compact to fit AppBar
+                    color: AppColors.accentColor,
+                  ),
+                ),
+              ])
+          ),
+        ),
+      ),
+        ],
+       
+      ),
+      
+        body: Container(
+          height: MediaQuery.of(context).size.height/1.1,
+          width: MediaQuery.of(context).size.width/.1,
+          child: SingleChildScrollView(
+          controller: scrollController,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Search Bar
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                   height: MediaQuery.of(context).size.height * 0.06,
+                   decoration: BoxDecoration(
                   color: AppColors.bg5,
                   borderRadius: BorderRadius.circular(30),
                 ),
@@ -154,7 +159,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                             icon: const Icon(Icons.clear,
                                 color: AppColors.accentColor),
                             onPressed: () {
-                              clearData();
+                                clearData();
+                              // Unfocus the search field
                             },
                           )
                         : null,
@@ -194,15 +200,17 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
           ],
         ),
       ),
+        ),
+      )
     );
   }
 
-  void clearData() {
-    searchController.clear();
-    currentPage = 1;
-    isLoadingMore.value = false;
-    getAllTransaction(context);
-  }
+ void clearData(){
+                            searchController.clear();
+                             currentPage = 1;
+                             isLoadingMore.value = false;
+                             getAllTransaction(context);
+ }
 
   Widget transactionsHistoryList() {
     return Obx(() => loadChatdataOnChnage.value
