@@ -38,13 +38,11 @@ List<double> trasactionsDataMonthlyDebit = [];
 List<double> trasactionsDataCustomCredit = [];
 List<double> trasactionsDataCustomDebit = [];
 List<String> trasactionsDataCustomLabel = [];
-
 RxBool flagTrasaction = false.obs;
 RxBool isFromEditDeatils = false.obs;
 RxString range = ''.obs;
 List<double> trasactionsDataCreditWeekly = [];
 List<double> trasactionsDataDebitWeekly = [];
-
 RxList trasactionsDataWeekly = [].obs;
 RxList friendRequestList = [].obs;
 RxList messages = [].obs;
@@ -104,7 +102,8 @@ RxString accountIdPdf = "".obs;
 RxString allOrGroupTransactionsName = "All".obs;
 RxList totalInSights = [].obs;
 RxBool getTotalInsightsHistory = false.obs;
-
+RxList foodieFundsDetailsRemainders = [].obs;
+RxBool getFoodieFundsUsers = false.obs;
 List<String> month = [
   "",
   "January",

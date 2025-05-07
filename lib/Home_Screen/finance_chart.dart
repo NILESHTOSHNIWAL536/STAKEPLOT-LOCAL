@@ -791,7 +791,7 @@ void _scrollToCurrentDate() {
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              '₹${formatNumberString(value.toStringAsFixed(0))}',
+              '₹${formatNumberString(value.toStringAsFixed(1))}',
               style: FontManager().getTextStyle(
                 context,
                 lWeight: FontWeight.normal,

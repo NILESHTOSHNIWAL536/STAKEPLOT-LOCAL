@@ -24,35 +24,42 @@ void approveBill(context, id, type, notifyId) async {
 Future<void> getRemainders(context) async {
   String urlPath = "${url}/reminders";
   var responce = await getDataApiCall(urlPath);
-
- 
-
+  //print("Response: ${responce.body}"); // Log the response body
   if (getFlagOfResponse(responce)) {
     var his = jsonDecode(responce.body);
-
-   
-
     var userDue = his['data']['payables'] ?? [];
     var userDue2 = his['data']['owed'] ?? [];
-
+    // print("User Due: $userDue"); // Log userDue
+    // print("User Due2: $userDue2"); // Log userDue2
     dueAmountRemainders.clear();
     lendAmountRemainders.clear();
-
     dueAmountRemainders.addAll(userDue); //payables
     lendAmountRemainders.addAll(userDue2); //owed
-
-   
-
-    // Ensure observables notify listeners
     dueAmountRemainders.refresh();
     lendAmountRemainders.refresh();
-
     getdueUsers.value = !getdueUsers.value;
-  } else {
-   
-  }
+  } else {}
 }
 
+Future<void> getFoodieFundsDetails(BuildContext context, String id) async {
+  String urlPath = "${url}/reminders/get-foodie-funds-details/$id";
+  var response = await getDataApiCall(urlPath);
+  print("Response: ${response.body}"); // Log the response body
+  if (getFlagOfResponse(response)) {
+    var his = jsonDecode(response.body);
+    var data = his['data'] ?? {};
+
+    foodieFundsDetailsRemainders.clear();
+
+    // Add the entire data object as a single item (or adjust to extract friends + currentUser)
+    foodieFundsDetailsRemainders.add(data);
+
+    foodieFundsDetailsRemainders.refresh();
+    getFoodieFundsUsers.value = !getFoodieFundsUsers.value;
+  } else {
+    snackBarCalled(context, 'Failed to fetch foodie funds details.');
+  }
+}
 void getNotifications(context) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
