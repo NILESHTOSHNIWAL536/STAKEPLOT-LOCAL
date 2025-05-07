@@ -280,18 +280,32 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
               // Show confirmation dialog before deletion
               bool? confirm = await showDialog(
                 context: context,
+              
                 builder: (context) => AlertDialog(
-                  title: Text('Delete Budget'),
-                  content: Text('Are you sure you want to delete this budget?'),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  title: _buildText('Delete Budget', AppColors.bg1,
+                      fontSize: 18, fontWeight: FontWeight.bold),
+                  content: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: _buildText(
+                      'Are you sure you want to delete this budget?',
+                      AppColors.bg1,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(false),
-                      child: Text('Cancel'),
+                      child: _buildText('Cancel', AppColors.bg1,
+                          fontSize: 14, fontWeight: FontWeight.w400),
                     ),
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(true),
-                      child:
-                          Text('Delete', style: TextStyle(color: Colors.red)),
+                      child: _buildText('Delete', AppColors.bg1,
+                          fontSize: 14, fontWeight: FontWeight.w400),
                     ),
                   ],
                 ),
@@ -533,8 +547,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
         graph(),
       ],
     );
-  }
-}
+  }}
 
 class LineChartSample extends StatelessWidget {
   final List<_ChartData> budgetData;
