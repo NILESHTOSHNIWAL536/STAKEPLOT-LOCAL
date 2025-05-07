@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
@@ -76,7 +77,7 @@ void _onScroll() {
         size: 24, // Slightly smaller for balance
       ),
       onPressed: (){
-       clearData();
+        clearData();
         Navigator.pop(context);
       },
       splashRadius: 20, // Smaller splash radius for a subtle effect
@@ -85,8 +86,18 @@ void _onScroll() {
       Padding(
         padding: const EdgeInsets.only(right: 16.0), // Proper spacing
         child: InkWell(
-          onTap: () {
-            showModalForPdfDownload(context);
+          onTap: ()
+          {
+              int len=bankAccountLinkedList.length;
+            if(len==0){
+                 snackBarCalled(context, "No Bank Account Linked Please link your bank account to download the statement.");
+            }
+            else if(len==1){
+             showModalForPdfDownload(context);
+            }else{
+               accountIdPdf.value=bankAccountLinkedList[0]['accountId'];
+               showModalForPdfDownloadBankUiCheckBox(context);
+            }
           },
           splashColor: AppColors.accentColor.withOpacity(0.2), // Subtle splash effect
           borderRadius: BorderRadius.circular(12), // Rounded ripple effect

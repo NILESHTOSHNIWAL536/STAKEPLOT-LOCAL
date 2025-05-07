@@ -159,21 +159,7 @@ Widget buildEmptyState(String title, String subtitle) {
           // Subtitle
          
           // Optional: Subtle decorative container
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.primaryColor.withOpacity(0.2)),
-            ),
-            child: Text(
-              'Check back later!',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: AppColors.primaryColor,
-              ),
-            ),
-          ),
+          
         ],
       ),
     );

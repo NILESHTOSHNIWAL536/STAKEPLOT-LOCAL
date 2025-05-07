@@ -390,7 +390,8 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                         );
                         Navigator.pop(
                             context); // Pop after processing when flag is true
-                      } else {
+                      } 
+                      else {
                         Navigator.pop(context); // Just pop when flag is false
                       }
                     },

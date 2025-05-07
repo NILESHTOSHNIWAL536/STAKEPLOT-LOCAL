@@ -6,16 +6,54 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/manual_transactio
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
-
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
-
 import 'package:intl/intl.dart';
-
-class DebtDetailsScreen extends StatelessWidget {
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart'; // Ensure DebtService is imported
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_service.dart';
+class DebtDetailsScreen extends StatefulWidget {
   final Debt debt;
 
   DebtDetailsScreen({required this.debt});
 
+  @override
+  _DebtDetailsScreenState createState() => _DebtDetailsScreenState();
+}
+
+class _DebtDetailsScreenState extends State<DebtDetailsScreen> {
+  bool _isDeleting = false;
+
+   Future<void> deleteDebt() async {
+    setState(() {
+      _isDeleting = true;
+    });
+
+    if (widget.debt.id.isEmpty) {
+     
+      setState(() {
+        _isDeleting = false;
+      });
+      return;
+    }
+
+    final bool success = await DebtService.deleteDebt(widget.debt.id);
+
+    if (success) {
+     
+      await Future.delayed(Duration(seconds: 2));
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    } else {
+     
+    }
+
+    if (mounted) {
+      setState(() {
+        _isDeleting = false;
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     double labelWidth = 100; // Set a fixed width for labels
@@ -24,7 +62,46 @@ class DebtDetailsScreen extends StatelessWidget {
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         backgroundColor: AppColors.backgroundColor,
-        title: Text(debt.name),
+        title: Text(widget.debt.name),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        actions: [
+          IconButton(
+            icon: _isDeleting
+                ? CircularProgressIndicator(color: Colors.red, strokeWidth: 2)
+                : Icon(Icons.delete, color: Colors.red),
+            onPressed: _isDeleting
+                ? null
+                : () async {
+                    bool? confirm = await showDialog<bool>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text('Delete Debt'),
+                        content: Text('Are you sure you want to delete this debt?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(false);
+                            },
+                            child: Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(true);
+                            },
+                            child: Text('Delete', style: TextStyle(color: Colors.red)),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (confirm == true && mounted) {
+                      await deleteDebt(); // Pass parent context
+                    }
+                  },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -53,28 +130,27 @@ class DebtDetailsScreen extends StatelessWidget {
                             ),
                             textStyle(
                               context: context,
-                              text: " ${debt.name} ",
+                              text: " ${widget.debt.name} ",
                               fontsize: 16,
                               fontWeight: FontWeight.normal,
                             ),
                           ],
                         ),
-                        
                       ],
                     ),
                     Container(
                       padding: EdgeInsets.all(12),
                       child: Column(
                         children: [
-                          rowItem("Loan type", debt.type, labelWidth, context),
-                          SizedBox(height: Colorcodes.paddingSize/3,),
-                          rowItem("Amount", "₹${debt.amount.toStringAsFixed(2)}", labelWidth, context),
-                          SizedBox(height: Colorcodes.paddingSize/3,),
-                          rowItem("Interest", "${debt.interest.toString()}", labelWidth, context),
-                          SizedBox(height: Colorcodes.paddingSize/3,),
-                          rowItem("Duration", "${debt.durationMonths.toString()} months", labelWidth, context),
-                          SizedBox(height: Colorcodes.paddingSize/3,),
-                          rowItem("Date", formattedDate(debt.date.toString()), labelWidth, context),
+                          rowItem("Loan type", widget.debt.type, labelWidth, context),
+                          SizedBox(height: Colorcodes.paddingSize / 3),
+                          rowItem("Amount", "₹${widget.debt.amount.toStringAsFixed(2)}", labelWidth, context),
+                          SizedBox(height: Colorcodes.paddingSize / 3),
+                          rowItem("Interest", "${widget.debt.interest.toString()}", labelWidth, context),
+                          SizedBox(height: Colorcodes.paddingSize / 3),
+                          rowItem("Duration", "${widget.debt.durationMonths.toString()} months", labelWidth, context),
+                          SizedBox(height: Colorcodes.paddingSize / 3),
+                          rowItem("Date", formattedDate(widget.debt.date.toString()), labelWidth, context),
                         ],
                       ),
                     ),

@@ -1,3 +1,4 @@
+
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_transactions.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history.dart';
@@ -91,20 +92,12 @@ class _TransactionHistoryState extends State<TransactionHistory>
     _stableContext ??= context;
   }
 
-  // @override
-  // void dispose() {
-  //   _scrollController2.dispose();
-
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
         child: Column(
           children: [
-           
             (widget.showIcon ?? false)
                 ? SizedBox(
                     height: 15,
@@ -115,14 +108,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
                             StringConstant.allTransactions
                         ? getTabsForTransactions()
                         : getTabsForTransactions()),
-
-            //  getlist()
-            // Obx(() => reloadHistory.value ? getlist() : getlist())
-            // (widget.showIcon ?? false)? Obx(() => reloadHistory.value ? getlist() : getlist()):
-            //        Obx(() => allOrGroupTransactionsName.value ==
-            //             StringConstant.allTransactions
-            //         ? Obx(() => reloadHistory.value ? getlist() : getlist())
-            //         : GroupTransactions()),
             Obx(() {
               if (widget.showIcon ?? false) {
                 return reloadHistory.value ? getlist() : getlist();
@@ -138,6 +123,55 @@ class _TransactionHistoryState extends State<TransactionHistory>
       ),
     );
   }
+// Widget build(BuildContext context) {
+//     // Get screen dimensions
+//     final double screenHeight = MediaQuery.of(context).size.height;
+//     final double screenWidth = MediaQuery.of(context).size.width;
+//     final double systemPaddingTop = MediaQuery.of(context).padding.top;
+
+//     // Heights for layout components
+//     const double tabsHeight = 48.0; // Fixed height for tabs (adjust as needed)
+//     const double tabsPadding = 32.0; // 16 top + 16 bottom padding in getTabsForTransactions
+//     const double listTopPadding = 10.0; // Padding above transaction list
+
+//     // Calculate available height for scrollable area
+//     // Note: AppBar and search bar heights are handled by TransactionHistoryScreen
+//     final double scrollableHeight = screenHeight - systemPaddingTop - tabsHeight - tabsPadding - listTopPadding;
+
+//     return Column(
+//       children: [
+//         // Fixed Tabs Header
+//         Container(
+//           width: screenWidth,
+//           color: AppColors.backgroundColor,
+//           child: (widget.showIcon ?? false)
+//               ? SizedBox(height: tabsHeight) // Placeholder if showIcon is true
+//               : Obx(() => redioButton.isNotEmpty
+//                   ? getTagHideButtons()
+//                   : allOrGroupTransactionsName.value == StringConstant.allTransactions
+//                       ? getTabsForTransactions()
+//                       : getTabsForTransactions()),
+//         ),
+//         // Scrollable Transaction List
+//         Container(
+//           width: screenWidth,
+//           height: scrollableHeight,
+//           child: SingleChildScrollView(
+//             controller: _scrollController2,
+//             child: Obx(() {
+//               if (widget.showIcon ?? false) {
+//                 return reloadHistory.value ? getlist() : getlist();
+//               } else {
+//                 return allOrGroupTransactionsName.value == StringConstant.allTransactions
+//                     ? (reloadHistory.value ? getlist() : getlist())
+//                     : GroupTransactions();
+//               }
+//             }),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
 
   Widget getTagHideButtons() {
     return Padding(
@@ -393,47 +427,7 @@ Widget tabItem(String text) {
       },
     );
   }
-  // Widget getlist() {
-  //   return ListView.builder(
-  //     itemCount: transactionsHistory.length + 1,
-  //     shrinkWrap: true,
-  //     controller: _scrollController2,
-  //     physics: const NeverScrollableScrollPhysics(),
-  //     itemBuilder: (context, index) {
-  //       if (index < transactionsHistory.length) {
-  //         final transaction = transactionsHistory[index];
-
-  //         double amount = double.parse(
-  //             doubleToFixed((transaction['amount'] ?? 0.0).toString()));
-  //         String category = transaction['category']?.toString() ??
-  //             'Uncategorized'; // Fixed typo and added null check
-  //         String subcategory =
-  //             transaction['subcategory']?.toString() ?? 'General';
-
-  //         return Container(
-  //               decoration: getBoxDecoration(index),
-  //               child: historyTransactions(
-  //                   transaction,
-  //                   transaction['transactionTimestamp']?.toString(),
-  //                   index), // Ensure this is a String or null),
-
-  //         );
-  //       } else {
-  //         return isLoadingMore.value
-  //             ? Padding(
-  //                 padding: const EdgeInsets.symmetric(vertical: 20),
-  //                 child: const Center(
-  //                   child: CircularProgressIndicator(
-  //                     color: AppColors.primaryColor,
-  //                   ),
-  //                 ),
-  //               )
-  //             : const SizedBox.shrink();
-  //       }
-  //     },
-  //   );
-  // }
-
+  
   void extractTransaction(bool isYearView, List obj) {
     // print("------------------------ extra called...");
     // print(isYearView);
@@ -516,7 +510,7 @@ Widget tabItem(String text) {
               getListItemListTile("30", "days", context),
               getListItemListTile("60", "days", context),
               getListItemListTile("6", "months", context),
-              getListItemListTile("1", "year", context),
+             
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: InkWell(

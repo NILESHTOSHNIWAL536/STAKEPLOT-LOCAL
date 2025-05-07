@@ -22,12 +22,16 @@ RxBool showCheckBox = false.obs; // Initialize as false to avoid showing checkbo
 
 Widget historyTransactions(Map<String, dynamic> transaction, String? date, int index, BuildContext context, [bool hideReview = false]) {
   String logo = transaction['bankLogo']?.toString() ?? "";
+ 
   final category = transaction['category']?.toString() ?? 'Uncategorized';
   final subcategory = transaction['subcategory']?.toString() ?? 'General';
   final double amount = double.parse(doubleToFixed((transaction['amount'] ?? 0.0).toString()));
   final isManual = transaction['manualTransaction'] ?? false;
   final formattedDate = date != null
-      ? formatWhatsAppDate4(convertStringToDateTime(date))
+      ? formatWhatsAppDate3(convertStringToDateTime(date))
+      : 'Date';
+  final formattedDateManual = date != null
+      ? formatWhatsAppDate(convertStringToDateTime(date))
       : 'Date';
   final type = transaction['type']?.toString() ?? '0';
   final narration = transaction['narration'] ?? 'Unnamed Group';
@@ -208,7 +212,7 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date, int i
                                 ),
                                 textStyle(
                                   context: context,
-                                 text: formattedDate,
+                                 text: isManual?formattedDateManual:formattedDate,
                                           c: AppColors.primaryColor.withOpacity(0.7),
                                           fontsize: fontSizeSmall,
                                           fontWeight: FontWeight.w400,
@@ -294,7 +298,9 @@ Widget getIconsForHideUpdateSplit(double iconSize, double padding, String catego
   final fontSizeMedium = 12.0 * scaleFactor;
   final fontSizeSmall = 10.0 * scaleFactor;
   final badgeSize = 20.0 * scaleFactor;
-
+ bool isValidUrl(String? url) {
+    return url != null && url.isNotEmpty && Uri.tryParse(url)?.hasAbsolutePath == true;
+  }
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: padding, vertical: padding / 2),
     child: Row(
@@ -317,19 +323,34 @@ Widget getIconsForHideUpdateSplit(double iconSize, double padding, String catego
         isReview
             ? getTagButton(transaction, index, category, context, id)
             : Container(
+              
                
               child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     // Hide Transaction
                     SizedBox(width: 8 * scaleFactor),
-                    logo == ""
-                        ? SizedBox.shrink()
+                      (() {
+                      print('Is review ???: $isReview');
+                      print('Logo URL: $logo');
+                      print('Transaction Data: $transaction'); // Log full transaction
+                      return SizedBox.shrink();
+                    })(),
+                    !isValidUrl(logo)
+                        ? Icon(Icons.account_balance, size: 22, color: AppColors.primaryColor) // Fallback icon
                         : Image.network(
                             logo,
                             width: 22,
                             height: 22,
                             fit: BoxFit.fitWidth,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return CircularProgressIndicator(strokeWidth: 2); // Loading indicator
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              print('Error loading logo for URL $logo: $error');
+                              return Icon(Icons.error, size: 22); // Fallback for failed image load
+                            },
                           ),
                     SizedBox(width: 8 * scaleFactor),
                     Tooltip(

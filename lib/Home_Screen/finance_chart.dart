@@ -372,27 +372,54 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     }
   }
 
-  void _scrollToCurrentDate() {
+  // void _scrollToCurrentDate() {
+  //   if (_scrollController?.hasClients == true) {
+  //     int currentIndex = getCurrentDateIndex(widget.days.cast<String>());
+  //     double labelWidth = widget.selectedButton.value == 'Week' ? 50.0 : 60.0;
+  //     double scrollOffset = (currentIndex - 4) * labelWidth;
+
+  //     double maxScrollExtent = 0;
+  //     if (_scrollController != null && _scrollController!.hasClients) {
+  //       maxScrollExtent = _scrollController!.position.maxScrollExtent;
+  //     }
+
+  //     if (scrollOffset > maxScrollExtent) {
+  //       scrollOffset = maxScrollExtent;
+  //     } else if (scrollOffset < 0) {
+  //       scrollOffset = 0;
+  //     }
+
+  //     _scrollController!.jumpTo(scrollOffset);
+  //   }
+  // }
+void _scrollToCurrentDate() {
     if (_scrollController?.hasClients == true) {
-      int currentIndex = getCurrentDateIndex(widget.days.cast<String>());
-      double labelWidth = widget.selectedButton.value == 'Week' ? 50.0 : 60.0;
-      double scrollOffset = (currentIndex - 4) * labelWidth;
+        // Find the last index with data
+        int lastIndex = widget.chartData["credited"]!.length - 1;
+        while (lastIndex >= 0 && (widget.chartData["credited"]![lastIndex] == 0 && widget.chartData["debited"]![lastIndex] == 0)) {
+            lastIndex--;
+        }
 
-      double maxScrollExtent = 0;
-      if (_scrollController != null && _scrollController!.hasClients) {
-        maxScrollExtent = _scrollController!.position.maxScrollExtent;
-      }
+        // If there's no data, do not scroll
+        if (lastIndex < 0) return;
 
-      if (scrollOffset > maxScrollExtent) {
-        scrollOffset = maxScrollExtent;
-      } else if (scrollOffset < 0) {
-        scrollOffset = 0;
-      }
+        double labelWidth = widget.selectedButton.value == 'Week' ? 40.0 : 50.0;
+        double scrollOffset = (lastIndex - 4) * labelWidth;
 
-      _scrollController!.jumpTo(scrollOffset);
+        double maxScrollExtent = 0;
+        if (_scrollController != null && _scrollController!.hasClients) {
+            maxScrollExtent = _scrollController!.position.maxScrollExtent;
+        }
+
+        if (scrollOffset > maxScrollExtent) {
+            scrollOffset = maxScrollExtent;
+        } else if (scrollOffset < 0) {
+            scrollOffset = 0;
+        }
+
+        _scrollController!.jumpTo(scrollOffset);
     }
-  }
-
+}
   @override
   void dispose() {
     _scrollController?.dispose();
@@ -584,7 +611,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       return ChartData(labels[index], value);
     });
 
-    double labelWidth = widget.selectedButton.value == 'Week' ? 50.0 : 60.0;
+    double labelWidth = widget.selectedButton.value == 'Week' ? 40.0 : 50.0;
     double chartWidth = dataLength * labelWidth;
 
     return Container(
@@ -594,7 +621,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       height: MediaQuery.of(context).size.height / 2.6,
       child:  Transform.translate(
         offset: widget.selectedButton.value == 'Week'? Offset(-5, 0)
-            : widget.selectedButton.value == 'Month'? Offset(-35, 0): Offset(-25, 0),
+            : widget.selectedButton.value == 'Month'? Offset(-28, 0): Offset(-25, 0),
         child: SfCartesianChart(
           borderWidth: 0,
           plotAreaBorderWidth: 0,

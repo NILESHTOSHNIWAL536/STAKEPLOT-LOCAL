@@ -118,6 +118,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
             Navigator.pop(
               context,
               Debt(
+                id: response['data']['_id']?.toString() ?? '',
                 name: _name,
                 type: _loanType,
                 amount: _amount,
@@ -283,6 +284,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
 }
 
 class Debt {
+  final String id; 
   final String type;
   final double amount;
   final DateTime date;
@@ -291,6 +293,7 @@ class Debt {
   final int durationMonths;
 
   Debt({
+     required this.id,
     required this.type,
     required this.amount,
     required this.date,
@@ -300,6 +303,7 @@ class Debt {
   });
   factory Debt.fromJson(Map<String, dynamic> json) {
     return Debt(
+       id: json['_id']?.toString() ?? '',
       name: json['name'],
       type: json['type'],
       amount: (json['principalAmount'] as num).toDouble(),
@@ -311,7 +315,7 @@ class Debt {
 
   @override
   String toString() {
-    return 'Debt(name: $name, principal: $amount)';
+    return 'Debt(id: $id,name: $name, principal: $amount)';
   }
 }
 

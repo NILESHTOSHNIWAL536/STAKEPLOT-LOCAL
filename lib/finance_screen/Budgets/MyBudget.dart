@@ -34,6 +34,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
   List<String>? insightsData;
   List<Map<String, dynamic>> categoryWiseSpendings = [];
   List<Map<String, dynamic>> graphData = [];
+  bool _isDeleting = false;
   @override
   void initState() {
     super.initState();
@@ -41,6 +42,44 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     fetchBudgetData();
     fetchBudgetInsights();
     // getInsights(context);
+  }
+
+  Future<void> deleteBudget() async {
+    setState(() {
+      _isDeleting = true;
+    });
+
+    final String budgetId =
+        widget.data['_id']?.toString() ?? '679b6ea12af555d641c5da61';
+    final String apiUrl = '$url/budget/$budgetId';
+   
+
+    try {
+      var response = await deleteDataApiCall(apiUrl);
+     
+
+      if (response.statusCode == 200) {
+       
+        // Use parentContext to show SnackBar
+       
+        // Wait for SnackBar to disappear
+        await Future.delayed(Duration(seconds: 2));
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
+      } else {
+       
+      }
+    } catch (e, stackTrace) {
+      
+     
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isDeleting = false;
+        });
+      }
+    }
   }
 
   Future<void> fetchBudgetInsights() async {
@@ -234,6 +273,36 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
         title: _buildText('My Budget', Colors.black,
             fontSize: 18, fontWeight: FontWeight.bold),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.delete, color: Colors.red),
+            onPressed: () async {
+              // Show confirmation dialog before deletion
+              bool? confirm = await showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('Delete Budget'),
+                  content: Text('Are you sure you want to delete this budget?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      child:
+                          Text('Delete', style: TextStyle(color: Colors.red)),
+                    ),
+                  ],
+                ),
+              );
+              if (confirm == true && mounted) {
+                print('Calling deleteBudget');
+                await deleteBudget();
+              }
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -327,7 +396,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
           SizedBox(height: 8),
           _buildRow2(
             'Over spent',
-            '₹ ${(totalSpent - (widget.data['amount'] as num)).clamp(0, double.infinity)}',
+            '₹ ${((totalSpent - (widget.data['amount'] as num)).clamp(0, double.infinity)).toStringAsFixed(2)}',
             Colors.red,
           ),
         ],
