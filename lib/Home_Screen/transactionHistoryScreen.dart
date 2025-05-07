@@ -176,7 +176,7 @@ void _onScroll() {
                         ? IconButton(
                             icon: const Icon(Icons.clear, color: AppColors.accentColor),
                             onPressed: () {
-                                clearData();
+                                clearData(f: true);
                               // Unfocus the search field
                             },
                           )
@@ -212,12 +212,14 @@ void _onScroll() {
     );
   }
 
- void clearData()
+ void clearData({bool f=false})
  {
                              searchController.clear();
-                            //  currentPage = 1;
-                            //  isLoadingMore.value = false;
-                            //  getAllTransaction(context);
+                             if(f){
+                              currentPage = 1;
+                              isLoadingMore.value = false;
+                              getAllTransaction(context);
+                             }
  }
 
   Widget  transactionsHistoryList() {
