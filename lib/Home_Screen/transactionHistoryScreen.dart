@@ -92,10 +92,13 @@ void _onScroll() {
             if(len==0){
                  snackBarCalled(context, "No Bank Account Linked Please link your bank account to download the statement.");
             }
-            else if(len==1){
+            else if(len==1)
+            {
                accountIdPdf.value=bankAccountLinkedList[0]['accountId'];
                showModalForPdfDownload(context);
-            }else{
+            }
+            else
+            {
                accountIdPdf.value=bankAccountLinkedList[0]['accountId'];
                showModalForPdfDownloadBankUiCheckBox(context);
             }
