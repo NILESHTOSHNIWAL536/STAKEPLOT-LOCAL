@@ -18,7 +18,7 @@ RxInt startIndex = 0.obs;
 void getPdf(BuildContext context, RxString selectedValue,
     RxString selectedValueType) async {
   var response = await getDataApiCall(
-      "${url}/transactionauto/get-previous-transactions/${getPreviousDate(int.parse(selectedValue.value), selectedValueType.value)}");
+      "${url}/transactionauto/get-previous-transactions/${getPreviousDate(int.parse(selectedValue.value), selectedValueType.value)}/${accountIdPdf.value}",);
 
   if (getFlagOfResponse(response)) {
     var obj = jsonDecode(response.body);

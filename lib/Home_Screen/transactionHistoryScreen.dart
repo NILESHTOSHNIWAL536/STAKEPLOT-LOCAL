@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
@@ -12,41 +13,44 @@ import 'package:get/get.dart';
 final TextEditingController searchController = TextEditingController();
 FocusNode focusNodeSearchFeild = FocusNode();
 
+
 class TransactionHistoryScreen extends StatefulWidget {
   const TransactionHistoryScreen({super.key});
 
   @override
-  State<TransactionHistoryScreen> createState() =>
-      _TransactionHistoryScreenState();
+  State<TransactionHistoryScreen> createState() => _TransactionHistoryScreenState();
 }
 
 class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
-  final RxList<Map<String, dynamic>> filteredTransactions =
-      RxList<Map<String, dynamic>>([]);
-  final ScrollController scrollController = ScrollController();
+  final RxList<Map<String, dynamic>> filteredTransactions = RxList<Map<String, dynamic>>([]);
+    final ScrollController scrollController = ScrollController();
+
 
   @override
   void initState() {
     super.initState();
     // Initialize filtered transactions with all transactions
     scrollController.addListener(_onScroll);
+
   }
 
-  void _onScroll() {
-    scrollController.addListener(() async {
+void _onScroll() {
+    scrollController.addListener(() async{
       // print("scrollController");
       // print("Scroll position: ${scrollController.position.pixels}");
       // print("Max scroll extent: ${scrollController.position.maxScrollExtent}");
-      if (scrollController.position.pixels >=
-          scrollController.position.maxScrollExtent - 100) {
-        getAllTransactionHistory(context, false, false);
-      }
+          if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 100)
+          {
+               getAllTransactionHistory(context, false, false);
+          }
     });
+  
   }
+
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
+    return  WillPopScope(
       onWillPop: () async {
         clearData();
         Navigator.pop(context);
@@ -73,7 +77,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
         size: 24, // Slightly smaller for balance
       ),
       onPressed: (){
-       clearData();
+        clearData();
         Navigator.pop(context);
       },
       splashRadius: 20, // Smaller splash radius for a subtle effect
@@ -82,8 +86,18 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
       Padding(
         padding: const EdgeInsets.only(right: 16.0), // Proper spacing
         child: InkWell(
-          onTap: () {
-            showModalForPdfDownload(context);
+          onTap: ()
+          {
+              int len=bankAccountLinkedList.length;
+            if(len==0){
+                 snackBarCalled(context, "No Bank Account Linked Please link your bank account to download the statement.");
+            }
+            else if(len==1){
+             showModalForPdfDownload(context);
+            }else{
+               accountIdPdf.value=bankAccountLinkedList[0]['accountId'];
+               showModalForPdfDownloadBankUiCheckBox(context);
+            }
           },
           splashColor: AppColors.accentColor.withOpacity(0.2), // Subtle splash effect
           borderRadius: BorderRadius.circular(12), // Rounded ripple effect
@@ -137,71 +151,60 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                    decoration: BoxDecoration(
                   color: AppColors.bg5,
                   borderRadius: BorderRadius.circular(30),
+                  
                 ),
-                child: TextField(
-                  controller: searchController,
-                  focusNode: focusNodeSearchFeild,
-                  onChanged: (value) {
-                    onChanedAutoTransactionStatus(context);
-                  },
-                  decoration: InputDecoration(
-                    hintText: 'Search transactions',
-                    hintStyle: FontManager().getTextStyle(
+                    child: TextField(
+                      controller: searchController,
+                      focusNode: focusNodeSearchFeild,
+                      onChanged: (value) {
+                           onChanedAutoTransactionStatus(context);
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Search transactions',
+                        hintStyle:FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.w400,
                       fontSize: 14,
                       color: AppColors.likesharecommentCount,
                     ),
-                    prefixIcon:
-                        const Icon(Icons.search, color: AppColors.accentColor),
-                    suffixIcon: searchController.text.isNotEmpty
+                        prefixIcon: const Icon(Icons.search, color: AppColors.accentColor),
+                         suffixIcon: searchController.text.isNotEmpty
                         ? IconButton(
-                            icon: const Icon(Icons.clear,
-                                color: AppColors.accentColor),
+                            icon: const Icon(Icons.clear, color: AppColors.accentColor),
                             onPressed: () {
                                 clearData();
                               // Unfocus the search field
                             },
                           )
                         : null,
-                    filled: true,
-                    fillColor: AppColors.bg5,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide.none,
+                        filled: true,
+                        fillColor: AppColors.bg5,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30), // Changed to 30 for more circular appearance
+                          borderSide: BorderSide.none,
+                        ),
+                        enabledBorder: OutlineInputBorder( // Added for the enabled state
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide(color: AppColors.accentColor, width: 1), // Border color when enabled
+                        ),
+                        focusedBorder: OutlineInputBorder( // Added for the focused state
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide(color: AppColors.accentColor, width: 2), // Border color when focused
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15), 
+                      ),
+                      style: const TextStyle(color: AppColors.accentColor),
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide:
-                          BorderSide(color: AppColors.accentColor, width: 1),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide:
-                          BorderSide(color: AppColors.accentColor, width: 2),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 15),
                   ),
-                  style: const TextStyle(color: AppColors.accentColor),
                 ),
-              ),
+                const SizedBox(height: 10),
+                // Transaction History
+               transactionsHistoryList()
+              ],
             ),
-            // Scrollable Transaction History
-            Container(
-              height: MediaQuery.sizeOf(context).height / 1.25,
-              width: MediaQuery.sizeOf(context).height,
-             
-              child: SingleChildScrollView(
-                controller: scrollController,
-                child: transactionsHistoryList(),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
-        ),
-      )
     );
   }
 
@@ -212,19 +215,21 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                              getAllTransaction(context);
  }
 
-  Widget transactionsHistoryList() {
-    return Obx(() => loadChatdataOnChnage.value
-        ? TransactionHistory(
-            isYearView: isYearView.value,
-            isflag: true,
-            showIcon: false,
-            expandedPage: true,
-          )
-        : TransactionHistory(
-            isYearView: isYearView.value,
-            isflag: true,
-            showIcon: false,
-            expandedPage: true,
-          ));
+  Widget  transactionsHistoryList() {
+    return  Obx(() => loadChatdataOnChnage.value
+                        ? TransactionHistory(
+                            isYearView: isYearView.value,
+                            isflag: true,
+                            showIcon: false,
+                            expandedPage: true,
+
+                          )
+                        : TransactionHistory(
+                            isYearView: isYearView.value,
+                            isflag: true,
+                             showIcon: false,
+                              expandedPage: true,
+                          ));
   }
+
 }

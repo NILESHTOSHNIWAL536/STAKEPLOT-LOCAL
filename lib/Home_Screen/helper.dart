@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/animated/pdf.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
@@ -370,6 +372,128 @@ String getMonthlyRange() {
     return '${date.day.toString().padLeft(2, '0')} ${getMonthName(date.month)} ${date.year}';
   }
 
+
+  void showModalForPdfDownloadBankUiCheckBox(BuildContext context) {
+    getPdgLoader.value = false;
+    final double screenWidth = MediaQuery.of(context).size.width;
+
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            child: Container(
+              width: MediaQuery.of(context).size.width, // Full screen width
+              height:( MediaQuery.of(context).size.height/2.5), // Full screen height
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(24)),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.white,
+                    Colors.grey[50]!,
+                  ],
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 20,
+                    spreadRadius: 5,
+                    offset: const Offset(0, -5),
+                  ),
+                ],
+              ),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Center(child: Container(width: 50,height: 2.2,color:Colorcodes.claimColor,)),
+                  Padding(
+                    padding:const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        textStyle(
+                            context: context,
+                            text: "Select Bank Account",
+                            fontsize: 14,
+                            fontWeight: FontWeight.w500),
+                        InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Icon(
+                            Icons.close_outlined,
+                            size: 20,
+                            color: AppColors.accentColor,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  getBankAccountList(context),
+                  SizedBox(height: 10,),
+                 
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: InkWell(
+                        onTap: () async {
+                            showModalForPdfDownload(context);
+                        },
+                        child: getButton(context, "Continue")),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
+  Widget getBankAccountList(context)
+  {
+     return Container(
+      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 6),
+      child: Column(
+        children: bankAccountLinkedList.map((account) {
+            return Obx(() => Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.primaryColor, width: 0.2),
+              ),
+              margin: const EdgeInsets.symmetric(vertical: 4,horizontal: 4),
+              child: ListTile(
+                    leading: Container(
+                      width: 40,
+                      height: 40,
+                      child:  Image.network(
+                              account["bankLogo"],
+                              width: 22,
+                              height: 22,
+                          ),
+                    ),
+                    title: textStyle(
+                        context: context,
+                        text: account["bankName"],
+                        fontsize: 15,
+                        fontWeight: FontWeight.w500),
+                    trailing: Radio<String>(
+                      value: account["accountId"].toString(), // Assign a unique value for each radio button
+                      groupValue: accountIdPdf.value , // The currently selected value
+                      onChanged: (value) {
+                        accountIdPdf.value = value!;
+                      },
+                    ),
+                  ),
+            ));
+          }).toList()));
+  }
 
   void showModalForPdfDownload(BuildContext context) {
     getPdgLoader.value = false;

@@ -671,8 +671,6 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       });
     });
 
-    print("Total Amount: $totalAmount"); // Log total amount
-    print("Name List: $nameList"); // Log name list
 
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
@@ -687,7 +685,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       'isVegNonVeg': true,
     };
 
-    print("Request Body: $requestBody"); // Log the request body
+  
 
     final response = await http.post(
       Uri.parse('${url}/split'),
@@ -706,8 +704,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
         for (var e in nameList) {
           if (e['id'] != currentId.value) {
             // Log notification details
-            print(
-                "Sending notification to ${e['name']} with amount: ${e['amount']}");
+           
             sendNotificationsToDevice(
                 e['id'],
                 context,
