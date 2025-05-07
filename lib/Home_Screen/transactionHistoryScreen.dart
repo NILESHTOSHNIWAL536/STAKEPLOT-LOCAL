@@ -212,11 +212,12 @@ void _onScroll() {
     );
   }
 
- void clearData(){
-                            searchController.clear();
-                             currentPage = 1;
-                             isLoadingMore.value = false;
-                             getAllTransaction(context);
+ void clearData()
+ {
+                             searchController.clear();
+                            //  currentPage = 1;
+                            //  isLoadingMore.value = false;
+                            //  getAllTransaction(context);
  }
 
   Widget  transactionsHistoryList() {

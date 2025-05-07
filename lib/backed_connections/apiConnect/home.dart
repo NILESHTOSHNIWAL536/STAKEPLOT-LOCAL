@@ -70,6 +70,11 @@ void getAllTransaction(context) async {
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
+    currentPage = 2;
+    if(transactionsHistory.length<=20)
+    {
+      loadMoreData.value=false;
+    }
     transactionsHistory.clear();
     transactionsHistory.addAll(obj);
     reloadHistory.value = !reloadHistory.value;
