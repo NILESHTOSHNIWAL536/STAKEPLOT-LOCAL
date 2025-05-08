@@ -430,33 +430,37 @@ void foodieFundsDetails(BuildContext context, String foodDetailsId) async {
                       // Header
                       Container(
                         width: double.infinity,
+                        padding: const EdgeInsets.all(12.0),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              AppColors.accentColor.withOpacity(0.1),
+                              AppColors.primaryColor.withOpacity(0.1),
                               Colors.white,
                             ],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
                           ),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: AppColors.accentColor.withOpacity(0.2),
-                            width: 0.5,
-                          ),
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        padding: const EdgeInsets.all(12.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               children: [
-                                Icon(
-                                  Icons.restaurant,
-                                  size: 18,
-                                  color: AppColors.accentColor,
+                                ScaleTransition(
+                                  scale: Tween<double>(begin: 0.8, end: 1).animate(
+                                    CurvedAnimation(
+                                      parent: ModalRoute.of(context)!.animation!,
+                                      curve: Curves.easeOut,
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.restaurant,
+                                    size: 18,
+                                    color: AppColors.accentColor,
+                                  ),
                                 ),
-                                const SizedBox(width: 6),
+                                const SizedBox(width: 8),
                                 Text(
                                   data['splitName'] ?? 'Foodie Split',
                                   style: FontManager().getTextStyle(
@@ -475,7 +479,7 @@ void foodieFundsDetails(BuildContext context, String foodDetailsId) async {
                                 context,
                                 lWeight: FontWeight.w400,
                                 fontSize: 12,
-                                color: AppColors.accentColor.withOpacity(0.6),
+                                color: AppColors.accentColor.withOpacity(0.7),
                               ),
                             ),
                             Text(
@@ -491,29 +495,29 @@ void foodieFundsDetails(BuildContext context, String foodDetailsId) async {
                         ),
                       ),
                       const SizedBox(height: 12),
-                      Container(
-                        height: 4,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.transparent,
-                              AppColors.accentColor.withOpacity(0.2),
-                              Colors.transparent,
-                            ],
-                          ),
-                        ),
+                      Divider(
+                        color: AppColors.accentColor.withOpacity(0.3),
+                        thickness: 0.5,
                       ),
 
                       // Current User
                       const SizedBox(height: 12),
                       Row(
                         children: [
-                          Icon(
-                            Icons.person_pin,
-                            size: 18,
-                            color: AppColors.accentColor,
+                          ScaleTransition(
+                            scale: Tween<double>(begin: 0.8, end: 1).animate(
+                              CurvedAnimation(
+                                parent: ModalRoute.of(context)!.animation!,
+                                curve: Curves.easeOut,
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.person,
+                              size: 18,
+                              color: AppColors.accentColor,
+                            ),
                           ),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: 8),
                           Text(
                             'Your Details',
                             style: FontManager().getTextStyle(
@@ -526,129 +530,118 @@ void foodieFundsDetails(BuildContext context, String foodDetailsId) async {
                         ],
                       ),
                       const SizedBox(height: 8),
-                      InkWell(
-                        onTap: () {}, // Optional: Add interaction if needed
-                        borderRadius: BorderRadius.circular(12),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.white,
-                                AppColors.accentColor.withOpacity(0.05),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              currentUser['name'] ?? 'Unknown',
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w600,
+                                fontSize: 14,
+                                color: AppColors.accentColor,
+                              ),
                             ),
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.15),
-                                blurRadius: 6,
-                                offset: const Offset(0, 3),
-                              ),
-                            ],
-                          ),
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                currentUser['name'] ?? 'Unknown',
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                  color: AppColors.accentColor,
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Text(
-                                'Amount Due: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(currentUser['amountDue'] ?? 0)}',
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.w400,
-                                  fontSize: 12,
-                                  color: AppColors.accentColor,
-                                ),
-                              ),
-                              Text(
-                                'Paid: ${currentUser['isPaid'] == true ? 'Yes' : 'No'}',
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.w400,
-                                  fontSize: 12,
-                                  color: AppColors.accentColor.withOpacity(0.6),
-                                ),
-                              ),
-                              if (currentUser['priorities'] != null) ...[
-                                const SizedBox(height: 8),
+                            const SizedBox(height: 6),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
                                 Text(
-                                  'Priorities:',
+                                  'Amount Due: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(currentUser['amountDue'] ?? 0)}',
                                   style: FontManager().getTextStyle(
                                     context,
-                                    lWeight: FontWeight.w500,
+                                    lWeight: FontWeight.w400,
                                     fontSize: 12,
                                     color: AppColors.accentColor,
                                   ),
                                 ),
-                                if ((currentUser['priorities']['Veg'] ?? 0) > 0)
-                                  Text(
-                                    'Veg: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(currentUser['priorities']['Veg'])}',
-                                    style: FontManager().getTextStyle(
-                                      context,
-                                      lWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                      color: AppColors.accentColor.withOpacity(0.6),
-                                    ),
+                                Text(
+                                  'Paid: ${currentUser['isPaid'] == true ? 'Yes' : 'No'}',
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w400,
+                                    fontSize: 12,
+                                    color: AppColors.accentColor.withOpacity(0.7),
                                   ),
-                                if ((currentUser['priorities']['Non veg'] ?? 0) > 0)
-                                  Text(
-                                    'Non Veg: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(currentUser['priorities']['Non veg'])}',
-                                    style: FontManager().getTextStyle(
-                                      context,
-                                      lWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                      color: AppColors.accentColor.withOpacity(0.6),
-                                    ),
-                                  ),
-                                if ((currentUser['priorities']['Alcohol'] ?? 0) > 0)
-                                  Text(
-                                    'Alcohol: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(currentUser['priorities']['Alcohol'])}',
-                                    style: FontManager().getTextStyle(
-                                      context,
-                                      lWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                      color: AppColors.accentColor.withOpacity(0.6),
-                                    ),
-                                  ),
+                                ),
                               ],
+                            ),
+                            if (currentUser['priorities'] != null) ...[
+                              const SizedBox(height: 8),
+                              Text(
+                                'Priorities:',
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w500,
+                                  fontSize: 12,
+                                  color: AppColors.accentColor,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                              if ((currentUser['priorities']['Veg'] ?? 0) > 0)
+                                Text(
+                                  'Veg: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(currentUser['priorities']['Veg'])}',
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w400,
+                                    fontSize: 12,
+                                    color: AppColors.accentColor.withOpacity(0.7),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                              if ((currentUser['priorities']['Non veg'] ?? 0) > 0)
+                                Text(
+                                  'Non Veg: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(currentUser['priorities']['Non veg'])}',
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w400,
+                                    fontSize: 12,
+                                    color: AppColors.accentColor.withOpacity(0.7),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                              if ((currentUser['priorities']['Alcohol'] ?? 0) > 0)
+                                Text(
+                                  'Alcohol: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(currentUser['priorities']['Alcohol'])}',
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w400,
+                                    fontSize: 12,
+                                    color: AppColors.accentColor.withOpacity(0.7),
+                                  ),
+                                ),
+                                ]
+                              )
                             ],
-                          ),
+                          ],
                         ),
                       ),
                       const SizedBox(height: 12),
-                      Container(
-                        height: 4,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.transparent,
-                              AppColors.accentColor.withOpacity(0.2),
-                              Colors.transparent,
-                            ],
-                          ),
-                        ),
+                      Divider(
+                        color: AppColors.accentColor.withOpacity(0.3),
+                        thickness: 0.5,
                       ),
 
                       // Friends
                       Row(
                         children: [
-                          Icon(
-                            Icons.group_add,
-                            size: 18,
-                            color: AppColors.accentColor,
+                          ScaleTransition(
+                            scale: Tween<double>(begin: 0.8, end: 1).animate(
+                              CurvedAnimation(
+                                parent: ModalRoute.of(context)!.animation!,
+                                curve: Curves.easeOut,
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.group,
+                              size: 18,
+                              color: AppColors.accentColor,
+                            ),
                           ),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: 8),
                           Text(
                             'Friends',
                             style: FontManager().getTextStyle(
@@ -662,13 +655,16 @@ void foodieFundsDetails(BuildContext context, String foodDetailsId) async {
                       ),
                       const SizedBox(height: 8),
                       if (friends.isEmpty)
-                        Text(
-                          'No friends in this split.',
-                          style: FontManager().getTextStyle(
-                            context,
-                            lWeight: FontWeight.w400,
-                            fontSize: 12,
-                            color: AppColors.accentColor.withOpacity(0.6),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(
+                            'No friends in this split.',
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w400,
+                              fontSize: 12,
+                              color: AppColors.accentColor.withOpacity(0.7),
+                            ),
                           ),
                         )
                       else
@@ -678,130 +674,109 @@ void foodieFundsDetails(BuildContext context, String foodDetailsId) async {
                           itemCount: friends.length,
                           itemBuilder: (context, index) {
                             final friend = friends[index];
-                            return Column(
-                              children: [
-                                InkWell(
-                                  onTap: () {}, // Optional: Add interaction if needed
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Colors.white,
-                                          AppColors.accentColor.withOpacity(0.05),
-                                        ],
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                      ),
-                                      borderRadius: BorderRadius.circular(12),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.15),
-                                          blurRadius: 6,
-                                          offset: const Offset(0, 3),
-                                        ),
-                                      ],
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    friend['name'] ?? 'Unknown',
+                                    style: FontManager().getTextStyle(
+                                      context,
+                                      lWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                      color: AppColors.accentColor,
                                     ),
-                                    padding: const EdgeInsets.all(10.0),
-                                    margin: const EdgeInsets.only(bottom: 8.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Amount Due: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(friend['amountDue'] ?? 0)}',
+                                        style: FontManager().getTextStyle(
+                                          context,
+                                          lWeight: FontWeight.w400,
+                                          fontSize: 12,
+                                          color: AppColors.accentColor,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Paid: ${friend['isPaid'] == true ? 'Yes' : 'No'}',
+                                        style: FontManager().getTextStyle(
+                                          context,
+                                          lWeight: FontWeight.w400,
+                                          fontSize: 12,
+                                          color: AppColors.accentColor.withOpacity(0.7),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  if (friend['priorities'] != null) ...[
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      'Priorities:',
+                                      style: FontManager().getTextStyle(
+                                        context,
+                                        lWeight: FontWeight.w500,
+                                        fontSize: 12,
+                                        color: AppColors.accentColor,
+                                      ),
+                                    ),
+                                    Row(
                                       children: [
-                                        Text(
-                                          friend['name'] ?? 'Unknown',
-                                          style: FontManager().getTextStyle(
-                                            context,
-                                            lWeight: FontWeight.w600,
-                                            fontSize: 14,
-                                            color: AppColors.accentColor,
-                                          ),
+                                    if ((friend['priorities']['Veg'] ?? 0) > 0)
+                                      Text(
+                                        'Veg: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(friend['priorities']['Veg'])}',
+                                        style: FontManager().getTextStyle(
+                                          context,
+                                          lWeight: FontWeight.w400,
+                                          fontSize: 12,
+                                          color: AppColors.accentColor.withOpacity(0.7),
                                         ),
-                                        const SizedBox(height: 6),
-                                        Text(
-                                          'Amount Due: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(friend['amountDue'] ?? 0)}',
-                                          style: FontManager().getTextStyle(
-                                            context,
-                                            lWeight: FontWeight.w400,
-                                            fontSize: 12,
-                                            color: AppColors.accentColor,
-                                          ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                    if ((friend['priorities']['Non veg'] ?? 0) > 0)
+                                      Text(
+                                        'Non Veg: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(friend['priorities']['Non veg'])}',
+                                        style: FontManager().getTextStyle(
+                                          context,
+                                          lWeight: FontWeight.w400,
+                                          fontSize: 12,
+                                          color: AppColors.accentColor.withOpacity(0.7),
                                         ),
-                                        Text(
-                                          'Paid: ${friend['isPaid'] == true ? 'Yes' : 'No'}',
-                                          style: FontManager().getTextStyle(
-                                            context,
-                                            lWeight: FontWeight.w400,
-                                            fontSize: 12,
-                                            color: AppColors.accentColor.withOpacity(0.6),
-                                          ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                    if ((friend['priorities']['Alcohol'] ?? 0) > 0)
+                                      Text(
+                                        'Alcohol: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(friend['priorities']['Alcohol'])}',
+                                        style: FontManager().getTextStyle(
+                                          context,
+                                          lWeight: FontWeight.w400,
+                                          fontSize: 12,
+                                          color: AppColors.accentColor.withOpacity(0.7),
                                         ),
-                                        if (friend['priorities'] != null) ...[
-                                          const SizedBox(height: 8),
-                                          Text(
-                                            'Priorities:',
-                                            style: FontManager().getTextStyle(
-                                              context,
-                                              lWeight: FontWeight.w500,
-                                              fontSize: 12,
-                                              color: AppColors.accentColor,
-                                            ),
-                                          ),
-                                          if ((friend['priorities']['Veg'] ?? 0) > 0)
-                                            Text(
-                                              'Veg: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(friend['priorities']['Veg'])}',
-                                              style: FontManager().getTextStyle(
-                                                context,
-                                                lWeight: FontWeight.w400,
-                                                fontSize: 12,
-                                                color: AppColors.accentColor.withOpacity(0.6),
-                                              ),
-                                            ),
-                                          if ((friend['priorities']['Non veg'] ?? 0) > 0)
-                                            Text(
-                                              'Non Veg: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(friend['priorities']['Non veg'])}',
-                                              style: FontManager().getTextStyle(
-                                                context,
-                                                lWeight: FontWeight.w400,
-                                                fontSize: 12,
-                                                color: AppColors.accentColor.withOpacity(0.6),
-                                              ),
-                                            ),
-                                          if ((friend['priorities']['Alcohol'] ?? 0) > 0)
-                                            Text(
-                                              'Alcohol: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(friend['priorities']['Alcohol'])}',
-                                              style: FontManager().getTextStyle(
-                                                context,
-                                                lWeight: FontWeight.w400,
-                                                fontSize: 12,
-                                                color: AppColors.accentColor.withOpacity(0.6),
-                                              ),
-                                            ),
-                                        ],
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                if (index < friends.length - 1)
-                                  Container(
-                                    height: 4,
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Colors.transparent,
-                                          AppColors.accentColor.withOpacity(0.2),
-                                          Colors.transparent,
-                                        ],
+                                      ),
+                                  ])
+                                  ],
+                                  if (index < friends.length - 1)
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Divider(
+                                        color: AppColors.accentColor.withOpacity(0.3),
+                                        thickness: 0.5,
                                       ),
                                     ),
-                                  ),
-                              ],
+                                ],
+                              ),
                             );
                           },
                         ),
 
                       // Close Button
                       const SizedBox(height: 12),
-                      Center(
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
                         child: ScaleTransition(
                           scale: Tween<double>(begin: 0.8, end: 1).animate(
                             CurvedAnimation(
@@ -809,48 +784,10 @@ void foodieFundsDetails(BuildContext context, String foodDetailsId) async {
                               curve: Curves.easeOutBack,
                             ),
                           ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  AppColors.button,
-                                  AppColors.button.withOpacity(0.6),
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.button.withOpacity(0.3),
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: ElevatedButton(
-                              onPressed: () => Navigator.pop(context),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                elevation: 0,
-                              ),
-                              child: Text(
-                                'Close',
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                  color: AppColors.primaryColor,
-                                ),
-                              ),
-                            ),
-                          ),
+                          
                         ),
                       ),
+                      
                     ],
                   ),
                 ),
