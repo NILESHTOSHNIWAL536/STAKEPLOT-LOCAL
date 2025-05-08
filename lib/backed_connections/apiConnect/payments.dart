@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -496,7 +497,7 @@ void getUserLend(context) async {
   }
 }
 
-void sendNotificationsToDevice(id, context, msg,[String screen="/home",String title="",String pic=""]) async {
+void sendNotificationsToDevice(id, context, msg,[String screen="/home",String title="",String pic="",String message="",String billid=""]) async {
   String urlPath = "${url}/reminders/sendNotifications/ToDevice";
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
@@ -514,13 +515,25 @@ void sendNotificationsToDevice(id, context, msg,[String screen="/home",String ti
       'screen':screen,
       'title':title,
       'pic':pic,
+      "billId":billid
     }),
   );
 
- 
+   printData(response);
+   if(response.statusCode==429){
+       var data=jsonDecode(response.body);
+       snackBarCalled(context, data["message"],Colorcodes.red);
+       return;
+   }
+
+   if(screen=="/remainder")
+   {
+              snackBarCalled(context, message);
+   }
+
    }catch(e){
    
-}
+  }
 }
 
 void getTopFiveCater() async {

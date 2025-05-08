@@ -132,7 +132,10 @@ class CardBuilders {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MyBudgetScreen(data: data)),
+          MaterialPageRoute(builder: (context) => MyBudgetScreen(
+            data: data,
+            
+          )),
         );
       },
       child: Container(

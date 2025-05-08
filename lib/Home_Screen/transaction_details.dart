@@ -29,10 +29,7 @@ class TransactionDetailsPage extends StatelessWidget {
               fontSize: 18,
               color: AppColors.accentColor),
         ),
-        // leading: IconButton(
-        //   icon: const Icon(Icons.arrow_back, color: Colors.black),
-        //   onPressed: () => Navigator.pop(context),
-        // ),
+       
       ),
       body: SingleChildScrollView(
         child: Padding(

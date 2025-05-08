@@ -94,11 +94,11 @@ class _NotificationsState extends State<Notifications> {
              
               padding: EdgeInsets.symmetric(horizontal: constraints.maxWidth * 0.04,vertical: constraints.maxHeight * 0.01,),
               child: SingleChildScrollView(
-                child: Expanded(
+                
                   child: Obx(() => myNotificationBool.value
                       ? _buildNotificationList()
                       : _buildNotificationList()),
-                ),
+                
               ),
             );
           },

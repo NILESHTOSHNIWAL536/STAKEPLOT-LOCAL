@@ -286,7 +286,6 @@
 // //   };
 // // }
 
-
 // import 'package:flutter/material.dart';
 // import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 // import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -319,19 +318,19 @@
 
 //  Future<void> _fetchDebts() async {
 //   try {
-   
+
 //     var fetchedDebts = await DebtService.fetchDebts();
 //    // Log the response
 //     if (fetchedDebts != null && fetchedDebts.isNotEmpty) {
 //       setState(() {
 //         debts = fetchedDebts;
-       
+
 //       });
 //     } else {
-     
+
 //     }
 //   } catch (e) {
-   
+
 //   }
 // }
 //   Future<void> _navigateToCreateDebtScreen() async {
@@ -603,7 +602,7 @@
 //               itemCount: debts.length,
 //               itemBuilder: (context, index) {
 //                 final debt = debts[index];
-               
+
 //                 return Padding(
 //                   padding: const EdgeInsets.only(right: 16),
 //                   child: SizedBox(
@@ -1293,18 +1292,13 @@
 //   final Color color;
 // }
 
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/pending_users.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
-import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_display.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_service.dart';
@@ -1351,8 +1345,6 @@ class _PlotFinanceState extends State<PlotFinance> {
     );
   }
 
-  
-
   @override
   void initState() {
     super.initState();
@@ -1369,7 +1361,7 @@ class _PlotFinanceState extends State<PlotFinance> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding:  EdgeInsets.only(top:12,left:0,right:0,bottom:0),
+            padding: EdgeInsets.only(top: 12, left: 0, right: 0, bottom: 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -1381,7 +1373,7 @@ class _PlotFinanceState extends State<PlotFinance> {
                 ),
                 // Budget List
                 FinanceWidgets.budgetHorizontalList(context),
-               // const SizedBox(height: 10),
+                // const SizedBox(height: 10),
                 // Budget and Debt Calculator
                 Padding(
                   padding: const EdgeInsets.all(12.0),
@@ -1390,9 +1382,10 @@ class _PlotFinanceState extends State<PlotFinance> {
                     _navigateToCreateDebtScreen,
                   ),
                 ),
-               // const SizedBox(height: 10),
+                // const SizedBox(height: 10),
                 // Debts List
-                FinanceWidgets.debtsPicture(context, debts, _navigateToDebtDetailsScreen),
+                FinanceWidgets.debtsPicture(
+                    context, debts, _navigateToDebtDetailsScreen),
                 // Calculators Header
                 Padding(
                   padding: const EdgeInsets.all(12.0),
@@ -1403,7 +1396,7 @@ class _PlotFinanceState extends State<PlotFinance> {
                     fontWeight: FontWeight.w800,
                   ),
                 ),
-              //  const SizedBox(height: 16),
+                //  const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: FinanceWidgets.calculatorList(context),

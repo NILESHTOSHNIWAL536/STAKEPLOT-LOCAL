@@ -38,7 +38,6 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
   @override
   void initState() {
     super.initState();
-
     fetchBudgetData();
     fetchBudgetInsights();
     // getInsights(context);
@@ -52,27 +51,25 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     final String budgetId =
         widget.data['_id']?.toString() ?? '679b6ea12af555d641c5da61';
     final String apiUrl = '$url/budget/$budgetId';
-   
 
     try {
       var response = await deleteDataApiCall(apiUrl);
-     
 
       if (response.statusCode == 200) {
-       
+        snackBarCalled(context, "Budget deleted successfully");
+
         // Use parentContext to show SnackBar
-       
+
         // Wait for SnackBar to disappear
-        await Future.delayed(Duration(seconds: 2));
+        // await Future.delayed(Duration(seconds: 2));
+        
         if (mounted) {
           Navigator.of(context).pop();
         }
       } else {
-       
+        snackBarCalledfail(context, "Failed to delete budget ");
       }
     } catch (e, stackTrace) {
-      
-     
     } finally {
       if (mounted) {
         setState(() {
@@ -280,7 +277,6 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
               // Show confirmation dialog before deletion
               bool? confirm = await showDialog(
                 context: context,
-              
                 builder: (context) => AlertDialog(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
@@ -547,7 +543,8 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
         graph(),
       ],
     );
-  }}
+  }
+}
 
 class LineChartSample extends StatelessWidget {
   final List<_ChartData> budgetData;

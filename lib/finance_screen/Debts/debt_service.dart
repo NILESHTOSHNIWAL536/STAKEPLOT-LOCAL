@@ -49,9 +49,11 @@ static Future<bool> deleteDebt(String debtId) async {
         return false;
       }
       final String apiUrl = '$baseUrl/$debtId';   
- var response = await deleteDataApiCall(apiUrl);
+      var response = await deleteDataApiCall(apiUrl);
       if (response.statusCode == 200 || response.statusCode == 204) {
+        
         return true;
+
       } else {
         return false;
       }

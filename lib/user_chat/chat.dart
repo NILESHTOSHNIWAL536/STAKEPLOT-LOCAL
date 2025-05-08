@@ -265,7 +265,7 @@ class _ChatState extends State<Chat> {
         padding: const EdgeInsets.all(10),
         width: MediaQuery.of(context).size.width / 1.8,
         decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
+           color: message.isMe ? AppColors.appIcon:AppColors.chatcolor,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(width: 1, color: AppColors.primaryColor),
         ),
@@ -276,14 +276,16 @@ class _ChatState extends State<Chat> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Icon(Icons.receipt, color: AppColors.primaryColor, size: 24),
+                Icon(Icons.receipt,
+                 color:message.isMe ? AppColors.backgroundColor: AppColors.appIcon, size: 24),
                 SizedBox(width: 10),
                 Text(
                   message.split['BillName'],
                   style: FontManager().getTextStyle(context,
                       fontSize: 16,
                       lWeight: FontWeight.bold,
-                      color: AppColors.bg1),
+                      color: message.isMe ? AppColors.backgroundColor:AppColors.bg1
+                      ),
                 ),
               ],
             ),
@@ -295,27 +297,27 @@ class _ChatState extends State<Chat> {
                   children: [
                     Text(
                       "₹", // Rupee symbol
-                      style: TextStyle(color: AppColors.bg2, fontSize: 16),
+                      style: TextStyle(color:  message.isMe ? AppColors.backgroundColor:AppColors.bg2, fontSize: 16),
                     ),
                     const SizedBox(width: 5),
                     Text(
                       "Total expense: " +
                           doubleToFixed(message.split['Amount'].toString()),
                       style: FontManager().getTextStyle(context,
-                          fontSize: 12, color: AppColors.bg2),
+                          fontSize: 12, color:  message.isMe ? AppColors.backgroundColor:AppColors.bg2),
                     ),
                   ],
                 ),
                 Row(
                   children: [
-                    Icon(Icons.group, color: AppColors.bg2, size: 20),
+                    Icon(Icons.group, color:  message.isMe ? AppColors.backgroundColor:AppColors.appIcon, size: 20),
                     const SizedBox(width: 5),
                     Text(
                       "Share: " +
                           doubleToFixed(message.split['Share'].toString())
                               .toString(),
                       style: FontManager().getTextStyle(context,
-                          fontSize: 12, color: AppColors.bg2),
+                          fontSize: 12, color:  message.isMe ? AppColors.backgroundColor:AppColors.bg2),
                     ),
                   ],
                 ),
@@ -408,7 +410,8 @@ class _ChatState extends State<Chat> {
   // }
 
   @override
-  Widget build(BuildContext context) {
+  
+Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
         clearChatData();
@@ -416,12 +419,19 @@ class _ChatState extends State<Chat> {
         return true;
       },
       child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
+        backgroundColor: AppColors.appIcon,
         appBar: AppBar(
-          backgroundColor: AppColors.backgroundColor,
+          backgroundColor: AppColors.appIcon,
           // leading:
           automaticallyImplyLeading: false,
-          centerTitle: false,
+          centerTitle: true,
+          leading:  GestureDetector(
+                        onTap: () {
+                          clearChatData();
+                          getChatLoader();
+                        },
+                        child: Icon(Icons.arrow_back),
+                      ),
           title: ValueListenableBuilder<bool>(
               valueListenable: onlineUser,
               builder: (context, snapshot, child) {
@@ -431,36 +441,34 @@ class _ChatState extends State<Chat> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          clearChatData();
-                          getChatLoader();
-                        },
-                        child: Icon(Icons.arrow_back),
-                      ),
-                      GestureDetector(
-                          onTap: () {
-                            pushDetails();
-                          },
-                          child: UserAvatar(
-                              url:avaterUrlPath(data['name']),
-                              width: 8,
-                              height: 17
-                        )),
+                     
+                      // GestureDetector(
+                      //     onTap: () {
+                      //       pushDetails();
+                      //     },
+                      //     child: UserAvatar(
+                      //         url:avaterUrlPath(data['name']),
+                      //         width: 8,
+                      //         height: 17
+                      //   )),
+                      
                       GestureDetector(
                         onTap: () {
                           
                           pushDetails();
                         },
-                        child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 2),
-                          width: MediaQuery.of(context).size.width / 1.7,
-                          child: Text(
-                            data['name'],
-                            style: FontManager().getTextStyle(context,
-                                fontSize: 18, lWeight: FontWeight.bold),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
+                        child: Center(
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 2),
+                            width: MediaQuery.of(context).size.width / 1.7,
+                            child: Text(
+                              data['name'],
+                              style: FontManager().getTextStyle(context,
+                              color: AppColors.backgroundColor,
+                                  fontSize: 16, lWeight: FontWeight.bold),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
                         ),
                       ),
@@ -471,6 +479,10 @@ class _ChatState extends State<Chat> {
         ),
         body: Container(
           height: MediaQuery.of(context).size.height,
+                    decoration: BoxDecoration(
+                      color: AppColors.backgroundColor,
+            borderRadius: BorderRadius.circular(24), // Specify the border radius
+          ),
           child: Column(
             children: [
               //  height: MediaQuery.of(context).size.height/1.28,
@@ -489,18 +501,7 @@ class _ChatState extends State<Chat> {
               Container(
                 // margin: EdgeInsets.all(8.0),
 
-                decoration: BoxDecoration(
-                   
-                    //borderRadius: BorderRadius.circular(24),
-                    ),
-                //       decoration: InputDecoration(
-                //   prefixIcon: Icon(Icons.search),
-                //   // prefixIconColor: Colorcodes.budgetDarkGreen,
-                //   filled: true,
-
-                //   fillColor: AppColors.button,
-                //   border: InputBorder.none,
-                // ),
+               
                 child: SafeArea(child: InputDate("Message", TextInputType.name, search)),
               ),
             ],
@@ -720,7 +721,7 @@ class _ChatState extends State<Chat> {
     TextEditingController textController,
   ) {
     return Container(
-      color: AppColors.chatcolor,
+      color: Colors.grey,
       width: MediaQuery.of(context).size.width,
       child: TextField(
         keyboardType: keyboardType,

@@ -74,7 +74,7 @@ class _UserListScreenState extends State<UserListScreen> {
           );
         }
         return ListView.builder(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(12.0),
           itemCount: dataList.length,
           itemBuilder: (context, index) => _buildCard(
             context,
@@ -95,159 +95,104 @@ class _UserListScreenState extends State<UserListScreen> {
     return GestureDetector(
       onTap: foodieBill == "foodie split"
           ? () {
-              foodieFundsDetails(context,foodDetailsId);
+              foodieFundsDetails(context, foodDetailsId);
             }
           : null,
-      child: Card(
-        elevation: 2,
-        color: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: AppColors.accentColor.withOpacity(0.15)),
-        ),
-        margin: const EdgeInsets.only(bottom: 12),
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final maxWidth = constraints.maxWidth;
-              final avatarSize = maxWidth * 0.12 > 48 ? 48.0 : maxWidth * 0.12;
-              final buttonWidth =
-                  maxWidth * 0.35 > 120 ? 120.0 : maxWidth * 0.35;
-
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Avatar
-                  Container(
-                    height: avatarSize,
-                    width: avatarSize,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                          color: AppColors.accentColor.withOpacity(0.2)),
-                    ),
-                    child: ClipOval(
-                      child: UserAvatar(
-                        url: avaterUrlPath(
-                            data['name'] ?? 'assets/avatar/menp4.svg'),
-                        width: 1,
-                        height: 1,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  // Details
-                  SizedBox(
-                    width: maxWidth * 0.45, // Constrain details section
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            data['name'] ?? data['userName'] ?? 'Unknown',
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: FontWeight.w600,
-                              fontSize: 14,
-                              color: AppColors.accentColor,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
+      child: Column(
+        children: [
+          Container(
+            color: AppColors.backgroundColor,
+          
+           // margin: const EdgeInsets.only(bottom: 12),
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final maxWidth = constraints.maxWidth;
+                  final avatarSize = maxWidth * 0.12 > 48 ? 48.0 : maxWidth * 0.12;
+                  final buttonWidth =
+                      maxWidth * 0.35 > 120 ? 120.0 : maxWidth * 0.35;
+          
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Avatar
+                      ClipOval(
+                        child: UserAvatar(
+                          url: avaterUrlPath(
+                              data['name'] ?? 'assets/avatar/menp4.svg'),
+                          width: avatarSize/2,
+                          height: avatarSize/2,
                         ),
-                        const SizedBox(height: 6),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
-                              width: MediaQuery.sizeOf(context).width / 5.3,
-                              decoration: BoxDecoration(
-                                color: AppColors.accentColor.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Center(
+                      ),
+                      const SizedBox(width: 12),
+                      // Details
+                      Container(
+                        child: SizedBox(
+                          //width: maxWidth * 0.48, // Constrain details section
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
                                 child: Text(
-                                  foodieBill == "foodie split"
-                                      ? data['billName']
-                                      : data['category'] ?? 'Untagged',
+                                  data['name'] ?? data['userName'] ?? 'Unknown',
                                   style: FontManager().getTextStyle(
                                     context,
-                                    lWeight: FontWeight.w500,
-                                    fontSize: 10,
+                                    lWeight: FontWeight.w600,
+                                    fontSize: 16,
                                     color: AppColors.accentColor,
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                            ConstrainedBox(
-                              constraints:
-                                  BoxConstraints(maxWidth: maxWidth * 0.2),
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  NumberFormat.currency(
-                                          symbol: '₹', decimalDigits: 2)
-                                      .format(data['amount'] ?? 0),
-                                  style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.bold,
-                                    fontSize: 10,
-                                    color: isDue
-                                        ? Color.fromARGB(255, 207, 118, 113)
-                                        : Colors.green,
+          
+                             
+                              const SizedBox(height: 12),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4, vertical: 4),
+                                    height:
+                                        MediaQuery.sizeOf(context).height / 28.0,
+                                    width: MediaQuery.sizeOf(context).width / 5.0,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.accentColor.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        foodieBill == "foodie split"
+                                            ? data['billName']
+                                            : data['category'] ?? 'Untagged',
+                                        style: FontManager().getTextStyle(
+                                          context,
+                                          lWeight: FontWeight.w500,
+                                          fontSize: 10,
+                                          color: AppColors.accentColor,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                    ),
                                   ),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        // Due date display for lends only
-                        if (isLendAmount && data['dueDate'] != null) ...[
-                          const SizedBox(height: 4),
-                          Text(
-                            'Due Date: ${DateFormat('d MMMM yyyy').format(DateTime.parse(data['dueDate']))}',
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: FontWeight.w400,
-                              fontSize: 10,
-                              color: AppColors.accentColor.withOpacity(0.6),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  // Action Button and Date
-                  SizedBox(
-                    width: buttonWidth,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        InkWell(
-                          onTap: () async {
-                            // Check if the action is already completed
-                            if (isDue && (data['isPaid'] ?? false)) {
-                              snackBarCalled(context,
-                                  'This bill has already been requested.');
-                              return;
-                            } else if (!isDue &&
-                                (data['reminderSent'] ?? false)) {
-                              snackBarCalled(context, 'Reminder already sent.');
-                              return;
-                            }
+                                  const SizedBox(width: 8),
+                                  //here
+                                  InkWell(
+                                    onTap: () async {
+                                     // Check if the action is already completed
+                            // if (isDue && (data['isPaid'] ?? false)) {
+                            //   snackBarCalled(context,'This bill has already been requested.');
+                            //   return;
+                            // } 
+                            // else if (!isDue && (data['reminderSent'] ?? false)) {
+                            //   snackBarCalled(context, 'Reminder already sent.');
+                            //   return;
+                            // }
 
                             String message;
                             if (isDue) {
@@ -279,7 +224,7 @@ class _UserListScreenState extends State<UserListScreen> {
                             }
 
                             // Show SnackBar
-                            snackBarCalled(context, message);
+                            // snackBarCalled(context, message);
 
                             // Send notification
                             sendNotificationsToDevice(
@@ -289,86 +234,149 @@ class _UserListScreenState extends State<UserListScreen> {
                                   ? 'Successfully paid your bill of ${data['amount'] ?? "0000"} to ${userName.value}.'
                                   : 'You need to pay ${data['amount'] ?? "0000"} to ${userName.value}.',
                               "/remainder",
+                              "",
+                              "",
+                              message,
+                              data['_id']
                             );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 8),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: (isDue && (data['isPaid'] ?? false)) ||
-                                      (!isDue &&
-                                          (data['reminderSent'] ?? false))
-                                  ? AppColors.button.withOpacity(0.5)
-                                  : AppColors.button,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.button.withOpacity(0.2),
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 2),
+                                    },
+                                    child: Container(
+                                      // width: Media,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 4, vertical: 4),
+                                      height:
+                                          MediaQuery.sizeOf(context).height / 28.0,
+                                      width: MediaQuery.sizeOf(context).width / 5,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: (isDue &&
+                                                    (data['isPaid'] ?? false)) ||
+                                                (!isDue &&
+                                                    (data['reminderSent'] ?? false))
+                                            ? AppColors.button.withOpacity(0.5)
+                                            : AppColors.button,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                AppColors.button.withOpacity(0.2),
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          isDue
+                                              ? (data['isPaid'] ?? false)
+                                                  ? 'Requested'
+                                                  : (data['billApproved'] ?? true)
+                                                      ? 'Settle Now'
+                                                      : 'Awaiting Settlement'
+                                              : (data['reminderSent'] ?? false)
+                                                  ? 'Remind now'
+                                                  : (data['billApproved'] ?? true)
+                                                      ? 'Remind now'
+                                                      : 'Awaiting Approval',
+                                          textAlign: TextAlign.center,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: FontManager().getTextStyle(
+                                            context,
+                                            lWeight: FontWeight.w600,
+                                            fontSize: 10,
+                                            color: AppColors.primaryColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              // Due date display for lends only
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      // Action Button and Date
+                      Container(
+                        child: SizedBox(
+                          width: buttonWidth / 1.15,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              const SizedBox(height: 16),
+                              ConstrainedBox(
+                                constraints:
+                                    BoxConstraints(maxWidth: maxWidth * 0.2),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Center(
+                                    child: Text(
+                                      NumberFormat.currency(
+                                              symbol: '₹', decimalDigits: 2)
+                                          .format(data['amount'] ?? 0),
+                                      style: FontManager().getTextStyle(
+                                        context,
+                                        lWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: isDue
+                                            ? Color.fromARGB(255, 207, 118, 113)
+                                            : Colors.green,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                               if (isLendAmount && data['dueDate'] != null) ...[
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Due : ${DateFormat('d MMM yyyy').format(DateTime.parse(data['dueDate']))}',
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.w400,
+                                    fontSize: 10,
+                                    color: AppColors.accentColor.withOpacity(0.6),
+                                  ),
                                 ),
                               ],
-                            ),
-                            child: Text(
-                              isDue
-                                  ? (data['isPaid'] ?? false)
-                                      ? 'Requested'
-                                      : (data['billApproved'] ?? true)
-                                          ? 'Settle Now'
-                                          : 'Awaiting Settlement'
-                                  : (data['reminderSent'] ?? false)
-                                      ? 'Reminder Sent'
-                                      : (data['billApproved'] ?? true)
-                                          ? 'Send Reminder'
-                                          : 'Awaiting Approval',
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w600,
-                                fontSize: 10,
-                                color: AppColors.primaryColor,
-                              ),
-                            ),
+          
+                              // Text(
+                              //   formatDateTime(data['createdAt']),
+                              //   textAlign: TextAlign.end,
+                              //   overflow: TextOverflow.ellipsis,
+                              //   style: FontManager().getTextStyle(
+                              //     context,
+                              //     lWeight: FontWeight.w400,
+                              //     fontSize: 10,
+                              //     color: AppColors.accentColor.withOpacity(0.6),
+                              //   ),
+                              // ),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: 6),
-                        Text(
-                          formatDateTime(data['createdAt']),
-                          textAlign: TextAlign.end,
-                          overflow: TextOverflow.ellipsis,
-                          style: FontManager().getTextStyle(
-                            context,
-                            lWeight: FontWeight.w400,
-                            fontSize: 10,
-                            color: AppColors.accentColor.withOpacity(0.6),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            },
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
           ),
-        ),
+       const Divider(),
+        ],
       ),
     );
+    
   }
-
 
 void foodieFundsDetails(BuildContext context, String foodDetailsId) async {
   // Show loading dialog
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (context) => const Center(child: CircularProgressIndicator()),
-  );
-
   try {
     // Fetch data
     await getFoodieFundsDetails(context, foodDetailsId);
-    Navigator.pop(context); // Dismiss loading dialog
 
     // Show bottom sheet
     showModalBottomSheet(
@@ -380,19 +388,19 @@ void foodieFundsDetails(BuildContext context, String foodDetailsId) async {
       backgroundColor: Colors.white,
       builder: (context) {
         final maxHeight = MediaQuery.of(context).size.height * 0.85;
+        final animation = ModalRoute.of(context)!.animation!;
         return Container(
           constraints: BoxConstraints(maxHeight: maxHeight),
           padding: const EdgeInsets.all(12.0),
           child: Obx(() {
             if (foodieFundsDetailsRemainders.isEmpty) {
-              return Center(
+              return const Center(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 24.0),
+                  padding: EdgeInsets.symmetric(vertical: 24.0),
                   child: Text(
                     'No details available.',
-                    style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.w400,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
                       fontSize: 14,
                       color: AppColors.accentColor,
                     ),
@@ -410,16 +418,14 @@ void foodieFundsDetails(BuildContext context, String foodDetailsId) async {
                 position: Tween<Offset>(
                   begin: const Offset(0, 0.1),
                   end: Offset.zero,
-                ).animate(
-                  CurvedAnimation(
-                    parent: ModalRoute.of(context)!.animation!,
-                    curve: Curves.easeOut,
-                  ),
-                ),
+                ).animate(CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.easeOut,
+                )),
                 child: FadeTransition(
                   opacity: Tween<double>(begin: 0, end: 1).animate(
                     CurvedAnimation(
-                      parent: ModalRoute.of(context)!.animation!,
+                      parent: animation,
                       curve: Curves.easeIn,
                     ),
                   ),
@@ -428,366 +434,54 @@ void foodieFundsDetails(BuildContext context, String foodDetailsId) async {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Header
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(12.0),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              AppColors.primaryColor.withOpacity(0.1),
-                              Colors.white,
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                ScaleTransition(
-                                  scale: Tween<double>(begin: 0.8, end: 1).animate(
-                                    CurvedAnimation(
-                                      parent: ModalRoute.of(context)!.animation!,
-                                      curve: Curves.easeOut,
-                                    ),
-                                  ),
-                                  child: Icon(
-                                    Icons.restaurant,
-                                    size: 18,
-                                    color: AppColors.accentColor,
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  data['splitName'] ?? 'Foodie Split',
-                                  style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w700,
-                                    fontSize: 18,
-                                    color: AppColors.accentColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Subcategory: ${data['subcategory'] ?? 'N/A'}',
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w400,
-                                fontSize: 12,
-                                color: AppColors.accentColor.withOpacity(0.7),
-                              ),
-                            ),
-                            Text(
-                              'Total Amount: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(data['totalAmount'] ?? 0)}',
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w600,
-                                fontSize: 14,
-                                color: AppColors.accentColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      _buildHeader(context, data, animation),
                       const SizedBox(height: 12),
-                      Divider(
-                        color: AppColors.accentColor.withOpacity(0.3),
-                        thickness: 0.5,
-                      ),
+                      const Divider(color: AppColors.accentColor, thickness: 0.5),
 
                       // Current User
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          ScaleTransition(
-                            scale: Tween<double>(begin: 0.8, end: 1).animate(
-                              CurvedAnimation(
-                                parent: ModalRoute.of(context)!.animation!,
-                                curve: Curves.easeOut,
-                              ),
-                            ),
-                            child: Icon(
-                              Icons.person,
-                              size: 18,
-                              color: AppColors.accentColor,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Your Details',
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: FontWeight.w700,
-                              fontSize: 16,
-                              color: AppColors.accentColor,
-                            ),
-                          ),
-                        ],
-                      ),
+                      _buildSectionHeader(context, 'Your Details', Icons.person, animation),
                       const SizedBox(height: 8),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              currentUser['name'] ?? 'Unknown',
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w600,
-                                fontSize: 14,
-                                color: AppColors.accentColor,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Amount Due: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(currentUser['amountDue'] ?? 0)}',
-                                  style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w400,
-                                    fontSize: 12,
-                                    color: AppColors.accentColor,
-                                  ),
-                                ),
-                                Text(
-                                  'Paid: ${currentUser['isPaid'] == true ? 'Yes' : 'No'}',
-                                  style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w400,
-                                    fontSize: 12,
-                                    color: AppColors.accentColor.withOpacity(0.7),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            if (currentUser['priorities'] != null) ...[
-                              const SizedBox(height: 8),
-                              Text(
-                                'Priorities:',
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.w500,
+                      _buildUserDetails(context, currentUser, animation),
+                      const SizedBox(height: 12),
+                      const Divider(color: AppColors.accentColor, thickness: 0.5),
+
+                      // Friends
+                      _buildSectionHeader(context, 'Friends', Icons.group, animation),
+                      const SizedBox(height: 8),
+                      friends.isEmpty
+                          ? const Padding(
+                              padding: EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                'No friends in this split.',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
                                   fontSize: 12,
                                   color: AppColors.accentColor,
                                 ),
                               ),
-                              Row(
-                                children: [
-                              if ((currentUser['priorities']['Veg'] ?? 0) > 0)
-                                Text(
-                                  'Veg: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(currentUser['priorities']['Veg'])}',
-                                  style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w400,
-                                    fontSize: 12,
-                                    color: AppColors.accentColor.withOpacity(0.7),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                              if ((currentUser['priorities']['Non veg'] ?? 0) > 0)
-                                Text(
-                                  'Non Veg: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(currentUser['priorities']['Non veg'])}',
-                                  style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w400,
-                                    fontSize: 12,
-                                    color: AppColors.accentColor.withOpacity(0.7),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                              if ((currentUser['priorities']['Alcohol'] ?? 0) > 0)
-                                Text(
-                                  'Alcohol: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(currentUser['priorities']['Alcohol'])}',
-                                  style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.w400,
-                                    fontSize: 12,
-                                    color: AppColors.accentColor.withOpacity(0.7),
-                                  ),
-                                ),
-                                ]
-                              )
-                            ],
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Divider(
-                        color: AppColors.accentColor.withOpacity(0.3),
-                        thickness: 0.5,
-                      ),
-
-                      // Friends
-                      Row(
-                        children: [
-                          ScaleTransition(
-                            scale: Tween<double>(begin: 0.8, end: 1).animate(
-                              CurvedAnimation(
-                                parent: ModalRoute.of(context)!.animation!,
-                                curve: Curves.easeOut,
-                              ),
-                            ),
-                            child: Icon(
-                              Icons.group,
-                              size: 18,
-                              color: AppColors.accentColor,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Friends',
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: FontWeight.w700,
-                              fontSize: 16,
-                              color: AppColors.accentColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      if (friends.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Text(
-                            'No friends in this split.',
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: FontWeight.w400,
-                              fontSize: 12,
-                              color: AppColors.accentColor.withOpacity(0.7),
-                            ),
-                          ),
-                        )
-                      else
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: friends.length,
-                          itemBuilder: (context, index) {
-                            final friend = friends[index];
-                            return Padding(
-                              padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    friend['name'] ?? 'Unknown',
-                                    style: FontManager().getTextStyle(
-                                      context,
-                                      lWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                      color: AppColors.accentColor,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'Amount Due: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(friend['amountDue'] ?? 0)}',
-                                        style: FontManager().getTextStyle(
-                                          context,
-                                          lWeight: FontWeight.w400,
-                                          fontSize: 12,
+                            )
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: friends.length,
+                              itemBuilder: (context, index) {
+                                final friend = friends[index];
+                                return Column(
+                                  children: [
+                                    _buildUserDetails(context, friend, animation),
+                                    if (index < friends.length - 1)
+                                      const Padding(
+                                        padding: EdgeInsets.only(top: 8.0),
+                                        child: Divider(
                                           color: AppColors.accentColor,
+                                          thickness: 0.2,
                                         ),
                                       ),
-                                      Text(
-                                        'Paid: ${friend['isPaid'] == true ? 'Yes' : 'No'}',
-                                        style: FontManager().getTextStyle(
-                                          context,
-                                          lWeight: FontWeight.w400,
-                                          fontSize: 12,
-                                          color: AppColors.accentColor.withOpacity(0.7),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  if (friend['priorities'] != null) ...[
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      'Priorities:',
-                                      style: FontManager().getTextStyle(
-                                        context,
-                                        lWeight: FontWeight.w500,
-                                        fontSize: 12,
-                                        color: AppColors.accentColor,
-                                      ),
-                                    ),
-                                    Row(
-                                      children: [
-                                    if ((friend['priorities']['Veg'] ?? 0) > 0)
-                                      Text(
-                                        'Veg: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(friend['priorities']['Veg'])}',
-                                        style: FontManager().getTextStyle(
-                                          context,
-                                          lWeight: FontWeight.w400,
-                                          fontSize: 12,
-                                          color: AppColors.accentColor.withOpacity(0.7),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                    if ((friend['priorities']['Non veg'] ?? 0) > 0)
-                                      Text(
-                                        'Non Veg: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(friend['priorities']['Non veg'])}',
-                                        style: FontManager().getTextStyle(
-                                          context,
-                                          lWeight: FontWeight.w400,
-                                          fontSize: 12,
-                                          color: AppColors.accentColor.withOpacity(0.7),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                    if ((friend['priorities']['Alcohol'] ?? 0) > 0)
-                                      Text(
-                                        'Alcohol: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(friend['priorities']['Alcohol'])}',
-                                        style: FontManager().getTextStyle(
-                                          context,
-                                          lWeight: FontWeight.w400,
-                                          fontSize: 12,
-                                          color: AppColors.accentColor.withOpacity(0.7),
-                                        ),
-                                      ),
-                                  ])
                                   ],
-                                  if (index < friends.length - 1)
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: Divider(
-                                        color: AppColors.accentColor.withOpacity(0.3),
-                                        thickness: 0.5,
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-
-                      // Close Button
-                      const SizedBox(height: 12),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: ScaleTransition(
-                          scale: Tween<double>(begin: 0.8, end: 1).animate(
-                            CurvedAnimation(
-                              parent: ModalRoute.of(context)!.animation!,
-                              curve: Curves.easeOutBack,
+                                );
+                              },
                             ),
-                          ),
-                          
-                        ),
-                      ),
-                      
+                      const SizedBox(height: 12),
                     ],
                   ),
                 ),
@@ -802,5 +496,233 @@ void foodieFundsDetails(BuildContext context, String foodDetailsId) async {
     snackBarCalled(context, 'Error fetching details: $e');
   }
 }
+
+// Reusable function for user details
+Widget _buildUserDetails(BuildContext context, Map<String, dynamic> user, Animation<double> animation) {
+  return Padding(
+    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+    child: Stack(
+      children: [
+        // Main user details content
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 20), // Space for the Paid status
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Name
+                Container(
+                  width: MediaQuery.sizeOf(context).width / 4,
+                  child: Text(
+                    user['name'] ?? 'Unknown',
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: AppColors.accentColor,
+                    ),
+                  ),
+                ),
+                 if (user['priorities'] != null) ...[
+             
+              Container(
+                width: MediaQuery.sizeOf(context).width / 3,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Priorities:',
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w500,
+                        fontSize: 12,
+                        color: AppColors.accentColor,
+                      ),
+                    ),
+                    if ((user['priorities']['Veg'] ?? 0) > 0)
+                      Text(
+                        'Veg: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(user['priorities']['Veg'])}',
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: AppColors.accentColor.withOpacity(0.7),
+                        ),
+                      ),
+                    if ((user['priorities']['Non veg'] ?? 0) > 0)
+                      Text(
+                        'Non Veg: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(user['priorities']['Non veg'])}',
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: AppColors.accentColor.withOpacity(0.7),
+                        ),
+                      ),
+                    if ((user['priorities']['Alcohol'] ?? 0) > 0)
+                      Text(
+                        'Alcohol: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(user['priorities']['Alcohol'])}',
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: AppColors.accentColor.withOpacity(0.7),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+                // Amount Due
+                Container(
+                  width: MediaQuery.sizeOf(context).width / 4,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Due:',
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: AppColors.accentColor,
+                        ),
+                      ),
+                      Text(
+                        '${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(user['amountDue'] ?? 0)}',
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: AppColors.accentColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            // Priorities
+           
+          ],
+        ),
+        // Paid status in top-right corner
+        Positioned(
+          top: 0,
+          right: 0,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: user['isPaid'] == true ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              'Paid: ${user['isPaid'] == true ? "Yes" : "No"}',
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.w400,
+                fontSize: 12,
+                color: user['isPaid'] == true ? Colors.green : Colors.red,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
+// Reusable function for section headers (unchanged)
+Widget _buildSectionHeader(BuildContext context, String title, IconData icon, Animation<double> animation) {
+  return Row(
+    children: [
+      ScaleTransition(
+        scale: Tween<double>(begin: 0.8, end: 1).animate(
+          CurvedAnimation(parent: animation, curve: Curves.easeOut),
+        ),
+        child: Icon(icon, size: 18, color: AppColors.accentColor),
+      ),
+      const SizedBox(width: 8),
+      Text(
+        title,
+        style: FontManager().getTextStyle(
+          context,
+          lWeight: FontWeight.w700,
+          fontSize: 16,
+          color: AppColors.accentColor,
+        ),
+      ),
+    ],
+  );
+}
+
+// Reusable function for header (unchanged)
+Widget _buildHeader(BuildContext context, Map<String, dynamic> data, Animation<double> animation) {
+  return Container(
+    width: double.infinity,
+    padding: const EdgeInsets.all(12.0),
+    decoration: BoxDecoration(
+      color: AppColors.primaryColor,
+      
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            ScaleTransition(
+              scale: Tween<double>(begin: 0.8, end: 1).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeOut),
+              ),
+              child: Icon(
+                Icons.restaurant,
+                size: 18,
+                color: AppColors.backgroundColor,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              data['splitName'] ?? 'Foodie Split',
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.w600,
+                fontSize: 18,
+                color: AppColors.backgroundColor,
+              ),
+            ),
+          ],
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Subcategory: ${data['subcategory'] ?? 'N/A'}',
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.w400,
+                fontSize: 12,
+                color: AppColors.backgroundColor.withOpacity(0.7),
+              ),
+            ),
+            SizedBox(height: 5,),
+            Text(
+              'Total Amount: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(data['totalAmount'] ?? 0)}',
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.w600,
+                fontSize: 14,
+                color: AppColors.backgroundColor,
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+}

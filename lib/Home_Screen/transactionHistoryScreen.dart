@@ -188,9 +188,7 @@ void _onScroll() {
                    height: MediaQuery.sizeOf(context).height/1.25,
                    child: SingleChildScrollView(
                      controller: scrollController,
-                     child: Expanded(
-                       child: transactionsHistoryList(),
-                     ),
+                     child: transactionsHistoryList(),
                    ),
                  )
                 ],

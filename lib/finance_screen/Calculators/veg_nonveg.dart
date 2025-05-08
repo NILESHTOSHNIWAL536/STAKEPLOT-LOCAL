@@ -582,7 +582,6 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       ),
     );
   }
-
   Widget _buildInputColumn(String label, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
@@ -616,7 +615,6 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       ),
     );
   }
-
   void addSocketMessage(addedUser, String amount, String splitName,
       String splitID, double totalAmount) {
     if (addedUser.isEmpty) return;
@@ -650,7 +648,6 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       socket.emit("LoadCharts", {"roomId": userToSend});
     });
   }
-
   void splitUserAmountFood(context, String amount, List members, String name,
       String subCategories, dynamic shareFriends) async {
     List nameList = [];
@@ -670,8 +667,6 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
         'priorities': data
       });
     });
-
-
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
 
@@ -683,6 +678,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       "paymentStatus": nameList,
       "image": '',
       'isVegNonVeg': true,
+      "ismanual":false,
     };
 
   
