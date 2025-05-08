@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/Profile/friends.dart';
 import 'package:flutter_application_code_stakeplot/Profile/notifications.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/animated/splashScreen.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/controller.dart/userController.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/AutoLoan.dart';
@@ -32,8 +33,14 @@ import 'Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'onboarding_screens/onboarding_screen.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+
 
 FinvuManager finvuManager = FinvuManager();
+late IO.Socket mainPageWebSocket;
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+
 
 void main()async {
   Get.put(UserController());
@@ -55,11 +62,23 @@ void checkFirebase() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    // print('✅ Firebase is set up correctly!');
+    
+
+  mainPageWebSocket = IO.io(urlWithLocallHost,
+        IO.OptionBuilder()
+            .setTransports(['websocket'])
+            .enableForceNewConnection()
+            .build());
+    mainPageWebSocket.connect();
+
   } catch (e) {
     print('❌ Firebase setup error: $e');
   }
 }
+
+
+ 
+
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -86,6 +105,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+       navigatorKey: navigatorKey, 
       theme: ThemeData(
         
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

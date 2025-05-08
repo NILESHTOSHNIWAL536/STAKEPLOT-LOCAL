@@ -65,8 +65,7 @@ void seletedBankUpdateInfo(id, context) async {
 }
 
 void getAllTransaction(context) async {
-  var response =
-      await getDataApiCall("${url}/transactionauto/getTransactions/${1}/empty");
+  var response =await getDataApiCall("${url}/transactionauto/getTransactions/${1}/empty");
   expire(response, context);
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);

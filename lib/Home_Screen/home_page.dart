@@ -30,6 +30,7 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/controller.dart/userController.dart';
 import 'package:flutter_application_code_stakeplot/customNoti.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/userAvatar.dart';
 import 'package:home_widget/home_widget.dart';
@@ -83,6 +84,8 @@ class _HomePageState extends State<HomePage> {
     getAck();
     getBudget();
     getUserInfomations();
+    contextGlobal=context;
+    setUpSocketListenerMainPage(context);
     getUserLend(context);
     getBudget();
     getHiddenTransactions(context);
@@ -93,6 +96,7 @@ class _HomePageState extends State<HomePage> {
     getAllContstant(context);
     getCustomCategory(context);
     allOrGroupTransactionsName.value = StringConstant.allTransactions;
+   
     await getRemainders(context);
     await updateWidget();
     lifecycleHandler = AppLifecycleHandler(currentId.value); // Replace with actual user ID

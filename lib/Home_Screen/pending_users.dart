@@ -239,15 +239,14 @@ class _UserListScreenState extends State<UserListScreen> {
                         InkWell(
                           onTap: () async {
                             // Check if the action is already completed
-                            if (isDue && (data['isPaid'] ?? false)) {
-                              snackBarCalled(context,
-                                  'This bill has already been requested.');
-                              return;
-                            } else if (!isDue &&
-                                (data['reminderSent'] ?? false)) {
-                              snackBarCalled(context, 'Reminder already sent.');
-                              return;
-                            }
+                            // if (isDue && (data['isPaid'] ?? false)) {
+                            //   snackBarCalled(context,'This bill has already been requested.');
+                            //   return;
+                            // } 
+                            // else if (!isDue && (data['reminderSent'] ?? false)) {
+                            //   snackBarCalled(context, 'Reminder already sent.');
+                            //   return;
+                            // }
 
                             String message;
                             if (isDue) {
@@ -279,7 +278,7 @@ class _UserListScreenState extends State<UserListScreen> {
                             }
 
                             // Show SnackBar
-                            snackBarCalled(context, message);
+                            // snackBarCalled(context, message);
 
                             // Send notification
                             sendNotificationsToDevice(
@@ -289,7 +288,13 @@ class _UserListScreenState extends State<UserListScreen> {
                                   ? 'Successfully paid your bill of ${data['amount'] ?? "0000"} to ${userName.value}.'
                                   : 'You need to pay ${data['amount'] ?? "0000"} to ${userName.value}.',
                               "/remainder",
+                              "",
+                              "",
+                              message,
+                              data['_id']
                             );
+
+
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(

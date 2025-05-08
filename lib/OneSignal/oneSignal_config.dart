@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/pending_users.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -130,7 +131,7 @@ Future<void> getDeviceInfo(
   }
   else
   {
-      getDeviceLocalDetails(playerId,emailController, passwordController, context);
+     getDeviceLocalDetails(playerId,emailController, passwordController, context);
   }
 
  
@@ -192,15 +193,21 @@ void oneSignalAddClickListener(context)
   });
 
    OneSignal.Notifications.addForegroundWillDisplayListener((event) {
-      
-      String s=event.notification.body.toString();
+      String s=event.notification.body.toString().toLowerCase().trim();
+      print("s0000000000000000000000000000000000000000&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+      print(s);
       String t1="There is a problem with you bank server. Please try again later.";
       String t2="we couldn't able to fetch your bank details, try again later";
       String t3="Your bank account data has been successfully fetched.";
-      if(s==t1 || s==t2 || s==t3){
-              isFected.value=false;
+      if(s=="you have been logged out from stakeplot!")
+      {
+          //  logoutUserFromDevice(context);
+           return;
       }
-});
+      if(s.contains("problem")|| s.contains("try again later") || s.contains("successfully fetched")){
+              isFected.value=false;
+      } 
+   });
 
  }catch(e)
  {
