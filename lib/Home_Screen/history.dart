@@ -330,7 +330,9 @@ Widget getIconsForHideUpdateSplit(double iconSize, double padding, String catego
                   children: [
                     // Hide Transaction
                     SizedBox(width: 8 * scaleFactor),
-                     
+                      (() {
+                      return SizedBox.shrink();
+                    })(),
                     !isValidUrl(logo)
                         ? !isManual?Icon(Icons.account_balance, size: 22, color: AppColors.primaryColor):SizedBox.shrink()// Fallback icon
                         : Image.network(

@@ -41,6 +41,7 @@ List<String> trasactionsDataCustomLabel = [];
 RxBool flagTrasaction = false.obs;
 RxBool isFromEditDeatils = false.obs;
 RxString range = ''.obs;
+RxString filterText = ''.obs;
 List<double> trasactionsDataCreditWeekly = [];
 List<double> trasactionsDataDebitWeekly = [];
 RxList trasactionsDataWeekly = [].obs;

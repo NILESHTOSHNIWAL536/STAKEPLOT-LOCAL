@@ -42,7 +42,7 @@ Future<void> getRemainders(context) async {
 }
 
 Future<void> getFoodieFundsDetails(BuildContext context, String id) async {
-  String urlPath = "${url}/reminders/get-foodie-funds-details/$id";
+  String urlPath = "${url}/reminders/$id";
   var response = await getDataApiCall(urlPath);
   print("Response: ${response.body}"); // Log the response body
   if (getFlagOfResponse(response)) {
