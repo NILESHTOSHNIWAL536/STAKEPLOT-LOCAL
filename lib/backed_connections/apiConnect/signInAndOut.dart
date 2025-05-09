@@ -86,16 +86,18 @@ Future<void> loginUser(
     BuildContext context,
     [bool flag = false]) async {
   try {
+    print(deviceData);
     var response = await postDataApiCallwithOutSharedPref('${url}/user/login', {
       'email': emailController.text.toString(),
       'userpassword': passwordController.text.toString(),
       'deviceInfo': deviceData,
     });
-
-    if (response.statusCode == 409) {
+     printData(response);
+    if (response.statusCode == 409)
+     {
       forceLoginShowModal(context, response, emailController, passwordController);
     } else if (response.statusCode == 500) {
-      snackBarCalledSignup(context, "Server Error!", Colors.red);
+      snackBarCalled(context, "Server Error!", Colors.red);
     } else if (getFlagOfResponse(response)) {
       loginCalledData(response, context);
       await screenDataLocalStorage();
@@ -204,8 +206,9 @@ void forceLogoutUser( sessionId, email, userpassword, context, id, deviceName)as
       });
     if (getFlagOfResponse(response))
     {
+      final body = json.decode(response.body);
       loginCalledData(response,context);
-      sendNotificationsToDevice(currentId.value, context,"You have been logged out from StakePlot!"); 
+      sendNotificationsToDevice(body['data']['_id'], context,"You have been logged out from StakePlot!"); 
     }else {
       snackBarCalled(context, "can't logout user!", Colors.red);
     }

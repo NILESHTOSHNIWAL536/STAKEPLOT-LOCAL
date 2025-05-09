@@ -267,7 +267,7 @@ class _ChatState extends State<Chat> {
         decoration: BoxDecoration(
            color: message.isMe ? AppColors.appIcon:AppColors.chatcolor,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(width: 1, color: AppColors.primaryColor),
+         
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -437,42 +437,25 @@ Widget build(BuildContext context) {
               builder: (context, snapshot, child) {
                 return Container(
                   // color: AppColors.backgroundColor,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                     
-                      // GestureDetector(
-                      //     onTap: () {
-                      //       pushDetails();
-                      //     },
-                      //     child: UserAvatar(
-                      //         url:avaterUrlPath(data['name']),
-                      //         width: 8,
-                      //         height: 17
-                      //   )),
+                  child: GestureDetector(
+                    onTap: () {
                       
-                      GestureDetector(
-                        onTap: () {
-                          
-                          pushDetails();
-                        },
-                        child: Center(
-                          child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 2),
-                            width: MediaQuery.of(context).size.width / 1.7,
-                            child: Text(
-                              data['name'],
-                              style: FontManager().getTextStyle(context,
-                              color: AppColors.backgroundColor,
-                                  fontSize: 16, lWeight: FontWeight.bold),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ),
+                      pushDetails();
+                    },
+                    child: Center(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 2),
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: Text(
+                          data['name'],
+                          style: FontManager().getTextStyle(context,
+                          color: AppColors.backgroundColor,
+                              fontSize: 16, lWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
                       ),
-                    ],
+                    ),
                   ),
                 );
               }),
@@ -663,7 +646,7 @@ Widget build(BuildContext context) {
       ),
       padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: isme ? AppColors.primaryColor : null,
+        color: isme ? AppColors.appIcon : null,
         borderRadius: BorderRadius.only(
           bottomRight: isme ? Radius.zero : Radius.circular(10),
           topLeft: Radius.circular(10.0),
@@ -760,7 +743,7 @@ Widget build(BuildContext context) {
               IconButton(
                 icon: Icon(
                   Icons.image,
-                  color: AppColors.primaryColor,
+                  color: AppColors.appIcon,
                   size: 25,
                 ),
                 onPressed: getImage,
@@ -768,7 +751,7 @@ Widget build(BuildContext context) {
               IconButton(
                 icon: Icon(
                   Icons.send,
-                  color: AppColors.primaryColor,
+                  color: AppColors.appIcon,
                   size: 25,
                 ),
                 onPressed: () {

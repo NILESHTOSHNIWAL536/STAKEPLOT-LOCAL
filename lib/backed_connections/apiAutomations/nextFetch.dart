@@ -431,7 +431,8 @@ Widget build(BuildContext context) {
 
   void checkAndFetchData() async {
     await getBankAccounts();
-    if (consentAndHandleDetails.isNotEmpty) {
+    if (consentAndHandleDetails.isNotEmpty)
+     {
       consentAndHandleDetails.forEach((item) {
         getWeeklyfetchData(item["consentId"], item["consendHandleId"],
             item["sessionId"], item["custId"], item['lastFetch']);

@@ -225,6 +225,7 @@ class _UserListScreenState extends State<UserListScreen> {
 
                             // Show SnackBar
                             // snackBarCalled(context, message);
+                            // snackBarCalled(context, message);
 
                             // Send notification
                             sendNotificationsToDevice(
@@ -237,7 +238,8 @@ class _UserListScreenState extends State<UserListScreen> {
                               "",
                               "",
                               message,
-                              data['_id']
+                              data['_id'],
+                            
                             );
                                     },
                                     child: Container(

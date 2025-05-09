@@ -303,27 +303,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
         InkWell(
           onTap: () async {
              await storeDeviceInfo();
-            final SharedPreferences _pref =await SharedPreferences.getInstance();
-            // Remove tokens and other session data
-            await _pref.remove("ConsentHandleId");
-            await _pref.remove("consentId");
-            await _pref.remove("from");
-            await _pref.remove("to");
-            await _pref.remove("sessionId");
-
-            // Navigate back to home screen
-            Navigator.of(context)
-                .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-            Navigator.pushReplacementNamed(context, '/');
-
-            clearGetX();
-
-            try {
-              var response = await postDataApiCall("${url}/user/logout", {});
-            } catch (e) {}
-
-            await _pref.remove("token");
-            await _pref.remove("accessToken");
+             logoutUserFromDevice(context);
           },
           child: Container(
             decoration: BoxDecoration(

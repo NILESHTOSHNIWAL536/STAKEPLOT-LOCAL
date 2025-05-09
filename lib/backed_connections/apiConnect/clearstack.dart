@@ -60,11 +60,11 @@ void clearStackShared(BuildContext context) {
 void expire(response, BuildContext context) {
   try {
     var body = json.decode(response.body);
-    if (body['error'].toString() == "JsonWebTokenError") {
-      Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    if (body['error'].toString() == "JsonWebTokenError")
+    {
+      logoutUserFromDevice(context);
     }
   } catch (e) {
-    // Optionally log the error
     debugPrint("Error in expire(): $e");
   }
 }
@@ -86,12 +86,18 @@ Future<bool> check(context, String flag) async {
   return true;
 }
 
-Future<void> storeDeviceInfo() async {
-  var json = await getUserStats();
-  var responce = await postDataApiCall("${url}/deviceScreenTime/", json);
-  if (getFlagOfResponse(responce)) {
-    printData(responce);
-  }
+Future<void> storeDeviceInfo() async
+ {
+
+            var json = await getUserStats();
+            var responce = await postDataApiCall("${url}/deviceScreenTime/", json);
+            if (getFlagOfResponse(responce)) {
+              printData(responce);
+            }
+          try {
+                await postDataApiCall("${url}/user/logout", {});
+            } catch (e) {}
+
 }
 
 void clearGetX() {
@@ -191,4 +197,33 @@ void getAllContstant(context) async {
     var data = jsonDecode(responce.body);
     weekOfThis.value = data['data']['week'];
   }
+}
+
+
+
+void logoutUserFromDevice(context2)async{
+
+   BuildContext context = navigatorKey.currentContext ?? context2;
+
+           try
+           {
+              print(1);
+              final SharedPreferences _pref =await SharedPreferences.getInstance();
+              print(2);
+              clearGetX();
+              print(3);
+              Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+              print(4);
+              Navigator.pushReplacementNamed(context, '/');
+              print(5);
+              await _pref.remove("token");
+              await _pref.remove("accessToken");
+              print(6);
+
+           }
+           catch(e)
+           {
+              print("error=====");
+              print(e);
+           }
 }

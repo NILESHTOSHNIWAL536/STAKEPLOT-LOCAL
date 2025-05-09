@@ -61,8 +61,11 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+
 
 DateTime? _lastSent;
 
@@ -114,4 +117,45 @@ class AppLifecycleHandler extends WidgetsBindingObserver {
 void resentCodeLocaldata() {
   print("Clearing OneSignal notifications");
   OneSignal.Notifications.clearAll();
+}
+
+
+
+setUpSocketListenerMainPage(context) 
+ {
+   try{
+    
+        mainPageWebSocket = IO.io(urlWithLocallHost,
+            IO.OptionBuilder()
+                .setTransports(['websocket'])
+                .enableForceNewConnection()
+                .build());
+
+        mainPageWebSocket.connect();
+
+  
+      mainPageWebSocket.onConnect((_){
+        mainPageWebSocket.emit("addUserToSocket", currentId.value);
+      });
+
+    
+      mainPageWebSocket.on("addUserToSocket",(data) =>{
+          
+            if(data['type']=="logoutUser"){
+                 logoutUserFromDevice(context),  
+            }
+            else if(data['type'] =="fetchedApiCall")
+            {
+                
+            }
+      });
+
+
+
+    
+   }
+   catch(e)
+   {
+    print(e);
+   }
 }

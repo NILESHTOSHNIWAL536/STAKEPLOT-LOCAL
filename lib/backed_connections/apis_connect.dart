@@ -9,7 +9,7 @@ import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 bool flag = true;
-String portNo = flag ? "192.168.1.3" : "localhost";
+String portNo = flag ? "192.168.1.16" : "localhost";
 String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Fields";
@@ -105,6 +105,7 @@ RxList totalInSights = [].obs;
 RxBool getTotalInsightsHistory = false.obs;
 RxList foodieFundsDetailsRemainders = [].obs;
 RxBool getFoodieFundsUsers = false.obs;
+late BuildContext contextGlobal;
 List<String> month = [
   "",
   "January",
@@ -255,14 +256,14 @@ void printData(response, [context = ""]) {
   print(response.body);
 }
 
-void snackBarCalled(context, String text, [Color colors = Colors.black]) {
+void snackBarCalled(BuildContext context, String text, [Color colors = const Color(0xFF43A047)]) {
   showTopSnackBar(
     Overlay.of(context),
     Container(
       height: 40,
       child: CustomSnackBar.success(
         message: text,
-        backgroundColor: Colors.green.shade600,
+        backgroundColor: colors,
         textStyle: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.bold,
