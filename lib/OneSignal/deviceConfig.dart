@@ -120,42 +120,38 @@ void resentCodeLocaldata() {
 }
 
 
-
-setUpSocketListenerMainPage(context) 
- {
-   try{
+void setUpSocketListenerMainPage(BuildContext context) {
+  try {
     
-        mainPageWebSocket = IO.io(urlWithLocallHost,
-            IO.OptionBuilder()
-                .setTransports(['websocket'])
-                .enableForceNewConnection()
-                .build());
+    if (currentId.value == "") return;
 
-        mainPageWebSocket.connect();
+    // Initialize socket connection
+    mainPageWebSocket = IO.io(
+      urlWithLocallHost,
+      IO.OptionBuilder()
+        .setTransports(['websocket'])
+        .enableForceNewConnection()
+        .build(),
+    );
 
-  
-      mainPageWebSocket.onConnect((_){
-        mainPageWebSocket.emit("addUserToSocket", currentId.value);
-      });
+    // Connect the socket
+    mainPageWebSocket.connect();
 
-    
-      mainPageWebSocket.on("addUserToSocket",(data) =>{
-          
-            if(data['type']=="logoutUser"){
-                 logoutUserFromDevice(context),  
-            }
-            else if(data['type'] =="fetchedApiCall")
-            {
-                
-            }
-      });
+    // On successful connection
+    mainPageWebSocket.onConnect((_) {
+      mainPageWebSocket.emit("addUserToSocket", currentId.value);
+    });
 
+    // Listener for events from the socket
+    mainPageWebSocket.on("addUserToSocket", (data) {
+      if (data['type'] == "logoutUser") {
+        logoutUserFromDevice(context);
+      } else if (data['type'] == "fetchedApiCall") {
+        isFected.value = false;
+      }
+    });
 
-
-    
-   }
-   catch(e)
-   {
-    print(e);
-   }
+  } catch (e) {
+    print("Socket connection error: $e");
+  }
 }
