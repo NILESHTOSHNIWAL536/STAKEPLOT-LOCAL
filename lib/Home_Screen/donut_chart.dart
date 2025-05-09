@@ -160,6 +160,9 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                           xValueMapper: (ChartData data, _) => data.category,
                           yValueMapper: (ChartData data, _) => data.value,
                           pointColorMapper: (ChartData data, _) => data.color,
+                          radius: '80%', // Adjust radius to fit border
+                            innerRadius: '50%', 
+                            cornerStyle: CornerStyle.bothCurve,
                           explode: true,
                           explodeIndex: selectedIndex.value,
                           dataLabelSettings:
@@ -178,7 +181,9 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                           },
                         ),
                       ],
-                    )),
+                    )
+                    
+                    ),
             ),
           ),
           Container(

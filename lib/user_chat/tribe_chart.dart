@@ -152,12 +152,12 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
       //       )),
       // ),
                 appBar: PreferredSize(
-  preferredSize: const Size.fromHeight(140),
+  preferredSize: chatSplitAccount.isNotEmpty?const Size.fromHeight(140):const Size.fromHeight(100),
   child: AppBar(
     automaticallyImplyLeading: true,
     backgroundColor: AppColors.appIcon,
     titleSpacing: 0,
-    toolbarHeight: 140,
+    toolbarHeight:chatSplitAccount.isNotEmpty? 140:100,
     title: Padding(
       padding: const EdgeInsets.only(left: 16.0, top: 20.0, bottom: 10.0),
       child: Column(
@@ -184,7 +184,7 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
             ),
           ),
           const SizedBox(height: 8),
-          SizedBox(
+          chatSplitAccount.isNotEmpty?SizedBox(
             height: 40,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -216,7 +216,7 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
                 );
               },
             ),
-          ),
+          ):SizedBox.shrink(),
         ],
       ),
     ),
