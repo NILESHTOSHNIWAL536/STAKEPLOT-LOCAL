@@ -435,9 +435,9 @@ Widget build(BuildContext context) {
     setUpSocketListenerMainPage(context);
     if (consentAndHandleDetails.isNotEmpty)
      {
-      consentAndHandleDetails.forEach((item) {
-        getWeeklyfetchData(item["consentId"], item["consendHandleId"],
-            item["sessionId"], item["custId"], item['lastFetch']);
+      consentAndHandleDetails.forEach((item)
+       {
+        getWeeklyfetchData(item["consentId"], item["consendHandleId"],item["sessionId"], item["custId"], item['lastFetch']);      
       });
     }
     // store data in shared preferences

@@ -74,17 +74,10 @@ Future<void> getBankAccounts() async {
 
 void getWeeklyfetchData(
     consentId, consendHandleId, sessionId, custId, last) async {
-  final String apiUrl = "${url}/finvu/fetchWeekly";
-  final SharedPreferences pref = await SharedPreferences.getInstance();
-  String accessToken = pref.getString("accessToken").toString();
 
-  final response = await http.post(
-    Uri.parse(apiUrl),
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
+  final String apiUrl = "${url}/finvu/fetchWeekly";
+  final String userUrl = "${url}/user/updateFetchStatus";
+  var body={
       'handleId': consendHandleId,
       'custId': custId,
       'consentId': consentId,
@@ -92,12 +85,26 @@ void getWeeklyfetchData(
       'userId': currentId.value,
       'isCron': false,
       'FROM': last,
-    }),
-  );
+    };
+  
+  var userBody={
+    "fetchInProgress":true,
+  };
 
-  if (response.statusCode == 200) {
-   
-  }
+   try
+   {
+     await updateDataApiCall2(userUrl,userBody);
+     await postDataApiCall(apiUrl,body);
+
+   }catch(e){
+      print("error while fetching "+e.toString());
+   }
+
+
+
+
+
+
 }
 
 void storeImageinMapFinvu(context) async {

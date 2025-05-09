@@ -189,6 +189,7 @@ void getUserInfomations() async {
     dob.value = data['dob'].toString().substring(0, 10);
     expenses.value = data['expense'].toString();
     isBankAccountLink.value = data['isBankAccountLinked'] ?? false;
+    isFected.value = data['fetchInProgress'] ?? false;
     cupertinoPin.value = data['cupertino_pin']; //?? '0';
 
     // savedList.clear();

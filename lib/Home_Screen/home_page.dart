@@ -78,12 +78,12 @@ class _HomePageState extends State<HomePage> {
   void callApi()async
   {
     if (!mounted) return;
+    getUserInfomations();
     getBankAccounts();
     getCategoryData();
     getPost();
     getAck();
     getBudget();
-    getUserInfomations();
     contextGlobal=context;
     setUpSocketListenerMainPage(context);
     getUserLend(context);
