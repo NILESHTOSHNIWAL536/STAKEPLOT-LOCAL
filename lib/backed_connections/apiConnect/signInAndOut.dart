@@ -86,7 +86,8 @@ Future<void> loginUser(
     BuildContext context,
     [bool flag = false]) async {
   try {
-    print(deviceData);
+
+    print(url);
     var response = await postDataApiCallwithOutSharedPref('${url}/user/login', {
       'email': emailController.text.toString(),
       'userpassword': passwordController.text.toString(),

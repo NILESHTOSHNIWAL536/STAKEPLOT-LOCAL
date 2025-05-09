@@ -152,40 +152,74 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                       ),
                     )
                   : SfCircularChart(
-                      legend: Legend(
-                          isVisible: true, position: LegendPosition.bottom),
-                      series: <CircularSeries>[
-                        DoughnutSeries<ChartData, String>(
-                          dataSource: chartData,
-                          xValueMapper: (ChartData data, _) => data.category,
-                          yValueMapper: (ChartData data, _) => data.value,
-                          pointColorMapper: (ChartData data, _) => data.color,
-                          radius: '80%', // Adjust radius to fit border
-                            innerRadius: '50%', 
-                            cornerStyle: CornerStyle.bothCurve,
-                          explode: true,
-                          explodeIndex: selectedIndex.value,
-                          dataLabelSettings:
-                              const DataLabelSettings(isVisible: false),
-                          enableTooltip: true,
-                          onPointTap: (ChartPointDetails details) {
-                            if (chartData.isNotEmpty &&
-                                details.pointIndex != null &&
-                                details.pointIndex! < chartData.length) {
-                              if (selectedIndex.value == details.pointIndex) {
-                                selectedIndex.value = -1;
-                              } else {
-                                selectedIndex.value = details.pointIndex!;
-                              }
-                            }
-                          },
-                        ),
-                      ],
-                    )
-                    
+                    legend: Legend(
+                      isVisible: true,
+                      position: LegendPosition.bottom,
+                      textStyle: FontManager().getTextStyle(
+                        context,
+                        fontSize: 12,
+                        color: AppColors.bg3,
+                      ),
                     ),
-            ),
+                    series: <CircularSeries>[
+                      DoughnutSeries<ChartData, String>(
+                        dataSource: chartData,
+                        xValueMapper: (ChartData data, _) => data.category,
+                        yValueMapper: (ChartData data, _) => data.value,
+                        pointColorMapper: (ChartData data, _) => data.color,
+                        pointRenderMode: PointRenderMode.gradient,
+                        // Adjusted radius for better proportion
+                        radius: '80%',
+                        innerRadius: '50%',
+                        // Smoother corner style
+                       // cornerStyle: CornerStyle.bothCurve,
+                        // Enhanced explode effect
+                        explode: true,
+                        explodeIndex: selectedIndex.value,
+                        explodeOffset: '10%', // Increased for prominence
+                        // Enable and style data labels
+                       
+                        // Add stroke for segment separation
+                        //strokeWidth: 2.0,
+                       // strokeColor: AppColors.bg3.withOpacity(0.2),
+                        // Enhanced tooltip
+                        enableTooltip: true,
+                        // tooltipSettings: TooltipSettings(
+                        //   enable: true,
+                        //   format: '{point.x}: ₹{point.y}',
+                        //   textStyle: FontManager().getTextStyle(
+                        //     context,
+                        //     fontSize: 12,
+                        //     color: AppColors.bg1,
+                        //   ),
+                        //   color: AppColors.accentColor.withOpacity(0.9),
+                        //   borderWidth: 1,
+                        //   borderColor: AppColors.bg3,
+                        // ),
+                        // Highlight selected segment
+                        selectionBehavior: SelectionBehavior(
+                          enable: true,
+                          selectedOpacity: 1.0,
+                          unselectedOpacity: 0.1,
+                         
+                          
+                        ),
+                        onPointTap: (ChartPointDetails details) {
+                          if (chartData.isNotEmpty &&
+                              details.pointIndex != null &&
+                              details.pointIndex! < chartData.length) {
+                            if (selectedIndex.value == details.pointIndex) {
+                              selectedIndex.value = -1;
+                            } else {
+                              selectedIndex.value = details.pointIndex!;
+                            }
+                          }
+                        },
+                      ),
+                    ],
+                  )),
           ),
+        ),
           Container(
               padding: const EdgeInsets.all(12.0),
               child: Obx(
