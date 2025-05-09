@@ -713,7 +713,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       addSocketMessage(nameList, amount.toString(), "Calculation".toString(),
           splitID.value, totalAmount);
 
-      snackBarCalled(context, "Split amount sent to users!", Colors.black);
+      snackBarCalled(context, "Split amount sent to users!");
       Navigator.pop(context);
     } else {
       snackBarCalled(context, "can't split error!", Colors.red);

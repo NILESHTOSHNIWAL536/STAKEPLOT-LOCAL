@@ -4,6 +4,8 @@ import "package:flutter/material.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
+import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
+import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
@@ -39,12 +41,16 @@ class _TribeSearchState extends State<TribeChats> {
   String myId = "";
   var myprofile;
   RxBool getChatData = false.obs;
+  //Added for chat split
+   List<dynamic> chatSplitAccount = [];
+  ValueNotifier<bool> getChatSplit = ValueNotifier<bool>(false);
   @override
   void initState() {
     super.initState();
     getUserInfomations();
     getChatLoader();
     getTransactions();
+    getChatsSplitAccounts(context, myId);
 
     socket = IO.io(
         urlWithLocallHost,
@@ -101,46 +107,146 @@ class _TribeSearchState extends State<TribeChats> {
     } else {}
   }
 
+      int getTotalUnopenedMessages() {
+    return chatList.fold<int>(0, (total, item) => total + (item['count']?.toInt() ?? 0) as int);
+  }
+void getChatsSplitAccounts(BuildContext context, String id) async {
+    var response = await getDataApiCall("${url}/split/pending-user");
+    if (response.statusCode == 200) {
+      var his = jsonDecode(response.body);
+      var obj = his['data'];
+      setState(() {
+        chatSplitAccount.clear();
+        chatSplitAccount.addAll(obj);
+        getChatSplit.value = !getChatSplit.value; // Trigger UI update
+      });
+    } else {
+      print('Failed to fetch chat split accounts: ${response.statusCode}');
+    }
+  }
+
+  // ... existing code ...
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       // bottomNavigationBar: BottomNavigations(data: sizeRoom ? 3 : 2),
       extendBody: true,
-      backgroundColor: AppColors.backgroundColor,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: AppColors.backgroundColor,
-        title: Text('Messages',
-                style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.bold,
-                    fontSize: 24,
-                    color: AppColors.message)),
-        leading: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(
-              Icons.arrow_back_sharp,
-              color: AppColors.primaryColor,
-              size: 30,
-            )),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-
-        //padding: const EdgeInsets.symmetric(vertical: 10),
-        child: ListView(
-          // mainAxisAlignment: MainAxisAlignment.start,
-          // crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-              
-            InputDate2("Search", TextInputType.name, search),
-            const SizedBox(
-              height: 16,
+      backgroundColor: AppColors.appIcon,
+      // appBar: AppBar(
+      //   automaticallyImplyLeading: false,
+      //   backgroundColor: AppColors.appIcon,
+      //   title: Text('Messages',
+      //           style: FontManager().getTextStyle(context,
+      //               lWeight: FontWeight.bold,
+      //               fontSize: 24,
+      //               color: AppColors.backgroundColor)),
+      //   leading: InkWell(
+      //       onTap: () {
+      //         Navigator.pop(context);
+      //       },
+      //       child: Icon(
+      //         Icons.arrow_back_sharp,
+      //         color: AppColors.primaryColor,
+      //         size: 30,
+      //       )),
+      // ),
+                appBar: PreferredSize(
+  preferredSize: const Size.fromHeight(140),
+  child: AppBar(
+    automaticallyImplyLeading: true,
+    backgroundColor: AppColors.appIcon,
+    titleSpacing: 0,
+    toolbarHeight: 140,
+    title: Padding(
+      padding: const EdgeInsets.only(left: 16.0, top: 20.0, bottom: 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Hi, ${myprofile != null ? myprofile['name'] ?? 'User' : 'User'}', // Null check for myprofile and myprofile['name']
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.bold,
+              fontSize: 24,
+              color: AppColors.backgroundColor,
             ),
-            Obx(() => reloadCharts.value ? getChatList() : getChatList()),
-          ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${getTotalUnopenedMessages() ?? 0} messages received', // Null check for chatList
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.normal,
+              fontSize: 16,
+              color: AppColors.backgroundColor,
+            ),
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            height: 40,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: chatSplitAccount?.length ?? 0, // Null check for frdsList
+              itemBuilder: (context, index) {
+                var friend = chatSplitAccount?[index]; // Safe access to frdsList[index]
+                if (friend == null) {
+                  return const SizedBox.shrink(); // Return empty widget if friend is null
+                }
+                return Row(
+                  children: [
+                    UserAvatar(
+                      url: avaterUrlPath(friend['name'] ?? ''), // Null check for friend['name']
+                      width: 30,
+                      height: 30,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      friend['name'] ?? 'Unknown', // Null check for friend['name']
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.normal,
+                        fontSize: 14,
+                        color: AppColors.backgroundColor,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    ),
+    centerTitle: false,
+    elevation: 0,
+  ),
+),
+      body: Container(
+        decoration: BoxDecoration(
+          color: AppColors.backgroundColor, // Set your desired color here
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(24), // Adjust the radius as needed
+            topRight: Radius.circular(24), // Adjust the radius as needed
+          ),),
+        child: Padding(
+          padding: EdgeInsets.all(16),
+        
+          //padding: const EdgeInsets.symmetric(vertical: 10),
+          child: ListView(
+            // mainAxisAlignment: MainAxisAlignment.start,
+            // crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+                
+              InputDate2("Search", TextInputType.name, search),
+              const SizedBox(
+                height: 16,
+              ),
+              Obx(() => reloadCharts.value ? getChatList() : getChatList()),
+            ],
+          ),
         ),
       ),
     );

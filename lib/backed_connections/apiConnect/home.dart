@@ -204,3 +204,16 @@ bool isCurrentMonth(String date, int m) {
     return false;
   }
 }
+
+
+void getChatsSplitAccounts(context, String id) async {
+  var response = await getDataApiCall("${url}/split/pending-user");
+  if (response.statusCode == 200) {
+    var his = jsonDecode(response.body);
+    var obj = his['data'];
+    chatSplitAccount.clear();
+    chatSplitAccount.addAll(obj);
+    getChatSplit.value = !getChatSplit.value;
+  } else {}
+}
+
