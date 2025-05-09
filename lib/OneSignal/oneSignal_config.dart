@@ -126,7 +126,7 @@ Future<void> getDeviceInfo(
 
   if(pref.containsKey(key))
   {
-    deviceData.value = jsonDecode(pref.getString(key) ?? "{}");
+     deviceData.value = jsonDecode(pref.getString(key) ?? "{}");
      loginUser(emailController, passwordController, context);
   }
   else
@@ -141,9 +141,9 @@ Future<void> getDeviceInfo(
 
 void getDeviceLocalDetails(String playerId,emailController, passwordController, context)async{
 
-final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
 try {
+     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     if (Platform.isAndroid) {
       final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
 
@@ -165,14 +165,23 @@ try {
       };
     } else {
       deviceData.value = {
-        'deviceId': playerId,
+        'deviceId':( playerId==""||playerId==null)?"":playerId,
         'deviceName': 'Unknown',
         'os': 'Unknown',
+        'brand': 'Unknown',
         'osVersion': 'Unknown',
       };
     }
   } catch (e) {
+    print("Error getting device info:");
     print('Error getting device info: $e');
+    deviceData.value = {
+        'deviceId':( playerId==""||playerId==null)?"":playerId,
+        'deviceName': 'Unknown',
+        'os': 'Unknown',
+        'brand': 'Unknown',
+        'osVersion': 'Unknown',
+      };
   }
 
    loginUser(emailController, passwordController, context);

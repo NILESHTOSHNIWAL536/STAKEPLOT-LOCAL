@@ -124,29 +124,31 @@ void resentCodeLocaldata() {
 setUpSocketListenerMainPage(context) 
  {
    try{
-    //  if (mainPageWebSocket == null || mainPageWebSocket.disconnected)
-      // {
+    
         mainPageWebSocket = IO.io(urlWithLocallHost,
             IO.OptionBuilder()
                 .setTransports(['websocket'])
                 .enableForceNewConnection()
                 .build());
-    //  }
+
         mainPageWebSocket.connect();
 
   
-     mainPageWebSocket.onConnect((_){
-      mainPageWebSocket.emit("addUserToSocket", currentId.value);
-    });
+      mainPageWebSocket.onConnect((_){
+        mainPageWebSocket.emit("addUserToSocket", currentId.value);
+      });
 
-            // {type: logoutUser, data: {}}
+    
       mainPageWebSocket.on("addUserToSocket",(data) =>{
           
             if(data['type']=="logoutUser"){
-                  print("00000000 "),
                  logoutUserFromDevice(context),  
             }
-        });
+            else if(data['type'] =="fetchedApiCall")
+            {
+                
+            }
+      });
 
 
 

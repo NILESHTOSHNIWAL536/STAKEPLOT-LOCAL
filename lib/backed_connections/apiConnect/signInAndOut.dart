@@ -86,17 +86,18 @@ Future<void> loginUser(
     BuildContext context,
     [bool flag = false]) async {
   try {
+    print(deviceData);
     var response = await postDataApiCallwithOutSharedPref('${url}/user/login', {
       'email': emailController.text.toString(),
       'userpassword': passwordController.text.toString(),
       'deviceInfo': deviceData,
     });
-
+     printData(response);
     if (response.statusCode == 409)
      {
       forceLoginShowModal(context, response, emailController, passwordController);
     } else if (response.statusCode == 500) {
-      snackBarCalledSignup(context, "Server Error!", Colors.red);
+      snackBarCalled(context, "Server Error!", Colors.red);
     } else if (getFlagOfResponse(response)) {
       loginCalledData(response, context);
       await screenDataLocalStorage();
