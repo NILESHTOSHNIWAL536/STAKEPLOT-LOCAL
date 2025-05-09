@@ -173,8 +173,7 @@ try {
       };
     }
   } catch (e) {
-    print("Error getting device info:");
-    print('Error getting device info: $e');
+  
     deviceData.value = {
         'deviceId':( playerId==""||playerId==null)?"":playerId,
         'deviceName': 'Unknown',
@@ -203,8 +202,6 @@ void oneSignalAddClickListener(context)
 
    OneSignal.Notifications.addForegroundWillDisplayListener((event) {
       String s=event.notification.body.toString().toLowerCase().trim();
-      print("s0000000000000000000000000000000000000000&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-      print(s);
       String t1="There is a problem with you bank server. Please try again later.";
       String t2="we couldn't able to fetch your bank details, try again later";
       String t3="Your bank account data has been successfully fetched.";

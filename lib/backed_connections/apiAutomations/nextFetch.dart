@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
@@ -431,6 +432,7 @@ Widget build(BuildContext context) {
 
   void checkAndFetchData() async {
     await getBankAccounts();
+    setUpSocketListenerMainPage(context);
     if (consentAndHandleDetails.isNotEmpty)
      {
       consentAndHandleDetails.forEach((item) {
