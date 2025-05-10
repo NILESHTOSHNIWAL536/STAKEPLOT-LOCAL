@@ -492,6 +492,7 @@ Widget getIconsForHideUpdateSplit(double iconSize, double padding, String catego
                       child: GestureDetector(
                         onTap: () async {
                            FocusScope.of(context).unfocus();
+                           transactionsId.value= transaction['_id'];
                           await showCustomFriendsModalTransactionHistory(
                             context,
                             amount,

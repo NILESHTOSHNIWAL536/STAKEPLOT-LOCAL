@@ -9,8 +9,8 @@ import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 bool flag = true;
-String portNo = flag ? "172.20.10.3" : "localhost";
-String urlWithLocallHost = flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String portNo = flag ? "192.168.1.49" : "localhost";
+String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Fields";
 RxString expenses = "Loading".obs;
@@ -209,6 +209,7 @@ RxString LastFetchDate = "".obs;
 RxString fetchCount = "".obs;
 RxString BankName = "".obs;
 RxString BankUrl = "".obs;
+RxString transactionsId = "".obs;
 
 
 RxBool isFected = false.obs;
