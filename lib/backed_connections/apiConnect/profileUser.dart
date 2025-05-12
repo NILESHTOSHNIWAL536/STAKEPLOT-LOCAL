@@ -167,6 +167,7 @@ void getUserInfomations() async {
     aboutMe.value = (obj['aboutMe'] == "Hello");
     aboutUS.value = obj['aboutMe'];
     selectedBank.value = obj['selectedBank'] ?? "";
+    userAvatarBackGround.value = obj['avatarBackGround'] ?? "#FA7070";
 
     List s = obj['accounts'];
     income.value = 0;

@@ -77,6 +77,7 @@ RxInt debtLength = 0.obs;
 RxInt paymentLength = 0.obs;
 String userAvatar = "assets/avatars/a.svg";
 RxString userAvatarProfile = "assets/images2/user.svg".obs;
+RxString userAvatarBackGround = "#FA7070".obs;
 RxString userName = "".obs;
 RxString dob = "".obs;
 RxString currentId = "".obs;
