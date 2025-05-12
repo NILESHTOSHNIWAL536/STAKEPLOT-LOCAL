@@ -65,7 +65,7 @@ void seletedBankUpdateInfo(id, context) async {
 }
 
 void getAllTransaction(context) async {
-  var response =await getDataApiCall("${url}/transactionauto/getTransactions/${1}/empty");
+  var response =await getDataApiCall("${url}/transactionauto/getTransactions/${1}/empty/-");
   expire(response, context);
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
@@ -124,7 +124,7 @@ Future<void> getAllTransactionHistory(
         searchController.text.trim() == "" ? "empty" : searchController.text;
     String urlPath = flag
         ? "${url}/transactionauto/get-monthly-transactions-history/${accountId.value}/${type}/${currentPage}"
-        : "${url}/transactionauto/getTransactions/${currentPage}/${text}";
+        : "${url}/transactionauto/getTransactions/${currentPage}/${text}/${accountIdPdf.value.isEmpty?"-":accountIdPdf.value}";
 
     var response = await getDataApiCall(urlPath);
     if (response.statusCode == 200) {

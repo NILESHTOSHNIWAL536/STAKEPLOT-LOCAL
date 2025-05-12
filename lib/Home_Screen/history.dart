@@ -181,103 +181,120 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
                         : SizedBox.shrink(key: ValueKey('no-checkbox')),
                   ),
                   // Main Transaction Content
-                  Container(
-                    width: MediaQuery.of(context).size.width /
-                        (showCheckBox.value ? 1.2 : 1.1),
-                    padding:
-                        EdgeInsets.only(top: padding / 6, bottom: padding / 6),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        (isManual || isReview)
-                            ? reviewTagTransactions(
-                                isReview,
-                                scaleFactor,
-                                isSplit,
-                                margin,
-                                badgeSize,
-                                fontSizeSmall,
-                                context,
-                                index,
-                                id)
-                            : SizedBox(height: padding),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: padding),
-                          child: Row(
-                            children: [
-                              getIconAvtar(avatarSize, category, scaleFactor),
-                              SizedBox(width: padding),
-                              Flexible(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Tooltip(
-                                          message: narration,
-                                          child: Container(
-                                            width: MediaQuery.sizeOf(context)
-                                                    .width /
-                                                3,
-                                            child: textStyle(
-                                              context: context,
-                                              text: !isManual
-                                                  ? nameOfUser
-                                                  : narration,
-                                              c: AppColors.accentColor,
-                                              fontsize: fontSizeMedium,
-                                              fontWeight: FontWeight.w600,
-                                              lineHeight: 1.5,
+                  InkWell(
+                    
+                        onTap: (){
+                            String id = '${transaction['_id']}';
+                            bool isChecked =redioButton.containsKey(id);
+                            if (!isChecked){
+                              redioButton[id] = id;
+                              redioButtonIndex[id] = index;
+                              HapticFeedback.selectionClick(); // Feedback on check
+                            } else
+                            {
+                              redioButton.remove(id);
+                              redioButtonIndex.remove(id);
+                              HapticFeedback.selectionClick();
+                            }
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width /
+                          (showCheckBox.value ? 1.2 : 1.1),
+                      padding:
+                          EdgeInsets.only(top: padding / 6, bottom: padding / 6),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          (isManual || isReview)
+                              ? reviewTagTransactions(
+                                  isReview,
+                                  scaleFactor,
+                                  isSplit,
+                                  margin,
+                                  badgeSize,
+                                  fontSizeSmall,
+                                  context,
+                                  index,
+                                  id)
+                              : SizedBox(height: padding),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: padding),
+                            child: Row(
+                              children: [
+                                getIconAvtar(avatarSize, category, scaleFactor),
+                                SizedBox(width: padding),
+                                Flexible(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Tooltip(
+                                            message: narration,
+                                            child: Container(
+                                              width: MediaQuery.sizeOf(context)
+                                                      .width /
+                                                  3,
+                                              child: textStyle(
+                                                context: context,
+                                                text: !isManual
+                                                    ? nameOfUser
+                                                    : narration,
+                                                c: AppColors.accentColor,
+                                                fontsize: fontSizeMedium,
+                                                fontWeight: FontWeight.w600,
+                                                lineHeight: 1.5,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        textStyle(
-                                          context: context,
-                                          text: formatAmount,
-                                          c: amtColor,
-                                          fontsize: fontSizeLarge,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ],
-                                    ),
-                                    textStyle(
-                                      context: context,
-                                      text: isManual
-                                          ? formattedDateManual
-                                          : formattedDate,
-                                      c: AppColors.primaryColor
-                                          .withOpacity(0.7),
-                                      fontsize: fontSizeSmall,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ],
+                                          textStyle(
+                                            context: context,
+                                            text: formatAmount,
+                                            c: amtColor,
+                                            fontsize: fontSizeLarge,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ],
+                                      ),
+                                      textStyle(
+                                        context: context,
+                                        text: isManual
+                                            ? formattedDateManual
+                                            : formattedDate,
+                                        c: AppColors.primaryColor
+                                            .withOpacity(0.7),
+                                        fontsize: fontSizeSmall,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: getIconsForHideUpdateSplit(
-                              iconSize,
-                              padding,
-                              category,
-                              amount,
-                              logo,
-                              context,
-                              index,
-                              subcategory,
-                              transaction,
-                              isReview,
-                              id,
-                              isManual),
-                        ),
-                        (isManual || isReview)
-                            ? SizedBox(height: 0)
-                            : SizedBox(height: padding / 2),
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: getIconsForHideUpdateSplit(
+                                iconSize,
+                                padding,
+                                category,
+                                amount,
+                                logo,
+                                context,
+                                index,
+                                subcategory,
+                                transaction,
+                                isReview,
+                                id,
+                                isManual),
+                          ),
+                          (isManual || isReview)
+                              ? SizedBox(height: 0)
+                              : SizedBox(height: padding / 2),
+                        ],
+                      ),
                     ),
                   ),
                 ],

@@ -62,7 +62,6 @@ void getCustomCategory(context)async
   if(getFlagOfResponse(res))
   {
     var data = jsonDecode(res.body);
-    print(data);
     data = data['categories'];
     customCategoryList.clear();
     customCategoryList.addAll(data);

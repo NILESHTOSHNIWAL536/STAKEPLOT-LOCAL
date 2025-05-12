@@ -458,44 +458,57 @@ String getMonthlyRange() {
   }
 
 
-  Widget getBankAccountList(context)
-  {
-     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 6),
-      child: Column(
-        children: bankAccountLinkedList.map((account) {
-            return Obx(() => Container(
+ Widget getBankAccountList(context) {
+  return Container(
+    margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 6),
+    child: Column(
+      children: bankAccountLinkedList.map((account) {
+        return Obx(() => Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: AppColors.primaryColor, width: 0.2),
               ),
-              margin: const EdgeInsets.symmetric(vertical: 4,horizontal: 4),
+              margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
               child: ListTile(
-                    leading: Container(
-                      width: 40,
-                      height: 40,
-                      child:  Image.network(
-                              account["bankLogo"],
-                              width: 22,
-                              height: 22,
-                          ),
-                    ),
-                    title: textStyle(
-                        context: context,
-                        text: account["bankName"],
-                        fontsize: 15,
-                        fontWeight: FontWeight.w500),
-                    trailing: Radio<String>(
-                      value: account["accountId"].toString(), // Assign a unique value for each radio button
-                      groupValue: accountIdPdf.value , // The currently selected value
-                      onChanged: (value) {
-                        accountIdPdf.value = value!;
-                      },
+                leading: SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: Image.network(
+                    account["bankLogo"],
+                    width: 22,
+                    height: 22,
+                  ),
+                ),
+                title: textStyle(
+                  context: context,
+                  text: account["bankName"],
+                  fontsize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
+                trailing: Theme(
+                  data: Theme.of(context).copyWith(
+                    checkboxTheme: CheckboxThemeData(
+                      shape: const CircleBorder(),
                     ),
                   ),
+                  child: Checkbox(
+                    value: accountIdPdf.value == account["accountId"].toString(),
+                    onChanged: (isChecked) {
+                      if (isChecked == true) {
+                        accountIdPdf.value = account["accountId"].toString();
+                      } else {
+                        accountIdPdf.value = "-";
+                      }
+                    },
+                  ),
+                ),
+              ),
             ));
-          }).toList()));
-  }
+      }).toList(),
+    ),
+  );
+}
+
 
 
   Widget getHeader(context,text){
@@ -592,36 +605,44 @@ String getMonthlyRange() {
           )),
     );
   }
-
-
-
-Widget getCheckBoxwithText(context,text){
-    return Container(
-             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.primaryColor, width: 0.2),
+ Widget getCheckBoxwithText(BuildContext context, String text) {
+  return Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: AppColors.primaryColor, width: 0.2),
+    ),
+    margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 7),
+    child: Obx(() => ListTile(
+          leading: const SizedBox(
+            width: 40,
+            height: 40,
+            child: Icon(Icons.credit_card),
+          ),
+          title: textStyle(
+            context: context,
+            text: text,
+            fontsize: 15,
+            fontWeight: FontWeight.w500,
+          ),
+          trailing: Theme(
+            data: Theme.of(context).copyWith(
+              checkboxTheme: CheckboxThemeData(
+                shape: const CircleBorder(), // 👈 Circular shape
               ),
-              margin: const EdgeInsets.symmetric(vertical: 4,horizontal: 7),
-               child: Obx(()=> ListTile(
-                    leading: Container(
-                      width: 40,
-                      height: 40,
-                      child: Icon(Icons.credit_card),
-                    ),
-                    title: textStyle(
-                        context: context,
-                        text: text,
-                        fontsize: 15,
-                        fontWeight: FontWeight.w500),
-                      trailing: Radio<String>(
-                      value: text, // Assign a unique value for each radio button
-                      groupValue: accountIdPdf.value , // The currently selected value
-                      onChanged: (value) {
-                        accountIdPdf.value = value!;
-                      },
-                    ),
-                  ))
-    );
+            ),
+            child: Checkbox(
+              value: accountIdPdf.value == text,
+              onChanged: (isChecked) {
+                if (isChecked == true) {
+                  accountIdPdf.value = text;
+                } else {
+                  accountIdPdf.value = "-";
+                }
+              },
+            ),
+          ),
+        )),
+  );
 }
 
 
@@ -640,7 +661,10 @@ Widget getCheckBoxwithText(context,text){
                   
                    InkWell(
                     onTap: (){
-                      searchController.text=accountIdPdf.value.toLowerCase();
+                      if(accountIdPdf.value.toLowerCase().startsWith("credit") || accountIdPdf.value.toLowerCase().startsWith("debit"))
+                      {
+                        searchController.text=accountIdPdf.value.toLowerCase();
+                      }
                       onChanedAutoTransactionStatus(context);
                       Navigator.pop(context);
                     },
