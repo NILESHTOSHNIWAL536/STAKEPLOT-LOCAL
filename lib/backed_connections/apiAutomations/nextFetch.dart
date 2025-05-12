@@ -12,6 +12,7 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 String convertToIso8601(String date) {
@@ -88,8 +89,8 @@ Widget build(BuildContext context) {
                     ? Container(
                         height: 30,
                         width: 30,
-                        margin: EdgeInsets.only(right: 10),
-                        child: Spinner(size: 30),
+                       // margin: EdgeInsets.only(right: 10),
+                        child: Lottie.asset("assets/splashScreen/fetchLoad.json"),
                       )
                     : InkWell(
                         onTap: () => showFetchModal(context),
@@ -106,7 +107,7 @@ Widget build(BuildContext context) {
                                 height: 25)),
                       ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
                   child: textStyle(
                     context: context ,
                     text: isFected.value

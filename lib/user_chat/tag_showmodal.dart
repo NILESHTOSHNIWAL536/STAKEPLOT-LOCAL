@@ -696,7 +696,7 @@ Widget getCustomCategoryList(BuildContext context) {
         ),
         const SizedBox(height: 5),
         Container(
-          color: Colors.amber,
+          
           height: 50,
           child: ListView(
             scrollDirection: Axis.horizontal,
@@ -724,14 +724,17 @@ Widget getCustomCategoryList(BuildContext context) {
                     width: 30,
                   ),
                   const SizedBox(width: 5),
-                  textStyle(
-                    context: context,
-                    text: e['name'],
-                    fontsize: 13,
-                    fontWeight: FontWeight.bold,
-                    c: widget.data['category'] == e['name']
-                        ? AppColors.bg2
-                        : AppColors.primaryColor,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: textStyle(
+                      context: context,
+                      text: e['name'],
+                      fontsize: 13,
+                      fontWeight: FontWeight.bold,
+                      c: widget.data['category'] == e['name']
+                          ? AppColors.bg2
+                          : AppColors.primaryColor,
+                    ),
                   ),
                   const SizedBox(width: 10),
                 ],

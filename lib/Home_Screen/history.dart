@@ -184,6 +184,7 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
                   InkWell(
                     
                         onTap: (){
+                          if(!showCheckBox.value)return;
                             String id = '${transaction['_id']}';
                             bool isChecked =redioButton.containsKey(id);
                             if (!isChecked){
@@ -321,21 +322,15 @@ Widget reviewTagTransactions(
     children: [
       if (isSplit)
         Container(
-            width: badgeSize,
-            height: badgeSize,
+            // width: badgeSize,
+            // height: badgeSize,
             decoration: BoxDecoration(
-              color: AppColors.primaryColor,
+             // color: AppColors.bg5,
               shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 4 * scaleFactor,
-                  offset: Offset(2 * scaleFactor, 2 * scaleFactor),
-                ),
-              ],
+             
             ),
             child: AvatarProfileImage(
-                url: HomePageIcons.isSplit, width: 12, height: 12)),
+                url: HomePageIcons.isSplit, width: 50, height:50)),
       if (isReview)
         Row(
           mainAxisSize: MainAxisSize.min,
@@ -418,17 +413,28 @@ Widget getIconsForHideUpdateSplit(
                       return SizedBox.shrink();
                     })(),
                     isManual
-                                               ? Container(
-                            height: 30,
-                            width: 30,
-                            child: Lottie.asset(
-                              'assets/splashScreen/manualTransactionIcon.json',
-                              errorBuilder: (context, error, stackTrace) {
-                                print('Lottie error: $error');
-                                return Icon(Icons.error); // fallback UI
-                              },
-                            ),
-                          )
+                                               ?
+                                               
+                                               Image.asset(
+  'assets/Images/rupee.gif',
+ 
+height: MediaQuery.of(context).size.width * 0.08, // Adjust as needed for responsiveness
+width: MediaQuery.of(context).size.width * 0.08, // Adjust as needed for responsiveness
+
+  fit: BoxFit.cover,
+)
+
+                          //                       Container(
+                          //   height: 30,
+                          //   width: 30,
+                          //   child: Lottie.asset(
+                          //     'assets/splashScreen/manualTransactionIcon.json',
+                          //     errorBuilder: (context, error, stackTrace) {
+                          //       print('Lottie error: $error');
+                          //       return Icon(Icons.error); // fallback UI
+                          //     },
+                          //   ),
+                          // )
 
                         // Fallback icon
                         : Image.network(
