@@ -654,7 +654,7 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
             children: [
                     topHeader(context),
                     const SizedBox(height: 5,),
-                    TextFeildWidget(textEditingController: searchController, heading: "tagSearch", keyBoard: TextInputType.text, lableText: "Search Cat",icon: CupertinoIcons.doc_text_search,),
+                    TextFeildWidget(textEditingController: searchController, heading: "tagSearch", keyBoard: TextInputType.text, lableText: "Search Category",icon: CupertinoIcons.doc_text_search,),
                     const SizedBox(height: 5,),
                     Obx(()=> loadAgain.value?  selectedItem(context):selectedItem(context)),
                    // Obx(()=>   LoadTag.value? getCustomCategoryList(context):getCustomCategoryList(context)),

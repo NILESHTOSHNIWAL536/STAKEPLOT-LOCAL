@@ -513,34 +513,28 @@ class _BottomNavigationsState extends State<BottomNavigations> {
   Widget build(BuildContext context) {
     //int selectedIndex = 0;
     return Container(
-      height: Colorcodes.paddingSize * 3.4,
-      padding: const EdgeInsets.only(left: 3.0, right: 3.0, bottom: 2),
-      child: Card(
-        elevation: Colorcodes.elevation,
-        color: AppColors.accentColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30), // Rounded corners
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            getContainer(NavBarIcons.home, 0),
-            getContainer(NavBarIcons.screen2, 1),
-            if (sizeRoom)
-              getContainer(
-                'assets/images/room.svg',
-                2,
-              ),
+      height: Colorcodes.paddingSize * 2.5,
+      color:AppColors.backgroundColor,
+     // padding: const EdgeInsets.only(left: 3.0, right: 3.0, bottom: 2),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          getContainer(NavBarIcons.home, 0),
+          getContainer(NavBarIcons.screen2, 1),
+          if (sizeRoom)
             getContainer(
-              NavBarIcons.community,
-              sizeRoom ? 3 : 2,
+              'assets/images/room.svg',
+              2,
             ),
-            getContainer(
-              svgIconPath.bottom4,
-              sizeRoom ? 4 : 3,
-            ),
-          ],
-        ),
+          getContainer(
+            NavBarIcons.community,
+            sizeRoom ? 3 : 2,
+          ),
+          getContainer(
+            svgIconPath.bottom4,
+            sizeRoom ? 4 : 3,
+          ),
+        ],
       ),
     );
   }
@@ -563,30 +557,20 @@ class _BottomNavigationsState extends State<BottomNavigations> {
     }
     bool ifAvatar = index == 3 || index == 4;
 
-    return Container(
-      width: Colorcodes.paddingSize * 2.5, // Increased size of the circle
-      height: Colorcodes.paddingSize * 2.5,
-      decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: isSelected
-              ? AppColors.backgroundColor
-              : AppColors.accentColor // White background if selected
-          ),
-      child: Center(
-        child: ifAvatar? Obx(()=> UserAvatar(url: avaterUrlPath(userName.value), width: 25, height: 11))
-            // ? SvgPicture.asset(iconPath,
-            //     width: Colorcodes.paddingSize * 2.2,
-            //     height: Colorcodes.paddingSize * 2.7)
-            : SvgPicture.asset(
-                iconPath,
-                width: Colorcodes.paddingSize * 1.4,
-                height: Colorcodes.paddingSize * 1.4,
-                colorFilter: isSelected
-                    ? ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn)
-                    : ColorFilter.mode(
-                        AppColors.backgroundColor, BlendMode.srcIn),
-              ),
-      ),
+    return Center(
+      child: ifAvatar? Obx(()=> UserAvatar(url: avaterUrlPath(userName.value), width: 30, height: 20))
+          // ? SvgPicture.asset(iconPath,
+          //     width: Colorcodes.paddingSize * 2.2,
+          //     height: Colorcodes.paddingSize * 2.7)
+          : SvgPicture.asset(
+              iconPath,
+              width: MediaQuery.of(context).size.width /30, // Adjust the multiplier as needed
+              height: MediaQuery.of(context).size.height /30, // Adjust the multiplier as needed
+              colorFilter: isSelected
+                  ? ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn)
+                  : ColorFilter.mode(
+                      AppColors.accentColor, BlendMode.srcIn),
+            ),
     );
   }
 
