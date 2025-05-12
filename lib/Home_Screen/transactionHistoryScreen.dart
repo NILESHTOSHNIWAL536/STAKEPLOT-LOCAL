@@ -216,16 +216,17 @@ void _onScroll() {
 
  void clearData({bool f=false})
  {
-       searchController.clear();
+          searchController.clear();
+          redioButton.clear();
+          redioButtonIndex.clear();
+          allOrGroupTransactionsName.value = StringConstant.allTransactions;
+          showCheckBox.value=false;
+
        if(f)
        {
           currentPage = 1;
           isLoadingMore.value = false;
           accountIdPdf.value="-";
-          redioButton.clear();
-          redioButtonIndex.clear();
-          allOrGroupTransactionsName.value = StringConstant.allTransactions;
-          showCheckBox.value=false;
           getAllTransaction(context);
        }
  }
