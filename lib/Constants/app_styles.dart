@@ -1,12 +1,11 @@
 class NavBarIcons {
   //nav bar
-  static String home = "assets/icons/Navigation_bar/Home.svg";
-  static String home1 = "assets/icons/Navigation_bar/home (2).svg";
-  static String community = "assets/icons/Navigation_bar/Community.svg";
-  static String community1 = "assets/icons/Navigation_bar/Community1.svg";
-  static String screen2 = "assets/icons/Navigation_bar/screen2.svg";
-  static String screen21 = "assets/icons/Navigation_bar/screen2(1).svg";
-
+  static String home = "assets/icons/Navigation_bar/homepageActive.svg";
+  static String home1 = "assets/icons/Navigation_bar/homePageInactive.svg";
+  static String community = "assets/icons/Navigation_bar/communityInactive.svg";
+  static String community1 = "assets/icons/Navigation_bar/communityActive.svg";
+  static String screen21 = "assets/icons/Navigation_bar/financeActive.svg";
+  static String screen2 = "assets/icons/Navigation_bar/financeInActive.svg";
   //Home page icons
 }
 

@@ -147,7 +147,7 @@ void _onScroll() {
                 children: [
                   // Search Bar
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    padding: const EdgeInsets.only(left: 12,right:4),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                     //  height: MediaQuery.of(context).size.height /5,
@@ -179,7 +179,7 @@ void _onScroll() {
                                   child: filterTransaction(context)
                                   ));
                               }, 
-                             child:  Icon(Icons.tune, 
+                             child:  Icon(Icons.filter_alt_outlined, 
                              size:  MediaQuery.of(context).size.width/10,
                              color: AppColors.accentColor),) 
                             ],
@@ -246,6 +246,7 @@ void _onScroll() {
  {
     return Container(
                             width: MediaQuery.of(context).size.width /1.17,
+                            height: MediaQuery.of(context).size.width /9,
                             child: TextField(
                               controller: searchController,
                               focusNode: focusNodeSearchFeild,
@@ -278,11 +279,11 @@ void _onScroll() {
                                 ),
                                 enabledBorder: OutlineInputBorder( // Added for the enabled state
                                   borderRadius: BorderRadius.circular(30),
-                                  borderSide: BorderSide(color: AppColors.accentColor, width: 1), // Border color when enabled
+                                  borderSide: BorderSide(color: AppColors.accentColor,), // Border color when enabled
                                 ),
                                 focusedBorder: OutlineInputBorder( // Added for the focused state
                                   borderRadius: BorderRadius.circular(30),
-                                  borderSide: BorderSide(color: AppColors.accentColor, width: 2), // Border color when focused
+                                  borderSide: BorderSide(color: AppColors.primaryColor), // Border color when focused
                                 ),
                                 contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15), 
                               ),
