@@ -100,11 +100,11 @@ class _HomePageState extends State<HomePage> {
     await getRemainders(context);
     await updateWidget();
     lifecycleHandler = AppLifecycleHandler(currentId.value); // Replace with actual user ID
-   WidgetsBinding.instance.addObserver(lifecycleHandler);
+    WidgetsBinding.instance.addObserver(lifecycleHandler);
   }
 
   void isLoginAlreadLogin()async{
-       bool isHome=await  check(context, "homeScreen");
+       bool isHome=await check(context, "homeScreen");
        if(isHome)
        {
           await requestNotificationPermissionOncePerDay();

@@ -59,7 +59,9 @@ void clearStackShared(BuildContext context) {
 
 void expire(response, BuildContext context) {
   try {
+    print("expire called");
     var body = json.decode(response.body);
+    print(body);
     if (body['error'].toString() == "JsonWebTokenError")
     {
       logoutUserFromDevice(context);
@@ -71,17 +73,17 @@ void expire(response, BuildContext context) {
 
 
 Future<bool> check(context, String flag) async {
-  // final SharedPreferences _pref = await SharedPreferences.getInstance();
-  // bool f = _pref.containsKey("accessToken");
+  final SharedPreferences _pref = await SharedPreferences.getInstance();
+  bool f = _pref.containsKey("accessToken");
   // //  if (!f && flag != "loginuser") Navigator.pushReplacementNamed(context, '/');
-  // if (!f && flag != "loginuser") {
-  //   Navigator.pushReplacementNamed(context, '/');
-  //   return false;
-  // }
+  if (!f && flag != "loginuser") {
+    Navigator.pushReplacementNamed(context, '/');
+    return false;
+  }
 
-  // if (flag == "loginuser") {
-  //   return false;
-  // }
+  if (flag == "loginuser") {
+    return false;
+  }
 
   return true;
 }
@@ -99,6 +101,22 @@ Future<void> storeDeviceInfo() async
             } catch (e) {}
 
 }
+
+Future<void> storeDeviceInfoLocalBackState() async
+ {
+
+            var json = await getUserStats();
+            var responce = await postDataApiCall("${url}/deviceScreenTime/", json);
+            
+            if (getFlagOfResponse(responce))
+            {
+              printData(responce);
+            }
+
+}
+
+
+
 
 void clearGetX() {
   income = 0.obs;

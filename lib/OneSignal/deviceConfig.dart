@@ -77,9 +77,10 @@ class AppLifecycleHandler extends WidgetsBindingObserver {
   AppLifecycleHandler(this.userId);
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    print('AppLifecycleState changed: $state');
+  void didChangeAppLifecycleState(AppLifecycleState state)
+   {
 
+    mainPageWebSocket.close();
     if (state == AppLifecycleState.paused) 
     {
       _lastPausedTime = DateTime.now();
@@ -88,18 +89,17 @@ class AppLifecycleHandler extends WidgetsBindingObserver {
         _lastSent = now;
         sendCloseEvent(userId);
       }
-  }
-  else if (_previousState != AppLifecycleState.inactive && state != AppLifecycleState.inactive)
-  {
-        resentCodeLocaldata();
-  }
-
+   }
+   else if (_previousState != AppLifecycleState.inactive && state != AppLifecycleState.inactive)
+   {
+         resentCodeLocaldata();
+   }
     _previousState = state;
   }
 
   Future<void> sendCloseEvent(String userId) async {
     try {
-      await storeDeviceInfo();
+      await storeDeviceInfoLocalBackState();
       String? userid = await getToken();
       await ScreenTimeTracker().setUser(userid.toString(), true);
       await screenDataLocalStorage();
@@ -114,8 +114,8 @@ class AppLifecycleHandler extends WidgetsBindingObserver {
   }
 }
 
-void resentCodeLocaldata() {
-  print("Clearing OneSignal notifications");
+void resentCodeLocaldata()
+{
   OneSignal.Notifications.clearAll();
 }
 
@@ -138,8 +138,8 @@ void setUpSocketListenerMainPage(BuildContext context) {
     mainPageWebSocket.connect();
 
     // On successful connection
-    mainPageWebSocket.onConnect((_) {
-      mainPageWebSocket.emit("addUserToSocket", currentId.value);
+    mainPageWebSocket.onConnect((_){
+       mainPageWebSocket.emit("addUserToSocket", currentId.value);
     });
 
     // Listener for events from the socket
