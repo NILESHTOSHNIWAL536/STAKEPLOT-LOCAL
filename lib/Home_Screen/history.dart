@@ -181,9 +181,9 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
                         : SizedBox.shrink(key: ValueKey('no-checkbox')),
                   ),
                   // Main Transaction Content
-                  InkWell(
-                    
+                  GestureDetector(
                         onTap: (){
+                           if(!showCheckBox.value)return;
                             String id = '${transaction['_id']}';
                             bool isChecked =redioButton.containsKey(id);
                             if (!isChecked){
