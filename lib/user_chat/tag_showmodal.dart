@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
@@ -18,10 +16,11 @@ import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/openShowModal.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
+import 'dart:async';
 
 RxString tagName="".obs;
 RxBool loadAgain=false.obs;
+RxString searchLabel = "Search Category".obs;
 
 class TagShowmodal extends StatefulWidget
 {
@@ -73,6 +72,14 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
     //     opacity = 1.0;
     //   });
     // });
+
+    // Start a timer to change the search label
+    Timer.periodic(Duration(seconds: 3), (timer) {
+      // List of category names to display
+      List<String> categories = ["Food", "Shopping", "Current", "Health", "Bills"];
+      // Randomly select a category name
+      searchLabel.value = (categories..shuffle()).first; // Shuffle and get the first category
+    });
   }
 
   String getIconPath(String category)
@@ -105,7 +112,13 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
             children: [
                     topHeader(context),
                     const SizedBox(height: 5,),
-                    TextFeildWidget(textEditingController: searchController, heading: "tagSearch", keyBoard: TextInputType.text, lableText: "Search Cat",icon: CupertinoIcons.doc_text_search,),
+                    Obx(() => TextFeildWidget(
+                      textEditingController: searchController,
+                      heading: "tagSearch",
+                      keyBoard: TextInputType.text,
+                      lableText: searchLabel.value,
+                      icon: CupertinoIcons.doc_text_search,
+                    )),
                     const SizedBox(height: 5,),
                     Obx(()=> loadAgain.value?  selectedItem(context):selectedItem(context)),
                     Obx(()=>   LoadTag.value? getCustomCategoryList(context):getCustomCategoryList(context)),
@@ -317,18 +330,19 @@ Widget getListOfCat(BuildContext context)
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
           margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            border: Border.all(
-              width: 1,
-              color: AppColors.primaryColor,
-            ),
-          ),
+          // decoration: BoxDecoration(
+          //   borderRadius: BorderRadius.circular(15),
+          //   border: Border.all(
+          //     width: 1,
+          //     color: AppColors.primaryColor,
+          //   ),
+          // ),
           child: Column(
             children: [
               mainCategory(context, e.key, e.value),
               const SizedBox(height: 10),
               subCategory(context, e.key, e.value),
+              Divider()
             ],
           ),
         );

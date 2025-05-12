@@ -176,7 +176,7 @@ void _onScroll() {
                           }, 
                            child: Icon(Icons.tune,
                             size: MediaQuery.of(context).size.width * 0.09, // Adjusted size based on MediaQuery
-                            color: AppColors.primaryColor),
+                            color: AppColors.bg1),
                           )
                         ],
                       ),
