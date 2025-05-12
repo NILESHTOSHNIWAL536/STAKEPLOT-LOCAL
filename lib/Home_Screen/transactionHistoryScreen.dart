@@ -158,7 +158,8 @@ void _onScroll() {
                       child: Row(
                         children: [
                            getTextFeild(),
-                          TextButton(onPressed: ()
+                          InkWell(
+                            onTap: ()
                           { 
                              showModalBottomSheet(context: context, builder: (_)=>
                              Container(
@@ -173,10 +174,9 @@ void _onScroll() {
                               child: filterTransaction(context)
                               ));
                           }, 
-                           child: Text("Filter",style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.bold,
-                            fontSize: 14,
-                            color: AppColors.primaryColor),),
+                           child: Icon(Icons.tune,
+                            size: MediaQuery.of(context).size.width * 0.09, // Adjusted size based on MediaQuery
+                            color: AppColors.primaryColor),
                           )
                         ],
                       ),
@@ -230,7 +230,7 @@ void _onScroll() {
   
  Widget getTextFeild() {
     return Container(
-                            width: MediaQuery.of(context).size.width /1.3,
+                            width: MediaQuery.of(context).size.width /1.17,
                             child: TextField(
                               controller: searchController,
                               focusNode: focusNodeSearchFeild,

@@ -186,20 +186,12 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (isSplit)
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: Icon(
-                              Icons.star,
-                              color: Colors.yellow,
-                              size: 16, // Adjust size as needed
-                            ),
-                          ),
+                        
                         (isManual || isReview)
                             ? reviewTagTransactions(
                                 isReview,
                                 scaleFactor,
-                                isManual,
+                                isSplit,
                                 margin,
                                 badgeSize,
                                 fontSizeSmall,
@@ -297,7 +289,7 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
 Widget reviewTagTransactions(
     bool isReview,
     double scaleFactor,
-    bool isManual,
+    bool isSplit,
     double margin,
     double badgeSize,
     double fontSizeSmall,
@@ -306,9 +298,9 @@ Widget reviewTagTransactions(
     String narration_id) {
   return Row(
     mainAxisAlignment:
-        isManual ? MainAxisAlignment.spaceBetween : MainAxisAlignment.end,
+        isSplit ? MainAxisAlignment.spaceBetween : MainAxisAlignment.end,
     children: [
-      if (isManual)
+      if (isSplit)
         Container(
           width: badgeSize,
           height: badgeSize,
@@ -325,7 +317,7 @@ Widget reviewTagTransactions(
           ),
           child: Center(
             child: Text(
-              'M',
+              'S',
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -415,11 +407,10 @@ Widget getIconsForHideUpdateSplit(
                     (() {
                       return SizedBox.shrink();
                     })(),
-                    !isValidUrl(logo)
-                        ? !isManual
-                            ? Icon(Icons.account_balance,
+                    isManual
+                            ? Icon(Icons.receipt,
                                 size: 22, color: AppColors.primaryColor)
-                            : SizedBox.shrink() // Fallback icon
+                            // Fallback icon
                         : Image.network(
                             logo,
                             width: 22,
@@ -594,7 +585,8 @@ Widget getIconsForHideUpdateSplit(
                       message: 'Split with Friends',
                       child: GestureDetector(
                         onTap: () async {
-                          FocusScope.of(context).unfocus();
+                           FocusScope.of(context).unfocus();
+                           transactionsId.value= transaction['_id'];
                           await showCustomFriendsModalTransactionHistory(
                               context,
                               amount,

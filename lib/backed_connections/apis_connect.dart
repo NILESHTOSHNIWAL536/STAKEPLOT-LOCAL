@@ -150,6 +150,7 @@ RxBool postDis = false.obs;
 RxBool posting=false.obs;
 RxBool getPosted=false.obs;
 RxBool acceptReset = false.obs;
+RxBool LoadTag = false.obs;
 RxList budgetList = [].obs;
 RxList debtsList = [].obs;
 RxList historyListData = [].obs;
@@ -209,6 +210,7 @@ RxString LastFetchDate = "".obs;
 RxString fetchCount = "".obs;
 RxString BankName = "".obs;
 RxString BankUrl = "".obs;
+RxString transactionsId = "".obs;
 
 
 RxBool isFected = false.obs;

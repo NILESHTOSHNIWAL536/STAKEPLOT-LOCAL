@@ -41,13 +41,13 @@ class TextFeildWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
+           (heading=="tagSearch" || heading=="")? SizedBox.shrink():Padding(
               padding: const EdgeInsets.symmetric(horizontal: 9.0),
               child: Text(heading,
                   style: FontManager().getTextStyle(context,
                       fontSize: 16, lWeight: FontWeight.w600)),
             ),
-            const SizedBox(
+           (heading=="tagSearch" || heading=="") ? SizedBox.shrink():  const SizedBox(
               height: 10,
             ),
             TextFormField(
@@ -55,6 +55,10 @@ class TextFeildWidget extends StatelessWidget {
               controller: textEditingController,
               onChanged: (c) {
                 acceptReset.value = false;
+                 if(heading=="tagSearch")
+                 {
+                     LoadTag.value = !LoadTag.value;
+                 }
               },
               maxLength: heading == "PhoneNo" ? 10 : null,
               obscureText: flag ? false : show.value,

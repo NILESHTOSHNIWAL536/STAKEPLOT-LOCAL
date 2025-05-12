@@ -664,7 +664,9 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
         'markAsComplete': false,
         'amount': doubleToFixed(data['Total'].toString()),
         'isVegNonVeg': true,
-        'priorities': data
+        'priorities': data,
+        
+
       });
     });
     final SharedPreferences _pref = await SharedPreferences.getInstance();
@@ -679,6 +681,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       "image": '',
       'isVegNonVeg': true,
       "ismanual":true,
+      'isFoodie':true
     };
 
   

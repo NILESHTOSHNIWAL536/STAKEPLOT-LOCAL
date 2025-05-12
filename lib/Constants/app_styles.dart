@@ -812,3 +812,5 @@ class OnboardingImages {
   static String manualTransaction =
       "assets/icons/likeComment/manualTransaction.svg";
 }
+
+
