@@ -14,6 +14,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/openShowModal.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -38,9 +39,11 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
 
    late AnimationController _controller;
   late Animation<Offset> _animation;
-  double opacity = 0.0;
+  double opacity = 1.0;
 
  TextEditingController nameController=TextEditingController();
+ TextEditingController searchController=TextEditingController();
+
   RxBool customSelections=false.obs;
   RxString UrlPathImage="".obs;
 
@@ -50,7 +53,7 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
        UrlPathImage.value =  getIconPath(widget.data['category'].toLowerCase());
       _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1000),
+      duration: Duration(milliseconds: 200),
     );
     
     _animation = Tween<Offset>(
@@ -65,11 +68,11 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
     _controller.forward();
 
     // Delay opacity animation
-    Future.delayed(Duration(milliseconds: 1000), () {
-      setState(() {
-        opacity = 1.0;
-      });
-    });
+    // Future.delayed(Duration(milliseconds: 1000), () {
+    //   setState(() {
+    //     opacity = 1.0;
+    //   });
+    // });
   }
 
   String getIconPath(String category)
@@ -101,10 +104,12 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
         child: Column(
             children: [
                     topHeader(context),
-                   Obx(()=> loadAgain.value?  selectedItem(context):selectedItem(context)),
-                   Obx(()=> getCustomCategoryList(context)),
-                    const SizedBox(height: 10,),
-                    getListOfCat(context),
+                    const SizedBox(height: 5,),
+                    TextFeildWidget(textEditingController: searchController, heading: "tagSearch", keyBoard: TextInputType.text, lableText: "Search Cat",icon: CupertinoIcons.doc_text_search,),
+                    const SizedBox(height: 5,),
+                    Obx(()=> loadAgain.value?  selectedItem(context):selectedItem(context)),
+                    Obx(()=>   LoadTag.value? getCustomCategoryList(context):getCustomCategoryList(context)),
+                    Obx(()=>  LoadTag.value? getListOfCat(context):getListOfCat(context)),
             ], 
         ),
       ),
@@ -112,16 +117,27 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
     );
   }
 
+List<Map<String, dynamic>> getthelist()
+ {
+  final lowerSearch = searchController.text.toLowerCase();
+  return  customCategoryList.where((e) {
+    final name = e['name']?.toString().toLowerCase() ?? '';
+    return name.contains(lowerSearch);
+  }).toList().cast<Map<String, dynamic>>();
+
+}
 
  Widget getCustomCategoryList(context){
-    return customCategoryList.isEmpty? SizedBox.shrink():Container(
+  List custom = getthelist();
+
+    return custom.isEmpty? SizedBox.shrink():Container(
       width: MediaQuery.of(context).size.width/1.1,
       height: 70,
       alignment: Alignment.center ,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        children: customCategoryList.map((e) {
-                return InkWell(
+        children: custom.map((e){
+                return !(e['name'].toString().contains(searchController.text.toLowerCase()))? SizedBox.shrink():InkWell(
                   onTap: () {
                     widget.data['category'] = e['name'];
                     widget.data['subcategory'] = "";
@@ -253,9 +269,42 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
     );
  }
 
+
+List<MapEntry<String, List<String>>> getMatchingCategories(
+    Map<String, List<String>> categories, String searchString) {
+  final lowerSearch = searchString.toLowerCase();
+
+  return categories.entries
+      .map((entry) {
+        final categoryName = entry.key.toLowerCase();
+
+        // If the category name matches, return all subcategories
+        if (categoryName.contains(lowerSearch)) {
+          return MapEntry(entry.key, entry.value);
+        }
+
+        // Otherwise, filter subcategories
+        final matchedSubcategories = entry.value
+            .where((sub) => sub.toLowerCase().contains(lowerSearch))
+            .toList();
+
+        if (matchedSubcategories.isNotEmpty) {
+          return MapEntry(entry.key, matchedSubcategories);
+        }
+
+        return null;
+      })
+      .whereType<MapEntry<String, List<String>>>()
+      .toList();
+}
+
+
+
+
 //  Widget getListOfCat(context){
-Widget getListOfCat(BuildContext context) {
-  List<MapEntry<String, dynamic>> categoryList = categories.entries.toList();
+Widget getListOfCat(BuildContext context)
+{
+    List<MapEntry<String, List<String>>> categoryList = getMatchingCategories(categories, searchController.text);
 
   return SizedBox(
     height: MediaQuery.of(context).size.height * 0.6, // Adjust height as needed
