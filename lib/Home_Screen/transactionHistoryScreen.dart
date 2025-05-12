@@ -221,12 +221,12 @@ void _onScroll() {
           redioButtonIndex.clear();
           allOrGroupTransactionsName.value = StringConstant.allTransactions;
           showCheckBox.value=false;
+          accountIdPdf.value="-";
 
        if(f)
        {
           currentPage = 1;
           isLoadingMore.value = false;
-          accountIdPdf.value="-";
           getAllTransaction(context);
        }
  }

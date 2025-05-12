@@ -107,7 +107,7 @@ Future<void> storeDeviceInfoLocalBackState() async
 
             var json = await getUserStats();
             var responce = await postDataApiCall("${url}/deviceScreenTime/", json);
-            
+
             if (getFlagOfResponse(responce))
             {
               printData(responce);
@@ -225,19 +225,12 @@ void logoutUserFromDevice(context2)async{
 
            try
            {
-              print(1);
               final SharedPreferences _pref =await SharedPreferences.getInstance();
-              print(2);
               clearGetX();
-              print(3);
               Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-              print(4);
               Navigator.pushReplacementNamed(context, '/');
-              print(5);
               await _pref.remove("token");
               await _pref.remove("accessToken");
-              print(6);
-
            }
            catch(e)
            {
