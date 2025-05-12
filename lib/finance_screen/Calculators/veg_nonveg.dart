@@ -678,7 +678,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       "paymentStatus": nameList,
       "image": '',
       'isVegNonVeg': true,
-      "ismanual":false,
+      "ismanual":true,
     };
 
   

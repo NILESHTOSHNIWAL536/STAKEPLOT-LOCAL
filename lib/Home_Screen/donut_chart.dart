@@ -167,7 +167,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                         xValueMapper: (ChartData data, _) => data.category,
                         yValueMapper: (ChartData data, _) => data.value,
                         pointColorMapper: (ChartData data, _) => data.color,
-                        pointRenderMode: PointRenderMode.gradient,
+                       // pointRenderMode: PointRenderMode.gradient,
                         // Adjusted radius for better proportion
                         radius: '80%',
                         innerRadius: '50%',

@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'dart:convert';
@@ -62,7 +63,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
 
         // Wait for SnackBar to disappear
         // await Future.delayed(Duration(seconds: 2));
-        
+
         if (mounted) {
           Navigator.of(context).pop();
         }
@@ -267,7 +268,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         elevation: 0,
-        title: _buildText('My Budget', Colors.black,
+        title: _buildText(widget.data['name'] ?? 'My Budget', Colors.black,
             fontSize: 18, fontWeight: FontWeight.bold),
         centerTitle: true,
         actions: [
@@ -336,6 +337,13 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     // Check if budgetSpentData is empty or all values are zero
     bool hasNoData = budgetSpentData.isEmpty ||
         budgetSpentData.every((item) => item.y == 0.0);
+
+    // Add a loading indicator if data is still being fetched
+    if (transactions.isEmpty && insightsData == null) {
+      return Center(
+        child:Spinner(), // Loader when data is loading
+      );
+    }
 
     if (hasNoData) {
       return Center(

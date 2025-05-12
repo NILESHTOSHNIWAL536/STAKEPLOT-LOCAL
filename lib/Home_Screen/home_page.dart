@@ -80,7 +80,6 @@ class _HomePageState extends State<HomePage> {
     if (!mounted) return;
     getUserInfomations();
     getBankAccounts();
-    getCategoryData();
     getPost();
     getAck();
     getBudget();

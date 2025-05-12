@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -147,52 +148,56 @@ class _SigninState extends State<ResetPassword> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width / 1.1,
-                    margin: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 10),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 30),
-                    decoration: BoxDecoration(
-                        color: AppColors.primaryColor,
-                        borderRadius:
-                            BorderRadius.circular(Colorcodes.borderRadius10)),
-                    child: InkWell(
-                      onTap: () {
-                        String password = passwordController.text;
-                        String conform = conformController.text;
-
-                        if (password.length < 6) {
-                          snackBarCalled(
-                              context,
-                              "The password must be at least 6 characters long.",
-                              Colors.red);
-                          return;
-                        }
-
-                        if (password != conform) {
-                          snackBarCalled(
-                              context,
-                              "The password and confirmation password do not match.",
-                              Colors.red);
-                          return;
-                        }
-
-                        changePassword(
-                          context,
-                          widget.email,
-                          passwordController.text,
-                          conformController.text,
-                        );
-                      },
-                      child: Center(
-                        child: Text(("Change Password"),
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: Colorcodes.white)),
-                      ),
-                    ),
+                  InkWell(
+                    onTap: () {
+                      String password = passwordController.text;
+                      String conform = conformController.text;
+                  
+                      if (password.length < 8) {
+                        snackBarCalledfail(
+                            context,
+                            "The password must be at least 8 characters long.",
+                            Colors.red);
+                        return;
+                      }
+                       if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~])').hasMatch(password)) {
+                        snackBarCalledfail(
+                            context,
+                            "Password must include uppercase, lowercase, number, and special character.",
+                            Colors.red);
+                        return;
+                      }
+                      if (conform.isEmpty) {
+                        snackBarCalledfail(
+                            context,
+                            "Please confirm your password.",
+                            Colors.red);
+                        return;
+                      }
+                  
+                      if (password != conform) {
+                        snackBarCalledfail(
+                            context,
+                            "The password and confirmation password do not match.",
+                            Colors.red);
+                        return;
+                      }
+                  
+                      changePassword(
+                        context,
+                        widget.email,
+                        passwordController.text,
+                        conformController.text,
+                      );
+                    },
+                    child: getButton(context, "Change Password"),
+                    // Center(
+                    //   child: Text(("Change Password"),
+                    //       style: FontManager().getTextStyle(context,
+                    //           lWeight: FontWeight.bold,
+                    //           fontSize: 20,
+                    //           color: Colorcodes.white)),
+                    // ),
                   ),
                 ],
               ),
