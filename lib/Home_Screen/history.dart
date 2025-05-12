@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
@@ -6,13 +7,15 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCall
 import 'package:flutter_application_code_stakeplot/Home_Screen/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_details.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:get/get.dart';
-import 'package:flutter/services.dart'; // For haptic feedback
+import 'package:flutter/services.dart';
+import 'package:lottie/lottie.dart'; // For haptic feedback
 
 // Reactive variables
 RxMap<String, String> redioButton = <String, String>{}.obs;
@@ -186,7 +189,6 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        
                         (isManual || isReview)
                             ? reviewTagTransactions(
                                 isReview,
@@ -302,30 +304,21 @@ Widget reviewTagTransactions(
     children: [
       if (isSplit)
         Container(
-          width: badgeSize,
-          height: badgeSize,
-          decoration: BoxDecoration(
-            color: AppColors.primaryColor,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 4 * scaleFactor,
-                offset: Offset(2 * scaleFactor, 2 * scaleFactor),
-              ),
-            ],
-          ),
-          child: Center(
-            child: Text(
-              'S',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: fontSizeSmall * 0.8,
-              ),
+            width: badgeSize,
+            height: badgeSize,
+            decoration: BoxDecoration(
+              color: AppColors.primaryColor,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 4 * scaleFactor,
+                  offset: Offset(2 * scaleFactor, 2 * scaleFactor),
+                ),
+              ],
             ),
-          ),
-        ),
+            child: AvatarProfileImage(
+                url: HomePageIcons.isSplit, width: 12, height: 12)),
       if (isReview)
         Row(
           mainAxisSize: MainAxisSize.min,
@@ -408,9 +401,19 @@ Widget getIconsForHideUpdateSplit(
                       return SizedBox.shrink();
                     })(),
                     isManual
-                            ? Icon(Icons.receipt,
-                                size: 22, color: AppColors.primaryColor)
-                            // Fallback icon
+                                               ? Container(
+                            height: 30,
+                            width: 30,
+                            child: Lottie.asset(
+                              'assets/splashScreen/manualTransactionIcon.json',
+                              errorBuilder: (context, error, stackTrace) {
+                                print('Lottie error: $error');
+                                return Icon(Icons.error); // fallback UI
+                              },
+                            ),
+                          )
+
+                        // Fallback icon
                         : Image.network(
                             logo,
                             width: 22,
@@ -585,8 +588,8 @@ Widget getIconsForHideUpdateSplit(
                       message: 'Split with Friends',
                       child: GestureDetector(
                         onTap: () async {
-                           FocusScope.of(context).unfocus();
-                           transactionsId.value= transaction['_id'];
+                          FocusScope.of(context).unfocus();
+                          transactionsId.value = transaction['_id'];
                           await showCustomFriendsModalTransactionHistory(
                               context,
                               amount,

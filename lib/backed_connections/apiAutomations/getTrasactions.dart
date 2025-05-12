@@ -419,7 +419,7 @@ void addTransaction(String amount, String subCategory, String categories,
 
   var body = {
     'amount': amount.toString(),
-    'category': categories.toString().toLowerCase(),
+    'category': categories.toString(),
     'label': subCategory.toString(),
     'account': dropdownValue.toString(),
     'room': {},
