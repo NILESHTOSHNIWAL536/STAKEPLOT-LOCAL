@@ -72,9 +72,6 @@ class _TransactionHistoryState extends State<TransactionHistory>
     //   duration: const Duration(milliseconds: 200),
     // );
     _scrollController2.addListener(() {
-       print("scrollController");
-      print("Scroll position: ${_scrollController2.position.pixels}");
-      print("Max scroll extent: ${_scrollController2.position.maxScrollExtent}");
       if (_scrollController2.position.pixels >=_scrollController2.position.maxScrollExtent - 100) {
         getAllTransactionHistory(
           context,
@@ -100,16 +97,16 @@ class _TransactionHistoryState extends State<TransactionHistory>
       child: Container(
         child: Column(
           children: [
-            (widget.showIcon ?? false)
-                ? SizedBox(
-                    height: 15,
-                  )
-                : Obx(() => redioButton.isNotEmpty
-                    ? getTagHideButtons()
-                    : allOrGroupTransactionsName.value ==
-                            StringConstant.allTransactions
-                        ? getTabsForTransactions()
-                        : getTabsForTransactions()),
+            // (widget.showIcon ?? false)
+            //     ? SizedBox(
+            //         height: 15,
+            //       )
+            //     : Obx(() => redioButton.isNotEmpty
+            //         ? getTagHideButtons()
+            //         : allOrGroupTransactionsName.value ==
+            //                 StringConstant.allTransactions
+            //             ? getTabsForTransactions()
+            //             : getTabsForTransactions()),
             Obx(() {
               if (widget.showIcon ?? false) {
                 return reloadHistory.value ? getlist() : getlist();
@@ -175,138 +172,139 @@ class _TransactionHistoryState extends State<TransactionHistory>
 //     );
 //   }
 
-  Widget getTagHideButtons() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          actionButton(
-            text: 'Tag',
-            onTap: () {
-              tagName.value = "Untagged";
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                ),
-                builder: (context) {
-                  return TagShowmodal(
-                    data: transactionsHistory.isNotEmpty &&
-                            redioButtonIndex.isNotEmpty
-                        ? transactionsHistory[redioButtonIndex.values.first]
-                        : {},
-                    index: 0,
-                    isTag: true,
-                  );
-                },
-              );
-            },
-          ),
-          const SizedBox(width: 10), // Spacing between buttons
-          actionButton(
-            text: 'Hide',
-            onTap: () {
-              hideSelectedTransactions(context, true);
-              showCheckBox.value = false;
-            },
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget getTagHideButtons() {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+  //     child: Row(
+  //       mainAxisAlignment: MainAxisAlignment.start,
+  //       children: [
+  //         actionButton(
+  //           text: 'Tag',
+  //           onTap: () {
+  //             tagName.value = "Untagged";
+  //             showModalBottomSheet(
+  //               context: context,
+  //               isScrollControlled: true,
+  //               shape: const RoundedRectangleBorder(
+  //                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  //               ),
+  //               builder: (context) {
+  //                 return TagShowmodal(
+  //                   data: transactionsHistory.isNotEmpty &&
+  //                           redioButtonIndex.isNotEmpty
+  //                       ? transactionsHistory[redioButtonIndex.values.first]
+  //                       : {},
+  //                   index: 0,
+  //                   isTag: true,
+  //                 );
+  //               },
+  //             );
+  //           },
+  //         ),
+  //         const SizedBox(width: 10), // Spacing between buttons
+  //         actionButton(
+  //           text: 'Hide',
+  //           onTap: () {
+  //             hideSelectedTransactions(context, true);
+  //             showCheckBox.value = false;
+  //           },
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  Widget actionButton({required String text, required VoidCallback onTap}) {
-    return InkWell(
-      onTap: onTap,
-      splashColor: AppColors.primaryColor.withOpacity(0.2),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-        decoration: BoxDecoration(
-          color: AppColors.mt, // Match modal background for consistency
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.accentColor.withOpacity(0.1),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: textStyle(
-          context: context,
-          text: text,
-          c: AppColors.accentColor,
-          fontsize: 16,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
+  // Widget actionButton({required String text, required VoidCallback onTap}) {
+  //   return InkWell(
+  //     onTap: onTap,
+  //     splashColor: AppColors.primaryColor.withOpacity(0.2),
+  //     child: Container(
+  //       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+  //       decoration: BoxDecoration(
+  //         color: AppColors.mt, // Match modal background for consistency
+  //         borderRadius: BorderRadius.circular(10),
+  //         boxShadow: [
+  //           BoxShadow(
+  //             color: AppColors.accentColor.withOpacity(0.1),
+  //             blurRadius: 4,
+  //             offset: const Offset(0, 2),
+  //           ),
+  //         ],
+  //       ),
+  //       child: textStyle(
+  //         context: context,
+  //         text: text,
+  //         c: AppColors.accentColor,
+  //         fontsize: 16,
+  //         fontWeight: FontWeight.w500,
+  //       ),
+  //     ),
+  //   );
+  // }
 
- Widget getTabsForTransactions() {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        tabItem(StringConstant.allTransactions),
-        //const SizedBox(width: 12), // Space between tabs
-        tabItem(StringConstant.pollTransactions),
-      ],
-    ),
-  );
-}
+//  Widget getTabsForTransactions() {
+//   return Padding(
+//     padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+//     child: Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//       children: [
+//         tabItem(StringConstant.allTransactions),
+//         //const SizedBox(width: 12), // Space between tabs
+//         tabItem(StringConstant.pollTransactions),
+//       ],
+//     ),
+//   );
+// }
 
-Widget tabItem(String text) {
-  bool isSelected = text == allOrGroupTransactionsName.value;
-  // Calculate width based on screen size for responsiveness
-  double tabWidth = (MediaQuery.of(context).size.width - 44) / 2; // 44 = 16*2 padding + 12 spacing
-  return InkWell(
-    onTap: () {
-      allOrGroupTransactionsName.value = text;
-    },
-    child: Container(
-      width: tabWidth,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: isSelected ? AppColors.primaryColor : AppColors.bg5,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
+// Widget tabItem(String text) {
+//   bool isSelected = text == allOrGroupTransactionsName.value;
+//   // Calculate width based on screen size for responsiveness
+//   double tabWidth = (MediaQuery.of(context).size.width - 44) / 2; // 44 = 16*2 padding + 12 spacing
+//   return InkWell(
+//     onTap: () {
+//       allOrGroupTransactionsName.value = text;
+//     },
+//     child: Container(
+//       width: tabWidth,
+//       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+//       decoration: BoxDecoration(
+//         color: isSelected ? AppColors.primaryColor : AppColors.bg5,
+//         borderRadius: BorderRadius.circular(12),
+//         border: Border.all(
           
-          color: isSelected ? AppColors.primaryColor : AppColors.bg1,
-        ),
-        gradient: isSelected
-            ? LinearGradient(
-                colors: [
-                  AppColors.primaryColor,
-                  AppColors.primaryColor.withOpacity(0.8),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              )
-            : null,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Center(
-        child: textStyle(
-          context: context,
-          text: text,
-          c: isSelected ? AppColors.bg5 : AppColors.primaryColor,
-          fontsize: 14,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    ),
-  );
-}
+//           color: isSelected ? AppColors.primaryColor : AppColors.bg1,
+//         ),
+//         gradient: isSelected
+//             ? LinearGradient(
+//                 colors: [
+//                   AppColors.primaryColor,
+//                   AppColors.primaryColor.withOpacity(0.8),
+//                 ],
+//                 begin: Alignment.topLeft,
+//                 end: Alignment.bottomRight,
+//               )
+//             : null,
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.black.withOpacity(0.1),
+//             blurRadius: 8,
+//             offset: const Offset(0, 2),
+//           ),
+//         ],
+//       ),
+//       child: Center(
+//         child: textStyle(
+//           context: context,
+//           text: text,
+//           c: isSelected ? AppColors.bg5 : AppColors.primaryColor,
+//           fontsize: 14,
+//           fontWeight: FontWeight.w600,
+//         ),
+//       ),
+//     ),
+//   );
+// }
+
   void changeTheBool() {
     sectionReached.value = true;
     Navigator.pop(context);
@@ -558,15 +556,15 @@ Widget getIconAvtar(double avatarSize, String category, double scaleFactor) {
   );
 }
 
-void hideSelectedTransactions(BuildContext context, bool hidden) {
-  int index = 0; // Or get from another list/map if you have matching indexes
+// void hideSelectedTransactions(BuildContext context, bool hidden) {
+//   int index = 0; // Or get from another list/map if you have matching indexes
 
-  redioButton.forEach((id, value) {
-    hideTransaction(redioButtonIndex[id] ?? 0, hidden, context, id);
-    index++;
-  });
+//   redioButton.forEach((id, value) {
+//     hideTransaction(redioButtonIndex[id] ?? 0, hidden, context, id);
+//     index++;
+//   });
 
-  redioButton.clear(); // Optionally clear selection after hiding
-  redioButtonIndex.clear(); // Optionally clear selection after hiding
-  Navigator.pop(context);
-}
+//   redioButton.clear(); // Optionally clear selection after hiding
+//   redioButtonIndex.clear(); // Optionally clear selection after hiding
+//   Navigator.pop(context);
+// }

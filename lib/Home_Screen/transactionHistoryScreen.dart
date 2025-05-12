@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/tagandhidebutton.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
@@ -149,35 +150,49 @@ void _onScroll() {
                     padding: const EdgeInsets.symmetric(horizontal: 5),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
-                     height: MediaQuery.of(context).size.height * 0.06,
+                    //  height: MediaQuery.of(context).size.height /5,
                      decoration: BoxDecoration(
                     color: AppColors.bg5,
                     borderRadius: BorderRadius.circular(30),
                     
                   ),
-                      child: Row(
+                      child: Column(
                         children: [
-                           getTextFeild(),
-                          TextButton(onPressed: ()
-                          { 
-                             showModalBottomSheet(context: context, builder: (_)=>
-                             Container(
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                color: AppColors.bg5,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(20),
-                                  topRight: Radius.circular(20),
-                                ),
-                              ),
-                              child: filterTransaction(context)
-                              ));
-                          }, 
-                           child: Text("Filter",style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.bold,
-                            fontSize: 14,
-                            color: AppColors.primaryColor),),
-                          )
+
+
+                         const SizedBox(height: 4,),
+                          Row(
+                            children: [
+                               getTextFeild(),
+                              TextButton(onPressed: ()
+                              { 
+                                 showModalBottomSheet(context: context, builder: (_)=>
+                                 Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration:const BoxDecoration(
+                                    color: AppColors.bg5,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20),
+                                    ),
+                                  ),
+                                  child: filterTransaction(context)
+                                  ));
+                              }, 
+                               child: Text("Filter",style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: AppColors.primaryColor),),
+                              )
+                            ],
+                          ),
+                      
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 1),
+                              child: getTab(context),
+                            ),
+
+                      
                         ],
                       ),
                     ),
@@ -185,12 +200,10 @@ void _onScroll() {
                   const SizedBox(height: 10),
                   // Transaction History
                  Container(
-                   height: MediaQuery.sizeOf(context).height/1.25,
+                   height: MediaQuery.sizeOf(context).height/1.38,
                    child: SingleChildScrollView(
                      controller: scrollController,
-                     child: Expanded(
-                       child: transactionsHistoryList(),
-                     ),
+                     child: Expanded(child: transactionsHistoryList()),
                    ),
                  )
                 ],
@@ -209,6 +222,7 @@ void _onScroll() {
                              {
                               currentPage = 1;
                               isLoadingMore.value = false;
+                              accountIdPdf.value="-";
                               getAllTransaction(context);
                              }
  }
@@ -230,7 +244,8 @@ void _onScroll() {
                           ));
   }
   
- Widget getTextFeild() {
+ Widget getTextFeild()
+ {
     return Container(
                             width: MediaQuery.of(context).size.width /1.3,
                             child: TextField(

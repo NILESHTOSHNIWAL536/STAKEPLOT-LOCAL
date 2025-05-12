@@ -99,6 +99,7 @@ RxList inSights = [].obs;
 RxBool getInsights = false.obs;
 RxBool allOrGroupTransactions = true.obs;
 RxString accountId = "".obs;
+RxString searchAccountId = "".obs;
 RxString accountIdPdf = "".obs;
 RxString allOrGroupTransactionsName = "All".obs;
 RxList totalInSights = [].obs;
