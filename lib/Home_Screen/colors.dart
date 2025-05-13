@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color primaryColor = Color(0xFF636486); //Color(0xFF004856);
+  static const Color primaryColor =  Color(0xFF004856);
   static const Color accentColor = Color(0xFF1E1E1E);
   static const Color backgroundColor = Color(0xFFF4F4F4); // for app bg
-  static const Color button = Color(0xFFE6EAEB); // for buttons bg
+  static const Color button = Color(0xFFE6EAEB); // for buttons bg and using for
   static const Color bg1 = Color(0xFF000000);
   static const Color bg2 = Color(0xFF171717);
   static const Color bg3 = Color(0xFF48484A);
@@ -22,7 +22,6 @@ class AppColors {
   static const Color bottomBarColor = Color(0xFF111111);
   static const Color green = Color.fromARGB(255, 88, 241, 49);
   static const Color chatcolor = Color(0xFFF0EBEB);
-  static const Color appIcon = Color(0xFF636486);
-
+  static const Color appIcon =  Color(0xFF004856);//Color(0xFF636486);
   static const Color likesharecommentCount = Color(0xFF454545);
 }

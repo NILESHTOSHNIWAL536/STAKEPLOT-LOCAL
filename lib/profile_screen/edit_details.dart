@@ -215,39 +215,23 @@ void checkBiometricsStatus() async {
                       width: 14,
                       height: 9,
                     )),
-                GestureDetector(
-                  onTap: () {
-                    // var data = {
-                    //   'name': userName.value,
-                    //   'email': email.value,
-                    // };
-                    // showModalBottomSheet(
-                    //   isScrollControlled: true,
-                    //   context: context,
-                    //   builder: (context) {
-                    //     return Avatar(
-                    //       data: data,
-                    //       isEdit: true,
-                    //     );
-                    //   },
-                    // );
-
-                    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => UserStatsScreen()),
-    );
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 0.0),
-                    child: textStyleOnly2(
-                      context: context,
-                      text: "vvv",
-                      fontsize: 14,
-                      color: AppColors.bg3,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
+    //             GestureDetector(
+    //               onTap: () { Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => UserStatsScreen()),
+    // );
+    //               },
+    //               child: Padding(
+    //                 padding: EdgeInsets.only(top: 0.0),
+    //                 child: textStyleOnly2(
+    //                   context: context,
+    //                   text: "vvv",
+    //                   fontsize: 14,
+    //                   color: AppColors.bg3,
+    //                   fontWeight: FontWeight.w400,
+    //                 ),
+    //               ),
+    //             ),
               ],
             ),
             const SizedBox(height: 20),

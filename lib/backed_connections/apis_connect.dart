@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:get/get.dart';
@@ -266,7 +267,7 @@ void snackBarCalled(BuildContext context, String text, [Color colors = const Col
       height: 40,
       child: CustomSnackBar.success(
         message: text,
-        backgroundColor: colors,
+        backgroundColor: AppColors.primaryColor,
         textStyle: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.bold,
