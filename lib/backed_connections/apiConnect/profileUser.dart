@@ -202,7 +202,7 @@ void getUserInfomations() async {
     friendsList.forEach((element) {
       friendsListDetails[element['_id']] = {
         'name': element['name'],
-        'avatar': element['avatar'],
+        'avatar': element['avatarBackGround'],
       };
     });
   } else {}

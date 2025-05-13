@@ -440,7 +440,7 @@ void getChatLoader() async {
         var data = {
           '_id': key,
           'name': friendsListDetails[key]['name'],
-          'avatar': friendsListDetails[key]['avatarBackGround'] ?? defaultBackGround.value,
+          'avatar': friendsListDetails[key]['avatar'] ?? defaultBackGround.value,
           'item': friendsListDetails[key]['avatar'],
           'count': element['chats']['unseenCount'],
           'type': type,
