@@ -558,7 +558,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
     bool ifAvatar = index == 3 || index == 4;
 
     return Center(
-      child: ifAvatar? Obx(()=> UserAvatar(url: avaterUrlPath(userName.value), width: 30, height: 20))
+      child: ifAvatar? Obx(()=> AvatarProfile(name: userName.value, width: 30, height: 13,background: userAvatarBackGround.value,))
           // ? SvgPicture.asset(iconPath,
           //     width: Colorcodes.paddingSize * 2.2,
           //     height: Colorcodes.paddingSize * 2.7)

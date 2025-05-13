@@ -300,6 +300,26 @@ Widget textStyle({
   );
 }
 
+Widget textStyleImage({
+  required BuildContext context,
+  text,
+  double fontsize = 12,
+  Color c = AppColors.bg1,
+  FontWeight fontWeight = FontWeight.w500,
+  bool iswrap = false,
+  double lineHeight=1.0 ,
+}) {
+  return Text(
+    text.toString(),
+    style: FontManager().getTextStyle(
+          context,
+          lWeight: fontWeight, fontSize: fontsize, color: c,
+          lineHeight: lineHeight
+        ),
+    overflow: iswrap? TextOverflow.visible:TextOverflow.ellipsis,
+  );
+}
+
 Widget textStyleAnimated({
   required BuildContext context,
   text,

@@ -373,6 +373,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                           "name": frdsList[index]['name'],
                                           "id": values,
                                           'avatar': frdsList[index]['avatar'],
+                                          'avatarBackGround': frdsList[index]['avatarBackGround'] ?? defaultBackGround.value ,
                                           "balance": 200,
                                         });
                                       } else {
@@ -381,6 +382,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                           "name": frdsList[index]['name'],
                                           "id": values,
                                           'avatar': frdsList[index]['avatar'],
+                                          'avatarBackGround': frdsList[index]['avatarBackGround'] ?? defaultBackGround.value ,
                                           "balance": 200,
                                         });
                                       }

@@ -114,6 +114,7 @@ class _FriendsState extends State<Friends> {
   }
 
   Widget profileContainer(data) {
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
       child: Center(
@@ -139,8 +140,10 @@ class _FriendsState extends State<Friends> {
              mainAxisAlignment: MainAxisAlignment.start,
              crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              AvatarProfileImage(
-                  url:avaterUrlPath(data['name']), width: 15, height: 15),
+              // AvatarProfileImage(
+              //     url:avaterUrlPath(data['name']), width: 15, height: 15),
+
+              AvatarProfile(name: data['name'], width: 30, height: 13,background:data['avatarBackGround'] ?? defaultBackGround.value,),
              
               Text((data['name']),
                   style: FontManager().getTextStyle(context,

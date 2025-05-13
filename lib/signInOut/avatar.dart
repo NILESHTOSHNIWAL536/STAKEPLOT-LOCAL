@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
@@ -306,11 +309,10 @@ void storeData(context, data, String opt, Avatarurl) async {
   String password = data['userpassword'];
   String conform = data['confirmPassword'];
   String dob = data['dob'];
-
+  String colorString=avatarBackGroundList[getRandomValue(avatarBackGroundList)];
 
   final response = await http.post(
     Uri.parse('${url}/user/register'),
-    // Uri.parse('https://stakeplot-bk4z.onrender.com/api/v1/user/register'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
@@ -321,7 +323,8 @@ void storeData(context, data, String opt, Avatarurl) async {
       'confirmPassword': conform,
       'dob': dob,
       'avatarType': Avatarurl,
-      'otp': opt
+      'otp': opt,
+      'avatarBackGround': colorString
     }),
   );
 

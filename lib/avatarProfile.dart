@@ -1,7 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
 
@@ -102,6 +104,81 @@ PrefixIcon({ Key? key,required this.url,required this.width,required this.height
     );
   }
 }
+
+
+class AvatarProfile extends StatelessWidget {
+  final String name;
+  final String background;
+  final double width;
+  final double height;
+   bool flag=false;
+
+   AvatarProfile({
+    Key? key,
+    required this.name,
+    required this.width,
+    required this.height,
+    required this.background,
+     this.flag=false,
+  }) : super(key: key);
+
+  Color getBackgroundColor(String hex) {
+    try {
+      return Color(int.parse(hex.replaceFirst('#', '0xFF')));
+    } catch (_) {
+      return Colors.grey; // Fallback color
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return flag?Container(
+      // color: AppColors.bg1,
+      width: MediaQuery.of(context).size.width/ width,
+      height: MediaQuery.of(context).size.height/ height,
+      alignment: Alignment.center,
+      child: img2(context,MediaQuery.of(context).size.width/ width)
+      ):Container(
+      margin: EdgeInsets.all(5),
+      padding: EdgeInsets.all(2),
+      alignment: Alignment.center,
+      child: img(context)
+    );
+  }
+
+
+  Widget img(context){
+    return CircleAvatar(
+        backgroundColor: getBackgroundColor(background),
+        child: Center(
+          child: textStyleImage(
+            context: context,
+            text: name[0].toUpperCase(),
+            fontWeight: FontWeight.bold,
+            fontsize: 25,
+            c: Colorcodes.appBarColor,
+          ),
+        ),
+      );
+  }
+
+  Widget img2(context,width){
+    return CircleAvatar(
+        backgroundColor: getBackgroundColor(background),
+        radius: width,
+        child: Center(
+          child: textStyleImage(
+            context: context,
+            text: name[0].toUpperCase(),
+            fontWeight: FontWeight.bold,
+            fontsize: 30,
+            c: Colorcodes.appBarColor,
+          ),
+        ),
+      );
+  }
+}
+
 
 
 bool isSvgUrl(String url) {

@@ -20,6 +20,7 @@ import 'package:flutter_application_code_stakeplot/user_chat/fullScreen.dart';
 import 'package:get/get_rx/get_rx.dart';
 // import 'package:getwidget/components/image/gf_image_overlay.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:flutter/cupertino.dart';
@@ -356,7 +357,63 @@ class _ChatState extends State<Chat> {
     );
   }
 
+
   void getImage() async {
+  // Show confirmation dialog
+  bool? confirm = await showDialog<bool>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Allow Media Access'),
+        content: const Text('Are you sure you want to allow access to your media?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false), // User selects No
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true), // User selects Yes
+            child: const Text('Yes'),
+          ),
+        ],
+      );
+    },
+  );
+
+  // If user selects No or closes the dialog, stop the process
+  if (confirm == null || !confirm) {
+    snackBarCalled(context, 'Image selection canceled');
+    return;
+  }
+
+  // Request photo library permission
+  PermissionStatus status = await Permission.photos.request();
+
+  // Handle permission response
+  if (status.isGranted) {
+    try {
+      final _picker = ImagePicker();
+      final imageData = await _picker.pickImage(source: ImageSource.gallery);
+      if (imageData != null) {
+        showData(imageData); // Your existing method to handle selected image
+      } else {
+        snackBarCalled(context, 'No image selected');
+      }
+    } catch (e) {
+      snackBarCalled(context, 'Error selecting image: $e');
+    }
+  } else if (status.isDenied) {
+    snackBarCalled(context, 'Please grant photo library access to select images');
+  } else if (status.isPermanentlyDenied) {
+    snackBarCalled(
+      context,
+      'Photo library access is permanently denied. Please enable it in settings.',
+    );
+    await openAppSettings(); // Open app settings for manual permission enable
+  }
+}
+
+  void getImage2() async {
     final _picker = ImagePicker();
     final imageData = await _picker.pickImage(source: ImageSource.gallery);
 

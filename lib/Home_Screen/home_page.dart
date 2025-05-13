@@ -15,6 +15,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/transactions_grap
 import 'package:flutter_application_code_stakeplot/NavigatorScreens/userNavigator.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
@@ -232,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: (){
                    navigatorToMyOwnPage(context);
                 },
-                child: Obx(()=> UserAvatar(url: avaterUrlPath(userName.value), width: 30, height: 13))),
+                child: Obx(()=> AvatarProfile(name: userName.value, width: 30, height: 13,background: userAvatarBackGround.value,))),
                 // child: UserAvatar(url: avatar.value, width: 15, height: 15)),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,

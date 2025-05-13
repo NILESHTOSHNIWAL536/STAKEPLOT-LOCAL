@@ -271,6 +271,11 @@ String getTimeBasedGreeting() {
 }
 
 
+int getRandomValue(list)
+{
+  return Random().nextInt(list.length);
+}
+
 String avaterUrlPath(String name)
 {
     if(name.isEmpty)return "assets/avatars/a.svg";

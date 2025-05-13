@@ -180,8 +180,9 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
                       //fontSize: MediaQuery.of(context).size.width * 0.04,
                       //fontSize: 12,
                       color: AppColors.bg1)),
+            const SizedBox(height: 10),
               
-                TabBarUser(userPostList: getTrendingData),
+             TabBarUser(userPostList: getTrendingData),
              
             ],
           ),
@@ -244,21 +245,22 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
                   Positioned(
                     top: 80,
                     left: MediaQuery.of(context).size.width / 2 - 50,
-                    child: GestureDetector(
-                      // onTap: () => _pickImage(ImageSource.gallery, "profile"),
-                      child:CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.transparent,
-                  child: ClipOval(
-                    child: SvgPicture.asset(
-                      avaterUrlPath(data['name']),
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                    ),
+                    child: AvatarProfile(name: data['name'], width: 4, height: 10,background:data['avatarBackGround'] ?? defaultBackGround.value,flag: true,),
+                //     child: GestureDetector(
+                //       // onTap: () => _pickImage(ImageSource.gallery, "profile"),
+                //       child:CircleAvatar(
+                //   radius: 50,
+                //   backgroundColor: Colors.transparent,
+                //   child: ClipOval(
+                //     child: SvgPicture.asset(
+                //       avaterUrlPath(data['name']),
+                //       width: 100,
+                //       height: 100,
+                //       fit: BoxFit.cover,
+                //     ),
+                //   ),
+                // ),
+                //     ),
                   ),
                 ],
               );
