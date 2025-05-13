@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:custom_image_crop/custom_image_crop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -123,8 +124,7 @@ class _ImageScreenState extends State<ImageScreen> {
                     children: [
                       Row(
                         children: [
-                          AvatarProfileImage(
-                              url: avatar.value, width: 20, height: 20),
+                          getProfile(),
                           const SizedBox(width: 8),
                           Column(
                             children: [

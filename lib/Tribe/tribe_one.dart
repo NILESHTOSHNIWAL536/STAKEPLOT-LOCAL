@@ -741,8 +741,7 @@ class _TribeHomeState extends State<TribeUnique> {
             autofocus: true,
             controller: Textcontroller,
             onSubmitted: (value) {
-              addComment(context, value, postId, widget.dataObj['author']['id'],
-                  widget.dataObj['title'], name);
+              addComment(context, value, postId, widget.dataObj['author']['id'],widget.dataObj['title'], name);
               postCommentCount.putIfAbsent(
                   postId, () => widget.dataObj["comments"] ?? 0);
               postCommentCount.update(postId, (value) => value + 1);
@@ -1389,6 +1388,7 @@ class _TribeHomeState extends State<TribeUnique> {
     author.avatar = userAvatar;
     author.name = userName.value;
     author.avatar = avatar.value;
+    author.avatarBackGround = userAvatarBackGround.value;
     //  author.avatar=avatar;
     rep.author = author;
     commentObj.replies!.add(rep);
