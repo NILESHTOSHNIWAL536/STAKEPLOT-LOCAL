@@ -88,7 +88,8 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                   color: AppColors.bg3,
                 ),
               ),
-              TextButton(
+               chartData.length >= 7?
+               TextButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -106,7 +107,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                     color: AppColors.bg3,
                   ),
                 ),
-              ),
+              ): const SizedBox.shrink(),
             ],
           ),
           Obx(() => chartData.isEmpty
