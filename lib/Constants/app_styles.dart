@@ -1,8 +1,10 @@
+import 'dart:ui';
+
 class NavBarIcons {
   //nav bar
   static String home = "assets/icons/Navigation_bar/homepageActive.svg";
   static String home1 = "assets/icons/Navigation_bar/homePageInactive.svg";
-  static String community1 = "assets/icons/Navigation_bar/communityInactive.svg";
+  static String community1 ="assets/icons/Navigation_bar/communityInactive.svg";
   static String community = "assets/icons/Navigation_bar/communityActive.svg";
   static String screen21 = "assets/icons/Navigation_bar/financeActive.svg";
   static String screen2 = "assets/icons/Navigation_bar/financeInActive.svg";
@@ -17,9 +19,8 @@ class HomePageIcons {
   static String refresh = "assets/icons/Home-page/Refresh.svg";
   static String fetch = "assets/icons/Home-page/fetch.svg";
   static String none = "assets/icons/Home-page/none.svg";
-    static String isSplit = "assets/icons/Home-page/isSplit.svg";
-      static String isManualGif = "assets/Images/rupee.gif";
-
+  static String isSplit = "assets/icons/Home-page/isSplit.svg";
+  static String isManualGif = "assets/Images/rupee.gif";
 }
 
 class Categories {
@@ -305,16 +306,16 @@ class BudgetSubCategories {
     "coffee": "${connect}coffee.svg",
     "eats": "${connect}eats.svg",
     "Frankie": "${connect}Frankie.svg",
-   // "kirana": "${connect}kirana.svg",
+    // "kirana": "${connect}kirana.svg",
     "Store": "${connect}Store.svg",
-   // "General Store": "${connect}general_store.svg",
+    // "General Store": "${connect}general_store.svg",
     "rasoi": "${connect}rasoi.svg",
     "fish": "${connect}fish.svg",
-   // "milk": "${connect}milk.svg",
+    // "milk": "${connect}milk.svg",
 
     // Shopping
     "Shoppers": "${connect}shoppers.svg",
-   // "Mart": "${connect}mart.svg",
+    // "Mart": "${connect}mart.svg",
     "WestSide": "${connect}westside.svg",
     "Electronics": "${connect}electronics.svg",
     "Supermarket": "${connect}Supermarket.svg",
@@ -324,7 +325,7 @@ class BudgetSubCategories {
     "Fabrics": "${connect}fabric.svg",
     "kart": "${connect}kart.svg",
     "Shopping": "${connect}Shopping.svg",
-  //  "ratnadeep": "${connect}ratnadeep.svg",
+    //  "ratnadeep": "${connect}ratnadeep.svg",
     "Mobiles": "${connect}Mobile.svg",
     "lifestyle": "${connect}lifestyle.svg",
     "market": "${connect}Market.svg",
@@ -400,7 +401,8 @@ class BudgetSubCategories {
     "Carpenter": "${connect}Carpenter.svg",
     "Electrician": "${connect}Electrician.svg",
     "Plumber": "${connect}plumber.svg",
-    "Bike/Car Service":"${connect}Bike/Car_service.svg", // Fixed path separator
+    "Bike/Car Service":
+        "${connect}Bike/Car_service.svg", // Fixed path separator
     "Events": "${connect}Events.svg",
     "Service": "${connect}Service.svg",
     "Bike": "${connect}Bike.svg",
@@ -517,28 +519,25 @@ class BudgetSubCategories {
     "milk": "${connect}milk.svg",
 
     //Income
-    "NEFT":"${connect}neft.svg",
-    "NEFT CR":"${connect}neft.svg",
-    "PRINC PAYOUT":"${connect}princPayout.svg",
+    "NEFT": "${connect}neft.svg",
+    "NEFT CR": "${connect}neft.svg",
+    "PRINC PAYOUT": "${connect}princPayout.svg",
 //    "INT PAYOUT":,
-    "Salary":"${connect}Salary.svg",
-    "credit interest":"${connect}creditInterest.svg",
-    "BIL":"${connect}neft.svg",
-    "INF":"${connect}neft.svg",
-    "zerodhabroking":"${connect}zerodhabroking.svg",
-    "credit":"${connect}Credit.svg",
-    
+    "Salary": "${connect}Salary.svg",
+    "credit interest": "${connect}creditInterest.svg",
+    "BIL": "${connect}neft.svg",
+    "INF": "${connect}neft.svg",
+    "zerodhabroking": "${connect}zerodhabroking.svg",
+    "credit": "${connect}Credit.svg",
+
     //Personal transfer
-    "POS":"${connect}POS.svg",
-    "CASH WDL":"${connect}cashWDL.svg",
-    "ATM":"${connect}ATM.svg",
-    "To:":Categories.personalTransfer,
+    "POS": "${connect}POS.svg",
+    "CASH WDL": "${connect}cashWDL.svg",
+    "ATM": "${connect}ATM.svg",
+    "To:": Categories.personalTransfer,
 
     //Personal transfer received
-    "UPI-CR":"${connect}scanner.svg",
-
-    
-
+    "UPI-CR": "${connect}scanner.svg",
   };
 
   static final List<String> categories = listofSubCategories.keys.toList();
@@ -616,16 +615,16 @@ final Map<String, List<String>> categories = {
     "coffee",
     "eats",
     "Frankie",
-  //  "kirana",
+    //  "kirana",
     "Store",
-   // "General Store",
+    // "General Store",
     "rasoi",
     "fish",
-   // "milk"
+    // "milk"
   ],
   "Shopping": [
     "Shoppers",
-   // "Mart",
+    // "Mart",
     "WestSide",
     "Electronics",
     "Supermarket",
@@ -634,7 +633,7 @@ final Map<String, List<String>> categories = {
     "Fashion",
     "Fabrics",
     "kart",
-   // "ratnadeep",
+    // "ratnadeep",
     "Mobiles",
     "lifestyle",
     "market",
@@ -772,14 +771,33 @@ final Map<String, List<String>> categories = {
     "Escape",
     "Adventures"
   ],
-
   "Groceries": [
-    "SUPRDAILY", "GROCERY", "SPENCER'S",  "VEGETABLE", "FRUIT", "Ratnadeep", "dmart", "kirana", "General Store", "milk"],
-  "Income": ["NEFT", "NEFT CR", "PRINC PAYOUT", "Salary", "credit interest", "BIL", "INF", "zerodhabroking", "credit"],
-  
-  "Personal Transfer": ["POS", "CASH WDL", "ATM"," To:"],
-
-  "Personal Transfer Received": ["UPI-CR",]
+    "SUPRDAILY",
+    "GROCERY",
+    "SPENCER'S",
+    "VEGETABLE",
+    "FRUIT",
+    "Ratnadeep",
+    "dmart",
+    "kirana",
+    "General Store",
+    "milk"
+  ],
+  "Income": [
+    "NEFT",
+    "NEFT CR",
+    "PRINC PAYOUT",
+    "Salary",
+    "credit interest",
+    "BIL",
+    "INF",
+    "zerodhabroking",
+    "credit"
+  ],
+  "Personal Transfer": ["POS", "CASH WDL", "ATM", " To:"],
+  "Personal Transfer Received": [
+    "UPI-CR",
+  ]
 };
 
 class OnboardingImages {
@@ -815,4 +833,14 @@ class OnboardingImages {
       "assets/icons/likeComment/manualTransaction.svg";
 }
 
-
+class UniversalColors {
+  static const List<Color> categoryColors = [
+    Color(0xFFEFF6FF), // Green
+    Color(0xFFF0FDF4), // Deep Orange
+    Color(0xFFFAF5FF), // Blue
+    Color(0xFFFFF7ED), // Pink
+    Color(0xFFFEFCE8), // Purple
+    Color(0xFFFEF2F2), // Amber
+    Color(0xFFF0FDFA), // Teal
+  ];
+}

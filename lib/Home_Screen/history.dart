@@ -413,17 +413,7 @@ Widget getIconsForHideUpdateSplit(
                     })(),
                     isManual
                                                ?
-                                               
-//                                                Image.asset(
-//   'assets/Images/rupee.gif',
- 
-// height: MediaQuery.of(context).size.width * 0.08, // Adjust as needed for responsiveness
-// width: MediaQuery.of(context).size.width * 0.08, // Adjust as needed for responsiveness
-
-//   fit: BoxFit.cover,
-// )
-
-                                                Container(
+                                                  Container(
                             height: 30,
                             width: 30,
                             child: Lottie.asset(

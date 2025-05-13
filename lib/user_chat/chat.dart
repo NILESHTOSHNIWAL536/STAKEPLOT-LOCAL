@@ -34,7 +34,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-
+import 'package:permission_handler/permission_handler.dart';
 late IO.Socket socket;
 
 class Chat extends StatefulWidget {
@@ -225,13 +225,13 @@ class _ChatState extends State<Chat> {
             children: [
               uploadData((message.post)),
               // PostCard(data: message.post),
-              profilepath(bool),
+             // profilepath(bool),
             ],
           )
         : Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              profilepath(bool),
+              //profilepath(bool),
               uploadData((message.post)),
               //  PostCard(data: message.post),
             ],
@@ -244,13 +244,13 @@ class _ChatState extends State<Chat> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               spliData(message),
-              profilepath(bool),
+            //  profilepath(bool),
             ],
           )
         : Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              profilepath(bool),
+           //   profilepath(bool),
               spliData(message),
             ],
           );
@@ -357,9 +357,25 @@ class _ChatState extends State<Chat> {
     );
   }
 
+  // void getImage() async {
+  //   final _picker = ImagePicker();
+  //   final imageData = await _picker.pickImage(source: ImageSource.gallery);
 
-  void getImage() async {
-  // Show confirmation dialog
+  //   if (imageData != null) {
+  //     //  addMessage(context,"image",search.text,data['_id'],data);
+  //     showData(imageData);
+  //     // addMessageImage(context, "image","None",data['_id'],File(imageData.path),widget.data,widget.myId,socket,widget.myId,roomId.value,);
+
+  //     // navigate();
+  //     // setState(() {
+  //     //       messages.insert(0,Message(isMe: true,url: File(imageData.path),type: "image")); // Add the message to the list
+  //     //   });
+  //   }
+  // }
+
+
+void getImage() async {
+  print('getImage called');
   bool? confirm = await showDialog<bool>(
     context: context,
     builder: (BuildContext context) {
@@ -368,11 +384,11 @@ class _ChatState extends State<Chat> {
         content: const Text('Are you sure you want to allow access to your media?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(false), // User selects No
+            onPressed: () => Navigator.of(context).pop(false),
             child: const Text('No'),
           ),
           TextButton(
-            onPressed: () => Navigator.of(context).pop(true), // User selects Yes
+            onPressed: () => Navigator.of(context).pop(true),
             child: const Text('Yes'),
           ),
         ],
@@ -380,27 +396,35 @@ class _ChatState extends State<Chat> {
     },
   );
 
-  // If user selects No or closes the dialog, stop the process
+  print('Dialog result: $confirm');
   if (confirm == null || !confirm) {
     snackBarCalled(context, 'Image selection canceled');
     return;
   }
 
-  // Request photo library permission
-  PermissionStatus status = await Permission.photos.request();
+  print('Checking initial permission status');
+  PermissionStatus status = await Permission.photos.status;
+  print('Initial status: $status');
 
-  // Handle permission response
+  if (!status.isGranted) {
+    print('Requesting permission');
+    status = await Permission.photos.request();
+    print('Permission status after request: $status');
+  }
+
   if (status.isGranted) {
     try {
       final _picker = ImagePicker();
       final imageData = await _picker.pickImage(source: ImageSource.gallery);
+      print('Image picked: $imageData');
       if (imageData != null) {
-        showData(imageData); // Your existing method to handle selected image
+        showData(imageData);
       } else {
         snackBarCalled(context, 'No image selected');
       }
     } catch (e) {
       snackBarCalled(context, 'Error selecting image: $e');
+      print('Error: $e');
     }
   } else if (status.isDenied) {
     snackBarCalled(context, 'Please grant photo library access to select images');
@@ -409,35 +433,24 @@ class _ChatState extends State<Chat> {
       context,
       'Photo library access is permanently denied. Please enable it in settings.',
     );
-    await openAppSettings(); // Open app settings for manual permission enable
+    await openAppSettings();
+  } else {
+    snackBarCalled(context, 'Unknown permission status: $status');
+    print('Unknown status: $status');
   }
 }
-
-  void getImage2() async {
-    final _picker = ImagePicker();
-    final imageData = await _picker.pickImage(source: ImageSource.gallery);
-
-    if (imageData != null) {
-      //  addMessage(context,"image",search.text,data['_id'],data);
-      showData(imageData);
-      // addMessageImage(context, "image","None",data['_id'],File(imageData.path),widget.data,widget.myId,socket,widget.myId,roomId.value,);
-
-      // navigate();
-      // setState(() {
-      //       messages.insert(0,Message(isMe: true,url: File(imageData.path),type: "image")); // Add the message to the list
-      //   });
-    }
-  }
-
   // Function to build a message bubble
   Widget _buildMessage(Message message) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3.0),
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
       child: Row(
         mainAxisAlignment:
             message.isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
-          getDataWidget(message),
+          Padding(
+            padding: !message.isMe? EdgeInsets.only(left: 14):EdgeInsets.only(right: 14),
+            child: getDataWidget(message),
+          ),
         ],
       ),
     );
@@ -487,32 +500,26 @@ Widget build(BuildContext context) {
                           clearChatData();
                           getChatLoader();
                         },
-                        child: Icon(Icons.arrow_back),
+                        child: const Icon(
+                          Icons.arrow_back,
+                         color: AppColors.backgroundColor
+                          ),
                       ),
           title: ValueListenableBuilder<bool>(
               valueListenable: onlineUser,
               builder: (context, snapshot, child) {
-                return Container(
-                  // color: AppColors.backgroundColor,
-                  child: GestureDetector(
-                    onTap: () {
-                      
-                      pushDetails();
-                    },
-                    child: Center(
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 2),
-                        width: MediaQuery.of(context).size.width / 2,
-                        child: Text(
-                          data['name'],
-                          style: FontManager().getTextStyle(context,
-                          color: AppColors.backgroundColor,
-                              fontSize: 16, lWeight: FontWeight.bold),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ),
-                    ),
+                return GestureDetector(
+                  onTap: () {
+                    
+                    pushDetails();
+                  },
+                  child: Text(
+                    data['name'],
+                    style: FontManager().getTextStyle(context,
+                    color: AppColors.backgroundColor,
+                        fontSize: 16, lWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
                 );
               }),
@@ -566,7 +573,7 @@ Widget build(BuildContext context) {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              profilepath(isme),
+            //  profilepath(isme),
               poll(pollObj),
             ],
           )
@@ -575,7 +582,7 @@ Widget build(BuildContext context) {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               poll(pollObj),
-              profilepath(isme),
+             // profilepath(isme),
             ],
           );
   }
@@ -604,7 +611,7 @@ Widget build(BuildContext context) {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    profilepath(isme),
+                 //   profilepath(isme),
                     demiData(),
                   ],
                 )
@@ -613,7 +620,7 @@ Widget build(BuildContext context) {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     demiData(),
-                    profilepath(isme),
+                   // profilepath(isme),
                   ],
                 );
         } else if (snapshot.hasError) {
@@ -637,7 +644,7 @@ Widget build(BuildContext context) {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              profilepath(isme),
+           //   profilepath(isme),
               poll(obj['data'][0]),
             ],
           )
@@ -646,7 +653,7 @@ Widget build(BuildContext context) {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               poll(obj['data'][0]),
-              profilepath(isme),
+            //  profilepath(isme),
             ],
           );
   }
@@ -657,7 +664,7 @@ Widget build(BuildContext context) {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              profilepath(isme),
+             // profilepath(isme),
               textIsme(msg, isme),
             ],
           )
@@ -666,7 +673,7 @@ Widget build(BuildContext context) {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               textIsme(msg, isme),
-              profilepath(isme),
+             // profilepath(isme),
             ],
           );
   }
@@ -677,13 +684,13 @@ Widget build(BuildContext context) {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               image(url),
-              profilepath(bool),
+             // profilepath(bool),
             ],
           )
         : Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              profilepath(bool),
+              // profilepath(bool),
               image(url),
             ],
           );
@@ -696,7 +703,7 @@ Widget build(BuildContext context) {
 
   Widget textIsme(String msg, bool isme) {
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 3.0),
+    padding: const EdgeInsets.symmetric(vertical: 0.0),
     child: Container(
       constraints: BoxConstraints(
         maxWidth: MediaQuery.of(context).size.width / 1.4,
@@ -726,7 +733,7 @@ Widget build(BuildContext context) {
         style: FontManager().getTextStyle(
           context,
           lWeight: FontWeight.w400,
-          fontSize: 15,
+          fontSize: 14,
           letterSpacing: 0.0,
           color: isme ? AppColors.backgroundColor : AppColors.bg1,
         ),
@@ -1446,6 +1453,7 @@ class SalesData {
 
   SalesData(this.month, this.sales);
 }
+
 // import 'package:file_picker/file_picker.dart';
 // import 'package:flutter/services.dart' show rootBundle;
 // import 'package:flutter_chat_types/flutter_chat_types.dart' as types;

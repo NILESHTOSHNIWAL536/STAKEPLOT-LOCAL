@@ -28,7 +28,6 @@ Widget getTab(BuildContext context){
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         tabItem(StringConstant.allTransactions,context),
-        //const SizedBox(width: 12), // Space between tabs
         tabItem(StringConstant.pollTransactions,context),
       ],
     ),
@@ -49,12 +48,11 @@ Widget tabItem(String text,BuildContext context) {
     child: Container(
       width: tabWidth,
       height: tabHeight,
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
         color: isSelected ? AppColors.primaryColor : AppColors.bg5,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          
           color: isSelected ? AppColors.primaryColor : AppColors.bg1,
         ),
         gradient: isSelected
