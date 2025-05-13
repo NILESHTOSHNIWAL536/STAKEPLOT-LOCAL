@@ -415,26 +415,19 @@ Widget getIconsForHideUpdateSplit(
                     isManual
                                                ?
                                                
-                                               Image.asset(
-  'assets/Images/rupee.gif',
- 
-height: MediaQuery.of(context).size.width * 0.08, // Adjust as needed for responsiveness
-width: MediaQuery.of(context).size.width * 0.08, // Adjust as needed for responsiveness
+   
 
-  fit: BoxFit.cover,
-)
-
-                          //                       Container(
-                          //   height: 30,
-                          //   width: 30,
-                          //   child: Lottie.asset(
-                          //     'assets/splashScreen/manualTransactionIcon.json',
-                          //     errorBuilder: (context, error, stackTrace) {
-                          //       print('Lottie error: $error');
-                          //       return Icon(Icons.error); // fallback UI
-                          //     },
-                          //   ),
-                          // )
+                                                Container(
+                            height: 30,
+                            width: 30,
+                            child: Lottie.asset(
+                              'assets/splashScreen/manualTransactionIcon.json',
+                              errorBuilder: (context, error, stackTrace) {
+                                print('Lottie error: $error');
+                                return Icon(Icons.error); // fallback UI
+                              },
+                            ),
+                          )
 
                         // Fallback icon
                         : Image.network(
