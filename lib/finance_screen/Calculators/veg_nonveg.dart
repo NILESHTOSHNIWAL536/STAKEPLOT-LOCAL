@@ -310,10 +310,11 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                   Stack(
                     alignment: Alignment.topRight,
                     children: [
-                      AvatarProfileImage(
-                        url: friend['avatar'] ?? userAvatar,
+                      AvatarProfile(
+                        background: friend['avatarBackGround'] ?? defaultBackGround.value,
                         width: 8,
                         height: 18,
+                        name: friend['name'],
                       ),
                       if (!isCurrentUser)
                         GestureDetector(
@@ -460,6 +461,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                               "name": limitedFriends[index]['name'],
                               "id": id,
                               'avatar': limitedFriends[index]['avatar'],
+                              'avatarBackGround': limitedFriends[index]['avatarBackGround'],
                               "balance": 200,
                             });
                             selectedOptions[id] = [];
@@ -477,11 +479,16 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                               horizontal: 2, vertical: 6),
                           child: Row(
                             children: [
-                              AvatarProfileImage(
-                                url: limitedFriends[index]['avatar'] ??
-                                    userAvatar,
-                                width: 24,
-                                height: 24,
+                              Padding(
+                                padding: const EdgeInsets.all(1.0),
+                                child: AvatarProfile(
+                                  name: limitedFriends[index]['name'],
+                                  width: 10,
+                                  height: 10,
+                                  background: limitedFriends[index]['avatarBackGround'],
+                                  flag: true,
+                                  fontsize: 7,
+                                ),
                               ),
                               Expanded(
                                 child: Text(
@@ -504,8 +511,8 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                       addedMembers.add({
                                         "name": limitedFriends[index]['name'],
                                         "id": id,
-                                        'avatar': limitedFriends[index]
-                                            ['avatar'],
+                                        'avatar': limitedFriends[index]['avatar'],
+                                        'avatarBackGround': limitedFriends[index]['avatarBackGround'],
                                         "balance": 200,
                                       });
                                       selectedOptions[id] = [];

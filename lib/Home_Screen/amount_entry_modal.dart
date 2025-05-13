@@ -205,11 +205,8 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                 children: [
                   Row(
                     children: [
-                      AvatarProfileImage(
-                        url: avaterUrlPath(widget.userName),
-                        width: 10,
-                        height: 20,
-                      ),
+                       AvatarProfile(name: widget.userName, width: 12, height: 12, background: userAvatarBackGround.value ),
+                     
                       const SizedBox(width: 10),
                       Text(
                         widget.userName,
@@ -266,12 +263,10 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                     children: [
                       Row(
                         children: [
-                          AvatarProfileImage(
-                            url:avaterUrlPath( friend['name'] ?? widget.userAvatar),
-                            width: 10,
-                            height: 20,
-                          ),
+                          AvatarProfile(name: friend['name'], width: 10, height: 12, background: friend['avatarBackGround']??defaultBackGround.value),
+                          
                           const SizedBox(width: 10),
+
                           Text(
                             friend['name'],
                             style: FontManager().getTextStyle(
@@ -280,6 +275,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                               color: AppColors.bg1,
                             ),
                           ),
+
                         ],
                       ),
                       SizedBox(
@@ -517,6 +513,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         'member': currentId.value,
         'markAsComplete': false,
         'amount': amountPerPerson,
+        'avatarBackGround' : userAvatarBackGround.value
       });
       calculatedTotal += amountPerPerson;
     

@@ -93,6 +93,7 @@ class _TribeHomeState extends State<TribeUnique> {
     auth.id = authorId;
     auth.name = userName.value;
     auth.avatar = avatar.value;
+    auth.avatarBackGround = userAvatarBackGround.value;
 
     obj.replies = [];
     obj.author = auth;
@@ -390,10 +391,8 @@ class _TribeHomeState extends State<TribeUnique> {
                     //   size: 35,
                     //   color: Colors.black,
                     // ),
-                    AvatarProfileImage(
-                        url: avaterUrlPath(data.author!.name.toString()),
-                        width: 15,
-                        height: 20),
+                    AvatarProfile(name: data.author!.name.toString(), width: 10, height: 23, background: data.author!.avatarBackGround.toString()),
+                   
                     const SizedBox(
                       width: 0,
                     ),
@@ -870,10 +869,8 @@ class _TribeHomeState extends State<TribeUnique> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AvatarProfileImage(
-                url: avaterUrlPath(replayObj.author!.name.toString()),
-                width: 15,
-                height: 20),
+            AvatarProfile(name: replayObj.author!.name.toString(), width: width, height: 23, background: replayObj.author!.avatarBackGround.toString()),
+          
             const SizedBox(
               width: 0,
             ),

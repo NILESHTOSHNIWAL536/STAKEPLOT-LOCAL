@@ -396,19 +396,15 @@ class _TribeHomeState extends State<TribeShare> {
                       // backgroundColor:const Color.fromRGBO(249, 246, 238, 1),
                       child: Stack(
                         children: [
-                          Center(
-                              child: AvatarProfileImage(
-                                  url: avaterUrlPath(frdsList[index]['name'] ?? userAvatar),
-                                  width: 8,
-                                  height: 18)),
-                          // const SizedBox(width:  10,),
+                          AvatarProfile(name: frdsList[index]['name'], width: 21, height: height, background: frdsList[index]['avatarBackGround']??defaultBackGround.value),
+                          
                           addedUser.contains(values)
                               ? const Positioned(
-                                  right: 0,
+                                  right: 2,
                                   top: 0,
                                   child: Icon(
                                     Icons.check_circle,
-                                    size: 30,
+                                    size: 25,
                                     color: Colors.green,
                                   ),
                                 )

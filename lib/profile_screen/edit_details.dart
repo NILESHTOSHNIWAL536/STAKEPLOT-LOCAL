@@ -210,11 +210,12 @@ void checkBiometricsStatus() async {
             // Profile Picture
             Column(
               children: [
-                Obx(() => AvatarProfileImage(
-                      url: avaterUrlPath(userName.value),
-                      width: 14,
-                      height: 9,
-                    )),
+               Obx(() =>  AvatarProfile(name: userName.value, width: 4, height: 10,background:userAvatarBackGround.value,flag: true,)),
+                // Obx(() => AvatarProfileImage(
+                //       url: avaterUrlPath(userName.value),
+                //       width: 14,
+                //       height: 9,
+                //     )),
                 GestureDetector(
                   onTap: () {
                     // var data = {
@@ -241,7 +242,7 @@ void checkBiometricsStatus() async {
                     padding: EdgeInsets.only(top: 0.0),
                     child: textStyleOnly2(
                       context: context,
-                      text: "vvv",
+                      text: "",
                       fontsize: 14,
                       color: AppColors.bg3,
                       fontWeight: FontWeight.w400,

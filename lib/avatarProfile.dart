@@ -111,7 +111,9 @@ class AvatarProfile extends StatelessWidget {
   final String background;
   final double width;
   final double height;
+   double fontsize=25;
    bool flag=false;
+
 
    AvatarProfile({
     Key? key,
@@ -120,6 +122,7 @@ class AvatarProfile extends StatelessWidget {
     required this.height,
     required this.background,
      this.flag=false,
+     this.fontsize=30,
   }) : super(key: key);
 
   Color getBackgroundColor(String hex) {
@@ -133,7 +136,7 @@ class AvatarProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return flag?Container(
-      // color: AppColors.bg1,
+      padding: EdgeInsets.all(2),
       width: MediaQuery.of(context).size.width/ width,
       height: MediaQuery.of(context).size.height/ height,
       alignment: Alignment.center,
@@ -155,7 +158,7 @@ class AvatarProfile extends StatelessWidget {
             context: context,
             text: name[0].toUpperCase(),
             fontWeight: FontWeight.bold,
-            fontsize: 25,
+            fontsize: fontsize,
             c: Colorcodes.appBarColor,
           ),
         ),
