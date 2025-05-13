@@ -278,14 +278,14 @@ class _TribeSearchState extends State<TribeSearch> {
                   //         color: Colors.black,
                   //       ),
 
-                  Container(
+                  // Container(
+                  //     child: AvatarProfileImage(
+                  //         url:avaterUrlPath( data['name'] ?? userAvatar) ,
+                  //         width: 20,
+                  //         height: 20
+                  // )),
+                  AvatarProfile(name: data['name'], width: 30, height: 13,background:data['avatarBackGround'] ?? defaultBackGround.value,),
 
-                      // width: MediaQuery.of(context).size.width/8,
-                      // height: MediaQuery.of(context).size.height/18,
-                      child: AvatarProfileImage(
-                          url:avaterUrlPath( data['name'] ?? userAvatar) ,
-                          width: 20,
-                          height: 20)),
                   const SizedBox(
                     width: 5,
                   ),
@@ -358,18 +358,7 @@ void showmodalWidget(data){
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                    networkFriends("Network",count.toString(),Icons.person_2_outlined),
-                    CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.transparent,
-                  child: ClipOval(
-                    child: SvgPicture.asset(
-                      avaterUrlPath(data['name']),
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
+                    AvatarProfile(name: data['name'], width: 5, height: 10,background:data['avatarBackGround'] ?? defaultBackGround.value,flag: true,),
                     networkFriends("Posts",getTrendingData.length.toString(),Icons.post_add),
                   ],
                 ),

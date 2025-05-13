@@ -129,12 +129,57 @@ class PostDetails {
   }
 }
 
+
 class Author {
   String? _id;
   String? _name;
   String? _avatar;
+  String? _avatarBackGround;
 
-  Author({String? id, String? name,String? avatar}) {
+  Author({String? id, String? name, String? avatar, String? avatarBackGround}) {
+    if (id != null) this._id = id;
+    if (name != null) this._name = name;
+    if (avatar != null) this._avatar = avatar;
+    // Default value
+    this._avatarBackGround = avatarBackGround ?? "#FFB07A";
+  }
+
+  String? get id => _id;
+  set id(String? id) => _id = id;
+
+  String? get name => _name;
+  set name(String? name) => _name = name;
+
+  String? get avatar => _avatar;
+  set avatar(String? avatar) => _avatar = avatar;
+
+  String? get avatarBackGround => _avatarBackGround;
+  set avatarBackGround(String? avatarBackGround) =>
+      _avatarBackGround = avatarBackGround ?? "#FFB07A";
+
+  Author.fromJson(Map<String, dynamic> json) {
+    _id = json['id'];
+    _name = json['name'];
+    _avatar = json['avatar'];
+    _avatarBackGround = json['avatarBackGround'] ?? "#FFB07A";
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = this._id;
+    data['name'] = this._name;
+    data['avatar'] = this._avatar;
+    data['avatarBackGround'] = this._avatarBackGround ?? "#FFB07A";
+    return data;
+  }
+}
+
+class Author2 {
+  String? _id;
+  String? _name;
+  String? _avatar;
+
+  Author2({String? id, String? name,String? avatar}) {
     if (id != null) {
       this._id = id;
     }
@@ -155,7 +200,7 @@ class Author {
   String? get avatar => _avatar;
   set avatar(String? avatar) => _avatar = avatar;
 
-  Author.fromJson(Map<String, dynamic> json) {
+  Author2.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
     _name = json['name'];
     _avatar= json['avatar'];

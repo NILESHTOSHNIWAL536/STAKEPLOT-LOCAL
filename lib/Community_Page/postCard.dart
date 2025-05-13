@@ -24,6 +24,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'dart:ui' as ui;
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 
 class ChartData {
   ChartData(this.x, this.y, [this.color, this.name]);
@@ -146,16 +147,9 @@ class _PostCardState extends State<PostCard> {
                         Container(
                           child: Row(
                             children: [
-                              UserAvatar(
-                                url:avaterUrlPath( dataObj["author"]['name']),
-                                width: 10,
-                                height: 15,
-                              ),
-                              // UserAvatar(
-                              //   url: dataObj["author"]['avatar'],
-                              //   width: 10,
-                              //   height: 15,
-                              // ),
+                              
+                              AvatarProfile(name: dataObj["author"]['name'], width: 4, height: 10,background:dataObj["author"]['avatarBackGround'] ?? defaultBackGround.value,flag: false,),
+                            
                               const SizedBox(width: 2),
                               Text(
                                 (dataObj["author"]['name']),

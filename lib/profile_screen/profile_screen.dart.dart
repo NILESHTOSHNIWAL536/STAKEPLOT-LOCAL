@@ -76,88 +76,87 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
       backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.only(top: 5, left: 16, right: 16),
+          // padding: const EdgeInsets.only(top: 5, left: 16, right: 16),
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            // Profile section
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  child: chatAvatartImage(
-                      url: avaterUrlPath(userName.value),
-                      width: 12,
-                      height: 12),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(userName.value,
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.w600,
-                              //fontSize: MediaQuery.of(context).size.width * 0.04,
-                              color: AppColors.primaryColor)),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        child: Text(email.value,
+           
+            Padding(
+              padding: const EdgeInsets.only(top: 5, left: 5, right: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AvatarProfile(name: userName.value, width: 7, height: 10,background:userAvatarBackGround.value,flag: true,),
+                  const SizedBox(width: 3,),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(userName.value,
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.w600,
+                                //fontSize: MediaQuery.of(context).size.width * 0.04,
+                                color: AppColors.primaryColor)),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          child: Text(email.value,
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.w400,
+                                  //fontSize: MediaQuery.of(context).size.width * 0.04,
+                                  fontSize: 10,
+                                  color: AppColors.bg1)),
+                        ),
+                        Text(number.value,
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.w400,
                                 //fontSize: MediaQuery.of(context).size.width * 0.04,
                                 fontSize: 10,
                                 color: AppColors.bg1)),
-                      ),
-                      Text(number.value,
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.w400,
-                              //fontSize: MediaQuery.of(context).size.width * 0.04,
-                              fontSize: 10,
-                              color: AppColors.bg1)),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => EditDetails()),
-                    );
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width *
-                        0.2, // Adjust the multiplier as needed
-                    decoration: BoxDecoration(
-                        color: AppColors.mt,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Center(
-                      child: Row(
-                        //mainAxisSize: MainAxisSize.min,
-                        //mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          AvatarProfileImage(
-                            url: ProfileIcons.edit,
-                            height: 40,
-                            width: 40,
-                          ),
-                          Text('Edit',
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.w600,
-                                  //fontSize: MediaQuery.of(context).size.width * 0.04,
-                                  fontSize: 12,
-                                  color: AppColors.bg1))
-                        ],
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => EditDetails()),
+                      );
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width *
+                          0.2, // Adjust the multiplier as needed
+                      decoration: BoxDecoration(
+                          color: AppColors.mt,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Center(
+                        child: Row(
+                          //mainAxisSize: MainAxisSize.min,
+                          //mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            AvatarProfileImage(
+                              url: ProfileIcons.edit,
+                              height: 40,
+                              width: 40,
+                            ),
+                            Text('Edit',
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.w600,
+                                    //fontSize: MediaQuery.of(context).size.width * 0.04,
+                                    fontSize: 12,
+                                    color: AppColors.bg1))
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             const SizedBox(height: 20),
             // Options list
             Padding(
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+              padding: const EdgeInsets.only(top: 5, left: 16, right: 16),
               child: Column(children: [
                 // First Container for Community profile and Friends list
                 Container(

@@ -115,14 +115,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.all(0.0),
-                                      child: Center(
-                                        child: AvatarProfileImage(
-                                          url: avaterUrlPath(element['name']) ??
-                                              widget.userAvatar,
-                                          width: 10,
-                                          height: 20,
-                                        ),
-                                      ),
+                                      child: AvatarProfile(name:  element['name'], width: 12, height: 12, background: element['avatarBackGround'])
                                     ),
                                     Positioned(
                                       right: 0,
@@ -373,6 +366,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                           "name": frdsList[index]['name'],
                                           "id": values,
                                           'avatar': frdsList[index]['avatar'],
+                                          'avatarBackGround': frdsList[index]['avatarBackGround'] ?? defaultBackGround.value ,
                                           "balance": 200,
                                         });
                                       } else {
@@ -381,6 +375,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                           "name": frdsList[index]['name'],
                                           "id": values,
                                           'avatar': frdsList[index]['avatar'],
+                                          'avatarBackGround': frdsList[index]['avatarBackGround'] ?? defaultBackGround.value ,
                                           "balance": 200,
                                         });
                                       }
@@ -393,13 +388,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                     child: Stack(
                                       children: [
                                         Center(
-                                          child: AvatarProfileImage(
-                                            url: avaterUrlPath(
-                                                    frdsList[index]['name']) ??
-                                                widget.userAvatar,
-                                            width: 8,
-                                            height: 18,
-                                          ),
+                                          child: AvatarProfile(name:  frdsList[index]['name'], width: 12, height: 12, background: frdsList[index]['avatarBackGround']??defaultBackGround.value),
                                         ),
                                         addedUser.contains(values)
                                             ? const Positioned(

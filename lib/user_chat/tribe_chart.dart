@@ -196,12 +196,8 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
                 }
                 return Row(
                   children: [
-                    UserAvatar(
-                      url: avaterUrlPath(friend['name'] ?? ''), // Null check for friend['name']
-                      width: 30,
-                      height: 30,
-                    ),
-                    const SizedBox(width: 8),
+                    AvatarProfile(name: friend['name'], width: 9, height: 12,fontsize: 15, background: friend['avatarBackGround'],flag: true,),
+                    const SizedBox(width: 2,),
                     Text(
                       friend['name'] ?? 'Unknown', // Null check for friend['name']
                       style: FontManager().getTextStyle(
@@ -390,11 +386,7 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
                   //   width: 10,
                   //   height: 16,
                   // ),
-                    UserAvatar(
-                                url:avaterUrlPath(item['name']),
-                                width: 10,
-                                height: 15,
-                    ),
+                  AvatarProfile(name: item['name'], width: 1, height: 1, background: item['avatar']),
                   const SizedBox(width: 8),
                   Container(
                     width: width >= 500

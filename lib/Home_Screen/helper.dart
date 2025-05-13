@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/animated/pdf.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -270,6 +271,17 @@ String getTimeBasedGreeting() {
   }
 }
 
+
+Widget getProfile()
+{
+    return  AvatarProfile(fontsize:18,name: userName.value, width: 8, height: 10,background:userAvatarBackGround.value,flag: true,);
+}
+
+
+int getRandomValue(list)
+{
+  return Random().nextInt(list.length);
+}
 
 String avaterUrlPath(String name)
 {

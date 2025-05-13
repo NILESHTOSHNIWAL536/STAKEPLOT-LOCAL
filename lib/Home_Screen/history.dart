@@ -181,8 +181,7 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
                         : SizedBox.shrink(key: ValueKey('no-checkbox')),
                   ),
                   // Main Transaction Content
-                  InkWell(
-                    
+                  GestureDetector(
                         onTap: (){
                           if(!showCheckBox.value)return;
                             String id = '${transaction['_id']}';
@@ -415,7 +414,14 @@ Widget getIconsForHideUpdateSplit(
                     isManual
                                                ?
                                                
-   
+//                                                Image.asset(
+//   'assets/Images/rupee.gif',
+ 
+// height: MediaQuery.of(context).size.width * 0.08, // Adjust as needed for responsiveness
+// width: MediaQuery.of(context).size.width * 0.08, // Adjust as needed for responsiveness
+
+//   fit: BoxFit.cover,
+// )
 
                                                 Container(
                             height: 30,

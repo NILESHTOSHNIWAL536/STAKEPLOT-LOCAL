@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:get/get.dart';
 
 final TextEditingController searchController = TextEditingController();
@@ -201,7 +202,7 @@ void _onScroll() {
                    height: MediaQuery.sizeOf(context).height/1.38,
                    child: SingleChildScrollView(
                      controller: scrollController,
-                     child: Expanded(child: transactionsHistoryList()),
+                     child: transactionsHistoryList(),
                    ),
                  )
                 ],
@@ -215,14 +216,19 @@ void _onScroll() {
 
  void clearData({bool f=false})
  {
-                             searchController.clear();
-                             if(f)
-                             {
-                              currentPage = 1;
-                              isLoadingMore.value = false;
-                              accountIdPdf.value="-";
-                              getAllTransaction(context);
-                             }
+          searchController.clear();
+          redioButton.clear();
+          redioButtonIndex.clear();
+          allOrGroupTransactionsName.value = StringConstant.allTransactions;
+          showCheckBox.value=false;
+          accountIdPdf.value="-";
+
+       if(f)
+       {
+          currentPage = 1;
+          isLoadingMore.value = false;
+          getAllTransaction(context);
+       }
  }
 
   Widget  transactionsHistoryList() {

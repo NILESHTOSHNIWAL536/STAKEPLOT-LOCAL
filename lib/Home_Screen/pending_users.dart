@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -105,7 +106,7 @@ class _UserListScreenState extends State<UserListScreen> {
           
            // margin: const EdgeInsets.only(bottom: 12),
             child: Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: const EdgeInsets.symmetric(horizontal: 3,vertical: 8),
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   final maxWidth = constraints.maxWidth;
@@ -118,14 +119,9 @@ class _UserListScreenState extends State<UserListScreen> {
                     children: [
                       // Avatar
                       ClipOval(
-                        child: UserAvatar(
-                          url: avaterUrlPath(
-                              data['name'] ?? 'assets/avatar/menp4.svg'),
-                          width: avatarSize/2,
-                          height: avatarSize/2,
-                        ),
+                        child: AvatarProfile(name:  data['name'], width: 12, height: 12, background:  data['avatarBackGround']??defaultBackGround.value),
                       ),
-                      const SizedBox(width: 12),
+                      
                       // Details
                       Container(
                         child: SizedBox(

@@ -20,6 +20,7 @@ import 'package:flutter_application_code_stakeplot/user_chat/fullScreen.dart';
 import 'package:get/get_rx/get_rx.dart';
 // import 'package:getwidget/components/image/gf_image_overlay.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:flutter/cupertino.dart';

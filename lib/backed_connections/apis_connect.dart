@@ -10,8 +10,8 @@ import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 bool flag = true;
-String portNo = flag ? "192.168.1.7" : "localhost";
-String urlWithLocallHost = flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String portNo = flag ? "192.168.1.3" : "localhost";
+String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Fields";
 RxString expenses = "Loading".obs;
@@ -43,6 +43,7 @@ RxBool flagTrasaction = false.obs;
 RxBool isFromEditDeatils = false.obs;
 RxString range = ''.obs;
 RxString filterText = ''.obs;
+RxString defaultBackGround = "#68B2A0".obs;
 List<double> trasactionsDataCreditWeekly = [];
 List<double> trasactionsDataDebitWeekly = [];
 RxList trasactionsDataWeekly = [].obs;
@@ -78,6 +79,7 @@ RxInt debtLength = 0.obs;
 RxInt paymentLength = 0.obs;
 String userAvatar = "assets/avatars/a.svg";
 RxString userAvatarProfile = "assets/images2/user.svg".obs;
+RxString userAvatarBackGround = "#FA7070".obs;
 RxString userName = "".obs;
 RxString dob = "".obs;
 RxString currentId = "".obs;
@@ -219,6 +221,7 @@ RxBool isFected = false.obs;
 RxInt transactionsLength = 0.obs;
 RxList chatSplitAccount = [].obs;
 RxBool getChatSplit= false.obs;
+List avatarBackGroundList = ["#FA7070", "#FFB07A", "#4C8BF5", "#68B2A0"];
 class Message {
   Message(
       {this.text,

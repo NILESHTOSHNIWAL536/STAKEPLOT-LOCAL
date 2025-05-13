@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -136,26 +137,27 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
         Positioned(
           top: 80,
           left: MediaQuery.of(context).size.width / 2 - 50,
-          child: GestureDetector(
-            // onTap: () => _pickImage(ImageSource.gallery, "profile"),
-            child: CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.transparent,
-                  child: ClipOval(
-                    child: SvgPicture.asset(
-                      avaterUrlPath(userName.value),
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
+          child: AvatarProfile(name: userName.value, width: 4, height: 10,background:userAvatarBackGround.value ?? defaultBackGround.value,flag: true,),
+          // child: GestureDetector(
+          //   // onTap: () => _pickImage(ImageSource.gallery, "profile"),
+          //   child: CircleAvatar(
+          //         radius: 50,
+          //         backgroundColor: Colors.transparent,
+          //         child: ClipOval(
+          //           child: SvgPicture.asset(
+          //             avaterUrlPath(userName.value),
+          //             width: 100,
+          //             height: 100,
+          //             fit: BoxFit.cover,
+          //           ),
+                  // ),
+                // ),
             // child: CircleAvatar(
             //   radius: 50,
             //   // backgroundImage: AssetImage(avaterUrlPath(userName.value)),
             //   child: Center(child: UserAvatar(url: avaterUrlPath(userAvatarProfile.value),height: 10,width: 10,)),
             // ),
-          ),
+          // ),
         ),
       ],
     );

@@ -93,6 +93,7 @@ class _TribeHomeState extends State<TribeUnique> {
     auth.id = authorId;
     auth.name = userName.value;
     auth.avatar = avatar.value;
+    auth.avatarBackGround = userAvatarBackGround.value;
 
     obj.replies = [];
     obj.author = auth;
@@ -390,10 +391,8 @@ class _TribeHomeState extends State<TribeUnique> {
                     //   size: 35,
                     //   color: Colors.black,
                     // ),
-                    AvatarProfileImage(
-                        url: avaterUrlPath(data.author!.name.toString()),
-                        width: 15,
-                        height: 20),
+                    AvatarProfile(name: data.author!.name.toString(), width: 10, height: 23, background: data.author!.avatarBackGround.toString()),
+                   
                     const SizedBox(
                       width: 0,
                     ),
@@ -742,8 +741,7 @@ class _TribeHomeState extends State<TribeUnique> {
             autofocus: true,
             controller: Textcontroller,
             onSubmitted: (value) {
-              addComment(context, value, postId, widget.dataObj['author']['id'],
-                  widget.dataObj['title'], name);
+              addComment(context, value, postId, widget.dataObj['author']['id'],widget.dataObj['title'], name);
               postCommentCount.putIfAbsent(
                   postId, () => widget.dataObj["comments"] ?? 0);
               postCommentCount.update(postId, (value) => value + 1);
@@ -870,10 +868,8 @@ class _TribeHomeState extends State<TribeUnique> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AvatarProfileImage(
-                url: avaterUrlPath(replayObj.author!.name.toString()),
-                width: 15,
-                height: 20),
+            AvatarProfile(name: replayObj.author!.name.toString(), width: width, height: 23, background: replayObj.author!.avatarBackGround.toString()),
+          
             const SizedBox(
               width: 0,
             ),
@@ -1392,6 +1388,7 @@ class _TribeHomeState extends State<TribeUnique> {
     author.avatar = userAvatar;
     author.name = userName.value;
     author.avatar = avatar.value;
+    author.avatarBackGround = userAvatarBackGround.value;
     //  author.avatar=avatar;
     rep.author = author;
     commentObj.replies!.add(rep);
