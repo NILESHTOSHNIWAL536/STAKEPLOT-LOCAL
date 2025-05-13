@@ -171,7 +171,7 @@ class AvatarProfile extends StatelessWidget {
     child: Center(
       child: textStyleImage(
         context: context,
-        text: name[0].toUpperCase(),
+        text: name.isEmpty? "L": name[0].toUpperCase(),
         fontsize: 20,
         c: Colorcodes.appBarColor,
       ),
