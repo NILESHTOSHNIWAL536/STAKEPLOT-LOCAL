@@ -91,7 +91,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                   color: AppColors.bg3,
                 ),
               ),
-               chartData.length >= 7?
+             Obx(()=> chartData.length >= 7?
                TextButton(
                 onPressed: () {
                   Navigator.push(
@@ -109,8 +109,8 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                     fontSize: 14,
                     color: AppColors.bg3,
                   ),
-                ),
-              ): const SizedBox.shrink(),
+                )
+              ): const SizedBox.shrink()),
             ],
           ),
           const SizedBox(height: 1,),
@@ -193,8 +193,9 @@ class CategoryCard extends StatelessWidget {
   });
 
   String getCategoryIconPath(String category) {
-    final iconFileName = BudgetCategories.listofCategories[category];
-    if (iconFileName != null) {
+    final iconFileName = BudgetCategories.listofCategories[toUpperCase(category)];
+    if (iconFileName != null)
+    {
       return '${Categories.link}$iconFileName';
     }
     return HomePageIcons.none; // Fallback icon
@@ -229,8 +230,6 @@ class CategoryCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                 
-                    width: MediaQuery.sizeOf(context).width / 9,
                     child: AvatarProfileImage(url: getCategoryIconPath(category), width: 50, height: 50)),
                   Container(
                    

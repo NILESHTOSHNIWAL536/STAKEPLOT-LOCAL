@@ -344,11 +344,8 @@ void updateTheTagOfTarnsactions(
     'category': category,
     'subcategory': subCategory,
   });
-  print(category);
-  print(subCategory);
-  print(urlPath);
-  printData(response);
-  if (getFlagOfResponse(response)) {
+ 
+   if (getFlagOfResponse(response)) {
     Navigator.pop(context);
     reloadHistory.value = !reloadHistory.value;
   } else {}

@@ -16,7 +16,7 @@ void getCategoryData() async {
     var data = jsonDecode(res.body);
     categoriesList.clear();
     categoriesList.addAll(data["data"]);
-    print("categories for donutttt:$categoriesList");
+  
     categoriesList.refresh();
     setDonectChat.value = !setDonectChat.value;
     processChartData();

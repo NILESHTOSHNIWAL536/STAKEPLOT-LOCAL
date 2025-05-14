@@ -69,11 +69,9 @@ void reportPost(context, String id, String spam, String type) async {
 Future<Map<String, dynamic>> createPost(BuildContext context, String title,
     String description, File imageFile) async {
   try {
-    print('createPost called with title: $title and description: $description');
-    print('Uploading image to cloud...');
+   
 
     String urlPath = await addImageToCloud2(imageFile);
-    print('Image uploaded. URL: $urlPath');
 
     var body = {
       'title': title,
@@ -83,23 +81,19 @@ Future<Map<String, dynamic>> createPost(BuildContext context, String title,
     };
 
     String apiCall = '${url}/post';
-    print('Sending POST request to: $apiCall');
-    print('Request body: $body');
+   
 
     var response = await postDataApiCall(apiCall, body);
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
+   
 
     if (getFlagOfResponse(response)) {
       var postData = jsonDecode(response.body);
-      print('Post creation successful. Data: $postData');
       uploadRefreshCall(postData, context);
       return {
         'success': true,
         'data': postData,
       };
     } else {
-      print('Server error occurred.');
       snackBarCalled(context, "Server error: ${response.statusCode}", Colors.red);
       return {
         'success': false,
@@ -107,7 +101,6 @@ Future<Map<String, dynamic>> createPost(BuildContext context, String title,
       };
     }
   } catch (e) {
-    print('Exception occurred: $e');
     snackBarCalled(context, "Error creating post: $e", Colors.red);
     return {
       'success': false,
@@ -117,7 +110,6 @@ Future<Map<String, dynamic>> createPost(BuildContext context, String title,
 }
 
 void createPostWithOutImage(context, String title, String description) async {
-  print('createPostWithOutImage called with title: $title, description: $description');
   var urlPath = '${url}/post/withOutImage';
 
   var body = {
@@ -128,24 +120,19 @@ void createPostWithOutImage(context, String title, String description) async {
     'isPoll': false,
   };
 
-  print('Sending POST request to: $urlPath');
-  print('Request body: $body');
+
 
   var response = await postDataApiCall(urlPath, body);
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${response.body}');
+  
 
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
-    print('Post without image successful. Data: $his');
     uploadRefreshCall(his, context);
   } else {
-    print('Post without image failed.');
   }
 }
 
 void createPollOfCommunity(context, String title, String description) async {
-  print('createPollOfCommunity called with title: $title, description: $description');
   var urlPath = '${url}/createPollPost';
 
   var body = {
@@ -156,23 +143,18 @@ void createPollOfCommunity(context, String title, String description) async {
     'isPoll': true,
   };
 
-  print('Sending POST request to: $urlPath');
-  print('Request body: $body');
+ 
 
   var response = await postDataApiCall(urlPath, body);
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${response.body}');
+ 
 
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
-    print('Poll post created successfully. Data: $his');
     uploadRefreshCall(his, context);
   } else {
-    print('Poll post creation failed.');
   }
 
   postDis.value = false;
-  print('postDis set to false');
 }
 
 // Future<Map<String, dynamic>> createPost(BuildContext context, String title,
