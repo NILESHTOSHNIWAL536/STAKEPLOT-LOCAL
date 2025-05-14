@@ -215,6 +215,10 @@ class _PostCardState extends State<PostCard> {
                                     boxFit: BoxFit.fill,
                                     borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
                                     image: NetworkImage(dataObj['image']),
+                                    colorFilter: null, // Disable any color tint
+                                    color: Colors.transparent,
+                                    border: Border.all(color: AppColors.bg5),
+                                    
                                   ),
                                 ),
                               )

@@ -226,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
         automaticallyImplyLeading: false,
         actions: [
           Padding(
-            padding:const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
+            padding:const EdgeInsets.only(right: 10,top:10,left: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               // crossAxisAlignment: CrossAxisAlignment.center,
@@ -258,7 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Spacer(),
           Padding(
-            padding: const EdgeInsets.only(right: 8),
+            padding:const EdgeInsets.only(right: 8,top:10,),
             child: NotificationsBudget(
               child: Text(""),
             ),

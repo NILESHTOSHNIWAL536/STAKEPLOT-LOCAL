@@ -22,22 +22,10 @@ class CardBuilders {
           maxWidth: MediaQuery.of(context).size.width * 0.85,
         ),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              AppColors.mt.withOpacity(0.95),
-              AppColors.mt.withOpacity(0.75),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+         color: AppColors.mt,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-              spreadRadius: 2,
-            ),
+           
           ],
         ),
         child: Material(
@@ -145,23 +133,16 @@ class CardBuilders {
           maxWidth: MediaQuery.of(context).size.width * 0.85,
         ),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              AppColors.mt.withOpacity(0.95),
-              AppColors.mt.withOpacity(0.75),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          color: AppColors.mt,
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-              spreadRadius: 2,
-            ),
-          ],
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: Colors.black.withOpacity(0.08),
+          //     blurRadius: 10,
+          //     offset: const Offset(0, 4),
+          //     spreadRadius: 2,
+          //   ),
+          // ],
         ),
         child: Material(
           color: Colors.transparent,
@@ -331,13 +312,7 @@ class CardBuilders {
       decoration: BoxDecoration(
         color: AppColors.mt,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+       
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -349,7 +324,7 @@ class CardBuilders {
             fontWeight: FontWeight.w600,
             color: color,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
           globalText(
             context: context,
             text: '₹${formatMoneyIndian(totalAmount.toStringAsFixed(2))}',

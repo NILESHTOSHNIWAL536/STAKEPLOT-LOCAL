@@ -16,6 +16,7 @@ void getCategoryData() async {
     var data = jsonDecode(res.body);
     categoriesList.clear();
     categoriesList.addAll(data["data"]);
+    print("categories for donutttt:$categoriesList");
     categoriesList.refresh();
     setDonectChat.value = !setDonectChat.value;
     processChartData();
@@ -35,7 +36,7 @@ void getSummary() async {
 
 void getdebts() async {
   Map<String, dynamic> body = {};
-  var res = await postDataApiCall("${url}/debt",body);
+  var res = await postDataApiCall("${url}/debt", body);
   if (getFlagOfResponse(res)) {
     var data = jsonDecode(res.body);
     data = data['data'];

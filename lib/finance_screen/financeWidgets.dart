@@ -27,13 +27,7 @@ class FinanceWidgets {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: AppColors.button,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
+                   
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -65,13 +59,7 @@ class FinanceWidgets {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: AppColors.button,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
+                    
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -105,13 +93,7 @@ class FinanceWidgets {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: AppColors.button,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
+                   
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,

@@ -381,12 +381,13 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                       context,
                       lWeight: FontWeight.w700,
                       fontSize: 14,
-                      color: AppColors.primaryColor,
+                      color: isSelected?AppColors.backgroundColor:AppColors.accentColor
                     ),
                   ),
                   selected: isSelected,
                   showCheckmark: false,
-                  selectedColor: AppColors.button,
+                  selectedColor: AppColors.primaryColor,
+                  backgroundColor: AppColors.mt,
                   onSelected: (selected) {
                     setState(() {
                       if (friendId != null) {
