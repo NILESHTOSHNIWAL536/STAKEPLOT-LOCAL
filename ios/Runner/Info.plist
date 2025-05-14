@@ -65,5 +65,10 @@
       </array>
     </dict>
   </array>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>We need access to your photo library to select images for your Stakeplot profile or content.</string>
+  <!-- Optional: Add if saving images to library -->
+  <key>NSPhotoLibraryAddUsageDescription</key>
+  <string>We need to save images to your photo library for your Stakeplot content.</string>
 </dict>
 </plist>

@@ -246,7 +246,7 @@ class _TribeHomeState extends State<TribeUnique> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      bottomNavigationBar: BottomNavigations(data: sizeRoom ? 3 : 2),
+     // bottomNavigationBar: BottomNavigations(data: sizeRoom ? 3 : 2),
       extendBody: true,
      
       body: SafeArea(

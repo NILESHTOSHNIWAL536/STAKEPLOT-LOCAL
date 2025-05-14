@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/exploreCard.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
@@ -35,6 +36,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:permission_handler/permission_handler.dart';
+
 late IO.Socket socket;
 
 class Chat extends StatefulWidget {
@@ -188,7 +190,6 @@ class _ChatState extends State<Chat> {
     socket.emit("LoadCharts", {
       "roomId": data['name'] + "" + data['name'],
     });
-    
   }
 
   Widget getDataWidget(Message message) {
@@ -225,7 +226,7 @@ class _ChatState extends State<Chat> {
             children: [
               uploadData((message.post)),
               // PostCard(data: message.post),
-             // profilepath(bool),
+              // profilepath(bool),
             ],
           )
         : Row(
@@ -244,13 +245,13 @@ class _ChatState extends State<Chat> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               spliData(message),
-            //  profilepath(bool),
+              //  profilepath(bool),
             ],
           )
         : Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-           //   profilepath(bool),
+              //   profilepath(bool),
               spliData(message),
             ],
           );
@@ -261,14 +262,19 @@ class _ChatState extends State<Chat> {
       padding: const EdgeInsets.all(10),
       width: MediaQuery.of(context).size.width / 1.8,
       decoration: BoxDecoration(
-         color: message.isMe ? AppColors.appIcon:Colors.white,
-        borderRadius:  BorderRadius.only(
+        color: message.isMe ? AppColors.appIcon : Colors.white,
+        borderRadius: BorderRadius.only(
           topLeft: Radius.circular(16), // Circular radius for top left
           topRight: Radius.circular(16), // Circular radius for top right
-          bottomLeft: message.isMe?Radius.circular(16):Radius.zero, // Circular radius for bottom left (for other messages)
-          bottomRight: message.isMe?Radius.zero:Radius.circular(16), // No radius for bottom right (for my messages)
+          bottomLeft: message.isMe
+              ? Radius.circular(16)
+              : Radius
+                  .zero, // Circular radius for bottom left (for other messages)
+          bottomRight: message.isMe
+              ? Radius.zero
+              : Radius.circular(
+                  16), // No radius for bottom right (for my messages)
         ),
-       
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -278,16 +284,21 @@ class _ChatState extends State<Chat> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Icon(Icons.receipt,
-               color:message.isMe ? AppColors.backgroundColor: AppColors.appIcon, size: 24),
+                  color: message.isMe
+                      ? AppColors.backgroundColor
+                      : AppColors.appIcon,
+                  size: 24),
               SizedBox(width: 10),
               Text(
                 message.split['BillName'],
-                style: FontManager().getTextStyle(context,
-                    fontSize: 16,
-                    lWeight: FontWeight.bold,
-                    color: message.isMe ? AppColors.backgroundColor:AppColors.bg1,
-                    overflow: TextOverflow.ellipsis,
-                    ),
+                style: FontManager().getTextStyle(
+                  context,
+                  fontSize: 16,
+                  lWeight: FontWeight.bold,
+                  color:
+                      message.isMe ? AppColors.backgroundColor : AppColors.bg1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),
@@ -299,27 +310,41 @@ class _ChatState extends State<Chat> {
                 children: [
                   Text(
                     "₹", // Rupee symbol
-                    style: TextStyle(color:  message.isMe ? AppColors.backgroundColor:AppColors.bg2, fontSize: 16),
+                    style: TextStyle(
+                        color: message.isMe
+                            ? AppColors.backgroundColor
+                            : AppColors.bg2,
+                        fontSize: 16),
                   ),
                   const SizedBox(width: 5),
                   Text(
                     "Total expense: " +
                         doubleToFixed(message.split['Amount'].toString()),
                     style: FontManager().getTextStyle(context,
-                        fontSize: 12, color:  message.isMe ? AppColors.backgroundColor:AppColors.bg2),
+                        fontSize: 12,
+                        color: message.isMe
+                            ? AppColors.backgroundColor
+                            : AppColors.bg2),
                   ),
                 ],
               ),
               Row(
                 children: [
-                  Icon(Icons.group, color:  message.isMe ? AppColors.backgroundColor:AppColors.appIcon, size: 20),
+                  Icon(Icons.group,
+                      color: message.isMe
+                          ? AppColors.backgroundColor
+                          : AppColors.appIcon,
+                      size: 20),
                   const SizedBox(width: 5),
                   Text(
                     "Share: " +
                         doubleToFixed(message.split['Share'].toString())
                             .toString(),
                     style: FontManager().getTextStyle(context,
-                        fontSize: 12, color:  message.isMe ? AppColors.backgroundColor:AppColors.bg2),
+                        fontSize: 12,
+                        color: message.isMe
+                            ? AppColors.backgroundColor
+                            : AppColors.bg2),
                   ),
                 ],
               ),
@@ -331,23 +356,18 @@ class _ChatState extends State<Chat> {
             child: Row(
               children: [
                 Icon(
-                  message.split['isPaid']
-                      ? Icons.check_circle
-                      : Icons.pending,
+                  message.split['isPaid'] ? Icons.check_circle : Icons.pending,
                   color: message.split['isPaid'] ? Colors.green : Colors.red,
                   size: 20,
                 ),
                 const SizedBox(width: 5),
                 Text(
-                  message.split['isPaid']
-                      ? "Settled Successfully"
-                      : "Pending",
+                  message.split['isPaid'] ? "Settled Successfully" : "Pending",
                   style: FontManager().getTextStyle(context,
                       fontSize: 12,
                       lWeight: FontWeight.w400,
-                      color: message.split['isPaid']
-                          ? Colors.green
-                          : Colors.red),
+                      color:
+                          message.split['isPaid'] ? Colors.green : Colors.red),
                 ),
               ],
             ),
@@ -373,72 +393,140 @@ class _ChatState extends State<Chat> {
   //   }
   // }
 
+// void getImage() async {
+//   print('getImage called');
+//   bool? confirm = await showDialog<bool>(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return AlertDialog(
+//         title: const Text('Allow Media Access'),
+//         content: const Text('Are you sure you want to allow access to your media?'),
+//         actions: [
+//           TextButton(
+//             onPressed: () => Navigator.of(context).pop(false),
+//             child: const Text('No'),
+//           ),
+//           TextButton(
+//             onPressed: () => Navigator.of(context).pop(true),
+//             child: const Text('Yes'),
+//           ),
+//         ],
+//       );
+//     },
+//   );
 
-void getImage() async {
-  print('getImage called');
-  bool? confirm = await showDialog<bool>(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Allow Media Access'),
-        content: const Text('Are you sure you want to allow access to your media?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('No'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Yes'),
-          ),
-        ],
-      );
-    },
-  );
+//   print('Dialog result: $confirm');
+//   if (confirm == null || !confirm) {
+//     snackBarCalled(context, 'Image selection canceled');
+//     return;
+//   }
 
-  print('Dialog result: $confirm');
-  if (confirm == null || !confirm) {
-    snackBarCalled(context, 'Image selection canceled');
-    return;
-  }
+//   print('Checking initial permission status');
+//   PermissionStatus status = await Permission.photos.status;
+//   print('Initial status: $status');
 
-  print('Checking initial permission status');
-  PermissionStatus status = await Permission.photos.status;
-  print('Initial status: $status');
+//   if (!status.isGranted) {
+//     print('Requesting permission');
+//     status = await Permission.photos.request();
+//     print('Permission status after request: $status');
+//   }
 
-  if (!status.isGranted) {
-    print('Requesting permission');
-    status = await Permission.photos.request();
-    print('Permission status after request: $status');
-  }
+//   if (status.isGranted) {
+//     try {
+//       final _picker = ImagePicker();
+//       final imageData = await _picker.pickImage(source: ImageSource.gallery);
+//       print('Image picked: $imageData');
+//       if (imageData != null) {
+//         showData(imageData);
+//       } else {
+//         snackBarCalled(context, 'No image selected');
+//       }
+//     } catch (e) {
+//       snackBarCalled(context, 'Error selecting image: $e');
+//       print('Error: $e');
+//     }
+//   } else if (status.isDenied) {
+//     snackBarCalled(context, 'Please grant photo library access to select images');
+//   } else if (status.isPermanentlyDenied) {
+//     snackBarCalled(
+//       context,
+//       'Photo library access is permanently denied. Please enable it in settings.',
+//     );
+//     await openAppSettings();
+//   } else {
+//     snackBarCalled(context, 'Unknown permission status: $status');
+//     print('Unknown status: $status');
+//   }
+// }
 
-  if (status.isGranted) {
-    try {
-      final _picker = ImagePicker();
-      final imageData = await _picker.pickImage(source: ImageSource.gallery);
-      print('Image picked: $imageData');
-      if (imageData != null) {
-        showData(imageData);
+  Future<void> getImage(BuildContext context) async {
+    print('getImage called');
+
+    print('Checking initial permission status');
+    PermissionStatus status;
+
+    if (Platform.isAndroid) {
+      final androidInfo = await DeviceInfoPlugin().androidInfo;
+      final sdkInt = androidInfo.version.sdkInt;
+      print('Android SDK version: $sdkInt');
+      if (sdkInt >= 33) {
+        // Android 13+: Use READ_MEDIA_IMAGES
+        status = await Permission.photos.status;
       } else {
-        snackBarCalled(context, 'No image selected');
+        // Android 12 and below: Use READ_EXTERNAL_STORAGE
+        status = await Permission.storage.status;
       }
-    } catch (e) {
-      snackBarCalled(context, 'Error selecting image: $e');
-      print('Error: $e');
+    } else {
+      // iOS
+      status = await Permission.photos.status;
     }
-  } else if (status.isDenied) {
-    snackBarCalled(context, 'Please grant photo library access to select images');
-  } else if (status.isPermanentlyDenied) {
-    snackBarCalled(
-      context,
-      'Photo library access is permanently denied. Please enable it in settings.',
-    );
-    await openAppSettings();
-  } else {
-    snackBarCalled(context, 'Unknown permission status: $status');
-    print('Unknown status: $status');
+    print('Initial status: $status');
+
+    if (!status.isGranted) {
+      print('Requesting permission');
+      if (Platform.isAndroid) {
+        final androidInfo = await DeviceInfoPlugin().androidInfo;
+        final sdkInt = androidInfo.version.sdkInt;
+        if (sdkInt >= 33) {
+          status = await Permission.photos.request();
+        } else {
+          status = await Permission.storage.request();
+        }
+      } else {
+        status = await Permission.photos.request();
+      }
+      print('Permission status after request: $status');
+    }
+
+    if (status.isGranted) {
+      try {
+        final _picker = ImagePicker();
+        final imageData = await _picker.pickImage(source: ImageSource.gallery);
+        print('Image picked: $imageData');
+        if (imageData != null) {
+          showData(imageData);
+        } else {
+          snackBarCalled(context, 'No image selected');
+        }
+      } catch (e) {
+        snackBarCalled(context, 'Error selecting image: $e');
+        print('Error: $e');
+      }
+    } else if (status.isDenied) {
+      snackBarCalled(
+          context, 'Please grant photo library access to select images');
+    } else if (status.isPermanentlyDenied) {
+      snackBarCalled(
+        context,
+        'Photo library access is permanently denied. Please enable it in settings.',
+      );
+      await openAppSettings();
+    } else {
+      snackBarCalled(context, 'Unknown permission status: $status');
+      print('Unknown status: $status');
+    }
   }
-}
+
   // Function to build a message bubble
   Widget _buildMessage(Message message) {
     return Padding(
@@ -448,7 +536,9 @@ void getImage() async {
             message.isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           Padding(
-            padding: !message.isMe? EdgeInsets.only(left: 14):EdgeInsets.only(right: 14),
+            padding: !message.isMe
+                ? EdgeInsets.only(left: 14)
+                : EdgeInsets.only(right: 14),
             child: getDataWidget(message),
           ),
         ],
@@ -480,8 +570,7 @@ void getImage() async {
   // }
 
   @override
-  
-Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
         clearChatData();
@@ -495,29 +584,27 @@ Widget build(BuildContext context) {
           // leading:
           automaticallyImplyLeading: false,
           centerTitle: true,
-          leading:  GestureDetector(
-                        onTap: () {
-                          clearChatData();
-                          getChatLoader();
-                        },
-                        child: const Icon(
-                          Icons.arrow_back,
-                         color: AppColors.backgroundColor
-                          ),
-                      ),
+          leading: GestureDetector(
+            onTap: () {
+              clearChatData();
+              getChatLoader();
+            },
+            child:
+                const Icon(Icons.arrow_back, color: AppColors.backgroundColor),
+          ),
           title: ValueListenableBuilder<bool>(
               valueListenable: onlineUser,
               builder: (context, snapshot, child) {
                 return GestureDetector(
                   onTap: () {
-                    
                     pushDetails();
                   },
                   child: Text(
                     data['name'],
                     style: FontManager().getTextStyle(context,
-                    color: AppColors.backgroundColor,
-                        fontSize: 16, lWeight: FontWeight.bold),
+                        color: AppColors.backgroundColor,
+                        fontSize: 16,
+                        lWeight: FontWeight.bold),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),
@@ -526,9 +613,10 @@ Widget build(BuildContext context) {
         ),
         body: Container(
           height: MediaQuery.of(context).size.height,
-                    decoration: BoxDecoration(
-                      color: AppColors.backgroundColor,
-            borderRadius: BorderRadius.circular(24), // Specify the border radius
+          decoration: BoxDecoration(
+            color: AppColors.backgroundColor,
+            borderRadius:
+                BorderRadius.circular(24), // Specify the border radius
           ),
           child: Column(
             children: [
@@ -548,8 +636,8 @@ Widget build(BuildContext context) {
               Container(
                 // margin: EdgeInsets.all(8.0),
 
-               
-                child: SafeArea(child: InputDate("Message", TextInputType.name, search)),
+                child: SafeArea(
+                    child: InputDate("Message", TextInputType.name, search)),
               ),
             ],
           ),
@@ -573,7 +661,7 @@ Widget build(BuildContext context) {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-            //  profilepath(isme),
+              //  profilepath(isme),
               poll(pollObj),
             ],
           )
@@ -582,7 +670,7 @@ Widget build(BuildContext context) {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               poll(pollObj),
-             // profilepath(isme),
+              // profilepath(isme),
             ],
           );
   }
@@ -611,7 +699,7 @@ Widget build(BuildContext context) {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                 //   profilepath(isme),
+                    //   profilepath(isme),
                     demiData(),
                   ],
                 )
@@ -620,7 +708,7 @@ Widget build(BuildContext context) {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     demiData(),
-                   // profilepath(isme),
+                    // profilepath(isme),
                   ],
                 );
         } else if (snapshot.hasError) {
@@ -644,7 +732,7 @@ Widget build(BuildContext context) {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-           //   profilepath(isme),
+              //   profilepath(isme),
               poll(obj['data'][0]),
             ],
           )
@@ -653,7 +741,7 @@ Widget build(BuildContext context) {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               poll(obj['data'][0]),
-            //  profilepath(isme),
+              //  profilepath(isme),
             ],
           );
   }
@@ -664,7 +752,7 @@ Widget build(BuildContext context) {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-             // profilepath(isme),
+              // profilepath(isme),
               textIsme(msg, isme),
             ],
           )
@@ -673,7 +761,7 @@ Widget build(BuildContext context) {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               textIsme(msg, isme),
-             // profilepath(isme),
+              // profilepath(isme),
             ],
           );
   }
@@ -684,7 +772,7 @@ Widget build(BuildContext context) {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               image(url),
-             // profilepath(bool),
+              // profilepath(bool),
             ],
           )
         : Row(
@@ -698,70 +786,72 @@ Widget build(BuildContext context) {
 
   Widget profilepath(boolFlag) {
     return chatAvatartImage(
-        url: boolFlag ? path : avaterUrlPath(data['name']), width: 17, height: 16);
+        url: boolFlag ? path : avaterUrlPath(data['name']),
+        width: 17,
+        height: 16);
   }
 
   Widget textIsme(String msg, bool isme) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 0.0),
-    child: Container(
-      constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width / 1.4,
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(
-        color: isme ? AppColors.appIcon : null,
-        borderRadius: BorderRadius.only(
-          bottomRight: isme ? Radius.zero : Radius.circular(10),
-          topLeft: Radius.circular(10.0),
-          topRight: Radius.circular(10.0),
-          bottomLeft: !isme ? Radius.zero : Radius.circular(10),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 0.0),
+      child: Container(
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width / 1.4,
         ),
-        gradient: !isme
-            ? LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [
-                  AppColors.mt,
-                  AppColors.mt,
-                ],
-              )
-            : null,
-      ),
-      child: SelectableText(
-        msg,
-        style: FontManager().getTextStyle(
-          context,
-          lWeight: FontWeight.w400,
-          fontSize: 14,
-          letterSpacing: 0.0,
-          color: isme ? AppColors.backgroundColor : AppColors.bg1,
+        padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: isme ? AppColors.appIcon : null,
+          borderRadius: BorderRadius.only(
+            bottomRight: isme ? Radius.zero : Radius.circular(10),
+            topLeft: Radius.circular(10.0),
+            topRight: Radius.circular(10.0),
+            bottomLeft: !isme ? Radius.zero : Radius.circular(10),
+          ),
+          gradient: !isme
+              ? LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    AppColors.mt,
+                    AppColors.mt,
+                  ],
+                )
+              : null,
         ),
-        textAlign: TextAlign.left,
-        onTap: () {
-          // Optional: Handle tap if needed
-        },
-        contextMenuBuilder: (context, editableTextState) {
-          return AdaptiveTextSelectionToolbar(
-            anchors: editableTextState.contextMenuAnchors,
-            children: [
-              TextSelectionToolbarTextButton(
-                padding: EdgeInsets.all(8),
-                child: Text('Copy'),
-                onPressed: () {
-                  Clipboard.setData(ClipboardData(text: msg));
-                  //Navigator.of(context).pop(); // Close the context menu
-                 
-                },
-              ),
-              // Add more options like 'Select All' if needed
-            ],
-          );
-        },
+        child: SelectableText(
+          msg,
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.w400,
+            fontSize: 14,
+            letterSpacing: 0.0,
+            color: isme ? AppColors.backgroundColor : AppColors.bg1,
+          ),
+          textAlign: TextAlign.left,
+          onTap: () {
+            // Optional: Handle tap if needed
+          },
+          contextMenuBuilder: (context, editableTextState) {
+            return AdaptiveTextSelectionToolbar(
+              anchors: editableTextState.contextMenuAnchors,
+              children: [
+                TextSelectionToolbarTextButton(
+                  padding: EdgeInsets.all(8),
+                  child: Text('Copy'),
+                  onPressed: () {
+                    Clipboard.setData(ClipboardData(text: msg));
+                    //Navigator.of(context).pop(); // Close the context menu
+                  },
+                ),
+                // Add more options like 'Select All' if needed
+              ],
+            );
+          },
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
+
   Widget InputDate(
     String labelText,
     TextInputType keyboardType,
@@ -776,7 +866,7 @@ Widget build(BuildContext context) {
         controller: textController,
         maxLines: null, // Allow multiple lines
         maxLength: 150,
-       
+
         onSubmitted: (value) {
           if (value.isNotEmpty) {
             _handleSubmitted(value);
@@ -805,13 +895,14 @@ Widget build(BuildContext context) {
             mainAxisSize: MainAxisSize.min, // Takes minimum space needed
             children: [
               IconButton(
-                icon: Icon(
-                  Icons.image,
-                  color: AppColors.appIcon,
-                  size: 25,
-                ),
-                onPressed: getImage,
-              ),
+                  icon: Icon(
+                    Icons.image,
+                    color: AppColors.appIcon,
+                    size: 25,
+                  ),
+                  onPressed: () {
+                    getImage(context);
+                  }),
               IconButton(
                 icon: Icon(
                   Icons.send,
@@ -975,11 +1066,10 @@ Widget build(BuildContext context) {
                           children: [
                             Expanded(
                               child: Text(op['option'].toString(),
-                               maxLines: null,
-                                            softWrap: true,
-                                             textWidthBasis: TextWidthBasis.longestLine,
-                                            overflow: TextOverflow.visible,
-                                 
+                                  maxLines: null,
+                                  softWrap: true,
+                                  textWidthBasis: TextWidthBasis.longestLine,
+                                  overflow: TextOverflow.visible,
                                   style: FontManager().getTextStyle(context,
                                       lWeight: FontWeight.bold,
                                       fontSize: 14,
@@ -1167,7 +1257,6 @@ Widget build(BuildContext context) {
         children: [
           GestureDetector(
             onTap: () {
-             
               Navigator.push(
                 context,
                 PageTransition(
@@ -1200,11 +1289,11 @@ Widget build(BuildContext context) {
                       Container(
                         child: Row(
                           children: [
-                             UserAvatar(
-                                url:avaterUrlPath( dataObj["author"]['name']),
-                                width: 15,
-                                height: 15,
-                              ),
+                            UserAvatar(
+                              url: avaterUrlPath(dataObj["author"]['name']),
+                              width: 15,
+                              height: 15,
+                            ),
                             const SizedBox(
                               width: 5,
                             ),

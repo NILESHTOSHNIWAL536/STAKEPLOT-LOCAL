@@ -146,10 +146,10 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       appBar: AppBar(
         backgroundColor: AppColors.backgroundColor,
         title: Text(
-          'Veg and Non veg Calculator',
+          'FoodieFunds',
           style: FontManager().getTextStyle(
             context,
-            lWeight: FontWeight.w700,
+            lWeight: FontWeight.w600,
             fontSize: 18,
             color: AppColors.bg1,
           ),

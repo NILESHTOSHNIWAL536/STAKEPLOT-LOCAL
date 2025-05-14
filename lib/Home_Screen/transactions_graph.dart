@@ -45,7 +45,7 @@ class _TransactionGraphState extends State<TransactionGraph> {
   @override
   void initState() {
     super.initState();
-    getGraphDataoverall.value = false;
+    // getGraphDataoverall.value = false;
     overallTransactions(context);
   }
 

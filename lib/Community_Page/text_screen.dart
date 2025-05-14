@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:custom_image_crop/custom_image_crop.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
@@ -16,6 +17,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import './success_post.dart';
 import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -89,19 +91,96 @@ class _TextScreenState extends State<TextScreen> {
     super.dispose();
   }
 
-  Future<void> _pickImage() async {
+  // Future<void> _pickImage() async {
+  //   try {
+  //     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+  //     if (image != null && mounted) {
+  //       setState(() {
+  //         selectedImage = File(image.path);
+  //       });
+  //     }
+  //   } catch (e) {
+  //     snackBarAllFeilds2(context, 'Error picking image: $e');
+  //   }
+  // }
+Future<void> _pickImage() async {
+  print('pickImage called');
+
+  // Check initial permission status
+  PermissionStatus status;
+
+  if (Platform.isAndroid) {
+    final androidInfo = await DeviceInfoPlugin().androidInfo;
+    final sdkInt = androidInfo.version.sdkInt;
+    print('Android SDK version: $sdkInt');
+    if (sdkInt >= 33) {
+      // Android 13+: Use READ_MEDIA_IMAGES
+      status = await Permission.photos.status;
+    } else {
+      // Android 12 and below: Use READ_EXTERNAL_STORAGE
+      status = await Permission.storage.status;
+    }
+  } else {
+    // iOS (all versions)
+    status = await Permission.photos.status;
+  }
+  print('Initial status: $status');
+
+  // Request permission if not granted
+  if (!status.isGranted) {
+    print('Requesting permission');
+    if (Platform.isAndroid) {
+      final androidInfo = await DeviceInfoPlugin().androidInfo;
+      final sdkInt = androidInfo.version.sdkInt;
+      if (sdkInt >= 33) {
+        status = await Permission.photos.request();
+      } else {
+        status = await Permission.storage.request();
+      }
+    } else {
+      status = await Permission.photos.request();
+    }
+    print('Permission status after request: $status');
+  }
+
+  // Handle permission outcomes
+  if (status.isGranted) {
     try {
       final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       if (image != null && mounted) {
         setState(() {
           selectedImage = File(image.path);
+          showImage = true; // Automatically show image container
+          _adjustHeight(); // Adjust modal height
         });
+      } else if (image == null && mounted) {
+        snackBarAllFeilds2(context, 'No image selected');
       }
     } catch (e) {
-      snackBarAllFeilds2(context, 'Error picking image: $e');
+      if (mounted) {
+        snackBarAllFeilds2(context, 'Error picking image: $e');
+      }
+      print('Error: $e');
     }
+  } else if (status.isDenied) {
+    if (mounted) {
+      snackBarAllFeilds2(context, 'Please grant photo library access to select images');
+    }
+  } else if (status.isPermanentlyDenied) {
+    if (mounted) {
+      snackBarAllFeilds2(
+        context,
+        'Photo library access is permanently denied. Please enable it in settings.',
+      );
+      await openAppSettings();
+    }
+  } else {
+    if (mounted) {
+      snackBarAllFeilds2(context, 'Unknown permission status: $status');
+    }
+    print('Unknown status: $status');
   }
-
+}
   Future<File?> _cropAndSaveImage() async {
     try {
       if (selectedImage == null) {

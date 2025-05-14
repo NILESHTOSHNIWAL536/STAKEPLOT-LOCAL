@@ -92,7 +92,7 @@ class _PostCardState extends State<PostCard> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
       child: Card(
-        elevation: Colorcodes.elevation3,
+       // elevation: Colorcodes.elevation3,
         color: AppColors.mt,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
@@ -131,7 +131,7 @@ class _PostCardState extends State<PostCard> {
                       );
                     },
               child: Container(
-                padding: const EdgeInsets.fromLTRB(0, 3, 0, 7),
+                padding: const EdgeInsets.fromLTRB(0, 2, 0, 4),
                 decoration: BoxDecoration(
                     color: AppColors.mt,
                     borderRadius:
@@ -154,7 +154,7 @@ class _PostCardState extends State<PostCard> {
                               Text(
                                 (dataObj["author"]['name']),
                                 style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.bold,
+                                    lWeight: FontWeight.w500,
                                     fontSize: 18,
                                     color: AppColors.bg1),
                               ),
@@ -190,7 +190,7 @@ class _PostCardState extends State<PostCard> {
                               )
                             : Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 10),
+                                    vertical: 4, horizontal: 10),
                                 child: Text(
                                   (dataObj['title']),
                                   style: FontManager().getTextStyle(context,
@@ -207,11 +207,11 @@ class _PostCardState extends State<PostCard> {
                                     dataObj['image'] != "")
                             ? Padding(
                                 padding: EdgeInsets.symmetric(
-                                    vertical: Colorcodes.borderRadius),
+                                    vertical: Colorcodes.borderRadius/3),
                                 child: Center(
                                   child: GFImageOverlay(
                                     width:MediaQuery.of(context).size.width / 1.2,
-                                    height: MediaQuery.of(context).size.height /2.7,
+                                    height: MediaQuery.of(context).size.height /3,
                                     boxFit: BoxFit.fill,
                                     borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
                                     image: NetworkImage(dataObj['image']),
@@ -231,7 +231,7 @@ class _PostCardState extends State<PostCard> {
                                                 1.2,
                                         height:
                                             MediaQuery.of(context).size.height /
-                                                2.7,
+                                                3,
                                         boxFit: BoxFit.fill,
                                         borderRadius: BorderRadius.circular(
                                             Colorcodes.borderRadius),
@@ -329,7 +329,7 @@ class _PostCardState extends State<PostCard> {
                     : "assets/images/Save.svg",
                 height: 25,
                 width: 25,
-                color: Colorcodes.white,
+                color: AppColors.accentColor,
               ))),
     );
   }

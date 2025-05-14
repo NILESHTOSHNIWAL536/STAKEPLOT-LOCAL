@@ -22,16 +22,15 @@ Widget getTab(BuildContext context){
 
 
  Widget getTabsForTransactions(BuildContext context) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        tabItem(StringConstant.allTransactions,context),
-        //const SizedBox(width: 12), // Space between tabs
-        tabItem(StringConstant.pollTransactions,context),
-      ],
-    ),
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      tabItem(StringConstant.allTransactions,context),
+      Padding(
+        padding: const EdgeInsets.only(right: 10),
+        child: tabItem(StringConstant.pollTransactions,context),
+      ),
+    ],
   );
 }
 
@@ -40,7 +39,7 @@ Widget getTab(BuildContext context){
 Widget tabItem(String text,BuildContext context) {
   bool isSelected = text == allOrGroupTransactionsName.value;
   // Calculate width based on screen size for responsiveness
-  double tabWidth = (MediaQuery.of(context).size.width - 44) / 2; 
+  double tabWidth = (MediaQuery.of(context).size.width) / 2.5; 
   double tabHeight = (MediaQuery.of(context).size.height ) / 20; // 44 = 16*2 padding + 12 spacing
   return InkWell(
     onTap: () {
@@ -54,7 +53,6 @@ Widget tabItem(String text,BuildContext context) {
         color: isSelected ? AppColors.primaryColor : AppColors.bg5,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          
           color: isSelected ? AppColors.primaryColor : AppColors.bg1,
         ),
         gradient: isSelected

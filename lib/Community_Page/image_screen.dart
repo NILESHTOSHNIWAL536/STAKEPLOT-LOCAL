@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:custom_image_crop/custom_image_crop.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/image_picker_utils.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
@@ -38,16 +39,27 @@ class _ImageScreenState extends State<ImageScreen> {
   final CustomImageCropController _cropController = CustomImageCropController();
   File? selectedImage;
 
+  // Future<void> _pickImage() async {
+  //   try {
+  //     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+  //     if (image != null && mounted) {
+  //       setState(() {
+  //         selectedImage = File(image.path);
+  //       });
+  //     }
+  //   } catch (e) {
+  //     snackBarAllFeilds2(context, 'Error picking image: $e');
+  //   }
+  // }
   Future<void> _pickImage() async {
-    try {
-      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-      if (image != null && mounted) {
-        setState(() {
-          selectedImage = File(image.path);
-        });
-      }
-    } catch (e) {
-      snackBarAllFeilds2(context, 'Error picking image: $e');
+    final File? image = await pickImageWithPermissions(
+      context,
+      showErrorSnackBar: (message) => snackBarAllFeilds2(context, message),
+    );
+    if (image != null && mounted) {
+      setState(() {
+        selectedImage = image;
+      });
     }
   }
 
@@ -108,179 +120,179 @@ class _ImageScreenState extends State<ImageScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      
-        child: AnimatedPadding(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          duration: const Duration(milliseconds: 100),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          getProfile(),
-                          const SizedBox(width: 8),
-                          Column(
-                            children: [
-                              Text(
-                                userName.value.toString(),
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                    color: AppColors.bg1),
-                              ),
-                              Text(
-                                'New post',
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w400,
-                                    fontSize: 12,
-                                    color: AppColors.bg1),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  GestureDetector(
-                    onTap: _pickImage,
-                    child: Container(
-                      height: MediaQuery.of(context).size.height / 3.1,
-                      width: MediaQuery.of(context).size.width / 0.5,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: selectedImage != null
-                          ? CustomImageCrop(
-                              image: FileImage(selectedImage!),
-                              cropController: _cropController,
-                              shape: CustomCropShape.Square,
-                             outlineStrokeWidth:0.0,
-                           //  ratio: Ratio(16, 9),
-                            // forceInsideCropArea:true,
-                           
-                              overlayColor: Colors.black.withOpacity(0.5),
-                              cropPercentage: 0.92, // Increased crop size
-                              // Increased crop size
-                            )
-                          : const Icon(
-                              Icons.add_photo_alternate,
-                              size: 50,
-                              color: Colors.grey,
+      child: AnimatedPadding(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        duration: const Duration(milliseconds: 100),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        getProfile(),
+                        const SizedBox(width: 8),
+                        Column(
+                          children: [
+                            Text(
+                              userName.value.toString(),
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                  color: AppColors.bg1),
                             ),
+                            Text(
+                              'New post',
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                  color: AppColors.bg1),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    controller: titleController,
-                    decoration: InputDecoration(
-                      hintText: 'Enter title',
-                      hintStyle: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.w600,
-                          fontSize: 18,
-                          color: AppColors.bg1),
-                      border: InputBorder.none,
+                  ],
+                ),
+                const SizedBox(height: 10),
+                GestureDetector(
+                  onTap: _pickImage,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height / 3.1,
+                    width: MediaQuery.of(context).size.width / 0.5,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(20),
                     ),
+                    child: selectedImage != null
+                        ? CustomImageCrop(
+                            image: FileImage(selectedImage!),
+                            cropController: _cropController,
+                            shape: CustomCropShape.Square,
+                            outlineStrokeWidth: 0.0,
+                            //  ratio: Ratio(16, 9),
+                            // forceInsideCropArea:true,
+
+                            overlayColor: Colors.black.withOpacity(0.5),
+                            cropPercentage: 0.92, // Increased crop size
+                            // Increased crop size
+                          )
+                        : const Icon(
+                            Icons.add_photo_alternate,
+                            size: 50,
+                            color: Colors.grey,
+                          ),
                   ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    controller: textController,
-                   // focusNode: _contentFocusNode,
-                    maxLines: 5,
-                    decoration: InputDecoration(
-                      hintText: 'Add your thoughts',
-                      border: InputBorder.none,
-                      hintStyle: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.normal,
-                          fontSize: 14,
-                          color: AppColors.bg1),
-                    ),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: titleController,
+                  decoration: InputDecoration(
+                    hintText: 'Enter title',
+                    hintStyle: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.w600,
+                        fontSize: 18,
+                        color: AppColors.bg1),
+                    border: InputBorder.none,
                   ),
-                  GestureDetector(
-                    onTap: () async {
-                      if (selectedImage == null) {
-                        snackBarAllFeilds2(context, "Please Upload Image");
-                        return;
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: textController,
+                  // focusNode: _contentFocusNode,
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                    hintText: 'Add your thoughts',
+                    border: InputBorder.none,
+                    hintStyle: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.normal,
+                        fontSize: 14,
+                        color: AppColors.bg1),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    if (selectedImage == null) {
+                      snackBarAllFeilds2(context, "Please Upload Image");
+                      return;
+                    }
+
+                    if (titleController.text.trim().isEmpty ||
+                        textController.text.trim().isEmpty) {
+                      snackBarAllFeilds(context);
+                      return;
+                    }
+
+                    if (posting.value) return;
+
+                    try {
+                      posting.value = true;
+
+                      final croppedImageFile = await _cropAndSaveImage();
+                      if (croppedImageFile == null) {
+                        posting.value = false;
+                        return; // Silently fail instead of showing snackbar
                       }
 
-                      if (titleController.text.trim().isEmpty ||
-                          textController.text.trim().isEmpty) {
-                        snackBarAllFeilds(context);
-                        return;
+                      await createPost(
+                        context,
+                        titleController.text,
+                        textController.text,
+                        croppedImageFile,
+                      );
+
+                      if (mounted) {
+                        Navigator.pop(context);
+                        Get.to(() => const SuccessPost(
+                              celebrationText: "Posted",
+                            ));
                       }
-
-                      if (posting.value) return;
-
-                      try {
-                        posting.value = true;
-
-                        final croppedImageFile = await _cropAndSaveImage();
-                        if (croppedImageFile == null) {
-                          posting.value = false;
-                          return; // Silently fail instead of showing snackbar
-                        }
-
-                        await createPost(
-                          context,
-                          titleController.text,
-                          textController.text,
-                          croppedImageFile,
-                        );
-
-                        if (mounted) {
-                          Navigator.pop(context);
-                          Get.to(() => const SuccessPost(celebrationText: "Posted",));
-                        }
-                      } catch (e) {
-                        // Log error instead of showing snackbar
-                      } finally {
-                        if (mounted) {
-                          posting.value = false;
-                        }
+                    } catch (e) {
+                      // Log error instead of showing snackbar
+                    } finally {
+                      if (mounted) {
+                        posting.value = false;
                       }
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width / 1.1,
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
-                      decoration: BoxDecoration(
-                        color: titleController.text.isNotEmpty &&
-                                textController.text.isNotEmpty
-                            ? AppColors.primaryColor
-                            : AppColors.button,
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      child: Center(
-                        child: Obx(() => posting.value
-                            ? Spinner(size: 20, color: Colorcodes.white)
-                            : Text(
-                                'Continue',
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                  color: titleController.text.isNotEmpty &&
-                                          textController.text.isNotEmpty
-                                      ? Colors.white
-                                      : Colors.black,
-                                ),
-                              )),
-                      ),
+                    }
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 1.1,
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                    decoration: BoxDecoration(
+                      color: titleController.text.isNotEmpty &&
+                              textController.text.isNotEmpty
+                          ? AppColors.primaryColor
+                          : AppColors.button,
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: Center(
+                      child: Obx(() => posting.value
+                          ? Spinner(size: 20, color: Colorcodes.white)
+                          : Text(
+                              'Continue',
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: titleController.text.isNotEmpty &&
+                                        textController.text.isNotEmpty
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+                            )),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
-      
+      ),
     );
   }
 

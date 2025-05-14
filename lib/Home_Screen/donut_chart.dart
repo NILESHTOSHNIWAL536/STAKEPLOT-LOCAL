@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'colors.dart';
@@ -200,6 +201,7 @@ class CategoryCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         searchController.text = category.toLowerCase();
+        onChanedAutoTransactionStatus(context);
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -223,10 +225,12 @@ class CategoryCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                   
+                 
+                    width: MediaQuery.sizeOf(context).width / 9,
                     child: AvatarProfileImage(url: getCategoryIconPath(category), width: 50, height: 50)),
                   Container(
-                    width: MediaQuery.sizeOf(context).width / 4,
+                   
+                    width: MediaQuery.sizeOf(context).width / 4.2,
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: Text(

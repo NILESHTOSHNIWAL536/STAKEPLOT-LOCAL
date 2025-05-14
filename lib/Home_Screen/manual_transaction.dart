@@ -106,10 +106,12 @@ void showCustomModal(BuildContext context) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
+    
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(16),
       ),
+
     ),
     builder: (BuildContext context) {
       return SafeArea(child: ModalContent()); // Use the modal widget here
@@ -243,7 +245,7 @@ class _ModalContentState extends State<ModalContent>
 
                   curve: Curves.easeOut,
                   child: Container(
-                    color: AppColors.backgroundColor,
+                    color: AppColors.mt,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 10),
                       child: Column(

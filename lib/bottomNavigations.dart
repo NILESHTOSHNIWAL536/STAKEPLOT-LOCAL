@@ -613,25 +613,35 @@ class _BottomNavigationsState extends State<BottomNavigations> {
     );
   }
 
-  void pushName(Widget widgetName, [bool flag = false]) {
-    final route = PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => widgetName,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return FadeTransition(
-          opacity: animation,
-          child: child,
-        );
-      },
-      transitionDuration: const Duration(milliseconds: 300),
-    );
+  // void pushName(Widget widgetName, [bool flag = false]) {
+  //   final route = PageRouteBuilder(
+  //     pageBuilder: (context, animation, secondaryAnimation) => widgetName,
+  //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+  //       return FadeTransition(
+  //         opacity: animation,
+  //         child: child,
+  //       );
+  //     },
+  //     transitionDuration: const Duration(milliseconds: 300),
+  //   );
 
-    if (flag) {
-      Navigator.push(context, route);
-    } else {
-      Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
-    }
+  //   if (flag) {
+  //     Navigator.push(context, route);
+  //   } else {
+  //     Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
+  //   }
+  // }
+void pushName(Widget widgetName, [bool flag = false]) {
+  final route = PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => widgetName,
+  );
+
+  if (flag) {
+    Navigator.push(context, route);
+  } else {
+    Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
   }
-
+}
 //  handleTap(i){
 //     if (i == 0 && widget.data != i) pushName( Home());
 //         else if (i == 1 && widget.data != i)pushName(Budget());

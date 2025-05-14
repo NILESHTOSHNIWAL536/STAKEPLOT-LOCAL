@@ -122,10 +122,11 @@ class AvatarProfile extends StatelessWidget {
     required this.height,
     required this.background,
      this.flag=false,
-     this.fontsize=30,
+     this.fontsize=20,
   }) : super(key: key);
 
-  Color getBackgroundColor(String hex) {
+  Color getBackgroundColor(String hexw) {
+   String  hex="#48484A";
     try {
       return Color(int.parse(hex.replaceFirst('#', '0xFF')));
     } catch (_) {
@@ -135,50 +136,77 @@ class AvatarProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double size=MediaQuery.of(context).size.width;
     return flag?Container(
       padding: EdgeInsets.all(2),
       width: MediaQuery.of(context).size.width/ width,
       height: MediaQuery.of(context).size.height/ height,
       alignment: Alignment.center,
-      child: img2(context,MediaQuery.of(context).size.width/ width)
+      child: img2(context,MediaQuery.of(context).size.width/ width,size)
       ):Container(
       margin: EdgeInsets.all(5),
       padding: EdgeInsets.all(2),
       alignment: Alignment.center,
-      child: img(context)
+      child: img(context,size)
     );
   }
 
 
-  Widget img(context){
-    return CircleAvatar(
-        backgroundColor: getBackgroundColor(background),
-        child: Center(
-          child: textStyleImage(
-            context: context,
-            text: name[0].toUpperCase(),
-            fontWeight: FontWeight.bold,
-            fontsize: fontsize,
-            c: Colorcodes.appBarColor,
-          ),
-        ),
-      );
+  Widget img(context,size){
+    return ClipOval(
+      
+  child: Container(
+     width: size / 10,  // Diameter
+    height: size / 10, // Diameter
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          getBackgroundColor(background).withOpacity(0.7),
+          getBackgroundColor(background),
+        ],
+      ),
+    ),
+    child: Center(
+      child: textStyleImage(
+        context: context,
+        text: name.isEmpty? "L": name[0].toUpperCase(),
+        fontsize: 20,
+        c: Colorcodes.appBarColor,
+      ),
+    ),
+  ),
+);
+
   }
 
-  Widget img2(context,width){
-    return CircleAvatar(
-        backgroundColor: getBackgroundColor(background),
-        radius: width,
-        child: Center(
-          child: textStyleImage(
-            context: context,
-            text: name[0].toUpperCase(),
-            fontWeight: FontWeight.bold,
-            fontsize: 30,
-            c: Colorcodes.appBarColor,
-          ),
-        ),
-      );
+  Widget img2(context,width,size){
+    return ClipOval(
+  child: Container(
+    width: size / 10, // diameter
+    height: size / 10,
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          getBackgroundColor(background),
+          getBackgroundColor(background).withOpacity(0.7),
+        ],
+      ),
+    ),
+    child: Center(
+      child: textStyleImage(
+        context: context,
+        text: name[0].toUpperCase(),
+        fontsize: 20,
+        c: Colorcodes.appBarColor,
+      ),
+    ),
+  ),
+);
+
   }
 }
 

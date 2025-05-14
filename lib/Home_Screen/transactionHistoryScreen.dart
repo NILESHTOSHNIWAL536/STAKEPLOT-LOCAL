@@ -59,6 +59,7 @@ void _onScroll() {
       child: Scaffold(
         backgroundColor: AppColors.backgroundColor,
        appBar: AppBar(
+         backgroundColor: AppColors.backgroundColor,
        // Flat design for a modern look
         title: Text(
       'History',
@@ -153,16 +154,18 @@ void _onScroll() {
                       duration: const Duration(milliseconds: 200),
                     //  height: MediaQuery.of(context).size.height /5,
                      decoration: BoxDecoration(
-                    color: AppColors.bg5,
+                    color: AppColors.backgroundColor,
                     borderRadius: BorderRadius.circular(30),
                     
                   ),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
 
 
                          const SizedBox(height: 4,),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                                getTextFeild(),
                               InkWell(onTap: ()
@@ -181,13 +184,13 @@ void _onScroll() {
                                   ));
                               }, 
                              child:  Icon(Icons.filter_alt_outlined, 
-                             size:  MediaQuery.of(context).size.width/10,
+                             size:  MediaQuery.of(context).size.height/20,
                              color: AppColors.accentColor),) 
                             ],
                           ),
                       
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 1),
+                              padding: const EdgeInsets.symmetric(vertical: 8),
                               child: getTab(context),
                             ),
 
@@ -251,8 +254,8 @@ void _onScroll() {
  Widget getTextFeild()
  {
     return Container(
-                            width: MediaQuery.of(context).size.width /1.17,
-                            height: MediaQuery.of(context).size.width /9,
+                            width: MediaQuery.of(context).size.width /1.20,
+                            height: MediaQuery.of(context).size.width /8,
                             child: TextField(
                               controller: searchController,
                               focusNode: focusNodeSearchFeild,

@@ -196,7 +196,7 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
                 }
                 return Row(
                   children: [
-                    AvatarProfile(name: friend['name'], width: 9, height: 12,fontsize: 15, background: friend['avatarBackGround'],flag: true,),
+                    AvatarProfile(name: friend['name'], width: 9, height: 12,fontsize: 15, background: friend['avatarBackGround']??"",flag: true,),
                     const SizedBox(width: 2,),
                     Text(
                       friend['name'] ?? 'Unknown', // Null check for friend['name']

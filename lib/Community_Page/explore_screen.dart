@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/image_picker_utils.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
@@ -54,17 +55,36 @@ class _ExploreModalState extends State<ExploreModal> {
     _amountControllers.add(TextEditingController());
   }
 
+  // Future<void> _pickAndCropImage() async {
+  //   if (selectedImages.length >= maxImages) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('Maximum 5 images allowed')),
+  //     );
+  //     return;
+  //   }
+
+  //   final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+  //   if (image != null) {
+  //     await _showCropDialog(File(image.path));
+  //   }
+  // }
   Future<void> _pickAndCropImage() async {
     if (selectedImages.length >= maxImages) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Maximum 5 images allowed')),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('Maximum 5 images allowed')),
+      // );
+      snackBarCalledfail(context, "Maximum 5 images allowed");
       return;
     }
 
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      await _showCropDialog(File(image.path));
+    final File? image = await pickImageWithPermissions(
+      context,
+      showErrorSnackBar: (message) =>
+          snackBarCalledfail(context, message)
+    );
+
+    if (image != null && mounted) {
+      await _showCropDialog(image);
     }
   }
 
@@ -279,7 +299,6 @@ class _ExploreModalState extends State<ExploreModal> {
   }
 
   Future<void> _submitPost() async {
-   
     if (locationNameController.text.isEmpty ||
         locationAddressController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -289,7 +308,6 @@ class _ExploreModalState extends State<ExploreModal> {
     }
 
     setState(() => _isSubmitting = true); // Show loading indicator
-   
 
     List<Map<String, dynamic>> budget = [];
     for (int i = 0; i < _textControllers.length; i++) {
@@ -369,7 +387,7 @@ class _ExploreModalState extends State<ExploreModal> {
         posting.value = false;
         postDis.value = false;
         widget.onPostCreated(jsonDecode(response.body));
-        Navigator.pop(context); 
+        Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -407,38 +425,37 @@ class _ExploreModalState extends State<ExploreModal> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-          padding: const EdgeInsets.only(top: 20),
-          child: Container(
-                  color: AppColors.backgroundColor,
-                  child: AnimatedPadding(
-                    padding: MediaQuery.of(context).viewInsets,
-                    duration: const Duration(milliseconds: 100),
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            _buildHeader(),
-                            const SizedBox(height: 20),
-                            _buildImageSection(),
-                            const SizedBox(height: 10),
-                            _buildPlaceSection(),
-                            const SizedBox(height: 10),
-                            _buildBudgetSection(),
-                            _buildRatingSection(),
-                            const SizedBox(height: 20),
-                            _buildHighlightSection(),
-                            const SizedBox(height: 20),
-                            _buildSubmitButton(),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+        padding: const EdgeInsets.only(top: 20),
+        child: Container(
+          color: AppColors.backgroundColor,
+          child: AnimatedPadding(
+            padding: MediaQuery.of(context).viewInsets,
+            duration: const Duration(milliseconds: 100),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildHeader(),
+                    const SizedBox(height: 20),
+                    _buildImageSection(),
+                    const SizedBox(height: 10),
+                    _buildPlaceSection(),
+                    const SizedBox(height: 10),
+                    _buildBudgetSection(),
+                    _buildRatingSection(),
+                    const SizedBox(height: 20),
+                    _buildHighlightSection(),
+                    const SizedBox(height: 20),
+                    _buildSubmitButton(),
+                  ],
                 ),
-        
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -720,7 +737,6 @@ class _ExploreModalState extends State<ExploreModal> {
     // );
     return GestureDetector(
       onTap: () {
-      
         isEnabled ? _submitPost() : null;
       },
       child: _isSubmitting

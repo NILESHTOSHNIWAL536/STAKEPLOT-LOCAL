@@ -224,15 +224,15 @@ class _CommunityState extends State<Community> {
                   'Welcome back to',
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.normal,
-                      fontSize: h / 46,
-                      color: Colors.black),
+                      fontSize: h / 48,
+                      color: AppColors.accentColor),
                 ),
                 Text(
                   'Financial Community',
                   style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.bold,
-                      fontSize: h / 40,
-                      color: Colors.black),
+                      lWeight: FontWeight.w500,
+                      fontSize: h / 38,
+                      color: AppColors.accentColor),
                 ),
               ],
             ),
@@ -241,8 +241,8 @@ class _CommunityState extends State<Community> {
               child: Column(
                 children: [
                   Container(
-                      width: MediaQuery.sizeOf(context).width / 7,
-                      height: MediaQuery.sizeOf(context).width / 7,
+                      width: MediaQuery.sizeOf(context).width / 8,
+                      height: MediaQuery.sizeOf(context).width / 8,
                       decoration: BoxDecoration(
                           color: AppColors.button,
                           borderRadius: BorderRadius.circular(18)),
@@ -252,8 +252,8 @@ class _CommunityState extends State<Community> {
                         },
                         child: AvatarProfileImage(
                           url: LikeComment.plus,
-                          height: 22,
-                          width: 22,
+                          height: 24,
+                          width: 24,
                         ),
                       )),
                   
@@ -277,8 +277,8 @@ class _CommunityState extends State<Community> {
                     Navigator.pushNamed(context, '/TribeSearch');
                   },
                   child: Container(
-                    width: MediaQuery.sizeOf(context).width / 1.45,
-                    height: 40,
+                    width: MediaQuery.sizeOf(context).width / 1.28,
+                    height: MediaQuery.sizeOf(context).height / 24,
                     child: TextField(
                       controller: _searchController,
                       decoration: InputDecoration(
@@ -286,7 +286,7 @@ class _CommunityState extends State<Community> {
                             EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         filled: true,
                         enabled: false,
-                        hintText: 'Search...',
+                        hintText: 'Search',
                         fillColor: AppColors.button,
                         hintStyle: FontManager().getTextStyle(context,
                             lWeight: FontWeight.normal,
@@ -307,8 +307,8 @@ class _CommunityState extends State<Community> {
                 },
                 child: AvatarProfileImage(
                   url: LikeComment.message,
-                  height: 22,
-                  width: 22,
+                  height: 24,
+                  width: 24,
                 ),
               ),
             ],
@@ -320,7 +320,7 @@ class _CommunityState extends State<Community> {
         Text(
           'Featured Posts',
           style: FontManager().getTextStyle(context,
-              lWeight: FontWeight.bold, fontSize: 18, color: Colors.black),
+              lWeight: FontWeight.w500, fontSize: 18, color: AppColors.accentColor),
         ),
       ],
     );
