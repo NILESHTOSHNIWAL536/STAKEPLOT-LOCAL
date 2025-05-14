@@ -698,3 +698,32 @@ String getMonthlyRange() {
 
   return bankImage; // return null if no match found
 }
+
+
+double getProgressValue(String text) {
+  if (text.toLowerCase().contains("same as last month")) {
+    return 0.0;
+  }
+
+  final match = RegExp(r'([-+]?\d+)%').firstMatch(text);
+  if (match != null)
+  {
+    final value = int.tryParse(match.group(1) ?? "0") ?? 0;
+    double  v= value<=0? 1 : value<=99? value/1.0 :100;
+    return v;
+    // return (value.abs().clamp(0, 100)) / 100;
+  }
+  
+  return 0.0;
+}
+
+String getDaysLeftInMonth()
+ {
+  final now = DateTime.now();
+  final nextMonth = (now.month < 12)
+      ? DateTime(now.year, now.month + 1, 1)
+      : DateTime(now.year + 1, 1, 1);
+  final lastDayOfMonth = nextMonth.subtract(const Duration(days: 1));
+  final daysLeft = lastDayOfMonth.day - now.day;
+  return '$daysLeft days left';
+}

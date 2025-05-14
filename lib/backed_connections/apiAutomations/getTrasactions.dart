@@ -486,10 +486,11 @@ void processChartData() {
 
   for (var item in categoriesList) {
     String category = item["category"];
+    String percentage= item["total_debit_percentage"] ?? "";
     double value = item["total_debit"].toDouble();
     Color color = categoryColors[category] ?? Colors.grey; // Default color
 
-    newData.add(ChartData(category, value, color));
+    newData.add(ChartData(category, value, color,percentage));
     newTotalValue += value;
   }
 
