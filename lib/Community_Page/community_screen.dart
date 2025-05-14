@@ -224,40 +224,43 @@ class _CommunityState extends State<Community> {
                   'Welcome back to',
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.normal,
-                      fontSize: h / 48,
+                      fontSize: h / 60,
                       color: AppColors.accentColor),
                 ),
                 Text(
-                  'Financial Community',
+                  'Finspace',
                   style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.w500,
+                      lWeight: FontWeight.bold,
                       fontSize: h / 38,
                       color: AppColors.accentColor),
                 ),
               ],
             ),
-            Align(
-              alignment: Alignment.topRight,
-              child: Column(
-                children: [
-                  Container(
-                      width: MediaQuery.sizeOf(context).width / 8,
-                      height: MediaQuery.sizeOf(context).width / 8,
-                      decoration: BoxDecoration(
-                          color: AppColors.button,
-                          borderRadius: BorderRadius.circular(18)),
-                      child: GestureDetector(
-                        onTap: () async {
-                          await showModal({});
-                        },
-                        child: AvatarProfileImage(
-                          url: LikeComment.plus,
-                          height: 24,
-                          width: 24,
-                        ),
-                      )),
-                  
-                ],
+            Padding(
+              padding: const EdgeInsets.only(right: 6),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: Column(
+                  children: [
+                    Container(
+                        width: MediaQuery.sizeOf(context).width / 9,
+                        height: MediaQuery.sizeOf(context).width / 9,
+                        decoration: BoxDecoration(
+                            color: AppColors.button,
+                            borderRadius: BorderRadius.circular(18)),
+                        child: GestureDetector(
+                          onTap: () async {
+                            await showModal({});
+                          },
+                          child: AvatarProfileImage(
+                            url: LikeComment.plus,
+                            height: 24,
+                            width: 24,
+                          ),
+                        )),
+                    
+                  ],
+                ),
               ),
             ),
           ],
@@ -307,8 +310,8 @@ class _CommunityState extends State<Community> {
                 },
                 child: AvatarProfileImage(
                   url: LikeComment.message,
-                  height: 24,
-                  width: 24,
+                  height: 26,
+                  width: 26,
                 ),
               ),
             ],

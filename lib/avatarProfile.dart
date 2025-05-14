@@ -43,6 +43,40 @@ AvatarProfileImage({ Key? key,required this.url,required this.width,required thi
     );
   }
 }
+class AvatarProfileImageNextFetch extends StatelessWidget {
+String url;
+double width;
+double height;
+AvatarProfileImageNextFetch({ Key? key,required this.url,required this.width,required this.height }) : super(key: key);
+//  ProfileImage({ Key? key, this.url="assets/images/profile2.svg" }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context){
+    // url="https://lh3.googleusercontent.com/a/ACg8ocKYmUXUyRRJMokLs9MV_LdZsO3-x8WJJGTOtPw41A72KO-4QMaF=s96-c";
+    return  Container(
+        margin: EdgeInsets.symmetric(horizontal: 0),
+        padding: EdgeInsetsDirectional.all(4),
+        alignment: Alignment.center,
+        // color: AppColors.primaryColor,
+        child: isSvgUrl(url)? SvgPicture.asset(url.toString().trim(),
+              width: MediaQuery.of(context).size.width/ width,
+              height: MediaQuery.of(context).size.height/ height,
+        ):Container(
+           width: MediaQuery.of(context).size.width /width,
+           height: MediaQuery.of(context).size.height/height,
+          child: GFImageOverlay(     
+                                shape: BoxShape.circle,
+                                boxFit: BoxFit.contain,
+                                image: NetworkImage(url),
+                                colorFilter:ColorFilter.mode(Colors.black.withOpacity(0.0),
+                                BlendMode.exclusion
+                        ),
+                 ),
+        )
+        
+    );
+  }
+}
 class chatAvatartImage extends StatelessWidget {
 String url;
 double width;

@@ -558,14 +558,14 @@ class _BottomNavigationsState extends State<BottomNavigations> {
     bool ifAvatar = index == 3 || index == 4;
 
     return Center(
-      child: ifAvatar? Obx(()=> AvatarProfile(name: userName.value, width: 30, height: 13,background: userAvatarBackGround.value,))
+      child: ifAvatar? Obx(()=> AvatarProfile(name: userName.value, width: 32, height: 14,background: userAvatarBackGround.value,))
           // ? SvgPicture.asset(iconPath,
           //     width: Colorcodes.paddingSize * 2.2,
           //     height: Colorcodes.paddingSize * 2.7)
           : SvgPicture.asset(
               iconPath,
-              width: MediaQuery.of(context).size.width /30, // Adjust the multiplier as needed
-              height: MediaQuery.of(context).size.height /30, // Adjust the multiplier as needed
+              width: MediaQuery.of(context).size.width /34, // Adjust the multiplier as needed
+              height: MediaQuery.of(context).size.height /34, // Adjust the multiplier as needed
               colorFilter: isSelected
                   ? ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn)
                   : ColorFilter.mode(

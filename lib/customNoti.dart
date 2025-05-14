@@ -47,7 +47,7 @@ Widget child;
     //                       height: 30, width: 15),
     //           );
    return  Container(
-     width: MediaQuery.of(context).size.width/4,
+     width: MediaQuery.of(context).size.width/6,
     //  color: Colorcodes.billBody,
      padding: EdgeInsets.symmetric(horizontal: 10),
      child: Row(

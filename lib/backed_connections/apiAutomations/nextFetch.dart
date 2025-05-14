@@ -75,20 +75,22 @@ Widget build(BuildContext context) {
         formattedNextFetch = 'Not scheduled'; // Fallback if empty
       }
     } catch (e) {
-      print("Error parsing nextFecthDate: $e");
+      
       formattedNextFetch = 'Not scheduled'; // Fallback on error
     }
 
     return consentAndHandleDetails.isEmpty
         ? SizedBox.shrink()
         : Container(
-            width: MediaQuery.of(context).size.width / 1.1,
+            width: MediaQuery.of(context).size.width / 1,
+           
             child: Row(
               children: [
                 isFected.value
                     ? Container(
                         height: 30,
                         width: 30,
+
                        // margin: EdgeInsets.only(right: 10),
                         child: Lottie.asset("assets/splashScreen/fetchLoad.json"),
                       )
@@ -101,9 +103,9 @@ Widget build(BuildContext context) {
                                 curve: Curves.linear,
                               ),
                             ).drive(Tween(begin: 1.0, end: 0.0)),
-                            child: AvatarProfileImage(
+                            child: AvatarProfileImageNextFetch(
                                 url: HomePageIcons.fetch,
-                                width: 25,
+                                width: 30,
                                 height: 25)),
                       ),
                 Padding(

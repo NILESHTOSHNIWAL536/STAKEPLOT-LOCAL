@@ -157,10 +157,10 @@ Widget vote(context, dataObj, data) {
                     child: Row(
                       children: [
                         Container(
-                            height: 28,
+                            height: 22,
                             child: SvgPicture.asset(
                               LikeComment.comments,
-                              height: 28,
+                              height: 22,
                             )),
                         const SizedBox(
                           width: 6,
@@ -191,7 +191,7 @@ Widget vote(context, dataObj, data) {
                       },
                       child: SvgPicture.asset(
                         LikeComment.share,
-                        height: 32,
+                        height: 22,
                       ),
                     ),
                   ),
@@ -211,7 +211,7 @@ Widget likeIcon(BuildContext context, bool isLiked) {
    // color: Colors.green,
     duration: const Duration(milliseconds: 300), // Animation duration
     curve: Curves.easeInOut, // Animation curve
-    height: isLiked ? 26 : 24, // Change height on like
+    height: isLiked ? 24 : 22, // Change height on like
     child: SvgPicture.asset(
       isLiked
           ? LikeComment.likeIcon2

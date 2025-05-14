@@ -225,37 +225,43 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: AppColors.backgroundColor,
         automaticallyImplyLeading: false,
         actions: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: (){
-                   navigatorToMyOwnPage(context);
-                },
-                child: Obx(()=> AvatarProfile(name: userName.value, width: 30, height: 13,background: userAvatarBackGround.value,))),
-                // child: UserAvatar(url: avatar.value, width: 15, height: 15)),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  textStyle(
-                      context: context,
-                      text: getTimeBasedGreeting(),
-                      fontWeight: FontWeight.w500,
-                      fontsize: 15),
-                  Obx(() => textStyle(
-                      context: context,
-                      text: userName.value,
-                      fontWeight: FontWeight.bold,
-                      fontsize: 15))
-                ],
-              )
-            ],
+          Padding(
+            padding:const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: (){
+                     navigatorToMyOwnPage(context);
+                  },
+                  child: Obx(()=> AvatarProfile(name: userName.value, width: 30, height: 13,background: userAvatarBackGround.value,))),
+                  // child: UserAvatar(url: avatar.value, width: 15, height: 15)),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    textStyle(
+                        context: context,
+                        text: getTimeBasedGreeting(),
+                        fontWeight: FontWeight.w500,
+                        fontsize: 15),
+                    Obx(() => textStyle(
+                        context: context,
+                        text: userName.value,
+                        fontWeight: FontWeight.bold,
+                        fontsize: 15))
+                  ],
+                )
+              ],
+            ),
           ),
           Spacer(),
-          NotificationsBudget(
-            child: Text(""),
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: NotificationsBudget(
+              child: Text(""),
+            ),
           ),
         ],
       );

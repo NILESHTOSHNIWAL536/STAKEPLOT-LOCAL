@@ -127,7 +127,6 @@ class _TribeHomeState extends State<TribeUnique> {
       obj.sId = id;
       postCount[id] = 0;
       snackBarCalled(context, "Comment added successfully!", Colors.black);
-     
     } else {
       snackBarCalled(
           context, "Unable to add comment. Please try again.", Colors.red);
@@ -138,13 +137,14 @@ class _TribeHomeState extends State<TribeUnique> {
   void initState() {
     super.initState();
     dataObj = widget.dataObj;
-    
+
     getpost(widget.id);
     getTransactionComments();
     getInfo();
   }
 
-  void getpost(id) async {;
+  void getpost(id) async {
+    ;
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
     final response = await http.get(
@@ -246,9 +246,9 @@ class _TribeHomeState extends State<TribeUnique> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-     // bottomNavigationBar: BottomNavigations(data: sizeRoom ? 3 : 2),
+      // bottomNavigationBar: BottomNavigations(data: sizeRoom ? 3 : 2),
       extendBody: true,
-     
+
       body: SafeArea(
         child: Container(
           height: MediaQuery.of(context).size.height,
@@ -305,12 +305,10 @@ class _TribeHomeState extends State<TribeUnique> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Container(
-        width: MediaQuery.sizeOf(context).width/1,
-
-       
+          width: MediaQuery.sizeOf(context).width / 1,
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-           
+
               // color: const Color.fromRGBO(249, 246, 238, 1),
               borderRadius: BorderRadius.circular(20)),
           child: Column(
@@ -323,11 +321,10 @@ class _TribeHomeState extends State<TribeUnique> {
 
               Obx(
                 () => Container(
-                  width: MediaQuery.sizeOf(context).width/1,
-                  
+                  width: MediaQuery.sizeOf(context).width / 1,
                   margin: EdgeInsets.only(bottom: 10),
                   decoration: BoxDecoration(
-                   
+
                       //  color: Colorcodes.budgetLightGreen,
                       borderRadius: BorderRadius.circular(12),
                       border:
@@ -336,7 +333,8 @@ class _TribeHomeState extends State<TribeUnique> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Column(
-                        children: indexArray.map((index) =>
+                        children: indexArray
+                            .map((index) =>
                                 dataComments(commentList[index], index))
                             .toList(),
                       ),
@@ -391,8 +389,12 @@ class _TribeHomeState extends State<TribeUnique> {
                     //   size: 35,
                     //   color: Colors.black,
                     // ),
-                    AvatarProfile(name: data.author!.name.toString(), width: 10, height: 23, background: data.author!.avatarBackGround.toString()),
-                   
+                    AvatarProfile(
+                        name: data.author!.name.toString(),
+                        width: 10,
+                        height: 23,
+                        background: data.author!.avatarBackGround.toString()),
+
                     const SizedBox(
                       width: 0,
                     ),
@@ -741,7 +743,8 @@ class _TribeHomeState extends State<TribeUnique> {
             autofocus: true,
             controller: Textcontroller,
             onSubmitted: (value) {
-              addComment(context, value, postId, widget.dataObj['author']['id'],widget.dataObj['title'], name);
+              addComment(context, value, postId, widget.dataObj['author']['id'],
+                  widget.dataObj['title'], name);
               postCommentCount.putIfAbsent(
                   postId, () => widget.dataObj["comments"] ?? 0);
               postCommentCount.update(postId, (value) => value + 1);
@@ -818,13 +821,14 @@ class _TribeHomeState extends State<TribeUnique> {
         reply(Textcontroller.text, commentId, Textcontroller);
       },
       child: Container(
-          height: 10,
-          width: 10,
-          child: AvatarProfileImage(
-            url: LikeComment.share,
-            height: 10,
-            width: 10,
-          )),
+        height: 10,
+        width: 10,
+        child: Icon(
+          Icons.mode_comment_outlined, // Or Icons.favorite if already liked
+          size: 20,
+          color: AppColors.primaryColor, // Optional
+        ),
+      ),
     );
   }
 
@@ -841,13 +845,14 @@ class _TribeHomeState extends State<TribeUnique> {
         Textcontroller.clear();
       },
       child: Container(
-          height: 10,
-          width: 10,
-          child: AvatarProfileImage(
-            url: LikeComment.share,
-            height: 10,
-            width: 10,
-          )),
+        height: 10,
+        width: 10,
+        child: Icon(
+          Icons.mode_comment_outlined, // Or Icons.favorite if already liked
+          size: 20,
+          color: AppColors.primaryColor, // Optional
+        ),
+      ),
     );
   }
 
@@ -868,8 +873,11 @@ class _TribeHomeState extends State<TribeUnique> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AvatarProfile(name: replayObj.author!.name.toString(), width: width, height: 23, background: replayObj.author!.avatarBackGround.toString()),
-          
+            AvatarProfile(
+                name: replayObj.author!.name.toString(),
+                width: width,
+                height: 23,
+                background: replayObj.author!.avatarBackGround.toString()),
             const SizedBox(
               width: 0,
             ),
@@ -1517,8 +1525,7 @@ Widget popUpBox(id, context) {
           },
         );
       } else {
-      
-        reportPost(context, id, "hide post","hide");
+        reportPost(context, id, "hide post", "hide");
       }
     },
     itemBuilder: (context) {
@@ -1651,7 +1658,7 @@ Widget textStyleModel(context, str, id, [flag = false]) {
   bool f = str == "Helps us to understand the issue, and look into it.";
   return GestureDetector(
     onTap: () {
-      reportPost(context, id, str,"report");
+      reportPost(context, id, str, "report");
       if (flag) {
         getPost();
         Navigator.pop(context);
