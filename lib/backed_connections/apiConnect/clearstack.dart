@@ -4,6 +4,7 @@ import 'package:finvu_flutter_sdk/finvu_config.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/donut_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/insightsController.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
@@ -180,6 +181,7 @@ void clearGetX() {
   bankAccountLinkedList.clear();
   FipIdsConnected.clear();
   transactionsHistory.clear();
+  chartData.clear();
   isLoadingMore.value = false;
   isFected.value = false;
   currentPage = 1;

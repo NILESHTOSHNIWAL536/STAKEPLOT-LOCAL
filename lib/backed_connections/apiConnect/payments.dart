@@ -136,8 +136,10 @@ void addBudget(BuildContext context, String name, String amount,
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
     getBudget();
-    clearStackName(context, "/Budget", "/BudgetDisplay");
-    Navigator.pushNamed(context, "/PlotFinance");
+    Navigator.pop(context);
+    Navigator.pop(context);
+    Navigator.pop(context);
+   
     snackBarCalled(context, "You have successfully added a new budget!");
    
   } else {

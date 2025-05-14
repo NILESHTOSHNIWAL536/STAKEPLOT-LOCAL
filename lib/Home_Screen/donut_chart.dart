@@ -8,6 +8,8 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'colors.dart';
 import 'package:get/get.dart';
 import 'package:home_widget/home_widget.dart';
@@ -19,10 +21,10 @@ RxDouble totalValue = 0.0.obs;
 
 class ChartData {
   final String category;
+  String persentage="";
   final double value;
   final Color color;
-
-  ChartData(this.category, this.value, this.color);
+  ChartData(this.category, this.value, this.color,this.persentage);
 }
 
 class DoughnutChartExample extends StatefulWidget {
@@ -111,6 +113,9 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
               ): const SizedBox.shrink(),
             ],
           ),
+          const SizedBox(height: 1,),
+          textStyleImage(context: context,text: getDaysLeftInMonth(),fontsize: 14,fontWeight: FontWeight.w400),
+          const SizedBox(height: 5,),
           Obx(() => chartData.isEmpty
               ? Center(
                   child: Text(
@@ -146,8 +151,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
       itemCount: topFour.length,
       itemBuilder: (context, index) {
         final data = topFour[index];
-        final percentage =
-            totalValue.value > 0 ? (data.value / totalValue.value) * 100 : 0.0;
+        String percentage = data.persentage ;//totalValue.value > 0 ? (data.value / totalValue.value) * 100 : 0.0;
         return CategoryCard(
           category: data.category,
           amount: data.value,
@@ -178,7 +182,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
 class CategoryCard extends StatelessWidget {
   final String category;
   final double amount;
-  final double percentage;
+  final String percentage;
   final Color color;
 
   const CategoryCard({
@@ -263,28 +267,29 @@ class CategoryCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Row(
-                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Column(
+                       mainAxisAlignment: MainAxisAlignment.start,
+                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          width: MediaQuery.sizeOf(context).width/4.5,
-                          height: MediaQuery.sizeOf(context).height/110,
+                          width: MediaQuery.sizeOf(context).width/1.1,
+                          height: 5,
                           child: LinearProgressIndicator(
-                            value: percentage / 100,
+                            value: getProgressValue(percentage) / 100,
                             backgroundColor: AppColors.bg3.withOpacity(0.2),
                             valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primaryColor), // Use the assigned color
                             minHeight: 6,
                             borderRadius: BorderRadius.circular(6),
                           ),
                         ),
-                        
+                        const SizedBox(height: 10,),
                         Text(
-                          '${percentage.toStringAsFixed(2)}%',
+                          '${percentage}',
                           style: FontManager().getTextStyle(
                             context,
                             lWeight: FontWeight.normal,
                             fontSize: 12,
-                            color: AppColors.bg3,
+                            color: percentage.startsWith("-")? Colorcodes.redDeleteIcon:percentage.startsWith("+")? Colorcodes.green: AppColors.bg3,
                           ),
                         ),
                       ],
@@ -326,8 +331,7 @@ class AllCategoriesPage extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Obx(() {
           // Sort chartData by value in descending order
-          final sortedData = chartData.toList()
-            ..sort((a, b) => b.value.compareTo(a.value));
+          final sortedData = chartData.toList()..sort((a, b) => b.value.compareTo(a.value));
           return sortedData.isEmpty
               ? Center(
                   child: Text(
@@ -350,9 +354,10 @@ class AllCategoriesPage extends StatelessWidget {
                   itemCount: sortedData.length,
                   itemBuilder: (context, index) {
                     final data = sortedData[index];
-                    final percentage = totalValue.value > 0
-                        ? (data.value / totalValue.value) * 100
-                        : 0.0;
+                     String percentage = data.persentage;
+                    //  totalValue.value > 0
+                    //     ? (data.value / totalValue.value) * 100
+                    //     : 0.0;
                     // Assign a unique color from UniversalColors
                     final color = UniversalColors
                         .categoryColors[index % UniversalColors.categoryColors.length];
