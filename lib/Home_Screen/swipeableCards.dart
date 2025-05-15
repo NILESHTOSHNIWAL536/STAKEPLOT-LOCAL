@@ -406,94 +406,91 @@ class _SwipeableCardsScreenState extends State<SwipeableCardsScreen> {
     final screenSize = MediaQuery.of(context).size;
     final padding = screenSize.width * 0.04;
 
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors.mt,
-            borderRadius: BorderRadius.circular(padding),
-          ),
-          padding: EdgeInsets.all(padding),
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: padding, vertical: padding * 0.2),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Finora',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: screenSize.width * 0.05,
-                        color: AppColors.accentColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: screenSize.height * 0.16,
-                child: PageView.builder(
-                  controller: _pageController,
-                  scrollDirection: Axis.vertical,
-                  physics: const ClampingScrollPhysics(),
-                  onPageChanged: _onPageChanged,
-                  clipBehavior: Clip.hardEdge,
-                   itemCount: _totalCards,
-                  itemBuilder: (context, index) {
-                    final cardIndex = index % _totalCards;
-                    return AnimatedBuilder(
-                      animation: _pageController,
-                      builder: (context, child) {
-                        double value = 1.0;
-                        if (_pageController.position.haveDimensions) {
-                          value = (index.toDouble() - (_pageController.page ?? 0.0)).clamp(-1.0, 1.0);
-                          value = (1.0 - (value.abs() * 0.2)).clamp(0.8, 1.0);
-                        }
-                        return Center(
-                          child: Transform.scale(
-                            scale: value,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: padding * 0.3,
-                                vertical: padding * 0.2,
-                              ),
-                              child: _buildCard(cardIndex, context, screenSize),
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-              // Uncomment and use if needed
-              /*
-              Obx(
-                () => Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(_totalCards, (index) {
-                    return AnimatedContainer(
-                      duration: Duration(milliseconds: 300),
-                      margin: EdgeInsets.symmetric(horizontal: padding * 0.3),
-                      width: _currentIndex.value == index ? padding : padding * 0.6,
-                      height: padding * 0.8,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: _currentIndex.value == index
-                            ? AppColors.accentColor
-                            : AppColors.primaryColor.withOpacity(0.5),
-                      ),
-                    );
-                  }),
-                ),
-              ),
-              */
-            ],
-          ),
+    return  Container(
+        decoration: BoxDecoration(
+          color: AppColors.mt,
+          borderRadius: BorderRadius.circular(padding),
         ),
-      ),
+        padding: EdgeInsets.symmetric(horizontal: padding, vertical: padding * 0.24),
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: padding, vertical: padding * 0.1),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Finora',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: screenSize.width * 0.05,
+                      color: AppColors.accentColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: screenSize.height * 0.16,
+              child: PageView.builder(
+                controller: _pageController,
+                scrollDirection: Axis.vertical,
+                physics: const ClampingScrollPhysics(),
+                onPageChanged: _onPageChanged,
+                clipBehavior: Clip.hardEdge,
+                 itemCount: _totalCards,
+                itemBuilder: (context, index) {
+                  final cardIndex = index % _totalCards;
+                  return AnimatedBuilder(
+                    animation: _pageController,
+                    builder: (context, child) {
+                      double value = 1.0;
+                      if (_pageController.position.haveDimensions) {
+                        value = (index.toDouble() - (_pageController.page ?? 0.0)).clamp(-1.0, 1.0);
+                        value = (1.0 - (value.abs() * 0.2)).clamp(0.8, 1.0);
+                      }
+                      return Center(
+                        child: Transform.scale(
+                          scale: value,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: padding * 0.3,
+                              vertical: padding * 0.2,
+                            ),
+                            child: _buildCard(cardIndex, context, screenSize),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+            // Uncomment and use if needed
+            /*
+            Obx(
+              () => Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(_totalCards, (index) {
+                  return AnimatedContainer(
+                    duration: Duration(milliseconds: 300),
+                    margin: EdgeInsets.symmetric(horizontal: padding * 0.3),
+                    width: _currentIndex.value == index ? padding : padding * 0.6,
+                    height: padding * 0.8,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _currentIndex.value == index
+                          ? AppColors.accentColor
+                          : AppColors.primaryColor.withOpacity(0.5),
+                    ),
+                  );
+                }),
+              ),
+            ),
+            */
+          ],
+        ),
+      
     );
   }
 

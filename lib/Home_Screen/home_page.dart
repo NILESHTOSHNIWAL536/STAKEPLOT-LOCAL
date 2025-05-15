@@ -195,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 14,
                 ),
                  SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.25,
+                  height: MediaQuery.of(context).size.height * 0.21,
                   child: SwipeableCardsScreen(),
                  ),
                   SizedBox(
