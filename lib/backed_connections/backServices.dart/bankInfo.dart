@@ -52,7 +52,7 @@ void getCategoryData() async {
     moreDrasticChangeWeek.refresh();
 
     setDonectChat.value = !setDonectChat.value;
-   // processChartData();
+    processChartData();
   }
 }
 
