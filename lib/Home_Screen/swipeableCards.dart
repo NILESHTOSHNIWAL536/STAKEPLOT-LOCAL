@@ -1,8 +1,11 @@
+
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:get/get.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+final RxString selectedPeriod = 'Month'.obs; // <-- Moved here
 
 class SwipeableCardsScreen extends StatefulWidget {
   @override
@@ -10,7 +13,7 @@ class SwipeableCardsScreen extends StatefulWidget {
 }
 
 class _SwipeableCardsScreenState extends State<SwipeableCardsScreen> {
-  final PageController _pageController = PageController();
+  final PageController _pageController = PageController(viewportFraction: 0.9);
   final RxInt _currentIndex = 0.obs;
   final int _totalCards = 3;
 
@@ -25,27 +28,64 @@ class _SwipeableCardsScreenState extends State<SwipeableCardsScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white, // Replace with AppColors.bg
-      body: SafeArea(
+ @override
+Widget build(BuildContext context) {
+ // Add this line
+
+  return Scaffold(
+   
+    body: SafeArea(
+      child: Container(
+        decoration: BoxDecoration(
+         
+        ),
         child: Column(
           children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Finora',
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.bold,
+                      fontSize: 22,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                 
+                ],
+              ),
+            ),
             Expanded(
               child: PageView.builder(
                 controller: _pageController,
                 scrollDirection: Axis.vertical,
+                physics: BouncingScrollPhysics(),
                 onPageChanged: _onPageChanged,
+                clipBehavior: Clip.hardEdge,
                 itemBuilder: (context, index) {
                   final cardIndex = index % _totalCards;
-                  return Center(
-                    // Center the card horizontally
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0,
-                          vertical: 8.0), // Reduced vertical padding
-                      child: _buildCard(cardIndex, context),
-                    ),
+                  return AnimatedBuilder(
+                    animation: _pageController,
+                    builder: (context, child) {
+                      double value = 1.0;
+                      if (_pageController.position.haveDimensions) {
+                        value = index - (_pageController.page ?? 0);
+                        value = (1 - (value.abs() * 0.2)).clamp(0.8, 1.0);
+                      }
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0,
+                            vertical: 8.0, // ⬅ Reduced vertical spacing
+                          ),
+                          child: _buildCard(cardIndex, context),
+                        ),
+                      );
+                    },
                   );
                 },
               ),
@@ -54,28 +94,27 @@ class _SwipeableCardsScreenState extends State<SwipeableCardsScreen> {
               () => Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(_totalCards, (index) {
-                  return Container(
+                  return AnimatedContainer(
+                    duration: Duration(milliseconds: 300),
                     margin: EdgeInsets.symmetric(horizontal: 3.0),
-                    width: _currentIndex.value == index
-                        ? 8.0
-                        : 4.0, // Smaller dots
-                    height: 4.0,
+                    width: _currentIndex.value == index ? 10.0 : 6.0,
+                    height: 8.0,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: _currentIndex.value == index
-                          ? Colors.blue // Replace with AppColors.primaryColor
-                          : Colors.grey.withOpacity(0.4),
+                          ? Colors.blue
+                          : Colors.grey.withOpacity(0.5),
                     ),
                   );
                 }),
               ),
             ),
-            SizedBox(height: 12), // Reduced bottom spacing
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildCard(int cardIndex, BuildContext context) {
     Widget card;
@@ -93,11 +132,17 @@ class _SwipeableCardsScreenState extends State<SwipeableCardsScreen> {
         return SizedBox.shrink();
     }
 
-    // Wrap each card in a Container with fixed size
     return Container(
-      width: MediaQuery.sizeOf(context).width * 0.8,
-      height: 100, // Set height to 100 as requested
-      child: card,
+      width: MediaQuery.sizeOf(context).width * 0.85,
+      height: 120, // Slightly increased height for better content fit
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: card,
+      ),
     );
   }
 }
@@ -108,19 +153,7 @@ class TotalSpendingCard extends StatelessWidget {
     return Obx(
       () => Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blue.shade300, Colors.blue.shade600],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 6,
-              offset: Offset(0, 3),
-            ),
-          ],
+         color:AppColors.backgroundColor,
         ),
         padding: EdgeInsets.all(12),
         child: Column(
@@ -132,26 +165,28 @@ class TotalSpendingCard extends StatelessWidget {
               style: FontManager().getTextStyle(
                 context,
                 lWeight: FontWeight.bold,
-                fontSize: 14,
-                color: Colors.white,
+                fontSize: 16,
+                color: AppColors.primaryColor,
               ),
             ),
-            Text(
+           
+             Text(
               '₹${formatMoneyIndian(totalDebitThisMonth.value.toStringAsFixed(2))}',
               style: FontManager().getTextStyle(
                 context,
                 lWeight: FontWeight.bold,
-                fontSize: 18,
-                color: Colors.white,
+                fontSize: 20,
+                color: AppColors.accentColor,
               ),
             ),
+           
             Text(
               'Avg/Day: ₹${formatMoneyIndian(((totalDebitThisMonth.value / (DateTime.now().day == 0 ? 1 : DateTime.now().day)).toStringAsFixed(2)))}',
               style: FontManager().getTextStyle(
                 context,
                 lWeight: FontWeight.w500,
-                fontSize: 10,
-                color: Colors.white.withOpacity(0.8),
+                fontSize: 12,
+                color: AppColors.accentColor,
               ),
             ),
           ],
@@ -161,42 +196,44 @@ class TotalSpendingCard extends StatelessWidget {
   }
 }
 
-// Card 2: Top 2 Overspent Categories Compared to Last Month
 class OverspentCategoriesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(
       () => Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.red.shade300, Colors.red.shade600],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 6,
-              offset: Offset(0, 3),
-            ),
-          ],
+         color: AppColors.backgroundColor
         ),
         padding: EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Overspent Categories',
-              style: FontManager().getTextStyle(
-                context,
-                lWeight: FontWeight.bold,
-                fontSize: 14,
-                color: Colors.white,
-              ),
+            Row(
+              children: [
+                Text(
+                  'Overspent Categories',
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    selectedPeriod.value = selectedPeriod.value == 'Week' ? 'Month' : 'Week';
+                  },
+                  child: Icon(
+                    Icons.swap_horiz,
+                    color: Colors.black,
+                    size: 24,
+                  ),
+                ),
+              ],
             ),
             Expanded(
+              
               child: moreDrasticChange.isEmpty
                   ? Center(
                       child: Text(
@@ -204,15 +241,16 @@ class OverspentCategoriesCard extends StatelessWidget {
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.w500,
-                          fontSize: 12,
-                          color: Colors.white.withOpacity(0.8),
+                          fontSize: 14,
+                          color: Colors.black.withOpacity(0.8),
                         ),
                       ),
                     )
                   : ListView(
+                    
                       padding: EdgeInsets.zero,
-                      children: moreDrasticChange
-                          .take(2) // Show top 2
+                      children: (selectedPeriod.value == 'Week'?moreDrasticChangeWeek: moreDrasticChange)
+                          .take(2)
                           .toList()
                           .asMap()
                           .entries
@@ -228,8 +266,8 @@ class OverspentCategoriesCard extends StatelessWidget {
                                 style: FontManager().getTextStyle(
                                   context,
                                   lWeight: FontWeight.w600,
-                                  fontSize: 12,
-                                  color: Colors.white,
+                                  fontSize: 14,
+                                  color: Colors.black,
                                 ),
                               ),
                               Text(
@@ -237,8 +275,8 @@ class OverspentCategoriesCard extends StatelessWidget {
                                 style: FontManager().getTextStyle(
                                   context,
                                   lWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  color: Colorcodes.redDeleteIcon,
+                                  fontSize: 14,
+                                  color: Colors.black,
                                 ),
                               ),
                             ],
@@ -254,26 +292,16 @@ class OverspentCategoriesCard extends StatelessWidget {
   }
 }
 
-// Card 3: Most Frequent Transaction
 class FrequentTransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => Container(
+    return Obx(() {
+      final selectedList =
+          selectedPeriod.value == 'Week' ? frequentPaymentsWeek : frequentPayments;
+
+      return Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.green.shade300, Colors.green.shade600],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 6,
-              offset: Offset(0, 3),
-            ),
-          ],
+          color: AppColors.backgroundColor
         ),
         padding: EdgeInsets.all(12),
         child: Column(
@@ -285,63 +313,62 @@ class FrequentTransactionCard extends StatelessWidget {
               style: FontManager().getTextStyle(
                 context,
                 lWeight: FontWeight.bold,
-                fontSize: 14,
-                color: Colors.white,
+                fontSize: 16,
+                color: AppColors.primaryColor,
               ),
             ),
-            frequentPayments.isEmpty
+            selectedList.isEmpty
                 ? Text(
                     'No Data',
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.w600,
-                      fontSize: 16,
-                      color: Colors.white,
+                      fontSize: 18,
+                      color: AppColors.accentColor,
                     ),
                   )
                 : Text(
-                    frequentPayments[0]['name'].toString(),
+                    selectedList[0]['name'].toString(),
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.w600,
-                      fontSize: 16,
-                      color: Colors.white,
+                      fontSize: 18,
+                      color: AppColors.accentColor,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
-            frequentPayments.isEmpty
+            selectedList.isEmpty
                 ? SizedBox.shrink()
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '${frequentPayments[0]['count']} Txns',
+                        '${selectedList[0]['count']} Txns',
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.bold,
-                          fontSize: 12,
-                          color: Colors.white,
+                          fontSize: 14,
+                          color: AppColors.accentColor,
                         ),
                       ),
                       Text(
-                        '₹${formatMoneyIndian(frequentPayments[0]['totalAmount'].toStringAsFixed(2))}',
+                        '₹${formatMoneyIndian(selectedList[0]['totalAmount'].toStringAsFixed(2))}',
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.bold,
-                          fontSize: 12,
-                          color: Colors.white,
+                          fontSize: 14,
+                          color: AppColors.accentColor,
                         ),
                       ),
                     ],
                   ),
           ],
         ),
-      ),
-    );
+      );
+    });
   }
 }
 
-// Placeholder for formatMoneyIndian
 String formatMoneyIndian(String value) {
   return value.replaceAllMapped(
       RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
