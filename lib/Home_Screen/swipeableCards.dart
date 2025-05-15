@@ -24,7 +24,7 @@ class _SwipeableCardsScreenState extends State<SwipeableCardsScreen> {
   }
 
   void _onPageChanged(int index) {
-    _currentIndex.value = index % _totalCards;
+    _currentIndex.value = index ;
   }
 
   @override
@@ -60,38 +60,76 @@ Widget build(BuildContext context) {
                 ],
               ),
             ),
+
+            // Container(
+            //   height: MediaQuery.sizeOf(context).height/5,
+            //   child: PageView.builder(
+            //     controller: _pageController,
+            //     scrollDirection: Axis.vertical,
+                
+            //     physics: BouncingScrollPhysics(),
+            //     onPageChanged: _onPageChanged,
+            //     clipBehavior: Clip.hardEdge,
+            //     itemBuilder: (context, index) {
+            //       final cardIndex = index % _totalCards;
+            //       return AnimatedBuilder(
+            //         animation: _pageController,
+                    
+            //         builder: (context, child) {
+            //           double value = 1.0;
+            //           if (_pageController.position.haveDimensions) {
+            //             value = index - (_pageController.page ?? 0);
+            //             value = (1 - (value.abs() * 0.2)).clamp(0.8, 1.0);
+            //           }
+            //           return Center(
+            //             child: Padding(
+            //               padding: const EdgeInsets.symmetric(
+            //                 horizontal: 8.0,
+            //                 vertical: 2.0, // ⬅ Reduced vertical spacing
+            //               ),
+            //               child: _buildCard(cardIndex, context),
+            //             ),
+            //           );
+            //         },
+            //       );
+            //     },
+            //   ),
+            // ),
+
             Container(
-              height: MediaQuery.sizeOf(context).height/5,
-              child: PageView.builder(
-                controller: _pageController,
-                scrollDirection: Axis.vertical,
-                physics: BouncingScrollPhysics(),
-                onPageChanged: _onPageChanged,
-                clipBehavior: Clip.hardEdge,
-                itemBuilder: (context, index) {
-                  final cardIndex = index % _totalCards;
-                  return AnimatedBuilder(
-                    animation: _pageController,
-                    builder: (context, child) {
-                      double value = 1.0;
-                      if (_pageController.position.haveDimensions) {
-                        value = index - (_pageController.page ?? 0);
-                        value = (1 - (value.abs() * 0.2)).clamp(0.8, 1.0);
-                      }
-                      return Center(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0,
-                            vertical: 2.0, // ⬅ Reduced vertical spacing
-                          ),
-                          child: _buildCard(cardIndex, context),
-                        ),
-                      );
-                    },
-                  );
-                },
+  height: MediaQuery.sizeOf(context).height / 5,
+  child: PageView.builder(
+    controller: _pageController,
+    scrollDirection: Axis.vertical,
+    physics: BouncingScrollPhysics(),
+    onPageChanged: _onPageChanged,
+    clipBehavior: Clip.hardEdge,
+    itemCount: _totalCards, // ✅ Stop infinite scroll
+    itemBuilder: (context, index) {
+      return AnimatedBuilder(
+        animation: _pageController,
+        builder: (context, child) {
+          double value = 1.0;
+          if (_pageController.position.haveDimensions) {
+            value = index - (_pageController.page ?? 0);
+            value = (1 - (value.abs() * 0.2)).clamp(0.8, 1.0);
+          }
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8.0,
+                vertical: 2.0,
               ),
+              child: _buildCard(index, context), // ✅ No modulo
             ),
+          );
+        },
+      );
+    },
+  ),
+),
+
+           
             // Obx(
             //   () => Row(
             //     mainAxisAlignment: MainAxisAlignment.center,
