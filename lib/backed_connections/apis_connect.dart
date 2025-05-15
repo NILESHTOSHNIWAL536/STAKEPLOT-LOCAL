@@ -10,7 +10,7 @@ import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 bool flag = true;
-String portNo = flag ? "192.168.1.3" : "localhost";
+String portNo = flag ? "192.168.1.8" : "localhost";
 String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Fields";
@@ -93,6 +93,8 @@ RxString openTrasactions = "Bills".obs;
 RxString targetString = "".obs;
 RxString cupertinoPin = "".obs;
 RxList categoriesList = [].obs;
+RxList moreDrasticChange  = [].obs;
+RxList  frequentPayments = [].obs;
 Map<String, dynamic> loginUsersList = Map<String, dynamic>();
 RxList dueAmountRemainders = [].obs;
 RxBool getdueUsers = false.obs;

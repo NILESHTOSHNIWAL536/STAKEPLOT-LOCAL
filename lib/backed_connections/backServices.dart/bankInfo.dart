@@ -14,10 +14,19 @@ void getCategoryData() async {
   var res = await getDataApiCall("${url}/transactionauto/categorize");
   if (getFlagOfResponse(res)) {
     var data = jsonDecode(res.body);
+    
     categoriesList.clear();
-    categoriesList.addAll(data["data"]);
+    frequentPayments.clear();
+    moreDrasticChange.clear();
+
+    categoriesList.addAll(data["data"]['categorized']);
+    frequentPayments.addAll(data["data"]['frequentPayments']);
+    moreDrasticChange.addAll(data["data"]['moreDrasticChange']);
   
     categoriesList.refresh();
+    frequentPayments.refresh();
+    moreDrasticChange.refresh();
+
     setDonectChat.value = !setDonectChat.value;
     processChartData();
   }
