@@ -235,6 +235,7 @@ class OverspentCategoriesCard extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(height:20),
             Expanded(
               
               child: moreDrasticChange.isEmpty
@@ -324,16 +325,19 @@ class FrequentTransactionCard extends StatelessWidget {
                       color: AppColors.accentColor,
                     ),
                   )
-                : Text(
-                    selectedList[0]['name'].toString(),
-                    style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.w600,
-                      fontSize: 18,
-                      color: AppColors.accentColor,
+                : Container(
+                  width: MediaQuery.of(context).size.width/1.2,
+                  child: Text(
+                      selectedList[0]['name'].toString(),
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w600,
+                        fontSize: 15,
+                        color: AppColors.accentColor,
+                      ),
+                      overflow: TextOverflow.visible,
                     ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                ),
             selectedList.isEmpty
                 ? SizedBox.shrink()
                 : Row(
