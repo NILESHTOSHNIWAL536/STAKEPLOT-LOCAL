@@ -87,7 +87,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  AvatarProfile(name: userName.value, width: 7, height: 10,background:userAvatarBackGround.value,flag: true,),
+                  AvatarProfile(name: userName.value, width: 8, height: 10,background:userAvatarBackGround.value,flag: false,),
                   const SizedBox(width: 3,),
                   Expanded(
                     child: Column(

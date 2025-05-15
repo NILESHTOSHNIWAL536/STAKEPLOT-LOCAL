@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history.dart';
@@ -189,10 +190,10 @@ void _onScroll() {
                             ],
                           ),
                       
-                            Padding(
+                         Obx(()=> groupTransactionList.length!=0?  Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: getTab(context),
-                            ),
+                            ):SizedBox.shrink()),
 
                       
                         ],
@@ -201,13 +202,13 @@ void _onScroll() {
                   ),
                   const SizedBox(height: 10),
                   // Transaction History
-                 Container(
-                   height: MediaQuery.sizeOf(context).height/1.38,
+                Obx(()=> Container(
+                   height: MediaQuery.sizeOf(context).height/ (groupTransactionList.length!=0? 1.38:1.27),
                    child: SingleChildScrollView(
                      controller: scrollController,
                      child: transactionsHistoryList(),
                    ),
-                 )
+                 ))
                 ],
               ),
             ),

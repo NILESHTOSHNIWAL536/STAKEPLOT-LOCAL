@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:flutter_application_code_stakeplot/Constants/customButton.dart';
+import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/expanded_finance.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
@@ -74,12 +75,19 @@ class _FinancePageState extends State<FinancePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Spending and cash flow',
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.w300,
-                  fontSize: fontSizeFactor * 4.0,
-                  color: AppColors.accentColor),
+            Row(
+               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                Text(
+                  'Spending and cash flow',
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.w300,
+                      fontSize: fontSizeFactor * 4.0,
+                      color: AppColors.accentColor),
+                ),
+                 historyButton(fontSizeFactor),
+              ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -150,27 +158,7 @@ class _FinancePageState extends State<FinancePage> {
                     }),
                   ],
                 ),
-                CustomButton(
-                  onTap: () {
-                    // _scrollToTransactionHistory();
-                    getAllTransaction(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const TransactionHistoryScreen(),
-                      ),
-                    );
-                  },
-                  text: 'History',
-                  fontSize: fontSizeFactor * 2.8,
-                  height: 1.7,
-                  width: 5.0,
-                  icon: AvatarProfileImage(
-                    url: HomePageIcons.history,
-                    width: 36,
-                    height: 36,
-                  ),
-                ),
+               
               ],
             ),
             SizedBox(height: screenHeight * 0.01),
@@ -198,6 +186,33 @@ class _FinancePageState extends State<FinancePage> {
         ),
       ),
     );
+  }
+
+
+
+  Widget historyButton(double fontSizeFactor){
+    return  CustomButton(
+                  onTap: () {
+                    // _scrollToTransactionHistory();
+                    getAllTransaction(context);
+                    getGroupTransactions();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TransactionHistoryScreen(),
+                      ),
+                    );
+                  },
+                  text: 'History',
+                  fontSize: fontSizeFactor * 2.8,
+                  height: 1.7,
+                  width: 5.0,
+                  icon: AvatarProfileImage(
+                    url: HomePageIcons.history,
+                    width: 36,
+                    height: 36,
+                  ),
+                );
   }
 
   Widget getMonthWeekCustom(fontSizeFactor, screenWidth) {
@@ -824,6 +839,8 @@ void _scrollToCurrentDate() {
       return numValue.toStringAsFixed(0);
     }
   }
+
+
 }
 class ChartData {
   ChartData(this.x, this.y);
