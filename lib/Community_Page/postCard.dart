@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/exploreCard.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
@@ -37,10 +38,12 @@ class ChartData {
 class PostCard extends StatefulWidget {
   var data;
   bool flag = false;
+  int index;
   PostCard({
     Key? key,
     required this.data,
     this.flag = false,
+    required this.index
   }) : super(key: key);
 
   @override
@@ -54,12 +57,26 @@ class _PostCardState extends State<PostCard> {
   void initState() {
     super.initState();
     getInfo();
+    getIndex();
   }
 
   @override
   Widget build(BuildContext context) {
     var data = widget.data;
     return uploadData(data, widget.flag);
+  }
+
+  void getIndex()
+  {
+     try{
+      widget.index = widget.index != -1
+        ? widget.index
+        : getTrendingData.indexWhere((d) => d['_id'] == widget.data['_id']);
+    }catch(e)
+    {
+      print(e);
+    }
+
   }
 
   void getInfo() async {
@@ -165,7 +182,7 @@ class _PostCardState extends State<PostCard> {
                           children: [
                             flag ? saved() : SizedBox.shrink(),
                             popUpBox(dataObj['_id'], context,
-                                dataObj["author"]['name']),
+                                dataObj["author"]['name'],widget.index),
                             const SizedBox(width: 20),
                           ],
                         ),
@@ -346,7 +363,7 @@ class _PostCardState extends State<PostCard> {
     }
   }
 
-  Widget popUpBox(id, context, userId) {
+  Widget popUpBox(id, context, userId,int index) {
     return PopupMenuButton(
       initialValue: 2,
       color: Colorcodes.white,
@@ -358,7 +375,6 @@ class _PostCardState extends State<PostCard> {
       )),
       onSelected: (value) {
         if (value == 0 && userId == userName.value) {
-         
           deletePost(id, context);
         }
         if (value == 1) {
@@ -376,6 +392,13 @@ class _PostCardState extends State<PostCard> {
             Navigator.pop(context);
           }
         }
+
+        getTrendingData.removeAt(index);
+        posting.value = false;
+        postDis.value = false;
+        getPosted.value = !getPosted.value;
+        resetAndLoadData();
+
       },
       itemBuilder: (context) {
         return userId == userName.value

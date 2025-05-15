@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_display.dart';
@@ -21,18 +22,9 @@ class PlotFinance extends StatefulWidget {
 }
 
 class _PlotFinanceState extends State<PlotFinance> {
-  final RxList<Debt> debts = <Debt>[].obs;
+  
 
-  Future<void> _fetchDebts() async {
-    try {
-      var fetchedDebts = await DebtService.fetchDebts();
-      if (fetchedDebts != null && fetchedDebts.isNotEmpty) {
-        debts.assignAll(fetchedDebts);
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'Failed to fetch debts: $e');
-    }
-  }
+
 
   Future<void> _navigateToCreateDebtScreen() async {
     final newDebt = await Navigator.push(
@@ -56,7 +48,7 @@ class _PlotFinanceState extends State<PlotFinance> {
   void initState() {
     super.initState();
     getBudget();
-    _fetchDebts();
+    fetchDebts();
     getRemainders(context);
   }
 

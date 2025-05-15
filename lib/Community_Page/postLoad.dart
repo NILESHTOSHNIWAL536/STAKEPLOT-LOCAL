@@ -6,7 +6,8 @@ import 'package:get/get.dart';
 final ScrollController scrollControllerPost = ScrollController();
 final RxList displayedData = [].obs;
 final int itemsPerLoad = 10;
-class LazyLoadingList extends StatefulWidget {
+class LazyLoadingList extends StatefulWidget 
+{
   @override
   _LazyLoadingListState createState() => _LazyLoadingListState();
 }
@@ -54,7 +55,7 @@ class _LazyLoadingListState extends State<LazyLoadingList> {
               physics: const NeverScrollableScrollPhysics(),
               itemCount: displayedData.length,
               itemBuilder: (context, index) {
-                return PostCard(data: displayedData[index]);
+                return PostCard(data: displayedData[index],index: index,);
               },
             ),
     ));

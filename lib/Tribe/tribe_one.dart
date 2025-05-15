@@ -263,7 +263,7 @@ class _TribeHomeState extends State<TribeUnique> {
                 // tribeHeader(context),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: PostCard(data: widget.dataObj, flag: true),
+                  child: PostCard(data: widget.dataObj, flag: true,index: -1,),
                 ),
                 uploadData(widget.dataObj),
                 SizedBox(

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:get/get.dart';
 
 RxString balance = "0".obs;
@@ -14,7 +15,7 @@ void getCategoryData() async {
   var res = await getDataApiCall("${url}/transactionauto/categorize");
   if (getFlagOfResponse(res)) {
     var data = jsonDecode(res.body);
-    print("data: $data");
+    print("data: ${data['data']['categorized']}");
     categoriesList.clear();
     frequentPayments.clear();
     moreDrasticChange.clear();
@@ -27,20 +28,16 @@ void getCategoryData() async {
     categoriesList.addAll(data["data"]['categorized']);
     frequentPayments.addAll(data["data"]['frequentPayments']);
     moreDrasticChange.addAll(data["data"]['moreDrasticChange']);
-    totalDebitThisMonth.value = data["data"]['totalDebitThisMonth'];
-    print("categoriesList for month : $categoriesList");
-    print("frequentPayments for month : $frequentPayments");
-     print("moreDrasticChange for month : $moreDrasticChange");
+    totalDebitThisMonth.value = double.parse(doubleToFixed(data["data"]['totalDebitThisMonth'].toString()));
+    // totalDebitThisMonth.value = data["data"]['totalDebitThisMonth'];
+   
 
     //week
     categoriesListWeek.addAll(data["data"]['week']['categorized']);
     frequentPaymentsWeek.addAll(data["data"]['week']['frequentPayments']);
     moreDrasticChangeWeek.addAll(data["data"]['week']['moreDrasticChange']);
- totalDebitThisWeek.value = data["data"]['week']['totalDebitThisMonth'];
-  print("categoriesListWeek for month : $categoriesListWeek");
-    print("frequentPaymentsWeek for month : $frequentPaymentsWeek");
-     print("moreDrasticChangeWeek for month : $moreDrasticChangeWeek");
-      print("totalDebitThisWeek for month : $totalDebitThisWeek");
+   totalDebitThisWeek.value = double.parse(doubleToFixed(data["data"]['week']['totalDebitThisMonth'].toString()));
+
 
     categoriesList.refresh();
     frequentPayments.refresh();

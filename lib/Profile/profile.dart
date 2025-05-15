@@ -505,10 +505,14 @@ class _ProfileState extends State<Profile> {
     return Column(
       children: [
         Container(
-          child: Wrap(
-            children: myPostList.map((item) => PostCard(data: item)).toList(),
-          ),
+        child: Wrap(
+          children: myPostList.asMap().entries.map((entry) {
+            int index = entry.key;
+            var item = entry.value;
+            return PostCard(data: item, index: index);
+          }).toList(),
         ),
+      ),
         SizedBox(
           height: 100,
         ),
