@@ -187,8 +187,6 @@ class _SigninState extends State<ResetOtp> {
                                    child: InkWell(
                                                               onTap: (){
                                        String opt="";
-                                       print("--------------------------------------");
-                                             print( _controllers.length);
                                          for(int i=0;i< _controllers.length;i++)
                                           { 
                                                 if(_controllers[i].text==""){
@@ -198,7 +196,6 @@ class _SigninState extends State<ResetOtp> {
                                           }
 
                                           _controllers.forEach((element) { 
-                                            print(element.text);
                                                opt += element.text;
                                           });
                                            acceptReset.value=true;

@@ -456,7 +456,6 @@ class _ModalContentState extends State<ModalContent>
         itemBuilder: (BuildContext context, int index)
         {
           bool f=(index>=filteredCategories.length);
-          print(f);
           String category =  f ?customCategoryList[index-filteredCategories.length]['name']:filteredCategories[index];
           String urlPath = "";
 

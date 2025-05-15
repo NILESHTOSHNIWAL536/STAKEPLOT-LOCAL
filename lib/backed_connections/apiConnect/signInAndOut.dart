@@ -87,7 +87,6 @@ Future<void> loginUser(
     [bool flag = false]) async {
   try {
 
-    print(url);
     var response = await postDataApiCallwithOutSharedPref('${url}/user/login', {
       'email': emailController.text.toString(),
       'userpassword': passwordController.text.toString(),
@@ -215,7 +214,6 @@ void forceLogoutUser( sessionId, email, userpassword, context, id, deviceName)as
     }
   } catch (e)
   {
-    print(e);
   }
 }
 

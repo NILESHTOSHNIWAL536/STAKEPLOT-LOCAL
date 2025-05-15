@@ -104,7 +104,6 @@ class _TextScreenState extends State<TextScreen> {
   //   }
   // }
 Future<void> _pickImage() async {
-  print('pickImage called');
 
   // Check initial permission status
   PermissionStatus status;
@@ -112,7 +111,6 @@ Future<void> _pickImage() async {
   if (Platform.isAndroid) {
     final androidInfo = await DeviceInfoPlugin().androidInfo;
     final sdkInt = androidInfo.version.sdkInt;
-    print('Android SDK version: $sdkInt');
     if (sdkInt >= 33) {
       // Android 13+: Use READ_MEDIA_IMAGES
       status = await Permission.photos.status;
@@ -124,11 +122,9 @@ Future<void> _pickImage() async {
     // iOS (all versions)
     status = await Permission.photos.status;
   }
-  print('Initial status: $status');
 
   // Request permission if not granted
   if (!status.isGranted) {
-    print('Requesting permission');
     if (Platform.isAndroid) {
       final androidInfo = await DeviceInfoPlugin().androidInfo;
       final sdkInt = androidInfo.version.sdkInt;
@@ -140,7 +136,6 @@ Future<void> _pickImage() async {
     } else {
       status = await Permission.photos.request();
     }
-    print('Permission status after request: $status');
   }
 
   // Handle permission outcomes
@@ -160,7 +155,6 @@ Future<void> _pickImage() async {
       if (mounted) {
         snackBarAllFeilds2(context, 'Error picking image: $e');
       }
-      print('Error: $e');
     }
   } else if (status.isDenied) {
     if (mounted) {
@@ -178,7 +172,6 @@ Future<void> _pickImage() async {
     if (mounted) {
       snackBarAllFeilds2(context, 'Unknown permission status: $status');
     }
-    print('Unknown status: $status');
   }
 }
   Future<File?> _cropAndSaveImage() async {

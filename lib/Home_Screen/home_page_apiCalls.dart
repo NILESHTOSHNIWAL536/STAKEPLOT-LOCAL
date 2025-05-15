@@ -432,7 +432,6 @@ void declineAmount(
     printData(response);
   } catch (e) {
     snackBarCalled(context, "Error settling due");
-    print("Error in duesPaid: $e");
   }
 }
 
@@ -490,7 +489,6 @@ void hideTransaction(
       snackBarCalledfail(context, "Failed to hide transaction");
     }
   } catch (e) {
-    print(e);
     snackBarCalledfail(context, "Error hiding transaction");
    
   }

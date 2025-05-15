@@ -68,7 +68,6 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
         iOSName: 'StakeplotWidget',
       );
     } catch (e) {
-      print('Error updating widget: $e');
     }
   }
 
@@ -274,7 +273,8 @@ class CategoryCard extends StatelessWidget {
                           width: MediaQuery.sizeOf(context).width/1.1,
                           height: 5,
                           child: LinearProgressIndicator(
-                            value: getProgressValue(percentage) / 100,
+                           // value: getProgressValue(percentage) / 100,
+                            value: totalValue.value > 0 ? amount / totalValue.value : 0.0,
                             backgroundColor: AppColors.bg3.withOpacity(0.2),
                             valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primaryColor), // Use the assigned color
                             minHeight: 6,

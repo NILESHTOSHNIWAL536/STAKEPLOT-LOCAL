@@ -8,10 +8,10 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/donut_chart.dart'
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/manual_transaction.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/pending_users.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/swipeableCards.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/number_picker.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/transactions_graph.dart';
 import 'package:flutter_application_code_stakeplot/NavigatorScreens/userNavigator.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
@@ -57,11 +57,9 @@ class _HomePageState extends State<HomePage> {
     initializeData();
      WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
-        print('Initializing HomeWidget with group: group.com.stakeplot.adnan.dev');
         await HomeWidget.setAppGroupId('group.com.stakeplot.adnan.dev');
         await updateWidget();
       } catch (e) {
-        print('Error initializing HomeWidget: $e');
       }
     });
     // Update widget when lendAmountRemainders or dueAmountRemainders change
@@ -162,6 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
         bottomNavigationBar: SafeArea(child: BottomNavigations(data: 0)),
         backgroundColor: AppColors.backgroundColor,
         appBar:getAppBar(),
+        
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
           child: SingleChildScrollView(
@@ -194,8 +193,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
       
                  SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.46,
-                  child: TransactionGraph(),
+                  height: MediaQuery.of(context).size.height * 0.25,
+                  child: SwipeableCardsScreen(),
                  ),
                   SizedBox(
                   height: MediaQuery.of(context).size.height * 0.5,
@@ -220,51 +219,53 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 
-  AppBar getAppBar(){
-    return  AppBar(
-        backgroundColor: AppColors.backgroundColor,
-        automaticallyImplyLeading: false,
-        actions: [
-          Padding(
-            padding:const EdgeInsets.only(right: 10,top:10,left: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              // crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: (){
-                     navigatorToMyOwnPage(context);
-                  },
-                  child: Obx(()=> AvatarProfile(name: userName.value, width: 30, height: 13,background: userAvatarBackGround.value,))),
-                  // child: UserAvatar(url: avatar.value, width: 15, height: 15)),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    textStyle(
-                        context: context,
-                        text: getTimeBasedGreeting(),
-                        fontWeight: FontWeight.w500,
-                        fontsize: 15),
-                    Obx(() => textStyle(
-                        context: context,
-                        text: userName.value,
-                        fontWeight: FontWeight.bold,
-                        fontsize: 15))
-                  ],
-                )
-              ],
-            ),
+  PreferredSizeWidget getAppBar(){
+    return  PreferredSize(
+      preferredSize: const Size.fromHeight(60),
+      child: Padding(
+       padding:const EdgeInsets.only(right: 10,top:10,left: 10),
+        child: AppBar(
+          
+            backgroundColor: AppColors.backgroundColor,
+            automaticallyImplyLeading: false,
+            
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: (){
+                       navigatorToMyOwnPage(context);
+                    },
+                    child: Obx(()=> AvatarProfile(name: userName.value, width: 30, height: 13,background: userAvatarBackGround.value,))),
+                    // child: UserAvatar(url: avatar.value, width: 15, height: 15)),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      textStyle(
+                          context: context,
+                          text: getTimeBasedGreeting(),
+                          fontWeight: FontWeight.w500,
+                          fontsize: 15),
+                      Obx(() => textStyle(
+                          context: context,
+                          text: userName.value,
+                          fontWeight: FontWeight.bold,
+                          fontsize: 15))
+                    ],
+                  )
+                ],
+              ),
+              Spacer(),
+              NotificationsBudget(
+                child: Text(""),
+              ),
+            ],
           ),
-          Spacer(),
-          Padding(
-            padding:const EdgeInsets.only(right: 8,top:10,),
-            child: NotificationsBudget(
-              child: Text(""),
-            ),
-          ),
-        ],
-      );
+      ),
+    );
   }
 
    void _onScroll() {

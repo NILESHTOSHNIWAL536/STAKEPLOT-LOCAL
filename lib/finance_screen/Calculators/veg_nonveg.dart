@@ -470,14 +470,14 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                         });
                       },
                       child: Card(
-                        elevation: 2,
+                        elevation: 1,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        color: isSelected ? Colors.green[50] : Colors.white,
+                        color: isSelected ? Colors.green[50] :  AppColors.backgroundColor,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 2, vertical: 6),
+                              horizontal: 2, vertical: 5),
                           child: Row(
                             children: [
                               Padding(
