@@ -37,7 +37,8 @@ Widget build(BuildContext context) {
     body: SafeArea(
       child: Container(
         decoration: BoxDecoration(
-         
+         color: AppColors.mt,
+         borderRadius: BorderRadius.circular(12)
         ),
         child: Column(
           children: [
@@ -50,16 +51,17 @@ Widget build(BuildContext context) {
                     'Finora',
                     style: FontManager().getTextStyle(
                       context,
-                      lWeight: FontWeight.bold,
-                      fontSize: 22,
-                      color: AppColors.primaryColor,
+                      lWeight: FontWeight.w600,
+                      fontSize: 20,
+                      color: AppColors.accentColor,
                     ),
                   ),
                  
                 ],
               ),
             ),
-            Expanded(
+            Container(
+              height: MediaQuery.sizeOf(context).height/5,
               child: PageView.builder(
                 controller: _pageController,
                 scrollDirection: Axis.vertical,
@@ -80,7 +82,7 @@ Widget build(BuildContext context) {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 8.0,
-                            vertical: 8.0, // ⬅ Reduced vertical spacing
+                            vertical: 2.0, // ⬅ Reduced vertical spacing
                           ),
                           child: _buildCard(cardIndex, context),
                         ),
@@ -90,25 +92,25 @@ Widget build(BuildContext context) {
                 },
               ),
             ),
-            Obx(
-              () => Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(_totalCards, (index) {
-                  return AnimatedContainer(
-                    duration: Duration(milliseconds: 300),
-                    margin: EdgeInsets.symmetric(horizontal: 3.0),
-                    width: _currentIndex.value == index ? 10.0 : 6.0,
-                    height: 8.0,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: _currentIndex.value == index
-                          ? Colors.blue
-                          : Colors.grey.withOpacity(0.5),
-                    ),
-                  );
-                }),
-              ),
-            ),
+            // Obx(
+            //   () => Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: List.generate(_totalCards, (index) {
+            //       return AnimatedContainer(
+            //         duration: Duration(milliseconds: 300),
+            //         margin: EdgeInsets.symmetric(horizontal: 3.0),
+            //         width: _currentIndex.value == index ? 10.0 : 6.0,
+            //         height: 8.0,
+            //         decoration: BoxDecoration(
+            //           shape: BoxShape.circle,
+            //           color: _currentIndex.value == index
+            //               ? Colors.blue
+            //               : Colors.grey.withOpacity(0.5),
+            //         ),
+            //       );
+            //     }),
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -210,6 +212,7 @@ class OverspentCategoriesCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
+               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'Overspent Categories',
@@ -217,7 +220,7 @@ class OverspentCategoriesCard extends StatelessWidget {
                     context,
                     lWeight: FontWeight.bold,
                     fontSize: 16,
-                    color: Colors.black,
+                    color: AppColors.primaryColor,
                   ),
                 ),
                 GestureDetector(
@@ -246,44 +249,38 @@ class OverspentCategoriesCard extends StatelessWidget {
                         ),
                       ),
                     )
-                  : ListView(
-                    
-                      padding: EdgeInsets.zero,
-                      children: (selectedPeriod.value == 'Week'?moreDrasticChangeWeek: moreDrasticChange)
-                          .take(2)
-                          .toList()
-                          .asMap()
-                          .entries
-                          .map((entry) {
-                        final category = entry.value;
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 4.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                category['category'].toString().capitalize!,
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              Text(
-                                '+₹${formatMoneyIndian(category['debit_diff'].toStringAsFixed(2))}',
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                    ),
+                  : Column(
+  children: (selectedPeriod.value == 'Week' ? moreDrasticChangeWeek : moreDrasticChange)
+      .take(2)
+      .map((category) => Padding(
+            padding: const EdgeInsets.only(bottom: 4.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  category['category'].toString().capitalize!,
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
+                ),
+                Text(
+                  '+₹${formatMoneyIndian(category['debit_diff'].toStringAsFixed(2))}',
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          ))
+      .toList(),
+)
+
             ),
           ],
         ),
