@@ -14,23 +14,41 @@ void getCategoryData() async {
   var res = await getDataApiCall("${url}/transactionauto/categorize");
   if (getFlagOfResponse(res)) {
     var data = jsonDecode(res.body);
-
+    print("data: $data");
     categoriesList.clear();
     frequentPayments.clear();
     moreDrasticChange.clear();
 
+    categoriesListWeek.clear();
+    frequentPaymentsWeek.clear();
+    moreDrasticChangeWeek.clear();
+
+    //month
     categoriesList.addAll(data["data"]['categorized']);
     frequentPayments.addAll(data["data"]['frequentPayments']);
     moreDrasticChange.addAll(data["data"]['moreDrasticChange']);
-    totalDebitThisMonth.value = (data["data"]['totalDebitThisMonth']);
-    print("categoriesList:$categoriesList");
-     print("frequentPayments:$frequentPayments");
-      print("moreDrasticChange:$moreDrasticChange");
-       print("totalDebitThisMonth:$totalDebitThisMonth");
+    totalDebitThisMonth.value = data["data"]['totalDebitThisMonth'];
+    print("categoriesList for month : $categoriesList");
+    print("frequentPayments for month : $frequentPayments");
+     print("moreDrasticChange for month : $moreDrasticChange");
+
+    //week
+    categoriesListWeek.addAll(data["data"]['week']['categorized']);
+    frequentPaymentsWeek.addAll(data["data"]['week']['frequentPayments']);
+    moreDrasticChangeWeek.addAll(data["data"]['week']['moreDrasticChange']);
+ totalDebitThisWeek.value = data["data"]['week']['totalDebitThisMonth'];
+  print("categoriesListWeek for month : $categoriesListWeek");
+    print("frequentPaymentsWeek for month : $frequentPaymentsWeek");
+     print("moreDrasticChangeWeek for month : $moreDrasticChangeWeek");
+      print("totalDebitThisWeek for month : $totalDebitThisWeek");
 
     categoriesList.refresh();
     frequentPayments.refresh();
     moreDrasticChange.refresh();
+
+    categoriesListWeek.refresh();
+    frequentPaymentsWeek.refresh();
+    moreDrasticChangeWeek.refresh();
 
     setDonectChat.value = !setDonectChat.value;
     processChartData();
