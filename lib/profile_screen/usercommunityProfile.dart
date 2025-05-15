@@ -243,9 +243,9 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
                   ),
                   
                   Positioned(
-                    top: 80,
-                    left: MediaQuery.of(context).size.width / 2 - 50,
-                    child: AvatarProfile(name: data['name'], width: 4, height: 10,background:data['avatarBackGround'] ?? defaultBackGround.value,flag: true,),
+                    top: 90,
+                    left: MediaQuery.of(context).size.width / 2 - 40,
+                    child: AvatarProfile(name: data['name'], width: 5, height: 10,background:data['avatarBackGround'] ?? defaultBackGround.value,flag: true,),
                 //     child: GestureDetector(
                 //       // onTap: () => _pickImage(ImageSource.gallery, "profile"),
                 //       child:CircleAvatar(

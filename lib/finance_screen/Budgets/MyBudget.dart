@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Calculators/graphCard.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
@@ -64,9 +65,12 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
         // Wait for SnackBar to disappear
         // await Future.delayed(Duration(seconds: 2));
 
-        if (mounted) {
+        if (mounted)
+        {
           Navigator.of(context).pop();
         }
+        getBudget();
+
       } else {
         snackBarCalledfail(context, "Failed to delete budget ");
       }

@@ -96,14 +96,25 @@ class TabBarUser extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            child: Column(
-              children: userPostList
-                  .map((item) => (item['isPoll'] ?? false )
-                      ? const SizedBox.shrink()
-                      : PostCard(data: item))
-                  .toList(),
-            ),
+          child: Column(
+            children: userPostList.asMap().entries.map((entry) {
+              int index = entry.key;
+              var item = entry.value;
+              return (item['isPoll'] ?? false)
+                  ? const SizedBox.shrink()
+                  : PostCard(data: item, index: index);
+            }).toList(),
           ),
+        ),
+          // Container(
+          //   child: Column(
+          //     children: userPostList
+          //         .map((item) => (item['isPoll'] ?? false )
+          //             ? const SizedBox.shrink()
+          //             : PostCard(data: item,index: ,))
+          //         .toList(),
+          //   ),
+          // ),
           SizedBox(
             height: 100,
           ),
@@ -121,12 +132,23 @@ class TabBarUser extends StatelessWidget {
       child: Column(
         children: [
           Container(
-              child: Wrap(
-                  children: userPostList
-                      .map((item) => (item['isPoll'] ?? false)
-                          ? PostCard(data: item)
-                          : SizedBox.shrink())
-                      .toList())),
+            child: Column(
+              children: userPostList.asMap().entries.map((entry) {
+                int index = entry.key;
+                var item = entry.value;
+                return (item['isPoll'] ?? false)
+                    ? const SizedBox.shrink()
+                    : PostCard(data: item, index: index);
+              }).toList(),
+            ),
+          ),
+          // Container(
+          //     child: Wrap(
+          //         children: userPostList
+          //             .map((item) => (item['isPoll'] ?? false)
+          //                 ? PostCard(data: item,index: ,)
+          //                 : SizedBox.shrink())
+          //             .toList())),
           SizedBox(
             height: 100,
           ),

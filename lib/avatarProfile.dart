@@ -176,7 +176,7 @@ class AvatarProfile extends StatelessWidget {
       width: MediaQuery.of(context).size.width/ width,
       height: MediaQuery.of(context).size.height/ height,
       alignment: Alignment.center,
-      child: img2(context,MediaQuery.of(context).size.width/ width,size)
+      child: img2(context,width,size)
       ):Container(
       margin: EdgeInsets.all(5),
       padding: EdgeInsets.all(2),
@@ -218,8 +218,8 @@ class AvatarProfile extends StatelessWidget {
   Widget img2(context,width,size){
     return ClipOval(
   child: Container(
-    width: size / 10, // diameter
-    height: size / 10,
+    width: size / width, // diameter
+    height: size / width,
     decoration: BoxDecoration(
       gradient: LinearGradient(
         begin: Alignment.topCenter,

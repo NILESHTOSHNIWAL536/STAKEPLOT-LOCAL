@@ -8,6 +8,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_service.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,6 +36,18 @@ void getDebts() async {
   }
 }
 
+  Future<void> fetchDebts() async
+   {
+    try {
+      var fetchedDebts = await DebtService.fetchDebts();
+      if (fetchedDebts != null && fetchedDebts.isNotEmpty) {
+        debts.assignAll(fetchedDebts);
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to fetch debts: $e');
+    }
+  }
+
 void getBudget() async {
   String urlPath = "${url}/budget/";
   try {
@@ -43,7 +57,6 @@ void getBudget() async {
       var obj = his['data'];
       budgetList.clear();
       budgetList.addAll(obj);
-    
       budgetLength.value = obj.length;
     }
   } catch (e) {}

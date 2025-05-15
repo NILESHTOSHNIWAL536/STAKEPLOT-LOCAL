@@ -107,7 +107,15 @@ Widget feed(){
     return  savedList.isEmpty?Text("No Post yet"):
             Column(
                     children: [
-                      Container(child: Column(children:savedList.map((dataObj) => PostCard(data: dataObj)).toList())),
+                      Container(
+                        child: Column(
+                          children: savedList.asMap().entries.map((entry) {
+                            int index = entry.key;
+                            var dataObj = entry.value;
+                            return PostCard(data: dataObj, index: index);
+                          }).toList(),
+                        ),
+                      ),
                       SizedBox(height: 100,),
                 ],
         );

@@ -403,9 +403,12 @@ class _UserDetailsState extends State<UserDetails> {
                     child: Text("No Post Yet",
                         style: FontManager().getTextStyle(context)))
                 : Column(
-                    children: getTrendingData
-                        .map((dataObj) => PostCard(data: dataObj))
-                        .toList()),
+                  children: getTrendingData.asMap().entries.map((entry) {
+                    int index = entry.key;
+                    var dataObj = entry.value;
+                    return PostCard(data: dataObj, index: index);
+                  }).toList(),
+                ),
       ],
     );
   }

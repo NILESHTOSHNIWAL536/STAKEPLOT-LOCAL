@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/manual_transaction.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
@@ -37,10 +38,11 @@ class _DebtDetailsScreenState extends State<DebtDetailsScreen> {
     }
 
     final bool success = await DebtService.deleteDebt(widget.debt.id);
-
+     
     if (success) {
      
       await Future.delayed(Duration(seconds: 2));
+     fetchDebts();
       if (mounted) {
         Navigator.of(context).pop();
       }

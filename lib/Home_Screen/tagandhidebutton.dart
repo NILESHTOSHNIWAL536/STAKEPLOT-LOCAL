@@ -48,7 +48,7 @@ Widget tabItem(String text,BuildContext context) {
     child: Container(
       width: tabWidth,
       height: tabHeight,
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: isSelected ? AppColors.primaryColor : AppColors.bg5,
         borderRadius: BorderRadius.circular(20),
@@ -74,7 +74,7 @@ Widget tabItem(String text,BuildContext context) {
         ],
       ),
       child: Center(
-        child: textStyle(
+        child: textStyleImage(
           context: context,
           text: text,
           c: isSelected ? AppColors.bg5 : AppColors.primaryColor,

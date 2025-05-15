@@ -13,9 +13,11 @@ RxString selectedBank = "".obs;
 
 void getCategoryData() async {
   var res = await getDataApiCall("${url}/transactionauto/categorize");
-  if (getFlagOfResponse(res)) {
+  if (getFlagOfResponse(res)) 
+  {
+    try{
     var data = jsonDecode(res.body);
-    print("data: $data");
+    print("data: ${data['data']['categorized']}");
     categoriesList.clear();
     frequentPayments.clear();
     moreDrasticChange.clear();
@@ -25,23 +27,19 @@ void getCategoryData() async {
     moreDrasticChangeWeek.clear();
 
     //month
+
     categoriesList.addAll(data["data"]['categorized']);
     frequentPayments.addAll(data["data"]['frequentPayments']);
     moreDrasticChange.addAll(data["data"]['moreDrasticChange']);
-     totalDebitThisMonth.value = double.parse(doubleToFixed(data["data"]['totalDebitThisMonth'].toString()));
-    // print("categoriesList for month : $categoriesList");
-    // print("frequentPayments for month : $frequentPayments");
-    //  print("moreDrasticChange for month : $moreDrasticChange");
-
-    //week
+    
+    totalDebitThisMonth.value = double.parse(doubleToFixed(data["data"]['totalDebitThisMonth'].toString()));
+   
+   
     categoriesListWeek.addAll(data["data"]['week']['categorized']);
     frequentPaymentsWeek.addAll(data["data"]['week']['frequentPayments']);
     moreDrasticChangeWeek.addAll(data["data"]['week']['moreDrasticChange']);
-  totalDebitThisWeek.value = double.parse(doubleToFixed(data["data"]['week']['totalDebitThisMonth'].toString()));
- // print("categoriesListWeek for month : $categoriesListWeek");
-    print("frequentPaymentsWeek for month : $frequentPaymentsWeek");
-   //  print("moreDrasticChangeWeek for month : $moreDrasticChangeWeek");
-   //   print("totalDebitThisWeek for month : $totalDebitThisWeek");
+    totalDebitThisWeek.value = double.parse(doubleToFixed(data["data"]['week']['totalDebitThisMonth'].toString()));
+   
 
     categoriesList.refresh();
     frequentPayments.refresh();
@@ -52,6 +50,10 @@ void getCategoryData() async {
     moreDrasticChangeWeek.refresh();
 
     setDonectChat.value = !setDonectChat.value;
+   
+    }catch(e){
+        print(e);
+    }
     processChartData();
   }
 }

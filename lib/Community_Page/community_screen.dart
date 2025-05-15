@@ -200,7 +200,7 @@ class _CommunityState extends State<Community> {
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           final dataObj = getTrendingData[index];
-          return PostCard(data: dataObj);
+          return PostCard(data: dataObj,index: index,);
         },
       ));
 
