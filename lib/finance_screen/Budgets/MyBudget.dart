@@ -375,13 +375,14 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
     final endDateStr = widget.data['endDate'] ?? '2025-03-04T12:07:11.028Z';
     final endDate = DateTime.parse(endDateStr);
     final daysRemaining = endDate.difference(DateTime.now()).inDays;
+     final daysRemainingTotal =daysRemaining>0? daysRemaining:0;
     return Row(
       children: [
-        Icon(Icons.access_time, color: Colors.grey),
+        Icon(Icons.access_time, color: AppColors.primaryColor),
         SizedBox(width: 8),
         // Text('Days remaining: $daysRemaining days',
         //     style: TextStyle(color: Colors.grey)),
-        _buildText('Days remaining: $daysRemaining days', Colors.black,
+        _buildText('Days remaining: $daysRemainingTotal days', AppColors.accentColor,
             fontSize: 13, fontWeight: FontWeight.w400),
       ],
     );

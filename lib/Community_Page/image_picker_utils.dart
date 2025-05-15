@@ -8,7 +8,6 @@ Future<File?> pickImageWithPermissions(
   BuildContext context, {
   required Function(String) showErrorSnackBar,
 }) async {
-  print('pickImageWithPermissions called');
 
   // Check initial permission status
   PermissionStatus status;
@@ -16,7 +15,6 @@ Future<File?> pickImageWithPermissions(
   if (Platform.isAndroid) {
     final androidInfo = await DeviceInfoPlugin().androidInfo;
     final sdkInt = androidInfo.version.sdkInt;
-    print('Android SDK version: $sdkInt');
     if (sdkInt >= 33) {
       status = await Permission.photos.status;
     } else {
@@ -25,11 +23,9 @@ Future<File?> pickImageWithPermissions(
   } else {
     status = await Permission.photos.status;
   }
-  print('Initial status: $status');
 
   // Request permission if not granted
   if (!status.isGranted) {
-    print('Requesting permission');
     if (Platform.isAndroid) {
       final androidInfo = await DeviceInfoPlugin().androidInfo;
       final sdkInt = androidInfo.version.sdkInt;
@@ -41,7 +37,6 @@ Future<File?> pickImageWithPermissions(
     } else {
       status = await Permission.photos.request();
     }
-    print('Permission status after request: $status');
   }
 
   // Handle permission outcomes
@@ -57,7 +52,6 @@ Future<File?> pickImageWithPermissions(
       }
     } catch (e) {
       showErrorSnackBar('Error picking image: $e');
-      print('Error: $e');
       return null;
     }
   } else if (status.isDenied) {
@@ -71,7 +65,6 @@ Future<File?> pickImageWithPermissions(
     return null;
   } else {
     showErrorSnackBar('Unknown permission status: $status');
-    print('Unknown status: $status');
     return null;
   }
 }

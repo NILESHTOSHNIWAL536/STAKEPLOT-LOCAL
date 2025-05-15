@@ -103,25 +103,31 @@ class _UserListScreenState extends State<UserListScreen> {
         children: [
           Container(
             color: AppColors.backgroundColor,
-          
-           // margin: const EdgeInsets.only(bottom: 12),
+
+            // margin: const EdgeInsets.only(bottom: 12),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 3,vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 8),
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   final maxWidth = constraints.maxWidth;
-                  final avatarSize = maxWidth * 0.12 > 48 ? 48.0 : maxWidth * 0.12;
+                  final avatarSize =
+                      maxWidth * 0.12 > 48 ? 48.0 : maxWidth * 0.12;
                   final buttonWidth =
                       maxWidth * 0.35 > 120 ? 120.0 : maxWidth * 0.35;
-          
+
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Avatar
                       ClipOval(
-                        child: AvatarProfile(name:  data['name'], width: 12, height: 12, background:  data['avatarBackGround']??defaultBackGround.value),
+                        child: AvatarProfile(
+                            name: data['name'],
+                            width: 12,
+                            height: 12,
+                            background: data['avatarBackGround'] ??
+                                defaultBackGround.value),
                       ),
-                      
+
                       // Details
                       Container(
                         child: SizedBox(
@@ -144,8 +150,7 @@ class _UserListScreenState extends State<UserListScreen> {
                                   maxLines: 1,
                                 ),
                               ),
-          
-                             
+
                               const SizedBox(height: 12),
                               Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -153,11 +158,13 @@ class _UserListScreenState extends State<UserListScreen> {
                                   Container(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 4, vertical: 4),
-                                    height:
-                                        MediaQuery.sizeOf(context).height / 28.0,
-                                    width: MediaQuery.sizeOf(context).width / 5.0,
+                                    height: MediaQuery.sizeOf(context).height /
+                                        28.0,
+                                    width:
+                                        MediaQuery.sizeOf(context).width / 5.0,
                                     decoration: BoxDecoration(
-                                      color: AppColors.accentColor.withOpacity(0.1),
+                                      color: AppColors.accentColor
+                                          .withOpacity(0.1),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Center(
@@ -180,83 +187,92 @@ class _UserListScreenState extends State<UserListScreen> {
                                   //here
                                   InkWell(
                                     onTap: () async {
-                                     // Check if the action is already completed
-                            // if (isDue && (data['isPaid'] ?? false)) {
-                            //   snackBarCalled(context,'This bill has already been requested.');
-                            //   return;
-                            // } 
-                            // else if (!isDue && (data['reminderSent'] ?? false)) {
-                            //   snackBarCalled(context, 'Reminder already sent.');
-                            //   return;
-                            // }
+                                      // Check if the action is already completed
+                                      // if (isDue && (data['isPaid'] ?? false)) {
+                                      //   snackBarCalled(context,'This bill has already been requested.');
+                                      //   return;
+                                      // }
+                                      // else if (!isDue && (data['reminderSent'] ?? false)) {
+                                      //   snackBarCalled(context, 'Reminder already sent.');
+                                      //   return;
+                                      // }
 
-                            String message;
-                            if (isDue) {
-                              // Handle "Settle Now" for due amounts
-                              int index = dueAmountRemainders.indexWhere(
-                                  (element) => element['_id'] == data['_id']);
-                              if (index != -1) {
-                                duesPaid(context, index);
-                                dueAmountRemainders[index]['isPaid'] = true;
-                                dueAmountRemainders[index]['billApproved'] =
-                                    true;
-                                dueAmountRemainders.refresh();
-                                message = 'Payment request has been initiated!';
-                              } else {
-                                message = 'Error: Payment not found.';
-                              }
-                            } else {
-                              // Handle "Send Reminder" for lend amounts
-                              int index = lendAmountRemainders.indexWhere(
-                                  (element) => element['_id'] == data['_id']);
-                              if (index != -1) {
-                                lendAmountRemainders[index]['reminderSent'] =
-                                    true;
-                                lendAmountRemainders.refresh();
-                                message = 'Reminder sent successfully!';
-                              } else {
-                                message = 'Error: Reminder not found.';
-                              }
-                            }
+                                      String message;
+                                      if (isDue) {
+                                        // Handle "Settle Now" for due amounts
+                                        int index = dueAmountRemainders
+                                            .indexWhere((element) =>
+                                                element['_id'] == data['_id']);
+                                        if (index != -1) {
+                                          duesPaid(context, index);
+                                          dueAmountRemainders[index]['isPaid'] =
+                                              true;
+                                          dueAmountRemainders[index]
+                                              ['billApproved'] = true;
+                                          dueAmountRemainders.refresh();
+                                          message =
+                                              'Payment request has been initiated!';
+                                        } else {
+                                          message = 'Error: Payment not found.';
+                                        }
+                                      } else {
+                                        // Handle "Send Reminder" for lend amounts
+                                        int index = lendAmountRemainders
+                                            .indexWhere((element) =>
+                                                element['_id'] == data['_id']);
+                                        if (index != -1) {
+                                          lendAmountRemainders[index]
+                                              ['reminderSent'] = true;
+                                          lendAmountRemainders.refresh();
+                                          message =
+                                              'Reminder sent successfully!';
+                                        } else {
+                                          message =
+                                              'Error: Reminder not found.';
+                                        }
+                                      }
 
-                            // Show SnackBar
-                            // snackBarCalled(context, message);
-                            // snackBarCalled(context, message);
+                                      // Show SnackBar
+                                      // snackBarCalled(context, message);
+                                      // snackBarCalled(context, message);
 
-                            // Send notification
-                            sendNotificationsToDevice(
-                              data['payerId'] ?? data['receiverId'],
-                              context,
-                              isDue
-                                  ? 'Successfully paid your bill of ${data['amount'] ?? "0000"} to ${userName.value}.'
-                                  : 'You need to pay ${data['amount'] ?? "0000"} to ${userName.value}.',
-                              "/remainder",
-                              "",
-                              "",
-                              message,
-                              data['_id'],
-                            
-                            );
+                                      // Send notification
+                                      sendNotificationsToDevice(
+                                        data['payerId'] ?? data['receiverId'],
+                                        context,
+                                        isDue
+                                            ? 'Successfully paid your bill of ${data['amount'] ?? "0000"} to ${userName.value}.'
+                                            : 'You need to pay ${data['amount'] ?? "0000"} to ${userName.value}.',
+                                        "/remainder",
+                                        "",
+                                        "",
+                                        message,
+                                        data['_id'],
+                                      );
                                     },
                                     child: Container(
                                       // width: Media,
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 4, vertical: 4),
                                       height:
-                                          MediaQuery.sizeOf(context).height / 28.0,
-                                      width: MediaQuery.sizeOf(context).width / 5,
+                                          MediaQuery.sizeOf(context).height /
+                                              28.0,
+                                      width:
+                                          MediaQuery.sizeOf(context).width / 5,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
                                         color: (isDue &&
-                                                    (data['isPaid'] ?? false)) ||
+                                                    (data['isPaid'] ??
+                                                        false)) ||
                                                 (!isDue &&
-                                                    (data['reminderSent'] ?? false))
+                                                    (data['reminderSent'] ??
+                                                        false))
                                             ? AppColors.button.withOpacity(0.5)
                                             : AppColors.button,
                                         boxShadow: [
                                           BoxShadow(
-                                            color:
-                                                AppColors.button.withOpacity(0.2),
+                                            color: AppColors.button
+                                                .withOpacity(0.2),
                                             blurRadius: 4,
                                             offset: const Offset(0, 2),
                                           ),
@@ -267,12 +283,14 @@ class _UserListScreenState extends State<UserListScreen> {
                                           isDue
                                               ? (data['isPaid'] ?? false)
                                                   ? 'Requested'
-                                                  : (data['billApproved'] ?? true)
+                                                  : (data['billApproved'] ??
+                                                          true)
                                                       ? 'Settle Now'
                                                       : 'Awaiting Settlement'
                                               : (data['reminderSent'] ?? false)
                                                   ? 'Remind now'
-                                                  : (data['billApproved'] ?? true)
+                                                  : (data['billApproved'] ??
+                                                          true)
                                                       ? 'Remind now'
                                                       : 'Awaiting Approval',
                                           textAlign: TextAlign.center,
@@ -298,7 +316,7 @@ class _UserListScreenState extends State<UserListScreen> {
                       // Action Button and Date
                       Container(
                         child: SizedBox(
-                          width: buttonWidth / 1.15,
+                          width: buttonWidth / 1.1,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             mainAxisSize: MainAxisSize.min,
@@ -329,19 +347,50 @@ class _UserListScreenState extends State<UserListScreen> {
                                   ),
                                 ),
                               ),
-                               if (isLendAmount && data['dueDate'] != null) ...[
+                              //  if (isLendAmount && data['dueDate'] != null) ...[
+                              //   const SizedBox(height: 4),
+                              //   Text(
+                              //     'Due : ${DateFormat('d MMM yyyy').format(DateTime.parse(data['dueDate']))}',
+                              //     style: FontManager().getTextStyle(
+                              //       context,
+                              //       lWeight: FontWeight.w400,
+                              //       fontSize: 10,
+                              //       color: AppColors.accentColor.withOpacity(0.6),
+                              //     ),
+                              //   ),
+                              // ],
+                              if (isLendAmount && data['dueDate'] != null) ...[
                                 const SizedBox(height: 4),
                                 Text(
-                                  'Due : ${DateFormat('d MMM yyyy').format(DateTime.parse(data['dueDate']))}',
+                                  () {
+                                    final dueDate =
+                                        DateTime.parse(data['dueDate']);
+                                    final today = DateTime.now();
+                                    final isToday =
+                                        dueDate.year == today.year &&
+                                            dueDate.month == today.month &&
+                                            dueDate.day == today.day;
+                                    final isOverdue =
+                                        dueDate.isBefore(today) && !isToday;
+
+                                    if (isToday) {
+                                      return 'Due: Today';
+                                    } else if (isOverdue) {
+                                      return 'Overdue: ${DateFormat('d MMM yyyy').format(dueDate)}';
+                                    } else {
+                                      return 'Due: ${DateFormat('d MMM yyyy').format(dueDate)}';
+                                    }
+                                  }(),
                                   style: FontManager().getTextStyle(
                                     context,
                                     lWeight: FontWeight.w400,
                                     fontSize: 10,
-                                    color: AppColors.accentColor.withOpacity(0.6),
+                                    color:
+                                        AppColors.accentColor.withOpacity(0.6),
                                   ),
                                 ),
                               ],
-          
+
                               // Text(
                               //   formatDateTime(data['createdAt']),
                               //   textAlign: TextAlign.end,
@@ -363,364 +412,372 @@ class _UserListScreenState extends State<UserListScreen> {
               ),
             ),
           ),
-       const Divider(),
+          const Divider(),
         ],
       ),
     );
-    
   }
 
-void foodieFundsDetails(BuildContext context, String foodDetailsId) async {
-  // Show loading dialog
-  try {
-    // Fetch data
-    await getFoodieFundsDetails(context, foodDetailsId);
+  void foodieFundsDetails(BuildContext context, String foodDetailsId) async {
+    // Show loading dialog
+    try {
+      // Fetch data
+      await getFoodieFundsDetails(context, foodDetailsId);
 
-    // Show bottom sheet
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      backgroundColor: Colors.white,
-      builder: (context) {
-        final maxHeight = MediaQuery.of(context).size.height * 0.85;
-        final animation = ModalRoute.of(context)!.animation!;
-        return Container(
-          constraints: BoxConstraints(maxHeight: maxHeight),
-          padding: const EdgeInsets.all(12.0),
-          child: Obx(() {
-            if (foodieFundsDetailsRemainders.isEmpty) {
-              return const Center(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 24.0),
-                  child: Text(
-                    'No details available.',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                      color: AppColors.accentColor,
+      // Show bottom sheet
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        backgroundColor: Colors.white,
+        builder: (context) {
+          final maxHeight = MediaQuery.of(context).size.height * 0.85;
+          final animation = ModalRoute.of(context)!.animation!;
+          return Container(
+            constraints: BoxConstraints(maxHeight: maxHeight),
+            padding: const EdgeInsets.all(12.0),
+            child: Obx(() {
+              if (foodieFundsDetailsRemainders.isEmpty) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 24.0),
+                    child: Text(
+                      'No details available.',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: AppColors.accentColor,
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              final data = foodieFundsDetailsRemainders[0];
+              final friends =
+                  List<Map<String, dynamic>>.from(data['friends'] ?? []);
+              final currentUser = data['currentUser'] ?? {};
+
+              return SingleChildScrollView(
+                child: SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(0, 0.1),
+                    end: Offset.zero,
+                  ).animate(CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.easeOut,
+                  )),
+                  child: FadeTransition(
+                    opacity: Tween<double>(begin: 0, end: 1).animate(
+                      CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.easeIn,
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Header
+                        _buildHeader(context, data, animation),
+                        const SizedBox(height: 12),
+                        const Divider(
+                            color: AppColors.accentColor, thickness: 0.5),
+
+                        // Current User
+                        _buildSectionHeader(
+                            context, 'Your Details', Icons.person, animation),
+                        const SizedBox(height: 8),
+                        _buildUserDetails(context, currentUser, animation),
+                        const SizedBox(height: 12),
+                        const Divider(
+                            color: AppColors.accentColor, thickness: 0.5),
+
+                        // Friends
+                        _buildSectionHeader(
+                            context, 'Friends', Icons.group, animation),
+                        const SizedBox(height: 8),
+                        friends.isEmpty
+                            ? const Padding(
+                                padding: EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  'No friends in this split.',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 12,
+                                    color: AppColors.accentColor,
+                                  ),
+                                ),
+                              )
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: friends.length,
+                                itemBuilder: (context, index) {
+                                  final friend = friends[index];
+                                  return Column(
+                                    children: [
+                                      _buildUserDetails(
+                                          context, friend, animation),
+                                      if (index < friends.length - 1)
+                                        const Padding(
+                                          padding: EdgeInsets.only(top: 8.0),
+                                          child: Divider(
+                                            color: AppColors.accentColor,
+                                            thickness: 0.2,
+                                          ),
+                                        ),
+                                    ],
+                                  );
+                                },
+                              ),
+                        const SizedBox(height: 12),
+                      ],
                     ),
                   ),
                 ),
               );
-            }
-
-            final data = foodieFundsDetailsRemainders[0];
-            final friends = List<Map<String, dynamic>>.from(data['friends'] ?? []);
-            final currentUser = data['currentUser'] ?? {};
-
-            return SingleChildScrollView(
-              child: SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0, 0.1),
-                  end: Offset.zero,
-                ).animate(CurvedAnimation(
-                  parent: animation,
-                  curve: Curves.easeOut,
-                )),
-                child: FadeTransition(
-                  opacity: Tween<double>(begin: 0, end: 1).animate(
-                    CurvedAnimation(
-                      parent: animation,
-                      curve: Curves.easeIn,
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Header
-                      _buildHeader(context, data, animation),
-                      const SizedBox(height: 12),
-                      const Divider(color: AppColors.accentColor, thickness: 0.5),
-
-                      // Current User
-                      _buildSectionHeader(context, 'Your Details', Icons.person, animation),
-                      const SizedBox(height: 8),
-                      _buildUserDetails(context, currentUser, animation),
-                      const SizedBox(height: 12),
-                      const Divider(color: AppColors.accentColor, thickness: 0.5),
-
-                      // Friends
-                      _buildSectionHeader(context, 'Friends', Icons.group, animation),
-                      const SizedBox(height: 8),
-                      friends.isEmpty
-                          ? const Padding(
-                              padding: EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                'No friends in this split.',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 12,
-                                  color: AppColors.accentColor,
-                                ),
-                              ),
-                            )
-                          : ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: friends.length,
-                              itemBuilder: (context, index) {
-                                final friend = friends[index];
-                                return Column(
-                                  children: [
-                                    _buildUserDetails(context, friend, animation),
-                                    if (index < friends.length - 1)
-                                      const Padding(
-                                        padding: EdgeInsets.only(top: 8.0),
-                                        child: Divider(
-                                          color: AppColors.accentColor,
-                                          thickness: 0.2,
-                                        ),
-                                      ),
-                                  ],
-                                );
-                              },
-                            ),
-                      const SizedBox(height: 12),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }),
-        );
-      },
-    );
-  } catch (e) {
-    Navigator.pop(context); // Dismiss loading dialog
-    snackBarCalled(context, 'Error fetching details: $e');
+            }),
+          );
+        },
+      );
+    } catch (e) {
+      Navigator.pop(context); // Dismiss loading dialog
+      snackBarCalled(context, 'Error fetching details: $e');
+    }
   }
-}
 
 // Reusable function for user details
-Widget _buildUserDetails(BuildContext context, Map<String, dynamic> user, Animation<double> animation) {
-  return Padding(
-    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-    child: Stack(
-      children: [
-        // Main user details content
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20), // Space for the Paid status
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Name
-                Container(
-                  width: MediaQuery.sizeOf(context).width / 4,
-                  child: Text(
-                    user['name'] ?? 'Unknown',
-                    style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.w600,
-                      fontSize: 14,
-                      color: AppColors.accentColor,
-                    ),
-                  ),
-                ),
-                 if (user['priorities'] != null) ...[
-             
-              Container(
-                width: MediaQuery.sizeOf(context).width / 3,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Priorities:',
+  Widget _buildUserDetails(BuildContext context, Map<String, dynamic> user,
+      Animation<double> animation) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+      child: Stack(
+        children: [
+          // Main user details content
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20), // Space for the Paid status
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Name
+                  Container(
+                    width: MediaQuery.sizeOf(context).width / 4,
+                    child: Text(
+                      user['name'] ?? 'Unknown',
                       style: FontManager().getTextStyle(
                         context,
-                        lWeight: FontWeight.w500,
-                        fontSize: 12,
+                        lWeight: FontWeight.w600,
+                        fontSize: 14,
                         color: AppColors.accentColor,
                       ),
                     ),
-                    if ((user['priorities']['Veg'] ?? 0) > 0)
-                      Text(
-                        'Veg: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(user['priorities']['Veg'])}',
-                        style: FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.w400,
-                          fontSize: 12,
-                          color: AppColors.accentColor.withOpacity(0.7),
-                        ),
-                      ),
-                    if ((user['priorities']['Non veg'] ?? 0) > 0)
-                      Text(
-                        'Non Veg: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(user['priorities']['Non veg'])}',
-                        style: FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.w400,
-                          fontSize: 12,
-                          color: AppColors.accentColor.withOpacity(0.7),
-                        ),
-                      ),
-                    if ((user['priorities']['Alcohol'] ?? 0) > 0)
-                      Text(
-                        'Alcohol: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(user['priorities']['Alcohol'])}',
-                        style: FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.w400,
-                          fontSize: 12,
-                          color: AppColors.accentColor.withOpacity(0.7),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ],
-                // Amount Due
-                Container(
-                  width: MediaQuery.sizeOf(context).width / 4,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Due:',
-                        style: FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.w400,
-                          fontSize: 12,
-                          color: AppColors.accentColor,
-                        ),
-                      ),
-                      Text(
-                        '${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(user['amountDue'] ?? 0)}',
-                        style: FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.w400,
-                          fontSize: 12,
-                          color: AppColors.accentColor,
-                        ),
-                      ),
-                    ],
                   ),
+                  if (user['priorities'] != null) ...[
+                    Container(
+                      width: MediaQuery.sizeOf(context).width / 3,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Priorities:',
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.w500,
+                              fontSize: 12,
+                              color: AppColors.accentColor,
+                            ),
+                          ),
+                          if ((user['priorities']['Veg'] ?? 0) > 0)
+                            Text(
+                              'Veg: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(user['priorities']['Veg'])}',
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w400,
+                                fontSize: 12,
+                                color: AppColors.accentColor.withOpacity(0.7),
+                              ),
+                            ),
+                          if ((user['priorities']['Non veg'] ?? 0) > 0)
+                            Text(
+                              'Non Veg: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(user['priorities']['Non veg'])}',
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w400,
+                                fontSize: 12,
+                                color: AppColors.accentColor.withOpacity(0.7),
+                              ),
+                            ),
+                          if ((user['priorities']['Alcohol'] ?? 0) > 0)
+                            Text(
+                              'Alcohol: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(user['priorities']['Alcohol'])}',
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.w400,
+                                fontSize: 12,
+                                color: AppColors.accentColor.withOpacity(0.7),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                  // Amount Due
+                  Container(
+                    width: MediaQuery.sizeOf(context).width / 4,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Due:',
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight.w400,
+                            fontSize: 12,
+                            color: AppColors.accentColor,
+                          ),
+                        ),
+                        Text(
+                          '${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(user['amountDue'] ?? 0)}',
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight.w400,
+                            fontSize: 12,
+                            color: AppColors.accentColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              // Priorities
+            ],
+          ),
+          // Paid status in top-right corner
+          Positioned(
+            top: 0,
+            right: 0,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: user['isPaid'] == true
+                    ? Colors.green.withOpacity(0.1)
+                    : Colors.red.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                'Paid: ${user['isPaid'] == true ? "Yes" : "No"}',
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w400,
+                  fontSize: 12,
+                  color: user['isPaid'] == true ? Colors.green : Colors.red,
                 ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            // Priorities
-           
-          ],
-        ),
-        // Paid status in top-right corner
-        Positioned(
-          top: 0,
-          right: 0,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: user['isPaid'] == true ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Text(
-              'Paid: ${user['isPaid'] == true ? "Yes" : "No"}',
-              style: FontManager().getTextStyle(
-                context,
-                lWeight: FontWeight.w400,
-                fontSize: 12,
-                color: user['isPaid'] == true ? Colors.green : Colors.red,
               ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 
 // Reusable function for section headers (unchanged)
-Widget _buildSectionHeader(BuildContext context, String title, IconData icon, Animation<double> animation) {
-  return Row(
-    children: [
-      ScaleTransition(
-        scale: Tween<double>(begin: 0.8, end: 1).animate(
-          CurvedAnimation(parent: animation, curve: Curves.easeOut),
-        ),
-        child: Icon(icon, size: 18, color: AppColors.accentColor),
-      ),
-      const SizedBox(width: 8),
-      Text(
-        title,
-        style: FontManager().getTextStyle(
-          context,
-          lWeight: FontWeight.w700,
-          fontSize: 16,
-          color: AppColors.accentColor,
-        ),
-      ),
-    ],
-  );
-}
-
-// Reusable function for header (unchanged)
-Widget _buildHeader(BuildContext context, Map<String, dynamic> data, Animation<double> animation) {
-  return Container(
-    width: double.infinity,
-    padding: const EdgeInsets.all(12.0),
-    decoration: BoxDecoration(
-      color: AppColors.primaryColor,
-      
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget _buildSectionHeader(BuildContext context, String title, IconData icon,
+      Animation<double> animation) {
+    return Row(
       children: [
-        Row(
-          children: [
-            ScaleTransition(
-              scale: Tween<double>(begin: 0.8, end: 1).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeOut),
-              ),
-              child: Icon(
-                Icons.restaurant,
-                size: 18,
-                color: AppColors.backgroundColor,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              data['splitName'] ?? 'Foodie Split',
-              style: FontManager().getTextStyle(
-                context,
-                lWeight: FontWeight.w600,
-                fontSize: 18,
-                color: AppColors.backgroundColor,
-              ),
-            ),
-          ],
+        ScaleTransition(
+          scale: Tween<double>(begin: 0.8, end: 1).animate(
+            CurvedAnimation(parent: animation, curve: Curves.easeOut),
+          ),
+          child: Icon(icon, size: 18, color: AppColors.accentColor),
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Subcategory: ${data['subcategory'] ?? 'N/A'}',
-              style: FontManager().getTextStyle(
-                context,
-                lWeight: FontWeight.w400,
-                fontSize: 12,
-                color: AppColors.backgroundColor.withOpacity(0.7),
-              ),
-            ),
-            SizedBox(height: 5,),
-            Text(
-              'Total Amount: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(data['totalAmount'] ?? 0)}',
-              style: FontManager().getTextStyle(
-                context,
-                lWeight: FontWeight.w600,
-                fontSize: 14,
-                color: AppColors.backgroundColor,
-              ),
-            ),
-          ],
+        const SizedBox(width: 8),
+        Text(
+          title,
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.w700,
+            fontSize: 16,
+            color: AppColors.accentColor,
+          ),
         ),
       ],
-    ),
-  );
-}
+    );
+  }
 
+// Reusable function for header (unchanged)
+  Widget _buildHeader(BuildContext context, Map<String, dynamic> data,
+      Animation<double> animation) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12.0),
+      decoration: BoxDecoration(
+        color: AppColors.primaryColor,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              ScaleTransition(
+                scale: Tween<double>(begin: 0.8, end: 1).animate(
+                  CurvedAnimation(parent: animation, curve: Curves.easeOut),
+                ),
+                child: Icon(
+                  Icons.restaurant,
+                  size: 18,
+                  color: AppColors.backgroundColor,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                data['splitName'] ?? 'Foodie Split',
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w600,
+                  fontSize: 18,
+                  color: AppColors.backgroundColor,
+                ),
+              ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Subcategory: ${data['subcategory'] ?? 'N/A'}',
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w400,
+                  fontSize: 12,
+                  color: AppColors.backgroundColor.withOpacity(0.7),
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                'Total Amount: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(data['totalAmount'] ?? 0)}',
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w600,
+                  fontSize: 14,
+                  color: AppColors.backgroundColor,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }

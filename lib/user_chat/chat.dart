@@ -262,7 +262,7 @@ class _ChatState extends State<Chat> {
       padding: const EdgeInsets.all(10),
       width: MediaQuery.of(context).size.width / 1.8,
       decoration: BoxDecoration(
-        color: message.isMe ? AppColors.appIcon : Colors.white,
+        color: message.isMe ? AppColors.appIcon : AppColors.mt,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(16), // Circular radius for top left
           topRight: Radius.circular(16), // Circular radius for top right
@@ -502,7 +502,6 @@ class _ChatState extends State<Chat> {
       try {
         final _picker = ImagePicker();
         final imageData = await _picker.pickImage(source: ImageSource.gallery);
-        print('Image picked: $imageData');
         if (imageData != null) {
           showData(imageData);
         } else {
@@ -510,7 +509,6 @@ class _ChatState extends State<Chat> {
         }
       } catch (e) {
         snackBarCalled(context, 'Error selecting image: $e');
-        print('Error: $e');
       }
     } else if (status.isDenied) {
       snackBarCalled(
@@ -523,7 +521,6 @@ class _ChatState extends State<Chat> {
       await openAppSettings();
     } else {
       snackBarCalled(context, 'Unknown permission status: $status');
-      print('Unknown status: $status');
     }
   }
 
@@ -880,7 +877,7 @@ class _ChatState extends State<Chat> {
         decoration: InputDecoration(
           hintText: labelText,
           filled: true,
-          fillColor: Colors.white,
+          fillColor: AppColors.mt,
           // prefixIcon: IconButton(
           //   icon: Icon(
           //     Icons.emoji_emotions,
@@ -1044,7 +1041,7 @@ class _ChatState extends State<Chat> {
                             EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                         width: MediaQuery.of(context).size.width / 1.5,
                         decoration: BoxDecoration(
-                          color: index == s ? null : Colorcodes.white,
+                          color: index == s ? null :  AppColors.backgroundColor,
                           borderRadius:
                               BorderRadius.circular(Colorcodes.borderRadius),
                           gradient: index == s
@@ -1074,8 +1071,8 @@ class _ChatState extends State<Chat> {
                                       lWeight: FontWeight.bold,
                                       fontSize: 14,
                                       color: index == s
-                                          ? Colorcodes.white
-                                          : Colors.black)),
+                                          ? AppColors.backgroundColor
+                                          :  AppColors.accentColor)),
                             ),
 
                             //  myvote ? Text(cal=="0.00"?'0%':cal=="100.00"?"100%":cal+"%",
@@ -1128,7 +1125,7 @@ class _ChatState extends State<Chat> {
                             EdgeInsets.symmetric(vertical: 13, horizontal: 10),
                         width: MediaQuery.of(context).size.width / 1.5,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color:  AppColors.backgroundColor,
                           borderRadius: BorderRadius.circular(5),
                           // border: Border.all()
                         ),
@@ -1160,7 +1157,7 @@ class _ChatState extends State<Chat> {
             height: MediaQuery.of(context).size.height / 3.2,
             padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
             decoration: BoxDecoration(
-                color: Colorcodes.white,
+                color: AppColors.backgroundColor,
                 borderRadius: BorderRadius.circular(12)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -1235,7 +1232,7 @@ class _ChatState extends State<Chat> {
           child: Text(
             str,
             style: FontManager().getTextStyle(context,
-                fontSize: 14, lWeight: FontWeight.w500, color: Colorcodes.white
+                fontSize: 14, lWeight: FontWeight.w500, color:  AppColors.backgroundColor
                 //  fontStyle: FontStyle.italic
                 ),
           ),

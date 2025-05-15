@@ -686,7 +686,9 @@ void _scrollToCurrentDate() {
               dataSource: creditedData,
               xValueMapper: (ChartData data, _) => data.x,
               yValueMapper: (ChartData data, _) => data.y,
-              color: const Color.fromARGB(255, 167, 187, 191),
+              //color: const Color.fromARGB(255, 167, 187, 191),
+              //use pollselected 
+              color: AppColors.primaryColor.withOpacity(0.1),
               borderWidth: 0,
               enableTooltip: false,
               splineType: SplineType.cardinal,

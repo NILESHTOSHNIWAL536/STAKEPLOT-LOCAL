@@ -419,7 +419,6 @@ Widget getIconsForHideUpdateSplit(
                             child: Lottie.asset(
                               'assets/splashScreen/manualTransactionIcon.json',
                               errorBuilder: (context, error, stackTrace) {
-                                print('Lottie error: $error');
                                 return Icon(Icons.error); // fallback UI
                               },
                             ),
@@ -437,7 +436,6 @@ Widget getIconsForHideUpdateSplit(
                                   strokeWidth: 2); // Loading indicator
                             },
                             errorBuilder: (context, error, stackTrace) {
-                              print('Error loading logo for URL $logo: $error');
                               return Icon(Icons.error,
                                   size: 22); // Fallback for failed image load
                             },
