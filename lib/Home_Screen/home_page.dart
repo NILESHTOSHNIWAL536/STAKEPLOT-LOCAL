@@ -192,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Manualtransaction(),
                 ),
        const SizedBox(
-                  height: 10,
+                  height: 14,
                 ),
                  SizedBox(
                   height: MediaQuery.of(context).size.height * 0.25,
