@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-
 
 class SwipeableCardsScreen extends StatefulWidget {
   @override
@@ -41,7 +41,9 @@ class _SwipeableCardsScreenState extends State<SwipeableCardsScreen> {
                   return Center(
                     // Center the card horizontally
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0), // Reduced vertical padding
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                          vertical: 8.0), // Reduced vertical padding
                       child: _buildCard(cardIndex, context),
                     ),
                   );
@@ -54,7 +56,9 @@ class _SwipeableCardsScreenState extends State<SwipeableCardsScreen> {
                 children: List.generate(_totalCards, (index) {
                   return Container(
                     margin: EdgeInsets.symmetric(horizontal: 3.0),
-                    width: _currentIndex.value == index ? 8.0 : 4.0, // Smaller dots
+                    width: _currentIndex.value == index
+                        ? 8.0
+                        : 4.0, // Smaller dots
                     height: 4.0,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
@@ -98,62 +102,60 @@ class _SwipeableCardsScreenState extends State<SwipeableCardsScreen> {
   }
 }
 
-// Card 1: Total Spending and Average Spending Per Day
 class TotalSpendingCard extends StatelessWidget {
-  final double totalSpending = 25000.0;
-  final double averageSpendingPerDay = 833.33;
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.blue.shade300, Colors.blue.shade600],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+    return Obx(
+      () => Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blue.shade300, Colors.blue.shade600],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 6,
+              offset: Offset(0, 3),
+            ),
+          ],
         ),
-        borderRadius: BorderRadius.circular(8), // Reduced border radius
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 6, // Reduced blur
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      padding: EdgeInsets.all(12), // Reduced padding
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Total Spending',
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.bold,
-              fontSize: 14, // Smaller font
-              color: Colors.white,
+        padding: EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Total Spending',
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.bold,
+                fontSize: 14,
+                color: Colors.white,
+              ),
             ),
-          ),
-          Text(
-            '₹${formatMoneyIndian(totalSpending.toStringAsFixed(2))}',
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.bold,
-              fontSize: 18, // Smaller font
-              color: Colors.white,
+            Text(
+              '₹${formatMoneyIndian(totalDebitThisMonth.value.toStringAsFixed(2))}',
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.bold,
+                fontSize: 18,
+                color: Colors.white,
+              ),
             ),
-          ),
-          Text(
-            'Avg/Day: ₹${formatMoneyIndian(averageSpendingPerDay.toStringAsFixed(2))}',
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.w500,
-              fontSize: 10, // Smaller font
-              color: Colors.white.withOpacity(0.8),
+            Text(
+              'Avg/Day: ₹${formatMoneyIndian(((totalDebitThisMonth.value / (DateTime.now().day == 0 ? 1 : DateTime.now().day)).toStringAsFixed(2)))}',
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.w500,
+                fontSize: 10,
+                color: Colors.white.withOpacity(0.8),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -161,79 +163,92 @@ class TotalSpendingCard extends StatelessWidget {
 
 // Card 2: Top 2 Overspent Categories Compared to Last Month
 class OverspentCategoriesCard extends StatelessWidget {
-  final List<Map<String, dynamic>> overspentCategories = [
-    {'category': 'Dining', 'amount': 8000.0, 'lastMonth': 5000.0},
-    {'category': 'Shopping', 'amount': 12000.0, 'lastMonth': 9000.0},
-  ];
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.red.shade300, Colors.red.shade600],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+    return Obx(
+      () => Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.red.shade300, Colors.red.shade600],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 6,
+              offset: Offset(0, 3),
+            ),
+          ],
         ),
-        borderRadius: BorderRadius.circular(8), // Reduced border radius
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 6, // Reduced blur
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      padding: EdgeInsets.all(12), // Reduced padding
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Overspent Categories',
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.bold,
-              fontSize: 14, // Smaller font
-              color: Colors.white,
+        padding: EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Overspent Categories',
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.bold,
+                fontSize: 14,
+                color: Colors.white,
+              ),
             ),
-          ),
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: overspentCategories.asMap().entries.map((entry) {
-                final category = entry.value;
-                final overspent = category['amount'] - category['lastMonth'];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 4.0), // Tight spacing
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        category['category'],
+            Expanded(
+              child: moreDrasticChange.isEmpty
+                  ? Center(
+                      child: Text(
+                        'No Data',
                         style: FontManager().getTextStyle(
                           context,
-                          lWeight: FontWeight.w600,
-                          fontSize: 12, // Smaller font
-                          color: Colors.white,
+                          lWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: Colors.white.withOpacity(0.8),
                         ),
                       ),
-                      Text(
-                        '+₹${formatMoneyIndian(overspent.toStringAsFixed(2))}',
-                        style: FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.bold,
-                          fontSize: 12, // Smaller font
-                          color: Colorcodes.redDeleteIcon,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
+                    )
+                  : ListView(
+                      padding: EdgeInsets.zero,
+                      children: moreDrasticChange
+                          .take(2) // Show top 2
+                          .toList()
+                          .asMap()
+                          .entries
+                          .map((entry) {
+                        final category = entry.value;
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 4.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                category['category'].toString().capitalize!,
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Text(
+                                '+₹${formatMoneyIndian(category['debit_diff'].toStringAsFixed(2))}',
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                  color: Colorcodes.redDeleteIcon,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -241,77 +256,86 @@ class OverspentCategoriesCard extends StatelessWidget {
 
 // Card 3: Most Frequent Transaction
 class FrequentTransactionCard extends StatelessWidget {
-  final String mostFrequentCategory = 'Coffee Shops';
-  final int transactionCount = 15;
-  final double totalAmount = 4500.0;
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.green.shade300, Colors.green.shade600],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+    return Obx(
+      () => Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.green.shade300, Colors.green.shade600],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 6,
+              offset: Offset(0, 3),
+            ),
+          ],
         ),
-        borderRadius: BorderRadius.circular(8), // Reduced border radius
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 6, // Reduced blur
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      padding: EdgeInsets.all(12), // Reduced padding
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Frequent Transaction',
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.bold,
-              fontSize: 14, // Smaller font
-              color: Colors.white,
-            ),
-          ),
-          Text(
-            mostFrequentCategory,
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.w600,
-              fontSize: 16, // Smaller font
-              color: Colors.white,
-            ),
-            overflow: TextOverflow.ellipsis,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '$transactionCount Txns',
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.bold,
-                 
-                  fontSize: 12, // Smaller font
-                  color: Colors.white,
-                ),
+        padding: EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Frequent Transaction',
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.bold,
+                fontSize: 14,
+                color: Colors.white,
               ),
-              Text(
-                '₹${formatMoneyIndian(totalAmount.toStringAsFixed(2))}',
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.bold,
-                  fontSize: 12, // Smaller font
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-        ],
+            ),
+            frequentPayments.isEmpty
+                ? Text(
+                    'No Data',
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  )
+                : Text(
+                    frequentPayments[0]['name'].toString(),
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+            frequentPayments.isEmpty
+                ? SizedBox.shrink()
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${frequentPayments[0]['count']} Txns',
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.bold,
+                          fontSize: 12,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        '₹${formatMoneyIndian(frequentPayments[0]['totalAmount'].toStringAsFixed(2))}',
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.bold,
+                          fontSize: 12,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+          ],
+        ),
       ),
     );
   }

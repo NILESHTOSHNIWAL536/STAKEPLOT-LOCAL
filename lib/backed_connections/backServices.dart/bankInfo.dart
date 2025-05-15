@@ -14,7 +14,7 @@ void getCategoryData() async {
   var res = await getDataApiCall("${url}/transactionauto/categorize");
   if (getFlagOfResponse(res)) {
     var data = jsonDecode(res.body);
-    
+
     categoriesList.clear();
     frequentPayments.clear();
     moreDrasticChange.clear();
@@ -22,7 +22,12 @@ void getCategoryData() async {
     categoriesList.addAll(data["data"]['categorized']);
     frequentPayments.addAll(data["data"]['frequentPayments']);
     moreDrasticChange.addAll(data["data"]['moreDrasticChange']);
-  
+    totalDebitThisMonth.value = (data["data"]['totalDebitThisMonth']);
+    print("categoriesList:$categoriesList");
+     print("frequentPayments:$frequentPayments");
+      print("moreDrasticChange:$moreDrasticChange");
+       print("totalDebitThisMonth:$totalDebitThisMonth");
+
     categoriesList.refresh();
     frequentPayments.refresh();
     moreDrasticChange.refresh();

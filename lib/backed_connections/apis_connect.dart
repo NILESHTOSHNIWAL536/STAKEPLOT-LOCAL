@@ -95,6 +95,7 @@ RxString cupertinoPin = "".obs;
 RxList categoriesList = [].obs;
 RxList moreDrasticChange  = [].obs;
 RxList  frequentPayments = [].obs;
+RxDouble totalDebitThisMonth  = 0.0.obs;
 Map<String, dynamic> loginUsersList = Map<String, dynamic>();
 RxList dueAmountRemainders = [].obs;
 RxBool getdueUsers = false.obs;
