@@ -43,7 +43,6 @@ void getBudget() async {
       var obj = his['data'];
       budgetList.clear();
       budgetList.addAll(obj);
-    
       budgetLength.value = obj.length;
     }
   } catch (e) {}
