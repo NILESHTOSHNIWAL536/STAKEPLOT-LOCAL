@@ -60,9 +60,9 @@ void clearStackShared(BuildContext context) {
 
 void expire(response, BuildContext context) {
   try {
-    print("expire called");
+   
     var body = json.decode(response.body);
-    print(body);
+    
     if (body['error'].toString() == "JsonWebTokenError")
     {
       logoutUserFromDevice(context);

@@ -13,7 +13,9 @@ RxString selectedBank = "".obs;
 
 void getCategoryData() async {
   var res = await getDataApiCall("${url}/transactionauto/categorize");
-  if (getFlagOfResponse(res)) {
+  if (getFlagOfResponse(res)) 
+  {
+    try{
     var data = jsonDecode(res.body);
     print("data: ${data['data']['categorized']}");
     categoriesList.clear();
@@ -25,19 +27,19 @@ void getCategoryData() async {
     moreDrasticChangeWeek.clear();
 
     //month
+
     categoriesList.addAll(data["data"]['categorized']);
     frequentPayments.addAll(data["data"]['frequentPayments']);
     moreDrasticChange.addAll(data["data"]['moreDrasticChange']);
+    
     totalDebitThisMonth.value = double.parse(doubleToFixed(data["data"]['totalDebitThisMonth'].toString()));
-    // totalDebitThisMonth.value = data["data"]['totalDebitThisMonth'];
    
-
-    //week
+   
     categoriesListWeek.addAll(data["data"]['week']['categorized']);
     frequentPaymentsWeek.addAll(data["data"]['week']['frequentPayments']);
     moreDrasticChangeWeek.addAll(data["data"]['week']['moreDrasticChange']);
-   totalDebitThisWeek.value = double.parse(doubleToFixed(data["data"]['week']['totalDebitThisMonth'].toString()));
-
+    totalDebitThisWeek.value = double.parse(doubleToFixed(data["data"]['week']['totalDebitThisMonth'].toString()));
+   
 
     categoriesList.refresh();
     frequentPayments.refresh();
@@ -48,6 +50,10 @@ void getCategoryData() async {
     moreDrasticChangeWeek.refresh();
 
     setDonectChat.value = !setDonectChat.value;
+   
+    }catch(e){
+        print(e);
+    }
     processChartData();
   }
 }
