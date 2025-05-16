@@ -212,7 +212,7 @@ void checkBiometricsStatus() async {
             // Profile Picture
             Column(
               children: [
-               Obx(() =>  AvatarProfile(name: userName.value, width: 4.4, height: 10,background:userAvatarBackGround.value,flag: true,)),
+               Obx(() =>  AvatarProfile(name: userName.value, width: 4, height: 10,background:userAvatarBackGround.value,flag:true)),
                 // Obx(() => AvatarProfileImage(
                 //       url: avaterUrlPath(userName.value),
                 //       width: 14,

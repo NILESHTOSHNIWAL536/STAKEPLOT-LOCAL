@@ -18,6 +18,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:lottie/lottie.dart';
 
 class HiddenTransactionsScreen extends StatefulWidget {
   //final List<Map<String, String>> hiddenTransactions;
@@ -92,12 +93,13 @@ Widget historyTransactions(
       ? Colors.green.shade700
       : const Color.fromARGB(255, 207, 118, 113);
   final formatAmount = type == 'CREDIT' ? "+₹$amount" : "-₹$amount";
+  final isSplit = transaction['isSplit'] ?? false;
 
   // Responsive scaling with MediaQuery
   final screenWidth = MediaQuery.of(context).size.width;
   final scaleFactor = screenWidth / 360; // Base width: 360px
   final padding = 16.0 * scaleFactor;
-  final margin = 12.0 * scaleFactor;
+  final margin = 10.0 * scaleFactor;
   final iconSize = 14.0 * scaleFactor; // Smaller icons for simplicity
   final avatarSize = 40.0 * scaleFactor;
   final fontSizeLarge = 14.0 * scaleFactor;
@@ -234,7 +236,19 @@ Widget historyTransactions(
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Hide Transaction
+                      // Hide Trans
+                       isManual
+                                               ?
+                                                  Container(
+                            height: 30,
+                            width: 30,
+                            child: Lottie.asset(
+                              'assets/splashScreen/manualTransactionIcon.json',
+                              errorBuilder: (context, error, stackTrace) {
+                                return Icon(Icons.error); // fallback UI
+                              },
+                            ),
+                          ):SizedBox.shrink(),
                       Tooltip(
                         message: 'unHide',
                         child: GestureDetector(
@@ -451,35 +465,20 @@ Widget historyTransactions(
           ),
         ),
         // Manual Badge
-        if (isManual)
+        if (isSplit)
           Positioned(
             top: margin,
-            left: margin + 4,
-            child: Container(
-              width: badgeSize,
-              height: badgeSize,
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 4 * scaleFactor,
-                    offset: Offset(2 * scaleFactor, 2 * scaleFactor),
-                  ),
-                ],
-              ),
-              child: Center(
-                child: Text(
-                  'M',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: fontSizeSmall * 0.8,
-                  ),
-                ),
-              ),
+            left: margin ,
+            child:  Container(
+            // width: badgeSize,
+            // height: badgeSize,
+            decoration: BoxDecoration(
+             // color: AppColors.bg5,
+              shape: BoxShape.circle,
+             
             ),
+            child: AvatarProfileImage(
+                url: HomePageIcons.isSplit, width: 50, height:50)),
           ),
       ],
     ),

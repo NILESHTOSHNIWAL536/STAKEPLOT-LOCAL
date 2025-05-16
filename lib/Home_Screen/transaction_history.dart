@@ -403,7 +403,8 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 transaction['transactionTimestamp']?.toString(),
                 transactionIndex,
                 context,
-                true),
+                true,
+                ),
           );
         }
 

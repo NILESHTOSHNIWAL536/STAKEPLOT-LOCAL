@@ -186,13 +186,12 @@ class AvatarProfile extends StatelessWidget {
   }
 
 
-  Widget img(context,size){
-    return ClipOval(
-      
-  child: Container(
-     width: size / 10,  // Diameter
+ Widget img(BuildContext context, double size) {
+  return Container(
+    width: size / 10,  // Diameter
     height: size / 10, // Diameter
     decoration: BoxDecoration(
+      shape: BoxShape.circle,
       gradient: LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
@@ -205,41 +204,38 @@ class AvatarProfile extends StatelessWidget {
     child: Center(
       child: textStyleImage(
         context: context,
-        text: name.isEmpty? "L": name[0].toUpperCase(),
+        text: name.isEmpty ? "L" : name[0].toUpperCase(),
         fontsize: 20,
         c: Colorcodes.appBarColor,
       ),
     ),
-  ),
-);
-
-  }
+  );
+}
 
   Widget img2(context,width,size){
-    return ClipOval(
-  child: Container(
-    width: size / width, // diameter
-    height: size / width,
-    decoration: BoxDecoration(
+    return Container(
+      width: size / width, // diameter
+      height: size / width,
+      decoration: BoxDecoration(
+      shape: BoxShape.circle,
       gradient: LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [
-          getBackgroundColor(background),
           getBackgroundColor(background).withOpacity(0.7),
+          getBackgroundColor(background),
         ],
       ),
     ),
-    child: Center(
-      child: textStyleImage(
-        context: context,
-        text: name[0].toUpperCase(),
-        fontsize: 20,
-        c: Colorcodes.appBarColor,
+      child: Center(
+        child: textStyleImage(
+          context: context,
+          text: name[0].toUpperCase(),
+          fontsize: 20,
+          c: Colorcodes.appBarColor,
+        ),
       ),
-    ),
-  ),
-);
+    );
 
   }
 }
