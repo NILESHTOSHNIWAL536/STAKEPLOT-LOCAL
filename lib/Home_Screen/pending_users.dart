@@ -554,135 +554,107 @@ class _UserListScreenState extends State<UserListScreen> {
       Animation<double> animation) {
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-      child: Stack(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Main user details content
-          Column(
+          const SizedBox(height: 20), // Space for the Paid status
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const SizedBox(height: 20), // Space for the Paid status
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Name
-                  Container(
-                    width: MediaQuery.sizeOf(context).width / 4,
-                    child: Text(
-                      user['name'] ?? 'Unknown',
+              // Name
+              Container(
+                width: MediaQuery.sizeOf(context).width / 4,
+                child: Text(
+                  user['name'] ?? 'Unknown',
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: AppColors.accentColor,
+                  ),
+                ),
+              ),
+              if (user['priorities'] != null) ...[
+                Container(
+                  width: MediaQuery.sizeOf(context).width / 3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Priorities:',
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: AppColors.accentColor,
+                        ),
+                      ),
+                      if ((user['priorities']['Veg'] ?? 0) > 0)
+                        Text(
+                          'Veg: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(user['priorities']['Veg'])}',
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight.w400,
+                            fontSize: 12,
+                            color: AppColors.accentColor.withOpacity(0.7),
+                          ),
+                        ),
+                      if ((user['priorities']['Non veg'] ?? 0) > 0)
+                        Text(
+                          'Non Veg: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(user['priorities']['Non veg'])}',
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight.w400,
+                            fontSize: 12,
+                            color: AppColors.accentColor.withOpacity(0.7),
+                          ),
+                        ),
+                      if ((user['priorities']['Alcohol'] ?? 0) > 0)
+                        Text(
+                          'Alcohol: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(user['priorities']['Alcohol'])}',
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight.w400,
+                            fontSize: 12,
+                            color: AppColors.accentColor.withOpacity(0.7),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+              // Amount Due
+              Container(
+                width: MediaQuery.sizeOf(context).width / 4,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Due:',
                       style: FontManager().getTextStyle(
                         context,
-                        lWeight: FontWeight.w600,
-                        fontSize: 14,
+                        lWeight: FontWeight.w400,
+                        fontSize: 12,
                         color: AppColors.accentColor,
                       ),
                     ),
-                  ),
-                  if (user['priorities'] != null) ...[
-                    Container(
-                      width: MediaQuery.sizeOf(context).width / 3,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Priorities:',
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: FontWeight.w500,
-                              fontSize: 12,
-                              color: AppColors.accentColor,
-                            ),
-                          ),
-                          if ((user['priorities']['Veg'] ?? 0) > 0)
-                            Text(
-                              'Veg: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(user['priorities']['Veg'])}',
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w400,
-                                fontSize: 12,
-                                color: AppColors.accentColor.withOpacity(0.7),
-                              ),
-                            ),
-                          if ((user['priorities']['Non veg'] ?? 0) > 0)
-                            Text(
-                              'Non Veg: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(user['priorities']['Non veg'])}',
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w400,
-                                fontSize: 12,
-                                color: AppColors.accentColor.withOpacity(0.7),
-                              ),
-                            ),
-                          if ((user['priorities']['Alcohol'] ?? 0) > 0)
-                            Text(
-                              'Alcohol: ${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(user['priorities']['Alcohol'])}',
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w400,
-                                fontSize: 12,
-                                color: AppColors.accentColor.withOpacity(0.7),
-                              ),
-                            ),
-                        ],
+                    Text(
+                      '${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(user['amountDue'] ?? 0)}',
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w400,
+                        fontSize: 12,
+                        color: AppColors.accentColor,
                       ),
                     ),
                   ],
-                  // Amount Due
-                  Container(
-                    width: MediaQuery.sizeOf(context).width / 4,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Due:',
-                          style: FontManager().getTextStyle(
-                            context,
-                            lWeight: FontWeight.w400,
-                            fontSize: 12,
-                            color: AppColors.accentColor,
-                          ),
-                        ),
-                        Text(
-                          '${NumberFormat.currency(symbol: '₹', decimalDigits: 2).format(user['amountDue'] ?? 0)}',
-                          style: FontManager().getTextStyle(
-                            context,
-                            lWeight: FontWeight.w400,
-                            fontSize: 12,
-                            color: AppColors.accentColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 6),
-              // Priorities
-            ],
-          ),
-          // Paid status in top-right corner
-          Positioned(
-            top: 0,
-            right: 0,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: user['isPaid'] == true
-                    ? Colors.green.withOpacity(0.1)
-                    : Colors.red.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Text(
-                'Paid: ${user['isPaid'] == true ? "Yes" : "No"}',
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.w400,
-                  fontSize: 12,
-                  color: user['isPaid'] == true ? Colors.green : Colors.red,
                 ),
               ),
-            ),
+            ],
           ),
+          const SizedBox(height: 6),
+          // Priorities
         ],
       ),
     );

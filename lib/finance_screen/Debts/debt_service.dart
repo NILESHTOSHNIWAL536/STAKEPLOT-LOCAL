@@ -79,23 +79,18 @@ static Future<bool> deleteDebt(String debtId) async {
         },
       );
 
-    //  print('Response status code: ${response.statusCode}'); // Debug statement
       if (response.statusCode == 200) {
         List<dynamic> body =
             jsonDecode(response.body)['data']; // Decode as a list
-    //    print("Debts fetched successfully."); // Debug statement
         List<Debt> debts = body
             .map((item) => Debt.fromJson(item))
             .toList(); // Convert each item to a Debt object
         return debts;
       } else {
-        // print(
-        //     "Failed to load debts: ${response.statusCode} - ${response.body}"); // Debug statement
         throw Exception(
             'Failed to load debts: ${response.statusCode} - ${response.body}');
       }
     } catch (error) {
-     // print("Error occurred while fetching debts: $error"); // Debug statement
       return [];
     }
   }

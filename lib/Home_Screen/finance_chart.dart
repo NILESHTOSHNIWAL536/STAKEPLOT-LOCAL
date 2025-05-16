@@ -76,9 +76,9 @@ class _FinancePageState extends State<FinancePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-               crossAxisAlignment: CrossAxisAlignment.start,
-               children: [
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 Text(
                   'Spending and cash flow',
                   style: FontManager().getTextStyle(context,
@@ -86,7 +86,7 @@ class _FinancePageState extends State<FinancePage> {
                       fontSize: fontSizeFactor * 4.0,
                       color: AppColors.accentColor),
                 ),
-                 historyButton(fontSizeFactor),
+                historyButton(fontSizeFactor),
               ],
             ),
             Row(
@@ -158,7 +158,6 @@ class _FinancePageState extends State<FinancePage> {
                     }),
                   ],
                 ),
-               
               ],
             ),
             SizedBox(height: screenHeight * 0.01),
@@ -188,13 +187,10 @@ class _FinancePageState extends State<FinancePage> {
     );
   }
 
-
-
-  Widget historyButton(double fontSizeFactor){
-    return  CustomButton(
-                  onTap: () {
-                    // _scrollToTransactionHistory();
-                    getAllTransaction(context);
+  Widget historyButton(double fontSizeFactor) {
+    return GestureDetector(
+      onTap: (){
+         getAllTransaction(context);
                     getGroupTransactions();
                     Navigator.push(
                       context,
@@ -202,17 +198,59 @@ class _FinancePageState extends State<FinancePage> {
                         builder: (context) => const TransactionHistoryScreen(),
                       ),
                     );
-                  },
-                  text: 'History',
-                  fontSize: fontSizeFactor * 2.8,
-                  height: 1.7,
-                  width: 5.0,
-                  icon: AvatarProfileImage(
+
+      },
+      child:Container(
+         width: MediaQuery.of(context).size.width / 4,
+                    height: MediaQuery.of(context).size.height / 30,
+                    decoration: BoxDecoration(
+                      color: AppColors.button,
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+          AvatarProfileImage(
                     url: HomePageIcons.history,
                     width: 36,
-                    height: 36,
-                  ),
-                );
+                    height: 36,),
+                    Text(
+                            'History',
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.w500,
+                                fontSize: fontSizeFactor * 3.3,
+                                color:
+                                    AppColors.accentColor), // Set text color based on value
+                          ),
+
+        ],),
+      )
+    );
+    // return  CustomButton(
+    //               onTap: () {
+    //                 // _scrollToTransactionHistory();
+    //                 getAllTransaction(context);
+    //                 getGroupTransactions();
+    //                 Navigator.push(
+    //                   context,
+    //                   MaterialPageRoute(
+    //                     builder: (context) => const TransactionHistoryScreen(),
+    //                   ),
+    //                 );
+    //               },
+    //               text: 'History',
+    //               fontSize: fontSizeFactor * 2.8,
+    //               height: 1.7,
+    //               width: 4.0,
+
+    //               icon: AvatarProfileImage(
+    //                 url: HomePageIcons.history,
+    //                 width: 36,
+    //                 height: 36,
+
+    //               ),
+    //             );
   }
 
   Widget getMonthWeekCustom(fontSizeFactor, screenWidth) {
@@ -281,7 +319,7 @@ class _FinancePageState extends State<FinancePage> {
             //           )),
             //     ),
             //   ),
-        
+
             SizedBox(width: screenWidth * 0.02),
             GestureDetector(
               onTap: () {
@@ -335,6 +373,7 @@ class LineChartWidget extends StatefulWidget {
   @override
   State<LineChartWidget> createState() => _LineChartWidgetState();
 }
+
 class _LineChartWidgetState extends State<LineChartWidget> {
   double maxYValue = 10000;
   ScrollController? _scrollController;
@@ -382,7 +421,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       maxYValue = [
         widget.chartData["credited"] ?? [],
         widget.chartData["debited"] ?? []
-      ].expand((x) => x).reduce((value, element) => value > element ? value : element);
+      ]
+          .expand((x) => x)
+          .reduce((value, element) => value > element ? value : element);
     }
     if (!maxYValue.isFinite || maxYValue == 0) {
       maxYValue = 1000.0;
@@ -409,34 +450,37 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   //     _scrollController!.jumpTo(scrollOffset);
   //   }
   // }
-void _scrollToCurrentDate() {
+  void _scrollToCurrentDate() {
     if (_scrollController?.hasClients == true) {
-        // Find the last index with data
-        int lastIndex = widget.chartData["credited"]!.length - 1;
-        while (lastIndex >= 0 && (widget.chartData["credited"]![lastIndex] == 0 && widget.chartData["debited"]![lastIndex] == 0)) {
-            lastIndex--;
-        }
+      // Find the last index with data
+      int lastIndex = widget.chartData["credited"]!.length - 1;
+      while (lastIndex >= 0 &&
+          (widget.chartData["credited"]![lastIndex] == 0 &&
+              widget.chartData["debited"]![lastIndex] == 0)) {
+        lastIndex--;
+      }
 
-        // If there's no data, do not scroll
-        if (lastIndex < 0) return;
+      // If there's no data, do not scroll
+      if (lastIndex < 0) return;
 
-        double labelWidth = widget.selectedButton.value == 'Week' ? 40.0 : 50.0;
-        double scrollOffset = (lastIndex - 4) * labelWidth;
+      double labelWidth = widget.selectedButton.value == 'Week' ? 40.0 : 50.0;
+      double scrollOffset = (lastIndex - 4) * labelWidth;
 
-        double maxScrollExtent = 0;
-        if (_scrollController != null && _scrollController!.hasClients) {
-            maxScrollExtent = _scrollController!.position.maxScrollExtent;
-        }
+      double maxScrollExtent = 0;
+      if (_scrollController != null && _scrollController!.hasClients) {
+        maxScrollExtent = _scrollController!.position.maxScrollExtent;
+      }
 
-        if (scrollOffset > maxScrollExtent) {
-            scrollOffset = maxScrollExtent;
-        } else if (scrollOffset < 0) {
-            scrollOffset = 0;
-        }
+      if (scrollOffset > maxScrollExtent) {
+        scrollOffset = maxScrollExtent;
+      } else if (scrollOffset < 0) {
+        scrollOffset = 0;
+      }
 
-        _scrollController!.jumpTo(scrollOffset);
+      _scrollController!.jumpTo(scrollOffset);
     }
-}
+  }
+
   @override
   void dispose() {
     _scrollController?.dispose();
@@ -636,9 +680,12 @@ void _scrollToCurrentDate() {
           ? screenWidth * 0.85
           : max(chartWidth, screenWidth * 0.85),
       height: MediaQuery.of(context).size.height / 2.6,
-      child:  Transform.translate(
-        offset: widget.selectedButton.value == 'Week'? Offset(-5, 0)
-            : widget.selectedButton.value == 'Month'? Offset(-28, 0): Offset(-25, 0),
+      child: Transform.translate(
+        offset: widget.selectedButton.value == 'Week'
+            ? Offset(-5, 0)
+            : widget.selectedButton.value == 'Month'
+                ? Offset(-28, 0)
+                : Offset(-25, 0),
         child: SfCartesianChart(
           borderWidth: 0,
           plotAreaBorderWidth: 0,
@@ -654,7 +701,6 @@ void _scrollToCurrentDate() {
             minorTickLines: const MinorTickLines(size: 0),
             interval: 1,
             maximumLabels: dataLength,
-            
           ),
           primaryYAxis: NumericAxis(
             isVisible: false,
@@ -673,7 +719,8 @@ void _scrollToCurrentDate() {
           ),
           tooltipBehavior: TooltipBehavior(
             enable: true,
-            builder: (dynamic data, dynamic point, dynamic series, int pointIndex, int seriesIndex) {
+            builder: (dynamic data, dynamic point, dynamic series,
+                int pointIndex, int seriesIndex) {
               final ChartData chartData = data as ChartData;
               String label = seriesIndex == 1 ? 'Credited' : 'Debited';
               isTooltipVisible.value = false;
@@ -702,7 +749,7 @@ void _scrollToCurrentDate() {
               xValueMapper: (ChartData data, _) => data.x,
               yValueMapper: (ChartData data, _) => data.y,
               //color: const Color.fromARGB(255, 167, 187, 191),
-              //use pollselected 
+              //use pollselected
               color: AppColors.primaryColor.withOpacity(0.1),
               borderWidth: 0,
               enableTooltip: false,
@@ -725,7 +772,6 @@ void _scrollToCurrentDate() {
                 width: 4,
                 shape: DataMarkerType.pentagon,
               ),
-             
             ),
             SplineSeries<ChartData, String>(
               dataSource: debitedData,
@@ -743,7 +789,6 @@ void _scrollToCurrentDate() {
                 width: 4,
                 shape: DataMarkerType.circle,
               ),
-             
             ),
             SplineAreaSeries<ChartData, String>(
               dataSource: debitedData,
@@ -769,7 +814,6 @@ void _scrollToCurrentDate() {
     );
   }
 
-  
   void navToExpanded() {
     selectedYear.value = DateTime.now().year;
     selectedMonth.value = DateTime.now().month;
@@ -812,7 +856,7 @@ void _scrollToCurrentDate() {
               style: FontManager().getTextStyle(
                 context,
                 lWeight: FontWeight.normal,
-                fontSize: fontSizeFactor * 3.0,
+                fontSize: fontSizeFactor * 2.7,
                 color: AppColors.accentColor,
               ),
             ),
@@ -830,21 +874,19 @@ void _scrollToCurrentDate() {
   String formatNumberString(String value) {
     double numValue = double.tryParse(value) ?? 0;
     if (numValue >= 10000000) {
-      return '${(numValue / 10000000).toStringAsFixed(0)} Cr';
+      return '${(numValue / 10000000).toStringAsFixed(1)}Cr';
     } else if (numValue >= 100000) {
-      return '${(numValue / 100000).toStringAsFixed(0)} L';
+      return '${(numValue / 100000).toStringAsFixed(1)}L';
     } else if (numValue >= 1000) {
-      return '${(numValue / 1000).toStringAsFixed(0)} K';
+      return '${(numValue / 1000).toStringAsFixed(1)}K';
     } else {
       return numValue.toStringAsFixed(0);
     }
   }
-
-
 }
+
 class ChartData {
   ChartData(this.x, this.y);
   final String x;
   final double y;
 }
-

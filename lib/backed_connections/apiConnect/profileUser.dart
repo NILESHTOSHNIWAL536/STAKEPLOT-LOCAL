@@ -60,6 +60,7 @@ Future<void> getFoodieFundsDetails(BuildContext context, String id) async {
     snackBarCalled(context, 'Failed to fetch foodie funds details.');
   }
 }
+
 void getNotifications(context) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");

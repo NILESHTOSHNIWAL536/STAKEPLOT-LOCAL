@@ -187,6 +187,7 @@ class AvatarProfile extends StatelessWidget {
 
 
   Widget img(context,size){
+    
     return ClipOval(
       
   child: Container(

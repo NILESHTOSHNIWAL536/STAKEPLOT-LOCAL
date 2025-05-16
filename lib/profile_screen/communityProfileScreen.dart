@@ -121,23 +121,23 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
         ),
 
         Positioned(
-          top: 140,
+          top:  MediaQuery.of(context).size.height / 5.8,
           left: MediaQuery.of(context).size.width / 6.7,
           child: networkFriends("Network", friendsList.length.toString(),
               Icons.person_2_outlined),
         ),
 
         Positioned(
-          top: 140,
+          top: MediaQuery.of(context).size.height / 5.8,
           left: MediaQuery.of(context).size.width / 1.45,
           child: networkFriends(
               "Posts", myPostList.length.toString(), Icons.post_add),
         ),
 
         Positioned(
-          top: 90,
+          top:  MediaQuery.of(context).size.height / 10,
           left: MediaQuery.of(context).size.width / 2 - 40,
-          child: AvatarProfile(name: userName.value, width: 5, height: 10,background:userAvatarBackGround.value ?? defaultBackGround.value,flag: true,),
+          child: AvatarProfile(name: userName.value, width: 4.4, height: 10,background:userAvatarBackGround.value ?? defaultBackGround.value,flag: true,),
           // child: GestureDetector(
           //   // onTap: () => _pickImage(ImageSource.gallery, "profile"),
           //   child: CircleAvatar(

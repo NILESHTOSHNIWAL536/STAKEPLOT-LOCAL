@@ -195,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 14,
                 ),
                  SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.25,
+                  height: MediaQuery.of(context).size.height * 0.21,
                   child: SwipeableCardsScreen(),
                  ),
                   SizedBox(
@@ -246,16 +246,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      textStyle(
-                          context: context,
-                          text: getTimeBasedGreeting(),
-                          fontWeight: FontWeight.w500,
-                          fontsize: 15),
                       Obx(() => textStyle(
                           context: context,
-                          text: userName.value,
+                          text: toUpperCase(userName.value),
                           fontWeight: FontWeight.bold,
-                          fontsize: 15))
+                          fontsize: 15)),
+                      textStyle(
+                          context: context,
+                          text: "👏 No food orders in 4 days",
+                          // text: getTimeBasedGreeting(),
+                          fontWeight: FontWeight.w500,
+                          fontsize: 15),
                     ],
                   )
                 ],

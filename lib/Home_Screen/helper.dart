@@ -49,7 +49,8 @@ String getCurrentWeekNumber() {
 }
 
 String formatWhatsAppDate2(DateTime date) {
-  date = date.toLocal().subtract(Duration(hours: 5, minutes: 30));;
+  date = date.toLocal().subtract(Duration(hours: 5, minutes: 30));
+  ;
   // Adjust for 5:30 offset
   DateTime now = DateTime.now().toLocal();
   DateTime today = DateTime(now.year, now.month, now.day);
@@ -180,7 +181,8 @@ String formatWhatsAppDate4(DateTime date) {
 }
 
 String formatWhatsAppDate3(DateTime date) {
-  date = date.toLocal().add(Duration(hours: 5, minutes: 30));;
+  date = date.toLocal().add(Duration(hours: 5, minutes: 30));
+  ;
   // Adjust for 5:30 offset
   DateTime now = DateTime.now().toLocal();
   DateTime today = DateTime(now.year, now.month, now.day);
@@ -222,7 +224,6 @@ String formatWhatsAppDate3(DateTime date) {
     return "${DateFormat('d MMM y').format(date)}, $timeFormat"; // e.g., 7 Apr 2025, 10:30 AM
   }
 }
-
 
 DateTime convertStringToDateTime(String dateString) {
   return DateTime.parse(dateString);
@@ -271,26 +272,27 @@ String getTimeBasedGreeting() {
   }
 }
 
-
-Widget getProfile()
-{
-    return  AvatarProfile(fontsize:18,name: userName.value, width: 8, height: 10,background:userAvatarBackGround.value,flag: true,);
+Widget getProfile() {
+  return AvatarProfile(
+    fontsize: 18,
+    name: userName.value,
+    width: 8,
+    height: 10,
+    background: userAvatarBackGround.value,
+    flag: true,
+  );
 }
 
-
-int getRandomValue(list)
-{
+int getRandomValue(list) {
   return Random().nextInt(list.length);
 }
 
-String avaterUrlPath(String name)
-{
-    if(name.isEmpty)return "assets/avatars/a.svg";
-    return "assets/avatars/"+name[0].toString().toLowerCase()+".svg";
+String avaterUrlPath(String name) {
+  if (name.isEmpty) return "assets/avatars/a.svg";
+  return "assets/avatars/" + name[0].toString().toLowerCase() + ".svg";
 }
 
-String formatMoneyIndian(String value)
- {
+String formatMoneyIndian(String value) {
   if (value.isEmpty) return '0';
   try {
     // Remove commas if user input already has them
@@ -308,169 +310,170 @@ String formatMoneyIndian(String value)
   }
 }
 
+Future<void> updateWidget() async {
+  final prefs = await SharedPreferences.getInstance();
+  try {
+    String toReceive = 'None: ₹0';
+    String toPay = 'None: ₹0';
 
-  Future<void> updateWidget() async {
-
-
-      final prefs = await SharedPreferences.getInstance();
-    try {
-      String toReceive = 'None: ₹0';
-      String toPay = 'None: ₹0';
-       
-      if (lendAmountRemainders.isNotEmpty && lendAmountRemainders.first != null) {
-        final data = lendAmountRemainders.first;
-        toReceive =
-            '${data["name"] ?? "Unknown"}: ₹${(data["amount"] ?? 0).toStringAsFixed(2)}';
-      }
-      if (dueAmountRemainders.isNotEmpty && dueAmountRemainders.first != null) {
-        final data = dueAmountRemainders.first;
-        toPay =
-            '${data["name"] ?? "Unknown"}: ₹${(data["amount"] ?? 0).toStringAsFixed(2)}';
-      }
-      await prefs.setString('to_receive', toReceive);
-      await prefs.setString('to_pay', toPay);
-      // Save to HomeWidget (updates UserDefaults for iOS)
-      await HomeWidget.saveWidgetData<String>('to_receive', toReceive);
-      await HomeWidget.saveWidgetData<String>('to_pay', toPay);
-      await HomeWidget.updateWidget(
-        name: 'PayableWidgetProvider',
-        androidName: 'PayableWidgetProvider',
-        iOSName: 'PayableWidget',
-      );
-    } catch (e) {
-    
-      await prefs.setString('to_receive', 'Error');
-      await prefs.setString('to_pay', 'Error');
-      await HomeWidget.saveWidgetData<String>('to_receive', 'Error');
-      await HomeWidget.saveWidgetData<String>('to_pay', 'Error');
-      await HomeWidget.updateWidget(
-        name: 'PayableWidgetProvider',
-        androidName: 'PayableWidgetProvider',
-        iOSName: 'PayableWidget',
-      );
+    if (lendAmountRemainders.isNotEmpty && lendAmountRemainders.first != null) {
+      final data = lendAmountRemainders.first;
+      toReceive =
+          '${data["name"] ?? "Unknown"}: ₹${(data["amount"] ?? 0).toStringAsFixed(2)}';
     }
-  }
-
-   String formatDate(String dateString) {
-    DateTime date = DateTime.parse(dateString);
-    return DateFormat('d MMM yyyy').format(date); // Format as Aug 2024
-  }
-
-  String getMonthName(int month) {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec'
-    ];
-    return months[month - 1];
-  }
-
-String getMonthlyRange() {
-    final now = DateTime.now();
-    final startOfMonth = DateTime(now.year, now.month, 1);
-    final currentDay = now; // Use current date as the end date
-
-    return '${_formatDateDonut(startOfMonth)} - ${_formatDateDonut(currentDay)}';
-  }
-
-  String _formatDateDonut(DateTime date) {
-    return '${date.day.toString().padLeft(2, '0')} ${getMonthName(date.month)} ${date.year}';
-  }
-
-
-  void showModalForPdfDownloadBankUiCheckBox(BuildContext context) {
-    getPdgLoader.value = false;
-    final double screenWidth = MediaQuery.of(context).size.width;
-
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            child: Container(
-              width: MediaQuery.of(context).size.width, // Full screen width
-              height:( MediaQuery.of(context).size.height/2.5), // Full screen height
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(24)),
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.white,
-                    Colors.grey[50]!,
-                  ],
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 20,
-                    spreadRadius: 5,
-                    offset: const Offset(0, -5),
-                  ),
-                ],
-              ),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Center(child: Container(width: 50,height: 2.2,color:Colorcodes.claimColor,)),
-                  Padding(
-                    padding:const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        textStyle(
-                            context: context,
-                            text: "Select Bank Account",
-                            fontsize: 14,
-                            fontWeight: FontWeight.w500),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Icon(
-                            Icons.close_outlined,
-                            size: 20,
-                            color: AppColors.accentColor,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  getBankAccountList(context),
-                  SizedBox(height: 10,),
-                 
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5),
-                    child: InkWell(
-                        onTap: () async {
-                            showModalForPdfDownload(context);
-                        },
-                        child: getButton(context, "Continue")),
-                  )
-                ],
-              ),
-            ),
-          ),
-        );
-      },
+    if (dueAmountRemainders.isNotEmpty && dueAmountRemainders.first != null) {
+      final data = dueAmountRemainders.first;
+      toPay =
+          '${data["name"] ?? "Unknown"}: ₹${(data["amount"] ?? 0).toStringAsFixed(2)}';
+    }
+    await prefs.setString('to_receive', toReceive);
+    await prefs.setString('to_pay', toPay);
+    // Save to HomeWidget (updates UserDefaults for iOS)
+    await HomeWidget.saveWidgetData<String>('to_receive', toReceive);
+    await HomeWidget.saveWidgetData<String>('to_pay', toPay);
+    await HomeWidget.updateWidget(
+      name: 'PayableWidgetProvider',
+      androidName: 'PayableWidgetProvider',
+      iOSName: 'PayableWidget',
+    );
+  } catch (e) {
+    await prefs.setString('to_receive', 'Error');
+    await prefs.setString('to_pay', 'Error');
+    await HomeWidget.saveWidgetData<String>('to_receive', 'Error');
+    await HomeWidget.saveWidgetData<String>('to_pay', 'Error');
+    await HomeWidget.updateWidget(
+      name: 'PayableWidgetProvider',
+      androidName: 'PayableWidgetProvider',
+      iOSName: 'PayableWidget',
     );
   }
+}
 
+String formatDate(String dateString) {
+  DateTime date = DateTime.parse(dateString);
+  return DateFormat('d MMM yyyy').format(date); // Format as Aug 2024
+}
 
- Widget getBankAccountList(context) {
+String getMonthName(int month) {
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+  ];
+  return months[month - 1];
+}
+
+String getMonthlyRange() {
+  final now = DateTime.now();
+  final startOfMonth = DateTime(now.year, now.month, 1);
+  final currentDay = now; // Use current date as the end date
+
+  return '${_formatDateDonut(startOfMonth)} - ${_formatDateDonut(currentDay)}';
+}
+
+String _formatDateDonut(DateTime date) {
+  return '${date.day.toString().padLeft(2, '0')} ${getMonthName(date.month)} ${date.year}';
+}
+
+void showModalForPdfDownloadBankUiCheckBox(BuildContext context) {
+  getPdgLoader.value = false;
+  final double screenWidth = MediaQuery.of(context).size.width;
+
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        child: Container(
+          width: MediaQuery.of(context).size.width, // Full screen width
+          height:
+              (MediaQuery.of(context).size.height / 2.5), // Full screen height
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.white,
+                Colors.grey[50]!,
+              ],
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 20,
+                spreadRadius: 5,
+                offset: const Offset(0, -5),
+              ),
+            ],
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Center(
+                    child: Container(
+                  width: 50,
+                  height: 2.2,
+                  color: Colorcodes.claimColor,
+                )),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      textStyle(
+                          context: context,
+                          text: "Select Bank Account",
+                          fontsize: 14,
+                          fontWeight: FontWeight.w500),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Icon(
+                          Icons.close_outlined,
+                          size: 20,
+                          color: AppColors.accentColor,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                getBankAccountList(context),
+                SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: InkWell(
+                      onTap: () async {
+                        showModalForPdfDownload(context);
+                      },
+                      child: getButton(context, "Continue")),
+                )
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
+
+Widget getBankAccountList(context) {
   return Container(
     margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 6),
     child: Column(
@@ -516,7 +519,8 @@ String getMonthlyRange() {
                     ),
                   ),
                   child: Checkbox(
-                    value: accountIdPdf.value == account["accountId"].toString(),
+                    value:
+                        accountIdPdf.value == account["accountId"].toString(),
                     onChanged: (isChecked) {
                       if (isChecked == true) {
                         accountIdPdf.value = account["accountId"].toString();
@@ -533,103 +537,103 @@ String getMonthlyRange() {
   );
 }
 
-
-
-  Widget getHeader(context,text){
-    return Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    textStyle(
-                        context: context,
-                        text: text,
-                        fontsize: 14,
-                        fontWeight: FontWeight.w500),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Icon(
-                        Icons.close_outlined,
-                        size: 20,
-                        color: AppColors.accentColor,
-                      ),
-                    )
-                  ],
-                ),
-              );
-  }
-
-  void showModalForPdfDownload(BuildContext context) {
-    getPdgLoader.value = false;
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          height: MediaQuery.of(context).size.height / 2.4,
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30),
-            ),
-            color: Colors.white,
+Widget getHeader(context, text) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        textStyle(
+            context: context,
+            text: text,
+            fontsize: 14,
+            fontWeight: FontWeight.w500),
+        InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: const Icon(
+            Icons.close_outlined,
+            size: 20,
+            color: AppColors.accentColor,
           ),
-          child: Column(
-            children: [
-              Center(child: Container()),
-              getHeader(context, "Download Statement"),
-              const SizedBox(height: 20),
-              getListItemListTile("30", "days", context),
-              getListItemListTile("60", "days", context),
-              getListItemListTile("6", "months", context),
-              // getListItemListTile("1", "year", context),
-              SizedBox(height: 10,),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                child: InkWell(
-                    onTap: () async {
-                      getPdgLoader.value = true;
-                      getPdf(context, selectedValue, selectedValueType);
-                    },
-                    child: Obx(() => getPdgLoader.value
-                        ? getspinner(context, "")
-                        : getButton(context, "Continue"))),
-              )
-            ],
-          ),
-        );
-      },
-    );
-  }
+        )
+      ],
+    ),
+  );
+}
 
-   Widget getListItemListTile(String no, String MorY, context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.primaryColor, width: 0.2),
-      ),
-      child: Obx(() => ListTile(
-            title: textStyle(
-                context: context,
-                text: no + " ${MorY}",
-                fontsize: 15,
-                fontWeight: FontWeight.w500),
-            trailing: Radio<String>(
-              value: no, // Assign a unique value for each radio button
-              groupValue: selectedValue.value, // The currently selected value
-              onChanged: (value) {
-                selectedValue.value = value!;
-                selectedValueType.value = MorY;
-              },
+void showModalForPdfDownload(BuildContext context) {
+  getPdgLoader.value = false;
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return Container(
+        height: MediaQuery.of(context).size.height / 2.4,
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
+          color: Colors.white,
+        ),
+        child: Column(
+          children: [
+            Center(child: Container()),
+            getHeader(context, "Download Statement"),
+            const SizedBox(height: 20),
+            getListItemListTile("30", "days", context),
+            getListItemListTile("60", "days", context),
+            getListItemListTile("6", "months", context),
+            // getListItemListTile("1", "year", context),
+            SizedBox(
+              height: 10,
             ),
-          )),
-    );
-  }
- Widget getCheckBoxwithText(BuildContext context, String text) {
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              child: InkWell(
+                  onTap: () async {
+                    getPdgLoader.value = true;
+                    getPdf(context, selectedValue, selectedValueType);
+                  },
+                  child: Obx(() => getPdgLoader.value
+                      ? getspinner(context, "")
+                      : getButton(context, "Continue"))),
+            )
+          ],
+        ),
+      );
+    },
+  );
+}
+
+Widget getListItemListTile(String no, String MorY, context) {
+  return Container(
+    width: MediaQuery.of(context).size.width,
+    margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: AppColors.primaryColor, width: 0.2),
+    ),
+    child: Obx(() => ListTile(
+          title: textStyle(
+              context: context,
+              text: no + " ${MorY}",
+              fontsize: 15,
+              fontWeight: FontWeight.w500),
+          trailing: Radio<String>(
+            value: no, // Assign a unique value for each radio button
+            groupValue: selectedValue.value, // The currently selected value
+            onChanged: (value) {
+              selectedValue.value = value!;
+              selectedValueType.value = MorY;
+            },
+          ),
+        )),
+  );
+}
+
+Widget getCheckBoxwithText(BuildContext context, String text) {
   return Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(12),
@@ -670,29 +674,30 @@ String getMonthlyRange() {
   );
 }
 
-
- Widget filterTransaction(context)
- {
-    return Container(
-      height:  MediaQuery.of(context).size.height /(bankAccountLinkedList.length<=1? 3:2.2),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-                   getHeader(context, "Select Filter"),
-                   getCheckBoxwithText(context, "Credit"),
-                   getCheckBoxwithText(context, "Debit"),
-                   bankAccountLinkedList.length>=2? getBankAccountList(context):SizedBox.shrink(),
-                   const SizedBox(height: 10),
-                  
-                   InkWell(
-                    onTap: (){
-                      if(accountIdPdf.value.toLowerCase().startsWith("credit") || accountIdPdf.value.toLowerCase().startsWith("debit"))
-                      {
-                        searchController.text=accountIdPdf.value.toLowerCase();
-                      }
-                      else if(accountIdPdf.value=="-"){
+Widget filterTransaction(context) {
+  return Container(
+    height: MediaQuery.of(context).size.height /
+        (bankAccountLinkedList.length <= 1 ? 3 : 2.2),
+    child: SingleChildScrollView(
+      child: Column(
+        children: [
+          getHeader(context, "Select Filter"),
+          getCheckBoxwithText(context, "Credit"),
+          getCheckBoxwithText(context, "Debit"),
+          bankAccountLinkedList.length >= 2
+              ? getBankAccountList(context)
+              : SizedBox.shrink(),
+          const SizedBox(height: 10),
+          InkWell(
+              onTap: () {
+                if (accountIdPdf.value.toLowerCase().startsWith("credit") ||
+                    accountIdPdf.value.toLowerCase().startsWith("debit")) {
+                  searchController.text = accountIdPdf.value.toLowerCase();
+                }
+                 else if(accountIdPdf.value=="-"){
                          searchController.text="";
-                      }
+                  }
+                     
                       onChanedAutoTransactionStatus(context);
                       Navigator.pop(context);
                     },
@@ -700,12 +705,10 @@ String getMonthlyRange() {
           ],
         ),
       ),
-    );
- }
+  );
+}
 
-
- String getBankLogo()
-  {
+String getBankLogo() {
   for (var bankAccount in bankAccountLinkedList) {
     if (bankAccount['accountId'] == accountIdPdf.value) {
       return bankAccount['bankLogo'];
@@ -715,26 +718,27 @@ String getMonthlyRange() {
   return bankImage; // return null if no match found
 }
 
-
 double getProgressValue(String text) {
   if (text.toLowerCase().contains("same as last month")) {
     return 0.0;
   }
 
   final match = RegExp(r'([-+]?\d+)%').firstMatch(text);
-  if (match != null)
-  {
+  if (match != null) {
     final value = int.tryParse(match.group(1) ?? "0") ?? 0;
-    double  v= value<=0? 1 : value<=99? value/1.0 :100;
+    double v = value <= 0
+        ? 1
+        : value <= 99
+            ? value / 1.0
+            : 100;
     return v;
     // return (value.abs().clamp(0, 100)) / 100;
   }
-  
+
   return 0.0;
 }
 
-String getDaysLeftInMonth()
- {
+String getDaysLeftInMonth() {
   final now = DateTime.now();
   final nextMonth = (now.month < 12)
       ? DateTime(now.year, now.month + 1, 1)
