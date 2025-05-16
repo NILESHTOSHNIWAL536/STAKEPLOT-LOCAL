@@ -712,7 +712,7 @@ Widget getCustomCategoryList(BuildContext context) {
                     activeColor: AppColors.primaryColor,
                     onChanged: (value) {
                       widget.data['category'] = e['name'];
-                      widget.data['subcategory'] = "";
+                      widget.data['subcategory'] = "Other";
                       tagName.value = e['name'];
                       UrlPathImage.value = e['imageUrl'];
                       loadAgain.value = !loadAgain.value;
@@ -890,30 +890,33 @@ List<MapEntry<String, List<String>>> getMatchingCategories(
 Widget getListOfCat(BuildContext context) {
   List<MapEntry<String, List<String>>> categoryList = getMatchingCategories(categories, searchController.text);
 
-  return SizedBox(
-    height: MediaQuery.of(context).size.height * 0.6,
-    child: ListView.builder(
-      itemCount: categoryList.length + 1, // +1 for custom categories
-      shrinkWrap: true,
-      padding: EdgeInsets.symmetric(vertical: 5),
-      itemBuilder: (context, index) {
-        if (index == 0) {
-          return Obx(() => LoadTag.value ? getCustomCategoryList(context) : getCustomCategoryList(context));
-        }
-        var e = categoryList[index - 1]; // Adjust index for regular categories
-        return Container(
-          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-          margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-          child: Column(
-            children: [
-              mainCategory(context, e.key, e.value),
-              const SizedBox(height: 10),
-              subCategory(context, e.key, e.value),
-              Divider(),
-            ],
-          ),
-        );
-      },
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 50),
+    child: SizedBox(
+      height: MediaQuery.of(context).size.height * 0.5,
+      child: ListView.builder(
+        itemCount: categoryList.length + 1, // +1 for custom categories
+        shrinkWrap: true,
+        padding: EdgeInsets.symmetric(vertical: 5),
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return Obx(() => LoadTag.value ? getCustomCategoryList(context) : getCustomCategoryList(context));
+          }
+          var e = categoryList[index - 1]; // Adjust index for regular categories
+          return Container(
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+            margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+            child: Column(
+              children: [
+                mainCategory(context, e.key, e.value),
+                const SizedBox(height: 10),
+                subCategory(context, e.key, e.value),
+                Divider(),
+              ],
+            ),
+          );
+        },
+      ),
     ),
   );
 }
@@ -930,7 +933,7 @@ Widget getListOfCat(BuildContext context) {
                   customSelections.value = false;
                   tagName.value = value!;
                   widget.data['category']=value;
-                  widget.data['subcategory']="";
+                  widget.data['subcategory']="Other";
                   loadAgain.value=!loadAgain.value;  
               },
             )),

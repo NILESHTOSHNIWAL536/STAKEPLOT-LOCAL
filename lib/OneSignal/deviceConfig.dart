@@ -56,6 +56,7 @@
 
 
 import 'package:flutter/widgets.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
@@ -146,8 +147,10 @@ void setUpSocketListenerMainPage(BuildContext context) {
     mainPageWebSocket.on("addUserToSocket", (data) {
       if (data['type'] == "logoutUser") {
         logoutUserFromDevice(context);
-      } else if (data['type'] == "fetchedApiCall") {
+      } else if (data['type'] == "fetchedApiCall")
+      {
         isFected.value = false;
+        getBankAccounts();
       }
     });
 

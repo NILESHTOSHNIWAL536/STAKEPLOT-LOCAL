@@ -236,7 +236,7 @@ class CategoryCard extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        category,
+                        toUpperCase(category),
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.w500,

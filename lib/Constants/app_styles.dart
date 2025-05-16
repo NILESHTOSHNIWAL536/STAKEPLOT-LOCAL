@@ -149,6 +149,7 @@ class SubCategories {
   static String musicApps = "MusicApps.svg";
   static String onlineCourses = "OnlineCources.svg";
   static String others = "Others.svg";
+  static String other = "other.svg";
   static String ott = "OTT.svg";
   static String personalLoan = "Personalloan.svg";
   static String petAccessories = "PetAccessories.svg";
@@ -281,6 +282,7 @@ class BudgetSubCategories {
   static const String connect = "assets/icons/subCategoryIcons/";
   static final Map<String, String> listofSubCategories = {
     // Food
+    "Other": "${connect}other.svg",
     "Swiggy": "${connect}swiggy.svg",
     "Zomato": "${connect}zomato.svg",
     "Restaurant": "${connect}restaurant.svg",
@@ -620,6 +622,7 @@ final Map<String, List<String>> categories = {
     // "General Store",
     "rasoi",
     "fish",
+    "Other"
     // "milk"
   ],
   "Shopping": [
@@ -641,7 +644,8 @@ final Map<String, List<String>> categories = {
     "shop",
     "max",
     "zudio",
-    "centro"
+    "centro",
+    "Other"
   ],
   "Travel": [
     "Fuel",
@@ -657,9 +661,10 @@ final Map<String, List<String>> categories = {
     "Filling",
     "Rapido",
     "Tgsrtc",
-    "irctc"
+    "irctc",
+    "Other"
   ],
-  "Health": ["Medical", "Pharmacy", "Hospital", "Medplus"],
+  "Health": ["Medical", "Pharmacy", "Hospital", "Medplus","Other"],
   "Bills": [
     "Electricity",
     "Water",
@@ -673,7 +678,8 @@ final Map<String, List<String>> categories = {
     "Solutions",
     "godaddy",
     "hostinger",
-    "bpcl"
+    "bpcl",
+     "Other"
   ],
   "Subscriptions": [
     "Netflix",
@@ -681,7 +687,8 @@ final Map<String, List<String>> categories = {
     "Spotify",
     "Jio Hotstar",
     "appleServices",
-    "disney"
+    "disney",
+     "Other"
   ],
   "Events": [
     "Weddings",
@@ -690,9 +697,10 @@ final Map<String, List<String>> categories = {
     "Anniversary",
     "Flowers",
     "pubs",
-    "Gift"
+    "Gift",
+    "Other"
   ],
-  "Personal Care": ["Salon", "Spa", "Haircare", "Skincare"],
+  "Personal Care": ["Salon", "Spa", "Haircare", "Skincare","Other"],
   "Services": [
     "Housemaid",
     "Carpenter",
@@ -709,13 +717,14 @@ final Map<String, List<String>> categories = {
     "communications",
     "traders",
     "Enterprises",
-    "solutions"
+    "solutions",
+     "Other"
   ],
-  "Emi": ["Eazypay", "slice", "postpaid"],
-  "Investments": ["MutualFund", "Stocks", "Gold"],
-  "Insurance": ["Life Insurance", "Vehicle Insurance", "POLICYBAZAAR"],
-  "Support": ["Charity"],
-  "Current": ["TDS"],
+  "Emi": ["Eazypay", "slice", "postpaid", "Other"],
+  "Investments": ["MutualFund", "Stocks", "Gold", "Other"],
+  "Insurance": ["Life Insurance", "Vehicle Insurance", "POLICYBAZAAR","Other"],
+  "Support": ["Charity", "Other"],
+  "Current": ["TDS", "Other"],
   "Children": [
     "School Fees",
     "Tuitions",
@@ -723,13 +732,14 @@ final Map<String, List<String>> categories = {
     "miniklub",
     "uniforms",
     "baby care",
-    "children"
+    "children",
+     "Other"
   ],
-  "Pet Care": ["Pet"],
-  "Sports": ["Gym Membership", "Sports Equipment", "Snooker", "cricket", "box"],
-  "Alcohol": ["Liquor", "Wine", "Cigarettes"],
-  "Hobbies": ["Photography", "Gardening"],
-  "Education": ["Stationary", "Fees", "institute", "college"],
+  "Pet Care": ["Pet","Other"],
+  "Sports": ["Gym Membership", "Sports Equipment", "Snooker", "cricket", "box", "Other"],
+  "Alcohol": ["Liquor", "Wine", "Cigarettes", "Other"],
+  "Hobbies": ["Photography", "Gardening", "Other"],
+  "Education": ["Stationary", "Fees", "institute", "college", "Other"],
   "Commerce": [
     "Amazon",
     "Flipkart",
@@ -739,7 +749,8 @@ final Map<String, List<String>> categories = {
     "zepto",
     "Grofers",
     "Bluedart",
-    "ekart"
+    "ekart", 
+    "Other"
   ],
   "snacks": [
     "juice",
@@ -757,7 +768,8 @@ final Map<String, List<String>> categories = {
     "Tea",
     "chips",
     "confectioners",
-    "cool drink"
+    "cool drink",
+     "Other"
   ],
   "Entertainment": [
     "Bookmyshow",
@@ -769,7 +781,8 @@ final Map<String, List<String>> categories = {
     "cinepolis",
     "imax",
     "Escape",
-    "Adventures"
+    "Adventures",
+     "Other"
   ],
   "Groceries": [
     "SUPRDAILY",
@@ -781,7 +794,8 @@ final Map<String, List<String>> categories = {
     "dmart",
     "kirana",
     "General Store",
-    "milk"
+    "milk",
+     "Other"
   ],
   "Income": [
     "NEFT",
@@ -792,11 +806,13 @@ final Map<String, List<String>> categories = {
     "BIL",
     "INF",
     "zerodhabroking",
-    "credit"
+    "credit",
+     "Other"
   ],
-  "Personal Transfer": ["POS", "CASH WDL", "ATM", " To:"],
+  "Personal Transfer": ["POS", "CASH WDL", "ATM", " To:", "Other"],
   "Personal Transfer Received": [
     "UPI-CR",
+    "Other"
   ]
 };
 
