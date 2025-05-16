@@ -106,7 +106,7 @@ void showCustomModal(BuildContext context) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
-    
+     backgroundColor: AppColors.mt,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(16),
@@ -566,8 +566,9 @@ class _ModalContentState extends State<ModalContent>
       runSpacing: 2.0, // Vertical spacing between rows
       children: categories[selectedCategory]!.map((subCategory) {
         // Get the URL path for the subcategory's icon from BudgetSubCategories
-        String urlPath = BudgetSubCategories.listofSubCategories[subCategory] ??
-            "assets/icons/subCategoryIcons/default.svg";
+        String urlPath = BudgetSubCategories.listofSubCategories[subCategory] ??"assets/icons/subCategoryIcons/default.svg";
+        
+  
         return GestureDetector(
           onTap: () {
             setState(() {
@@ -588,7 +589,7 @@ class _ModalContentState extends State<ModalContent>
               url: urlPath,
             ),
             label: Text(
-              subCategory,
+              toUpperCase(subCategory),
               style: FontManager().getTextStyle(
                 context,
                 lWeight: FontWeight.normal,

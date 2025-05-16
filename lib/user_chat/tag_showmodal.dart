@@ -712,7 +712,7 @@ Widget getCustomCategoryList(BuildContext context) {
                     activeColor: AppColors.primaryColor,
                     onChanged: (value) {
                       widget.data['category'] = e['name'];
-                      widget.data['subcategory'] = "";
+                      widget.data['subcategory'] = "Other";
                       tagName.value = e['name'];
                       UrlPathImage.value = e['imageUrl'];
                       loadAgain.value = !loadAgain.value;
@@ -931,7 +931,7 @@ Widget getListOfCat(BuildContext context) {
                   customSelections.value = false;
                   tagName.value = value!;
                   widget.data['category']=value;
-                  widget.data['subcategory']="";
+                  widget.data['subcategory']="Other";
                   loadAgain.value=!loadAgain.value;  
               },
             )),

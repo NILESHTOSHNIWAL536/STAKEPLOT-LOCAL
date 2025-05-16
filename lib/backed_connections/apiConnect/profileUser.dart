@@ -194,7 +194,6 @@ void getUserInfomations() async {
     isFected.value = data['fetchInProgress'] ?? false;
     cupertinoPin.value = data['cupertino_pin']; //?? '0';
     getPhoneNo(his);
-
     // savedList.clear();
     // savedList.addAll(data['saved'] );
 

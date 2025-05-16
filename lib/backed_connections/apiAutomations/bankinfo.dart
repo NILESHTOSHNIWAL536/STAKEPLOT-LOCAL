@@ -16,10 +16,9 @@ RxList bankAccountLinkedList = [].obs;
 RxList consentAndHandleDetails = [].obs;
 RxMap bankImagemap = {}.obs;
 
-Future<void> getBankAccounts() async {
+Future<void> getBankAccounts() async
+{
   var response =await getDataApiCall("${url}/transactionauto/get-banks-linked/");
-
-
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     consentAndHandleDetails.clear();

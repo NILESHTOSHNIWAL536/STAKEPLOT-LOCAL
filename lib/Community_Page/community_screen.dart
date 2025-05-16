@@ -393,6 +393,7 @@ class _CommunityState extends State<Community> {
                             Navigator.of(context).pop();
                             showModalBottomSheet(
                               isScrollControlled: true,
+                               backgroundColor: AppColors.backgroundColor,
                               context: context,
                               builder: (context) {
                                 return Container(
@@ -424,6 +425,7 @@ class _CommunityState extends State<Community> {
                             Navigator.of(context).pop();
                             showModalBottomSheet(
                               isScrollControlled: true,
+                               backgroundColor: AppColors.backgroundColor,
                               context: context,
                               builder: (context) {
                                 return Container(
@@ -454,6 +456,7 @@ class _CommunityState extends State<Community> {
                             Navigator.of(context).pop();
                             showModalBottomSheet(
                               isScrollControlled: true,
+                               backgroundColor: AppColors.backgroundColor,
                               context: context,
                               builder: (context) {
                                 return Container(
@@ -487,6 +490,7 @@ class _CommunityState extends State<Community> {
                         Navigator.of(context).pop();
                         showModalBottomSheet(
                           context: context,
+                          backgroundColor: AppColors.backgroundColor,
                           isScrollControlled: true,
                           builder: (context) {
                             return Container(

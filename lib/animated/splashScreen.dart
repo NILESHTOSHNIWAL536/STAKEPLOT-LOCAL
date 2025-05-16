@@ -37,6 +37,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:lottie/lottie.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
@@ -52,12 +53,9 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
-  Future<Widget> _checkAuthAndNavigate() async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    final bool isLoggedIn = _pref.containsKey("accessToken");
-    return isLoggedIn ? HomePage() : Signin();
-  }
+class _SplashScreenState extends State<SplashScreen>
+{
+
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +69,7 @@ class _SplashScreenState extends State<SplashScreen> {
         splash: Center(
           child: Lottie.asset("assets/splashScreen/splash.json"),
         ),
-        screenFunction: _checkAuthAndNavigate,
+        screenFunction: checkAuthAndNavigate,
       ),
     );
   }

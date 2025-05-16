@@ -494,12 +494,24 @@ Widget getBankAccountList(context) {
                     height: 22,
                   ),
                 ),
-                title: textStyle(
-                  context: context,
-                  text: account["bankName"],
-                  fontsize: 15,
-                  fontWeight: FontWeight.w500,
-                ),
+                title: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                        textStyle(
+                          context: context,
+                          text: account["bankName"],
+                          fontsize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        const SizedBox(height: 4,),
+                        textStyle(
+                          context: context,
+                          text: "Acc No:"+account["maskedAccNumber"],
+                          fontsize: 11,
+                          fontWeight: FontWeight.w500,
+                        ),
+                  ]),
                 trailing: Theme(
                   data: Theme.of(context).copyWith(
                     checkboxTheme: CheckboxThemeData(
@@ -534,7 +546,8 @@ Widget getHeader(context, text) {
         textStyle(
             context: context,
             text: text,
-            fontsize: 14,
+            fontsize: 16,
+            c: AppColors.accentColor,
             fontWeight: FontWeight.w500),
         InkWell(
           onTap: () {
@@ -651,6 +664,7 @@ Widget getCheckBoxwithText(BuildContext context, String text) {
               onChanged: (isChecked) {
                 if (isChecked == true) {
                   accountIdPdf.value = text;
+
                 } else {
                   accountIdPdf.value = "-";
                 }
@@ -662,32 +676,37 @@ Widget getCheckBoxwithText(BuildContext context, String text) {
 }
 
 Widget filterTransaction(context) {
-  return Container(
-    height: MediaQuery.of(context).size.height /
-        (bankAccountLinkedList.length <= 1 ? 3 : 2.2),
-    child: SingleChildScrollView(
-      child: Column(
-        children: [
-          getHeader(context, "Select Filter"),
-          getCheckBoxwithText(context, "Credit"),
-          getCheckBoxwithText(context, "Debit"),
-          bankAccountLinkedList.length >= 2
-              ? getBankAccountList(context)
-              : SizedBox.shrink(),
-          const SizedBox(height: 10),
-          InkWell(
-              onTap: () {
-                if (accountIdPdf.value.toLowerCase().startsWith("credit") ||
-                    accountIdPdf.value.toLowerCase().startsWith("debit")) {
-                  searchController.text = accountIdPdf.value.toLowerCase();
-                } else if(accountIdPdf.value=="-"){
-                         searchController.text="";
-                      }
-                onChanedAutoTransactionStatus(context);
-                Navigator.pop(context);
-              },
-              child: getButton(context, "Apply Filter")),
-        ],
+  return SafeArea(
+    child: Container(
+      height: MediaQuery.of(context).size.height /
+          (bankAccountLinkedList.length <= 1 ? 3 : 2.2),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              child: getHeader(context, "Select Filter"),
+            ),
+            getCheckBoxwithText(context, "Credit"),
+            getCheckBoxwithText(context, "Debit"),
+            bankAccountLinkedList.length >= 2
+                ? getBankAccountList(context)
+                : SizedBox.shrink(),
+            const SizedBox(height: 10),
+            InkWell(
+                onTap: () {
+                  if (accountIdPdf.value.toLowerCase().startsWith("credit") ||
+                      accountIdPdf.value.toLowerCase().startsWith("debit")) {
+                    searchController.text = accountIdPdf.value.toLowerCase();
+                  } else if(accountIdPdf.value=="-"){
+                           searchController.text="";
+                        }
+                  onChanedAutoTransactionStatus(context);
+                  Navigator.pop(context);
+                },
+                child: getButton(context, "Apply Filter")),
+          ],
+        ),
       ),
     ),
   );

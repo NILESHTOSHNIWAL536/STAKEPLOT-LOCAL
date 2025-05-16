@@ -33,6 +33,8 @@ class AuthGate extends StatelessWidget
   }
 
 
+ 
+
   Future<Widget> checkAuthAndNavigate() async
   {
     final SharedPreferences _pref = await SharedPreferences.getInstance();

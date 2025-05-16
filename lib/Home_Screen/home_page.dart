@@ -224,15 +224,15 @@ class _HomeScreenState extends State<HomeScreen> {
   PreferredSizeWidget getAppBar(){
     return  PreferredSize(
       preferredSize: const Size.fromHeight(60),
-      child: Padding(
-       padding:const EdgeInsets.only(right: 10,top:10,left: 10),
-        child: AppBar(
+      child: AppBar(
+        
+          backgroundColor: AppColors.backgroundColor,
+          automaticallyImplyLeading: false,
           
-            backgroundColor: AppColors.backgroundColor,
-            automaticallyImplyLeading: false,
-            
-            actions: [
-              Row(
+          actions: [
+            Padding(
+             padding:const EdgeInsets.only(right: 10,top:6,left: 10),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 // crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -260,13 +260,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   )
                 ],
               ),
-              Spacer(),
-              NotificationsBudget(
-                child: Text(""),
-              ),
-            ],
-          ),
-      ),
+            ),
+            Spacer(),
+            NotificationsBudget(
+              child: Text(""),
+            ),
+          ],
+        ),
     );
   }
 
