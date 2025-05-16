@@ -491,12 +491,24 @@ String getMonthlyRange() {
                     height: 22,
                   ),
                 ),
-                title: textStyle(
-                  context: context,
-                  text: account["bankName"],
-                  fontsize: 15,
-                  fontWeight: FontWeight.w500,
-                ),
+                title: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                        textStyle(
+                          context: context,
+                          text: account["bankName"],
+                          fontsize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        const SizedBox(height: 4,),
+                        textStyle(
+                          context: context,
+                          text: "Acc No:"+account["maskedAccNumber"],
+                          fontsize: 11,
+                          fontWeight: FontWeight.w500,
+                        ),
+                  ]),
                 trailing: Theme(
                   data: Theme.of(context).copyWith(
                     checkboxTheme: CheckboxThemeData(
@@ -647,6 +659,7 @@ String getMonthlyRange() {
               onChanged: (isChecked) {
                 if (isChecked == true) {
                   accountIdPdf.value = text;
+
                 } else {
                   accountIdPdf.value = "-";
                 }
@@ -676,6 +689,9 @@ String getMonthlyRange() {
                       if(accountIdPdf.value.toLowerCase().startsWith("credit") || accountIdPdf.value.toLowerCase().startsWith("debit"))
                       {
                         searchController.text=accountIdPdf.value.toLowerCase();
+                      }
+                      else if(accountIdPdf.value=="-"){
+                         searchController.text="";
                       }
                       onChanedAutoTransactionStatus(context);
                       Navigator.pop(context);
