@@ -20,6 +20,7 @@ class HomePageIcons {
   static String none = "assets/icons/Home-page/none.svg";
   static String isSplit = "assets/icons/Home-page/isSplit.svg";
   static String isManualGif = "assets/Images/rupee.gif";
+  static String transactionSplit = "assets/icons/Home-page/TransactionSplitIcon.svg";
 }
 
 class Categories {

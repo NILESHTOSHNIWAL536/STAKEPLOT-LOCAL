@@ -49,7 +49,21 @@ class NewFriendsUi extends StatefulWidget {
 
 class _NewFriendsUiState extends State<NewFriendsUi> {
   TextEditingController textController = TextEditingController();
-
+  @override
+  void initState() {
+    super.initState();
+    // Clear the selected friends lists when the screen is initialized
+    // addedUser.clear();
+    // addedMembers.clear();
+  }
+  @override
+ void dispose() {
+    // Clear the selected friends lists when the screen is closed
+    addedUser.clear();
+    addedMembers.clear();
+    textController.dispose(); // Also dispose of the controller to prevent memory leaks
+    super.dispose();
+ }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -61,13 +75,14 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
         ),
       ),
       width: MediaQuery.of(context).size.width,
-     // height: MediaQuery.of(context).size.height / 2,
+      // height: MediaQuery.of(context).size.height / 2,
       child: Padding(
         padding: EdgeInsets.only(
           top: 24,
           left: 18,
           right: 18,
-          bottom: MediaQuery.of(context).viewInsets.bottom, // Adjust for keyboard
+          bottom:
+              MediaQuery.of(context).viewInsets.bottom, // Adjust for keyboard
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -114,9 +129,13 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                 Stack(
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.all(0.0),
-                                      child: AvatarProfile(name:  element['name'], width: 12, height: 12, background: element['avatarBackGround'])
-                                    ),
+                                        padding: const EdgeInsets.all(0.0),
+                                        child: AvatarProfile(
+                                            name: element['name'],
+                                            width: 12,
+                                            height: 12,
+                                            background:
+                                                element['avatarBackGround'])),
                                     Positioned(
                                       right: 0,
                                       top: 0,
@@ -280,7 +299,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                     child: getButton(context, "Continue"),
                   ),
                 ),
-                const SizedBox(height: 16),
+              const SizedBox(height: 16),
             ],
           ),
         ),
@@ -366,7 +385,9 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                           "name": frdsList[index]['name'],
                                           "id": values,
                                           'avatar': frdsList[index]['avatar'],
-                                          'avatarBackGround': frdsList[index]['avatarBackGround'] ?? defaultBackGround.value ,
+                                          'avatarBackGround': frdsList[index]
+                                                  ['avatarBackGround'] ??
+                                              defaultBackGround.value,
                                           "balance": 200,
                                         });
                                       } else {
@@ -375,7 +396,9 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                           "name": frdsList[index]['name'],
                                           "id": values,
                                           'avatar': frdsList[index]['avatar'],
-                                          'avatarBackGround': frdsList[index]['avatarBackGround'] ?? defaultBackGround.value ,
+                                          'avatarBackGround': frdsList[index]
+                                                  ['avatarBackGround'] ??
+                                              defaultBackGround.value,
                                           "balance": 200,
                                         });
                                       }
@@ -388,7 +411,13 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                                     child: Stack(
                                       children: [
                                         Center(
-                                          child: AvatarProfile(name:  frdsList[index]['name'], width: 12, height: 12, background: frdsList[index]['avatarBackGround']??defaultBackGround.value),
+                                          child: AvatarProfile(
+                                              name: frdsList[index]['name'],
+                                              width: 12,
+                                              height: 12,
+                                              background: frdsList[index]
+                                                      ['avatarBackGround'] ??
+                                                  defaultBackGround.value),
                                         ),
                                         addedUser.contains(values)
                                             ? const Positioned(

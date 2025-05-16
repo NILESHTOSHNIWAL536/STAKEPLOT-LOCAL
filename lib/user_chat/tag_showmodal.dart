@@ -640,9 +640,9 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
       // duration: Duration(milliseconds: 300),
       // curve: Curves.easeInOut,
       // padding: EdgeInsets.all(16),
-      padding: EdgeInsets.symmetric(horizontal: 5,vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height/1.3,
+      height: MediaQuery.of(context).size.height/1.25,
       decoration: BoxDecoration(
         color: Colorcodes.white,
         borderRadius:const BorderRadius.only(
@@ -891,19 +891,20 @@ Widget getListOfCat(BuildContext context) {
   List<MapEntry<String, List<String>>> categoryList = getMatchingCategories(categories, searchController.text);
 
   return SizedBox(
-    height: MediaQuery.of(context).size.height * 0.6,
+    height: MediaQuery.of(context).size.height * 0.57,
     child: ListView.builder(
       itemCount: categoryList.length + 1, // +1 for custom categories
       shrinkWrap: true,
-      padding: EdgeInsets.symmetric(vertical: 5),
+   //   padding: EdgeInsets.symmetric(vertical: 5),
       itemBuilder: (context, index) {
         if (index == 0) {
           return Obx(() => LoadTag.value ? getCustomCategoryList(context) : getCustomCategoryList(context));
         }
         var e = categoryList[index - 1]; // Adjust index for regular categories
         return Container(
-          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-          margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 4),
+          margin: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+         
           child: Column(
             children: [
               mainCategory(context, e.key, e.value),
