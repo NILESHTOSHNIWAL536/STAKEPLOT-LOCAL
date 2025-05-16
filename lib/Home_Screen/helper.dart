@@ -546,7 +546,8 @@ Widget getHeader(context, text) {
         textStyle(
             context: context,
             text: text,
-            fontsize: 14,
+            fontsize: 16,
+            c: AppColors.accentColor,
             fontWeight: FontWeight.w500),
         InkWell(
           onTap: () {

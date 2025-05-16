@@ -424,6 +424,7 @@ class _ExploreModalState extends State<ExploreModal> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      
       child: Padding(
         padding: const EdgeInsets.only(top: 20),
         child: Container(
