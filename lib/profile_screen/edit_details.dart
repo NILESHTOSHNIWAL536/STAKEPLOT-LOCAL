@@ -210,7 +210,7 @@ void checkBiometricsStatus() async {
             // Profile Picture
             Column(
               children: [
-               Obx(() =>  AvatarProfile(name: userName.value, width: 4, height: 10,background:userAvatarBackGround.value,flag: true,)),
+               Obx(() =>  AvatarProfile(name: userName.value, width: 4.4, height: 10,background:userAvatarBackGround.value,flag: true,)),
                 // Obx(() => AvatarProfileImage(
                 //       url: avaterUrlPath(userName.value),
                 //       width: 14,
@@ -315,13 +315,37 @@ void checkBiometricsStatus() async {
             const SizedBox(height: 20),
             Divider(),
             const SizedBox(height: 10),
-            Align(
-              alignment: Alignment.topLeft,
-              child: textStyle(
-                  text: 'Account Details',
-                  context: context,
-                  fontWeight: FontWeight.bold,
-                  fontsize: 14),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: textStyle(
+                      text: 'Account Details',
+                      context: context,
+                      fontWeight: FontWeight.bold,
+                      fontsize: 14),
+                ),
+                 InkWell(
+                     onTap: () {
+                       number.value = Phone.value;
+                       isFromEditDeatils.value=true;
+                       Navigator.push(
+                         context,
+                         MaterialPageRoute(
+                           builder: (context) => MobileNumber(
+                             flag: true,
+                             formEditDetails: true,
+                           ),
+                         ),
+                       );
+                     },
+                     child: textStyle(
+                         text: '+ Add Bank',
+                         context: context,
+                         fontWeight: FontWeight.bold,
+                         fontsize: 14)),
+              ],
             ),
             // Account Details
             const SizedBox(height: 20),
@@ -349,34 +373,30 @@ void checkBiometricsStatus() async {
               return _buildAccountDetails(e['bankName'], e['maskedAccNumber'], e,e['bankLogo']);
             }).toList(),
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: InkWell(
-                onTap: () {
-                  number.value = Phone.value;
-                  isFromEditDeatils.value=true;
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MobileNumber(
-                        flag: true,
-                        formEditDetails: true,
-                      ),
-                    ),
-                  );
-                },
-                child: textStyle(
-                    text: '+ Add Bank',
-                    context: context,
-                    fontWeight: FontWeight.bold,
-                    fontsize: 16)),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
+         
+          // Align(
+          //   alignment: Alignment.bottomRight,
+          //   child: InkWell(
+          //       onTap: () {
+          //         number.value = Phone.value;
+          //         isFromEditDeatils.value=true;
+          //         Navigator.push(
+          //           context,
+          //           MaterialPageRoute(
+          //             builder: (context) => MobileNumber(
+          //               flag: true,
+          //               formEditDetails: true,
+          //             ),
+          //           ),
+          //         );
+          //       },
+          //       child: textStyle(
+          //           text: '+ Add Bank',
+          //           context: context,
+          //           fontWeight: FontWeight.bold,
+          //           fontsize: 16)),
+          // ),
+         
         ],
       ),
     );

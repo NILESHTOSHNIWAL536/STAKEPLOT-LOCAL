@@ -258,37 +258,38 @@ class OverspentCategoriesCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Overspent Categories',
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.bold,
-                    fontSize: screenSize.width * 0.04,
-                    color: AppColors.primaryColor,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Overspent Categories',
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.bold,
+                        fontSize: screenSize.width * 0.04,
+                        color: AppColors.primaryColor,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                     Text(
+                      '(${selectedPeriod.value}ly)',
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w500,
+                        fontSize: screenSize.width * 0.02,
+                        color: AppColors.bg3,
+                      ),
+                    ),
+                  ],
                 ),
                 GestureDetector(
                   onTap: () {
                     selectedPeriod.value = selectedPeriod.value == 'Week' ? 'Month' : 'Week';
                   },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: padding * 0.5,
-                      vertical: padding * 0.2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      selectedPeriod.value,
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.w600,
-                        fontSize: screenSize.width * 0.035,
-                        color: AppColors.accentColor,
-                      ),
-                    ),
+                  child: Icon(
+                    Icons.swap_horiz,
+                    color: AppColors.primaryColor,
+                    size: screenSize.width * 0.06,
                   ),
                 ),
               ],
@@ -406,7 +407,7 @@ class FrequentTransactionCard extends StatelessWidget {
                 : Text(
                     frequentPayments[0]['name'].toString(),
                     style:FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.w600,
+                                        lWeight: FontWeight.w500,
                       fontSize: screenSize.width * 0.04,
                       color: AppColors.accentColor,
                     ),

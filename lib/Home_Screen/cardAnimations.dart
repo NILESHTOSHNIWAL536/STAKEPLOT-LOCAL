@@ -355,13 +355,7 @@ class _InsightsScreenState extends State<InsightsScreen>
       decoration: BoxDecoration(
         color: Colors.grey[200],
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
+       
       ),
       child: Center(
         child: CircularProgressIndicator(
@@ -496,13 +490,7 @@ class NavItem extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: isSelected ? backgroundColor : Colors.grey[200],
                   shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 6,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+                 
                 ),
                 child: Icon(
                   icon,
@@ -562,19 +550,7 @@ class InsightCard extends StatelessWidget {
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.15),
-              blurRadius: 12,
-              offset: const Offset(0, 6),
-              spreadRadius: 2,
-            ),
-            BoxShadow(
-              color: Colors.white.withOpacity(0.1),
-              blurRadius: 12,
-              offset: const Offset(-4, -4),
-            ),
-          ],
+         
         ),
         child: Stack(
           children: [

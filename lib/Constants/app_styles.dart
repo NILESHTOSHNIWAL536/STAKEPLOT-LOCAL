@@ -12,9 +12,8 @@ class NavBarIcons {
 }
 
 class HomePageIcons {
-  static String history = "assets/icons/Home-page/history.svg";
-  static String manualTransaction =
-      "assets/icons/Home-page/manual_transaction.svg";
+  static String history = "assets/icons/Home-page/TransactionHistoryBtn.svg";
+  static String manualTransaction = "assets/icons/Home-page/manual_transaction.svg";
   static String notification = "assets/icons/Home-page/notification.svg";
   static String refresh = "assets/icons/Home-page/Refresh.svg";
   static String fetch = "assets/icons/Home-page/fetch.svg";

@@ -431,7 +431,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
       TextEditingController controller) {
     return Center(
       child: Container(
-        color: const Color.fromRGBO(246, 246, 246, 1),
+        color: AppColors.backgroundColor,
         width: MediaQuery.of(context).size.width / 1.1,
         child: TextFormField(
           keyboardType: keyboardType,

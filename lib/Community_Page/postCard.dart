@@ -180,7 +180,8 @@ class _PostCardState extends State<PostCard> {
                         ),
                         Row(
                           children: [
-                            flag ? saved() : SizedBox.shrink(),
+                            // Save user posts 
+                           // flag ? saved() : SizedBox.shrink(),
                             popUpBox(dataObj['_id'], context,
                                 dataObj["author"]['name'],widget.index),
                             const SizedBox(width: 20),

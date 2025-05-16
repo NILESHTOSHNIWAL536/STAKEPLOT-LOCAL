@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
@@ -59,6 +60,7 @@ Future<void> getFoodieFundsDetails(BuildContext context, String id) async {
     snackBarCalled(context, 'Failed to fetch foodie funds details.');
   }
 }
+
 void getNotifications(context) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
@@ -191,6 +193,7 @@ void getUserInfomations() async {
     isBankAccountLink.value = data['isBankAccountLinked'] ?? false;
     isFected.value = data['fetchInProgress'] ?? false;
     cupertinoPin.value = data['cupertino_pin']; //?? '0';
+    getPhoneNo(his);
 
     // savedList.clear();
     // savedList.addAll(data['saved'] );
