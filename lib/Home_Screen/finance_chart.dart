@@ -830,11 +830,11 @@ void _scrollToCurrentDate() {
   String formatNumberString(String value) {
     double numValue = double.tryParse(value) ?? 0;
     if (numValue >= 10000000) {
-      return '${(numValue / 10000000).toStringAsFixed(0)} Cr';
+      return '${(numValue / 10000000).toStringAsFixed(1)}Cr';
     } else if (numValue >= 100000) {
-      return '${(numValue / 100000).toStringAsFixed(0)} L';
+      return '${(numValue / 100000).toStringAsFixed(1)}L';
     } else if (numValue >= 1000) {
-      return '${(numValue / 1000).toStringAsFixed(0)} K';
+      return '${(numValue / 1000).toStringAsFixed(1)}K';
     } else {
       return numValue.toStringAsFixed(0);
     }

@@ -239,7 +239,6 @@ class TotalSpendingCard extends StatelessWidget {
     );
   }
 }
-
 class OverspentCategoriesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -261,21 +260,35 @@ class OverspentCategoriesCard extends StatelessWidget {
               children: [
                 Text(
                   'Overspent Categories',
-                  style:FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.bold,
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.bold,
                     fontSize: screenSize.width * 0.04,
                     color: AppColors.primaryColor,
                   ),
                 ),
-
                 GestureDetector(
                   onTap: () {
                     selectedPeriod.value = selectedPeriod.value == 'Week' ? 'Month' : 'Week';
                   },
-                  child: Icon(
-                    Icons.swap_horiz,
-                    color: AppColors.primaryColor,
-                    size: screenSize.width * 0.06,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: padding * 0.5,
+                      vertical: padding * 0.2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      selectedPeriod.value,
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w600,
+                        fontSize: screenSize.width * 0.035,
+                        color: AppColors.accentColor,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -283,55 +296,79 @@ class OverspentCategoriesCard extends StatelessWidget {
             SizedBox(height: 10),
             SizedBox(
               height: screenSize.height * 0.06,
-              child: moreDrasticChange.isEmpty
-                  ? Center(
-                      child: Text(
-                        'No Data',
-                        style: FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.w500,
-                          fontSize: screenSize.width * 0.035,
-                          color: AppColors.primaryColor.withOpacity(0.8),
-                        ),
-                      ),
-                    )
-                  : Column(
-                      children: (selectedPeriod.value == 'Week' ? moreDrasticChangeWeek : moreDrasticChange)
-                          .take(2)
-                          .map((category) => Padding(
-                                padding: EdgeInsets.only(bottom: padding * 0.4),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      category['category'].toString().capitalize!,
-                                      style:  FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.w600,
-
-                                        fontSize: screenSize.width * 0.035,
-                                        color: AppColors.accentColor,
-                                      ),
-                                    ),
-                                    Text(
-                                      '+₹${formatMoneyIndian(category['debit_diff'].toStringAsFixed(2))}',
-                                      style: FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.w500,
-                                        fontSize: screenSize.width * 0.033,
-                                        color: AppColors.accentColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ))
-                          .toList(),
-                    ),
+              child: _buildCategoryList(screenSize, padding,context),
             ),
           ],
         ),
       ),
     );
   }
-}
 
+  Widget _buildCategoryList(Size screenSize, double padding, BuildContext context) {
+    // Check if lists are null or empty
+    final isMonthPeriod = selectedPeriod.value == 'Month';
+    final categoryList = isMonthPeriod ? moreDrasticChange : moreDrasticChangeWeek;
+
+    if (categoryList == null || categoryList.isEmpty) {
+      return Center(
+        child: Text(
+          'No Data',
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.w500,
+            fontSize: screenSize.width * 0.035,
+            color: AppColors.primaryColor.withOpacity(0.8),
+          ),
+        ),
+      );
+    }
+
+    return Column(
+      children: categoryList
+          .take(2)
+          .map((category) {
+            // Null checks for category map entries
+            final categoryName = category != null && category['category'] != null
+                ? category['category'].toString().capitalize ?? 'Unknown'
+                : 'Unknown';
+            final debitDiff = category != null && category['debit_diff'] != null
+                ? formatMoneyIndian(category['debit_diff'].toStringAsFixed(2))
+                : '0.00';
+
+            return Padding(
+              padding: EdgeInsets.only(bottom: padding * 0.4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      categoryName,
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w600,
+                        fontSize: screenSize.width * 0.035,
+                        color: AppColors.accentColor,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Text(
+                    '+₹$debitDiff',
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w500,
+                      fontSize: screenSize.width * 0.033,
+                      color: AppColors.accentColor,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          })
+          .toList(),
+    );
+  }
+}
 class FrequentTransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
