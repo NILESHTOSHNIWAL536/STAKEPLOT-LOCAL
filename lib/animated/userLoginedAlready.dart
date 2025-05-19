@@ -41,7 +41,7 @@ class UserLoginedAlready extends StatelessWidget {
         children: [
           Container(
               width: MediaQuery.of(context).size.width / 2,
-              height: MediaQuery.of(context).size.height / 5,
+              height: MediaQuery.of(context).size.height / 4.5,
               child: AvatarProfileImage(
                   url: "assets/icons/lock.svg", width: 10, height: 10)),
           getContainer(context, body['message']),

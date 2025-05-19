@@ -54,15 +54,13 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
     double width = MediaQuery.of(context).size.width;
 
     // Check for zero to avoid division by zero
-    return Scaffold(
+    return Container(
         // Wrap content with SingleChildScrollView
-        body: SafeArea(
-            child: SizedBox(
-              
-                width: width,
-                height: height > 0 ? height / 2.5 : 100, // Fallback height
-                child: Obx(
-                    () => loadBanks.value ? BankSlider() : avatarSlider2()))));
+        child: SizedBox(
+            width: width,
+            height: height > 0 ? height / 2.5 : 100, // Fallback height
+            child: Obx(
+                () => loadBanks.value ? BankSlider() : avatarSlider2())));
   }
 
   Widget avatarSlider2() {
@@ -130,16 +128,14 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
     if (randomIndex == lock.length) randomIndex = 0;
     return Container(
        // width: MediaQuery.sizeOf(context).width/1.1,
-        padding: EdgeInsets.symmetric(
-            horizontal: Colorcodes.paddingHorizontal,
-            vertical: Colorcodes.paddingHorizontal / 5),
+        padding: EdgeInsets.symmetric(horizontal: Colorcodes.paddingHorizontal,vertical: Colorcodes.paddingHorizontal / 6),
         decoration: BoxDecoration(
           color: AppColors.accentColor,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             SizedBox(height: Colorcodes.borderRadius10),
             Row(
@@ -168,13 +164,13 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                   fontSize: 16,
                   color: AppColors.backgroundColor),
             ),
-            SizedBox(height: Colorcodes.borderRadius),
+            SizedBox(height: Colorcodes.borderRadius10),
             Text('Available balance',
                 style: FontManager().getTextStyle(context,
                     lWeight: FontWeight.w400,
                     fontSize: 12,
                     color: AppColors.backgroundColor)),
-            SizedBox(height: Colorcodes.borderRadius10),
+            
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -189,6 +185,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                 setPinForAccountHide(context)
               ],
             ),
+            SizedBox(height: Colorcodes.elevation5),
           ],
         ));
   }

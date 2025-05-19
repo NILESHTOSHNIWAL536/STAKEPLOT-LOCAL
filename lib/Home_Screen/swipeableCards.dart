@@ -163,18 +163,19 @@ class TotalSpendingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final padding = screenSize.width * 0.03;
+    // final padding = screenSize.width * 0.03;
 
     return Obx(
-      () => Container(
-        
-        decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
-        ),
-        padding: EdgeInsets.symmetric(horizontal: padding,vertical: padding*2),
-        child: Center(
+      () => Center(
+        child: Container( 
+          decoration: BoxDecoration(
+            color: AppColors.backgroundColor,
+          ),
+          alignment: Alignment.center,
+          padding: EdgeInsets.symmetric(horizontal: 10,vertical:4),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
                Text(
                         'Monthly',
@@ -184,8 +185,9 @@ class TotalSpendingCard extends StatelessWidget {
                           color: AppColors.bg3,
                         ),
                       ),
+               SizedBox(height: 5,),
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
@@ -195,6 +197,7 @@ class TotalSpendingCard extends StatelessWidget {
                       
                       Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           
                           Text(
@@ -207,7 +210,7 @@ class TotalSpendingCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 10,),
+                      SizedBox(height: 7,),
                       
                       Container(
                          width: MediaQuery.sizeOf(context).width/2.6,
@@ -235,7 +238,7 @@ class TotalSpendingCard extends StatelessWidget {
                           color: AppColors.primaryColor,
                         ),
                       ),
-                       SizedBox(height: 10,),
+                       SizedBox(height: 7,),
                        Container(
                          width: MediaQuery.sizeOf(context).width/2.9,
                          child: Text(
@@ -270,7 +273,7 @@ class OverspentCategoriesCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.backgroundColor,
         ),
-        padding: EdgeInsets.all(padding),
+       padding: EdgeInsets.symmetric(horizontal: 10,vertical:4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -314,11 +317,8 @@ class OverspentCategoriesCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 10),
-            SizedBox(
-              height: screenSize.height * 0.06,
-              child: _buildCategoryList(screenSize, padding,context),
-            ),
+            SizedBox(height: 5),
+            _buildCategoryList(screenSize, padding,context),
           ],
         ),
       ),
@@ -361,17 +361,15 @@ class OverspentCategoriesCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                    child: Text(
-                      categoryName,
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.w600,
-                        fontSize: screenSize.width * 0.035,
-                        color: AppColors.accentColor,
-                      ),
-                      overflow: TextOverflow.ellipsis,
+                  Text(
+                    categoryName,
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w600,
+                      fontSize: screenSize.width * 0.035,
+                      color: AppColors.accentColor,
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                   Text(
                     '+₹$debitDiff',
