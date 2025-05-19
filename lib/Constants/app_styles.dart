@@ -52,6 +52,9 @@ class Categories {
   static String income = "PersonalTransfer.svg";
   static String personalTransfer = "PersonalTransfer.svg";
   static String personalTransferReceived = "PersonalTransferReceived.svg";
+  static String creditCardCheck = "creditCardCheck.svg";
+  static String digitalPayment = "digitalPayment.svg";
+  static String handBill = "handBill.svg";
   /*
   Groceries: SUPRDAILY, GROCERY, SPENCER'S, METRO CASH, VEGETABLE, FRUIT, Ratnadeep, dmart, Veggie, kirana, General Store, milk
 
