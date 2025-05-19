@@ -670,6 +670,14 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
     );
   }
 
+void callBack(e){
+                      widget.data['category'] = e['name'];
+                      widget.data['subcategory'] = "Other";
+                      tagName.value = e['name'];
+                      UrlPathImage.value = e['imageUrl'];
+                      loadAgain.value = !loadAgain.value;
+                      customSelections.value = true;
+}
 
 
 Widget getCustomCategoryList(BuildContext context) {
@@ -692,8 +700,8 @@ Widget getCustomCategoryList(BuildContext context) {
         ),
         const SizedBox(height: 5),
         Container(
-          
           height: 50,
+          width:MediaQuery.of(context).size.width/1.1,
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: custom.map((e) {
@@ -766,7 +774,7 @@ Widget getCustomCategoryList(BuildContext context) {
               
               InkWell(
                   onTap: (){
-                       openShowModalCate(context, nameController,  transactionsHistory[widget.index]['narration']??"");
+                       openShowModalCate(context, nameController,  transactionsHistory[widget.index]['narration']??"",callBack);
                   },
                   child: Icon(
                     CupertinoIcons.add,

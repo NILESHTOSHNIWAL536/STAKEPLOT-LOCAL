@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -88,6 +89,8 @@ void postCustomCategory(context,name,urlPath,narr)async
     customCategoryList.clear();
     customCategoryList.addAll(data);
     customCategoryList.refresh();
+    LoadTag.value=!LoadTag.value;
+    custom=getthelist();
     Navigator.pop(context);
     snackBarCalled(context, "Category Added Successfully", Colors.green);
   }
