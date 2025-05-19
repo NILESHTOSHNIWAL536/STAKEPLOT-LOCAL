@@ -566,34 +566,36 @@ class InsightCard extends StatelessWidget {
                 ),
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  title,
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.bold,
-                    fontSize: ResponsiveUtils.getFontSize(context, 26),
-                    color: Colors.white,
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    title,
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.bold,
+                      fontSize: ResponsiveUtils.getFontSize(context, 26),
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  message,
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w600,
-                    lineHeight: 1.2,
-                    
-                    fontSize: ResponsiveUtils.getFontSize(context, 18),
-                    color: Colors.white.withOpacity(0.95),
+                  const SizedBox(height: 12),
+                  Text(
+                    message,
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w600,
+                      lineHeight: 1.2,
+                      
+                      fontSize: ResponsiveUtils.getFontSize(context, 18),
+                      color: Colors.white.withOpacity(0.95),
+                    ),
+                    maxLines: null,
+                    overflow: TextOverflow.visible,
                   ),
-                  maxLines: null,
-                  overflow: TextOverflow.visible,
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
