@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/donut_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/manual_transaction.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 // import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
@@ -343,14 +344,15 @@ void updateTheTagOfTarnsactions(
     'category': category,
     'subcategory': subCategory,
   });
- 
-   if (getFlagOfResponse(response)) {
+
+  if (getFlagOfResponse(response)) {
     Navigator.pop(context);
     reloadHistory.value = !reloadHistory.value;
   } else {}
 }
 
-void updateTheTagOfTarnsactionsGroup(category, subCategory, grpId, context, index) async {
+void updateTheTagOfTarnsactionsGroup(
+    category, subCategory, grpId, context, index) async {
   String urlPath = "${url}/transactionauto/grouped/${grpId}/categorize";
 
   var body = {
@@ -419,6 +421,7 @@ void addTransaction(String amount, String subCategory, String categories,
     'account': dropdownValue.toString(),
     'room': {},
     'isSplit': isSplit,
+    'isDebit': isDebit
   };
 
   final response = await http.post(
@@ -429,7 +432,7 @@ void addTransaction(String amount, String subCategory, String categories,
     },
     body: jsonEncode(body),
   );
-
+  print("body of mt: $body");
   if (response.statusCode == 200) {
     final body = json.decode(response.body);
     if (!isSplit)
@@ -481,11 +484,11 @@ void processChartData() {
 
   for (var item in categoriesList) {
     String category = item["category"];
-    String percentage= item["total_debit_percentage"] ?? "";
+    String percentage = item["total_debit_percentage"] ?? "";
     double value = item["total_debit"].toDouble();
     Color color = categoryColors[category] ?? Colors.grey; // Default color
 
-    newData.add(ChartData(category, value, color,percentage));
+    newData.add(ChartData(category, value, color, percentage));
     newTotalValue += value;
   }
 

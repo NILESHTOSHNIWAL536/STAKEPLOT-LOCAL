@@ -29,6 +29,7 @@ class NewFriendsUi extends StatefulWidget {
   final String? subcategory;
   final bool flag;
   final bool ismanual;
+  
   const NewFriendsUi({
     Key? key,
     this.showContinueButton = true,
