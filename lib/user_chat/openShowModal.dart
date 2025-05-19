@@ -5,13 +5,14 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
+import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 RxString cateName = "".obs;
 
 void openShowModalCate(
-    BuildContext context, TextEditingController nameController, String narr) {
+    BuildContext context, TextEditingController nameController, String narr,void Function(dynamic e) callBack,) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true, // Allows the modal to resize with the keyboard
@@ -62,6 +63,12 @@ void openShowModalCate(
               ),
               InkWell(
                 onTap: () {
+                  //need to chnage the local vai
+                  var e={
+                     'name':nameController.text,
+                     'imageUrl':cateName.value,
+                  };
+                  callBack(e);
                   postCustomCategory(context, nameController.text, cateName.value, narr);
                 },
                 child: getButton(context, "Add Category"),

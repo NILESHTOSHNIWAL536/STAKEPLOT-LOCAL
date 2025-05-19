@@ -24,6 +24,7 @@ class HomePageIcons {
 }
 
 class Categories {
+  // assets\icons\Categories\income.svg
   static String link = "assets/icons/Categories/";
   static String alcohal = "Alcohol_Smoking.svg";
   static String bills = "Bills.svg";
@@ -48,7 +49,7 @@ class Categories {
   static String education = "Education.svg";
   static String commerce = "Commerce.svg";
   static String groceries = "Groceries.svg";
-  static String income = "income.svg";
+  static String income = "PersonalTransfer.svg";
   static String personalTransfer = "PersonalTransfer.svg";
   static String personalTransferReceived = "PersonalTransferReceived.svg";
   /*

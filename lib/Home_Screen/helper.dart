@@ -748,3 +748,24 @@ String getDaysLeftInMonth() {
   final daysLeft = lastDayOfMonth.day - now.day;
   return '$daysLeft days left';
 }
+
+List<Map<String, dynamic>> getthelist() {
+  final lowerSearch = searchController.text.toLowerCase();
+
+  final filtered = customCategoryList.where((e) {
+    final name = e['name']?.toString().toLowerCase() ?? '';
+    return name.contains(lowerSearch);
+  }).toList();
+
+  return filtered.reversed.toList().cast<Map<String, dynamic>>();
+}
+
+List<Map<String, dynamic>> getthelistAll()
+ {
+  String lowerSearch = "";
+  return  customCategoryList.where((e) {
+    final name = e['name']?.toString().toLowerCase() ?? '';
+    return name.contains(lowerSearch);
+  }).toList().cast<Map<String, dynamic>>();
+
+}

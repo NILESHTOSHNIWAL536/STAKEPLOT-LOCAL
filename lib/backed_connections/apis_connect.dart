@@ -64,6 +64,7 @@ RxList customCategoryList = [].obs;
 RxMap friendsListDetails = {}.obs;
 RxMap chatOfUserList = {}.obs;
 RxMap chatOfUserListData = {}.obs;
+List<Map<String, dynamic>> custom=[];
 
 RxBool aboutMe = false.obs;
 RxBool myNotificationBool = false.obs;

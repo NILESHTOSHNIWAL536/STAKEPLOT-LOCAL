@@ -618,6 +618,7 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
 
     // Start animation
     _controller.forward();
+    custom = getthelist();
 
     // Delay opacity animation
     // Future.delayed(Duration(milliseconds: 1000), () {
@@ -669,18 +670,18 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
     );
   }
 
-List<Map<String, dynamic>> getthelist()
- {
-  final lowerSearch = searchController.text.toLowerCase();
-  return  customCategoryList.where((e) {
-    final name = e['name']?.toString().toLowerCase() ?? '';
-    return name.contains(lowerSearch);
-  }).toList().cast<Map<String, dynamic>>();
-
+void callBack(e){
+                      widget.data['category'] = e['name'];
+                      widget.data['subcategory'] = "Other";
+                      tagName.value = e['name'];
+                      UrlPathImage.value = e['imageUrl'];
+                      loadAgain.value = !loadAgain.value;
+                      customSelections.value = true;
 }
 
+
 Widget getCustomCategoryList(BuildContext context) {
-  List<Map<String, dynamic>> custom = getthelist();
+  
 
   if (custom.isEmpty) return SizedBox.shrink();
 
@@ -699,8 +700,8 @@ Widget getCustomCategoryList(BuildContext context) {
         ),
         const SizedBox(height: 5),
         Container(
-          
           height: 50,
+          width:MediaQuery.of(context).size.width/1.1,
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: custom.map((e) {
@@ -773,7 +774,7 @@ Widget getCustomCategoryList(BuildContext context) {
               
               InkWell(
                   onTap: (){
-                       openShowModalCate(context, nameController,  transactionsHistory[widget.index]['narration']??"");
+                       openShowModalCate(context, nameController,  transactionsHistory[widget.index]['narration']??"",callBack);
                   },
                   child: Icon(
                     CupertinoIcons.add,
@@ -957,9 +958,9 @@ Widget getListOfCat(BuildContext context) {
           duration: Duration(milliseconds: 500),
           opacity: opacity,
                     child: Container(
-              child: historyTransactions(widget.data,!widget.isGroupTransaction? widget.data['transactionTimestamp']:widget.data['createdAt'], context),
+                      child: historyTransactions(widget.data, widget.data['transactionTimestamp'], context),
                     ),
-                  ),
+             ),
       );
   }
 
