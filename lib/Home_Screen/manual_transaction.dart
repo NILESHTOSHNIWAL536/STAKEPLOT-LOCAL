@@ -20,6 +20,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+bool isDebit = true;
+
 class Manualtransaction extends StatefulWidget {
   const Manualtransaction({super.key});
 
@@ -28,12 +30,10 @@ class Manualtransaction extends StatefulWidget {
 }
 
 class _ManualtransactionState extends State<Manualtransaction> {
-
- @override
-  void initState()
-  {
+  @override
+  void initState() {
     super.initState();
-     getCustomCategory(context);
+    getCustomCategory(context);
   }
 
   Widget build(BuildContext context) {
@@ -68,7 +68,9 @@ class _ManualtransactionState extends State<Manualtransaction> {
                     const SizedBox(height: 8),
                     InkWell(
                       onTap: () {
-                        showCustomModal(context);
+                        isDebit = false;
+                        showCustomModal(context,isDebit);
+
                         // player.play(UrlSource('https://www.soundjay.com/button/beep-07.wav'));
                       },
                       child: Container(
@@ -78,7 +80,28 @@ class _ManualtransactionState extends State<Manualtransaction> {
                             color: AppColors.button,
                             borderRadius: BorderRadius.circular(16)),
                         child: Center(
-                          child: Text('Start now',
+                          child: Text('Credit',
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.normal,
+                                  fontSize: 12,
+                                  color: AppColors.primaryColor)),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        isDebit = true;
+                        showCustomModal(context,isDebit);
+                        // player.play(UrlSource('https://www.soundjay.com/button/beep-07.wav'));
+                      },
+                      child: Container(
+                        height: Colorcodes.paddingSize * 1.5,
+                        width: Colorcodes.paddingSize * 4,
+                        decoration: BoxDecoration(
+                            color: AppColors.button,
+                            borderRadius: BorderRadius.circular(16)),
+                        child: Center(
+                          child: Text('Debit',
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.normal,
                                   fontSize: 12,
@@ -102,25 +125,26 @@ class _ManualtransactionState extends State<Manualtransaction> {
   }
 }
 
-void showCustomModal(BuildContext context) {
+void showCustomModal(BuildContext context, bool isDebit) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
-     backgroundColor: AppColors.mt,
+    backgroundColor: AppColors.mt,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(16),
       ),
-
     ),
     builder: (BuildContext context) {
-      return SafeArea(child: ModalContent()); // Use the modal widget here
+      return SafeArea(
+          child: ModalContent(isDebit)); // Use the modal widget here
     },
   );
 }
 
 class ModalContent extends StatefulWidget {
-  const ModalContent({Key? key}) : super(key: key);
+  final bool isDebit;
+  const ModalContent(this.isDebit,{Key? key}) : super(key: key);
 
   @override
   _ModalContentState createState() => _ModalContentState();
@@ -144,7 +168,7 @@ class _ModalContentState extends State<ModalContent>
   String? selectedSubCategory2;
   // List  addedUser=[];
   // List addedMembers=[];
- bool _isAmountFieldFocused = true;
+  bool _isAmountFieldFocused = true;
   late IO.Socket socket;
 
   void initState() {
@@ -200,7 +224,7 @@ class _ModalContentState extends State<ModalContent>
       selectedCategory = null;
       selectedSubCategory = null;
       isCategoryFieldExpanded = false;
-       _isAmountFieldFocused = false;
+      _isAmountFieldFocused = false;
       // isSplitbill = (selectedCategory != null &&
       //     selectedSubCategory != null &&
       //     amount != null);
@@ -210,8 +234,8 @@ class _ModalContentState extends State<ModalContent>
   void toggleCategoryField() {
     setState(() {
       isCategoryFieldExpanded = !isCategoryFieldExpanded;
-       _isAmountFieldFocused = false;
-        _isAmountFieldFocused = false;
+      _isAmountFieldFocused = false;
+      _isAmountFieldFocused = false;
     });
   }
 
@@ -360,7 +384,6 @@ class _ModalContentState extends State<ModalContent>
       controller: _amountController,
       keyboardType: TextInputType.number,
       autofocus: _isAmountFieldFocused,
-      
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.currency_rupee),
         hintText: 'Enter amount',
@@ -394,14 +417,13 @@ class _ModalContentState extends State<ModalContent>
       onChanged: (value) {
         setState(() {
           // Update the amount variable whenever the input changes
-          amount = double.tryParse(value); 
-          _isAmountFieldFocused = false;// Convert string to double
+          amount = double.tryParse(value);
+          _isAmountFieldFocused = false; // Convert string to double
         });
       },
       onEditingComplete: () {
         FocusScope.of(context).unfocus(); // Dismiss keyboard when done
       },
-    
     );
   }
 
@@ -452,26 +474,28 @@ class _ModalContentState extends State<ModalContent>
   Widget categoryExpandedWidget() {
     return Expanded(
       child: ListView.builder(
-        itemCount: filteredCategories.length+customCategoryList.length,
-        itemBuilder: (BuildContext context, int index)
-        {
-          bool f=(index>=filteredCategories.length);
-          String category =  f ?customCategoryList[index-filteredCategories.length]['name']:filteredCategories[index];
+        itemCount: filteredCategories.length + customCategoryList.length,
+        itemBuilder: (BuildContext context, int index) {
+          bool f = (index >= filteredCategories.length);
+          String category = f
+              ? customCategoryList[index - filteredCategories.length]['name']
+              : filteredCategories[index];
           String urlPath = "";
 
-       if(!f){
-          try {
-            urlPath = Categories.link + BudgetCategories.listofCategories[BudgetCategories.listofCategories.keys.elementAt(index)];
-          } catch (e) {}
-       }else
-       {
-           urlPath= customCategoryList[index-filteredCategories.length]['imageUrl'];
-       }
+          if (!f) {
+            try {
+              urlPath = Categories.link +
+                  BudgetCategories.listofCategories[
+                      BudgetCategories.listofCategories.keys.elementAt(index)];
+            } catch (e) {}
+          } else {
+            urlPath = customCategoryList[index - filteredCategories.length]
+                ['imageUrl'];
+          }
 
-    
           return ListTile(
             //leading: const Icon(Icons.category),
-    
+
             leading: Container(
               height: 40,
               width: 40,
@@ -488,24 +512,24 @@ class _ModalContentState extends State<ModalContent>
                     color: AppColors.accentColor)),
             onTap: () {
               setState(() {
-                if(f){
+                if (f) {
                   selectedCategory = category;
-                  selectedSubCategory="";
-                   isCategoryFieldExpanded = false; 
-                 _isAmountFieldFocused = false;
-                 categoryFieldController.text ='$selectedCategory';
-              // isSplitbill = true; // Uncomment if needed
-              fin = '$selectedCategory ($selectedSubCategory)';
-              selectedCategory2 = selectedCategory;
-              _isAmountFieldFocused = false; // Prevent amount field refocus
-                FocusScope.of(context).unfocus(); 
-              resetToInitialScreen();
-                }else{
-                selectedCategory = category;
-                categoryFieldController.text = category; // Update text field
-                isCategoryFieldExpanded = false; 
-                _isAmountFieldFocused = false; // Prevent amount field refocus
-                FocusScope.of(context).unfocus(); // Collapse the list
+                  selectedSubCategory = "";
+                  isCategoryFieldExpanded = false;
+                  _isAmountFieldFocused = false;
+                  categoryFieldController.text = '$selectedCategory';
+                  // isSplitbill = true; // Uncomment if needed
+                  fin = '$selectedCategory ($selectedSubCategory)';
+                  selectedCategory2 = selectedCategory;
+                  _isAmountFieldFocused = false; // Prevent amount field refocus
+                  FocusScope.of(context).unfocus();
+                  resetToInitialScreen();
+                } else {
+                  selectedCategory = category;
+                  categoryFieldController.text = category; // Update text field
+                  isCategoryFieldExpanded = false;
+                  _isAmountFieldFocused = false; // Prevent amount field refocus
+                  FocusScope.of(context).unfocus(); // Collapse the list
                 }
               });
             },
@@ -515,49 +539,47 @@ class _ModalContentState extends State<ModalContent>
     );
   }
 
-
   Widget getListOfCustomCategory() {
-    return   Expanded(
-  child: ListView.builder(
-    itemCount: customCategoryList.length,
-    itemBuilder: (BuildContext context, int index) {
-      final category = customCategoryList[index];
-      final categoryName = category['name'] ?? '';
-      final imageUrl = category['imageUrl'] ?? '';
+    return Expanded(
+      child: ListView.builder(
+        itemCount: customCategoryList.length,
+        itemBuilder: (BuildContext context, int index) {
+          final category = customCategoryList[index];
+          final categoryName = category['name'] ?? '';
+          final imageUrl = category['imageUrl'] ?? '';
 
-      return ListTile(
-        leading: Container(
-          height: 40,
-          width: 40,
-          child: AvatarProfileImage(
-            url: imageUrl,
-            width: 4,
-            height: 4,
-          ),
-        ),
-        title: Text(
-          categoryName,
-          style: FontManager().getTextStyle(
-            context,
-            lWeight: FontWeight.normal,
-            fontSize: 16,
-            color: AppColors.accentColor,
-          ),
-        ),
-        onTap: () {
-          setState(() {
-            selectedCategory = categoryName;
-            categoryFieldController.text = categoryName;
-            isCategoryFieldExpanded = false;
-            _isAmountFieldFocused = false;
-            FocusScope.of(context).unfocus();
-          });
+          return ListTile(
+            leading: Container(
+              height: 40,
+              width: 40,
+              child: AvatarProfileImage(
+                url: imageUrl,
+                width: 4,
+                height: 4,
+              ),
+            ),
+            title: Text(
+              categoryName,
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.normal,
+                fontSize: 16,
+                color: AppColors.accentColor,
+              ),
+            ),
+            onTap: () {
+              setState(() {
+                selectedCategory = categoryName;
+                categoryFieldController.text = categoryName;
+                isCategoryFieldExpanded = false;
+                _isAmountFieldFocused = false;
+                FocusScope.of(context).unfocus();
+              });
+            },
+          );
         },
-      );
-    },
-  ),
-);
-    
+      ),
+    );
   }
 
   Widget subcategoryWidget() {
@@ -566,9 +588,9 @@ class _ModalContentState extends State<ModalContent>
       runSpacing: 2.0, // Vertical spacing between rows
       children: categories[selectedCategory]!.map((subCategory) {
         // Get the URL path for the subcategory's icon from BudgetSubCategories
-        String urlPath = BudgetSubCategories.listofSubCategories[subCategory] ??"assets/icons/subCategoryIcons/default.svg";
-        
-  
+        String urlPath = BudgetSubCategories.listofSubCategories[subCategory] ??
+            "assets/icons/subCategoryIcons/default.svg";
+
         return GestureDetector(
           onTap: () {
             setState(() {
@@ -580,7 +602,7 @@ class _ModalContentState extends State<ModalContent>
               fin = '$selectedCategory ($selectedSubCategory)';
               selectedCategory2 = selectedCategory;
               _isAmountFieldFocused = false; // Prevent amount field refocus
-                FocusScope.of(context).unfocus(); 
+              FocusScope.of(context).unfocus();
               resetToInitialScreen();
             });
           },
@@ -613,7 +635,7 @@ class _ModalContentState extends State<ModalContent>
       children: [
         GestureDetector(
           onTap: () async {
-            FocusScope.of(context).unfocus(); 
+            FocusScope.of(context).unfocus();
             if (isLend.value) {
               addedUser.clear();
               addedMembers.clear();
@@ -634,7 +656,7 @@ class _ModalContentState extends State<ModalContent>
                 amounts: result as Map<String, double>,
               );
             }
-             setState(() {
+            setState(() {
               _isAmountFieldFocused = false; // Prevent amount field refocus
             });
           },
@@ -660,7 +682,7 @@ class _ModalContentState extends State<ModalContent>
         ),
         GestureDetector(
           onTap: () async {
-            FocusScope.of(context).unfocus(); 
+            FocusScope.of(context).unfocus();
             if (isSplit.value) {
               addedUser.clear();
               addedMembers.clear();
@@ -670,7 +692,7 @@ class _ModalContentState extends State<ModalContent>
 
             final result =
                 await showCustomFriendsModal(context, amount ?? 0.0, true);
-                 setState(() {
+            setState(() {
               _isAmountFieldFocused = false; // Prevent amount field refocus
             });
           },
@@ -708,7 +730,7 @@ class _ModalContentState extends State<ModalContent>
             padding: const EdgeInsets.only(top: 10),
             child: InkWell(
               onTap: () {
-                FocusScope.of(context).unfocus(); 
+                FocusScope.of(context).unfocus();
                 if (isSplit.value && addedMembers.isNotEmpty) {
                   splitBill(selectedCategory2.toString(), amount.toString(),
                       selectedSubCategory2.toString(), true);
@@ -734,6 +756,7 @@ class _ModalContentState extends State<ModalContent>
                     selectedCategory2.toString(),
                     context,
                     "cash",
+                    
                   );
                 }
               },
@@ -826,7 +849,6 @@ class _ModalContentState extends State<ModalContent>
           userName: userName.value,
           userAvatar: avatar.value,
           isLendMode: isLendMode,
-          
         );
       },
     );
@@ -953,10 +975,10 @@ class _ModalContentState extends State<ModalContent>
         addSocketMessage(members, amountPerPerson.toString(), name,
             splitID.value, parsedTotalAmount);
       }
-         currentPage=1;
-        isLoadingMore.value=false;
-        searchController.clear();
-        getAllTransaction(context);
+      currentPage = 1;
+      isLoadingMore.value = false;
+      searchController.clear();
+      getAllTransaction(context);
 
       // print("splitUserAmount: Split successful, showing celebration");
       snackBarCalled(
@@ -999,7 +1021,6 @@ class _ModalContentState extends State<ModalContent>
         'dueDate': selectedDueDate.toString().substring(0, 10)
       }),
     );
-   
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
