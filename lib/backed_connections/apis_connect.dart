@@ -135,6 +135,7 @@ List<String> month = [
   "December"
 ];
 int currentPage = 1;
+RxBool havingMoreData = true.obs;
 RxBool isLoadingMore = false.obs;
 RxBool loadMoreData = false.obs;
 bool hasMoreData = true;

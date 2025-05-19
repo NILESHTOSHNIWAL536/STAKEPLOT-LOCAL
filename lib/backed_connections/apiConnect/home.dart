@@ -142,7 +142,9 @@ Future<void> getAllTransactionHistory(
         if (obj.isEmpty || obj.length < 20) {
           hasMoreData = false;
           isLoadingMore.value = true;
+          havingMoreData.value=false;
         } else {
+          havingMoreData.value=true;
           isLoadingMore.value = false;
           currentPage++;
         }
