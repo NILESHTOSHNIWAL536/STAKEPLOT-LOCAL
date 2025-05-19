@@ -577,9 +577,10 @@ class TagShowmodal extends StatefulWidget
 {
 var data;
 int index;
+String id;
 bool isGroupTransaction=false;
 bool isTag=false;
-TagShowmodal({ Key? key ,required this.data,required  this.index,this.isGroupTransaction=false,this.isTag=false }) : super(key: key);
+TagShowmodal({ Key? key,this.id="" ,required this.data,required  this.index,this.isGroupTransaction=false,this.isTag=false }) : super(key: key);
 
   @override
   State<TagShowmodal> createState() => _TagShowmodalState();
@@ -600,7 +601,7 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
   @override
   void initState() {
     super.initState();
-    
+      print(widget.id);
        UrlPathImage.value =  getIconPath(widget.data['category'].toLowerCase());
       _controller = AnimationController(
       vsync: this,
@@ -834,7 +835,7 @@ Widget getCustomCategoryList(BuildContext context) {
                               snackBarCalledSignup(context, "Please select a category and subcategory",Colorcodes.red);
                               return;
                           }
-                          updateTheTagOfTarnsactionsGroup(widget.data['category'], widget.data['subcategory'], widget.data['_id'], context,widget.index);
+                          updateTheTagOfTarnsactionsGroup(widget.data['category'], widget.data['subcategory'], widget.id, context,widget.index);
                         
                       }
 

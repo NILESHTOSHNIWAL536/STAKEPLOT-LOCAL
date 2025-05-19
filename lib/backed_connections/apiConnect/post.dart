@@ -18,17 +18,23 @@ void addReply(context, String data, String postId) async {
   }
 }
 
-
-
+// void deletePost(id, context) async {
+//   var responce = await deleteDataApiCall("${url}/post/delete/${id}");
+//   if (getFlagOfResponse(responce)) {
+//     snackBarCalled(context, "Deleted Post");
+//   } else {
+//     snackBarCalled(context, "Error while Deleting Post...");
+//   }
+// }
 void deletePost(id, context) async {
-  var responce = await deleteDataApiCall("${url}/post/delete/${id}");
+  var responce = await deleteDataApiCall("${url}/post/${id}");
+  print("Delete API Response: ${responce.body}"); // Log the response
   if (getFlagOfResponse(responce)) {
-    snackBarCalled(context, "Deleted Post...");
+    snackBarCalled(context, "Deleted Post");
   } else {
     snackBarCalled(context, "Error while Deleting Post...");
   }
 }
-
 Future<String> postImageToCloud(imageFile, context) async {
   try {
     final url2 = Uri.parse('https://api.cloudinary.com/v1_1/deus5rcgl/upload');
@@ -54,23 +60,25 @@ Future<String> postImageToCloud(imageFile, context) async {
   }
 }
 
-
 void reportPost(context, String id, String spam, String type) async {
- 
-  var response =await postDataApiCall('${url}/user/report/${type}/$id', {'reason': spam});
-  if (getFlagOfResponse(response)) 
-  {
-    snackBarCalled(context,spam == "hide post"? "The post has been hidden from you.": "Reported successfully.",Colors.green);
+  var response =
+      await postDataApiCall('${url}/user/report/${type}/$id', {'reason': spam});
+  if (getFlagOfResponse(response)) {
+    snackBarCalled(
+        context,
+        spam == "hide post"
+            ? "The post has been hidden from you."
+            : "Reported successfully.",
+        Colors.green);
   } else {
     snackBarCalled(context, "An error occurred while reporting.", Colors.red);
   }
   getPost();
 }
+
 Future<Map<String, dynamic>> createPost(BuildContext context, String title,
     String description, File imageFile) async {
   try {
-   
-
     String urlPath = await addImageToCloud2(imageFile);
 
     var body = {
@@ -81,10 +89,8 @@ Future<Map<String, dynamic>> createPost(BuildContext context, String title,
     };
 
     String apiCall = '${url}/post';
-   
 
     var response = await postDataApiCall(apiCall, body);
-   
 
     if (getFlagOfResponse(response)) {
       var postData = jsonDecode(response.body);
@@ -94,7 +100,8 @@ Future<Map<String, dynamic>> createPost(BuildContext context, String title,
         'data': postData,
       };
     } else {
-      snackBarCalled(context, "Server error: ${response.statusCode}", Colors.red);
+      snackBarCalled(
+          context, "Server error: ${response.statusCode}", Colors.red);
       return {
         'success': false,
         'error': 'Server error: ${response.statusCode}',
@@ -120,16 +127,12 @@ void createPostWithOutImage(context, String title, String description) async {
     'isPoll': false,
   };
 
-
-
   var response = await postDataApiCall(urlPath, body);
-  
 
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     uploadRefreshCall(his, context);
-  } else {
-  }
+  } else {}
 }
 
 void createPollOfCommunity(context, String title, String description) async {
@@ -143,16 +146,12 @@ void createPollOfCommunity(context, String title, String description) async {
     'isPoll': true,
   };
 
- 
-
   var response = await postDataApiCall(urlPath, body);
- 
 
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     uploadRefreshCall(his, context);
-  } else {
-  }
+  } else {}
 
   postDis.value = false;
 }
