@@ -11,7 +11,7 @@ import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 bool flag = true;
-String portNo = flag ? "192.168.1.10" : "localhost";
+String portNo = flag ? "192.168.1.8" : "localhost";
 String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Fields";
@@ -135,6 +135,7 @@ List<String> month = [
   "December"
 ];
 int currentPage = 1;
+RxBool havingMoreData = true.obs;
 RxBool isLoadingMore = false.obs;
 RxBool loadMoreData = false.obs;
 bool hasMoreData = true;

@@ -410,21 +410,21 @@ class _TransactionHistoryState extends State<TransactionHistory>
 
         // Case 3: Loading Indicator
         else if (!isLoadingMore.value) {
-          return const Padding(
+          return Obx(()=>!isLoadingMore.value? SizedBox.shrink():Padding(
             padding: EdgeInsets.symmetric(vertical: 20),
             child: Center(
               child: CircularProgressIndicator(
-                color: AppColors.primaryColor,
+                color:AppColors.primaryColor,
               ),
             ),
-          );
+          ));
         }
 
-        return loadingDelay.value
+        return  Obx(()=>!isLoadingMore.value? SizedBox.shrink(): loadingDelay.value
             ? Container(width: 50, height: 50, child: Spinner())
             : transactionsHistory.isEmpty
                 ? textStyle(context: context, text: "No Transactions")
-                : SizedBox.shrink(); // Fallback for unexpected items
+                : SizedBox.shrink()); // Fallback for unexpected items
       },
     );
   }
