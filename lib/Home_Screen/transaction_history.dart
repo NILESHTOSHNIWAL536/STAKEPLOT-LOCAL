@@ -531,6 +531,17 @@ class _TransactionHistoryState extends State<TransactionHistory>
 }
 
 Widget getIconAvtar(double avatarSize, String category, double scaleFactor) {
+
+  String lowerCategory = category?.toLowerCase() ?? '';
+
+final matched = custom.firstWhere(
+  (item) => item['name']?.toString().toLowerCase() == lowerCategory,
+  orElse: () => {},
+);
+
+final url = matched.isNotEmpty && matched['imageUrl'] != null ? matched['imageUrl']
+    : Categories.link + (imageMapForHistory[lowerCategory] ?? 'default_image.png');
+
   return Container(
     width: avatarSize,
     height: avatarSize,
@@ -546,9 +557,8 @@ Widget getIconAvtar(double avatarSize, String category, double scaleFactor) {
       borderRadius: BorderRadius.circular(12 * scaleFactor),
     ),
     child: Center(
-      child: AvatarProfileImage(
-        url: Categories.link +
-            (imageMapForHistory[category.toLowerCase()] ?? 'default_image.png'),
+      child:  AvatarProfileImage(
+        url:  url,//custom.contains(category.toLowerCase())? custom[category.toLowerCase()]['imageUrl']:(Categories.link + (imageMapForHistory[category.toLowerCase()] ?? 'default_image.png')),
         height: avatarSize * 0.5,
         width: avatarSize * 0.5,
       ),

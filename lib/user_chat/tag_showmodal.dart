@@ -618,6 +618,7 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
 
     // Start animation
     _controller.forward();
+    custom = getthelist();
 
     // Delay opacity animation
     // Future.delayed(Duration(milliseconds: 1000), () {
@@ -669,18 +670,10 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
     );
   }
 
-List<Map<String, dynamic>> getthelist()
- {
-  final lowerSearch = searchController.text.toLowerCase();
-  return  customCategoryList.where((e) {
-    final name = e['name']?.toString().toLowerCase() ?? '';
-    return name.contains(lowerSearch);
-  }).toList().cast<Map<String, dynamic>>();
 
-}
 
 Widget getCustomCategoryList(BuildContext context) {
-  List<Map<String, dynamic>> custom = getthelist();
+  
 
   if (custom.isEmpty) return SizedBox.shrink();
 

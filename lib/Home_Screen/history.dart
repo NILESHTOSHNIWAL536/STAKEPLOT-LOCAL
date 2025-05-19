@@ -18,6 +18,7 @@ import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart'; // For haptic feedback
 
 // Reactive variables
+
 RxMap<String, String> redioButton = <String, String>{}.obs;
 RxMap<String, int> redioButtonIndex = <String, int>{}.obs;
 RxBool showCheckBox =

@@ -93,6 +93,7 @@ class _HomePageState extends State<HomePage> {
     getAllTransaction(context);
     getAllContstant(context);
     getCustomCategory(context);
+    custom = getthelist();
     allOrGroupTransactionsName.value = StringConstant.allTransactions;
    
     await getRemainders(context);
