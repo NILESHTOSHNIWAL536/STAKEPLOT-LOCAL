@@ -60,7 +60,7 @@ class _SwipeableCardsScreenState extends State<SwipeableCardsScreen> {
             children: [
               // PageView for Cards
               SizedBox(
-                height: screenSize.height * 0.16,
+                height: screenSize.height * 0.14,
                 width: screenSize.width /1.2,
                 child: PageView.builder(
                   controller: _pageController,
@@ -167,6 +167,7 @@ class TotalSpendingCard extends StatelessWidget {
 
     return Obx(
       () => Container(
+        height: MediaQuery.of(context).size.height/4,
         
         decoration: BoxDecoration(
           color: AppColors.backgroundColor,
@@ -196,7 +197,6 @@ class TotalSpendingCard extends StatelessWidget {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          
                           Text(
                             'Total Spending',
                             style:FontManager().getTextStyle(context,

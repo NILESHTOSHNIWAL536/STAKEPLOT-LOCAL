@@ -53,9 +53,9 @@ void openShowModalCate(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  getImageContainer(Categories.link + Categories.alcohal),
-                  getImageContainer(Categories.link + Categories.food),
-                  getImageContainer(Categories.link + Categories.health),
+                  getImageContainer(Categories.link + Categories.handBill),
+                  getImageContainer(Categories.link + Categories.creditCardCheck),
+                  getImageContainer(Categories.link + Categories.digitalPayment),
                 ],
               ),
               SizedBox(
