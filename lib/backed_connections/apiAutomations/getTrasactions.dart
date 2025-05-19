@@ -339,7 +339,6 @@ void getUserBankData(context) async {
 void updateTheTagOfTarnsactions(
     category, subCategory, transactionId, context, index) async {
   String urlPath = "${url}/transactionauto/updateTransaction/${transactionId}";
-
   var response = await updateDataApiCall2(urlPath, {
     'category': category,
     'subcategory': subCategory,
@@ -351,8 +350,7 @@ void updateTheTagOfTarnsactions(
   } else {}
 }
 
-void updateTheTagOfTarnsactionsGroup(
-    category, subCategory, grpId, context, index) async {
+void updateTheTagOfTarnsactionsGroup(category, subCategory, grpId, context, index) async {
   String urlPath = "${url}/transactionauto/grouped/${grpId}/categorize";
 
   var body = {
