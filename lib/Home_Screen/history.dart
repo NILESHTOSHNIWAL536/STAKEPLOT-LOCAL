@@ -242,7 +242,8 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
                                                 context: context,
                                                 text: !isManual
                                                     ? nameOfUser
-                                                    : narration,
+                                                    : subcategory,
+                                                 
                                                 c: AppColors.accentColor,
                                                 fontsize: fontSizeMedium,
                                                 fontWeight: FontWeight.w600,
