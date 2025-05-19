@@ -79,218 +79,221 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
           // padding: const EdgeInsets.only(top: 5, left: 16, right: 16),
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-           
-            Padding(
-              padding: const EdgeInsets.only(top: 5, left: 5, right: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  AvatarProfile(name: userName.value, width: 8, height: 10,background:userAvatarBackGround.value,flag: false,),
-                  const SizedBox(width: 3,),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(userName.value,
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.w600,
-                                //fontSize: MediaQuery.of(context).size.width * 0.04,
-                                color: AppColors.primaryColor)),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          child: Text(email.value,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start, children: [
+             
+              Padding(
+                padding: const EdgeInsets.only(top: 5, left: 5, right: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AvatarProfile(name: userName.value, width: 8, height: 10,background:userAvatarBackGround.value,flag: false,),
+                    const SizedBox(width: 3,),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(userName.value,
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.w600,
+                                  //fontSize: MediaQuery.of(context).size.width * 0.04,
+                                  color: AppColors.primaryColor)),
+                          Container(
+                            width: MediaQuery.of(context).size.width/2.1,
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            child: Text(email.value,
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.w400,
+                                    //fontSize: MediaQuery.of(context).size.width * 0.04,
+                                    fontSize: 10,
+                                    color: AppColors.bg1),overflow: TextOverflow.ellipsis,),
+                          ),
+                          Text(number.value,
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.w400,
                                   //fontSize: MediaQuery.of(context).size.width * 0.04,
                                   fontSize: 10,
                                   color: AppColors.bg1)),
-                        ),
-                        Text(number.value,
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.w400,
-                                //fontSize: MediaQuery.of(context).size.width * 0.04,
-                                fontSize: 10,
-                                color: AppColors.bg1)),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => EditDetails()),
-                      );
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width *
-                          0.2, // Adjust the multiplier as needed
-                      decoration: BoxDecoration(
-                          color: AppColors.mt,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Center(
-                        child: Row(
-                          //mainAxisSize: MainAxisSize.min,
-                          //mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            AvatarProfileImage(
-                              url: ProfileIcons.edit,
-                              height: 40,
-                              width: 40,
-                            ),
-                            Text('Edit',
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w600,
-                                    //fontSize: MediaQuery.of(context).size.width * 0.04,
-                                    fontSize: 12,
-                                    color: AppColors.bg1))
-                          ],
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => EditDetails()),
+                        );
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width *
+                            0.2, // Adjust the multiplier as needed
+                        decoration: BoxDecoration(
+                            color: AppColors.mt,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: Row(
+                            //mainAxisSize: MainAxisSize.min,
+                            //mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              AvatarProfileImage(
+                                url: ProfileIcons.edit,
+                                height: 40,
+                                width: 40,
+                              ),
+                              Text('Edit',
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.w600,
+                                      //fontSize: MediaQuery.of(context).size.width * 0.04,
+                                      fontSize: 12,
+                                      color: AppColors.bg1))
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            // Options list
-            Padding(
-              padding: const EdgeInsets.only(top: 5, left: 16, right: 16),
-              child: Column(children: [
-                // First Container for Community profile and Friends list
-                Container(
-                  decoration: BoxDecoration(
-                      color: AppColors.mt,
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: AppColors.border)),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(6, 8, 8, 4),
-                    child: Column(
-                      children: [
-                        _buildOption(
-                            ProfileImage(
-                              url: ProfileIcons.communityProf,
-                            ),
-                            'Community profile',
-                            'Check your community profile', onTap: () {
-                          navigatorToMyOwnPage(context);
-                        }),
-                        Divider(),
-                        _buildOption(
-                            ProfileImage(
-                              url: ProfileIcons.friends,
-                              // height: 20,
-                              // width: 20,
-                            ),
-                            'Friends list',
-                            'Check your friends list here', onTap: () {
-                          Navigator.pushNamed(context, '/Friends');
-                        }),
-                      ],
+              const SizedBox(height: 20),
+              // Options list
+              Padding(
+                padding: const EdgeInsets.only(top: 5, left: 16, right: 16),
+                child: Column(children: [
+                  // First Container for Community profile and Friends list
+                  Container(
+                    decoration: BoxDecoration(
+                        color: AppColors.mt,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: AppColors.border)),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(6, 8, 8, 4),
+                      child: Column(
+                        children: [
+                          _buildOption(
+                              ProfileImage(
+                                url: ProfileIcons.communityProf,
+                              ),
+                              'Community profile',
+                              'Check your community profile', onTap: () {
+                            navigatorToMyOwnPage(context);
+                          }),
+                          Divider(),
+                          _buildOption(
+                              ProfileImage(
+                                url: ProfileIcons.friends,
+                                // height: 20,
+                                // width: 20,
+                              ),
+                              'Friends list',
+                              'Check your friends list here', onTap: () {
+                            Navigator.pushNamed(context, '/Friends');
+                          }),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                // SizedBox(height: 10),
-                // Second Container for Support, Terms & conditions, and Privacy policy
-
-                SizedBox(height: 10),
-                // Second Container for Support, Terms & conditions, and Privacy policy
-                Container(
-                  decoration: BoxDecoration(
-                      color: AppColors.mt,
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: AppColors.border)),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 14, 10, 10),
-                    child: Column(
-                      children: [
-                        InkWell(
-                          onTap: () async {
-                            bool isAuthenticated =
-                                await authenticateUser(context);
-                            if (isAuthenticated) {
+                  // SizedBox(height: 10),
+                  // Second Container for Support, Terms & conditions, and Privacy policy
+            
+                  SizedBox(height: 10),
+                  // Second Container for Support, Terms & conditions, and Privacy policy
+                  Container(
+                    decoration: BoxDecoration(
+                        color: AppColors.mt,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: AppColors.border)),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 14, 10, 10),
+                      child: Column(
+                        children: [
+                          InkWell(
+                            onTap: () async {
+                              bool isAuthenticated =
+                                  await authenticateUser(context);
+                              if (isAuthenticated) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        HiddenTransactionsScreen(),
+                                  ),
+                                );
+                              } else {
+                                snackBarCalledfail(context,
+                                    'Authentication failed. Please try again.');
+                              }
+                            },
+                            child: _buildOption(
+                                ProfileImage(
+                                  url: ProfileIcons.support,
+                                  // height: 20,
+                                  // width: 20,
+                                ),
+                                'History archives ',
+                                'Find your hidden history here'),
+                          ),
+                          Divider(),
+                          InkWell(
+                            onTap: () {
+                              WebViewController controller = WebViewController()
+                                ..setJavaScriptMode(JavaScriptMode.unrestricted)
+                                ..loadRequest(Uri.parse(
+                                    "https://stakeplot.com/Privacypolicy"));
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      HiddenTransactionsScreen(),
+                                      WebViewPage(controller: controller),
                                 ),
                               );
-                            } else {
-                              snackBarCalledfail(context,
-                                  'Authentication failed. Please try again.');
-                            }
-                          },
-                          child: _buildOption(
-                              ProfileImage(
-                                url: ProfileIcons.support,
-                                // height: 20,
-                                // width: 20,
-                              ),
-                              'History archives ',
-                              'Find your hidden history here'),
-                        ),
-                        Divider(),
-                        InkWell(
-                          onTap: () {
-                            WebViewController controller = WebViewController()
-                              ..setJavaScriptMode(JavaScriptMode.unrestricted)
-                              ..loadRequest(Uri.parse(
-                                  "https://stakeplot.com/Privacypolicy"));
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    WebViewPage(controller: controller),
-                              ),
-                            );
-                          },
-                          child: _buildOption(
-                              ProfileImage(
-                                url: ProfileIcons.terms,
-                                // height: 20,
-                                // width: 20,
-                              ),
-                              'Terms & conditions',
-                              'Please follow our terms and conditions'),
-                        ),
-
-                        // InkWell(
-                        //   onTap: () {
-                        //     Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //         builder: (context) =>
-                        //             OnboardingScreen(),
-                        //       ),
-                        //     );
-                        //   },
-                        //   child: _buildOption(
-                        //       ProfileImage(
-                        //         url: ProfileIcons.support,
-                        //         // height: 20,
-                        //         // width: 20,
-                        //       ),
-                        //       'History archives ',
-                        //       'Find your hidden history here'),
-                        // ),
-                      ],
+                            },
+                            child: _buildOption(
+                                ProfileImage(
+                                  url: ProfileIcons.terms,
+                                  // height: 20,
+                                  // width: 20,
+                                ),
+                                'Terms & conditions',
+                                'Please follow our terms and conditions'),
+                          ),
+            
+                          // InkWell(
+                          //   onTap: () {
+                          //     Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //         builder: (context) =>
+                          //             OnboardingScreen(),
+                          //       ),
+                          //     );
+                          //   },
+                          //   child: _buildOption(
+                          //       ProfileImage(
+                          //         url: ProfileIcons.support,
+                          //         // height: 20,
+                          //         // width: 20,
+                          //       ),
+                          //       'History archives ',
+                          //       'Find your hidden history here'),
+                          // ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-
-                // Third Container for Log ou
-                // t
-                const SizedBox(
-                  height: 10,
-                ),
-                logoutWidget(),
-              ]),
-            ),
-            // Spacer(),
-            // logoutWidget(),
-          ]),
+            
+                  // Third Container for Log ou
+                  // t
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  logoutWidget(),
+                ]),
+              ),
+              // Spacer(),
+              // logoutWidget(),
+            ]),
+          ),
         ),
       ),
     );
