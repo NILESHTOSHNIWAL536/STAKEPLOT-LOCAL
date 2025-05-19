@@ -186,7 +186,7 @@ class AvatarProfile extends StatelessWidget {
   }
 
 
- Widget img(BuildContext context, double size) {
+  Widget img(BuildContext context, double size) {
   return Container(
     width: size / 10,  // Diameter
     height: size / 10, // Diameter
@@ -238,6 +238,7 @@ class AvatarProfile extends StatelessWidget {
     );
 
   }
+
 }
 
 

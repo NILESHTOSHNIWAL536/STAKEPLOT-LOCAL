@@ -600,6 +600,7 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
   @override
   void initState() {
     super.initState();
+    
        UrlPathImage.value =  getIconPath(widget.data['category'].toLowerCase());
       _controller = AnimationController(
       vsync: this,

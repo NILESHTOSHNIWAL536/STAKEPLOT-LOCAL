@@ -447,7 +447,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
                                   BorderRadius.vertical(top: Radius.circular(20)),
                             ),
                             builder: (context) => TagShowmodal(
-                              data: transaction,
+                              data: transaction["transactions"][0],
                               index: index,
                               isGroupTransaction: true,
                             ),

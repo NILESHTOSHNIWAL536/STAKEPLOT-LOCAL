@@ -246,16 +246,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+
                       textStyle(
                           context: context,
                           text: getTimeBasedGreeting(),
                           fontWeight: FontWeight.w500,
-                          fontsize: 15),
+                          fontsize: 15
+                      ),
+
                       Obx(() => textStyle(
                           context: context,
-                          text: userName.value,
+                          text: toUpperCase(userName.value),
                           fontWeight: FontWeight.bold,
-                          fontsize: 15))
+                          fontsize: 15)),
+                      
                     ],
                   )
                 ],
