@@ -958,9 +958,9 @@ Widget getListOfCat(BuildContext context) {
           duration: Duration(milliseconds: 500),
           opacity: opacity,
                     child: Container(
-              child: historyTransactions(widget.data,!widget.isGroupTransaction? widget.data['transactionTimestamp']:widget.data['createdAt'], context),
+                      child: historyTransactions(widget.data, widget.data['transactionTimestamp'], context),
                     ),
-                  ),
+             ),
       );
   }
 

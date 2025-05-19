@@ -439,6 +439,7 @@ class _GroupTransactionsState extends State<GroupTransactions>
                   onTap: lengthOfTransactions.value
                       ? null
                       : () {
+                           transaction['transactions'][0]['totalAmount']=transaction['totalAmount']??0;
                           showModalBottomSheet(
                             context: context,
                             isScrollControlled: true,
