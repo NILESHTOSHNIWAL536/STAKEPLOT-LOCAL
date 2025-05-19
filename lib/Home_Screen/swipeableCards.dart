@@ -54,68 +54,79 @@ class _SwipeableCardsScreenState extends State<SwipeableCardsScreen> {
                 ),
               ),
             ),
-            SizedBox(
-              height: screenSize.height * 0.16,
-              child: PageView.builder(
-                controller: _pageController,
-                scrollDirection: Axis.vertical,
-                physics: const ClampingScrollPhysics(),
-                onPageChanged: _onPageChanged,
-                clipBehavior: Clip.hardEdge,
-                 itemCount: _totalCards,
-                itemBuilder: (context, index) {
-                  final cardIndex = index % _totalCards;
-                  return AnimatedBuilder(
-                    animation: _pageController,
-                    builder: (context, child) {
-                      double value = 1.0;
-                      if (_pageController.position.haveDimensions) {
-                        value = (index.toDouble() - (_pageController.page ?? 0.0)).clamp(-1.0, 1.0);
-                        value = (1.0 - (value.abs() * 0.2)).clamp(0.8, 1.0);
-                      }
-                      return Center(
-                        child: Transform.scale(
-                          scale: value,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: padding * 0.3,
-                              vertical: padding * 0.2,
+            Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // PageView for Cards
+              SizedBox(
+                height: screenSize.height * 0.16,
+                width: screenSize.width /1.2,
+                child: PageView.builder(
+                  controller: _pageController,
+                  scrollDirection: Axis.vertical,
+                  physics: const ClampingScrollPhysics(),
+                  onPageChanged: _onPageChanged,
+                  clipBehavior: Clip.hardEdge,
+                  itemCount: _totalCards,
+                  itemBuilder: (context, index) {
+                    final cardIndex = index % _totalCards;
+                    return AnimatedBuilder(
+                      animation: _pageController,
+                      builder: (context, child) {
+                        double value = 1.0;
+                        if (_pageController.position.haveDimensions) {
+                          value = (index.toDouble() - (_pageController.page ?? 0.0)).clamp(-1.0, 1.0);
+                          value = (1.0 - (value.abs() * 0.2)).clamp(0.8, 1.0);
+                        }
+                        return Center(
+                          child: Transform.scale(
+                            scale: value,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: padding * 0.3,
+                                vertical: padding * 0.2,
+                              ),
+                              child: _buildCard(cardIndex, context, screenSize),
                             ),
-                            child: _buildCard(cardIndex, context, screenSize),
                           ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+              // Indicator Dots
+              Padding(
+                padding: EdgeInsets.only(right: padding * 0.1),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    _totalCards,
+                    (index) => Obx(
+                      () => Container(
+                        margin: EdgeInsets.symmetric(vertical: padding * 0.3),
+                        width: _currentIndex.value == index ? 6.0 : 4.0,
+                        height: _currentIndex.value == index ? 6.0 : 4.0,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: _currentIndex.value == index
+                              ? AppColors.primaryColor
+                              : AppColors.bg3,
                         ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-            // Uncomment and use if needed
-            /*
-            Obx(
-              () => Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(_totalCards, (index) {
-                  return AnimatedContainer(
-                    duration: Duration(milliseconds: 300),
-                    margin: EdgeInsets.symmetric(horizontal: padding * 0.3),
-                    width: _currentIndex.value == index ? padding : padding * 0.6,
-                    height: padding * 0.8,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: _currentIndex.value == index
-                          ? AppColors.accentColor
-                          : AppColors.primaryColor.withOpacity(0.5),
+                      ),
                     ),
-                  );
-                }),
+                  ),
+                ),
               ),
-            ),
-            */
-          ],
-        ),
-      
+            ],
+          ),
+        ],
+      ),
     );
+  
+            // Uncomment and use if needed
+
   }
 
   Widget _buildCard(int cardIndex, BuildContext context, Size screenSize) {
@@ -156,6 +167,7 @@ class TotalSpendingCard extends StatelessWidget {
 
     return Obx(
       () => Container(
+        
         decoration: BoxDecoration(
           color: AppColors.backgroundColor,
         ),
@@ -196,12 +208,16 @@ class TotalSpendingCard extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 10,),
-                      Text(
-                        '₹${formatMoneyIndian(totalDebitThisMonth.value.toStringAsFixed(2))}',
-                        style:FontManager().getTextStyle(context,
-                                          lWeight: FontWeight.w500,
-                          fontSize: screenSize.width * 0.06,
-                          color: AppColors.accentColor,
+                      
+                      Container(
+                         width: MediaQuery.sizeOf(context).width/2.6,
+                        child: Text(
+                          '₹${formatMoneyIndian(totalDebitThisMonth.value.toStringAsFixed(0))}',
+                          style:FontManager().getTextStyle(context,
+                                            lWeight: FontWeight.w500,
+                            fontSize: (totalDebitThisMonth.value.toString().length > 8)  ? screenSize.width * 0.05 : screenSize.width * 0.056,
+                            color: AppColors.accentColor,
+                          ),
                         ),
                       ),
                     ],
@@ -220,14 +236,18 @@ class TotalSpendingCard extends StatelessWidget {
                         ),
                       ),
                        SizedBox(height: 10,),
-                       Text(
-                        '₹${formatMoneyIndian(((totalDebitThisMonth.value / (DateTime.now().day == 0 ? 1 : DateTime.now().day)).toStringAsFixed(2)))}',
-                        style:FontManager().getTextStyle(context,
-                                          lWeight: FontWeight.w500,
-                          fontSize: screenSize.width * 0.06,
-                          color: AppColors.accentColor,
-                        ),
-                      ),
+                       Container(
+                         width: MediaQuery.sizeOf(context).width/2.9,
+                         child: Text(
+                          '₹${formatMoneyIndian(((totalDebitThisMonth.value / (DateTime.now().day == 0 ? 1 : DateTime.now().day)).toStringAsFixed(0)))}',
+                          style:FontManager().getTextStyle(context,
+                                            lWeight: FontWeight.w500,
+                            fontSize: (totalDebitThisMonth.value.toString().length > 8)  ? screenSize.width * 0.05 : screenSize.width * 0.056,
+                            color: AppColors.accentColor,
+                            overflow: TextOverflow.ellipsis
+                          ),
+                                               ),
+                       ),
                     ],
                   ),
                 ],

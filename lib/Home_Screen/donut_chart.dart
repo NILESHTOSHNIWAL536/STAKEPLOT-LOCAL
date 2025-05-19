@@ -140,7 +140,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
     final topFour = topCategories.take(6).toList();
     return GridView.builder(
       shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+      // physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 8,
@@ -255,13 +255,16 @@ class CategoryCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      '₹${formatMoneyIndian(amount.toStringAsFixed(2))}',
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.w500,
-                        fontSize: 16,
-                        color: AppColors.accentColor,
+                    Container(
+                       width: MediaQuery.sizeOf(context).width/2,
+                      child: Text(
+                        '₹${formatMoneyIndian(amount.toStringAsFixed(2))}',
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w500,
+                          fontSize: 16,
+                          color: AppColors.accentColor,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -282,13 +285,17 @@ class CategoryCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 10,),
-                        Text(
-                          '${percentage}',
-                          style: FontManager().getTextStyle(
-                            context,
-                            lWeight: FontWeight.normal,
-                            fontSize: 12,
-                            color: percentage.startsWith("-")? Colorcodes.redDeleteIcon:percentage.startsWith("+")? Colorcodes.green: AppColors.bg3,
+                        Container(
+                        
+                           width: MediaQuery.sizeOf(context).width/2.4,
+                          child: Text(
+                            '${percentage}',
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: FontWeight.normal,
+                              fontSize: 10,
+                              color: percentage.startsWith("-")? Colorcodes.redDeleteIcon:percentage.startsWith("+")? Colorcodes.green: AppColors.bg3,
+                            ),
                           ),
                         ),
                       ],

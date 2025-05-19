@@ -66,47 +66,61 @@ class _ManualtransactionState extends State<Manualtransaction> {
                             fontSize: MediaQuery.of(context).size.width * 0.04,
                             color: AppColors.accentColor)),
                     const SizedBox(height: 8),
-                    InkWell(
-                      onTap: () {
-                        isDebit = false;
-                        showCustomModal(context,isDebit);
-
-                        // player.play(UrlSource('https://www.soundjay.com/button/beep-07.wav'));
-                      },
-                      child: Container(
-                        height: Colorcodes.paddingSize * 1.5,
-                        width: Colorcodes.paddingSize * 4,
+                    Container(
                         decoration: BoxDecoration(
-                            color: AppColors.button,
-                            borderRadius: BorderRadius.circular(16)),
-                        child: Center(
-                          child: Text('Credit',
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.normal,
-                                  fontSize: 12,
-                                  color: AppColors.primaryColor)),
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        isDebit = true;
-                        showCustomModal(context,isDebit);
-                        // player.play(UrlSource('https://www.soundjay.com/button/beep-07.wav'));
-                      },
-                      child: Container(
-                        height: Colorcodes.paddingSize * 1.5,
-                        width: Colorcodes.paddingSize * 4,
-                        decoration: BoxDecoration(
-                            color: AppColors.button,
-                            borderRadius: BorderRadius.circular(16)),
-                        child: Center(
-                          child: Text('Debit',
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.normal,
-                                  fontSize: 12,
-                                  color: AppColors.primaryColor)),
-                        ),
+                                  color: AppColors.button,
+                                 // borderRadius: BorderRadius.circular(16)
+                                  ),
+                      child: Row(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              isDebit = false;
+                              showCustomModal(context,isDebit);
+                          
+                              // player.play(UrlSource('https://www.soundjay.com/button/beep-07.wav'));
+                            },
+                            child: Container(
+                              height: Colorcodes.paddingSize * 1.5,
+                              width: Colorcodes.paddingSize * 3,
+                              // decoration: BoxDecoration(
+                              //     color: AppColors.button,
+                              //     borderRadius: BorderRadius.circular(16)),
+                              child: Center(
+                                child: Text('Credit',
+                                    style: FontManager().getTextStyle(context,
+                                        lWeight: FontWeight.normal,
+                                        fontSize: 12,
+                                        color: AppColors.primaryColor)),
+                              ),
+                            ),
+                          ),
+                         Container(
+                            width: 0.5, // Width of the divider
+                            height: Colorcodes.paddingSize * 1.2, // Match the height of the buttons
+                            color: AppColors.accentColor, // Color of the divider
+                          ),
+                          InkWell(
+                            onTap: () {
+                              isDebit = true;
+                              showCustomModal(context,isDebit);
+                            },
+                            child: Container(
+                              height: Colorcodes.paddingSize * 1.5,
+                              width: Colorcodes.paddingSize * 3,
+                              // decoration: BoxDecoration(
+                              //     color: AppColors.button,
+                              //     borderRadius: BorderRadius.circular(16)),
+                              child: Center(
+                                child: Text('Debit',
+                                    style: FontManager().getTextStyle(context,
+                                        lWeight: FontWeight.normal,
+                                        fontSize: 12,
+                                        color: AppColors.primaryColor)),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     )
                   ],

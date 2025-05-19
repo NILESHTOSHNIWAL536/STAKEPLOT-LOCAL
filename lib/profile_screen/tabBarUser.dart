@@ -11,6 +11,7 @@ class TabBarUser extends StatelessWidget {
     return  DefaultTabController(
                     length: 2, // Number of tabs
                     child: Column(
+                     
                       children: [
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 20),
@@ -75,8 +76,8 @@ class TabBarUser extends StatelessWidget {
                                 vertical: 0, horizontal: 12.0),
                             child: TabBarView(
                               children: [
-                                Center(child: feedWidgets("post")),
-                                Center(child: pollWidgets("poll")),
+                                feedWidgets("post"),
+                                pollWidgets("poll"),
                               ],
                             ),
                           ),
@@ -94,9 +95,11 @@ class TabBarUser extends StatelessWidget {
     }
     return SingleChildScrollView(
       child: Column(
+        // mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
           child: Column(
+             mainAxisAlignment: MainAxisAlignment.start,
             children: userPostList.asMap().entries.map((entry) {
               int index = entry.key;
               var item = entry.value;

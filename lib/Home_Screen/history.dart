@@ -240,12 +240,10 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
                                                   3,
                                               child: textStyle(
                                                 context: context,
-                                                // text: !isManual
-                                                //     ? nameOfUser
-                                                //     : subcategory,
-                                                 text: category=="Untagged"
+                                                text: !isManual
                                                     ? nameOfUser
                                                     : subcategory,
+                                                 
                                                 c: AppColors.accentColor,
                                                 fontsize: fontSizeMedium,
                                                 fontWeight: FontWeight.w600,
