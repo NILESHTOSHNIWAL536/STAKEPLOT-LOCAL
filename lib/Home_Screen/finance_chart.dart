@@ -190,15 +190,15 @@ class _FinancePageState extends State<FinancePage> {
   Widget historyButton(double fontSizeFactor) {
     return InkWell(
       onTap: (){
-                   
-                    Navigator.push(
+  
+                    getAllTransaction(context);
+                    getGroupTransactions();
+                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const TransactionHistoryScreen(),
                       ),
                     );
-                    getAllTransaction(context);
-                    getGroupTransactions();
 
       },
       child:Container(

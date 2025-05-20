@@ -782,10 +782,11 @@ class _ChatState extends State<Chat> {
   }
 
   Widget profilepath(boolFlag) {
-    return chatAvatartImage(
-        url: boolFlag ? path : avaterUrlPath(data['name']),
-        width: 17,
-        height: 16);
+    return AvatarProfile(name: data['name'], width: 1, height: 1, background: userAvatarBackGround.value,);
+    // return chatAvatartImage(
+    //     url: boolFlag ? path : avaterUrlPath(data['name']),
+    //     width: 17,
+    //     height: 16);
   }
 
   Widget textIsme(String msg, bool isme) {
@@ -1286,11 +1287,12 @@ class _ChatState extends State<Chat> {
                       Container(
                         child: Row(
                           children: [
-                            UserAvatar(
-                              url: avaterUrlPath(dataObj["author"]['name']),
-                              width: 15,
-                              height: 15,
-                            ),
+                            AvatarProfile(name: dataObj["author"]['name'], width: 1, height: 1, background: userAvatarBackGround.value,),
+                            // UserAvatar(
+                            //   url: avaterUrlPath(dataObj["author"]['name']),
+                            //   width: 15,
+                            //   height: 15,
+                            // ),
                             const SizedBox(
                               width: 5,
                             ),
