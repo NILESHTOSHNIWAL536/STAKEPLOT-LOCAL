@@ -55,38 +55,38 @@ class _ExploreModalState extends State<ExploreModal> {
     _amountControllers.add(TextEditingController());
   }
 
-  // Future<void> _pickAndCropImage() async {
-  //   if (selectedImages.length >= maxImages) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(content: Text('Maximum 5 images allowed')),
-  //     );
-  //     return;
-  //   }
-
-  //   final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-  //   if (image != null) {
-  //     await _showCropDialog(File(image.path));
-  //   }
-  // }
   Future<void> _pickAndCropImage() async {
     if (selectedImages.length >= maxImages) {
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(content: Text('Maximum 5 images allowed')),
-      // );
-      snackBarCalledfail(context, "Maximum 5 images allowed");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Maximum 5 images allowed')),
+      );
       return;
     }
 
-    final File? image = await pickImageWithPermissions(
-      context,
-      showErrorSnackBar: (message) =>
-          snackBarCalledfail(context, message)
-    );
-
-    if (image != null && mounted) {
-      await _showCropDialog(image);
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      await _showCropDialog(File(image.path));
     }
   }
+  // Future<void> _pickAndCropImage() async {
+  //   if (selectedImages.length >= maxImages) {
+  //     // ScaffoldMessenger.of(context).showSnackBar(
+  //     //   const SnackBar(content: Text('Maximum 5 images allowed')),
+  //     // );
+  //     snackBarCalledfail(context, "Maximum 5 images allowed");
+  //     return;
+  //   }
+
+  //   final File? image = await pickImageWithPermissions(
+  //     context,
+  //     showErrorSnackBar: (message) =>
+  //         snackBarCalledfail(context, message)
+  //   );
+
+  //   if (image != null && mounted) {
+  //     await _showCropDialog(image);
+  //   }
+  // }
 
   Future<void> _showCropDialog(File imageFile, [int? existingIndex]) async {
     final cropController = CustomImageCropController();

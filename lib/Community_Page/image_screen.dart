@@ -39,29 +39,29 @@ class _ImageScreenState extends State<ImageScreen> {
   final CustomImageCropController _cropController = CustomImageCropController();
   File? selectedImage;
 
-  // Future<void> _pickImage() async {
-  //   try {
-  //     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-  //     if (image != null && mounted) {
-  //       setState(() {
-  //         selectedImage = File(image.path);
-  //       });
-  //     }
-  //   } catch (e) {
-  //     snackBarAllFeilds2(context, 'Error picking image: $e');
-  //   }
-  // }
   Future<void> _pickImage() async {
-    final File? image = await pickImageWithPermissions(
-      context,
-      showErrorSnackBar: (message) => snackBarAllFeilds2(context, message),
-    );
-    if (image != null && mounted) {
-      setState(() {
-        selectedImage = image;
-      });
+    try {
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image != null && mounted) {
+        setState(() {
+          selectedImage = File(image.path);
+        });
+      }
+    } catch (e) {
+      snackBarAllFeilds2(context, 'Error picking image: $e');
     }
   }
+  // Future<void> _pickImage() async {
+  //   final File? image = await pickImageWithPermissions(
+  //     context,
+  //     showErrorSnackBar: (message) => snackBarAllFeilds2(context, message),
+  //   );
+  //   if (image != null && mounted) {
+  //     setState(() {
+  //       selectedImage = image;
+  //     });
+  //   }
+  // }
 
   Future<File?> _cropAndSaveImage() async {
     try {

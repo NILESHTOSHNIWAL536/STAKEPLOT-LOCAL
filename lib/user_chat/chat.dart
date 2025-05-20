@@ -377,152 +377,87 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  // void getImage() async {
-  //   final _picker = ImagePicker();
-  //   final imageData = await _picker.pickImage(source: ImageSource.gallery);
+  void getImage() async {
+    final _picker = ImagePicker();
+    final imageData = await _picker.pickImage(source: ImageSource.gallery);
 
-  //   if (imageData != null) {
-  //     //  addMessage(context,"image",search.text,data['_id'],data);
-  //     showData(imageData);
-  //     // addMessageImage(context, "image","None",data['_id'],File(imageData.path),widget.data,widget.myId,socket,widget.myId,roomId.value,);
+    if (imageData != null) {
+      //  addMessage(context,"image",search.text,data['_id'],data);
+      showData(imageData);
+      // addMessageImage(context, "image","None",data['_id'],File(imageData.path),widget.data,widget.myId,socket,widget.myId,roomId.value,);
 
-  //     // navigate();
-  //     // setState(() {
-  //     //       messages.insert(0,Message(isMe: true,url: File(imageData.path),type: "image")); // Add the message to the list
-  //     //   });
-  //   }
-  // }
-
-// void getImage() async {
-//   print('getImage called');
-//   bool? confirm = await showDialog<bool>(
-//     context: context,
-//     builder: (BuildContext context) {
-//       return AlertDialog(
-//         title: const Text('Allow Media Access'),
-//         content: const Text('Are you sure you want to allow access to your media?'),
-//         actions: [
-//           TextButton(
-//             onPressed: () => Navigator.of(context).pop(false),
-//             child: const Text('No'),
-//           ),
-//           TextButton(
-//             onPressed: () => Navigator.of(context).pop(true),
-//             child: const Text('Yes'),
-//           ),
-//         ],
-//       );
-//     },
-//   );
-
-//   print('Dialog result: $confirm');
-//   if (confirm == null || !confirm) {
-//     snackBarCalled(context, 'Image selection canceled');
-//     return;
-//   }
-
-//   print('Checking initial permission status');
-//   PermissionStatus status = await Permission.photos.status;
-//   print('Initial status: $status');
-
-//   if (!status.isGranted) {
-//     print('Requesting permission');
-//     status = await Permission.photos.request();
-//     print('Permission status after request: $status');
-//   }
-
-//   if (status.isGranted) {
-//     try {
-//       final _picker = ImagePicker();
-//       final imageData = await _picker.pickImage(source: ImageSource.gallery);
-//       print('Image picked: $imageData');
-//       if (imageData != null) {
-//         showData(imageData);
-//       } else {
-//         snackBarCalled(context, 'No image selected');
-//       }
-//     } catch (e) {
-//       snackBarCalled(context, 'Error selecting image: $e');
-//       print('Error: $e');
-//     }
-//   } else if (status.isDenied) {
-//     snackBarCalled(context, 'Please grant photo library access to select images');
-//   } else if (status.isPermanentlyDenied) {
-//     snackBarCalled(
-//       context,
-//       'Photo library access is permanently denied. Please enable it in settings.',
-//     );
-//     await openAppSettings();
-//   } else {
-//     snackBarCalled(context, 'Unknown permission status: $status');
-//     print('Unknown status: $status');
-//   }
-// }
-
-  Future<void> getImage(BuildContext context) async {
-    print('getImage called');
-
-    print('Checking initial permission status');
-    PermissionStatus status;
-
-    if (Platform.isAndroid) {
-      final androidInfo = await DeviceInfoPlugin().androidInfo;
-      final sdkInt = androidInfo.version.sdkInt;
-      print('Android SDK version: $sdkInt');
-      if (sdkInt >= 33) {
-        // Android 13+: Use READ_MEDIA_IMAGES
-        status = await Permission.photos.status;
-      } else {
-        // Android 12 and below: Use READ_EXTERNAL_STORAGE
-        status = await Permission.storage.status;
-      }
-    } else {
-      // iOS
-      status = await Permission.photos.status;
-    }
-    print('Initial status: $status');
-
-    if (!status.isGranted) {
-      print('Requesting permission');
-      if (Platform.isAndroid) {
-        final androidInfo = await DeviceInfoPlugin().androidInfo;
-        final sdkInt = androidInfo.version.sdkInt;
-        if (sdkInt >= 33) {
-          status = await Permission.photos.request();
-        } else {
-          status = await Permission.storage.request();
-        }
-      } else {
-        status = await Permission.photos.request();
-      }
-      print('Permission status after request: $status');
-    }
-
-    if (status.isGranted) {
-      try {
-        final _picker = ImagePicker();
-        final imageData = await _picker.pickImage(source: ImageSource.gallery);
-        if (imageData != null) {
-          showData(imageData);
-        } else {
-          snackBarCalled(context, 'No image selected');
-        }
-      } catch (e) {
-        snackBarCalled(context, 'Error selecting image: $e');
-      }
-    } else if (status.isDenied) {
-      snackBarCalled(
-          context, 'Please grant photo library access to select images');
-    } else if (status.isPermanentlyDenied) {
-      snackBarCalled(
-        context,
-        'Photo library access is permanently denied. Please enable it in settings.',
-      );
-      await openAppSettings();
-    } else {
-      snackBarCalled(context, 'Unknown permission status: $status');
+      // navigate();
+      // setState(() {
+      //       messages.insert(0,Message(isMe: true,url: File(imageData.path),type: "image")); // Add the message to the list
+      //   });
     }
   }
+
+
+  // Future<void> getImage(BuildContext context) async {
+  //   print('getImage called');
+
+  //   print('Checking initial permission status');
+  //   PermissionStatus status;
+
+  //   if (Platform.isAndroid) {
+  //     final androidInfo = await DeviceInfoPlugin().androidInfo;
+  //     final sdkInt = androidInfo.version.sdkInt;
+  //     print('Android SDK version: $sdkInt');
+  //     if (sdkInt >= 33) {
+  //       // Android 13+: Use READ_MEDIA_IMAGES
+  //       status = await Permission.photos.status;
+  //     } else {
+  //       // Android 12 and below: Use READ_EXTERNAL_STORAGE
+  //       status = await Permission.storage.status;
+  //     }
+  //   } else {
+  //     // iOS
+  //     status = await Permission.photos.status;
+  //   }
+  //   print('Initial status: $status');
+
+  //   if (!status.isGranted) {
+  //     print('Requesting permission');
+  //     if (Platform.isAndroid) {
+  //       final androidInfo = await DeviceInfoPlugin().androidInfo;
+  //       final sdkInt = androidInfo.version.sdkInt;
+  //       if (sdkInt >= 33) {
+  //         status = await Permission.photos.request();
+  //       } else {
+  //         status = await Permission.storage.request();
+  //       }
+  //     } else {
+  //       status = await Permission.photos.request();
+  //     }
+  //     print('Permission status after request: $status');
+  //   }
+
+  //   if (status.isGranted) {
+  //     try {
+  //       final _picker = ImagePicker();
+  //       final imageData = await _picker.pickImage(source: ImageSource.gallery);
+  //       if (imageData != null) {
+  //         showData(imageData);
+  //       } else {
+  //         snackBarCalled(context, 'No image selected');
+  //       }
+  //     } catch (e) {
+  //       snackBarCalled(context, 'Error selecting image: $e');
+  //     }
+  //   } else if (status.isDenied) {
+  //     snackBarCalled(
+  //         context, 'Please grant photo library access to select images');
+  //   } else if (status.isPermanentlyDenied) {
+  //     snackBarCalled(
+  //       context,
+  //       'Photo library access is permanently denied. Please enable it in settings.',
+  //     );
+  //     await openAppSettings();
+  //   } else {
+  //     snackBarCalled(context, 'Unknown permission status: $status');
+  //   }
+  // }
 
   // Function to build a message bubble
   Widget _buildMessage(Message message) {
@@ -899,7 +834,7 @@ class _ChatState extends State<Chat> {
                     size: 25,
                   ),
                   onPressed: () {
-                    getImage(context);
+                    getImage();
                   }),
               IconButton(
                 icon: Icon(

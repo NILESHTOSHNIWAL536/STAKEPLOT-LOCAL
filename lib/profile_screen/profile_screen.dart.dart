@@ -330,7 +330,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
         Align(
           alignment: Alignment.bottomCenter,
           child: Text(
-            'Stakeplot\nApp version 1.0.0+2',
+            'Stakeplot\nApp version 1.0.0+3',
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.grey, fontSize: 12),
           ),
