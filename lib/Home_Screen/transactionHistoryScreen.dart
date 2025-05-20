@@ -200,7 +200,7 @@ void _onScroll() {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                 
                   // Transaction History
                 Obx(()=> Container(
                    height: MediaQuery.sizeOf(context).height/ (groupTransactionList.length!=0? 1.38:1.27),

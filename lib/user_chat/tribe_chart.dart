@@ -356,7 +356,7 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
     double width = MediaQuery.of(context).size.width;
     
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       child: GestureDetector(
         onTap: () {
           
@@ -374,81 +374,84 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
           );
 
         },
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
-              //width: width / 1,
-              child: Row(
-                children: [
-                  // AvatarProfileImage(
-                  //   url: item['avatar'] ?? userAvatar,
-                  //   width: 10,
-                  //   height: 16,
-                  // ),
-                  AvatarProfile(name: item['name'], width: 1, height: 1, background: item['avatar']),
-                  const SizedBox(width: 8),
-                  Container(
-                    width: width >= 500
-                        ? width / 2.2
-                        : width >= 300
-                            ? width / 2.5
-                            : width / 3.1,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          (item['name']),
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.w400,
-                              fontSize: 18,
-                              color: AppColors.message),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          item['type'] ?? 'No messages yet',
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.w400,
-                              fontSize: 12,
-                              color: AppColors.message.withOpacity(0.7)),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Spacer(),
-                  if (item['count'] != 0)
+        child: Container(
+          color: AppColors.backgroundColor,
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+                //width: width / 1,
+                child: Row(
+                  children: [
+                    // AvatarProfileImage(
+                    //   url: item['avatar'] ?? userAvatar,
+                    //   width: 10,
+                    //   height: 16,
+                    // ),
+                    AvatarProfile(name: item['name'], width: 1, height: 1, background: item['avatar']),
+                    const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryColor,
-                     
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          width: 0.3,
-                          color: Colorcodes.budgetDarkGreen,
-                        ),
-                      ),
-                      child:  Center(
-                          child: Text(
-                           item['count'].toString(),
+                      width: width >= 500
+                          ? width / 2.2
+                          : width >= 300
+                              ? width / 2.5
+                              : width / 3.1,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            (item['name']),
                             style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.bold,
+                                lWeight: FontWeight.w400,
+                                fontSize: 18,
+                                color: AppColors.message),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            item['type'] ?? 'No messages yet',
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.w400,
                                 fontSize: 12,
-                                color: AppColors.bg5),
-                          
-                        ),
+                                color: AppColors.message.withOpacity(0.7)),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
                     ),
-                ],
+                    const Spacer(),
+                    if (item['count'] != 0)
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryColor,
+                       
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            width: 0.3,
+                            color: Colorcodes.budgetDarkGreen,
+                          ),
+                        ),
+                        child:  Center(
+                            child: Text(
+                             item['count'].toString(),
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                  color: AppColors.bg5),
+                            
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ),
-            ),
-            const Divider(),
-          ],
+              const Divider(),
+            ],
+          ),
         ),
       ),
     );

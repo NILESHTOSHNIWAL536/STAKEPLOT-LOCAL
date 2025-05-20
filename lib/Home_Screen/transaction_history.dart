@@ -540,9 +540,10 @@ final matched = custom.firstWhere(
   orElse: () => {},
 );
 
+// final url = matched.isNotEmpty && matched['imageUrl'] != null ? matched['imageUrl']
+//     : Categories.link + (imageMapForHistory[lowerCategory] ?? 'default_image.png');
 final url = matched.isNotEmpty && matched['imageUrl'] != null ? matched['imageUrl']
-    : Categories.link + (imageMapForHistory[lowerCategory] ?? 'default_image.png');
-
+    :  imageMapForHistory[lowerCategory] !=null ?  Categories.link + imageMapForHistory[lowerCategory].toString()  : "assets/icons/subCategoryIcons/other.svg";
   return Container(
     width: avatarSize,
     height: avatarSize,

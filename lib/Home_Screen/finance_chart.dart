@@ -569,78 +569,13 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 ),
               ),
             ),
-          ValueListenableBuilder<Map<String, dynamic>>(
-            valueListenable: tooltipData,
-            builder: (context, data, child) {
-              if (!data.containsKey('visible') || !data['visible']) {
-                return SizedBox.shrink();
-              }
-              return Positioned(
-                left: data['x']?.toDouble() ?? 0,
-                top: data['y']?.toDouble() ?? 0,
-                child: _buildCustomTooltip(data, fontSizeFactor),
-              );
-            },
-          ),
+         
         ],
       ),
     );
   }
 
-  Widget _buildCustomTooltip(Map<String, dynamic> data, double fontSizeFactor) {
-    final String date = data['date'] ?? '';
-    final double credited = data['credited'] ?? 0.0;
-    final double debited = data['debited'] ?? 0.0;
-
-    return Container(
-      padding: EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: Colors.black87,
-        borderRadius: BorderRadius.circular(4),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 4,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Date: $date',
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.bold,
-              fontSize: fontSizeFactor * 2.5,
-              color: Colors.white,
-            ),
-          ),
-          SizedBox(height: 4),
-          Text(
-            'Credited: ₹${credited.toStringAsFixed(2)}',
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.normal,
-              fontSize: fontSizeFactor * 2.5,
-              color: Colors.white,
-            ),
-          ),
-          Text(
-            'Debited: ₹${debited.toStringAsFixed(2)}',
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.normal,
-              fontSize: fontSizeFactor * 2.5,
-              color: Colors.white,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
+  
   Widget getContainerOfGraph(double screenWidth, double fontSizeFactor) {
     int dataLength;
     List<String> labels;
@@ -720,6 +655,9 @@ class _LineChartWidgetState extends State<LineChartWidget> {
           ),
           tooltipBehavior: TooltipBehavior(
             enable: true,
+            format: 'point.x: ₹point.y',
+            duration:  0.2,
+            
             builder: (dynamic data, dynamic point, dynamic series,
                 int pointIndex, int seriesIndex) {
               final ChartData chartData = data as ChartData;
@@ -744,6 +682,13 @@ class _LineChartWidgetState extends State<LineChartWidget> {
               );
             },
           ),
+          trackballBehavior: TrackballBehavior(
+                  enable: true,
+                  
+                  // Display mode of trackball tooltip
+                  tooltipDisplayMode: TrackballDisplayMode.groupAllPoints,
+                 
+                ),
           series: <ChartSeries>[
             SplineAreaSeries<ChartData, String>(
               dataSource: creditedData,

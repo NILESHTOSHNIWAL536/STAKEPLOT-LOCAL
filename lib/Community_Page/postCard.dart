@@ -365,7 +365,7 @@ class _PostCardState extends State<PostCard> {
   }
 
   Widget popUpBox(id, context, userId, int index) {
-    print("popUpBox called with id: $id, userId: $userId, index: $index");
+   
     return PopupMenuButton(
       initialValue: 2,
       color: Colorcodes.white,
@@ -376,9 +376,7 @@ class _PostCardState extends State<PostCard> {
         color: AppColors.bg2,
       )),
       onSelected: (value) {
-        print("Menu item selected: $value");
         if (value == 0 && userId == userName.value) {
-          print("Deleting post with id: $id");
           deletePost(id, context);
         }
         else if (value == 1) {
@@ -390,16 +388,13 @@ class _PostCardState extends State<PostCard> {
             },
           );
         } else {
-          print("Reporting post with id: $id");
           reportPost(context, id, "hide post", "hide");
           if (widget.flag) {
-            print("Flag is true, getting post data");
             getPost();
             Navigator.pop(context);
           }
         }
 
-        print("Removing item at index: $index");
         getTrendingData.removeAt(index);
         posting.value = false;
         postDis.value = false;
