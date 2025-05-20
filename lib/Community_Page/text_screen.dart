@@ -91,89 +91,89 @@ class _TextScreenState extends State<TextScreen> {
     super.dispose();
   }
 
-  // Future<void> _pickImage() async {
-  //   try {
-  //     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-  //     if (image != null && mounted) {
-  //       setState(() {
-  //         selectedImage = File(image.path);
-  //       });
-  //     }
-  //   } catch (e) {
-  //     snackBarAllFeilds2(context, 'Error picking image: $e');
-  //   }
-  // }
-Future<void> _pickImage() async {
-
-  // Check initial permission status
-  PermissionStatus status;
-
-  if (Platform.isAndroid) {
-    final androidInfo = await DeviceInfoPlugin().androidInfo;
-    final sdkInt = androidInfo.version.sdkInt;
-    if (sdkInt >= 33) {
-      // Android 13+: Use READ_MEDIA_IMAGES
-      status = await Permission.photos.status;
-    } else {
-      // Android 12 and below: Use READ_EXTERNAL_STORAGE
-      status = await Permission.storage.status;
-    }
-  } else {
-    // iOS (all versions)
-    status = await Permission.photos.status;
-  }
-
-  // Request permission if not granted
-  if (!status.isGranted) {
-    if (Platform.isAndroid) {
-      final androidInfo = await DeviceInfoPlugin().androidInfo;
-      final sdkInt = androidInfo.version.sdkInt;
-      if (sdkInt >= 33) {
-        status = await Permission.photos.request();
-      } else {
-        status = await Permission.storage.request();
-      }
-    } else {
-      status = await Permission.photos.request();
-    }
-  }
-
-  // Handle permission outcomes
-  if (status.isGranted) {
+  Future<void> _pickImage() async {
     try {
       final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       if (image != null && mounted) {
         setState(() {
           selectedImage = File(image.path);
-          showImage = true; // Automatically show image container
-          _adjustHeight(); // Adjust modal height
         });
-      } else if (image == null && mounted) {
-        snackBarAllFeilds2(context, 'No image selected');
       }
     } catch (e) {
-      if (mounted) {
-        snackBarAllFeilds2(context, 'Error picking image: $e');
-      }
-    }
-  } else if (status.isDenied) {
-    if (mounted) {
-      snackBarAllFeilds2(context, 'Please grant photo library access to select images');
-    }
-  } else if (status.isPermanentlyDenied) {
-    if (mounted) {
-      snackBarAllFeilds2(
-        context,
-        'Photo library access is permanently denied. Please enable it in settings.',
-      );
-      await openAppSettings();
-    }
-  } else {
-    if (mounted) {
-      snackBarAllFeilds2(context, 'Unknown permission status: $status');
+      snackBarAllFeilds2(context, 'Error picking image: $e');
     }
   }
-}
+// Future<void> _pickImage() async {
+
+//   // Check initial permission status
+//   PermissionStatus status;
+
+//   if (Platform.isAndroid) {
+//     final androidInfo = await DeviceInfoPlugin().androidInfo;
+//     final sdkInt = androidInfo.version.sdkInt;
+//     if (sdkInt >= 33) {
+//       // Android 13+: Use READ_MEDIA_IMAGES
+//       status = await Permission.photos.status;
+//     } else {
+//       // Android 12 and below: Use READ_EXTERNAL_STORAGE
+//       status = await Permission.storage.status;
+//     }
+//   } else {
+//     // iOS (all versions)
+//     status = await Permission.photos.status;
+//   }
+
+//   // Request permission if not granted
+//   if (!status.isGranted) {
+//     if (Platform.isAndroid) {
+//       final androidInfo = await DeviceInfoPlugin().androidInfo;
+//       final sdkInt = androidInfo.version.sdkInt;
+//       if (sdkInt >= 33) {
+//         status = await Permission.photos.request();
+//       } else {
+//         status = await Permission.storage.request();
+//       }
+//     } else {
+//       status = await Permission.photos.request();
+//     }
+//   }
+
+//   // Handle permission outcomes
+//   if (status.isGranted) {
+//     try {
+//       final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+//       if (image != null && mounted) {
+//         setState(() {
+//           selectedImage = File(image.path);
+//           showImage = true; // Automatically show image container
+//           _adjustHeight(); // Adjust modal height
+//         });
+//       } else if (image == null && mounted) {
+//         snackBarAllFeilds2(context, 'No image selected');
+//       }
+//     } catch (e) {
+//       if (mounted) {
+//         snackBarAllFeilds2(context, 'Error picking image: $e');
+//       }
+//     }
+//   } else if (status.isDenied) {
+//     if (mounted) {
+//       snackBarAllFeilds2(context, 'Please grant photo library access to select images');
+//     }
+//   } else if (status.isPermanentlyDenied) {
+//     if (mounted) {
+//       snackBarAllFeilds2(
+//         context,
+//         'Photo library access is permanently denied. Please enable it in settings.',
+//       );
+//       await openAppSettings();
+//     }
+//   } else {
+//     if (mounted) {
+//       snackBarAllFeilds2(context, 'Unknown permission status: $status');
+//     }
+//   }
+// }
   Future<File?> _cropAndSaveImage() async {
     try {
       if (selectedImage == null) {
