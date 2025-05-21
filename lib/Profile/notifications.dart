@@ -368,11 +368,12 @@ class _NotificationsState extends State<Notifications> {
     children: [
       if (!isFetchedData && avatar.isNotEmpty)
     //     print("-----------------------${(!isFetchedData && avatar.isNotEmpty)}");
-        UserAvatar(
-          url: avaterUrlPath(avatar),
-          width: 20,
-          height:17,
-        )
+        // UserAvatar(
+        //   url: avaterUrlPath(avatar),
+        //   width: 20,
+        //   height:17,
+        // )
+        AvatarProfile(name: avatar, width: 20, height: 17, background: "")
       else if (!isFetchedData)
         SizedBox(width: MediaQuery.of(context).size.width * 0.06),
       if (!isFetchedData) SizedBox(width: MediaQuery.of(context).size.width * 0.03),
@@ -406,11 +407,12 @@ class _NotificationsState extends State<Notifications> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-         UserAvatar(
-          url: avaterUrlPath(avatar),
-          width: MediaQuery.of(context).size.width * 0.06,
-          height: MediaQuery.of(context).size.width * 0.06,
-        ),
+        //  UserAvatar(
+        //   url: avaterUrlPath(avatar),
+        //   width: MediaQuery.of(context).size.width * 0.06,
+        //   height: MediaQuery.of(context).size.width * 0.06,
+        // ),
+         AvatarProfile(name: avatar, width: 20, height: 17, background: ""),
         SizedBox(width: MediaQuery.of(context).size.width * 0.03),
         Expanded(
           child: Column(
@@ -468,11 +470,12 @@ class _NotificationsState extends State<Notifications> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        UserAvatar(
-          url: avaterUrlPath(avatar),
-          width: MediaQuery.of(context).size.width * 0.06,
-          height: MediaQuery.of(context).size.width * 0.06,
-        ),
+        // UserAvatar(
+        //   url: avaterUrlPath(avatar),
+        //   width: MediaQuery.of(context).size.width * 0.06,
+        //   height: MediaQuery.of(context).size.width * 0.06,
+        // ),
+         AvatarProfile(name: avatar, width: 20, height: 17, background: ""),
         SizedBox(width: MediaQuery.of(context).size.width * 0.03),
         Expanded(
           child: Column(
@@ -530,11 +533,13 @@ class _NotificationsState extends State<Notifications> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        avatar.isNotEmpty? UserAvatar(
-                url: avaterUrlPath(avatar),
-                width: MediaQuery.of(context).size.width * 0.06,
-                height: MediaQuery.of(context).size.width * 0.06,
-              )
+        avatar.isNotEmpty?
+        //  UserAvatar(
+        //         url: avaterUrlPath(avatar),
+        //         width: MediaQuery.of(context).size.width * 0.06,
+        //         height: MediaQuery.of(context).size.width * 0.06,
+        //       )
+         AvatarProfile(name: avatar, width: 20, height: 17, background: "")
             : SizedBox(width: MediaQuery.of(context).size.width * 0.06),
         SizedBox(width: MediaQuery.of(context).size.width * 0.03),
         Expanded(

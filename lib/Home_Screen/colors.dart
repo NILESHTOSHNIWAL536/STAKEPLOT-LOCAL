@@ -25,4 +25,6 @@ class AppColors {
   static const Color appIcon =  Color(0xFF004856);//Color(0xFF636486);
 
   static const Color likesharecommentCount = Color(0xFF454545);
+  static const Color debitColor =  Color.fromARGB(255, 207, 118, 113);
+  static  Color creditColor = Colors.green.shade700;
 }

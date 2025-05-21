@@ -87,7 +87,7 @@ class _ManualtransactionState extends State<Manualtransaction> {
                               //     color: AppColors.button,
                               //     borderRadius: BorderRadius.circular(16)),
                               child: Center(
-                                child: Text('Credit',
+                                child: Text('Cash in',
                                     style: FontManager().getTextStyle(context,
                                         lWeight: FontWeight.normal,
                                         fontSize: 12,
@@ -112,7 +112,7 @@ class _ManualtransactionState extends State<Manualtransaction> {
                               //     color: AppColors.button,
                               //     borderRadius: BorderRadius.circular(16)),
                               child: Center(
-                                child: Text('Debit',
+                                child: Text('Cash out',
                                     style: FontManager().getTextStyle(context,
                                         lWeight: FontWeight.normal,
                                         fontSize: 12,

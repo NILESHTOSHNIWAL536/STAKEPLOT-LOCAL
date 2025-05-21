@@ -640,12 +640,10 @@ class _TagShowmodalState extends State<TagShowmodal>with SingleTickerProviderSta
   Widget build(BuildContext context)
   {
     return Container(
-      // duration: Duration(milliseconds: 300),
-      // curve: Curves.easeInOut,
-      // padding: EdgeInsets.all(16),
+
       padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height/1.25,
+      height: MediaQuery.of(context).size.height/1.1,
       decoration: BoxDecoration(
         color: Colorcodes.white,
         borderRadius:const BorderRadius.only(
@@ -894,7 +892,7 @@ Widget getListOfCat(BuildContext context) {
   List<MapEntry<String, List<String>>> categoryList = getMatchingCategories(categories, searchController.text);
 
   return SizedBox(
-    height: MediaQuery.of(context).size.height * 0.57,
+    height: MediaQuery.of(context).size.height * 0.64,
     child: ListView.builder(
       itemCount: categoryList.length + 1, // +1 for custom categories
       shrinkWrap: true,
@@ -911,7 +909,7 @@ Widget getListOfCat(BuildContext context) {
           child: Column(
             children: [
               mainCategory(context, e.key, e.value),
-              const SizedBox(height: 10),
+             // const SizedBox(height: 10),
               subCategory(context, e.key, e.value),
               Divider(),
             ],
@@ -983,6 +981,8 @@ Widget getListOfCat(BuildContext context) {
 
  Widget getSubList(context,s,main){
       // bool f=data['subcategory']==s;
+      // bool flag=(widget.data['subcategory']==s &&  widget.data['category']==main);
+
       return InkWell(
         onTap: (){
              widget.data['category']=main;
@@ -1019,8 +1019,8 @@ Widget getListOfCat(BuildContext context) {
                     ),
                     const SizedBox(height: 5,),
                    Obx(()=> loadAgain.value?
-                     textStyle(context: context,text:s,fontsize: widget.data['subcategory']==s?13:11,fontWeight: FontWeight.bold,c: widget.data['subcategory']==s?AppColors.bg2:AppColors.primaryColor):
-                     textStyle(context: context,text:s,fontsize: widget.data['subcategory']==s?13:11,fontWeight: FontWeight.bold,c: widget.data['subcategory']==s?AppColors.bg2:AppColors.primaryColor)),
+                     textStyle(context: context,text:s,fontsize: (widget.data['subcategory']==s &&  widget.data['category']==main)?13:11,fontWeight: FontWeight.bold,c: (widget.data['subcategory']==s &&  widget.data['category']==main)?AppColors.bg2:AppColors.primaryColor):
+                     textStyle(context: context,text:s,fontsize: (widget.data['subcategory']==s &&  widget.data['category']==main)?13:11,fontWeight: FontWeight.bold,c: (widget.data['subcategory']==s &&  widget.data['category']==main)?AppColors.bg2:AppColors.primaryColor)),
                     const SizedBox(height: 5,),
              ],
           ),
