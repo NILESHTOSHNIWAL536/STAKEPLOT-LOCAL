@@ -247,15 +247,35 @@ class _GroupTransactionsState extends State<GroupTransactions>
 
     return FadeTransition(
       opacity: _animationController!.drive(CurveTween(curve: Curves.easeIn)),
-      child: ListView.builder(
-        itemCount: groupTransactionList.length,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        itemBuilder: (context, index) {
-          var transaction = groupTransactionList[index];
-          return _buildGroupCard(context, transaction, index);
-        },
+      child: Container(
+        // color: Colorcodes.barGraphOrange,
+        height: MediaQuery.of(context).size.height/1.38,
+        child: SingleChildScrollView(
+          child: Column(
+                children: groupTransactionList
+                    .asMap()
+                    .entries
+                    .map((entry) {
+                      int index = entry.key;
+                      var transaction = entry.value;
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        child: _buildGroupCard(context, transaction, index),
+                      );
+                    })
+                    .toList(),
+              ),
+        ),
+        // child: ListView.builder(
+        //   itemCount: groupTransactionList.length,
+        //   shrinkWrap: true,
+        //   physics: const NeverScrollableScrollPhysics(),
+        //   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        //   itemBuilder: (context, index) {
+        //     var transaction = groupTransactionList[index];
+        //     return _buildGroupCard(context, transaction, index);
+        //   },
+        // ),
       ),
     );
   }

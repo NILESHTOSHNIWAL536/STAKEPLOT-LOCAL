@@ -57,8 +57,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
           ),
         );
       } else {
-        snackBarCalledfail(context,
-            'Biometric authentication is not available on this device.');
+        snackBarCalledfail(context,'Biometric authentication is not available on this device.');
         // Optionally show a message if biometrics are not available
         
       }
@@ -220,8 +219,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                   ),
                                 );
                               } else {
-                                snackBarCalledfail(context,
-                                    'Authentication failed. Please try again.');
+                               
                               }
                             },
                             child: _buildOption(
