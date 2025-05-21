@@ -76,7 +76,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
              }else{
                 skipOrLets.value="Let\'s Go",
              },
-                mess.value=data['message'],
+              mess.value=data['message'],
               flagToFetchData.value = true,
               fetchedData.value = true,
               fetchedTrsacntionList.clear(),
@@ -690,7 +690,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                 padding: const EdgeInsets.only(top: 17, bottom: 30),
                 child: flagToFetchData.value
                     ? Center(child: getButton(context, skipOrLets.value,
-                        Colorcodes.greyLight, Colorcodes.black))
+                        AppColors.primaryColor, Colorcodes.white))
                     : getButton(context, skipOrLets.value, Colorcodes.greyLight,
                         Colorcodes.black),
               ),
