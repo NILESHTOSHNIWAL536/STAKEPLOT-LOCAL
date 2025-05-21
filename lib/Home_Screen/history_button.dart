@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import './colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
@@ -17,8 +18,9 @@ Widget historyButton(double fontSizeFactor,BuildContext context) {
                     // getAllTransaction(context);
                     isLoadingMore.value=false;
                     getGroupTransactions();
+                    clearTransactions(context: context,f: false);
                      Navigator.push(
-                      context,
+                      context,  
                       MaterialPageRoute(
                         builder: (context) => const TransactionHistoryScreen(),
                       ),

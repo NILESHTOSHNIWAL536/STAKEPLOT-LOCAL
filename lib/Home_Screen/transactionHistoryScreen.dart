@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/tagandhidebutton.
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -52,188 +53,169 @@ void _onScroll() {
 
   @override
   Widget build(BuildContext context) {
-    return  WillPopScope(
-      onWillPop: () async {
-        clearData();
-        Navigator.pop(context);
-        return true;
-      },
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
-       appBar: AppBar(
-         backgroundColor: AppColors.backgroundColor,
-       // Flat design for a modern look
-        title: Text(
-      'History',
-      style: FontManager().getTextStyle(
-        context,
-        lWeight: FontWeight.w600, // Slightly bolder for emphasis
-        fontSize: 18, // Slightly larger for better readability
-        color: AppColors.accentColor,
+    return  Scaffold(
+      backgroundColor: AppColors.backgroundColor,
+     appBar: AppBar(
+       backgroundColor: AppColors.backgroundColor,
+     // Flat design for a modern look
+      title: Text(
+    'History',
+    style: FontManager().getTextStyle(
+      context,
+      lWeight: FontWeight.w600, // Slightly bolder for emphasis
+      fontSize: 18, // Slightly larger for better readability
+      color: AppColors.accentColor,
+    ),
       ),
-        ),
-         // Center the title for symmetry
-        leading: IconButton(
-      icon: Icon(
-        Icons.arrow_back_ios, // More refined back icon
-        color: AppColors.accentColor,
-        size: 24, // Slightly smaller for balance
+       // Center the title for symmetry
+      leading: IconButton(
+    icon: Icon(
+      Icons.arrow_back_ios, // More refined back icon
+      color: AppColors.accentColor,
+      size: 24, // Slightly smaller for balance
+    ),
+    onPressed: (){
+     clearTransactions(context: context);
+      Navigator.pop(context);
+    },
+    splashRadius: 20, // Smaller splash radius for a subtle effect
       ),
-      onPressed: (){
-        clearData();
-        Navigator.pop(context);
-      },
-      splashRadius: 20, // Smaller splash radius for a subtle effect
-        ),
-        actions: [
-      Padding(
-        padding: const EdgeInsets.only(right: 16.0), // Proper spacing
-        child: InkWell(
-          onTap: ()
+      actions: [
+    Padding(
+      padding: const EdgeInsets.only(right: 16.0), // Proper spacing
+      child: InkWell(
+        onTap: ()
+        {
+            int len=bankAccountLinkedList.length;
+          if(len==0){
+               snackBarCalled(context, "No Bank Account Linked Please link your bank account to download the statement.");
+          }
+          else if(len==1)
           {
-              int len=bankAccountLinkedList.length;
-            if(len==0){
-                 snackBarCalled(context, "No Bank Account Linked Please link your bank account to download the statement.");
-            }
-            else if(len==1)
-            {
-               accountIdPdf.value=bankAccountLinkedList[0]['accountId'];
-               showModalForPdfDownload(context);
-            }
-            else
-            {
-               accountIdPdf.value=bankAccountLinkedList[0]['accountId'];
-               showModalForPdfDownloadBankUiCheckBox(context);
-            }
-          },
-          splashColor: AppColors.accentColor.withOpacity(0.2), // Subtle splash effect
-          borderRadius: BorderRadius.circular(12), // Rounded ripple effect
-          child: Container(
-            padding: const EdgeInsets.all(8.0), 
-                     decoration: BoxDecoration(
-              color: Colors.grey.withOpacity(0.1), // Added filled color grey
-              borderRadius: BorderRadius.circular(16), // Added rounded borders
-            ), // Comfortable tap area// Comfortable tap area
-          
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.download_for_offline, // Modern, appealing download icon
-                  size: 15, // Slightly smaller to balance with text
+             accountIdPdf.value=bankAccountLinkedList[0]['accountId'];
+             showModalForPdfDownload(context);
+          }
+          else
+          {
+             accountIdPdf.value=bankAccountLinkedList[0]['accountId'];
+             showModalForPdfDownloadBankUiCheckBox(context);
+          }
+        },
+        splashColor: AppColors.accentColor.withOpacity(0.2), // Subtle splash effect
+        borderRadius: BorderRadius.circular(12), // Rounded ripple effect
+        child: Container(
+          padding: const EdgeInsets.all(8.0), 
+                   decoration: BoxDecoration(
+            color: Colors.grey.withOpacity(0.1), // Added filled color grey
+            borderRadius: BorderRadius.circular(16), // Added rounded borders
+          ), // Comfortable tap area// Comfortable tap area
+        
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.download_for_offline, // Modern, appealing download icon
+                size: 15, // Slightly smaller to balance with text
+                color: AppColors.accentColor,
+              ),
+              const SizedBox(width: 2), // Spacing between icon and text
+              Text(
+                'My Statement',
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w600, // Semi-bold for readability
+                  fontSize: 10, // Compact to fit AppBar
                   color: AppColors.accentColor,
                 ),
-                const SizedBox(width: 2), // Spacing between icon and text
-                Text(
-                  'My Statement',
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w600, // Semi-bold for readability
-                    fontSize: 10, // Compact to fit AppBar
-                    color: AppColors.accentColor,
-                  ),
-                ),
-              ])
-          ),
+              ),
+            ])
         ),
       ),
-        ],
-       
-      ),
-      
-       body: Column(
-          children: [
-            Container(
-             // height: MediaQuery.of(context).size.height/1.1,
-              width: MediaQuery.of(context).size.width/.1,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Search Bar
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12,right:4),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                    //  height: MediaQuery.of(context).size.height /5,
-                     decoration: BoxDecoration(
-                    color: AppColors.backgroundColor,
-                    borderRadius: BorderRadius.circular(30),
-                    
-                  ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-
-
-                         const SizedBox(height: 4,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                               getTextFeild(),
-                              InkWell(onTap: ()
-                              { 
-                                 showModalBottomSheet(context: context, builder: (_)=>
-                                 Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  decoration:const BoxDecoration(
-                                    color: AppColors.bg5,
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(20),
-                                      topRight: Radius.circular(20),
-                                    ),
+    ),
+      ],
+     
+    ),
+    
+     body: Column(
+        children: [
+          Container(
+           // height: MediaQuery.of(context).size.height/1.1,
+            width: MediaQuery.of(context).size.width/.1,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Search Bar
+                Padding(
+                  padding: const EdgeInsets.only(left: 12,right:4),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                  //  height: MediaQuery.of(context).size.height /5,
+                   decoration: BoxDecoration(
+                  color: AppColors.backgroundColor,
+                  borderRadius: BorderRadius.circular(30),
+                  
+                ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+    
+    
+                       const SizedBox(height: 4,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                             getTextFeild(),
+                            InkWell(onTap: ()
+                            { 
+                               showModalBottomSheet(context: context, builder: (_)=>
+                               Container(
+                                width: MediaQuery.of(context).size.width,
+                                decoration:const BoxDecoration(
+                                  color: AppColors.bg5,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
                                   ),
-                                  child: filterTransaction(context)
-                                  ));
-                              }, 
-                             child:  Icon(Icons.filter_alt_outlined, 
-                             size:  MediaQuery.of(context).size.height/20,
-                             color: AppColors.accentColor),) 
-                            ],
-                          ),
-                      
-                         Obx(()=> groupTransactionList.length!=0?  Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: getTab(context),
-                            ):SizedBox.shrink()),
-
-                      
-                        ],
-                      ),
+                                ),
+                                child: filterTransaction(context)
+                                ));
+                            }, 
+                           child:  Icon(Icons.filter_alt_outlined, 
+                           size:  MediaQuery.of(context).size.height/20,
+                           color: AppColors.accentColor),) 
+                          ],
+                        ),
+                    
+                       Obx(()=> (groupTransactionList.length!=0 ||  redioButton.isNotEmpty)?  Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: getTab(context),
+                          ):SizedBox.shrink()),
+    
+                    
+                      ],
                     ),
                   ),
-                 
-                  // Transaction History
-                Obx(()=> Container(
-                   height: MediaQuery.sizeOf(context).height/ (groupTransactionList.length!=0? 1.38:1.27),
-                   child: SingleChildScrollView(
-                     controller: scrollController,
-                     child: transactionsHistoryList(),
-                   ),
-                 ))
-                ],
-              ),
+                ),
+               
+                // Transaction History
+              Obx(()=> Container(
+                width: MediaQuery.of(context).size.width,
+                alignment: Alignment.center,
+                 height: MediaQuery.sizeOf(context).height/ ((groupTransactionList.length!=0 || redioButton.isNotEmpty)? 1.35:1.25),
+                 child: SingleChildScrollView(
+                   controller: scrollController,
+                   child: transactionsHistoryList(),
+                 ),
+               ))
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
- void clearData({bool f=false})
- {
-          searchController.clear();
-          redioButton.clear();
-          redioButtonIndex.clear();
-          allOrGroupTransactionsName.value = StringConstant.allTransactions;
-          showCheckBox.value=false;
-          accountIdPdf.value="-";
-      //  if(f)
-      //  {
-      //     currentPage = 1;
-      //     isLoadingMore.value = false;
-      //     getAllTransaction(context);
-      //  }
- }
+
 
   Widget  transactionsHistoryList() {
     return  Obx(() => loadChatdataOnChnage.value
@@ -276,8 +258,8 @@ void _onScroll() {
                                 ? IconButton(
                                     icon: const Icon(Icons.clear, color: AppColors.accentColor),
                                     onPressed: () {
-                                        clearData(f: true);
-                                      // Unfocus the search field
+                                        clearTransactions(context: context,f: true);
+                                        
                                     },
                                   )
                                 : null,
