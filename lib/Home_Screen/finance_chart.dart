@@ -32,12 +32,26 @@ class _FinancePageState extends State<FinancePage> {
   @override
   void initState() {
     super.initState();
-    // getGraphData.value = false;
-    selectedButton.value='Month';
+    getGraphData.value = false;
     calledFunctionToFetchData(context);
   }
 
- 
+  // void _scrollToTransactionHistory() {
+  //   final RenderObject? renderObject =
+  //       widget.transactionHistoryKey.currentContext?.findRenderObject();
+  //   if (renderObject != null && renderObject is RenderBox) {
+  //     final position = renderObject.localToGlobal(Offset.zero);
+  //     final scrollOffset = widget.scrollController.offset;
+  //     final targetOffset =
+  //         position.dy - scrollOffset - MediaQuery.of(context).size.height / 8;
+  //     widget.scrollController.animateTo(
+  //       targetOffset > 0 ? targetOffset : 0,
+  //       duration: Duration(milliseconds: 500),
+  //       curve: Curves.easeInOut,
+  //     );
+  //   } else {}
+  // }
+
   int _getDaysInCurrentMonth() {
     final now = DateTime.now();
     return DateTime(now.year, now.month + 1, 0).day;
@@ -142,7 +156,7 @@ class _FinancePageState extends State<FinancePage> {
               ],
             ),
             SizedBox(height: screenHeight * 0.01),
-            Obx(() => (getGraphData.value)
+            Obx(() => getGraphData.value
                 ? getMonthWeekCustom(fontSizeFactor, screenWidth)
                 : getMonthWeekCustom(fontSizeFactor, screenWidth)),
             Obx(() => !getGraphData.value
@@ -207,6 +221,34 @@ class _FinancePageState extends State<FinancePage> {
                 ),
               ),
             ),
+            // SizedBox(width: screenWidth * 0.02),
+            // GestureDetector(
+            //   onTap: () {
+            //     selectedButton.value = 'Week';
+            //     // getGraphData.value = false;
+            //     getAutoMationsTransactionsCustom(
+            //         getCurrentWeek(), context, 'Week');
+            //   },
+            //   child: Container(
+            //     height: 35,
+            //     width: screenWidth * 0.15,
+            //     decoration: BoxDecoration(
+            //       borderRadius: BorderRadius.circular(16),
+            //       color: selectedButton.value == 'Week'
+            //           ? AppColors.button
+            //           : AppColors.backgroundColor,
+            //     ),
+            //     child: Center(
+            //       child: Text(
+            //             "Last Week",
+            //             style: FontManager().getTextStyle(context,
+            //                 lWeight: FontWeight.normal,
+            //                 fontSize: fontSizeFactor * 3,
+            //                 color: AppColors.accentColor),
+            //           )),
+            //     ),
+            //   ),
+
             SizedBox(width: screenWidth * 0.02),
             GestureDetector(
               onTap: () {
@@ -317,6 +359,26 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     }
   }
 
+  // void _scrollToCurrentDate() {
+  //   if (_scrollController?.hasClients == true) {
+  //     int currentIndex = getCurrentDateIndex(widget.days.cast<String>());
+  //     double labelWidth = widget.selectedButton.value == 'Week' ? 50.0 : 60.0;
+  //     double scrollOffset = (currentIndex - 4) * labelWidth;
+
+  //     double maxScrollExtent = 0;
+  //     if (_scrollController != null && _scrollController!.hasClients) {
+  //       maxScrollExtent = _scrollController!.position.maxScrollExtent;
+  //     }
+
+  //     if (scrollOffset > maxScrollExtent) {
+  //       scrollOffset = maxScrollExtent;
+  //     } else if (scrollOffset < 0) {
+  //       scrollOffset = 0;
+  //     }
+
+  //     _scrollController!.jumpTo(scrollOffset);
+  //   }
+  // }
   void _scrollToCurrentDate() {
     if (_scrollController?.hasClients == true) {
       // Find the last index with data
