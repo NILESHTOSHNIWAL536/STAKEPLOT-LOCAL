@@ -36,17 +36,16 @@ void getDebts() async {
   }
 }
 
-  Future<void> fetchDebts() async
-   {
-    try {
-      var fetchedDebts = await DebtService.fetchDebts();
-      if (fetchedDebts != null && fetchedDebts.isNotEmpty) {
-        debts.assignAll(fetchedDebts);
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'Failed to fetch debts: $e');
+Future<void> fetchDebts() async {
+  try {
+    var fetchedDebts = await DebtService.fetchDebts();
+    if (fetchedDebts != null && fetchedDebts.isNotEmpty) {
+      debts.assignAll(fetchedDebts);
     }
+  } catch (e) {
+    Get.snackbar('Error', 'Failed to fetch debts: $e');
   }
+}
 
 void getBudget() async {
   String urlPath = "${url}/budget/";
@@ -152,9 +151,8 @@ void addBudget(BuildContext context, String name, String amount,
     Navigator.pop(context);
     Navigator.pop(context);
     Navigator.pop(context);
-   
+
     snackBarCalled(context, "You have successfully added a new budget!");
-   
   } else {
     snackBarCalled(context, "Failed to add the budget!", Colors.red);
   }
@@ -512,43 +510,44 @@ void getUserLend(context) async {
   }
 }
 
-void sendNotificationsToDevice(id, context, msg,[String screen="/home",String title="",String pic="",String message="",String billid=""]) async {
+void sendNotificationsToDevice(id, context, msg,
+    [String screen = "/home",
+    String title = "",
+    String pic = "",
+    String message = "",
+    String billid = ""]) async {
   String urlPath = "${url}/reminders/sendNotifications/ToDevice";
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
 
-   try{
-  final response = await http.post(
-    Uri.parse('${urlPath}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
-      'id': id,
-      'message': msg,
-      'screen':screen,
-      'title':title,
-      'pic':pic,
-      "billId":billid
-    }),
-  );
+  try {
+    final response = await http.post(
+      Uri.parse('${urlPath}'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Authorization": "$accessToken",
+      },
+      body: jsonEncode({
+        'id': id,
+        'message': msg,
+        'screen': screen,
+        'title': title,
+        'pic': pic,
+        "billId": billid
+      }),
+    );
 
-   printData(response);
-   if(response.statusCode==429){
-       var data=jsonDecode(response.body);
-       snackBarCalled(context, data["message"],Colorcodes.red);
-       return;
-   }
+    if (response.statusCode == 429) {
+      var data = jsonDecode(response.body);
+      snackBarCalled(context, data["message"], Colorcodes.red);
+      return;
+    }
 
-   if(screen=="/remainder")
-   {
-              snackBarCalled(context, message);
-   }
-
-   }catch(e){
-   
-  }
+    print(message);
+    if (screen == "/remainder" || screen == "/remainders") {
+      snackBarCalled(context, message);
+    }
+  } catch (e) {}
 }
 
 void getTopFiveCater() async {
@@ -573,4 +572,3 @@ Future<String?> getToken() async {
     return accessToken;
   }
 }
- 
