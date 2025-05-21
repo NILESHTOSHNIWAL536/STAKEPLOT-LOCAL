@@ -90,7 +90,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
 
    final SharedPreferences pref = await SharedPreferences.getInstance();
    String accessToken=pref.getString("accessToken").toString(); 
-
+  //  flagToFetchData.value=false;
    clearStackShared(context);
    Navigator.pushNamed(context, "/OnboardingScreen"); 
 
