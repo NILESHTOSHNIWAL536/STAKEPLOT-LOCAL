@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-import 'package:flutter_application_code_stakeplot/Constants/customButton.dart';
-import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/expanded_finance.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/transactionHistoryScreen.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history_button.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
@@ -86,7 +81,7 @@ class _FinancePageState extends State<FinancePage> {
                       fontSize: fontSizeFactor * 4.0,
                       color: AppColors.accentColor),
                 ),
-                historyButton(fontSizeFactor),
+                historyButton(fontSizeFactor,context),
               ],
             ),
             Row(
@@ -185,73 +180,6 @@ class _FinancePageState extends State<FinancePage> {
         ),
       ),
     );
-  }
-
-  Widget historyButton(double fontSizeFactor) {
-    return InkWell(
-      onTap: (){
-  
-                    getAllTransaction(context);
-                    getGroupTransactions();
-                     Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const TransactionHistoryScreen(),
-                      ),
-                    );
-
-      },
-      child:Container(
-         width: MediaQuery.of(context).size.width / 4,
-                    height: MediaQuery.of(context).size.height / 30,
-                    decoration: BoxDecoration(
-                      color: AppColors.button,
-                      borderRadius: BorderRadius.circular(10)
-                    ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-          AvatarProfileImage(
-                    url: HomePageIcons.history,
-                    width: 36,
-                    height: 36,),
-                    Text(
-                            'History',
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.w500,
-                                fontSize: fontSizeFactor * 3.3,
-                                color:
-                                    AppColors.accentColor), // Set text color based on value
-                          ),
-
-        ],),
-      )
-    );
-    // return  CustomButton(
-    //               onTap: () {
-    //                 // _scrollToTransactionHistory();
-    //                 getAllTransaction(context);
-    //                 getGroupTransactions();
-    //                 Navigator.push(
-    //                   context,
-    //                   MaterialPageRoute(
-    //                     builder: (context) => const TransactionHistoryScreen(),
-    //                   ),
-    //                 );
-    //               },
-    //               text: 'History',
-    //               fontSize: fontSizeFactor * 2.8,
-    //               height: 1.7,
-    //               width: 4.0,
-
-    //               icon: AvatarProfileImage(
-    //                 url: HomePageIcons.history,
-    //                 width: 36,
-    //                 height: 36,
-
-    //               ),
-    //             );
   }
 
   Widget getMonthWeekCustom(fontSizeFactor, screenWidth) {
