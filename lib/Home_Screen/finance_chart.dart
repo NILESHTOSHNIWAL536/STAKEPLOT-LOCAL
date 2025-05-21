@@ -683,12 +683,73 @@ class _LineChartWidgetState extends State<LineChartWidget> {
             },
           ),
           trackballBehavior: TrackballBehavior(
-                  enable: true,
-                  
-                  // Display mode of trackball tooltip
-                  tooltipDisplayMode: TrackballDisplayMode.groupAllPoints,
-                 
-                ),
+  enable: true,
+  tooltipDisplayMode: TrackballDisplayMode.groupAllPoints,
+  lineType: TrackballLineType.vertical, // Vertical line for trackball
+  lineColor: AppColors.accentColor.withOpacity(0.7), // Customize line color
+  lineWidth: 1.0, // Thickness of the trackball line
+  lineDashArray: [5, 5], // Dashed line pattern (optional)
+//  activationMode: ActivationMode.singleTap, 
+   tooltipAlignment: ChartAlignment.near,// Trigger on single tap
+  markerSettings: TrackballMarkerSettings(
+    markerVisibility: TrackballVisibilityMode.visible, // Show marker
+    height: 1, // Marker size
+    width: 1,
+    shape: DataMarkerType.circle, // Marker shape
+    color: AppColors.primaryColor, // Marker color
+    borderWidth: 1,
+    borderColor: AppColors.accentColor, // Border color for marker
+  ),
+  builder: (BuildContext context, TrackballDetails trackballDetails) {
+    // Get the data for the current point
+    final int index = trackballDetails.groupingModeInfo?.currentPointIndices.first ?? 0;
+    final String date = labels[index];
+    final double creditedValue = creditedData[index].y;
+    final double debitedValue = debitedData[index].y;
+
+    return Container(
+       margin: EdgeInsets.only(top: 10),
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: AppColors.mt.withOpacity(0.4),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Date: $date',
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.bold,
+              fontSize: fontSizeFactor * 2.4,
+              color: AppColors.bg3,
+            ),
+          ),
+          Text(
+            'Credited: ₹${creditedValue.toStringAsFixed(2)}',
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.bold,
+              fontSize: fontSizeFactor * 2.7,
+              color: AppColors.primaryColor,
+            ),
+          ),
+          Text(
+            'Debited: ₹${debitedValue.toStringAsFixed(2)}',
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.bold,
+              fontSize: fontSizeFactor * 2.7,
+              color: AppColors.accentColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  },
+),
           series: <ChartSeries>[
             SplineAreaSeries<ChartData, String>(
               dataSource: creditedData,
