@@ -164,7 +164,7 @@ void checkBiometricsStatus() async {
                
 
                 if (response.statusCode == 200) {
-                
+                //  hideBackAccountPassword.value=false;
                   cupertinoPin.value = "0";
                   Navigator.of(dialogContext).pop();
                 } else {
@@ -267,10 +267,10 @@ void checkBiometricsStatus() async {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-              bankAccountLinkedList.isEmpty? SizedBox.shrink(): InkWell(
+            Obx(()=>  (bankAccountLinkedList.isEmpty || (hideBackAccountPassword.value || cupertinoPin.value == "0"))? SizedBox.shrink(): InkWell(
                   onTap: () {
                   
-                   
+          
                     resetCupertinoPin(context);
                    
                   },
@@ -288,7 +288,7 @@ void checkBiometricsStatus() async {
                       ),
                     ],
                   ),
-                ),
+                )),
               ],
             ),
             const SizedBox(height: 20),
