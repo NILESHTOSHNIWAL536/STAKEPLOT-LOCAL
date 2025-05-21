@@ -68,7 +68,7 @@ void navigateScreens(context,screen){
     {
             Navigator.pushNamed(context, '/post');
     }
-   else if(screen.toString().contains("remainder"))
+   else if(screen.toString().contains("remainder" ) || screen.toString().contains("remainders"))
     {
            Navigator.push(
             context,

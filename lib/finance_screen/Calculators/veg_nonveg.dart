@@ -216,9 +216,37 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
-                  onTap: () {
-                    splitUserAmountFood(context, "3000", addedMembers,
-                        "foodie split", "Veg & Non Veg", friendShares);
+                  // onTap: () {
+                  //   splitUserAmountFood(context, "3000", addedMembers,
+                  //       "foodie split", "Veg & Non Veg", friendShares);
+                  // },
+                                                      onTap: () {
+                    double totalVeg = double.tryParse(vegController.text) ?? 0.0;
+                    double totalNonVeg = double.tryParse(nonVegController.text) ?? 0.0;
+                    double totalAlcohol = double.tryParse(alcoholController.text) ?? 0.0;
+
+                    // Check if at least one category has a valid amount
+                    bool hasValidAmount = totalVeg > 0 || totalNonVeg > 0 || totalAlcohol > 0;
+
+                    // Check if there are shares for the added members
+                    bool hasShares = addedMembers.any((member) {
+                                           String? friendId = member['id'];
+                      return friendShares[friendId]?['Total'] != null && 
+                             (friendShares[friendId]!['Total'] ?? 0) > 0;
+                    });
+
+                    if (hasValidAmount && hasShares) {
+                      // Proceed with the split if conditions are met
+                      splitUserAmountFood(context, 
+                          (totalVeg + totalNonVeg + totalAlcohol).toString(), 
+                          addedMembers,
+                          "foodie split", 
+                          "Veg & Non Veg", 
+                          friendShares);
+                    } else {
+                      // Show a message to the user that they need to add money or select shares
+                     snackBarCalledfail(context, "Please add a valid amount and ensure shares are selected.");
+                    }
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width / 2.2,
@@ -241,18 +269,100 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                   ),
                 ),
                 GestureDetector(
+                  // onTap: () {
+                  //   friendShares.forEach((key, value) {
+                  //     if (key != currentId.value) {
+                  //       // added this line for excluding current user in notify
+                  //       sendNotificationsToDevice(
+                  //           key,
+                  //           context,
+                  //           "${userName.value} has shared the foodie expense of ${value!['Total'] ?? "0000"}",
+                  //           "/remainders", "",
+                  //                       "",
+                  //                       "Notified successfully");
+                             
+                  //     }
+                  //   });
+                  // },
                   onTap: () {
-                    friendShares.forEach((key, value) {
-                      if (key != currentId.value) {
-                        // added this line for excluding current user in notify
-                        sendNotificationsToDevice(
-                            key,
-                            context,
-                            "${userName.value} has shared the foodie expense of ${value!['Total'] ?? "0000"}",
-                            "/remainder");
-                      }
-                    });
-                  },
+  // Check if friendShares is null or empty
+  if (friendShares == null || friendShares.isEmpty) {
+    snackBarCalledfail(context, "No shares calculated yet. Please calculate the bill first.");
+    return;
+  }
+
+  // Check if currentId is null
+  if (currentId.value == null) {
+    snackBarCalledfail(context, "User ID is not available. Please try again.");
+    return;
+  }
+
+  // Check if userName is null
+  if (userName.value == null || userName.value.isEmpty) {
+    snackBarCalledfail(context, "User name is not available. Please try again.");
+    return;
+  }
+
+  // Check if there are valid recipients other than the current user
+  bool hasValidRecipients = friendShares.keys.any((key) => key != currentId.value);
+
+  if (!hasValidRecipients) {
+    snackBarCalledfail(context, "No friends to notify. Please add friends to the split.");
+    return;
+  }
+
+  // Check if shares have valid amounts
+  bool hasValidShares = friendShares.entries.any((entry) {
+    String? key = entry.key;
+    var value = entry.value;
+    return key != null &&
+        key != currentId.value &&
+        value != null &&
+        value['Total'] != null &&
+        (value['Total'] is double || value['Total'] is int) &&
+        (value['Total'] as num) > 0;
+  });
+
+  if (!hasValidShares) {
+    snackBarCalledfail(context, "No valid shares to notify. Ensure amounts are calculated.");
+    return;
+  }
+
+  // Proceed with sending notifications
+  bool atLeastOneNotificationSent = false;
+  friendShares.forEach((key, value) {
+    if (key != null && key != currentId.value) {
+      // Ensure value and total are valid
+      if (value != null && value['Total'] != null && (value['Total'] is num) && (value['Total'] as num) > 0) {
+        try {
+          sendNotificationsToDevice(
+            key,
+            context,
+            "${userName.value} has shared the foodie expense of ₹${(value['Total'] as num).toStringAsFixed(2)}",
+            "/remainders",
+            "",
+            "",
+            "Notified successfully",
+          );
+          atLeastOneNotificationSent = true;
+        } catch (e) {
+          // Handle notification sending failure
+          snackBarCalledfail(context, "Failed to send notification to user $key: $e");
+        }
+      } else {
+        // Log or show warning for invalid share
+        snackBarCalledfail(context, "Invalid share amount for user $key.");
+      }
+    }
+  });
+
+  // Show success message if at least one notification was sent
+  if (atLeastOneNotificationSent) {
+    //snackBarCalled(context, "Notifications sent successfully!");
+  } else {
+    snackBarCalledfail(context, "No notifications sent due to invalid data.");
+  }
+},
                   child: Container(
                     width: MediaQuery.of(context).size.width / 2.2,
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
