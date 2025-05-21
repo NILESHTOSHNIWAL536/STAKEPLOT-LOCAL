@@ -233,6 +233,9 @@ RxInt transactionsLength = 0.obs;
 RxList chatSplitAccount = [].obs;
 RxBool getChatSplit= false.obs;
 List avatarBackGroundList = ["#FA7070", "#FFB07A", "#4C8BF5", "#68B2A0"];
+
+DateTime startDateCustom=DateTime.now().subtract(const Duration(days: 7));
+DateTime endDateCustom =  DateTime.now();
 class Message {
   Message(
       {this.text,
