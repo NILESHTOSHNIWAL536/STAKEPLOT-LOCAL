@@ -16,7 +16,6 @@ import 'package:get/get.dart';
 final TextEditingController searchController = TextEditingController();
 FocusNode focusNodeSearchFeild = FocusNode();
 
-
 class TransactionHistoryScreen extends StatefulWidget {
   const TransactionHistoryScreen({super.key});
 
@@ -33,6 +32,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   void initState() {
     super.initState();
     // Initialize filtered transactions with all transactions
+    currentPage=1;
+    getAllTransactionHistory(context, false, false,isRefreshing: true);
     scrollController.addListener(_onScroll);
 
   }
@@ -226,13 +227,12 @@ void _onScroll() {
           allOrGroupTransactionsName.value = StringConstant.allTransactions;
           showCheckBox.value=false;
           accountIdPdf.value="-";
-
-       if(f)
-       {
-          currentPage = 1;
-          isLoadingMore.value = false;
-          getAllTransaction(context);
-       }
+      //  if(f)
+      //  {
+      //     currentPage = 1;
+      //     isLoadingMore.value = false;
+      //     getAllTransaction(context);
+      //  }
  }
 
   Widget  transactionsHistoryList() {

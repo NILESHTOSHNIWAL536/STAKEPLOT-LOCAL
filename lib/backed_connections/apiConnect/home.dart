@@ -65,20 +65,19 @@ void seletedBankUpdateInfo(id, context) async {
 }
 
 void getAllTransaction(context) async {
-  var response =await getDataApiCall("${url}/transactionauto/getTransactions/${1}/empty/-");
+  var response =await getDataApiCall("${url}/transactionauto/getTransactions/${currentPage}/empty/-");
   expire(response, context);
-  if (response.statusCode == 200) {
+  if (response.statusCode == 200)
+  {
     var his = jsonDecode(response.body);
     var obj = his['data'];
     currentPage = 2;
-    if (transactionsHistory.length < 20) {
-      // loadMoreData.value = true;
+    if (transactionsHistory.length < 20)
+    {
       isLoadingMore.value = true;
-    } else
-     {
+    } else{
       isLoadingMore.value = false;
     }
-
     transactionsHistory.clear();
     transactionsHistory.addAll(obj);
     reloadHistory.value = !reloadHistory.value;
@@ -120,12 +119,11 @@ Future<void> getAllTransactionHistory(
         : selectedYear.value.toString() +
             "-" +
             selectedMonth.value.toString().padLeft(2, '0');
-    String text =
-        searchController.text.trim() == "" ? "empty" : searchController.text;
+    String text = searchController.text.trim() == "" ? "empty" : searchController.text;
     String urlPath = flag
         ? "${url}/transactionauto/get-monthly-transactions-history/${accountId.value}/${type}/${currentPage}"
         : "${url}/transactionauto/getTransactions/${currentPage}/${text}/${accountIdPdf.value.isEmpty?"-":accountIdPdf.value}";
-
+   
     var response = await getDataApiCall(urlPath);
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);

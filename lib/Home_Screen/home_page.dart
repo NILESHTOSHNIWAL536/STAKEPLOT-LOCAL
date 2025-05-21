@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> {
     getCategoryData();
     getNotifications(context);
     getAllAutoTransactions();
-    getAllTransaction(context);
+    // getAllTransaction(context);
     getAllContstant(context);
     getCustomCategory(context);
     custom = getthelist();
