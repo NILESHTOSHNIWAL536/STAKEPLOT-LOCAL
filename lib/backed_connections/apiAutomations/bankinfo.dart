@@ -120,15 +120,19 @@ void storeImageinMapFinvu(context) async {
 }
 
 void calledFunctionToFetchData(context) async {
-  if (accountId.value.isEmpty) {
+  if (accountId.value.isEmpty)
+   {
     getGraphData.value = false;
     await getBankAccounts();
   }
-  if (selectedButton.value == "Month") {
+  
+  
+  if (selectedButton.value == "Month") 
+  {
     getAutoMationsTransactionsCustom(getFormattedDate(), context);
   } else if (selectedButton.value == "Week") {
     getAutoMationsTransactionsCustom(getCurrentWeek(), context, 'Week');
   } else {
-    getAutoMationsTransactionsCustom(getFormattedDate(), context);
+    getAutoMationsTransactionsCustom(getFormattedDate(), context,'Custom');
   }
 }
