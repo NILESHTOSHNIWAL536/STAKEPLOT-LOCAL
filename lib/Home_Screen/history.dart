@@ -395,7 +395,7 @@ Widget getIconsForHideUpdateSplit(
           width: MediaQuery.sizeOf(context).width / 3,
           child: textStyle(
             context: context,
-            text: category,
+            text: toUpperCase(category),
             c: AppColors.accentColor,
             fontsize: fontSizeMedium,
             fontWeight: FontWeight.w600,

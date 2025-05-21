@@ -5,13 +5,16 @@ import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/donut_chart.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/insightsController.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -115,6 +118,23 @@ Future<void> storeDeviceInfoLocalBackState() async
             }
 
 }
+
+
+ void clearTransactions({ required BuildContext context,bool f=false})
+ {
+          searchController.clear();
+          redioButton.clear();
+          redioButtonIndex.clear();
+          allOrGroupTransactionsName.value = StringConstant.allTransactions;
+          showCheckBox.value=false;
+          accountIdPdf.value="-";
+       if(f)
+       {
+          currentPage = 1;
+          isLoadingMore.value = false;
+          getAllTransactionHistory(context, false, false,isRefreshing: true);
+       }
+ }
 
 
 
