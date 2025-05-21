@@ -454,6 +454,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     }
     return SizedBox(
       height: MediaQuery.of(context).size.height / 2.6,
+      width: MediaQuery.of(context).size.width,
       child: Stack(
         children: [
           Row(
@@ -461,8 +462,11 @@ class _LineChartWidgetState extends State<LineChartWidget> {
             children: [
               if (!widget.isExpandedView)
                 Container(
+                  alignment: Alignment.center,
                   width: screenWidth * 0.09,
+                  // color: Colorcodes.moneyOrange,
                   height: MediaQuery.of(context).size.height / 2.6,
+                  padding: EdgeInsets.symmetric(vertical: 12),
                   child: _buildYAxisLabels(fontSizeFactor),
                 ),
               Expanded(
@@ -536,24 +540,34 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       return ChartData(labels[index], value);
     });
 
-    double labelWidth = widget.selectedButton.value == 'Week' ? 40.0 : 50.0;
+    double labelWidth = widget.selectedButton.value == 'Month' ? 40.0 : 43.0;
     double chartWidth = dataLength * labelWidth;
 
     return Container(
+      // color: Colorcodes.barGraphOrange,
+      padding: EdgeInsets.all(0),
       width: widget.selectedButton.value == 'Week'
           ? screenWidth * 0.85
-          : max(chartWidth, screenWidth * 0.85),
+          :  max(chartWidth, screenWidth * 0.85),
       height: MediaQuery.of(context).size.height / 2.6,
-      child: Transform.translate(
-        offset: widget.selectedButton.value == 'Week'
-            ? Offset(-5, 0)
-            : widget.selectedButton.value == 'Month'
-                ? Offset(-28, 0)
-                : Offset(-25, 0),
+      child: Container(
+        // offset: widget.selectedButton.value == 'Week'
+        //     ? Offset(-5, 0)
+        //     : widget.selectedButton.value == 'Month'
+        //         ? Offset(-28, 0)
+        //         : Offset(-18, 0),
         child: SfCartesianChart(
           borderWidth: 0,
           plotAreaBorderWidth: 0,
+          plotAreaBackgroundColor: Colors.transparent,
+          enableSideBySideSeriesPlacement: false,
+          
+          margin: EdgeInsets.symmetric(horizontal: 0),
+          
+          // backgroundColor: Colors.red,
           primaryXAxis: CategoryAxis(
+            //  edgeLabelPlacement: EdgeLabelPlacement.shift,
+           
             labelStyle: FontManager().getTextStyle(context,
                 lWeight: FontWeight.w500,
                 fontSize: fontSizeFactor * 3,
@@ -566,21 +580,26 @@ class _LineChartWidgetState extends State<LineChartWidget> {
             interval: 1,
             maximumLabels: dataLength,
           ),
-          primaryYAxis: NumericAxis(
-            isVisible: false,
-            labelStyle: FontManager().getTextStyle(context,
-                lWeight: FontWeight.normal,
-                fontSize: fontSizeFactor * 3.3,
-                color: AppColors.accentColor),
-            majorGridLines: MajorGridLines(width: 0),
-            minorGridLines: MinorGridLines(width: 0),
-            axisLine: AxisLine(width: 0),
-            majorTickLines: const MajorTickLines(size: 0),
-            minorTickLines: const MinorTickLines(size: 0),
-            labelFormat: '₹{value}',
-            minimum: 0,
-            maximum: maxYValue * 1.2,
-          ),
+         primaryYAxis: NumericAxis(
+  isVisible: false,
+  placeLabelsNearAxisLine: true,
+  labelAlignment: LabelAlignment.start,
+  // axisLabelIntersectAction: AxisLabelIntersectAction.hide,
+  labelStyle: FontManager().getTextStyle(
+    context,
+    lWeight: FontWeight.normal,
+    fontSize: fontSizeFactor * 2.8,
+    color: AppColors.accentColor,
+  ),
+  majorGridLines: MajorGridLines(width: 0),
+  minorGridLines: MinorGridLines(width: 0),
+  axisLine: AxisLine(width: 0),
+  majorTickLines: const MajorTickLines(size: 0),
+  minorTickLines: const MinorTickLines(size: 0),
+  labelFormat: '₹{value}',
+  minimum: 0,
+  maximum: maxYValue * 1.2,
+),
           tooltipBehavior: TooltipBehavior(
             enable: true,
             format: 'point.x: ₹point.y',
@@ -783,18 +802,13 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     for (int i = 0; i < numLabels; i++) {
       double value = i * interval;
       labels.add(
-        Expanded(
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              '₹${formatNumberString(value.toStringAsFixed(1))}',
-              style: FontManager().getTextStyle(
-                context,
-                lWeight: FontWeight.normal,
-                fontSize: fontSizeFactor * 2.7,
-                color: AppColors.accentColor,
-              ),
-            ),
+        Text(
+          '₹${formatNumberString(value.toStringAsFixed(1))}',
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.normal,
+            fontSize: fontSizeFactor * 2.7,
+            color: AppColors.accentColor,
           ),
         ),
       );
