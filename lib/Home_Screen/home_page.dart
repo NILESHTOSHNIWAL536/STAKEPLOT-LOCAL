@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/cardAnimations.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/donut_chart.dart';
@@ -92,6 +93,7 @@ class _HomePageState extends State<HomePage> {
     getAllAutoTransactions();
     // getAllTransaction(context);
     getAllContstant(context);
+    getGroupTransactions();
     getCustomCategory(context);
     custom = getthelist();
     allOrGroupTransactionsName.value = StringConstant.allTransactions;
