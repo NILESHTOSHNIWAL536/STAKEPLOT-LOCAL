@@ -200,7 +200,7 @@ void _onScroll() {
                 // Transaction History
               Obx(()=> Container(
                 width: MediaQuery.of(context).size.width,
-                alignment: Alignment.center,
+               
                  height: MediaQuery.sizeOf(context).height/ ((groupTransactionList.length!=0 || redioButton.isNotEmpty)? 1.35:1.25),
                  child: SingleChildScrollView(
                    controller: scrollController,

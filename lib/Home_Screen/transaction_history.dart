@@ -96,6 +96,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
     return SingleChildScrollView(
       child: Container(
         child: Column(
+        
           children: [
             // (widget.showIcon ?? false)
             //     ? SizedBox(
@@ -363,6 +364,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
     return ListView.builder(
       itemCount: displayItems.length,
       shrinkWrap: true,
+      
       controller: _scrollController2,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
@@ -423,7 +425,9 @@ class _TransactionHistoryState extends State<TransactionHistory>
         return  Obx(()=>!isLoadingMore.value? SizedBox.shrink(): loadingDelay.value
             ? Container(width: 50, height: 50, child: Spinner())
             : transactionsHistory.isEmpty
-                ? textStyle(context: context, text: "No Transactions")
+                ? Container(
+                  height:MediaQuery.of(context).size.height / 1.38,
+                  child: Center(child: textStyleImage(context: context, text: "No Transactions")))
                 : SizedBox.shrink()); // Fallback for unexpected items
       },
     );
