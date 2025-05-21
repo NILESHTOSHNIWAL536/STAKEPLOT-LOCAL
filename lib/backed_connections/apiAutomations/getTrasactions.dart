@@ -527,8 +527,10 @@ void pickCustomDateRange(BuildContext context) async {
         ),
         dialogSize: const Size(400, 300),
         value: [
-          DateTime.now().subtract(const Duration(days: 7)),
-          DateTime.now(),
+          startDateCustom,
+          endDateCustom,
+          // DateTime.now().subtract(const Duration(days: 7)),
+          // DateTime.now(),
         ],
         borderRadius: BorderRadius.circular(24),
       ) ??
@@ -537,7 +539,8 @@ void pickCustomDateRange(BuildContext context) async {
   if (picked.length == 2 && picked[0] != null && picked[1] != null) {
     DateTime start = picked[0]!;
     DateTime end = picked[1]!;
-
+    startDateCustom=start;
+    endDateCustom=end;
     selectedButton.value = 'Custom';
     getGraphData.value = false;
 

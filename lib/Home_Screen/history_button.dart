@@ -17,7 +17,7 @@ Widget historyButton(double fontSizeFactor,BuildContext context) {
   
                     // getAllTransaction(context);
                     isLoadingMore.value=false;
-                    getGroupTransactions();
+                    
                     clearTransactions(context: context,f: false);
                      Navigator.push(
                       context,  
