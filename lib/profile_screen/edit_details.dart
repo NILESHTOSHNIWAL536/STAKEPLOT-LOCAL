@@ -57,6 +57,7 @@ class _EditDetailsState extends State<EditDetails> {
     _controllers.forEach((_, controller) => controller.dispose());
     super.dispose();
   }
+
 void checkBiometricsStatus() async {
   final LocalAuthentication auth = LocalAuthentication();
 
@@ -86,8 +87,10 @@ void checkBiometricsStatus() async {
         ),
       );
     } else {
+       isAuthenticated = true;
     }
   } catch (e) {
+     isAuthenticated = true;
   }
 
   if (!isAuthenticated) {

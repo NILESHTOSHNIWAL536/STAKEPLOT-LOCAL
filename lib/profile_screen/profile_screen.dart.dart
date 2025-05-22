@@ -59,9 +59,12 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
       } else {
         snackBarCalledfail(context,'Biometric authentication is not available on this device.');
         // Optionally show a message if biometrics are not available
+         isAuthenticated = true;
         
       }
-    } catch (e) {}
+    } catch (e) {
+       isAuthenticated = true;
+    }
 
     return isAuthenticated;
   }
