@@ -129,8 +129,7 @@ class _TribeHomeState extends State<TribeUnique> {
       postCount[id] = 0;
       snackBarCalled(context, "Comment added successfully!", Colors.black);
     } else {
-      snackBarCalled(
-          context, "Unable to add comment. Please try again.", Colors.red);
+      snackBarCalled(context, "Unable to add comment. Please try again.", Colors.red);
     }
   }
 
@@ -138,7 +137,7 @@ class _TribeHomeState extends State<TribeUnique> {
   void initState() {
     super.initState();
     dataObj = widget.dataObj;
-
+    uniquePostDeatils= widget.dataObj;
     getpost(widget.id);
     getTransactionComments();
     getInfo();
@@ -261,12 +260,14 @@ class _TribeHomeState extends State<TribeUnique> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // tribeHeader(context),
+               
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: PostCard(data: widget.dataObj, flag: true,index: -1,),
+                  child:Obx(()=> PostCard(data: reloadUniquePost.value? uniquePostDeatils:uniquePostDeatils, flag: true,index: -1,)),
                 ),
-                uploadData(widget.dataObj),
+
+                uploadData(uniquePostDeatils),
+
                 SizedBox(
                   height: 100,
                 ),
@@ -838,12 +839,18 @@ class _TribeHomeState extends State<TribeUnique> {
       onTap: () {
         String value = Textcontroller.text;
 
-        addComment(context, value, postId, widget.dataObj['author']['id'],
-            widget.dataObj['title'], name);
-        postCommentCount.putIfAbsent(
-            postId, () => widget.dataObj["comments"] ?? 0);
-        postCommentCount.update(postId, (value) => value + 1);
-        Textcontroller.clear();
+        // addComment(context, value, postId, widget.dataObj['author']['id'],
+        //     widget.dataObj['title'], name);
+        // postCommentCount.putIfAbsent(
+        //     postId, () => widget.dataObj["comments"] ?? 0);
+        // postCommentCount.update(postId, (value) => value + 1);
+        // Textcontroller.clear();
+              addComment(context, value, postId, widget.dataObj['author']['id'],
+                  widget.dataObj['title'], name);
+              postCommentCount.putIfAbsent(
+                  postId, () => widget.dataObj["comments"] ?? 0);
+              postCommentCount.update(postId, (value) => value + 1);
+              Textcontroller.clear();
       },
       child: Container(
         height: 10,
