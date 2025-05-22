@@ -57,6 +57,7 @@ class _PostCardState extends State<PostCard> {
   @override
   void initState() {
     super.initState();
+    // postData[widget.data['_id']]=true;
     getInfo();
     getIndex();
   }
@@ -64,7 +65,8 @@ class _PostCardState extends State<PostCard> {
   @override
   Widget build(BuildContext context) {
     var data = widget.data;
-    return uploadData(data, widget.flag);
+    return  uploadData(data, widget.flag) ;
+    // return  Obx(()=>( postData[widget.data['_id']] ??false) ?uploadData(data, widget.flag)  :uploadData(data, widget.flag));
   }
 
   void getIndex()

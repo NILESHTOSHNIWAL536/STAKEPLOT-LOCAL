@@ -1,8 +1,11 @@
 
 import 'package:flutter/widgets.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -67,9 +70,9 @@ void resentCodeLocaldata()
 
 void setUpSocketListenerMainPage(BuildContext context) {
   try {
-    
-    if (currentId.value == "") return;
 
+    if (currentId.value == "") return;
+  
     // Initialize socket connection
     mainPageWebSocket = IO.io(
       urlWithLocallHost,
@@ -82,16 +85,42 @@ void setUpSocketListenerMainPage(BuildContext context) {
     // Connect the socket
     mainPageWebSocket.connect();
 
+
     // On successful connection
-    mainPageWebSocket.onConnect((_){
-       mainPageWebSocket.emit("addUserToSocket", currentId.value);
-    });
+    // mainPageWebSocket.onConnect((_){
+    //   try{
+    //    mainPageWebSocket.emit("addUserToSocket", currentId.value);
+    //   }catch(e){
+    //     pritn(e);
+    //   }
+    // });
+      mainPageWebSocket.onConnect((_) {
+    print("Connected to socket server ✅");
+
+    try {
+      mainPageWebSocket.emit("addUserToSocket", currentId.value);
+      print("User emitted to server");
+    } catch (e) {
+      print("Emit error: $e");
+    }
+  });
 
     // Listener for events from the socket
     mainPageWebSocket.on("addUserToSocket", (data) {
-      if (data['type'] == "logoutUser") {
+       print("data");
+       print(data);
+      if (data['type'] == "reactOnPost")
+      {
+             onPostReactLikeAndCommentWebSocket(data['data'],context);
+      }
+      else if (data['type'] == "NewPost") {
+          onPostDataCallWebSocket(data,context); 
+      }
+     else if (data['type'] == "logoutUser")
+      {
         logoutUserFromDevice(context);
-      } else if (data['type'] == "fetchedApiCall")
+      } 
+      else if (data['type'] == "fetchedApiCall")
       {
         isFected.value = false;
         getBankAccounts();
@@ -101,4 +130,28 @@ void setUpSocketListenerMainPage(BuildContext context) {
   } catch (e) {
     print("Socket connection error: $e");
   }
+}
+
+
+
+void onPostReactLikeAndCommentWebSocket(updatedPost,context)
+{
+    
+    String id=updatedPost['_id'];   
+    if(postData.containsKey(id)) postData[id] = ! (postData[id]??false);
+    postCount[id] = updatedPost['upvotes'];
+    postCommentCount[id] = updatedPost['comments'];
+
+}
+
+void onPostDataCallWebSocket(data,context){
+     try{
+           var element=data['data'];
+           uploadRefreshCall(element, context);
+        }
+        catch(e)
+        {
+          print("error in adding....");
+          print(e);
+        }
 }

@@ -55,7 +55,7 @@ class _LazyLoadingListState extends State<LazyLoadingList> {
               physics: const NeverScrollableScrollPhysics(),
               itemCount: displayedData.length,
               itemBuilder: (context, index) {
-                return PostCard(data: displayedData[index],index: index,);
+                return   Obx(()=> ( postData[displayedData[index]['_id']] ??false) ?   PostCard(data: displayedData[index],index: index,) :PostCard(data: displayedData[index],index: index,));
               },
             ),
     ));

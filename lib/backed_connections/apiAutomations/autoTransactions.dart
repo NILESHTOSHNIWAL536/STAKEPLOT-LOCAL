@@ -81,7 +81,7 @@ void postCustomCategory(context,name,urlPath,narr)async
   print(body);
   
   var res = await postDataApiCall("${url}/custom/custom-category",body);
-  printData(res);
+
   if(getFlagOfResponse(res))
   {
     var data = jsonDecode(res.body);

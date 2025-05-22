@@ -429,7 +429,7 @@ void declineAmount(
        "splittedUserId":endUser
     };
     final response = await updateDataApiCall(apiUrl, body);
-    printData(response);
+    
   } catch (e) {
     snackBarCalled(context, "Error settling due");
   }
@@ -474,7 +474,6 @@ void hideTransaction(
 
   try {
     final response = await updateDataApiCall2(apiUrl, {"Hidden": hidden});
-    printData(response);
     if (getFlagOfResponse(response)) {
       if (hidden) {
         hiddenTransactions.add(transaction);

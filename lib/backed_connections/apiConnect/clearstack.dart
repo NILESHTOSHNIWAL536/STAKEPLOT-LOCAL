@@ -75,8 +75,8 @@ void expire(response, BuildContext context) {
   }
 }
 
-  void clearPostReportHide(int index){
-        getTrendingData.removeAt(index);
+  void clearPostReportHide(int index,[bool f=true]){
+       if(f) getTrendingData.removeAt(index);
         resetAndLoadData();
         posting.value = false;
         postDis.value = false;
@@ -106,7 +106,6 @@ Future<void> storeDeviceInfo() async
             var json = await getUserStats();
             var responce = await postDataApiCall("${url}/deviceScreenTime/", json);
             if (getFlagOfResponse(responce)) {
-              printData(responce);
             }
           try {
                 await postDataApiCall("${url}/user/logout", {});
@@ -122,7 +121,6 @@ Future<void> storeDeviceInfoLocalBackState() async
 
             if (getFlagOfResponse(responce))
             {
-              printData(responce);
             }
 
 }
