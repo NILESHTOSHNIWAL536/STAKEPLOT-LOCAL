@@ -26,6 +26,8 @@ struct Provider: TimelineProvider {
         let totalSpending = defaults?.string(forKey: "total_spending") ?? "₹0"
         let categories = defaults?.string(forKey: "categories") ?? "Categories: None"
         let timestamp = defaults?.string(forKey: "timestamp") ?? "01 Jan - 01 Jan"
+        
+        print("StakeplotWidget: totalSpending=\(totalSpending), categories=\(categories), timestamp=\(timestamp)")
 
         let entry = SimpleEntry(
             date: Date(),
@@ -82,9 +84,7 @@ struct StakeplotWidgetEntryView: View {
                         .stroke(Color(hex: "E0E0E0"), lineWidth: 1)
                 )
         )
-        .containerBackground(for: .widget) {
-            Color.white
-        }
+        .widgetURL(URL(string: "stakeplot://open"))
     }
 }
 
@@ -108,7 +108,7 @@ struct StakeplotWidget: Widget {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
             StakeplotWidgetEntryView(entry: entry)
         }
-        .configurationDisplayName("Stakeplot")
+        .configurationDisplayName("Stakeplot Expenses")
         .description("Shows expense overview.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
