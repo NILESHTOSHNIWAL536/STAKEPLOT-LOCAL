@@ -75,7 +75,7 @@ void expire(response, BuildContext context) {
   }
 }
 
-  void clearPostReportHide(index){
+  void clearPostReportHide(int index){
         getTrendingData.removeAt(index);
         resetAndLoadData();
         posting.value = false;

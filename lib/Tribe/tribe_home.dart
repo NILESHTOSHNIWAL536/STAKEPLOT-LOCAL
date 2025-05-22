@@ -76,7 +76,7 @@ Widget popUpBox(id, context) {
           },
         );
       } else {
-        reportPost(context, id, "hide post","hide");
+        reportPost(context, id, "hide post","hide",0);
       }
     },
     itemBuilder: (context) {

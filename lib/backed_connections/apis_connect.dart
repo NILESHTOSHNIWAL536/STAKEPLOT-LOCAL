@@ -12,7 +12,7 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 bool flag = true;
 String portNo = flag ? "192.168.1.8" : "localhost";
-String urlWithLocallHost = flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Fields";
 RxString expenses = "Loading".obs;
@@ -278,6 +278,8 @@ void printData(response, [context = ""]) {
 }
 
 void snackBarCalled(BuildContext context, String text, [Color colors = const Color(0xFF43A047)]) {
+ 
+ try{
   showTopSnackBar(
     Overlay.of(context),
     Container(
@@ -298,6 +300,9 @@ void snackBarCalled(BuildContext context, String text, [Color colors = const Col
     reverseCurve: Curves.easeInBack,
     animationDuration: const Duration(milliseconds: 600),
   );
+ }catch(e){
+    print("error in snackbar "+e.toString());
+ }
 
 
 }

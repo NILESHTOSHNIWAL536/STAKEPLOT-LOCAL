@@ -1507,7 +1507,7 @@ Widget tribeHeader(context, [str = "tribeone"]) {
   );
 }
 
-Widget popUpBox(id, context) {
+Widget popUpBox2(id, context) {
   return PopupMenuButton(
     initialValue: 2,
     color: Colorcodes.appBarColor,
@@ -1526,7 +1526,7 @@ Widget popUpBox(id, context) {
           },
         );
       } else {
-        reportPost(context, id, "hide post", "hide");
+        reportPost(context, id, "hide post", "hide",0);
       }
     },
     itemBuilder: (context) {
@@ -1659,7 +1659,7 @@ Widget textStyleModel(context, str, id, [flag = false]) {
   bool f = str == "Helps us to understand the issue, and look into it.";
   return GestureDetector(
     onTap: () {
-      reportPost(context, id, str, "report");
+      reportPost(context, id, str, "report",0);
       if (flag) {
         getPost();
         Navigator.pop(context);
@@ -1728,7 +1728,7 @@ Widget textStyleModel(context, str, id, [flag = false]) {
 //   );
 // }
 
-Widget showModel(BuildContext context, String id, [bool flag = false,int index=0]) {
+Widget showModel(BuildContext context, String id, [bool flag = false,int indexElement=-1]) {
   return AnimatedContainer(
     duration: const Duration(milliseconds: 300),
     curve: Curves.easeInOut,
@@ -1775,19 +1775,19 @@ Widget showModel(BuildContext context, String id, [bool flag = false,int index=0
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             itemCount: reportOptions.length,
-            separatorBuilder: (context, index) => Divider(
+            separatorBuilder: (context2, index) => Divider(
               height: 1,
               color: Colors.grey[200],
             ),
-            itemBuilder: (context, index) {
+            itemBuilder: (context2, index) {
               final option = reportOptions[index];
               return InkWell(
                 onTap: () {
                   // Handle report submission with id and flag
                   Navigator.pop(context);
                   // Add your reporting logic here using id and flag
-                  reportPost(context, id, option['title'], "report");
-                  clearPostReportHide(index);
+                  reportPost(context, id, option['title'], "report",indexElement);
+                 
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),

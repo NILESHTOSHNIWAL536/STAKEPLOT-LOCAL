@@ -383,20 +383,22 @@ class _PostCardState extends State<PostCard> {
           clearPostReportHide(index);
         }
         else if (value == 1) {
-        
+          BuildContext c=context;
           showModalBottomSheet(
             context: context,
-            builder: (context) {
-              return showModel(context, id, widget.flag,index);
+            builder: (contextBuild) {
+              return showModel(c, id, widget.flag,index);
             },
           );
+
         } else {
-          reportPost(context, id, "hide post", "hide");
-          if (widget.flag) {
+          reportPost(context, id, "hide post", "hide",index);
+          if (widget.flag)
+          {
             getPost();
             Navigator.pop(context);
           }
-          clearPostReportHide(index);
+         
         }
 
     

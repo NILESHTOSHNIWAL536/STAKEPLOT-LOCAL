@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:http/http.dart' as http;
@@ -60,20 +61,25 @@ Future<String> postImageToCloud(imageFile, context) async {
   }
 }
 
-void reportPost(context, String id, String spam, String type) async {
-  var response =
-      await postDataApiCall('${url}/user/report/${type}/$id', {'reason': spam});
-  if (getFlagOfResponse(response)) {
+void reportPost(context, String id, String spam, String type,int index) async {
+  var response = await postDataApiCall('${url}/user/report/${type}/$id', {'reason': spam});
+  // printData(response);
+  if (getFlagOfResponse(response)){
+   
     snackBarCalled(
         context,
         spam == "hide post"
             ? "The post has been hidden from you."
             : "Reported successfully.",
-        Colors.green);
+        Colors.green
+      );
+
+    if(index>-1)clearPostReportHide(index);
+
   } else {
     snackBarCalled(context, "An error occurred while reporting.", Colors.red);
   }
-  getPost();
+  // getPost();
 }
 
 Future<Map<String, dynamic>> createPost(BuildContext context, String title,
