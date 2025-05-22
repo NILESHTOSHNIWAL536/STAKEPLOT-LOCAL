@@ -362,11 +362,9 @@ class TextFeildCalender extends StatelessWidget {
                       onTap: () async {
                         DateTime? dateTime = await showDatePicker(
                             context: context,
-                            initialDate:
-                                DateTime.tryParse(textEditingController.text) ??
-                                    DateTime.now(),
-                            firstDate: DateTime(1995),
-                            lastDate: DateTime(2035));
+                            initialDate:DateTime.now(),
+                            firstDate: DateTime(1950),
+                            lastDate: DateTime.now());
                         if (dateTime != null) {
                           textEditingController.text = DateFormat('yyyy-MM-dd')
                               .format(dateTime)

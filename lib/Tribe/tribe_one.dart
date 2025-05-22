@@ -10,6 +10,7 @@ import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_search.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_share.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
+import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart";
 import "package:flutter_application_code_stakeplot/bottomNavigations.dart";
 import "package:flutter_application_code_stakeplot/model/comment.dart";
@@ -1727,7 +1728,7 @@ Widget textStyleModel(context, str, id, [flag = false]) {
 //   );
 // }
 
-Widget showModel(BuildContext context, String id, [bool flag = false]) {
+Widget showModel(BuildContext context, String id, [bool flag = false,int index=0]) {
   return AnimatedContainer(
     duration: const Duration(milliseconds: 300),
     curve: Curves.easeInOut,
@@ -1785,6 +1786,8 @@ Widget showModel(BuildContext context, String id, [bool flag = false]) {
                   // Handle report submission with id and flag
                   Navigator.pop(context);
                   // Add your reporting logic here using id and flag
+                  reportPost(context, id, option['title'], "report");
+                  clearPostReportHide(index);
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),

@@ -62,9 +62,10 @@ class _LazyLoadingListState extends State<LazyLoadingList> {
   }
 }
 
- void loadInitialData() {
+ void loadInitialData()
+ {
     displayedData.addAll(getTrendingData.take(itemsPerLoad).toList()); // Load first batch
-}
+ }
 
 
 void resetAndLoadData() {

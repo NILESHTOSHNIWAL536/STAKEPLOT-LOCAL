@@ -75,6 +75,14 @@ void expire(response, BuildContext context) {
   }
 }
 
+  void clearPostReportHide(index){
+        getTrendingData.removeAt(index);
+        resetAndLoadData();
+        posting.value = false;
+        postDis.value = false;
+        getPosted.value = !getPosted.value;
+  }
+
 
 Future<bool> check(context, String flag) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();

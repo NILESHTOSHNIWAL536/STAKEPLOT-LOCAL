@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -376,15 +377,17 @@ class _PostCardState extends State<PostCard> {
         color: AppColors.bg2,
       )),
       onSelected: (value) {
-        if (value == 0 && userId == userName.value) {
+        if (value == 0 && userId == userName.value)
+        {
           deletePost(id, context);
+          clearPostReportHide(index);
         }
         else if (value == 1) {
         
           showModalBottomSheet(
             context: context,
             builder: (context) {
-              return showModel(context, id, widget.flag);
+              return showModel(context, id, widget.flag,index);
             },
           );
         } else {
@@ -393,13 +396,10 @@ class _PostCardState extends State<PostCard> {
             getPost();
             Navigator.pop(context);
           }
+          clearPostReportHide(index);
         }
 
-        getTrendingData.removeAt(index);
-        posting.value = false;
-        postDis.value = false;
-        getPosted.value = !getPosted.value;
-        resetAndLoadData();
+    
       },
       itemBuilder: (context) {
         return userId == userName.value
@@ -426,6 +426,9 @@ class _PostCardState extends State<PostCard> {
       },
     );
   }
+
+
+
 
   Widget getTextMenuItem({
     required BuildContext context,
