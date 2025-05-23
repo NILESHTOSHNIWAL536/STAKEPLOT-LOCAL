@@ -24,7 +24,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 RxBool load = true.obs;
 RxBool reloadCharts = true.obs;
 late IO.Socket socket;
-
+RxInt totalUnopenedMessages = 0.obs;
 class TribeChats extends StatefulWidget {
   const TribeChats({Key? key}) : super(key: key);
 
@@ -51,6 +51,7 @@ class _TribeSearchState extends State<TribeChats> {
     getChatLoader();
     getTransactions();
     getChatsSplitAccounts(context, myId);
+    
 
     socket = IO.io(
         urlWithLocallHost,
@@ -104,12 +105,16 @@ class _TribeSearchState extends State<TribeChats> {
         getChatData.value = true;
         load.value = false;
       });
+      
     } else {}
   }
 
-      int getTotalUnopenedMessages() {
-    return chatList.fold<int>(0, (total, item) => total + (item['count']?.toInt() ?? 0) as int);
-  }
+  //     int getTotalUnopenedMessages() {
+  //   return chatList.fold<int>(0, (total, item) => total + (item['count']?.toInt() ?? 0) as int);
+  // }
+  void updateTotalUnopenedMessages() {
+    totalUnopenedMessages.value = chatList.fold<int>(0, (total, item) => total + (item['count']?.toInt() ?? 0) as int);
+}
 void getChatsSplitAccounts(BuildContext context, String id) async {
     var response = await getDataApiCall("${url}/split/pending-user");
     if (response.statusCode == 200) {
@@ -121,7 +126,6 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
         getChatSplit.value = !getChatSplit.value; // Trigger UI update
       });
     } else {
-      print('Failed to fetch chat split accounts: ${response.statusCode}');
     }
   }
 
@@ -174,15 +178,24 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
             ),
           ),
           const SizedBox(height: 4),
-          Text(
-            '${getTotalUnopenedMessages() ?? 0} messages received', // Null check for chatList
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.normal,
-              fontSize: 16,
-              color: AppColors.backgroundColor,
-            ),
-          ),
+          // Text(
+          //   '${getTotalUnopenedMessages() ?? 0} messages received', // Null check for chatList
+          //   style: FontManager().getTextStyle(
+          //     context,
+          //     lWeight: FontWeight.normal,
+          //     fontSize: 16,
+          //     color: AppColors.backgroundColor,
+          //   ),
+          // ),
+          Obx(() => Text(
+                                '${totalUnopenedMessages.value} messages received', // Use the reactive variable
+                                style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.normal,
+                                    fontSize: 16,
+                                    color: AppColors.backgroundColor,
+                                ),
+                            )),
           const SizedBox(height: 8),
           chatSplitAccount.isNotEmpty?SizedBox(
             height: 40,

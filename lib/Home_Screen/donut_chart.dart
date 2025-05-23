@@ -155,7 +155,8 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
           category: data.category,
           amount: data.value,
           percentage: percentage,
-          color: UniversalColors.categoryColors[index % UniversalColors.categoryColors.length],
+          color: AppColors.backgroundColor,
+          // color: UniversalColors.categoryColors[index % UniversalColors.categoryColors.length],
         );
       },
     );
@@ -217,7 +218,15 @@ class CategoryCard extends StatelessWidget {
         height: MediaQuery.sizeOf(context).height / 5,
         decoration: BoxDecoration(
           color: color, // Use the assigned color with opacity for background
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(14),
+           boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1), // Shadow color
+              spreadRadius: 2, // Spread radius
+              blurRadius: 5, // Blur radius
+              offset: Offset(0, 5), // Changes the position of the shadow
+            ),
+          ],
         ),
         child: Padding(
           padding: const EdgeInsets.all(10.0),

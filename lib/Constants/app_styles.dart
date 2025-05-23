@@ -21,7 +21,6 @@ class HomePageIcons {
   static String fetch = "assets/icons/Home-page/fetch.svg";
   static String none = "assets/icons/Home-page/none.svg";
   static String isSplit = "assets/icons/Home-page/isSplit.svg";
-  static String isManualGif = "assets/Images/rupee.gif";
   static String transactionSplit = "assets/icons/Home-page/TransactionSplitIcon.svg";
 }
 
@@ -187,7 +186,7 @@ class SubCategories {
 
 // images
 class Pictures {
-  static String manualTransactionImage = "assets/Images/manualTransaction.svg";
+  static String manualTransactionImage = "assets/icons/Home-page/manualTransaction.svg";
 }
 
 class LikeComment {
