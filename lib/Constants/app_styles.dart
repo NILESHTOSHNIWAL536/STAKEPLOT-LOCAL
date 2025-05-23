@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
+
 class NavBarIcons {
   //nav bar
   static String home = "assets/icons/Navigation_bar/homepageActive.svg";
@@ -864,3 +866,29 @@ class UniversalColors {
     Color(0xFFF0FDFA), // Teal
   ];
 }
+
+
+
+class FontSizeFactor {
+  final double scaleFactor;
+  final double padding;
+  final double margin;
+  final double iconSize;
+  final double avatarSize;
+  final double fontSizeLarge;
+  final double fontSizeMedium;
+  final double fontSizeSmall;
+  final double badgeSize;
+
+  FontSizeFactor(BuildContext context)
+      : scaleFactor = MediaQuery.of(context).size.width / 360,
+        padding = 14.0 * MediaQuery.of(context).size.width / 360,
+        margin = 10.0 * MediaQuery.of(context).size.width / 360,
+        iconSize = 14.0 * MediaQuery.of(context).size.width / 360,
+        avatarSize = 40.0 * MediaQuery.of(context).size.width / 360,
+        fontSizeLarge = 16.0 * MediaQuery.of(context).size.width / 360,
+        fontSizeMedium = 12.0 * MediaQuery.of(context).size.width / 360,
+        fontSizeSmall = 10.0 * MediaQuery.of(context).size.width / 360,
+        badgeSize = 20.0 * MediaQuery.of(context).size.width / 360;
+}
+

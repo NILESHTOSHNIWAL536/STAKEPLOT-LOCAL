@@ -336,7 +336,7 @@ class _ModalContentState extends State<ModalContent>
                           ],
 
                           if (fin != null) ...[
-                            buttonsWidget(),
+                            isDebit?  buttonsWidget():SizedBox.shrink(),
                             continueButton(),
                           ],
                         ],

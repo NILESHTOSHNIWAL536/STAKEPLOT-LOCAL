@@ -21,12 +21,13 @@ import 'package:lottie/lottie.dart'; // For haptic feedback
 
 RxMap<String, String> redioButton = <String, String>{}.obs;
 RxMap<String, int> redioButtonIndex = <String, int>{}.obs;
+RxList<String> addManually=<String>[].obs;
 RxBool showCheckBox =
     false.obs; // Initialize as false to avoid showing checkboxes by default
 
 Widget historyTransactions(Map<String, dynamic> transaction, String? date,
     int index, BuildContext context,
-    [bool hideReview = false]) {
+    [bool hideReview = false,bool isexpanded=false]) {
   String logo = transaction['bankLogo']?.toString() ?? "";
 
   final category = transaction['category']?.toString() ?? 'Uncategorized';
@@ -69,16 +70,17 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
       : "-₹${formatMoneyIndian(amount.toString())}";
 
   // Responsive scaling with MediaQuery
-  final screenWidth = MediaQuery.of(context).size.width;
-  final scaleFactor = screenWidth / 360; // Base width: 360px
-  final padding = 14.0 * scaleFactor;
-  final margin = 10.0 * scaleFactor;
-  final iconSize = 14.0 * scaleFactor;
-  final avatarSize = 40.0 * scaleFactor;
-  final fontSizeLarge = 16.0 * scaleFactor;
-  final fontSizeMedium = 12.0 * scaleFactor;
-  final fontSizeSmall = 10.0 * scaleFactor;
-  final badgeSize = 20.0 * scaleFactor;
+  // final screenWidth = MediaQuery.of(context).size.width;
+  // final scaleFactor = screenWidth / 360; // Base width: 360px
+  // final padding = 14.0 * scaleFactor;
+  // final margin = 10.0 * scaleFactor;
+  // final iconSize = 14.0 * scaleFactor;
+  // final avatarSize = 40.0 * scaleFactor;
+  // final fontSizeLarge = 16.0 * scaleFactor;
+  // final fontSizeMedium = 12.0 * scaleFactor;
+  // final fontSizeSmall = 10.0 * scaleFactor;
+  // final badgeSize = 20.0 * scaleFactor;
+  final fontSizes = FontSizeFactor(context);
 
   return WillPopScope(
     onWillPop: () async {
@@ -107,14 +109,14 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
         }
       },
       onLongPress: () {
-        showCheckBox.value = true;
+        if(!isexpanded) showCheckBox.value = true;
         HapticFeedback.mediumImpact(); // Haptic feedback on long press
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
-        margin: EdgeInsets.symmetric(vertical: margin / 2, horizontal: margin),
+        margin: EdgeInsets.symmetric(vertical: fontSizes.margin / 2, horizontal: fontSizes.margin),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16 * scaleFactor),
+          borderRadius: BorderRadius.circular(16 * fontSizes.scaleFactor),
           border: !isReview
               ? null
               : Border.all(
@@ -132,8 +134,8 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
-              blurRadius: 8 * scaleFactor,
-              offset: Offset(0, 3 * scaleFactor),
+              blurRadius: 8 * fontSizes.scaleFactor,
+              offset: Offset(0, 3 * fontSizes.scaleFactor),
             ),
           ],
         ),
@@ -160,14 +162,17 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
                                   .containsKey('${transaction['_id']}'),
                               onChanged: (bool? isChecked) {
                                 String id = '${transaction['_id']}';
+                                 bool ismanual=transaction['manualTransaction']??false;
                                 if (isChecked == true) {
                                   redioButton[id] = id;
                                   redioButtonIndex[id] = index;
+                                   if(ismanual) addManually.add(id);
                                   HapticFeedback
                                       .selectionClick(); // Feedback on check
                                 } else {
                                   redioButton.remove(id);
                                   redioButtonIndex.remove(id);
+                                  if(ismanual) addManually.remove(id);
                                   HapticFeedback.selectionClick();
                                 }
                               },
@@ -187,12 +192,17 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
                           if(!showCheckBox.value)return;
                             String id = '${transaction['_id']}';
                             bool isChecked =redioButton.containsKey(id);
+
+                           
+
                             if (!isChecked){
                               redioButton[id] = id;
                               redioButtonIndex[id] = index;
+                              
                               HapticFeedback.selectionClick(); // Feedback on check
                             } else
                             {
+                            
                               redioButton.remove(id);
                               redioButtonIndex.remove(id);
                               HapticFeedback.selectionClick();
@@ -202,28 +212,28 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
                       width: MediaQuery.of(context).size.width /
                           (showCheckBox.value ? 1.2 : 1.1),
                       padding:
-                          EdgeInsets.only(top: padding / 6, bottom: padding / 6),
+                          EdgeInsets.only(top: fontSizes.padding / 6, bottom: fontSizes.padding / 6),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           (isManual || isReview)
                               ? reviewTagTransactions(
                                   isReview,
-                                  scaleFactor,
+                                  fontSizes.scaleFactor,
                                   isSplit,
-                                  margin,
-                                  badgeSize,
-                                  fontSizeSmall,
+                                  fontSizes.margin,
+                                  fontSizes.badgeSize,
+                                  fontSizes.fontSizeSmall,
                                   context,
                                   index,
                                   id)
-                              : SizedBox(height: padding),
+                              : SizedBox(height: fontSizes.padding),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: padding),
+                            padding: EdgeInsets.symmetric(horizontal: fontSizes.padding),
                             child: Row(
                               children: [
-                                getIconAvtar(avatarSize, category, scaleFactor),
-                                SizedBox(width: padding),
+                                getIconAvtar(fontSizes.avatarSize, category, fontSizes.scaleFactor),
+                                SizedBox(width: fontSizes.padding),
                                 Flexible(
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -245,7 +255,7 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
                                                     : subcategory,
                                                  
                                                 c: AppColors.accentColor,
-                                                fontsize: fontSizeMedium,
+                                                fontsize: fontSizes.fontSizeMedium,
                                                 fontWeight: FontWeight.w600,
                                                 lineHeight: 1.5,
                                               ),
@@ -255,7 +265,7 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
                                             context: context,
                                             text: formatAmount,
                                             c: amtColor,
-                                            fontsize: fontSizeLarge,
+                                            fontsize: fontSizes.fontSizeLarge,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ],
@@ -267,7 +277,7 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
                                             : formattedDate,
                                         c: AppColors.primaryColor
                                             .withOpacity(0.7),
-                                        fontsize: fontSizeSmall,
+                                        fontsize: fontSizes.fontSizeSmall,
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ],
@@ -279,8 +289,8 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
                           Padding(
                             padding: const EdgeInsets.only(left: 10),
                             child: getIconsForHideUpdateSplit(
-                                iconSize,
-                                padding,
+                                fontSizes.iconSize,
+                                fontSizes.padding,
                                 category,
                                 amount,
                                 logo,
@@ -294,7 +304,7 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
                           ),
                           (isManual || isReview)
                               ? SizedBox(height: 0)
-                              : SizedBox(height: padding / 2),
+                              : SizedBox(height: fontSizes.padding / 2),
                         ],
                       ),
                     ),
