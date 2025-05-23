@@ -331,7 +331,6 @@ void getUserBankData(context) async {
 //       'subcategory': subCategory,
 //     }),
 //   );
-//  // printData(response);
 //   if (getFlagOfResponse(response)) {
 //     Navigator.pop(context);
 //     reloadHistory.value = !reloadHistory.value;
@@ -362,7 +361,7 @@ void updateTheTagOfTarnsactionsGroup(
   };
 
   var response = await postDataApiCall(urlPath, body);
-  printData(response);
+
   if (getFlagOfResponse(response)) {
     getAllTransaction(context);
     reloadHistory.value = !reloadHistory.value;

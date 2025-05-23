@@ -94,7 +94,6 @@ Future<void> loginUser(
       'userpassword': passwordController.text.toString(),
       'deviceInfo': deviceData,
     });
-     printData(response);
     if (response.statusCode == 409)
      {
       forceLoginShowModal(context, response, emailController, passwordController);

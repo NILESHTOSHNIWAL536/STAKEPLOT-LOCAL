@@ -151,15 +151,19 @@ RxBool reRender = false.obs;
 RxBool reGraph = false.obs;
 RxBool setDonectChat = false.obs;
 RxList likedList = [].obs;
+late Map<String, dynamic> uniquePostDeatils;
 RxList likedCommentList = [].obs;
 RxList likedProducts = [].obs;
 RxMap<String, int> postCount = <String, int>{}.obs;
 RxMap<String, int> postCommentCount = <String, int>{}.obs;
 RxMap<String, int> supportCount = <String, int>{}.obs;
+RxMap<String, bool> postData = <String, bool>{}.obs;
+
 List room = [];
 List<String> account = [];
 
 RxBool postInter = false.obs;
+RxBool reloadUniquePost = false.obs;
 RxBool postDis = false.obs;
 RxBool posting=false.obs;
 RxBool getPosted=false.obs;

@@ -24,8 +24,7 @@ void getPdf(BuildContext context, RxString selectedValue,
   var response = await getDataApiCall("${url}/transactionauto/get-previous-transactions/${getPreviousDate(int.parse(selectedValue.value), selectedValueType.value)}/${accountIdPdf.value}",);
   startIndex.value=0;
   bankLogo.value =getBankLogo();
-  print(bankLogo.value);
-  printData(response);
+ 
   if (getFlagOfResponse(response)) {
     var obj = jsonDecode(response.body);
     List list = obj['data']['transactions'];

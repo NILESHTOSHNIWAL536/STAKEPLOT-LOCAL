@@ -83,7 +83,8 @@ void getNotifications(context) async {
         friendRequestList.add(e['from_id']);
       }
     });
-
+    
+      hasGetNewNotifications.value = false;
     myNotificationBool.value = !myNotificationBool.value;
     // snackBarCalled(context,"Lend Amount Adde to Dues!",Colors.black);
   } else {}

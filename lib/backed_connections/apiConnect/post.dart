@@ -63,7 +63,7 @@ Future<String> postImageToCloud(imageFile, context) async {
 
 void reportPost(context, String id, String spam, String type,int index) async {
   var response = await postDataApiCall('${url}/user/report/${type}/$id', {'reason': spam});
-  // printData(response);
+  
   if (getFlagOfResponse(response)){
    
     snackBarCalled(
@@ -236,14 +236,17 @@ void createPollOfCommunity(context, String title, String description) async {
 
 void getPost() async {
   var response = await getDataApiCall('${url}/post/feed');
+  print(response.statusCode);
   if (getFlagOfResponse(response)) {
-    var his = jsonDecode(response.body);
+   
+    var his = jsonDecode(response.body); 
     var obj = his['data'];
     historyListData.clear();
     historyListData.addAll(obj);
     getTrendingData.clear();
     getTrendingData.addAll(obj);
-    historyListData.forEach((element) {
+    historyListData.forEach((element){
+      postData[element["_id"]]=true;
       postCount[element["_id"]] = element['upvotes'];
       postCommentCount[element["_id"]] = element['comments'];
     });
