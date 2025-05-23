@@ -170,3 +170,77 @@ Future<void> handleSignInGoogle(BuildContext context) async {
     // }
   } catch (error) {}
 }
+
+// import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
+// import 'package:http/http.dart' as http;
+// import 'dart:convert';
+
+// class GoogleAuthService {
+//   final FirebaseAuth _auth = FirebaseAuth.instance;
+//   final GoogleSignIn _googleSignIn = GoogleSignIn(
+//     serverClientId: "563513206414-b1ceophl7jl4b1d83ivkiniqub3lr26o.apps.googleusercontent.com",
+//     scopes: ['email'],
+//   );
+
+//   Future<User?> signInWithGoogle(BuildContext context) async {
+//     try {
+//       // 1. Trigger Google Sign-In
+//       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+//       if (googleUser == null) {
+//         return null; // User canceled sign-in
+//       }
+
+//       // 2. Get Google authentication credentials
+//       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+//       // 3. Create Firebase credential
+//       final AuthCredential credential = GoogleAuthProvider.credential(
+//         idToken: googleAuth.idToken,
+//         accessToken: googleAuth.accessToken,
+//       );
+
+//       // 4. Sign in with Firebase
+//       final UserCredential userCredential = await _auth.signInWithCredential(credential);
+//       final User? user = userCredential.user;
+
+//       if (user == null) {
+//         return null;
+//       }
+
+//       // 5. Get Firebase ID token
+//       final String? idToken = await user.getIdToken();
+//       if (idToken == null) {
+//         return null;
+//       }
+
+//       // 6. Send ID token to backend for verification
+//        String backendUrl = '${url}/auth/verify-google-token'; // Replace with your backend URL
+//       final response = await http.post(
+//         Uri.parse(backendUrl),
+//         headers: {'Content-Type': 'application/json'},
+//         body: jsonEncode({'idToken': idToken}),
+//       );
+
+//       if (response.statusCode == 200) {
+//         final data = jsonDecode(response.body);
+//         final jwtToken = data['token']; // Store JWT for API calls
+//         print('JWT Token: $jwtToken');
+//         return user;
+//       } else {
+//         print('Backend authentication failed: ${response.body}');
+//         return null;
+//       }
+//     } catch (e) {
+//       print('Error during Google Sign-In: $e');
+//       return null;
+//     }
+//   }
+
+//   Future<void> signOut() async {
+//     await _googleSignIn.signOut();
+//     await _auth.signOut();
+//   }
+// }
