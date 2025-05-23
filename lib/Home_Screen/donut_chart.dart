@@ -140,7 +140,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
     final topFour = topCategories.take(6).toList();
     return GridView.builder(
       shrinkWrap: true,
-      // physics: const NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 8,
@@ -374,8 +374,9 @@ class AllCategoriesPage extends StatelessWidget {
                     //     ? (data.value / totalValue.value) * 100
                     //     : 0.0;
                     // Assign a unique color from UniversalColors
-                    final color = UniversalColors
-                        .categoryColors[index % UniversalColors.categoryColors.length];
+                    final color = AppColors.backgroundColor;
+                    // final color = UniversalColors
+                    //     .categoryColors[index % UniversalColors.categoryColors.length];
                     return CategoryCard(
                       category: data.category,
                       amount: data.value,

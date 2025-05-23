@@ -109,12 +109,14 @@ class _TribeSearchState extends State<TribeChats> {
     } else {}
   }
 
-  //     int getTotalUnopenedMessages() {
-  //   return chatList.fold<int>(0, (total, item) => total + (item['count']?.toInt() ?? 0) as int);
-  // }
-  void updateTotalUnopenedMessages() {
-    totalUnopenedMessages.value = chatList.fold<int>(0, (total, item) => total + (item['count']?.toInt() ?? 0) as int);
-}
+      int getTotalUnopenedMessages()
+      {
+        return chatList.fold<int>(0, (total, item) => total + (item['count']?.toInt() ?? 0) as int);
+    }
+//   void updateTotalUnopenedMessages() {
+//     totalUnopenedMessages.value = chatList.fold<int>(0, (total, item) => total + (item['count']?.toInt() ?? 0) as int);
+// }
+
 void getChatsSplitAccounts(BuildContext context, String id) async {
     var response = await getDataApiCall("${url}/split/pending-user");
     if (response.statusCode == 200) {
@@ -178,24 +180,24 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
             ),
           ),
           const SizedBox(height: 4),
-          // Text(
-          //   '${getTotalUnopenedMessages() ?? 0} messages received', // Null check for chatList
-          //   style: FontManager().getTextStyle(
-          //     context,
-          //     lWeight: FontWeight.normal,
-          //     fontSize: 16,
-          //     color: AppColors.backgroundColor,
-          //   ),
-          // ),
-          Obx(() => Text(
-                                '${totalUnopenedMessages.value} messages received', // Use the reactive variable
-                                style: FontManager().getTextStyle(
-                                    context,
-                                    lWeight: FontWeight.normal,
-                                    fontSize: 16,
-                                    color: AppColors.backgroundColor,
-                                ),
-                            )),
+          Text(
+            '${getTotalUnopenedMessages() ?? 0} messages received', // Null check for chatList
+            style: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.normal,
+              fontSize: 16,
+              color: AppColors.backgroundColor,
+            ),
+          ),
+          // Obx(() => Text(
+          //                       '${totalUnopenedMessages.value} messages received', // Use the reactive variable
+          //                       style: FontManager().getTextStyle(
+          //                           context,
+          //                           lWeight: FontWeight.normal,
+          //                           fontSize: 16,
+          //                           color: AppColors.backgroundColor,
+          //                       ),
+          //                   )),
           const SizedBox(height: 8),
           chatSplitAccount.isNotEmpty?SizedBox(
             height: 40,

@@ -97,7 +97,8 @@ class Colorcodes {
 List namePresent = [];
 
 Map<String, String> imageMapForHistory = {
-  "income": "assets/images2/add.svg",
+  "income": Categories.income, 
+  "Income": Categories.income,
   "restaurant": SubCategories.restaurents,
   "hospital": SubCategories.healthCheckup,
   "travel": Categories.travel,
