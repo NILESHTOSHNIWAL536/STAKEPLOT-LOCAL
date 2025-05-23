@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCall
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
@@ -190,7 +191,7 @@ Widget tabItem(String text,BuildContext context) {
                           TextButton(
                             onPressed: () {
                               deletSelectedTransactions(context);
-                              Navigator.of(context2).pop(true);
+                             
                             },
                             child: textStyleImage(context: context,text:'Delete', c: Colors.red,fontsize: 16,fontWeight: FontWeight.bold),
                           ),
@@ -226,6 +227,7 @@ Widget tabItem(String text,BuildContext context) {
    redioButton.clear(); // Optionally clear selection after hiding
   redioButtonIndex.clear(); // Optionally clear selection after hiding
   addManually.clear();
+    getCategoryData();
   Navigator.pop(context);
 
   }
