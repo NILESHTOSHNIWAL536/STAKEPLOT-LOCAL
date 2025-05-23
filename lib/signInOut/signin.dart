@@ -63,7 +63,7 @@ class _SigninState extends State<Signin> {
                   textHeader(),
                   getTextFeilds(),
                   siginButton(),   
-                  // signinWith(),  
+                  signinWith(),  
                   forgotPassword(),
                   dontHaveAccount(),
             ],
