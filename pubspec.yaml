@@ -144,16 +144,10 @@ flutter:
   assets:
     - assets/icons/
     - assets/
-    - assets/images/
-    - assets/images2/
     - assets/avatar2/
     - assets/avatars/
     - assets/svgs/
-    - assets/img/
-    - assets/img/imgs/
-    - assets/trans/
     - assets/msg.mp3
-    - assets/appicon.jpeg
     - assets/icons/Navigation_bar/
     - assets/icons/Home-page/
     - assets/icons/Categories/
@@ -162,7 +156,6 @@ flutter:
     - assets/icons/profileScreen/
     - assets/icons/Signup/
     - assets/icons/financeScreen/
-    - assets/Images/
     - assets/splashScreen/
     - assets/onboarding/
     

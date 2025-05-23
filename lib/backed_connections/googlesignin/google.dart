@@ -181,7 +181,8 @@ Future<void> handleSignInGoogle(BuildContext context) async {
 // class GoogleAuthService {
 //   final FirebaseAuth _auth = FirebaseAuth.instance;
 //   final GoogleSignIn _googleSignIn = GoogleSignIn(
-//     serverClientId: "563513206414-b1ceophl7jl4b1d83ivkiniqub3lr26o.apps.googleusercontent.com",
+//     // serverClientId: "563513206414-b1ceophl7jl4b1d83ivkiniqub3lr26o.apps.googleusercontent.com",
+//      serverClientId:  "442849932576-3pgo4ulesmgf3d0urk0s1m6gbam9s606.apps.googleusercontent.com",
 //     scopes: ['email'],
 //   );
 
