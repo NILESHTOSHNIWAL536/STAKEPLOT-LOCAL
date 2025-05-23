@@ -57,14 +57,8 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
     // addedUser.clear();
     // addedMembers.clear();
   }
-  @override
- void dispose() {
-    // Clear the selected friends lists when the screen is closed
-    addedUser.clear();
-    addedMembers.clear();
-    textController.dispose(); // Also dispose of the controller to prevent memory leaks
-    super.dispose();
- }
+ 
+ 
   @override
   Widget build(BuildContext context) {
     return Container(

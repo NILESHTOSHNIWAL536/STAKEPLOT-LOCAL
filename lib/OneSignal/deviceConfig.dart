@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
@@ -109,7 +110,14 @@ void setUpSocketListenerMainPage(BuildContext context) {
     mainPageWebSocket.on("addUserToSocket", (data) {
        print("data");
        print(data);
-      if (data['type'] == "reactOnPost")
+      if(data['type'] == "Notify")
+      {
+        hasGetNewNotifications.value=!hasGetNewNotifications.value;
+        hasGetNewNotifications.value=!hasGetNewNotifications.value;
+        myNotificationBool.value=!myNotificationBool.value;
+        getNotifications(context);
+      }
+      else if (data['type'] == "reactOnPost")
       {
              onPostReactLikeAndCommentWebSocket(data['data'],context);
       }
@@ -147,7 +155,7 @@ void onPostReactLikeAndCommentWebSocket(updatedPost,context)
 }
 
 void onPostDataCallWebSocket(data,context){
-     try{
+        try{
            var element=data['data'];
            uploadRefreshCall(element, context);
         }

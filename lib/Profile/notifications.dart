@@ -30,9 +30,10 @@ class _NotificationsState extends State<Notifications> {
   @override
   void initState() {
     super.initState();
-    getTransaction();
+    // getTransaction();
     getNotifications(context);
   }
+
 
   void getTransaction() async {
     String urlPath = '${url}/user/myNotifications';
@@ -57,6 +58,7 @@ class _NotificationsState extends State<Notifications> {
       myNotificationBool.value = !myNotificationBool.value;
     }
   }
+
 
   Future<void> deleteNotification(String? notifyId) async {
     if (notifyId == null) return;

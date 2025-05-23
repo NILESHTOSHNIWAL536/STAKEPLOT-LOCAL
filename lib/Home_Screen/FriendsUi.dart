@@ -217,10 +217,10 @@ class _FriendsUiState extends State<FriendsUi> {
                                     }
                                   });
 
-                                  setState(() {
-                                    addedMembers.clear();
-                                    addedMembers.addAll(f);
-                                  });
+                                  // setState(() {
+                                  //   addedMembers.clear();
+                                  //   addedMembers.addAll(f);
+                                  // });
                                 }
                               });
                             },

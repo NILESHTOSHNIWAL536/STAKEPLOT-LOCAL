@@ -218,7 +218,7 @@ class _TribeHomeState extends State<TribeUnique> {
         Comments obj = Comments.fromJson(e);
         indexArray.add(i);
         i++;
-        // countLikes.add(obj.upvotes as RxInt);
+       
         commentList.add(obj);
       });
     } else {}

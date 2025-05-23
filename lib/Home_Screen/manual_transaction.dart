@@ -306,14 +306,14 @@ class _ModalContentState extends State<ModalContent>
 
                           // Enter Amount Field (Only shown if no category is selected)
 
-                          if (selectedCategory == null &&
-                              selectedSubCategory == null) ...[
+                          if ((selectedCategory == null &&
+                              selectedSubCategory == null) || !isDebit) ...[
                             AmountWidget(),
                             const SizedBox(height: 16),
                           ],
 
                           if (amount != null) ...[
-                            categoryWidget(),
+                              categoryWidget(),
                           ],
                           const SizedBox(height: 8),
                           if (isCategoryFieldExpanded) ...[
@@ -432,10 +432,16 @@ class _ModalContentState extends State<ModalContent>
         setState(() {
           // Update the amount variable whenever the input changes
           amount = double.tryParse(value);
+          if(!isDebit){
+            selectedCategory="Income";
+            categoryFieldController.text="Income";
+          }
+          fin=null;
           _isAmountFieldFocused = false; // Convert string to double
         });
       },
       onEditingComplete: () {
+         fin = '$selectedCategory ($selectedSubCategory)';
         FocusScope.of(context).unfocus(); // Dismiss keyboard when done
       },
     );
@@ -446,7 +452,7 @@ class _ModalContentState extends State<ModalContent>
       onTap: toggleCategoryField,
       child: TextField(
         controller: categoryFieldController,
-        readOnly: false,
+        readOnly: !isDebit,
         decoration: InputDecoration(
           hintText: 'Select Category',
           fillColor: AppColors.button,
@@ -475,7 +481,15 @@ class _ModalContentState extends State<ModalContent>
         ),
         onTap: () {
           if (!isCategoryFieldExpanded) {
-            toggleCategoryField();
+            if(isDebit)  toggleCategoryField();
+            else{
+              setState(() {
+                selectedCategory="Income";
+                selectedSubCategory=null;
+                categoryFieldController.text="Income";
+              });
+
+            }
           }
         },
         onChanged: (value) {
@@ -745,6 +759,7 @@ class _ModalContentState extends State<ModalContent>
             child: InkWell(
               onTap: () {
                 FocusScope.of(context).unfocus();
+        
                 if (isSplit.value && addedMembers.isNotEmpty) {
                   splitBill(selectedCategory2.toString(), amount.toString(),
                       selectedSubCategory2.toString(), true);
@@ -1000,7 +1015,10 @@ class _ModalContentState extends State<ModalContent>
           "The split amount has been successfully sent to users!",
           Colors.black);
       Navigator.pop(context);
+      addedMembers.clear();
+      addedUser.clear();
       _showCelebration();
+
     } else {
       // print("splitUserAmount: API error - Status: ${response.statusCode}, Body: ${response.body}");
       snackBarCalled(context,
@@ -1015,7 +1033,6 @@ class _ModalContentState extends State<ModalContent>
       String subCategories) async {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
-
     final response = await http.post(
       Uri.parse('${url}/bill'),
       headers: <String, String>{
@@ -1040,8 +1057,7 @@ class _ModalContentState extends State<ModalContent>
       final body = json.decode(response.body);
 
       members.forEach((e) {
-        sendNotificationsToDevice(e['id'], context,
-            "${userName.value} has sent u a lend bill..Of ${name} Of ${amount}");
+        sendNotificationsToDevice(e['id'], context,"${userName.value} has sent u a lend bill..Of ${name} Of ${amount}");
       });
 
       snackBarCalled(context,
