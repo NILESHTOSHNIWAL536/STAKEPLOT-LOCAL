@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/pending_users.dart';
+import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
@@ -40,7 +41,7 @@ class FinanceWidgets {
                       const SizedBox(width: 8),
                       CardBuilders.globalText(
                         context: context,
-                        text: "Add Budget",
+                        text:  PlotFinanceStaticData().calculatorsTitle,
                         fontsize: 12,
                         fontWeight: FontWeight.w600,
                         color: AppColors.primaryColor,
@@ -72,7 +73,7 @@ class FinanceWidgets {
                       const SizedBox(width: 8),
                       CardBuilders.globalText(
                         context: context,
-                        text: "Add Debt",
+                        text:  PlotFinanceStaticData().addDebt, 
                         fontsize: 12,
                         fontWeight: FontWeight.w600,
                         color: AppColors.primaryColor,
@@ -106,7 +107,7 @@ class FinanceWidgets {
                       const SizedBox(width: 8),
                       CardBuilders.globalText(
                         context: context,
-                        text: "FoodieFunds",
+                        text: PlotFinanceStaticData().foodieFunds,
                         fontsize: 12,
                         fontWeight: FontWeight.w600,
                         color: AppColors.primaryColor,
@@ -133,7 +134,7 @@ class FinanceWidgets {
                 },
                 child: Obx(() => CardBuilders.buildSummaryCard(
                       context,
-                      "To Receive",
+                      PlotFinanceStaticData().toReceive,
                       lendAmountRemainders,
                       AppColors.primaryColor,
                     )),
@@ -152,7 +153,7 @@ class FinanceWidgets {
                 },
                 child: Obx(() => CardBuilders.buildSummaryCard(
                       context,
-                      "To Pay",
+                     PlotFinanceStaticData().toPay,
                       dueAmountRemainders,
                       const Color.fromARGB(255, 186, 69, 63),
                     )),
@@ -232,43 +233,43 @@ class FinanceWidgets {
         children: [
           CardBuilders.buildCalculatorTile(
             context,
-            'Credit Card Payoff',
-            'Calculator',
+             PlotFinanceStaticData().creditCardPayoff, // Updated
+            PlotFinanceStaticData().calculatorSubtitle,
             url: Finance.credit,
             path: "/CreditCard",
           ),
           CardBuilders.buildCalculatorTile(
             context,
-            'EMI',
-            'Calculator',
+            PlotFinanceStaticData().emiCalculator, // Updated
+            PlotFinanceStaticData().calculatorSubtitle, 
             url: Finance.emi,
             path: "/emi",
           ),
-          CardBuilders.buildCalculatorTile(
+           CardBuilders.buildCalculatorTile(
             context,
-            'Rent vs Buy',
-            'Calculator',
+            PlotFinanceStaticData().rentVsBuy, // Updated
+            PlotFinanceStaticData().calculatorSubtitle, // Updated
             url: Finance.key,
             path: "/rent_buy",
           ),
           CardBuilders.buildCalculatorTile(
             context,
-            'Savings goal',
-            'Calculator',
+            PlotFinanceStaticData().savingsGoal, // Updated
+            PlotFinanceStaticData().calculatorSubtitle, // Updated
             url: Finance.savings,
             path: "/Savings",
           ),
           CardBuilders.buildCalculatorTile(
             context,
-            'Auto loan',
-            'Calculator',
+            PlotFinanceStaticData().autoLoan, // Updated
+            PlotFinanceStaticData().calculatorSubtitle, // Updated
             url: Finance.auto,
             path: "/autoLoan",
           ),
           CardBuilders.buildCalculatorTile(
             context,
-            'Trip cost',
-            'Calculator',
+            PlotFinanceStaticData().tripCost, // Updated
+            PlotFinanceStaticData().calculatorSubtitle, // Updated
             url: Finance.location,
             path: "/TripCost",
           ),

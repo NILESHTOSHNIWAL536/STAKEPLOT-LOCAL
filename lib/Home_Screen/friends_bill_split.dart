@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/lendMessage.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
+import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
@@ -82,7 +83,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Select people',
+                  HomepageStringsDart().selectPeople,
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.bold,
@@ -93,10 +94,10 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
               const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 14),
-                child: InputDat('Search', TextInputType.name, textController),
+                child: InputDat(HomepageStringsDart().searchLabel, TextInputType.name, textController),
               ),
               Text(
-                'My friends',
+               HomepageStringsDart().myFriends, 
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.w600,
@@ -288,7 +289,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                 child: frdsList.isEmpty
                     ? Center(
                         child: Text(
-                          'No friends available',
+                           HomepageStringsDart().noFriendsAvailable,
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.w500,
                               fontSize: 16,

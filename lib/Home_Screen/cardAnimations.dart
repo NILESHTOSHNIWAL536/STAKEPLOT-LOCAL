@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/insightsController.dart';
+import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -54,13 +55,13 @@ class _InsightsScreenState extends State<InsightsScreen>
 
   final List<Map<String, dynamic>> _navigationItems = [
     {
-      'title': 'Heads up',
+      'title': HomepageStringsDart().headsUp,
       'icon': Icons.send,
       'color': const Color(0xFF00565E),
       'backgroundColor': const Color(0xFF00565E),
     },
     {
-      'title': 'Money Map',
+      'title': HomepageStringsDart().moneyMap,
       'icon': Icons.currency_rupee_rounded,
       'color': const Color(0xFF00565E),
       'backgroundColor': const Color(0xFF00565E),
@@ -150,7 +151,7 @@ class _InsightsScreenState extends State<InsightsScreen>
     } catch (e) {
       setState(() {
         _isLoading = false;
-        _errorMessage = 'Failed to load insights. Please try again.';
+        _errorMessage = HomepageStringsDart().insightsError;
       });
     }
   }
@@ -170,7 +171,7 @@ class _InsightsScreenState extends State<InsightsScreen>
     } catch (e) {
       setState(() {
         _isLoading = false;
-        _errorMessage = 'Failed to load Money Map insights. Please try again.';
+        _errorMessage = HomepageStringsDart().moneyMapError;
       });
     }
   }
@@ -207,38 +208,38 @@ class _InsightsScreenState extends State<InsightsScreen>
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: ResponsiveUtils.getPadding(context),
-                  child: Text(
-                    'Your Highlights',
-                    style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.bold,
-                      fontSize: ResponsiveUtils.getFontSize(context, 18),
-                      color: AppColors.bg3.withOpacity(0.9),
-                    ),
-                    semanticsLabel: 'Your Insights',
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: ResponsiveUtils.getPadding(context),
+                child: Text(
+                  HomepageStringsDart().yourHighlights,
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.bold,
+                    fontSize: ResponsiveUtils.getFontSize(context, 18),
+                    color: AppColors.bg3.withOpacity(0.9),
                   ),
+                  semanticsLabel: 'Your Insights',
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Center(
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: ResponsiveUtils.getCardWidth(context),
-                          maxHeight: ResponsiveUtils.getCardHeight(context),
-                        ),
-                        child: _buildContent(),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: ResponsiveUtils.getCardWidth(context),
+                        maxHeight: ResponsiveUtils.getCardHeight(context),
                       ),
+                      child: _buildContent(),
                     ),
                   ),
                 ),
-                getMoneyMap(),
-              ],
-            );
+              ),
+              getMoneyMap(),
+            ],
+          );
         },
       ),
     );
@@ -355,7 +356,6 @@ class _InsightsScreenState extends State<InsightsScreen>
       decoration: BoxDecoration(
         color: Colors.grey[200],
         borderRadius: BorderRadius.circular(20),
-       
       ),
       child: Center(
         child: CircularProgressIndicator(
@@ -398,7 +398,7 @@ class _InsightsScreenState extends State<InsightsScreen>
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
             child: Text(
-              'Retry',
+              HomepageStringsDart().retryButton,
               style: FontManager().getTextStyle(
                 context,
                 lWeight: FontWeight.bold,
@@ -415,15 +415,18 @@ class _InsightsScreenState extends State<InsightsScreen>
   Widget _buildEmptyState() {
     return Center(
       child: Text(
-        'No ${_navigationItems[_selectedIndex]['title']} insights available',
+        _selectedIndex == 0
+            ? HomepageStringsDart().noHeadsUpInsights
+            : HomepageStringsDart().noMoneyMapInsights, // Updated
         style: FontManager().getTextStyle(
           context,
           lWeight: FontWeight.w600,
-          fontSize: ResponsiveUtils.getFontSize(context, 16),
+          fontSize: ResponsiveUtils.getFontSize(context, 14),
           color: AppColors.bg3.withOpacity(0.7),
         ),
-        semanticsLabel:
-            'No ${_navigationItems[_selectedIndex]['title']} insights available',
+        semanticsLabel: _selectedIndex == 0
+            ? HomepageStringsDart().noHeadsUpInsights
+            : HomepageStringsDart().noMoneyMapInsights, // Updated
       ),
     );
   }
@@ -490,7 +493,6 @@ class NavItem extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: isSelected ? backgroundColor : Colors.grey[200],
                   shape: BoxShape.circle,
-                 
                 ),
                 child: Icon(
                   icon,
@@ -550,7 +552,6 @@ class InsightCard extends StatelessWidget {
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(24),
-         
         ),
         child: Stack(
           children: [
@@ -587,7 +588,6 @@ class InsightCard extends StatelessWidget {
                       context,
                       lWeight: FontWeight.w600,
                       lineHeight: 1.2,
-                      
                       fontSize: ResponsiveUtils.getFontSize(context, 18),
                       color: Colors.white.withOpacity(0.95),
                     ),

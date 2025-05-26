@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
+import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -81,7 +82,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
             SizedBox(height: Colorcodes.paddingSize),
             textStyle(
                 context: context,
-                text: "Budget Overview",
+                text: PlotFinanceStaticData().budgetOverviewTitle,
                 fontsize: 18,
                 fontWeight: FontWeight.w500),
             SizedBox(height: Colorcodes.paddingSize),
@@ -99,7 +100,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                           borderRadius: BorderRadius.circular(10)),
                       child: textStyle(
                           context: context,
-                          text: "Total Amount",
+                          text: PlotFinanceStaticData().totalAmountLabel,
                           fontsize: 14,
                           fontWeight: FontWeight.w600)),
                   textStyle(
@@ -124,7 +125,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                     c: AppColors.accentColor),
                 textStyle(
                     context: context,
-                    text: " Estimation",
+                    text:  PlotFinanceStaticData().totalAmountLabel,
                     fontsize: 16,
                     fontWeight: FontWeight.w500),
               ],
@@ -147,7 +148,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                   // Dismiss loader
                  
                 },
-                child: getButton(context, "Add Budget")),
+                child: getButton(context, PlotFinanceStaticData().addBudgetButton)),
           ],
         ),
       ),
@@ -209,13 +210,13 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                                 vertical: 0,
                                 horizontal: 4), // Removes extra spacing
                             isDense: true, // Reduces extra height
-                            hintText: "Enter amount",
+                             hintText: PlotFinanceStaticData().enterAmountHint,
                             hintStyle: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.w400,
                                 fontSize: 12,
                                 color: AppColors.accentColor),
                             errorText: _isAmountExceeded(index)
-                                ? "Amount exceeds budget"
+                                ?PlotFinanceStaticData().amountExceedsBudget
                                 : null,
                           ),
                           keyboardType: TextInputType.number,

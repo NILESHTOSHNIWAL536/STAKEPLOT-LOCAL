@@ -1,9 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transactionHistoryScreen.dart';
+import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -21,10 +21,10 @@ RxDouble totalValue = 0.0.obs;
 
 class ChartData {
   final String category;
-  String persentage="";
+  String persentage = "";
   final double value;
   final Color color;
-  ChartData(this.category, this.value, this.color,this.persentage);
+  ChartData(this.category, this.value, this.color, this.persentage);
 }
 
 class DoughnutChartExample extends StatefulWidget {
@@ -67,8 +67,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
         androidName: 'StakeplotWidgetProvider',
         iOSName: 'StakeplotWidget',
       );
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   @override
@@ -82,7 +81,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Spendings on categories',
+                 HomepageStringsDart().spendingsOnCategories,
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.bold,
@@ -90,35 +89,43 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                   color: AppColors.bg3,
                 ),
               ),
-             Obx(()=> chartData.length >= 7?
-               TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AllCategoriesPage(),
-                    ),
-                  );
-                },
-                child: Text(
-                  'More',
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w500,
-                    fontSize: 14,
-                    color: AppColors.bg3,
-                  ),
-                )
-              ): const SizedBox.shrink()),
+              Obx(() => chartData.length >= 7
+                  ? TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AllCategoriesPage(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        HomepageStringsDart().moreButton,
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.w500,
+                          fontSize: 14,
+                          color: AppColors.bg3,
+                        ),
+                      ))
+                  : const SizedBox.shrink()),
             ],
           ),
-          const SizedBox(height: 1,),
-          textStyleImage(context: context,text: getDaysLeftInMonth(),fontsize: 14,fontWeight: FontWeight.w400),
-          const SizedBox(height: 5,),
+          const SizedBox(
+            height: 1,
+          ),
+          textStyleImage(
+              context: context,
+              text: getDaysLeftInMonth(),
+              fontsize: 14,
+              fontWeight: FontWeight.w400),
+          const SizedBox(
+            height: 5,
+          ),
           Obx(() => chartData.isEmpty
               ? Center(
                   child: Text(
-                    'No Spendings Available',
+                    HomepageStringsDart().noSpendingsAvailable,
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.bold,
@@ -150,7 +157,8 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
       itemCount: topFour.length,
       itemBuilder: (context, index) {
         final data = topFour[index];
-        String percentage = data.persentage ;//totalValue.value > 0 ? (data.value / totalValue.value) * 100 : 0.0;
+        String percentage = data
+            .persentage; // totalValue.value > 0 ? (data.value / totalValue.value) * 100 : 0.0;
         return CategoryCard(
           category: data.category,
           amount: data.value,
@@ -193,9 +201,9 @@ class CategoryCard extends StatelessWidget {
   });
 
   String getCategoryIconPath(String category) {
-    final iconFileName = BudgetCategories.listofCategories[toUpperCase(category)];
-    if (iconFileName != null)
-    {
+    final iconFileName =
+        BudgetCategories.listofCategories[toUpperCase(category)];
+    if (iconFileName != null) {
       return '${Categories.link}$iconFileName';
     }
     return HomePageIcons.none; // Fallback icon
@@ -219,7 +227,7 @@ class CategoryCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: color, // Use the assigned color with opacity for background
           borderRadius: BorderRadius.circular(14),
-           boxShadow: [
+          boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1), // Shadow color
               spreadRadius: 2, // Spread radius
@@ -238,9 +246,11 @@ class CategoryCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    child: AvatarProfileImage(url: getCategoryIconPath(category), width: 50, height: 50)),
+                      child: AvatarProfileImage(
+                          url: getCategoryIconPath(category),
+                          width: 50,
+                          height: 50)),
                   Container(
-                   
                     width: MediaQuery.sizeOf(context).width / 4.2,
                     child: Align(
                       alignment: Alignment.centerRight,
@@ -260,12 +270,12 @@ class CategoryCard extends StatelessWidget {
               ),
               const SizedBox(height: 2),
               Padding(
-                padding: const EdgeInsets.only(left:6),
+                padding: const EdgeInsets.only(left: 6),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                       width: MediaQuery.sizeOf(context).width/2,
+                      width: MediaQuery.sizeOf(context).width / 2,
                       child: Text(
                         '₹${formatMoneyIndian(amount.toStringAsFixed(2))}',
                         style: FontManager().getTextStyle(
@@ -278,32 +288,41 @@ class CategoryCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Column(
-                       mainAxisAlignment: MainAxisAlignment.start,
-                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          width: MediaQuery.sizeOf(context).width/1.1,
+                          width: MediaQuery.sizeOf(context).width / 1.1,
                           height: 5,
                           child: LinearProgressIndicator(
-                           // value: getProgressValue(percentage) / 100,
-                            value: totalValue.value > 0 ? amount / totalValue.value : 0.0,
+                            // value: getProgressValue(percentage) / 100,
+                            value: totalValue.value > 0
+                                ? amount / totalValue.value
+                                : 0.0,
                             backgroundColor: AppColors.bg3.withOpacity(0.2),
-                            valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primaryColor), // Use the assigned color
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                                AppColors
+                                    .primaryColor), // Use the assigned color
                             minHeight: 6,
                             borderRadius: BorderRadius.circular(6),
                           ),
                         ),
-                        const SizedBox(height: 10,),
+                        const SizedBox(
+                          height: 10,
+                        ),
                         Container(
-                        
-                           width: MediaQuery.sizeOf(context).width/2.4,
+                          width: MediaQuery.sizeOf(context).width / 2.4,
                           child: Text(
                             '${percentage}',
                             style: FontManager().getTextStyle(
                               context,
                               lWeight: FontWeight.normal,
                               fontSize: 10,
-                              color: percentage.startsWith("-")? Colorcodes.redDeleteIcon:percentage.startsWith("+")? Colorcodes.green: AppColors.bg3,
+                              color: percentage.startsWith("-")
+                                  ? Colorcodes.redDeleteIcon
+                                  : percentage.startsWith("+")
+                                      ? Colorcodes.green
+                                      : AppColors.bg3,
                             ),
                           ),
                         ),
@@ -327,7 +346,7 @@ class AllCategoriesPage extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          'All Categories',
+         HomepageStringsDart().allCategories,
           style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.bold,
@@ -346,11 +365,12 @@ class AllCategoriesPage extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Obx(() {
           // Sort chartData by value in descending order
-          final sortedData = chartData.toList()..sort((a, b) => b.value.compareTo(a.value));
+          final sortedData = chartData.toList()
+            ..sort((a, b) => b.value.compareTo(a.value));
           return sortedData.isEmpty
               ? Center(
                   child: Text(
-                    'No Spendings Available',
+                    HomepageStringsDart().noSpendingsAvailable,
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.bold,
@@ -369,7 +389,7 @@ class AllCategoriesPage extends StatelessWidget {
                   itemCount: sortedData.length,
                   itemBuilder: (context, index) {
                     final data = sortedData[index];
-                     String percentage = data.persentage;
+                    String percentage = data.persentage;
                     //  totalValue.value > 0
                     //     ? (data.value / totalValue.value) * 100
                     //     : 0.0;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -117,7 +118,7 @@ class _BudgetSearchState extends State<BudgetSearch> {
                   SizedBox(height: 15),
                   textStyle(
                     context: context,
-                    text: "Choose category(s)",
+                     text: PlotFinanceStaticData().chooseCategoryTitle,
                     fontsize: 18,
                     fontWeight: FontWeight.w500,
                   ),
@@ -125,7 +126,7 @@ class _BudgetSearchState extends State<BudgetSearch> {
                   searchList(width, height),
                   SizedBox(height: 15),
                   Text(
-                    "After analyzing your expenses,\nwe have curated some categories for you!",
+                    PlotFinanceStaticData().curatedCategoriesText, 
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w300,
                         fontSize: 14,
@@ -142,7 +143,7 @@ class _BudgetSearchState extends State<BudgetSearch> {
               onTap: () {
                 calculateBudget(widget.amount, widget.name, widget.period);
               },
-              child: getButton(context, "Continue"),
+              child: getButton(context, PlotFinanceStaticData().continueButton),
             ),
           ),
         ],
@@ -227,7 +228,7 @@ class _BudgetSearchState extends State<BudgetSearch> {
           TextFeildWidgetCustom2(
             textEditingController: nameController,
             keyBoard: TextInputType.emailAddress,
-            lableText: "Search for category",
+            lableText: PlotFinanceStaticData().searchCategoryHint,
             icon: ProfileIcons.friends,
             flag: false,
             focusNode: _searchFocusNode,
@@ -262,7 +263,7 @@ class _BudgetSearchState extends State<BudgetSearch> {
             }).toList(),
           )
         : Center(
-            child: Text("No categories found",
+            child: Text( PlotFinanceStaticData().noCategoriesFound,
                 style: TextStyle(color: Colors.grey)),
           );
   }

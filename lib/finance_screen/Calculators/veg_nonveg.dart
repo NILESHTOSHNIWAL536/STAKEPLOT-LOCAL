@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
+import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/bill.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
@@ -30,7 +31,11 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
   List<Map<dynamic, dynamic>> get friends =>
       frdsList.map((e) => e as Map<dynamic, dynamic>).toList();
 
-  List<String> options = ['Veg', 'Non veg', 'Alcohol'];
+ List<String> options = [
+    PlotFinanceStaticData().vegLabel, // Updated
+    PlotFinanceStaticData().nonVegLabel, // Updated
+    PlotFinanceStaticData().alcoholLabel // Updated
+  ];
   Map<String, Map<String, double>> friendShares = {};
 
   RxList addedUser = [].obs;
@@ -147,7 +152,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       appBar: AppBar(
         backgroundColor: AppColors.backgroundColor,
         title: Text(
-          'FoodieFunds',
+           PlotFinanceStaticData().foodieFundsTitle,
           style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.w600,
@@ -171,17 +176,17 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
               padding: const EdgeInsets.all(5.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildInputColumn('Veg', vegController),
-                  _buildInputColumn('Non-veg', nonVegController),
-                  _buildInputColumn('Alcohol', alcoholController),
+              children: [
+                  _buildInputColumn(PlotFinanceStaticData().vegLabel, vegController), // Updated
+                  _buildInputColumn(PlotFinanceStaticData().nonVegLabel, nonVegController), // Updated
+                  _buildInputColumn(PlotFinanceStaticData().alcoholLabel, alcoholController), // Updated
                 ],
               ),
             ),
             // Fixed search bar
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-              child: InputDat('Search', TextInputType.name, Textcontroller),
+              child: InputDat(PlotFinanceStaticData().searchHint, TextInputType.name, Textcontroller),
             ),
             // Scrollable section: commentedData and vegNonvegdata
             Expanded(
@@ -258,7 +263,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                     ),
                     child: Center(
                       child: Text(
-                        'Bill split',
+                       PlotFinanceStaticData().billSplitButton, // Updated
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.bold,
@@ -372,7 +377,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                     ),
                     child: Center(
                       child: Text(
-                        'Notify',
+                       PlotFinanceStaticData().notifyButton,
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.bold,
@@ -391,7 +396,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
             onTap: () {
               _calculateShares();
             },
-            child: getButton(context, "Calculate"),
+            child: getButton(context, PlotFinanceStaticData().calculateButton),
           ),
         ],
       ),
@@ -535,7 +540,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
           limitedFriends.isEmpty
               ? Center(
                   child: Text(
-                    'No friends available',
+                   PlotFinanceStaticData().calculateButton,
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.w500,

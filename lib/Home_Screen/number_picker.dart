@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/animated/bankSlider.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
@@ -158,14 +159,14 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
             ),
             SizedBox(height: Colorcodes.borderRadius),
             Text(
-              "Acc No : " + data['maskedAccNumber'],
+              HomepageStringsDart().accountNumberLabel + data['maskedAccNumber'],
               style: FontManager().getTextStyle(context,
                   lWeight: FontWeight.bold,
                   fontSize: 16,
                   color: AppColors.backgroundColor),
             ),
             SizedBox(height: Colorcodes.borderRadius10),
-            Text('Available balance',
+            Text(HomepageStringsDart().availableBalanceLabel,
                 style: FontManager().getTextStyle(context,
                     lWeight: FontWeight.w400,
                     fontSize: 12,
@@ -271,7 +272,7 @@ Widget setPinForAccountHide(context) {
             ),
             child: Center(
               child: Text(
-                'Set Pin',
+                HomepageStringsDart().setPinButton,
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.normal,
@@ -288,49 +289,7 @@ Widget setPinForAccountHide(context) {
     }
   });
 }
-  // Widget setPinForAccountHide(context) {
-  //   return Obx(() => cupertinoPin.value == "0"
-  //       ? Padding(
-  //           padding: const EdgeInsets.symmetric(vertical: 5),
-  //           child: InkWell(
-  //               onTap: () {
-  //                 showModalBottomSheet(
-  //                   context: context,
-  //                   backgroundColor: Colorcodes.appBarColor,
-  //                   builder: (context) {
-  //                     return setPassword(context);
-  //                   },
-  //                 );
-  //               },
-  //               child: Container(
-  //                 padding: const EdgeInsets.all(8.0),
-  //                 width: 80,
-  //                 decoration: BoxDecoration(
-  //                   borderRadius: BorderRadius.circular(10),
-  //                   color: AppColors.bg3,
-  //                 ),
-  //                 child: Center(
-  //                   child: Text(
-  //                     'Set Pin',
-  //                     style: FontManager().getTextStyle(context,
-  //                         lWeight: FontWeight.normal,
-  //                         fontSize: 12,
-  //                         color: AppColors.backgroundColor),
-  //                   ),
-  //                 ),
-  //                 // child: textStyle(
-  //                 //     text: "Set pin",
-  //                 //     context: context,
-  //                 //     fontsize: 10,
-
-  //                 //     fontWeight: FontWeight.bold),
-  //               )),
-  //         )
-  //       : digitLoad.value
-  //           ? locker(context)
-  //           : locker(context));
-  // }
-
+ 
   Widget setPassword(context) {
     double height = MediaQuery.of(context).size.height;
    RxInt selectedNumber1 = 0.obs; // Make first digit reactive
@@ -354,7 +313,7 @@ Widget setPinForAccountHide(context) {
               padding: const EdgeInsets.only(top: 20),
               child: textStyle(
                   context: context,
-                  text: "Set lock",
+                  text: HomepageStringsDart().setLockTitle,
                   fontsize: 20,
                   fontWeight: FontWeight.bold),
             ),
@@ -422,7 +381,7 @@ Widget setPinForAccountHide(context) {
         ),
         child: Center(
           child: Text(
-            "Confirm",
+            HomepageStringsDart().confirmButton,
             style: FontManager().getTextStyle(
               context,
               lWeight: FontWeight.bold,

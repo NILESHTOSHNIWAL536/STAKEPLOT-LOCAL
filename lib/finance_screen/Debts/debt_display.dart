@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -79,20 +80,23 @@ class _DebtDetailsScreenState extends State<DebtDetailsScreen> {
                     bool? confirm = await showDialog<bool>(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: Text('Delete Debt'),
-                        content: Text('Are you sure you want to delete this debt?'),
+                        title: Text(PlotFinanceStaticData().deleteDebtTitle), // Updated
+                        content: Text(PlotFinanceStaticData().deleteDebtPrompt),
                         actions: [
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop(false);
                             },
-                            child: Text('Cancel'),
+                            child: Text(PlotFinanceStaticData().cancelButton),
                           ),
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop(true);
                             },
-                            child: Text('Delete', style: TextStyle(color: Colors.red)),
+                           child: Text(
+                              PlotFinanceStaticData().deleteButton, // Updated
+                              style: TextStyle(color: Colors.red),
+                            ),
                           ),
                         ],
                       ),
@@ -142,16 +146,16 @@ class _DebtDetailsScreenState extends State<DebtDetailsScreen> {
                     Container(
                       padding: EdgeInsets.all(12),
                       child: Column(
-                        children: [
-                          rowItem("Loan type", widget.debt.type, labelWidth, context),
+                         children: [
+                          rowItem(PlotFinanceStaticData().loanTypeLabel, widget.debt.type, labelWidth, context), // Updated
                           SizedBox(height: Colorcodes.paddingSize / 3),
-                          rowItem("Amount", "₹${widget.debt.amount.toStringAsFixed(2)}", labelWidth, context),
+                          rowItem(PlotFinanceStaticData().amountLabel, "₹${widget.debt.amount.toStringAsFixed(2)}", labelWidth, context), // Updated
                           SizedBox(height: Colorcodes.paddingSize / 3),
-                          rowItem("Interest", "${widget.debt.interest.toString()}", labelWidth, context),
+                          rowItem(PlotFinanceStaticData().interestLabel, "${widget.debt.interest.toString()}", labelWidth, context), // Updated
                           SizedBox(height: Colorcodes.paddingSize / 3),
-                          rowItem("Duration", "${widget.debt.durationMonths.toString()} months", labelWidth, context),
+                          rowItem(PlotFinanceStaticData().durationLabel, "${widget.debt.durationMonths.toString()} months", labelWidth, context), // Updated
                           SizedBox(height: Colorcodes.paddingSize / 3),
-                          rowItem("Date", formattedDate(widget.debt.date.toString()), labelWidth, context),
+                          rowItem(PlotFinanceStaticData().dateLabel, formattedDate(widget.debt.date.toString()), labelWidth, context), // Updated
                         ],
                       ),
                     ),

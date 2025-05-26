@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCall
 import 'package:flutter_application_code_stakeplot/Home_Screen/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_details.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
+import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -454,7 +455,7 @@ Widget getIconsForHideUpdateSplit(
                           ),
                     SizedBox(width: 8 * scaleFactor),
                     Tooltip(
-                      message: 'Hide',
+                      message:HomepageStringsDart().hideTooltip,
                       child: GestureDetector(
                         onTap: () {
                           // Show confirmation dialog
@@ -506,7 +507,7 @@ Widget getIconsForHideUpdateSplit(
                                         child: textStyleOnly2(
                                           context: context,
                                           text:
-                                              "Do you want to hide this transaction?",
+                                              HomepageStringsDart().hideTransactionPrompt,
                                           fontsize: screenWidth < 400 ? 14 : 16,
                                           color: AppColors.bg1,
                                           fontWeight: FontWeight.w500,
@@ -539,7 +540,7 @@ Widget getIconsForHideUpdateSplit(
                                             ),
                                             child: textStyleOnly2(
                                               context: context,
-                                              text: "No",
+                                              text: HomepageStringsDart().noButton,
                                               fontsize:
                                                   screenWidth < 400 ? 14 : 16,
                                               color: AppColors.bg1
@@ -573,7 +574,7 @@ Widget getIconsForHideUpdateSplit(
                                             ),
                                             child: textStyleOnly2(
                                               context: context,
-                                              text: "Yes",
+                                              text:  HomepageStringsDart().yesButton,
                                               fontsize:
                                                   screenWidth < 400 ? 14 : 16,
                                               color: AppColors.primaryColor,
@@ -607,7 +608,7 @@ Widget getIconsForHideUpdateSplit(
                     SizedBox(width: 8 * scaleFactor),
                     // Friends Modal
                     Tooltip(
-                      message: 'Split with Friends',
+                      message: HomepageStringsDart().splitWithFriendsTooltip,
                       child: GestureDetector(
                         onTap: () async {
                           FocusScope.of(context).unfocus();
@@ -640,7 +641,7 @@ Widget getIconsForHideUpdateSplit(
                     SizedBox(width: 8 * scaleFactor),
                     // Tag Action
                     Tooltip(
-                      message: 'Tag',
+                      message:HomepageStringsDart().tagTooltip,
                       child: GestureDetector(
                         onTap: () {
                           tagName.value = category;

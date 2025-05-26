@@ -174,6 +174,13 @@ void getAutoMationsTransactionsCustom(date, context,
             }
           }
         });
+
+        // Print month data for debugging only if selected button is 'Month'
+        if (selectedButton.value == 'Month') {
+          print("Debit List for Custom Month: $debitList");
+          print("Credit List for Custom Month: $creditList");
+          print("Labels for Custom Month: $labelsLocal");
+        }
       } else {
         // Keep original logic for non-custom cases
         data.forEach((key, value) {
@@ -184,6 +191,13 @@ void getAutoMationsTransactionsCustom(date, context,
           debitList.add(getDouble(value['debit']));
           creditList.add(getDouble(value['credit']));
         });
+
+        // Print month data for non-custom cases only if selected button is 'Month'
+        if (selectedButton.value == 'Month') {
+          print("Debit List for Non-Custom Month: $debitList");
+          print("Credit List for Non-Custom Month: $creditList");
+          print("Labels for Non-Custom Month: $labelsLocal");
+        }
       }
     } catch (e) {
       maxYValue.value = 500.0;
@@ -539,8 +553,8 @@ void pickCustomDateRange(BuildContext context) async {
   if (picked.length == 2 && picked[0] != null && picked[1] != null) {
     DateTime start = picked[0]!;
     DateTime end = picked[1]!;
-    startDateCustom=start;
-    endDateCustom=end;
+    startDateCustom = start;
+    endDateCustom = end;
     selectedButton.value = 'Custom';
     getGraphData.value = false;
 
