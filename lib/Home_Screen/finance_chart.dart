@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter_application_code_stakeplot/Home_Screen/expanded_finance.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history_button.dart';
+import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
@@ -75,13 +76,13 @@ class _FinancePageState extends State<FinancePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Spending and cash flow',
+                  HomepageStringsDart().spendingAndCashFlow,
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.w300,
                       fontSize: fontSizeFactor * 4.0,
                       color: AppColors.accentColor),
                 ),
-                historyButton(fontSizeFactor,context),
+                historyButton(fontSizeFactor, context),
               ],
             ),
             Row(
@@ -102,9 +103,10 @@ class _FinancePageState extends State<FinancePage> {
                     Obx(() {
                       String displayText = '';
                       if (selectedButton.value == 'Week') {
-                        displayText = "Last week"; //'This week';
+                        displayText =
+                            HomepageStringsDart().lastWeek; //'This week';
                       } else if (selectedButton.value == 'Month') {
-                        displayText = 'This month';
+                        displayText = HomepageStringsDart().thisMonth;
                       }
                       return Text(
                         displayText,
@@ -187,7 +189,7 @@ class _FinancePageState extends State<FinancePage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          'Bank Spendings',
+          HomepageStringsDart().bankSpendings,
           style: FontManager().getTextStyle(context,
               lWeight: FontWeight.normal,
               fontSize: fontSizeFactor * 3.4,
@@ -212,7 +214,7 @@ class _FinancePageState extends State<FinancePage> {
                 ),
                 child: Center(
                   child: Text(
-                    'Month',
+                    HomepageStringsDart().month,
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.normal,
                         fontSize: fontSizeFactor * 3.4,
@@ -265,7 +267,7 @@ class _FinancePageState extends State<FinancePage> {
                 ),
                 child: Center(
                   child: Text(
-                    'Custom',
+                    HomepageStringsDart().custom,
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.normal,
                         fontSize: fontSizeFactor * 3.4,
@@ -441,7 +443,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
         height: MediaQuery.of(context).size.height / 2.6,
         child: Center(
           child: Text(
-            'No spendings available',
+            HomepageStringsDart().noSpendingsAvailable,
             style: FontManager().getTextStyle(
               context,
               lWeight: FontWeight.normal,
@@ -501,13 +503,11 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                 ),
               ),
             ),
-         
         ],
       ),
     );
   }
 
-  
   Widget getContainerOfGraph(double screenWidth, double fontSizeFactor) {
     int dataLength;
     List<String> labels;
@@ -548,7 +548,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       padding: EdgeInsets.all(0),
       width: widget.selectedButton.value == 'Week'
           ? screenWidth * 0.85
-          :  max(chartWidth, screenWidth * 0.85),
+          : max(chartWidth, screenWidth * 0.85),
       height: MediaQuery.of(context).size.height / 2.6,
       child: Container(
         // offset: widget.selectedButton.value == 'Week'
@@ -561,13 +561,13 @@ class _LineChartWidgetState extends State<LineChartWidget> {
           plotAreaBorderWidth: 0,
           plotAreaBackgroundColor: Colors.transparent,
           enableSideBySideSeriesPlacement: false,
-          
+
           margin: EdgeInsets.symmetric(horizontal: 0),
-          
+
           // backgroundColor: Colors.red,
           primaryXAxis: CategoryAxis(
             //  edgeLabelPlacement: EdgeLabelPlacement.shift,
-           
+
             labelStyle: FontManager().getTextStyle(context,
                 lWeight: FontWeight.w500,
                 fontSize: fontSizeFactor * 3,
@@ -580,31 +580,30 @@ class _LineChartWidgetState extends State<LineChartWidget> {
             interval: 1,
             maximumLabels: dataLength,
           ),
-         primaryYAxis: NumericAxis(
-  isVisible: false,
-  placeLabelsNearAxisLine: true,
-  labelAlignment: LabelAlignment.start,
-  // axisLabelIntersectAction: AxisLabelIntersectAction.hide,
-  labelStyle: FontManager().getTextStyle(
-    context,
-    lWeight: FontWeight.normal,
-    fontSize: fontSizeFactor * 2.8,
-    color: AppColors.accentColor,
-  ),
-  majorGridLines: MajorGridLines(width: 0),
-  minorGridLines: MinorGridLines(width: 0),
-  axisLine: AxisLine(width: 0),
-  majorTickLines: const MajorTickLines(size: 0),
-  minorTickLines: const MinorTickLines(size: 0),
-  labelFormat: '₹{value}',
-  minimum: 0,
-  maximum: maxYValue * 1.2,
-),
+          primaryYAxis: NumericAxis(
+            isVisible: false,
+            placeLabelsNearAxisLine: true,
+            labelAlignment: LabelAlignment.start,
+            // axisLabelIntersectAction: AxisLabelIntersectAction.hide,
+            labelStyle: FontManager().getTextStyle(
+              context,
+              lWeight: FontWeight.normal,
+              fontSize: fontSizeFactor * 2.8,
+              color: AppColors.accentColor,
+            ),
+            majorGridLines: MajorGridLines(width: 0),
+            minorGridLines: MinorGridLines(width: 0),
+            axisLine: AxisLine(width: 0),
+            majorTickLines: const MajorTickLines(size: 0),
+            minorTickLines: const MinorTickLines(size: 0),
+            labelFormat: '₹{value}',
+            minimum: 0,
+            maximum: maxYValue * 1.2,
+          ),
           tooltipBehavior: TooltipBehavior(
             enable: true,
             format: 'point.x: ₹point.y',
-            duration:  0.2,
-            
+            duration: 0.2,
             builder: (dynamic data, dynamic point, dynamic series,
                 int pointIndex, int seriesIndex) {
               final ChartData chartData = data as ChartData;
@@ -630,73 +629,76 @@ class _LineChartWidgetState extends State<LineChartWidget> {
             },
           ),
           trackballBehavior: TrackballBehavior(
-  enable: true,
-  tooltipDisplayMode: TrackballDisplayMode.groupAllPoints,
-  lineType: TrackballLineType.vertical, // Vertical line for trackball
-  lineColor: AppColors.accentColor.withOpacity(0.7), // Customize line color
-  lineWidth: 1.0, // Thickness of the trackball line
-  lineDashArray: [5, 5], // Dashed line pattern (optional)
-//  activationMode: ActivationMode.singleTap, 
-   tooltipAlignment: ChartAlignment.near,// Trigger on single tap
-  markerSettings: TrackballMarkerSettings(
-    markerVisibility: TrackballVisibilityMode.visible, // Show marker
-    height: 1, // Marker size
-    width: 1,
-    shape: DataMarkerType.circle, // Marker shape
-    color: AppColors.primaryColor, // Marker color
-    borderWidth: 1,
-    borderColor: AppColors.accentColor, // Border color for marker
-  ),
-  builder: (BuildContext context, TrackballDetails trackballDetails) {
-    // Get the data for the current point
-    final int index = trackballDetails.groupingModeInfo?.currentPointIndices.first ?? 0;
-    final String date = labels[index];
-    final double creditedValue = creditedData[index].y;
-    final double debitedValue = debitedData[index].y;
+            enable: true,
+            tooltipDisplayMode: TrackballDisplayMode.groupAllPoints,
+            lineType: TrackballLineType.vertical, // Vertical line for trackball
+            lineColor:
+                AppColors.accentColor.withOpacity(0.7), // Customize line color
+            lineWidth: 1.0, // Thickness of the trackball line
+            lineDashArray: [5, 5], // Dashed line pattern (optional)
+//  activationMode: ActivationMode.singleTap,
+            tooltipAlignment: ChartAlignment.near, // Trigger on single tap
+            markerSettings: TrackballMarkerSettings(
+              markerVisibility: TrackballVisibilityMode.visible, // Show marker
+              height: 1, // Marker size
+              width: 1,
+              shape: DataMarkerType.circle, // Marker shape
+              color: AppColors.primaryColor, // Marker color
+              borderWidth: 1,
+              borderColor: AppColors.accentColor, // Border color for marker
+            ),
+            builder: (BuildContext context, TrackballDetails trackballDetails) {
+              // Get the data for the current point
+              final int index = trackballDetails
+                      .groupingModeInfo?.currentPointIndices.first ??
+                  0;
+              final String date = labels[index];
+              final double creditedValue = creditedData[index].y;
+              final double debitedValue = debitedData[index].y;
 
-    return Container(
-       margin: EdgeInsets.only(top: 10),
-      padding: EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: AppColors.mt.withOpacity(0.4),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Date: $date',
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.bold,
-              fontSize: fontSizeFactor * 2.4,
-              color: AppColors.bg3,
-            ),
+              return Container(
+                margin: EdgeInsets.only(top: 10),
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.mt.withOpacity(0.4),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '${HomepageStringsDart().datePrefix} $date',
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.bold,
+                        fontSize: fontSizeFactor * 2.4,
+                        color: AppColors.bg3,
+                      ),
+                    ),
+                    Text(
+                      '${HomepageStringsDart().creditedPrefix} ₹${creditedValue.toStringAsFixed(2)}',
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.bold,
+                        fontSize: fontSizeFactor * 2.7,
+                        color: AppColors.primaryColor,
+                      ),
+                    ),
+                    Text(
+                      '${HomepageStringsDart().debitedPrefix} ₹${debitedValue.toStringAsFixed(2)}',
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.bold,
+                        fontSize: fontSizeFactor * 2.7,
+                        color: AppColors.accentColor,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
-          Text(
-            'Credited: ₹${creditedValue.toStringAsFixed(2)}',
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.bold,
-              fontSize: fontSizeFactor * 2.7,
-              color: AppColors.primaryColor,
-            ),
-          ),
-          Text(
-            'Debited: ₹${debitedValue.toStringAsFixed(2)}',
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.bold,
-              fontSize: fontSizeFactor * 2.7,
-              color: AppColors.accentColor,
-            ),
-          ),
-        ],
-      ),
-    );
-  },
-),
           series: <ChartSeries>[
             SplineAreaSeries<ChartData, String>(
               dataSource: creditedData,

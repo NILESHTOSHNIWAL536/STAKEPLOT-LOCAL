@@ -189,6 +189,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
+              
               'Enter Amounts (Total: ₹${widget.totalAmount.toStringAsFixed(2)})',
               style: FontManager().getTextStyle(
                 context,

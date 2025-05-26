@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -117,7 +118,7 @@ class _BudgetState extends State<Budget> {
                   SizedBox(width: 12),
                   textStyle(
                     context: context,
-                    text: "Budget Planner",
+                    text:  PlotFinanceStaticData().budgetPlannerTitle,
                     fontsize: 20 * fontScale,
                     fontWeight: FontWeight.bold,
                     c: AppColors.accentColor,
@@ -127,7 +128,7 @@ class _BudgetState extends State<Budget> {
               SizedBox(height: 8),
               textStyle(
                 context: context,
-                text: "Plan and manage your budget effectively",
+                text: PlotFinanceStaticData().budgetPlannerDescription,
                 fontsize: 14 * fontScale,
                 fontWeight: FontWeight.w300,
                 c: Colors.grey[600]!,
@@ -152,24 +153,23 @@ class _BudgetState extends State<Budget> {
                   children: [
                     TextFeildWidgetCustom(
                       textEditingController: nameController,
-                      heading: "Name",
+                      heading: PlotFinanceStaticData().nameLabel, // Updated
                       keyBoard: TextInputType.emailAddress,
-                      lableText: "Enter budget name",
+                      lableText: PlotFinanceStaticData().enterBudgetNameHint, // Updated
                       icon: Icons.person,
                     ),
                     SizedBox(height: 20),
                     TextFeildWidgetCustom(
                       textEditingController: amountController,
-                      heading: "Amount",
+                      heading: PlotFinanceStaticData().amountLabelBudget, // Updated
                       keyBoard: TextInputType.number,
-                      lableText: "Enter amount",
-                      
+                      lableText: PlotFinanceStaticData().enterAmountHintBudget, // Updated
                       icon: Icons.currency_rupee_rounded,
                     ),
                     SizedBox(height: 24),
                     textStyle(
                       context: context,
-                      text: "Duration",
+                      text: PlotFinanceStaticData().durationLabel, // Updated
                       fontsize: 16 * fontScale,
                       fontWeight: FontWeight.bold,
                       c: AppColors.accentColor,
@@ -191,7 +191,7 @@ class _BudgetState extends State<Budget> {
                 onTap: () {
                   bedgetCalculator();
                 },
-                child: getButton(context, "Continue",),
+                 child: getButton(context, PlotFinanceStaticData().continueButton),
               ),
               SizedBox(height: 20), // Extra padding at bottom for scroll
             ],
@@ -205,9 +205,9 @@ class _BudgetState extends State<Budget> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        getPeriod("Weekly", width),
-        getPeriod("Monthly", width),
-        getPeriod("Yearly", width),
+       getPeriod(PlotFinanceStaticData().weeklyPeriod, width), // Updated
+        getPeriod(PlotFinanceStaticData().monthlyPeriod, width), // Updated
+        getPeriod(PlotFinanceStaticData().yearlyPeriod, width), 
       ],
     );
   }

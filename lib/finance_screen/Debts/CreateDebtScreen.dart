@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Community_Page/success_post.dart';
+import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
 import 'package:flutter_application_code_stakeplot/animated/snackbar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_service.dart';
@@ -37,17 +38,17 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                'Personal',
-                'Home',
-                'Loan Against Property (LAP)',
-                'Vehicle',
-                'Credit-Card',
-                'Gold',
-                'Mortgage',
-                'Education',
-                'Business',
-                'Student Loan',
-                'Other'
+                PlotFinanceStaticData().loanType, // Updated
+                PlotFinanceStaticData().homeLoan,
+                PlotFinanceStaticData().loanAgainstProperty,
+                PlotFinanceStaticData().vehicleLoan,
+                PlotFinanceStaticData().creditCardLoan,
+                PlotFinanceStaticData().goldLoan,
+                PlotFinanceStaticData().mortgageLoan,
+                PlotFinanceStaticData().educationLoan,
+                PlotFinanceStaticData().businessLoan,
+                PlotFinanceStaticData().studentLoan,
+                PlotFinanceStaticData().otherLoan,
               ].map((loan) {
                 return ListTile(
                   title: Text(loan),
@@ -105,14 +106,12 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
         'durationMonths': _durationMonths,
         'startDate': _date.toIso8601String(),
       };
-       // Debug statement
+      // Debug statement
 
       try {
         Map<String, dynamic>? response = await DebtService.createDebt(debtData);
-      
 
         if (response != null) {
-          
           if (context.mounted) {
             // Ensure the widget is still in the tree
             Navigator.pop(
@@ -129,14 +128,10 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
             );
             showSuccessTopSnackBar(context, "Debt created successfully!");
           }
-        } else {
-        
-        }
-      } catch (e) {
-       
-      }
+        } else {}
+      } catch (e) {}
     } else {
-     // Debug statement
+      // Debug statement
     }
   }
 
@@ -146,7 +141,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         backgroundColor: AppColors.backgroundColor,
-        title: Text('Create Debt'),
+        title: Text((PlotFinanceStaticData().createDebtTitle)),
       ),
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
@@ -157,74 +152,74 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
             child: Column(
               children: [
                 CustomFormField(
-                  hintText: 'Enter debt name',
+                  hintText: PlotFinanceStaticData().enterDebtName,
                   onChanged: (value) => setState(() => _name = value),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a name';
+                      PlotFinanceStaticData().enterDebtName;
                     }
                     return null;
                   },
                 ),
                 SizedBox(height: Colorcodes.paddingSize),
                 CustomFormField(
-                  hintText: 'Select Loan Type',
+                  hintText:PlotFinanceStaticData().selectLoanType,
                   readOnly: true,
                   onTap: _showLoanTypeModal,
                   controller: TextEditingController(text: _loanType),
                   suffixIcon: Icon(Icons.arrow_drop_down),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please select a loan type';
+                     return PlotFinanceStaticData().validateLoanType; 
                     }
                     return null;
                   },
                 ),
                 SizedBox(height: Colorcodes.paddingSize),
                 CustomFormField(
-                  hintText: 'Enter Debt Amount',
+                  hintText: PlotFinanceStaticData().enterDebtAmount, // Updated
                   keyboardType: TextInputType.number,
                   onChanged: (value) =>
                       setState(() => _amount = double.tryParse(value) ?? 0.0),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter an amount';
+                      return PlotFinanceStaticData().validateAmount; // Updated
                     }
                     if (double.tryParse(value) == null) {
-                      return 'Please enter a valid number';
+                      return PlotFinanceStaticData().validateNumeric; // Updated
                     }
                     return null;
                   },
                 ),
                 SizedBox(height: Colorcodes.paddingSize),
                 CustomFormField(
-                  hintText: 'Enter Interest Rate',
+                  hintText:PlotFinanceStaticData().enterInterestRate,
                   keyboardType: TextInputType.number,
                   onChanged: (value) =>
                       setState(() => _interest = double.tryParse(value) ?? 0.0),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter an interest rate';
+                     return PlotFinanceStaticData().validateInterest; 
                     }
                     if (double.tryParse(value) == null) {
-                      return 'Please enter a valid number';
+                      return PlotFinanceStaticData().validateNumeric;
                     }
                     return null;
                   },
                 ),
                 SizedBox(height: Colorcodes.paddingSize),
                 CustomFormField(
-                  hintText: 'Enter Duration (months)',
+                  hintText: PlotFinanceStaticData().enterDuration,
                   keyboardType: TextInputType.number,
                   onChanged: (value) => setState(() {
                     _durationMonths = int.tryParse(value) ?? 0;
                   }),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter duration';
+                      return PlotFinanceStaticData().validateDuration; 
                     }
                     if (int.tryParse(value) == null) {
-                      return 'Please enter a valid number for duration';
+                      return  PlotFinanceStaticData().validateDuration; 
                     }
                     return null;
                   },
@@ -232,7 +227,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                 SizedBox(height: Colorcodes.paddingSize),
 
                 CustomFormField(
-                  hintText: 'Select Date',
+                  hintText: PlotFinanceStaticData().selectDate,
                   readOnly: true,
                   onTap: _showDatePicker,
                   controller: TextEditingController(
@@ -240,7 +235,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                   suffixIcon: Icon(Icons.calendar_today),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please select a date';
+                      return PlotFinanceStaticData().validateDate;
                     }
                     return null;
                   },
@@ -253,7 +248,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                 // check the issue with continue...
                 GestureDetector(
                   onTap: () {
-                   // Debug statement
+                    // Debug statement
                     saveDebt();
                     // Debug statement
                   },
@@ -265,7 +260,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                         borderRadius: BorderRadius.circular(24)),
                     child: Center(
                       child: Text(
-                        'Continue',
+                        PlotFinanceStaticData().continueButton,
                         style: FontManager().getTextStyle(context,
                             lWeight: FontWeight.bold,
                             fontSize: Colorcodes.paddingSize,
@@ -284,7 +279,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
 }
 
 class Debt {
-  final String id; 
+  final String id;
   final String type;
   final double amount;
   final DateTime date;
@@ -293,7 +288,7 @@ class Debt {
   final int durationMonths;
 
   Debt({
-     required this.id,
+    required this.id,
     required this.type,
     required this.amount,
     required this.date,
@@ -303,7 +298,7 @@ class Debt {
   });
   factory Debt.fromJson(Map<String, dynamic> json) {
     return Debt(
-       id: json['_id']?.toString() ?? '',
+      id: json['_id']?.toString() ?? '',
       name: json['name'],
       type: json['type'],
       amount: (json['principalAmount'] as num).toDouble(),

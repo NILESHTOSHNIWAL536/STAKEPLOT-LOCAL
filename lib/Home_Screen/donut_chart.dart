@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transactionHistoryScreen.dart';
+import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -80,7 +81,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Spendings on categories',
+                 HomepageStringsDart().spendingsOnCategories,
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.bold,
@@ -99,7 +100,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
                         );
                       },
                       child: Text(
-                        'More',
+                        HomepageStringsDart().moreButton,
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.w500,
@@ -124,7 +125,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
           Obx(() => chartData.isEmpty
               ? Center(
                   child: Text(
-                    'No Spendings Available',
+                    HomepageStringsDart().noSpendingsAvailable,
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.bold,
@@ -345,7 +346,7 @@ class AllCategoriesPage extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          'All Categories',
+         HomepageStringsDart().allCategories,
           style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.bold,
@@ -369,7 +370,7 @@ class AllCategoriesPage extends StatelessWidget {
           return sortedData.isEmpty
               ? Center(
                   child: Text(
-                    'No Spendings Available',
+                    HomepageStringsDart().noSpendingsAvailable,
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.bold,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/MyBudget.dart';
@@ -53,7 +54,7 @@ class CardBuilders {
                   const SizedBox(height: 6),
                   globalText(
                     context: context,
-                    text: 'Amount',
+                    text:  PlotFinanceStaticData().amountLabel,
                     fontWeight: FontWeight.w500,
                     fontsize: 13,
                     color: Colors.grey[600]!,
@@ -65,7 +66,7 @@ class CardBuilders {
                     children: [
                       globalText(
                         context: context,
-                        text: 'Debt: ',
+                        text: PlotFinanceStaticData().debtPrefix,
                         fontWeight: FontWeight.w600,
                         fontsize: 14,
                         color: AppColors.accentColor.withOpacity(0.9),
@@ -105,12 +106,12 @@ class CardBuilders {
 
     List<ChartData> chartData = [
       ChartData(
-        'Spent',
+        PlotFinanceStaticData().spent,
         spentAmount > budgetAmount ? spentAmount : spentAmount,
         AppColors.primaryColor.withOpacity(0.9),
       ),
       ChartData(
-        'Remaining',
+        PlotFinanceStaticData().remaining,
         spentAmount > budgetAmount ? 0 : budgetAmount - spentAmount,
         Colors.grey[300]!.withOpacity(0.7),
       ),
@@ -170,7 +171,7 @@ class CardBuilders {
                       children: [
                         globalText(
                           context: context,
-                          text: data['name']?.toString() ?? 'Unnamed Budget',
+                          text: data['name']?.toString() ??PlotFinanceStaticData().unnamedBudget,
                           fontWeight: FontWeight.w700,
                           fontsize: 18,
                           overflow: TextOverflow.ellipsis,
@@ -181,7 +182,7 @@ class CardBuilders {
                         globalText(
                           context: context,
                           text: data['budgetPeriod']?.toString() ??
-                              'Unknown Period',
+                              PlotFinanceStaticData().unknownPeriod,
                           fontWeight: FontWeight.w500,
                           fontsize: 13,
                           color: Colors.grey[600]!,
@@ -193,7 +194,7 @@ class CardBuilders {
                           children: [
                             globalText(
                               context: context,
-                              text: 'Budget: ',
+                              text: PlotFinanceStaticData().budgetPrefix,
                               fontWeight: FontWeight.w600,
                               fontsize: 14,
                               color: AppColors.accentColor.withOpacity(0.9),
@@ -216,7 +217,7 @@ class CardBuilders {
                           children: [
                             globalText(
                               context: context,
-                              text: 'Spent: ',
+                              text: PlotFinanceStaticData().spentPrefix,
                               fontWeight: FontWeight.w500,
                               fontsize: 12,
                               color: AppColors.accentColor.withOpacity(0.9),
@@ -235,9 +236,9 @@ class CardBuilders {
                           ],
                         ),
                         const SizedBox(height: 8),
-                        globalText(
+                         globalText(
                           context: context,
-                          text: '${percentageSpent.toStringAsFixed(1)}% Spent',
+                          text: PlotFinanceStaticData().percentageSpent.replaceFirst('{percentage}', percentageSpent.toStringAsFixed(1)), // Updated
                           fontWeight: FontWeight.w500,
                           fontsize: 12,
                           color: percentageSpent > 80
@@ -331,9 +332,9 @@ class CardBuilders {
             fontsize: 16,
             fontWeight: FontWeight.bold,
           ),
-          globalText(
+           globalText(
             context: context,
-            text: '${pendingItems.length} pending',
+            text: PlotFinanceStaticData().pendingItems.replaceFirst('{count}', pendingItems.length.toString()), // Updated
             fontsize: 14,
             fontWeight: FontWeight.w400,
             color: Colors.grey[600],

@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/lendMessage.dart';
+import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
@@ -60,7 +61,7 @@ class _ManualtransactionState extends State<Manualtransaction> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Manual Transaction',
+                    Text(HomepageStringsDart().manualTransaction,
                         style: FontManager().getTextStyle(context,
                             lWeight: FontWeight.w600,
                             fontSize: MediaQuery.of(context).size.width * 0.04,
@@ -87,7 +88,7 @@ class _ManualtransactionState extends State<Manualtransaction> {
                               //     color: AppColors.button,
                               //     borderRadius: BorderRadius.circular(16)),
                               child: Center(
-                                child: Text('Cash in',
+                                child: Text(HomepageStringsDart().cashIn,
                                     style: FontManager().getTextStyle(context,
                                         lWeight: FontWeight.normal,
                                         fontSize: 12,
@@ -112,7 +113,7 @@ class _ManualtransactionState extends State<Manualtransaction> {
                               //     color: AppColors.button,
                               //     borderRadius: BorderRadius.circular(16)),
                               child: Center(
-                                child: Text('Cash out',
+                                child: Text(HomepageStringsDart().cashOut,
                                     style: FontManager().getTextStyle(context,
                                         lWeight: FontWeight.normal,
                                         fontSize: 12,
@@ -294,9 +295,9 @@ class _ModalContentState extends State<ModalContent>
                           Text(
                             selectedSubCategory == null
                                 ? selectedCategory == null
-                                    ? 'Manual Transaction'
+                                    ? HomepageStringsDart().manualTransaction
                                     : ''
-                                : 'Manual Transactions',
+                                : HomepageStringsDart().manualTransactions,
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.bold,
                                 fontSize: 18,
@@ -379,7 +380,7 @@ class _ModalContentState extends State<ModalContent>
               ),
               const SizedBox(height: 16),
               Text(
-                'Successfully Added',
+                HomepageStringsDart().successfullyAdded,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -400,7 +401,7 @@ class _ModalContentState extends State<ModalContent>
       autofocus: _isAmountFieldFocused,
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.currency_rupee),
-        hintText: 'Enter amount',
+        hintText: HomepageStringsDart().enterAmount,
         fillColor: AppColors.button,
         filled: true,
         hintStyle: FontManager().getTextStyle(context,
@@ -454,7 +455,7 @@ class _ModalContentState extends State<ModalContent>
         controller: categoryFieldController,
         readOnly: !isDebit,
         decoration: InputDecoration(
-          hintText: 'Select Category',
+          hintText: HomepageStringsDart().selectCategory,
           fillColor: AppColors.button,
           filled: true,
           hintStyle: FontManager().getTextStyle(context,
@@ -697,7 +698,7 @@ class _ModalContentState extends State<ModalContent>
             ),
             child: Center(
               child: Text(
-                'Bill Split',
+                HomepageStringsDart().billSplit,
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.bold,
@@ -734,7 +735,7 @@ class _ModalContentState extends State<ModalContent>
             ),
             child: Center(
               child: Text(
-                'Lend money',
+                HomepageStringsDart().lendMoney,
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.bold,
@@ -790,7 +791,7 @@ class _ModalContentState extends State<ModalContent>
                   );
                 }
               },
-              child: getButton(context, "Add"),
+              child: getButton(context, HomepageStringsDart().addButton),
             ),
           ),
         ),

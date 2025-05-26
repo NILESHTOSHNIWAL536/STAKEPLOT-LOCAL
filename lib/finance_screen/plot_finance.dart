@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
@@ -90,7 +91,7 @@ class _PlotFinanceState extends State<PlotFinance> {
                   padding: const EdgeInsets.all(12.0),
                   child: CardBuilders.globalText(
                     context: context,
-                    text: "Calculators",
+                    text:  PlotFinanceStaticData().calculatorsTitle,
                     fontsize: 20,
                     fontWeight: FontWeight.w800,
                   ),

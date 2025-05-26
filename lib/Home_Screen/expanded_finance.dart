@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dar
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
+import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -125,7 +126,7 @@ Widget getLineGraph(screenHeight,screenWidth){
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Spending and cash flow',
+          HomepageStringsDart().spendingAndCashFlow,
           style: FontManager().getTextStyle(context,
               lWeight: FontWeight.w500,
               fontSize: fontSizeFactor * 4.5,
@@ -149,7 +150,7 @@ Widget getLineGraph(screenHeight,screenWidth){
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'My Spendings',
+              HomepageStringsDart().bankSpendings,
               style: FontManager().getTextStyle(context,
                   lWeight: FontWeight.normal,
                   fontSize: fontSizeFactor * 3.4,
@@ -225,7 +226,7 @@ Widget getLineGraph(screenHeight,screenWidth){
               color: AppColors.accentColor,
             ),
           ),
-          title: Text('Detailed Chart View'),
+          title: Text( HomepageStringsDart().detailedChartView),
           backgroundColor: AppColors.backgroundColor,
         );
   }

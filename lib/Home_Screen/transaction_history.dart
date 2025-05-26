@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart';
+import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/animated/pdf.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
@@ -247,7 +248,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
             : transactionsHistory.isEmpty
                 ? Container(
                   height:MediaQuery.of(context).size.height / 1.38,
-                  child: Center(child: textStyleImage(context: context, text: "No Transactions")))
+                  child: Center(child: textStyleImage(context: context, text:  HomepageStringsDart().noTransactions)))
                 : SizedBox.shrink()); // Fallback for unexpected items
       },
     );
@@ -315,7 +316,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                   children: [
                     textStyle(
                         context: context,
-                        text: "Download Statement",
+                        text: HomepageStringsDart().downloadStatement,
                         fontsize: 14,
                         fontWeight: FontWeight.w500),
                     InkWell(
@@ -332,9 +333,9 @@ class _TransactionHistoryState extends State<TransactionHistory>
                 ),
               ),
               const SizedBox(height: 20),
-              getListItemListTile("30", "days", context),
-              getListItemListTile("60", "days", context),
-              getListItemListTile("6", "months", context),
+              getListItemListTile(HomepageStringsDart().thirtyDays, "days", context),
+              getListItemListTile(HomepageStringsDart().thirtyDays, "days", context),
+              getListItemListTile(HomepageStringsDart().sixtyDays, "months", context),
              
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
@@ -345,7 +346,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                     },
                     child: Obx(() => getPdgLoader.value
                         ? getspinner(context, "")
-                        : getButton(context, "Continue"))),
+                        : getButton(context,HomepageStringsDart().sixMonths))),
               )
             ],
           ),

@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/tagandhidebutton.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
+import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
@@ -60,7 +61,7 @@ void _onScroll() {
        backgroundColor: AppColors.backgroundColor,
      // Flat design for a modern look
       title: Text(
-    'History',
+     HomepageStringsDart().historyTitle,
     style: FontManager().getTextStyle(
       context,
       lWeight: FontWeight.w600, // Slightly bolder for emphasis
@@ -121,7 +122,7 @@ void _onScroll() {
               ),
               const SizedBox(width: 2), // Spacing between icon and text
               Text(
-                'My Statement',
+                HomepageStringsDart().myStatement,
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.w600, // Semi-bold for readability
@@ -246,7 +247,7 @@ void _onScroll() {
                                    onChanedAutoTransactionStatus(context);
                               },
                               decoration: InputDecoration(
-                                hintText: 'Search transactions',
+                                hintText: HomepageStringsDart().searchTransactions,
                                 hintStyle:FontManager().getTextStyle(
                               context,
                               lWeight: FontWeight.w400,
