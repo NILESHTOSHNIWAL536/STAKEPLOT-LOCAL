@@ -66,6 +66,7 @@ RxMap chatOfUserList = {}.obs;
 RxMap chatOfUserListData = {}.obs;
 List<Map<String, dynamic>> custom=[];
 
+RxBool hideTransactionReload =false.obs;
 RxBool aboutMe = false.obs;
 RxBool myNotificationBool = false.obs;
 RxBool clickedLinkedBackAccount = false.obs;

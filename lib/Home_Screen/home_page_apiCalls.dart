@@ -482,6 +482,7 @@ void hideTransaction(
         snackBarCalled(context, "Transaction hidden Successfully");
       } else {
         hiddentrasactionsHistory.removeAt(index);
+        hideTransactionReload.value=! hideTransactionReload.value;
         hiddentrasactionsHistory.refresh();
       }
     } else {

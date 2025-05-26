@@ -347,7 +347,7 @@ pw.Widget firstPage(
           mainAxisAlignment: pw.MainAxisAlignment.end,
           children: [
             pw.Text("Name: ${profile['holder']['name']}"),
-             pw.Container(
+             if(profile['holder']['address'] is String && profile['holder']['address'].toString().trim().isNotEmpty) pw.Container(
                     width: PdfPageFormat.a4.availableWidth / 2,
                     child: pw.Text("Address: ${profile['holder']['address']}"),
             ),

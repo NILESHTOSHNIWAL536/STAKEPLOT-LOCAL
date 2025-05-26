@@ -817,7 +817,11 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       final body = json.decode(response.body);
       splitID.value = body['id']['_id'];
 
-      nameList.forEach((e) {
+      List<dynamic> uniqueNameList = {
+        for (var item in nameList) item['id']: item
+      }.values.toList();
+
+      uniqueNameList.forEach((e) {
         for (var e in nameList) {
           if (e['id'] != currentId.value) {
             // Log notification details

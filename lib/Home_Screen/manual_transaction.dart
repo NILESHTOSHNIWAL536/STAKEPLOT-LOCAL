@@ -336,7 +336,7 @@ class _ModalContentState extends State<ModalContent>
                           ],
 
                           if (fin != null) ...[
-                            buttonsWidget(),
+                            isDebit?  buttonsWidget():SizedBox.shrink(),
                             continueButton(),
                           ],
                         ],
@@ -723,6 +723,7 @@ class _ModalContentState extends State<ModalContent>
             setState(() {
               _isAmountFieldFocused = false; // Prevent amount field refocus
             });
+
           },
           child: Container(
             width: MediaQuery.of(context).size.width / 2.4,
@@ -1066,6 +1067,8 @@ class _ModalContentState extends State<ModalContent>
           amount, "Lend Bill (${subCategories})", name, context, 'cash', false);
       getUserLend(context);
       messageController.clear();
+      addedMembers.clear();
+      addedUser.clear();
       selectedDueDate = null;
     } else {
       snackBarCalledfail(

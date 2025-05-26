@@ -134,6 +134,7 @@ Future<void> storeDeviceInfoLocalBackState() async
           allOrGroupTransactionsName.value = StringConstant.allTransactions;
           showCheckBox.value=false;
           accountIdPdf.value="-";
+          addManually.clear();
        if(f)
        {
           currentPage = 1;

@@ -34,6 +34,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     super.initState();
     // Initialize filtered transactions with all transactions
     currentPage=1;
+    addManually.clear();
     getAllTransactionHistory(context, false, false,isRefreshing: true);
     scrollController.addListener(_onScroll);
 
@@ -223,14 +224,13 @@ void _onScroll() {
                             isYearView: isYearView.value,
                             isflag: true,
                             showIcon: false,
-                            expandedPage: true,
-
+                            expandedPage: false,
                           )
                         : TransactionHistory(
                             isYearView: isYearView.value,
                             isflag: true,
                              showIcon: false,
-                              expandedPage: true,
+                              expandedPage: false,
                           ));
   }
   

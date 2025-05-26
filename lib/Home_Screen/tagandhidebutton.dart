@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
@@ -126,6 +129,15 @@ Widget tabItem(String text,BuildContext context) {
             },
             context: context
           ),
+          const SizedBox(width: 10), // Spacing between buttons
+        Obx(()=> addManually.isEmpty?SizedBox.shrink():  actionButton(
+            text: 'Delete',
+            onTap: () {
+              showModal(context);
+              
+            },
+            context: context
+          )),
         ],
       ),
     );
@@ -160,6 +172,67 @@ Widget tabItem(String text,BuildContext context) {
   }
 
 
+  void showModal(context2){
+     showDialog<bool>(
+                      context: context2,
+                      builder: (context) => AlertDialog(
+                      title:  textStyleImage(context: context,text:'Confirm Deletion',c: Colorcodes.red,fontWeight: FontWeight.bold,fontsize: 18),
+                      content: Container(
+                              // width: MediaQuery.of(context).size.width,
+                              child: textStyleImage(context: context,iswrap: true,
+                              text:'Only manual transactions can be deleted. Do you want to proceed?')),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context2).pop(false);
+                            },
+                            child: textStyleImage(context: context,text:'Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              deletSelectedTransactions(context);
+                             
+                            },
+                            child: textStyleImage(context: context,text:'Delete', c: Colors.red,fontsize: 16,fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    );
+  }
+
+
+  void deletSelectedTransactions(BuildContext context)async {
+
+
+ try{
+  var body={
+      'transactionIds':addManually
+  };
+  var urlPath="${url}/transactionauto/delete/";
+
+  var response= await postDataApiCall(urlPath,body);
+
+  if(getFlagOfResponse(response))
+  {
+      snackBarCalled(context, "✔️ Your selected transactions have been deleted.");
+      onChanedAutoTransactionStatus(context);
+  }
+
+ }catch(e)
+ {
+  snackBarCalledfail(context, "❌ Unable to delete the selected transactions. Please try again.");
+ }
+
+   showCheckBox.value = false;
+   redioButton.clear(); // Optionally clear selection after hiding
+  redioButtonIndex.clear(); // Optionally clear selection after hiding
+  addManually.clear();
+    getCategoryData();
+  Navigator.pop(context);
+
+  }
+
+
   void hideSelectedTransactions(BuildContext context, bool hidden) {
   int index = 0; // Or get from another list/map if you have matching indexes
 
@@ -170,5 +243,6 @@ Widget tabItem(String text,BuildContext context) {
 
   redioButton.clear(); // Optionally clear selection after hiding
   redioButtonIndex.clear(); // Optionally clear selection after hiding
+  addManually.clear();
   Navigator.pop(context);
 }

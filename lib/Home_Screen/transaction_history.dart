@@ -123,188 +123,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
       ),
     );
   }
-// Widget build(BuildContext context) {
-//     // Get screen dimensions
-//     final double screenHeight = MediaQuery.of(context).size.height;
-//     final double screenWidth = MediaQuery.of(context).size.width;
-//     final double systemPaddingTop = MediaQuery.of(context).padding.top;
 
-//     // Heights for layout components
-//     const double tabsHeight = 48.0; // Fixed height for tabs (adjust as needed)
-//     const double tabsPadding = 32.0; // 16 top + 16 bottom padding in getTabsForTransactions
-//     const double listTopPadding = 10.0; // Padding above transaction list
-
-//     // Calculate available height for scrollable area
-//     // Note: AppBar and search bar heights are handled by TransactionHistoryScreen
-//     final double scrollableHeight = screenHeight - systemPaddingTop - tabsHeight - tabsPadding - listTopPadding;
-
-//     return Column(
-//       children: [
-//         // Fixed Tabs Header
-//         Container(
-//           width: screenWidth,
-//           color: AppColors.backgroundColor,
-//           child: (widget.showIcon ?? false)
-//               ? SizedBox(height: tabsHeight) // Placeholder if showIcon is true
-//               : Obx(() => redioButton.isNotEmpty
-//                   ? getTagHideButtons()
-//                   : allOrGroupTransactionsName.value == StringConstant.allTransactions
-//                       ? getTabsForTransactions()
-//                       : getTabsForTransactions()),
-//         ),
-//         // Scrollable Transaction List
-//         Container(
-//           width: screenWidth,
-//           height: scrollableHeight,
-//           child: SingleChildScrollView(
-//             controller: _scrollController2,
-//             child: Obx(() {
-//               if (widget.showIcon ?? false) {
-//                 return reloadHistory.value ? getlist() : getlist();
-//               } else {
-//                 return allOrGroupTransactionsName.value == StringConstant.allTransactions
-//                     ? (reloadHistory.value ? getlist() : getlist())
-//                     : GroupTransactions();
-//               }
-//             }),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-
-  // Widget getTagHideButtons() {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-  //     child: Row(
-  //       mainAxisAlignment: MainAxisAlignment.start,
-  //       children: [
-  //         actionButton(
-  //           text: 'Tag',
-  //           onTap: () {
-  //             tagName.value = "Untagged";
-  //             showModalBottomSheet(
-  //               context: context,
-  //               isScrollControlled: true,
-  //               shape: const RoundedRectangleBorder(
-  //                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-  //               ),
-  //               builder: (context) {
-  //                 return TagShowmodal(
-  //                   data: transactionsHistory.isNotEmpty &&
-  //                           redioButtonIndex.isNotEmpty
-  //                       ? transactionsHistory[redioButtonIndex.values.first]
-  //                       : {},
-  //                   index: 0,
-  //                   isTag: true,
-  //                 );
-  //               },
-  //             );
-  //           },
-  //         ),
-  //         const SizedBox(width: 10), // Spacing between buttons
-  //         actionButton(
-  //           text: 'Hide',
-  //           onTap: () {
-  //             hideSelectedTransactions(context, true);
-  //             showCheckBox.value = false;
-  //           },
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget actionButton({required String text, required VoidCallback onTap}) {
-  //   return InkWell(
-  //     onTap: onTap,
-  //     splashColor: AppColors.primaryColor.withOpacity(0.2),
-  //     child: Container(
-  //       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-  //       decoration: BoxDecoration(
-  //         color: AppColors.mt, // Match modal background for consistency
-  //         borderRadius: BorderRadius.circular(10),
-  //         boxShadow: [
-  //           BoxShadow(
-  //             color: AppColors.accentColor.withOpacity(0.1),
-  //             blurRadius: 4,
-  //             offset: const Offset(0, 2),
-  //           ),
-  //         ],
-  //       ),
-  //       child: textStyle(
-  //         context: context,
-  //         text: text,
-  //         c: AppColors.accentColor,
-  //         fontsize: 16,
-  //         fontWeight: FontWeight.w500,
-  //       ),
-  //     ),
-  //   );
-  // }
-
-//  Widget getTabsForTransactions() {
-//   return Padding(
-//     padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-//     child: Row(
-//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//       children: [
-//         tabItem(StringConstant.allTransactions),
-//         //const SizedBox(width: 12), // Space between tabs
-//         tabItem(StringConstant.pollTransactions),
-//       ],
-//     ),
-//   );
-// }
-
-// Widget tabItem(String text) {
-//   bool isSelected = text == allOrGroupTransactionsName.value;
-//   // Calculate width based on screen size for responsiveness
-//   double tabWidth = (MediaQuery.of(context).size.width - 44) / 2; // 44 = 16*2 padding + 12 spacing
-//   return InkWell(
-//     onTap: () {
-//       allOrGroupTransactionsName.value = text;
-//     },
-//     child: Container(
-//       width: tabWidth,
-//       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-//       decoration: BoxDecoration(
-//         color: isSelected ? AppColors.primaryColor : AppColors.bg5,
-//         borderRadius: BorderRadius.circular(12),
-//         border: Border.all(
-          
-//           color: isSelected ? AppColors.primaryColor : AppColors.bg1,
-//         ),
-//         gradient: isSelected
-//             ? LinearGradient(
-//                 colors: [
-//                   AppColors.primaryColor,
-//                   AppColors.primaryColor.withOpacity(0.8),
-//                 ],
-//                 begin: Alignment.topLeft,
-//                 end: Alignment.bottomRight,
-//               )
-//             : null,
-//         boxShadow: [
-//           BoxShadow(
-//             color: Colors.black.withOpacity(0.1),
-//             blurRadius: 8,
-//             offset: const Offset(0, 2),
-//           ),
-//         ],
-//       ),
-//       child: Center(
-//         child: textStyle(
-//           context: context,
-//           text: text,
-//           c: isSelected ? AppColors.bg5 : AppColors.primaryColor,
-//           fontsize: 14,
-//           fontWeight: FontWeight.w600,
-//         ),
-//       ),
-//     ),
-//   );
-// }
 
   void changeTheBool() {
     sectionReached.value = true;
@@ -401,11 +220,12 @@ class _TransactionHistoryState extends State<TransactionHistory>
 
           return Container(
             child: historyTransactions(
-                transaction,
-                transaction['transactionTimestamp']?.toString(),
-                transactionIndex,
-                context,
-                true,
+                  transaction,
+                  transaction['transactionTimestamp']?.toString(),
+                  transactionIndex,
+                  context,
+                  true,
+                  widget.expandedPage
                 ),
           );
         }
@@ -548,6 +368,7 @@ final matched = custom.firstWhere(
 //     : Categories.link + (imageMapForHistory[lowerCategory] ?? 'default_image.png');
 final url = matched.isNotEmpty && matched['imageUrl'] != null ? matched['imageUrl']
     :  imageMapForHistory[lowerCategory] !=null ?  Categories.link + imageMapForHistory[lowerCategory].toString()  : "assets/icons/subCategoryIcons/other.svg";
+ 
   return Container(
     width: avatarSize,
     height: avatarSize,

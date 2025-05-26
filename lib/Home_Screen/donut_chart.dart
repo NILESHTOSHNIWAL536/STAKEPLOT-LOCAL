@@ -144,26 +144,28 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
     final topCategories = chartData.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
     final topFour = topCategories.take(6).toList();
-
-    // Use Wrap to display cards in two columns
-    return Wrap(
-      spacing: 8.0, // Horizontal space between cards
-      runSpacing: 8.0, // Vertical space between rows
-      children: topFour.map((data) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+        childAspectRatio: 1.5,
+      ),
+      itemCount: topFour.length,
+      itemBuilder: (context, index) {
+        final data = topFour[index];
         String percentage = data
             .persentage; // totalValue.value > 0 ? (data.value / totalValue.value) * 100 : 0.0;
-        return SizedBox(
-          width: MediaQuery.of(context).size.width / 2.4,
-            height:MediaQuery.of(context).size.height / 8, // Adjust width for two columns
-          child: CategoryCard(
-            category: data.category,
-            amount: data.value,
-            percentage: percentage,
-            color: AppColors.backgroundColor,
-            // color: UniversalColors.categoryColors[index % UniversalColors.categoryColors.length],
-          ),
+        return CategoryCard(
+          category: data.category,
+          amount: data.value,
+          percentage: percentage,
+          color: AppColors.backgroundColor,
+          // color: UniversalColors.categoryColors[index % UniversalColors.categoryColors.length],
         );
-      }).toList(),
+      },
     );
   }
 
@@ -391,9 +393,9 @@ class AllCategoriesPage extends StatelessWidget {
                     //     ? (data.value / totalValue.value) * 100
                     //     : 0.0;
                     // Assign a unique color from UniversalColors
-                    final color=AppColors.backgroundColor;
-                    // final color = UniversalColors.categoryColors[
-                    //     index % UniversalColors.categoryColors.length];
+                    final color = AppColors.backgroundColor;
+                    // final color = UniversalColors
+                    //     .categoryColors[index % UniversalColors.categoryColors.length];
                     return CategoryCard(
                       category: data.category,
                       amount: data.value,

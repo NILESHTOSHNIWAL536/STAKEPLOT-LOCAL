@@ -97,7 +97,8 @@ class Colorcodes {
 List namePresent = [];
 
 Map<String, String> imageMapForHistory = {
-  "income": "assets/images2/add.svg",
+  "income": Categories.income, 
+  "Income": Categories.income,
   "restaurant": SubCategories.restaurents,
   "hospital": SubCategories.healthCheckup,
   "travel": Categories.travel,
@@ -274,7 +275,7 @@ int getSteps(max, div) {
 
 class BankText
 {
-
+  
     static  String text1="No bank account found";
     static  String text2="It could be due to any of the following reasons";
     static  String text3="The bank accounts aren't connected to your primary number,";

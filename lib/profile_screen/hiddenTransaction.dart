@@ -60,7 +60,7 @@ class _HiddenTransactionsScreenState extends State<HiddenTransactionsScreen> {
                           fontSize: 18,
                           color: AppColors.accentColor)),
                 )
-              : hiddenTransactionsWidget())),
+              :  hideTransactionReload.value? hiddenTransactionsWidget():hiddenTransactionsWidget())),
     );
   }
 
