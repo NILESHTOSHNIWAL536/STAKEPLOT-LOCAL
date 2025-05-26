@@ -1,11 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/success_post.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
@@ -189,17 +185,6 @@ void budgetUpdate(context, name, amount, expenseCategory, budgetType,
     Navigator.pop(context);
     Navigator.pop(context);
 
-    //  Navigator.push(
-    //                         context,
-    //                         PageTransition(
-    //                           type: PageTransitionType.fade,
-    //                           alignment: Alignment.bottomRight,
-    //                           duration: Durations.long1,
-
-    //                           child:const BudgetCheck(),
-    //                           isIos: true,
-    //                         ),
-    // );
   } else {
     snackBarCalled(context,SnackbarData().budgetUpdateFailed, Colors.red);
   }
@@ -229,35 +214,10 @@ void addDebts(context, name, amount, interest, startDate, durations) async {
 
     snackBarCalled(context,SnackbarData().debtAdded);
     acceptReset.value = false;
-    //  Navigator.pushNamed(context, '/DebtsBillAmoutDisplay');
-
-    //  SchedulePaymentsDisplay
-
-    //   Navigator.pop(context);
+  
     getDebts();
     Navigator.pop(context);
 
-    //    Navigator.pushReplacement(
-    //                         context,
-    //                         PageTransition(
-    //                           type: PageTransitionType.bottomToTop,
-    //                           alignment: Alignment.bottomRight,
-    //                           duration: Durations.long1,
-
-    //                           child:const Budget(),
-    //                           isIos: true,
-    //  ));
-
-    //  Navigator.push(
-    //                         context,
-    //                         PageTransition(
-    //                           type: PageTransitionType.bottomToTop,
-    //                           alignment: Alignment.bottomRight,
-    //                           duration: Durations.long1,
-
-    //                           child:DebtsBillAmoutDisplay(),
-    //                           isIos: true,
-    //  ));
   } else {
     snackBarCalled(context,SnackbarData().debtAddFailed, Colors.red);
   }

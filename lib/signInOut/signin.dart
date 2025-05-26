@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -13,9 +12,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
 import 'package:flutter_application_code_stakeplot/Utils/signin.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart'; // Added import
 import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/google.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
@@ -24,7 +21,6 @@ import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Signin extends StatefulWidget {
   const Signin({Key? key}) : super(key: key);
