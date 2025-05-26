@@ -3,6 +3,7 @@ import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
@@ -681,13 +682,13 @@ class _AccessState extends State<Access> {
       FinvuProcessConsentRequestResponse response = await finvuManager.approveConsentRequest(
               finvuConsentRequestDetailInfo, seletedAccountInfomations);
   
-      snackBarCalled(context, "Consent request approved successfully.");
+      snackBarCalled(context, SnackbarData().consentApproved);
    
       FetchTransactionFromFinvuApi(context);
 
     } catch (e) {
       skipOrLets.value = "Skip";
-      snackBarCalled(context, "An error occurred while approving the consent request.");
+      snackBarCalled(context, SnackbarData().consentApproveError);
     }
     debugPrint('approveConsentRequest');
   }
@@ -779,9 +780,9 @@ void showDialogBoxForDecline(BuildContext context) {
                  logoutAndDisconnect();
                  Navigator.of(context).pushNamedAndRemoveUntil('/ShareAccountLogin', (Route<dynamic> route) => false);
                  Navigator.pushNamed(context, "/ShareAccountLogin");
-                 snackBarCalledSignup(context, "Successfully decline the consent request.");
+                 snackBarCalledSignup(context, SnackbarData().consentDeclined);
               } catch (e) {
-                snackBarCalledSignup(context, "Unable to disapprove the request.");
+                snackBarCalledSignup(context,SnackbarData().consentDisapproveError);
               }    
   }
 }

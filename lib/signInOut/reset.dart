@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/signUp.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/opt_email.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -24,9 +25,7 @@ class ResetPassword extends StatefulWidget {
 }
 
 class _SigninState extends State<ResetPassword> {
-  // TextEditingController emailController= TextEditingController();
-  //  TextEditingController passwordController= TextEditingController();
-  // TextEditingController emailController= TextEditingController();
+  
   TextEditingController passwordController = TextEditingController();
   TextEditingController conformController = TextEditingController();
   // TextEditingController emailController= TextEditingController(text: "nileshtoshniwal743@gmail.com");
@@ -56,12 +55,7 @@ class _SigninState extends State<ResetPassword> {
             border: InputBorder.none,
           ),
 
-          // decoration: InputDecoration(
-          //   labelText: lableText,
-          //   border:const OutlineInputBorder(
-          //         borderSide: BorderSide(color:Color.fromRGBO(249, 246, 238, 1))
-          //   ),
-          // ),
+
         ),
       ),
     );
@@ -72,8 +66,7 @@ class _SigninState extends State<ResetPassword> {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 9.0),
         child: Container(
-          // padding: EdgeInsets.symmetric(vertical: 5),
-          // color:  Color.fromRGBO(246, 246, 246, 1),
+         
           height: 60,
           width: MediaQuery.of(context).size.width / 1.3,
           child: Center(
@@ -86,7 +79,7 @@ class _SigninState extends State<ResetPassword> {
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(100),
                     borderSide: const BorderSide(color: Colors.white
-                        // color: Color.fromRGBO(249, 246, 238, 1)
+                        
                         )),
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(100),
@@ -156,21 +149,21 @@ class _SigninState extends State<ResetPassword> {
                       if (password.length < 8) {
                         snackBarCalledfail(
                             context,
-                            "The password must be at least 8 characters long.",
+                           SignupData().shortPassword,
                             Colors.red);
                         return;
                       }
                        if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~])').hasMatch(password)) {
                         snackBarCalledfail(
                             context,
-                            "Password must include uppercase, lowercase, number, and special character.",
+                           SignupData().weakPassword,
                             Colors.red);
                         return;
                       }
                       if (conform.isEmpty) {
                         snackBarCalledfail(
                             context,
-                            "Please confirm your password.",
+                          SignupData().emptyConfirmPassword,
                             Colors.red);
                         return;
                       }
@@ -178,7 +171,7 @@ class _SigninState extends State<ResetPassword> {
                       if (password != conform) {
                         snackBarCalledfail(
                             context,
-                            "The password and confirmation password do not match.",
+                          SignupData().passwordMismatch,
                             Colors.red);
                         return;
                       }
@@ -190,14 +183,8 @@ class _SigninState extends State<ResetPassword> {
                         conformController.text,
                       );
                     },
-                    child: getButton(context, "Change Password"),
-                    // Center(
-                    //   child: Text(("Change Password"),
-                    //       style: FontManager().getTextStyle(context,
-                    //           lWeight: FontWeight.bold,
-                    //           fontSize: 20,
-                    //           color: Colorcodes.white)),
-                    // ),
+                    child: getButton(context, SignupData().changePasswordSubLabel),
+                    
                   ),
                 ],
               ),

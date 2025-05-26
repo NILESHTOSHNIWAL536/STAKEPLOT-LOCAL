@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -183,8 +184,7 @@ class _MobileNumberState extends State<MobileNumber> {
                       // Handle OTP logic here
                       if(loadConsentId.value)return;
                       if (_phoneController.text.length != 10) {
-                        snackBarCalled(context,
-                            "Please enter valid mobile number", Colorcodes.red);
+                        snackBarCalled(context,SnackbarData().enterValidMobile, Colorcodes.red);
                         return;
                       }
                       ;
@@ -206,7 +206,7 @@ class _MobileNumberState extends State<MobileNumber> {
                           });
                    }else
                    {
-                     snackBarCalledSignup(context, "Error while generating otp Ref / or internal issue");
+                     snackBarCalledSignup(context, SnackbarData().errorGeneratingOtp);
                    }
                      loadConsentId.value=false;
                     },
@@ -468,7 +468,7 @@ class _MobileNumberState extends State<MobileNumber> {
         }
       });
     } else {
-      snackBarCalled(context, "Please enter OTP of length 6");
+      snackBarCalled(context, SnackbarData().enterOtpLength);
     }
   }
 

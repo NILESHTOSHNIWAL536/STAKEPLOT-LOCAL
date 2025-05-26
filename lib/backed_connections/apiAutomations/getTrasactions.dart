@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/donut_chart.dart'
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/manual_transaction.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 // import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
@@ -449,7 +450,7 @@ void addTransaction(String amount, String subCategory, String categories,
   if (response.statusCode == 200) {
     final body = json.decode(response.body);
     if (!isSplit)
-      snackBarCalled(context, "Transaction has been successfully saved!",
+      snackBarCalled(context,  SnackbarData().transactionSuccess,
           AppColors.primaryColor);
     // getAllTransaction(context);
     transactionsHistory.insert(0, body['data'][0]);
@@ -460,7 +461,7 @@ void addTransaction(String amount, String subCategory, String categories,
     getAutoMationsTransactionsCustom(getFormattedDate(), context);
     Navigator.pop(context);
   } else {
-    snackBarCalled(context, "Failed to add transaction!", Colors.red);
+    snackBarCalled(context, SnackbarData().transactionAddFail, Colors.red);
   }
 }
 

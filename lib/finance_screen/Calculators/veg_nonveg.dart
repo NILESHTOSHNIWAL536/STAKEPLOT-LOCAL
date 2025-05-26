@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/bill.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
@@ -250,7 +251,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                           friendShares);
                     } else {
                       // Show a message to the user that they need to add money or select shares
-                     snackBarCalledfail(context, "Please add a valid amount and ensure shares are selected.");
+                     snackBarCalledfail(context,SnackbarData().validAmountAndShares);
                     }
                   },
                   child: Container(
@@ -292,19 +293,19 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                   onTap: () {
   // Check if friendShares is null or empty
   if (friendShares == null || friendShares.isEmpty) {
-    snackBarCalledfail(context, "No shares calculated yet. Please calculate the bill first.");
+    snackBarCalledfail(context,SnackbarData().noSharesCalculated);
     return;
   }
 
   // Check if currentId is null
   if (currentId.value == null) {
-    snackBarCalledfail(context, "User ID is not available. Please try again.");
+    snackBarCalledfail(context,SnackbarData().userIdNotAvailable);
     return;
   }
 
   // Check if userName is null
   if (userName.value == null || userName.value.isEmpty) {
-    snackBarCalledfail(context, "User name is not available. Please try again.");
+    snackBarCalledfail(context,SnackbarData().userNameNotAvailable);
     return;
   }
 
@@ -312,7 +313,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
   bool hasValidRecipients = friendShares.keys.any((key) => key != currentId.value);
 
   if (!hasValidRecipients) {
-    snackBarCalledfail(context, "No friends to notify. Please add friends to the split.");
+    snackBarCalledfail(context,SnackbarData().noFriendsToNotify);
     return;
   }
 
@@ -329,7 +330,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
   });
 
   if (!hasValidShares) {
-    snackBarCalledfail(context, "No valid shares to notify. Ensure amounts are calculated.");
+    snackBarCalledfail(context,SnackbarData().noValidSharesToNotify);
     return;
   }
 
@@ -352,20 +353,19 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
           atLeastOneNotificationSent = true;
         } catch (e) {
           // Handle notification sending failure
-          snackBarCalledfail(context, "Failed to send notification to user $key: $e");
+          snackBarCalledfail(context,SnackbarData().failedToSendNotification);
         }
       } else {
         // Log or show warning for invalid share
-        snackBarCalledfail(context, "Invalid share amount for user $key.");
+        snackBarCalledfail(context,SnackbarData().invalidShareAmount);
       }
     }
   });
 
   // Show success message if at least one notification was sent
   if (atLeastOneNotificationSent) {
-    //snackBarCalled(context, "Notifications sent successfully!");
   } else {
-    snackBarCalledfail(context, "No notifications sent due to invalid data.");
+    snackBarCalledfail(context,SnackbarData().noNotificationsSent);
   }
 },
                   child: Container(
@@ -843,10 +843,10 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       addSocketMessage(nameList, amount.toString(), "Calculation".toString(),
           splitID.value, totalAmount);
 
-      snackBarCalled(context, "Split amount sent to users!");
+      snackBarCalled(context,SnackbarData().splitAmountSent);
       Navigator.pop(context);
     } else {
-      snackBarCalled(context, "can't split error!", Colors.red);
+      snackBarCalled(context,SnackbarData().authenticationError, Colors.red);
     }
     acceptReset.value = false;
   }

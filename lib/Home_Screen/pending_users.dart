@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
@@ -187,15 +188,7 @@ class _UserListScreenState extends State<UserListScreen> {
                                   //here
                                   InkWell(
                                     onTap: () async {
-                                      // Check if the action is already completed
-                                      // if (isDue && (data['isPaid'] ?? false)) {
-                                      //   snackBarCalled(context,'This bill has already been requested.');
-                                      //   return;
-                                      // }
-                                      // else if (!isDue && (data['reminderSent'] ?? false)) {
-                                      //   snackBarCalled(context, 'Reminder already sent.');
-                                      //   return;
-                                      // }
+                                      
 
                                       String message;
                                       if (isDue) {
@@ -232,9 +225,7 @@ class _UserListScreenState extends State<UserListScreen> {
                                         }
                                       }
 
-                                      // Show SnackBar
-                                      // snackBarCalled(context, message);
-                                      // snackBarCalled(context, message);
+                                     
 
                                       // Send notification
                                       sendNotificationsToDevice(
@@ -545,7 +536,7 @@ class _UserListScreenState extends State<UserListScreen> {
       );
     } catch (e) {
       Navigator.pop(context); // Dismiss loading dialog
-      snackBarCalled(context, 'Error fetching details: $e');
+      snackBarCalled(context,SnackbarData().fetchingError);
     }
   }
 

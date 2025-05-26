@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/lendMessage.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
@@ -54,9 +55,6 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
   @override
   void initState() {
     super.initState();
-    // Clear the selected friends lists when the screen is initialized
-    // addedUser.clear();
-    // addedMembers.clear();
   }
  
  
@@ -170,58 +168,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                     )
                   : const SizedBox.shrink(),
               commentedData(),
-              // if (widget.showContinueButton)
-              //   Center(
-              //     child: InkWell(
-              //       onTap: () async {
-              //         if (addedMembers.isNotEmpty) {
-
-              //           if (widget.isLendMode) {
-
-              //             if (addedMembers.length > 1) {
-
-              //               ScaffoldMessenger.of(context).showSnackBar(
-              //                 const SnackBar(
-              //                     content: Text(
-              //                         'Please select only one friend for lending')),
-              //               );
-              //               return;
-              //             }
-              //             Navigator.pop(context, addedMembers[0]);
-              //           } else {
-
-              //             Navigator.pop(context);
-              //             final amounts = await showAmountEntryModal(
-              //               context,
-              //               widget.category ?? 'Uncategorized',
-              //               widget.subcategory ?? 'General',
-              //             );
-
-              //             if (amounts != null) {
-
-              //               Navigator.pop(context, amounts);
-              //             }
-              //             ;
-              //             if (amounts != null) {
-
-              //               Navigator.pop(context, amounts);
-              //             } else {
-
-              //             }
-              //           }
-
-              //         } else {
-
-              //           ScaffoldMessenger.of(context).showSnackBar(
-              //             const SnackBar(
-              //                 content:
-              //                     Text('Please select at least one friend')),
-              //           );
-              //         }
-              //       },
-              //       child: getButton(context, "Continue"),
-              //     ),
-              //   ),
+             
 
               if (widget.showContinueButton)
                 Center(
@@ -230,11 +177,11 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                       if (addedMembers.isNotEmpty) {
                         if (widget.isLendMode) {
                           if (addedMembers.length > 1) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text(
-                                      'Please select only one friend for lending')),
-                            );
+                            
+                            snackBarCalled(
+                                context,
+                               SnackbarData().selectOnlyOneFriendLend,
+                              );
                             return;
                           }
                           // Show LendDetailsModal
@@ -264,13 +211,10 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                               'message': lendDetails['message'],
                               'dueDate': lendDetails['dueDate'],
                             });
-                          } else {
-                            // User dismissed the modal without confirming
-                            snackBarCalled(
-                                context, "Please provide lend details");
-                            // ScaffoldMessenger.of(context).showSnackBar(
-                            //   const SnackBar(content: Text('Lend details not provided')),
-                            // );
+                          } else 
+                          {
+                            snackBarCalled(context,SnackbarData(). provideLendDetails);
+                          
                           }
                         } else {
                           Navigator.pop(context);
@@ -285,11 +229,8 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                           }
                         }
                       } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content:
-                                  Text('Please select at least one friend')),
-                        );
+                       
+                        snackBarCalled(context,SnackbarData().selectAtLeastOneFriend);
                       }
                     },
                     child: getButton(context, "Continue"),

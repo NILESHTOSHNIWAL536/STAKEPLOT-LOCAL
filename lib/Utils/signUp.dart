@@ -28,6 +28,7 @@ class SignupData {
   String emailSubLabel = "johndoe@gmail.com";
   String passwordSubLabel = "Password";
   String confirmPasswordSubLabel = "Confirm Password";
+  String changePasswordSubLabel = "Change Password";
 
   // ✅ Validation Messages
    String emptyUsername = "Please enter a username.";
@@ -82,6 +83,7 @@ class SignupData {
         accountExit = data['accountExit'] ?? accountExit;
         Continue = data['Continue'] ?? Continue;
         errorInvalidOtp = data['errorInvalidOtp'] ?? errorInvalidOtp;
+        changePasswordSubLabel = data['changePasswordSubLabel'] ?? changePasswordSubLabel;
 
         return true;
       } else {

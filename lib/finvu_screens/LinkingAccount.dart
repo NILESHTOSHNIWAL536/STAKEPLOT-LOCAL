@@ -3,6 +3,7 @@ import 'package:finvu_flutter_sdk_core/finvu_fip_details.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -338,7 +339,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
     try {
       List<FinvuDiscoveredAccountInfo> bankData = listOfAccountAdded[fipId] ?? [];
       if (bankData.isEmpty) {
-        snackBarCalled(context, "The account has been successfully added for linking.", Colorcodes.red);
+        snackBarCalled(context, SnackbarData().accountAdded, Colorcodes.red);
         return;
       }
       linkingReference = await finvuManager.linkAccounts(fipDetails, bankData);
@@ -351,7 +352,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
       );
     } catch (e) {
       print("Error during linking: $e");
-      snackBarCalledSignup(context, "Maximum Retries Exceeded. Please try again after sometime.");
+      snackBarCalledSignup(context, SnackbarData().maxRetries);
     }
   }
 
@@ -460,7 +461,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
               child: InkWell(
                 onTap: () {
                   if (_otpCode.value.length < 6) {
-                    snackBarCalledSignup(context, "enter valid otp");
+                    snackBarCalledSignup(context, SnackbarData().enterValidOtp);
                   } else {
                     otpCount.value++;
                     linkAccount(_otpCode.value, fid, context, fipDetails);
@@ -509,7 +510,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
     try {
       isOtpWrong.value = false;
       FinvuConfirmAccountLinkingInfo data = await finvuManager.confirmAccountLinking(linkingReference, otpController.text.trim());
-      snackBarCalled(context, "Linked Bank account Successfully...");
+      snackBarCalled(context, SnackbarData().bankLinkedSuccess);
 
       Navigator.pop(context);
       count.value=0;

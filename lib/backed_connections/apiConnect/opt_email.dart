@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/reset.dart';
@@ -15,7 +16,7 @@ void checkEmail(context, email, otp, name) async {
  print(response.body);
   if (getFlagOfResponse(response))
   {
-    snackBarCalled(context, "OTP Accepted!", Colors.black);
+    snackBarCalled(context,SnackbarData().otpAccepted, Colors.black);
     acceptReset.value = false;
     Navigator.pushReplacement(
         context,
@@ -31,7 +32,7 @@ void checkEmail(context, email, otp, name) async {
         ));
   } else {
     acceptReset.value = false;
-    snackBarCalled(context, "Invalid OTP!", Colors.red);
+    snackBarCalled(context,SnackbarData().otpInvalid, Colors.red);
   }
 }
 
@@ -44,11 +45,11 @@ void changePassword(context, email, p1, p2) async
       "confirmNewPassword": p2,
     });
   if (getFlagOfResponse(response)) {
-    snackBarCalledSignup(context, "Password changed!", Colors.black);
+    snackBarCalledSignup(context,SnackbarData().passwordChanged, Colors.black);
     Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
     Navigator.pushNamed(context, "/");
   } else {
-    snackBarCalled(context, "Can't change!", Colors.red);
+    snackBarCalled(context,SnackbarData().passwordChangeFail, Colors.red);
   }
 }
 
@@ -63,9 +64,9 @@ void resendOptUser(context, email, name) async
 
   if (getFlagOfResponse(response)) {
     acceptReset.value = false;
-    snackBarCalled(context, "Resent Otp To Email Id!", Colors.black);
+    snackBarCalled(context,SnackbarData().otpResent, Colors.black);
   } else {
-    snackBarCalled(context, "can't send otp!", Colors.red);
+    snackBarCalled(context,SnackbarData().otpSendFail1, Colors.red);
   }
 }
 
@@ -80,8 +81,8 @@ void resendOpt(context, email, name) async {
 
   if (getFlagOfResponse(response)) {
     acceptReset.value = false;
-    snackBarCalled(context, "OTP has been resent to your email!", Colors.black);
+    snackBarCalled(context,SnackbarData().otpResentSuccess, Colors.black);
   } else {
-    snackBarCalled(context, "Unable to send OTP, Please try again", Colors.red);
+    snackBarCalled(context,SnackbarData().otpSendFail2, Colors.red);
   }
 }

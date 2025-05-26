@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Community_Page/success_post.dart';
 import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/animated/snackbar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_service.dart';
@@ -126,7 +127,7 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                 date: _date,
               ),
             );
-            showSuccessTopSnackBar(context, "Debt created successfully!");
+            showSuccessTopSnackBar(context,SnackbarData().debtCreatedSuccess);
           }
         } else {}
       } catch (e) {}

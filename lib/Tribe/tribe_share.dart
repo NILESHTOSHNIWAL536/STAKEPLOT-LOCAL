@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
@@ -303,7 +304,7 @@ class _TribeHomeState extends State<TribeShare> {
             }
 
             if (addedUser.isEmpty) {
-              snackBarCalled(context, "No friends have been added.");
+              snackBarCalled(context,SnackbarData().noFriendsAdded);
               return;
             }
 
@@ -449,10 +450,10 @@ class _TribeHomeState extends State<TribeShare> {
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
 
-      snackBarCalled(context, 'Post sent successfully!');
+      snackBarCalled(context, SnackbarData().postSentSuccessfully);
       Navigator.pop(context);
     } else {
-      snackBarCalled(context, "can't add!", Colors.red);
+      snackBarCalled(context, SnackbarData().cantAdd, Colors.red);
     }
   }
 
@@ -624,7 +625,7 @@ class _TribeHomeState extends State<TribeShare> {
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
-      snackBarCalled(context, "You liked this post!");
+      snackBarCalled(context, SnackbarData().likedPost);
 
       if (!postListIds.contains(objectId)) {
         setState(() {
@@ -640,7 +641,7 @@ class _TribeHomeState extends State<TribeShare> {
       //  Navigator.pop(context);
       //  Navigator.pushNamed(context, '/TribeHome');
     } else {
-      snackBarCalled(context, "Error while liking the post!", Colors.red);
+      snackBarCalled(context, SnackbarData().errorLikingPost, Colors.red);
     }
   }
 
@@ -662,7 +663,7 @@ class _TribeHomeState extends State<TribeShare> {
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
-      snackBarCalled(context, "You disliked this post!");
+      snackBarCalled(context, SnackbarData().dislikedPost);
 
       if (postListIds.contains(objectId)) {
         setState(() {
@@ -671,7 +672,7 @@ class _TribeHomeState extends State<TribeShare> {
         postListIds.remove(objectId);
       }
     } else {
-      snackBarCalled(context, "Error while disliking the post!", Colors.red);
+      snackBarCalled(context, SnackbarData().errorDislikingPost, Colors.red);
     }
   }
 }

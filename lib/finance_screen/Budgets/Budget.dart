@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -257,7 +258,7 @@ class _BudgetState extends State<Budget> {
     if (nameController.text == "" ||
         amountController.text == "" ||
         period.value == "") {
-      snackBarCalled(context, "Please Enter All Fields", Colorcodes.red);
+      snackBarCalled(context,SnackbarData().fillAllRequiredFields, Colorcodes.red);
       return;
     }
     Navigator.push(

@@ -4,6 +4,7 @@ import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -283,7 +284,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
 
   void getBankAccount() {
     if (listOfBankAccount.isEmpty) {
-      snackBarCalled(context, "Pick atleast one bank to proceed", Colorcodes.red);
+      snackBarCalled(context,SnackbarData().pickOneBank, Colorcodes.red);
       return;
     } else {
     

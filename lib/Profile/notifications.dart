@@ -8,6 +8,7 @@ import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart";
 import "package:flutter_application_code_stakeplot/Profile/autocategroies.dart";
+import "package:flutter_application_code_stakeplot/Utils/snackBar.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends.dart";
@@ -40,7 +41,7 @@ class _NotificationsState extends State<Notifications> {
     var response = await getDataApiCall(urlPath);
     if (response.statusCode == 200) {
       if (response.body.isEmpty) {
-        snackBarCalled(context, "No Notifications");
+        snackBarCalled(context,SnackbarData().noNotifications);
         return;
       }
       var his = jsonDecode(response.body);
@@ -65,7 +66,7 @@ class _NotificationsState extends State<Notifications> {
     String urlPath = '${url}/user/deleteNotifications/$notifyId';
     var response = await getDataApiCall(urlPath);
     if (response.statusCode != 200) {
-      snackBarCalled(context, "Failed to delete notification");
+      snackBarCalled(context,SnackbarData().deleteNotificationFailed);
     }
   }
 

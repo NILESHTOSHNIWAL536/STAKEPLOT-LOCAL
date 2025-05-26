@@ -13,73 +13,7 @@ import 'package:flutter_application_code_stakeplot/signInOut/resetPas.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-// Future<void> loginUser(TextEditingController emailController,TextEditingController passwordController, BuildContext context,[bool flag = false]) async {
-
-//   var response = await postDataApiCallwithOutSharedPref('${url}/user/login', {
-//     'email': emailController.text.toString(),
-//     'userpassword': passwordController.text.toString(),
-//     'deviceInfo': deviceData,
-//   });
-
-//   if (response.statusCode == 409)
-//   {
-//       forceLoginShowModal(context,response,emailController,passwordController); 
-//   }
-//   else if(response.statusCode == 500){
-//     snackBarCalledSignup(context, "Server Error!", Colors.red);
-//   }
-//   else if (getFlagOfResponse(response))
-//    {
-//      loginCalledData(response,context);
-//   }
-//   else
-//   {
-//      acceptReset.value = false;
-//      snackBarCalledfail(context, 'Invalid credentials');
-//   }
-// }
-
-// Future<void> loginUser(
-//     TextEditingController emailController,
-//     TextEditingController passwordController,
-//     BuildContext context,
-//     [bool flag = false]) async {
-//   var response = await postDataApiCallwithOutSharedPref('${url}/user/login', {
-//     'email': emailController.text.toString(),
-//     'userpassword': passwordController.text.toString(),
-//     'deviceInfo': deviceData,
-//   });
-
-//   if (response.statusCode == 409) {
-//     forceLoginShowModal(context, response, emailController, passwordController);
-//   } else if (response.statusCode == 500) {
-//     snackBarCalledSignup(context, "Server Error!", Colors.red);
-//   } else if (getFlagOfResponse(response)) {
-//     loginCalledData(response, context);
-
-//     final SharedPreferences pref = await SharedPreferences.getInstance();
-//     final String todayKey = 'login_count_${DateTime.now().toIso8601String().substring(0, 10)}';
-//     int dailyLoginCount = pref.getInt(todayKey) ?? 0;
-//     dailyLoginCount++;
-//     await pref.setInt(todayKey, dailyLoginCount);
-
-//     final List<String> loginHistory = pref.getStringList('login_history') ?? [];
-//     final String todayEntry = '$todayKey:$dailyLoginCount';
-//     if (loginHistory.any((entry) => entry.startsWith(todayKey))) {
-//       loginHistory.removeWhere((entry) => entry.startsWith(todayKey));
-//     }
-//     loginHistory.add(todayEntry);
-//     await pref.setStringList('login_history', loginHistory);
-
-//     await ScreenTimeTracker().initialize();
-//     ScreenTimeTracker().startSession();
-//   } else {
-//     acceptReset.value = false;
-//     snackBarCalledfail(context, 'Invalid credentials');
-//   }
-// }
-
+import '../../Utils/snackBar.dart';
 
 
 Future<void> loginUser(
@@ -98,18 +32,18 @@ Future<void> loginUser(
      {
       forceLoginShowModal(context, response, emailController, passwordController);
     } else if (response.statusCode == 500) {
-      snackBarCalled(context, "Server Error!", Colors.red);
+      snackBarCalled(context,SnackbarData().serverError, Colors.red);
     } else if (getFlagOfResponse(response)) {
       loginCalledData(response, context);
       await screenDataLocalStorage();
       Navigator.pushReplacementNamed(context, '/home');
     } else {
       acceptReset.value = false;
-      snackBarCalledfail(context, 'Invalid credentials');
+      snackBarCalledfail(context,SnackbarData().invalidCredentials);
     }
   } catch (e, stackTrace) {
     acceptReset.value = false;
-    snackBarCalledfail(context, 'Login failed, Try again');
+    snackBarCalledfail(context,SnackbarData().loginFailedTryAgain);
   }
 }
 
@@ -191,9 +125,9 @@ void getOTP(context, String name, String email) async
 {
   var response =await postDataApiCallwithOutSharedPref('${url}/otp/send', {'email': email, 'name': name, 'deviceInfo': deviceData});
   if (getFlagOfResponse(response)){
-    snackBarCalled(context, "Sent Otp To Email Id!", Colors.black);
+    snackBarCalled(context,SnackbarData().sentOtpToEmail, Colors.black);
   } else {
-    snackBarCalled(context, "can't send otp!", Colors.red);
+    snackBarCalled(context,SnackbarData().cantSendOtp, Colors.red);
   }
 
 }
@@ -212,7 +146,7 @@ void forceLogoutUser( sessionId, email, userpassword, context, id, deviceName)as
       loginCalledData(response,context);
       sendNotificationsToDevice(body['data']['_id'], context,"You have been logged out from StakePlot!"); 
     }else {
-      snackBarCalled(context, "can't logout user!", Colors.red);
+      snackBarCalled(context,SnackbarData().cantLogoutUser, Colors.red);
     }
   } catch (e)
   {
@@ -227,7 +161,7 @@ void getforgotPassword(context, String name, String email) async {
     });
 
   if (getFlagOfResponse(responce)) {
-    snackBarCalled(context, "Sent OTP To Email Id", Colors.black);
+    snackBarCalled(context,SnackbarData().sentOtpToEmailAlt, Colors.black);
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -238,7 +172,7 @@ void getforgotPassword(context, String name, String email) async {
       ),
     );
   } else {
-    snackBarCalled(context, "Email Id Not Valid!", Colors.red);
+    snackBarCalled(context,SnackbarData().emailIdNotValid, Colors.red);
   }
 }
 

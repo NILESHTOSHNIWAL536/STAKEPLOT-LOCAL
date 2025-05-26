@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Utils/signUp.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
@@ -218,43 +219,6 @@ class _SigninState extends State<Avatar> {
         });
   }
 
-// Widget avatarSlider2(){
-//     return   Container(
-//                 width: MediaQuery.of(context).size.width,
-//                  height: MediaQuery.of(context).size.height/3,
-//                 // color: Colors.red,
-//                 // height: MediaQuery.of(context).size.height/2,
-//                 padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 20),
-//                 child: CarouselSlider.builder(
-//                 itemCount: images.length,
-
-//                 itemBuilder: (context, index, realIndex) {
-//                     return  Container(
-//                                    height: MediaQuery.of(context).size.height/4,
-
-//                                    color: Colorcodes.appBarColor,
-//                                    margin: EdgeInsets.symmetric(horizontal: 2),
-
-//                                   child: SvgPicture.asset(
-//                                  images[index],
-//                                  width: MediaQuery.of(context).size.width,
-//                          ),
-//                                 );
-//                 },
-//               options: CarouselOptions(
-//                  aspectRatio: 1.3,
-//                  height: 400,
-//                 //  autoPlay: true,
-
-//                  onPageChanged: (position,reason){
-//                 setState(() {
-//                       activePage=position;
-//                 });
-//                 },
-
-//               )
-
-//     ));
 }
 
 Widget avatarSlider() {
@@ -345,6 +309,6 @@ void storeData(context, data, String opt, Avatarurl) async {
     clearStack(context);
     Navigator.pushReplacementNamed(context, '/ShareAccountLogin');
   } catch (e) {
-    snackBarCalledSignup(context, "Invalid OTP!", Colors.red);
+    snackBarCalledSignup(context, SignupData().errorInvalidOtp, Colors.red);
   }
 }

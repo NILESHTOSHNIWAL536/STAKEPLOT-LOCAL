@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/image_picker_utils.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -48,35 +49,25 @@ class _ImageScreenState extends State<ImageScreen> {
         });
       }
     } catch (e) {
-      snackBarAllFeilds2(context, 'Error picking image: $e');
+      snackBarAllFeilds2(context, SnackbarData().pickingError);
     }
   }
-  // Future<void> _pickImage() async {
-  //   final File? image = await pickImageWithPermissions(
-  //     context,
-  //     showErrorSnackBar: (message) => snackBarAllFeilds2(context, message),
-  //   );
-  //   if (image != null && mounted) {
-  //     setState(() {
-  //       selectedImage = image;
-  //     });
-  //   }
-  // }
+
 
   Future<File?> _cropAndSaveImage() async {
     try {
       if (selectedImage == null) {
-        return null; // Silently fail instead of showing snackbar
+        return null; 
       }
 
       final croppedImage = await _cropController.onCropImage();
       if (croppedImage == null) {
-        return null; // Silently fail instead of showing snackbar
+        return null; 
       }
 
       final byteData = await _imageProviderToByteData(croppedImage);
       if (byteData == null) {
-        return null; // Silently fail instead of showing snackbar
+        return null; 
       }
 
       final Uint8List bytes = byteData.buffer.asUint8List();
@@ -87,7 +78,6 @@ class _ImageScreenState extends State<ImageScreen> {
 
       return file;
     } catch (e) {
-      // Log error instead of showing snackbar
       return null;
     }
   }
@@ -218,7 +208,7 @@ class _ImageScreenState extends State<ImageScreen> {
                 GestureDetector(
                   onTap: () async {
                     if (selectedImage == null) {
-                      snackBarAllFeilds2(context, "Please Upload Image");
+                      snackBarAllFeilds2(context,SnackbarData().uploadError);
                       return;
                     }
 
@@ -236,7 +226,7 @@ class _ImageScreenState extends State<ImageScreen> {
                       final croppedImageFile = await _cropAndSaveImage();
                       if (croppedImageFile == null) {
                         posting.value = false;
-                        return; // Silently fail instead of showing snackbar
+                        return;
                       }
 
                       await createPost(

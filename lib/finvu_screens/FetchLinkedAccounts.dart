@@ -141,7 +141,6 @@ class _DiscoverAccountState extends State<FetchLinkedAccounts> {
                 fontSize: 15,
               ),
             ),
-            // Obx(()=>  addAccount.value? getcheckBox(bankData) :getcheckBox(bankData))
           ],
         ),
       ),
@@ -150,46 +149,3 @@ class _DiscoverAccountState extends State<FetchLinkedAccounts> {
 }
 
 
-
-//  String fipId=bankData.fipId;
-//              FinvuFIPInfo finvuFIPInfo=bankData;
- 
-//           try{
-//         var fetchFIPDetails=await finvuManager.fetchFIPDetails(fipId); //dhanagarbank
-//         // var fetchFIPDetails=await finvuManager.fetchFIPDetails("dhanagarbank");
-//         var typeIdentifiers=fetchFIPDetails.typeIdentifiers;
-
-//         List<FinvuTypeIdentifierInfo> finvuTypeIdentifierInfo=[];
-
-//          typeIdentifiers.forEach((e){
-//              e.identifiers.forEach((ele){
-//                  FinvuTypeIdentifierInfo obj=FinvuTypeIdentifierInfo(
-//                    category: ele.category,
-//                    type: ele.type,
-//                    value:number , // dou
-//                  );
-//                   finvuTypeIdentifierInfo.add(obj);       
-//              });
-
-//          });
-//           FinvuFIPDetails fipDetails=FinvuFIPDetails(fipId:fipId , typeIdentifiers: fetchFIPDetails.typeIdentifiers);
-   
-//           List<FinvuDiscoveredAccountInfo> info=await finvuManager.discoverAccounts(
-//             fipDetails,finvuFIPInfo.fipFitypes,finvuTypeIdentifierInfo);
-
-//            info.forEach((e){
-//               print('e.accountType');
-//               print(e.accountType);
-//               print(e.fiType);
-//            }); 
-
-//            Navigator.push(
-//               context,
-//               MaterialPageRoute(
-//                 builder: (context) => LinkingAccount(account: info,fipDetails: fipDetails,),
-//               ),
-//             );
-
-//       }catch(e){
-//            snackBarCalled(context,"No Account Found...");   
-//       } 

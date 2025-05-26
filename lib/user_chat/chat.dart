@@ -11,6 +11,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/userDetails.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -382,84 +383,12 @@ class _ChatState extends State<Chat> {
     final imageData = await _picker.pickImage(source: ImageSource.gallery);
 
     if (imageData != null) {
-      //  addMessage(context,"image",search.text,data['_id'],data);
       showData(imageData);
-      // addMessageImage(context, "image","None",data['_id'],File(imageData.path),widget.data,widget.myId,socket,widget.myId,roomId.value,);
-
-      // navigate();
-      // setState(() {
-      //       messages.insert(0,Message(isMe: true,url: File(imageData.path),type: "image")); // Add the message to the list
-      //   });
     }
   }
 
 
-  // Future<void> getImage(BuildContext context) async {
-  //   print('getImage called');
 
-  //   print('Checking initial permission status');
-  //   PermissionStatus status;
-
-  //   if (Platform.isAndroid) {
-  //     final androidInfo = await DeviceInfoPlugin().androidInfo;
-  //     final sdkInt = androidInfo.version.sdkInt;
-  //     print('Android SDK version: $sdkInt');
-  //     if (sdkInt >= 33) {
-  //       // Android 13+: Use READ_MEDIA_IMAGES
-  //       status = await Permission.photos.status;
-  //     } else {
-  //       // Android 12 and below: Use READ_EXTERNAL_STORAGE
-  //       status = await Permission.storage.status;
-  //     }
-  //   } else {
-  //     // iOS
-  //     status = await Permission.photos.status;
-  //   }
-  //   print('Initial status: $status');
-
-  //   if (!status.isGranted) {
-  //     print('Requesting permission');
-  //     if (Platform.isAndroid) {
-  //       final androidInfo = await DeviceInfoPlugin().androidInfo;
-  //       final sdkInt = androidInfo.version.sdkInt;
-  //       if (sdkInt >= 33) {
-  //         status = await Permission.photos.request();
-  //       } else {
-  //         status = await Permission.storage.request();
-  //       }
-  //     } else {
-  //       status = await Permission.photos.request();
-  //     }
-  //     print('Permission status after request: $status');
-  //   }
-
-  //   if (status.isGranted) {
-  //     try {
-  //       final _picker = ImagePicker();
-  //       final imageData = await _picker.pickImage(source: ImageSource.gallery);
-  //       if (imageData != null) {
-  //         showData(imageData);
-  //       } else {
-  //         snackBarCalled(context, 'No image selected');
-  //       }
-  //     } catch (e) {
-  //       snackBarCalled(context, 'Error selecting image: $e');
-  //     }
-  //   } else if (status.isDenied) {
-  //     snackBarCalled(
-  //         context, 'Please grant photo library access to select images');
-  //   } else if (status.isPermanentlyDenied) {
-  //     snackBarCalled(
-  //       context,
-  //       'Photo library access is permanently denied. Please enable it in settings.',
-  //     );
-  //     await openAppSettings();
-  //   } else {
-  //     snackBarCalled(context, 'Unknown permission status: $status');
-  //   }
-  // }
-
-  // Function to build a message bubble
   Widget _buildMessage(Message message) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -804,7 +733,7 @@ class _ChatState extends State<Chat> {
           if (value.isNotEmpty) {
             _handleSubmitted(value);
           } else {
-            snackBarCalled(context, "Please enter message");
+            snackBarCalled(context, SnackbarData().pleaseEnterMessage);
           }
           textController.clear();
           getChatLoader();
@@ -847,7 +776,7 @@ class _ChatState extends State<Chat> {
                   if (value.isNotEmpty) {
                     _handleSubmitted(value);
                   } else {
-                    snackBarCalled(context, "Please enter valid data");
+                    snackBarCalled(context,SnackbarData().pleaseEnterValidData);
                   }
                   textController.clear();
                   getChatLoader();

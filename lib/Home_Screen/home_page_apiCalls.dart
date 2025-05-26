@@ -5,6 +5,7 @@ import "package:flutter/services.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart";
+import "package:flutter_application_code_stakeplot/Utils/snackBar.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart";
@@ -399,7 +400,7 @@ void duesPaid(BuildContext context, int index) async {
     final response = await updateDataApiCall(apiUrl, {});
     
   } catch (e) {
-    snackBarCalled(context, "Error settling due");
+    snackBarCalled(context,SnackbarData().errorSettlingDue);
   
   }
 }
@@ -415,7 +416,7 @@ void settleAmount(
    
     
   } catch (e) {
-    snackBarCalled(context, "Error settling due");
+    snackBarCalled(context, SnackbarData().errorSettlingDue);
   
   }
 
@@ -431,7 +432,7 @@ void declineAmount(
     final response = await updateDataApiCall(apiUrl, body);
     
   } catch (e) {
-    snackBarCalled(context, "Error settling due");
+    snackBarCalled(context, SnackbarData().errorSettlingDue);
   }
 }
 
@@ -479,17 +480,17 @@ void hideTransaction(
         hiddenTransactions.add(transaction);
         transactionsHistory.removeAt(index);
         transactionsHistory.refresh();
-        snackBarCalled(context, "Transaction hidden Successfully");
+        snackBarCalled(context,SnackbarData().transactionHiddenSuccess);
       } else {
         hiddentrasactionsHistory.removeAt(index);
         hideTransactionReload.value=! hideTransactionReload.value;
         hiddentrasactionsHistory.refresh();
       }
     } else {
-      snackBarCalledfail(context, "Failed to hide transaction");
+      snackBarCalledfail(context,SnackbarData().transactionHideFailed);
     }
   } catch (e) {
-    snackBarCalledfail(context, "Error hiding transaction");
+    snackBarCalledfail(context,SnackbarData().errorHidingTransaction);
    
   }
 }

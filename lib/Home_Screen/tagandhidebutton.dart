@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -214,13 +215,13 @@ Widget tabItem(String text,BuildContext context) {
 
   if(getFlagOfResponse(response))
   {
-      snackBarCalled(context, "✔️ Your selected transactions have been deleted.");
+      snackBarCalled(context,SnackbarData().selectedTransactionsDeleted);
       onChanedAutoTransactionStatus(context);
   }
 
  }catch(e)
  {
-  snackBarCalledfail(context, "❌ Unable to delete the selected transactions. Please try again.");
+  snackBarCalledfail(context, SnackbarData().selectedTransactionsDeleteFailed);
  }
 
    showCheckBox.value = false;
