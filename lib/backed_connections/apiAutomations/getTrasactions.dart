@@ -13,7 +13,6 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -325,32 +324,10 @@ void getUserBankData(context) async {
   var responce = await getDataApiCall(urlPath);
 
   if (getFlagOfResponse(responce)) {
-    //  Navigator.pop(context);
   }
 }
 
-// void updateTheTagOfTarnsactions(category, subCategory, transactionId, context, index) async {
-//   String urlPath = "${url}/transactionauto/updateTransaction/${transactionId}";
 
-//   final SharedPreferences _pref = await SharedPreferences.getInstance();
-//   var accessToken = _pref.getString("accessToken");
-
-//   final response = await http.patch(
-//     Uri.parse('${urlPath}'),
-//     headers: <String, String>{
-//       'Content-Type': 'application/json; charset=UTF-8',
-//       "Authorization": "$accessToken",
-//     },
-//     body: jsonEncode({
-//       'category': category,
-//       'subcategory': subCategory,
-//     }),
-//   );
-//   if (getFlagOfResponse(response)) {
-//     Navigator.pop(context);
-//     reloadHistory.value = !reloadHistory.value;
-//   } else {}
-// }
 void updateTheTagOfTarnsactions(
     category, subCategory, transactionId, context, index) async {
   String urlPath = "${url}/transactionauto/updateTransaction/${transactionId}";
