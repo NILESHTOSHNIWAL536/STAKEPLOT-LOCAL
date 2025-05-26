@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/signUp.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -112,7 +113,7 @@ class _SigninState extends State<SignUp> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(("Already have an account ? "),
+            Text((SignupData().accountExit),
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.bold,
@@ -162,7 +163,7 @@ class _SigninState extends State<SignUp> {
                         size: 20,
                         color: Colorcodes.white,
                       )
-                    : Text(("Continue"),
+                    : Text((SignupData().Continue),
                         style: FontManager().getTextStyle(context,
                             lWeight: FontWeight.bold,
                             fontSize: 20,
@@ -180,16 +181,16 @@ class _SigninState extends State<SignUp> {
         children: [
           TextFeildWidget(
             textEditingController: usernameController,
-            heading: "Username",
+            heading: SignupData().usernameLabel,
             keyBoard: TextInputType.name,
-            lableText: "Enter your username",
+            lableText: SignupData().usernameSubLabel,
             icon: Icons.person_2_outlined,
           ),
           TextFeildCalender(
             textEditingController: dobController,
-            heading: "Date of Birth",
+            heading: SignupData().dobLabel,
             keyBoard: TextInputType.visiblePassword,
-            lableText: "Date of Birth",
+            lableText: SignupData().dobSubLabel,
           ),
           // TextFeildWidget(
           //     textEditingController: phoneController,
@@ -198,18 +199,18 @@ class _SigninState extends State<SignUp> {
           //     lableText: "Phone No"),
           TextFeildWidget(
               textEditingController: emailController,
-              heading: "Email",
+              heading: SignupData().emailLabel,
               keyBoard: TextInputType.emailAddress,
-              lableText: "johndoe@gmail.com"
+              lableText: SignupData().emailSubLabel,
           ),
           Obx(() => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFeildWidgetPassword(
                 textEditingController: passwordController,
-                heading: "Password",
+                heading: SignupData().passwordLabel,
                 keyBoard: TextInputType.visiblePassword,
-                lableText: "Password",
+                lableText: SignupData().passwordSubLabel,
                 flag: false,
                 icon: Icons.lock_clock_outlined,
               ),
@@ -228,9 +229,9 @@ class _SigninState extends State<SignUp> {
             children: [
               TextFeildWidgetPassword(
                 textEditingController: confirmController,
-                heading: "Confirm Password",
+                heading: SignupData().confirmPasswordLabel,
                 keyBoard: TextInputType.visiblePassword,
-                lableText: "Confirm Password",
+                lableText: SignupData().confirmPasswordSubLabel,
                 flag: false,
                 icon: Icons.lock_clock_outlined,
               ),
@@ -253,7 +254,7 @@ class _SigninState extends State<SignUp> {
     return Padding(
       padding:
           EdgeInsets.symmetric(vertical: Colorcodes.paddingTopDesign / 1.4),
-      child: Text(("Create Account"),
+      child: Text((SignupData().createAccount),
           style: FontManager().getTextStyle(context,
               lWeight: FontWeight.bold, fontSize: 22, color: Colors.black)),
     );
@@ -290,7 +291,7 @@ class _SigninState extends State<SignUp> {
 
   Future<http.Response> createUser() async {
     final response = await http.post(
-      Uri.parse('https://stakeplot.in/api/v1/user/register'),
+      Uri.parse('${url}/user/register'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -316,60 +317,58 @@ class _SigninState extends State<SignUp> {
     String dob = dobController.text;
 
   if (name.isEmpty) {
-    snackBarCalledfail(context, "Please enter a username.", Colors.red);
+    snackBarCalledfail(context, SignupData().emptyUsername, Colors.red);
     return;
   }
   if (!RegExp(r'^[a-zA-Z]').hasMatch(name)) {
-  snackBarCalledfail(context, "Username must start with a letter (A-Z or a-z).", Colors.red);
+  snackBarCalledfail(context, SignupData().invalidUsername, Colors.red);
   return;
  }
 
   if (name.length < 3) {
-    snackBarCalledfail(context, "Username must be at least 3 characters long.", Colors.red);
+    snackBarCalledfail(context, SignupData().shortUsername, Colors.red);
     return;
   }
 
   if (email.isEmpty) {
-    snackBarCalledfail(context, "Please enter an email address.", Colors.red);
+    snackBarCalledfail(context, SignupData().emptyEmail, Colors.red);
     return;
   }
 
   // Email format validation
   if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(email)) {
-    snackBarCalledfail(context, "Please enter a valid email address.", Colors.red);
+    snackBarCalledfail(context, SignupData().invalidEmail, Colors.red);
     return;
   }
 
   if (password.isEmpty) {
-    snackBarCalledfail(context, "Please enter a password.", Colors.red);
+    snackBarCalledfail(context, SignupData().emptyPassword, Colors.red);
     return;
   }
 
   
   if (password.length < 8) {
-    snackBarCalledfail(context, "Password must be at least 8 characters long.", Colors.red);
+    snackBarCalledfail(context,  SignupData().shortPassword, Colors.red);
     return;
   }
 
   if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~])').hasMatch(password)) {
-    snackBarCalledfail(context, 
-        "Password must include uppercase, lowercase, number, and special character.", 
-        Colors.red);
+    snackBarCalledfail(context,  SignupData().weakPassword, Colors.red);
     return;
   }
 
   if (conform.isEmpty) {
-    snackBarCalledfail(context, "Please confirm your password.", Colors.red);
+    snackBarCalledfail(context,  SignupData().emptyConfirmPassword, Colors.red);
     return;
   }
 
   if (password != conform) {
-    snackBarCalledfail(context, "Passwords do not match.", Colors.red);
+    snackBarCalledfail(context, SignupData().passwordMismatch, Colors.red);
     return;
   }
 
   if (dob.isEmpty) {
-    snackBarCalledfail(context, "Please enter your date of birth.", Colors.red);
+    snackBarCalledfail(context,  SignupData().emptyDob, Colors.red);
     return;
   }
     flag.value = true;

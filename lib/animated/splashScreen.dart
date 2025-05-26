@@ -37,6 +37,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Utils/signUp.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:lottie/lottie.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
@@ -55,6 +56,14 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
 {
+
+ SignupData signup= SignupData();
+  @override
+  void initState()
+  {
+    super.initState();
+    signup.fetchConstants();
+  }
 
 
   @override

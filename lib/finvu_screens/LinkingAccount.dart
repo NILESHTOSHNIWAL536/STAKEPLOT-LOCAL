@@ -350,6 +350,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
         builder: (BuildContext context) => verify(fipId, fipDetails, info, context),
       );
     } catch (e) {
+      print("Error during linking: $e");
       snackBarCalledSignup(context, "Maximum Retries Exceeded. Please try again after sometime.");
     }
   }
