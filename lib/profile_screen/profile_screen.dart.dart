@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/NavigatorScreens/userNavigator.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
@@ -57,8 +58,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
           ),
         );
       } else {
-        snackBarCalledfail(context,'Biometric authentication is not available on this device.');
-        // Optionally show a message if biometrics are not available
+        snackBarCalledfail(context,SnackbarData().biometric);
          isAuthenticated = true;
         
       }

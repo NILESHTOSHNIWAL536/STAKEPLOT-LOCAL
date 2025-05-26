@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transactionHistoryScreen.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
@@ -363,9 +364,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
                   child: InkWell(
                     onTap: () {
                       if (widget.flag) {
-                       // Debug print when flag is true
                         if (leftoverAmount != 0) {
-                          // Shows a snackbar and returns (assuming this is handled elsewhere)
                           return;
                         }
                         Map<String, double> amounts = {};
@@ -462,13 +461,13 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
     double? parsedTotalAmount = double.tryParse(totalAmount);
     if (parsedTotalAmount == null || parsedTotalAmount <= 0) {
     
-      snackBarCalled(context, "Invalid amount entered!", Colors.red);
+      snackBarCalled(context,SnackbarData().invalidAmountEntered, Colors.red);
       return;
     }
 
     if (members.isEmpty) {
     
-      snackBarCalled(context, "No members selected!", Colors.red);
+      snackBarCalled(context,SnackbarData().noMembersSelected, Colors.red);
       return;
     }
 
@@ -530,7 +529,7 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
     var accessToken = _pref.getString("accessToken");
     if (accessToken == null) {
      
-      snackBarCalled(context, "Authentication error!", Colors.red);
+      snackBarCalled(context,SnackbarData().authenticationError, Colors.red);
       return;
     }
 
@@ -580,10 +579,10 @@ class _AmountEntryModalState extends State<AmountEntryModal> {
         // getAllTransaction(context);
       }
 
-      snackBarCalled(context, "Split amount sent to users!", Colors.black);
+      snackBarCalled(context,SnackbarData().splitAmountSent, Colors.black);
     } else {
     
-      snackBarCalled(context, "Can't split, error!", Colors.red);
+      snackBarCalled(context,SnackbarData().splitError, Colors.red);
     }
 
     acceptReset.value = false;

@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
@@ -58,12 +59,9 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
       var response = await deleteDataApiCall(apiUrl);
 
       if (response.statusCode == 200) {
-        snackBarCalled(context, "Budget deleted successfully");
+        snackBarCalled(context, SnackbarData().budgetDeletionSuccess);
 
-        // Use parentContext to show SnackBar
-
-        // Wait for SnackBar to disappear
-        // await Future.delayed(Duration(seconds: 2));
+       
 
         if (mounted)
         {
@@ -72,7 +70,7 @@ class _MyBudgetScreenState extends State<MyBudgetScreen> {
         getBudget();
 
       } else {
-        snackBarCalledfail(context, "Failed to delete budget ");
+        snackBarCalledfail(context, SnackbarData().budgetDeletionError);
       }
     } catch (e, stackTrace) {
     } finally {

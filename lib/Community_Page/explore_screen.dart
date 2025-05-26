@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/image_picker_utils.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
@@ -57,9 +58,7 @@ class _ExploreModalState extends State<ExploreModal> {
 
   Future<void> _pickAndCropImage() async {
     if (selectedImages.length >= maxImages) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Maximum 5 images allowed')),
-      );
+      snackBarCalled(context,SnackbarData().maxFiveImagesAllowed );
       return;
     }
 
@@ -68,25 +67,7 @@ class _ExploreModalState extends State<ExploreModal> {
       await _showCropDialog(File(image.path));
     }
   }
-  // Future<void> _pickAndCropImage() async {
-  //   if (selectedImages.length >= maxImages) {
-  //     // ScaffoldMessenger.of(context).showSnackBar(
-  //     //   const SnackBar(content: Text('Maximum 5 images allowed')),
-  //     // );
-  //     snackBarCalledfail(context, "Maximum 5 images allowed");
-  //     return;
-  //   }
 
-  //   final File? image = await pickImageWithPermissions(
-  //     context,
-  //     showErrorSnackBar: (message) =>
-  //         snackBarCalledfail(context, message)
-  //   );
-
-  //   if (image != null && mounted) {
-  //     await _showCropDialog(image);
-  //   }
-  // }
 
   Future<void> _showCropDialog(File imageFile, [int? existingIndex]) async {
     final cropController = CustomImageCropController();
@@ -299,11 +280,8 @@ class _ExploreModalState extends State<ExploreModal> {
   }
 
   Future<void> _submitPost() async {
-    if (locationNameController.text.isEmpty ||
-        locationAddressController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill in all required fields')),
-      );
+    if (locationNameController.text.isEmpty || locationAddressController.text.isEmpty) {
+       snackBarCalled(context, SnackbarData().fillAllRequiredFields);
       return;
     }
 
@@ -327,9 +305,7 @@ class _ExploreModalState extends State<ExploreModal> {
         String url = await postImageToCloud(image, context);
         imageUrls.add(url);
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error uploading image: $e')),
-        );
+        snackBarCalled(context,SnackbarData().errorUploadingImage);
         setState(() => _isSubmitting = false);
         return;
       }
@@ -389,16 +365,12 @@ class _ExploreModalState extends State<ExploreModal> {
         widget.onPostCreated(jsonDecode(response.body));
         Navigator.pop(context);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text('Failed to submit post: ${response.statusCode}')),
-        );
+        snackBarCalled(context,SnackbarData().failedToSubmitPost);
         setState(() => _isSubmitting = false);
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      
+      snackBarCalled(context,SnackbarData().errorSubmittingPost);
       setState(() => _isSubmitting = false);
     }
   }

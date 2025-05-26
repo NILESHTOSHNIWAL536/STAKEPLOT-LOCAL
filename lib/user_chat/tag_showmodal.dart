@@ -557,6 +557,7 @@ import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
@@ -790,7 +791,7 @@ Widget getCustomCategoryList(BuildContext context) {
                     if(widget.isTag)
                     {
                         if(widget.data['category']==null && widget.data['subcategory']==null){
-                            snackBarCalledSignup(context, "Please select a category and subcategory",Colorcodes.red);
+                            snackBarCalledSignup(context,SnackbarData().selectCategoryAndSubcategory,Colorcodes.red);
                             return;
                         }                         
                         redioButton.forEach((key, id) {
@@ -831,7 +832,7 @@ Widget getCustomCategoryList(BuildContext context) {
                       }else{
                         
                           if(widget.data['category']==null && widget.data['subcategory']==Null){
-                              snackBarCalledSignup(context, "Please select a category and subcategory",Colorcodes.red);
+                              snackBarCalledSignup(context, SnackbarData().selectCategoryAndSubcategory,Colorcodes.red);
                               return;
                           }
                           updateTheTagOfTarnsactionsGroup(widget.data['category'], widget.data['subcategory'], widget.id, context,widget.index);

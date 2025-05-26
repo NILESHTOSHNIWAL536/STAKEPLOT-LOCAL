@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/number_picker.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -20,7 +21,7 @@ void getAck() async {
 void setPasswordApiCalled(context, String password) async {
   if (password == "00") {
     snackBarCalledfail(
-        context, "Unable to set the PIN 00 except 00 try other!", Colors.red);
+        context,SnackbarData().pinSetFail00, Colors.red);
     return; // Exit the function without setting the PIN
   }
 
@@ -33,9 +34,9 @@ void setPasswordApiCalled(context, String password) async {
     cupertinoPin.value = password;
 
     snackBarCalled(
-        context, "Your PIN has been set successfully!", Colors.black);
+        context,SnackbarData().pinSetSuccess, Colors.black);
   } else {
-    snackBarCalled(context, "Unable to set the PIN!", Colors.red);
+    snackBarCalled(context,SnackbarData().pinSetFail, Colors.red);
   }
   Navigator.pop(context);
 }
@@ -153,7 +154,7 @@ Future<void> getAllTransactionHistory(
         }
         getHistory.value = !getHistory.value;
       } else {
-        snackBarCalled(context, "No transaction data available");
+        snackBarCalled(context,SnackbarData().noTransactionData);
       }
     }
   } catch (e) {

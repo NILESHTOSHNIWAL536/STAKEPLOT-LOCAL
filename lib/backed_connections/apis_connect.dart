@@ -3,6 +3,7 @@ import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
@@ -396,7 +397,7 @@ void snackBarAllFeilds(context, [Color colors = Colors.red]) {
     Container(
       height: 40,
       child: CustomSnackBar.success(
-        message: "Enter all fields",
+        message: SnackbarData().enterAllFields,
         backgroundColor: Colors.red,
         textStyle: FontManager().getTextStyle(
                       context,

@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 
 
@@ -258,7 +259,7 @@ Widget siginButton(){
                             if (acceptReset.value) return;
 
                             if (emailController.text == "" ||passwordController.text == "") {
-                              snackBarCalledfail(context, "Please enter all fields");
+                              snackBarCalledfail(context,SnackbarData().enterAllFields);
                               return;
                             }
                             

@@ -7,6 +7,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -100,94 +101,24 @@ class _TextScreenState extends State<TextScreen> {
         });
       }
     } catch (e) {
-      snackBarAllFeilds2(context, 'Error picking image: $e');
+      snackBarAllFeilds2(context,SnackbarData().pickingError);
     }
   }
-// Future<void> _pickImage() async {
 
-//   // Check initial permission status
-//   PermissionStatus status;
-
-//   if (Platform.isAndroid) {
-//     final androidInfo = await DeviceInfoPlugin().androidInfo;
-//     final sdkInt = androidInfo.version.sdkInt;
-//     if (sdkInt >= 33) {
-//       // Android 13+: Use READ_MEDIA_IMAGES
-//       status = await Permission.photos.status;
-//     } else {
-//       // Android 12 and below: Use READ_EXTERNAL_STORAGE
-//       status = await Permission.storage.status;
-//     }
-//   } else {
-//     // iOS (all versions)
-//     status = await Permission.photos.status;
-//   }
-
-//   // Request permission if not granted
-//   if (!status.isGranted) {
-//     if (Platform.isAndroid) {
-//       final androidInfo = await DeviceInfoPlugin().androidInfo;
-//       final sdkInt = androidInfo.version.sdkInt;
-//       if (sdkInt >= 33) {
-//         status = await Permission.photos.request();
-//       } else {
-//         status = await Permission.storage.request();
-//       }
-//     } else {
-//       status = await Permission.photos.request();
-//     }
-//   }
-
-//   // Handle permission outcomes
-//   if (status.isGranted) {
-//     try {
-//       final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-//       if (image != null && mounted) {
-//         setState(() {
-//           selectedImage = File(image.path);
-//           showImage = true; // Automatically show image container
-//           _adjustHeight(); // Adjust modal height
-//         });
-//       } else if (image == null && mounted) {
-//         snackBarAllFeilds2(context, 'No image selected');
-//       }
-//     } catch (e) {
-//       if (mounted) {
-//         snackBarAllFeilds2(context, 'Error picking image: $e');
-//       }
-//     }
-//   } else if (status.isDenied) {
-//     if (mounted) {
-//       snackBarAllFeilds2(context, 'Please grant photo library access to select images');
-//     }
-//   } else if (status.isPermanentlyDenied) {
-//     if (mounted) {
-//       snackBarAllFeilds2(
-//         context,
-//         'Photo library access is permanently denied. Please enable it in settings.',
-//       );
-//       await openAppSettings();
-//     }
-//   } else {
-//     if (mounted) {
-//       snackBarAllFeilds2(context, 'Unknown permission status: $status');
-//     }
-//   }
-// }
   Future<File?> _cropAndSaveImage() async {
     try {
       if (selectedImage == null) {
-        return null; // Silently fail instead of showing snackbar
+        return null; 
       }
 
       final croppedImage = await _cropController.onCropImage();
       if (croppedImage == null) {
-        return null; // Silently fail instead of showing snackbar
+        return null; 
       }
 
       final byteData = await _imageProviderToByteData(croppedImage);
       if (byteData == null) {
-        return null; // Silently fail instead of showing snackbar
+        return null; 
       }
 
       final Uint8List bytes = byteData.buffer.asUint8List();
@@ -198,7 +129,7 @@ class _TextScreenState extends State<TextScreen> {
 
       return file;
     } catch (e) {
-     // Log error instead of showing snackbar
+  
       return null;
     }
   }
@@ -358,7 +289,7 @@ class _TextScreenState extends State<TextScreen> {
                       onTap: () async {
                         if (contentController.text.isNotEmpty) {
                           if (showImage && selectedImage == null) {
-                            snackBarAllFeilds2(context, "Please Upload Image...");
+                            snackBarAllFeilds2(context,SnackbarData().uploadError);
                             return;
                           }
 
@@ -379,7 +310,7 @@ class _TextScreenState extends State<TextScreen> {
                         final croppedImageFile = await _cropAndSaveImage();
                         if (croppedImageFile == null) {
                           posting.value = false;
-                          return; // Silently fail instead of showing snackbar
+                          return;
                         }
 
                         await createPost(
@@ -391,11 +322,9 @@ class _TextScreenState extends State<TextScreen> {
 
                         if (mounted) {
                           Navigator.pop(context);
-                          // Get.to(() => const SuccessPost(celebrationText: "posted",));
                         }
                       } catch (e) {
-                        // print(
-                        //     'Error posting: $e'); // Log error instead of showing snackbar
+                       
                       } finally {
                         if (mounted) {
                           posting.value = false;

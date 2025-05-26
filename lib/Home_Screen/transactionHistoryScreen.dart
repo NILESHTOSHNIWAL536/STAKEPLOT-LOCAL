@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/tagandhidebutton.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
@@ -89,7 +90,7 @@ void _onScroll() {
         {
             int len=bankAccountLinkedList.length;
           if(len==0){
-               snackBarCalled(context, "No Bank Account Linked Please link your bank account to download the statement.");
+               snackBarCalled(context, SnackbarData().noBankForLinking);
           }
           else if(len==1)
           {

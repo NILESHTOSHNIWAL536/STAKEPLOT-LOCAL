@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/lendMessage.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
@@ -768,7 +769,7 @@ class _ModalContentState extends State<ModalContent>
                   if (addedMembers.length > 1) {
                     snackBarCalled(
                         context,
-                        "Please select only one friend for lending",
+                      SnackbarData().selectOnlyOneFriendLend,
                         Colors.red);
                     return;
                   }
@@ -804,7 +805,7 @@ class _ModalContentState extends State<ModalContent>
       return;
     }
     if (addedMembers.length <= 0) {
-      snackBarCalled(context, "Please add members to proceed!", Colors.red);
+      snackBarCalled(context,SnackbarData().addMembersToProceed, Colors.red);
       return;
     }
 
@@ -895,14 +896,14 @@ class _ModalContentState extends State<ModalContent>
     double? parsedTotalAmount = double.tryParse(totalAmount);
     if (parsedTotalAmount == null || parsedTotalAmount <= 0) {
       // print("splitUserAmount: Invalid totalAmount: $totalAmount");
-      snackBarCalled(context, "Invalid amount entered!", Colors.red);
+      snackBarCalled(context,SnackbarData().invalidAmountEntered, Colors.red);
       return;
     }
     // print("splitUserAmount: Parsed totalAmount: $parsedTotalAmount");
 
     if (members.isEmpty) {
       // print("splitUserAmount: No members selected");
-      snackBarCalled(context, "No members selected!", Colors.red);
+      snackBarCalled(context,SnackbarData().noMembersSelected, Colors.red);
       return;
     }
     // print("splitUserAmount: Members count: ${members.length}, Members: $members");
@@ -1013,7 +1014,7 @@ class _ModalContentState extends State<ModalContent>
       // print("splitUserAmount: Split successful, showing celebration");
       snackBarCalled(
           context,
-          "The split amount has been successfully sent to users!",
+         SnackbarData().splitAmountSuccess,
           Colors.black);
       Navigator.pop(context);
       addedMembers.clear();
@@ -1022,8 +1023,7 @@ class _ModalContentState extends State<ModalContent>
 
     } else {
       // print("splitUserAmount: API error - Status: ${response.statusCode}, Body: ${response.body}");
-      snackBarCalled(context,
-          "An error occurred while trying to split the bill!", Colors.red);
+      snackBarCalled(context,SnackbarData().splitAmountError, Colors.red);
     }
 
     acceptReset.value = false;
@@ -1061,8 +1061,7 @@ class _ModalContentState extends State<ModalContent>
         sendNotificationsToDevice(e['id'], context,"${userName.value} has sent u a lend bill..Of ${name} Of ${amount}");
       });
 
-      snackBarCalled(context,
-          "Lend amount has been successfully sent to users!", Colors.black);
+      snackBarCalled(context,SnackbarData().lendAmountSuccess, Colors.black);
       addTransaction(
           amount, "Lend Bill (${subCategories})", name, context, 'cash', false);
       getUserLend(context);
@@ -1072,7 +1071,7 @@ class _ModalContentState extends State<ModalContent>
       selectedDueDate = null;
     } else {
       snackBarCalledfail(
-          context, "An error occurred while trying to lend money!", Colors.red);
+          context,SnackbarData().lendAmountError, Colors.red);
     }
     acceptReset.value = false;
   }
