@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Utils/signUp.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
@@ -345,6 +346,6 @@ void storeData(context, data, String opt, Avatarurl) async {
     clearStack(context);
     Navigator.pushReplacementNamed(context, '/ShareAccountLogin');
   } catch (e) {
-    snackBarCalledSignup(context, "Invalid OTP!", Colors.red);
+    snackBarCalledSignup(context, SignupData().errorInvalidOtp, Colors.red);
   }
 }
