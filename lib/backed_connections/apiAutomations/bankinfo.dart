@@ -67,6 +67,7 @@ Future<void> getBankAccounts() async
          }
 
   loadBanks.value = false;
+  loadBalance.value =! loadBalance.value;
 }
 
 void getWeeklyfetchData(

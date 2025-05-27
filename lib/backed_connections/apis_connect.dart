@@ -13,7 +13,7 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 bool flag = true;
 String portNo = flag ? "192.168.1.8" : "localhost";
-String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String urlWithLocallHost = flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Fields";
 RxString expenses = "Loading".obs;
@@ -180,6 +180,7 @@ RxList getTrendingData = [].obs;
 RxBool hasGetNewNotifications = false.obs;
 RxBool getGraphData=false.obs;
 RxBool loadBanks=true.obs;
+RxBool loadBalance=true.obs;
 RxBool isSplit = false.obs;
   RxBool isLend = false.obs;
   RxBool stopTonavigate = true.obs;

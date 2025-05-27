@@ -18,6 +18,9 @@ void getAck() async {
   }
 }
 
+
+
+
 void setPasswordApiCalled(context, String password) async {
   if (password == "00") {
     snackBarCalledfail(context,SnackbarData().pinSetFail00, Colors.red);
@@ -29,18 +32,67 @@ void setPasswordApiCalled(context, String password) async {
     'pin': password.toString(),
   });
 
-  if (getFlagOfResponse(response)) {
+  if (getFlagOfResponse(response))
+  {
     cupertinoPin.value = password;
-
-    snackBarCalled(
-        context,SnackbarData().pinSetSuccess, Colors.black);
-  } else {
+    snackBarCalled(context,SnackbarData().pinSetSuccess, Colors.black);
+  }
+  else {
     snackBarCalled(context,SnackbarData().pinSetFail, Colors.red);
   }
   Navigator.pop(context);
 }
 
-void PinPasswordVerify(password, context, Function setBack) async {
+
+// Lock flag to prevent duplicate API calls
+bool _isVerifyingPin = false;
+
+// Debounce timer (optional, if you want to debounce the API call)
+Timer? _verifyDebounce;
+
+/// Call this function instead of [pinPasswordVerify] to apply debounce
+void pinPasswordVerifyDebounced(String password, BuildContext context, Function setBack) {
+  if (_verifyDebounce?.isActive ?? false) _verifyDebounce?.cancel();
+
+  _verifyDebounce = Timer(const Duration(milliseconds: 800), () {
+    pinPasswordVerify(password, context, setBack);
+  });
+}
+
+/// Main PIN verification function with locking and error handling
+void pinPasswordVerify(String password, BuildContext context, Function setBack) async {
+  if (_isVerifyingPin) return; // Prevent multiple calls
+  _isVerifyingPin = true;
+
+  try {
+    final response = await getDataApiCall("${url}/user/cupertino/$password");
+
+    if (response.statusCode == 200) {
+      hideBackAccountPassword.value = true;
+   
+      // Auto-hide after 5 seconds
+      Timer(const Duration(seconds: 5), () {
+        hideBackAccountPassword.value = false;
+
+        // Reset values
+        firstDigit.value = 0;
+        secondDigit.value = 0;
+        digitLoad.value = !digitLoad.value;
+
+        setBack(); // Callback
+      });
+    } else
+    {
+      hideBackAccountPassword.value = false;
+    }
+  } catch (e) {
+    hideBackAccountPassword.value = false;
+  } finally {
+    _isVerifyingPin = false;
+  }
+}
+
+void PinPasswordVerify2(password, context, Function setBack) async {
   var response = await getDataApiCall("${url}/user/cupertino/${password}");
 
   if (response.statusCode == 200 || response.statusCode == 200) {
