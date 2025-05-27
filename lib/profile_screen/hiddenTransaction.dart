@@ -85,7 +85,7 @@ Widget historyTransactions(
       doubleToFixed((transaction['amount'] ?? 0.0).toString()));
   final isManual = transaction['manualTransaction'] ?? false;
   final formattedDate = date != null
-      ? formatWhatsAppDate(convertStringToDateTime(date))
+      ? formatWhatsAppDate4(convertStringToDateTime(date))
       : 'Date';
   final narration = transaction['narration'] ?? 'Unnamed Group';
   final type = transaction['type']?.toString() ?? '0';
