@@ -16,6 +16,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/number_picker.dar
 import 'package:flutter_application_code_stakeplot/NavigatorScreens/userNavigator.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
+import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
@@ -97,7 +98,7 @@ class _HomePageState extends State<HomePage> {
     getCustomCategory(context);
     custom = getthelist();
     allOrGroupTransactionsName.value = StringConstant.allTransactions;
-   
+   clearAllFlags();
     await getRemainders(context);
     await updateWidget();
     lifecycleHandler = AppLifecycleHandler(currentId.value); // Replace with actual user ID

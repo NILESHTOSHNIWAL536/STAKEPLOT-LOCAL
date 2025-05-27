@@ -66,7 +66,6 @@ final Map<String, int> monthNameToIndex = {
             };
 
             try {
-              //   print('Processing yearly data for year: $year');
               if (data['data'] != null &&
                   data['data']['result'] != null) {
                 data['data']['result'].forEach((key, value) {
@@ -99,7 +98,6 @@ final Map<String, int> monthNameToIndex = {
               };
             }
           } else {
-            //  print('API returned success:false with error: ${data['error']}');
             currentChartData.value = {
               'credited': List.filled(12, 0.0),
               'debited': List.filled(12, 0.0),
@@ -467,10 +465,8 @@ void hideTransaction(
   final transaction = transactionsHistory[index];
   final transactionId = transaction['_id']?.toString();
   if (transactionId == null) {
-    //   print("Error: Transaction ID is null");
     return;
   }
-  //  /67e7d5f43afa9db7fcc3f29c
   final apiUrl = "$url/transactionauto/updateTransaction/$id";
 
   try {

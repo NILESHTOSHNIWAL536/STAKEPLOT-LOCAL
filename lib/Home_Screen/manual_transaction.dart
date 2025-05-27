@@ -8,8 +8,10 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_spli
 import 'package:flutter_application_code_stakeplot/Home_Screen/lendMessage.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
+import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
@@ -18,6 +20,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/backServic
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -338,7 +341,7 @@ class _ModalContentState extends State<ModalContent>
                           ],
 
                           if (fin != null) ...[
-                            isDebit?  buttonsWidget():SizedBox.shrink(),
+                            isDebit?  SplitLendButton():SizedBox.shrink(),
                             continueButton(),
                           ],
                         ],
@@ -659,7 +662,7 @@ class _ModalContentState extends State<ModalContent>
     );
   }
 
-  Widget buttonsWidget() {
+  Widget SplitLendButton() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -676,7 +679,6 @@ class _ModalContentState extends State<ModalContent>
             final result =
                 await showCustomFriendsModal(context, amount ?? 0.0, false);
             if (result != null && addedMembers.isNotEmpty) {
-              // print("buttonsWidget: Split mode - Received amounts: $result");
               splitUserAmountManualTransaction(
                 context,
                 amount.toString(),
@@ -762,15 +764,14 @@ class _ModalContentState extends State<ModalContent>
             child: InkWell(
               onTap: () {
                 FocusScope.of(context).unfocus();
+                if(cashInAndOut.value)return;
+                cashInAndOut.value = true;
                 if (isSplit.value && addedMembers.isNotEmpty) {
-                  splitBill(selectedCategory2.toString(), amount.toString(),
-                      selectedSubCategory2.toString(), true);
+                  splitBill(selectedCategory2.toString(), amount.toString(),selectedSubCategory2.toString(), true);
                 } else if (isLend.value && addedMembers.isNotEmpty) {
-                  if (addedMembers.length > 1) {
-                    snackBarCalled(
-                        context,
-                      SnackbarData().selectOnlyOneFriendLend,
-                        Colors.red);
+                  if (addedMembers.length > 1)
+                  {
+                    snackBarCalled(context,SnackbarData().selectOnlyOneFriendLend,Colors.red);
                     return;
                   }
                   addLendUserAmount(
@@ -787,11 +788,11 @@ class _ModalContentState extends State<ModalContent>
                     selectedCategory2.toString(),
                     context,
                     "cash",
-                    
                   );
                 }
+              
               },
-              child: getButton(context, HomepageStringsDart().addButton),
+              child: Obx(()=>  cashInAndOut.value? getspinner(context) :getButton(context, HomepageStringsDart().addButton)),
             ),
           ),
         ),
@@ -817,8 +818,7 @@ class _ModalContentState extends State<ModalContent>
       splitUserAmountManualTransaction(
           context, amount, addedMembers, categories, subCategories);
     else
-      addLendUserAmount(
-          context, amount, addedMembers, categories, subCategories);
+      addLendUserAmount(context, amount, addedMembers, categories, subCategories);
   }
 
   void addSocketMessage(addedUser, String amount, String splitName,
@@ -891,27 +891,23 @@ class _ModalContentState extends State<ModalContent>
     List members,
     String name,
     String subCategories, {
-    Map<String, double>? amounts, // Manual amounts including user's share
+    Map<String, double>? amounts, 
   }) async {
     double? parsedTotalAmount = double.tryParse(totalAmount);
     if (parsedTotalAmount == null || parsedTotalAmount <= 0) {
-      // print("splitUserAmount: Invalid totalAmount: $totalAmount");
+     
       snackBarCalled(context,SnackbarData().invalidAmountEntered, Colors.red);
       return;
     }
-    // print("splitUserAmount: Parsed totalAmount: $parsedTotalAmount");
 
     if (members.isEmpty) {
-      // print("splitUserAmount: No members selected");
       snackBarCalled(context,SnackbarData().noMembersSelected, Colors.red);
       return;
     }
-    // print("splitUserAmount: Members count: ${members.length}, Members: $members");
-
-    // Prepare paymentStatus list with individual amounts
+   
     List<Map<String, dynamic>> nameList = [];
     if (amounts != null) {
-      // print("splitUserAmount: Using manual amounts: $amounts");
+      
       members.forEach((element) {
         double memberAmount = amounts[element['id']] ?? 0.0;
         nameList.add({
@@ -919,19 +915,9 @@ class _ModalContentState extends State<ModalContent>
           'markAsComplete': false,
           'amount': memberAmount,
         });
-        // print("splitUserAmount: Added member ${element['id']} with amount: $memberAmount");
       });
-      // Include the user's amount if present in amounts (commented out in your version)
-      // if (amounts.containsKey(currentId.value)) {
-      //   nameList.add({
-      //     'member': currentId.value,
-      //     'markAsComplete': false,
-      //     'amount': amounts[currentId.value]!,
-      //   });
-      //   print("splitUserAmount: Added user ${currentId.value} with amount: ${amounts[currentId.value]}");
-      // }
+      
     } else {
-      // print("splitUserAmount: Falling back to equal split");
       double amountPerPerson = parsedTotalAmount / (members.length + 1);
       members.forEach((element) {
         nameList.add({
@@ -939,52 +925,36 @@ class _ModalContentState extends State<ModalContent>
           'markAsComplete': false,
           'amount': amountPerPerson,
         });
-        // print("splitUserAmount: Added member ${element['id']} with equal amount: $amountPerPerson");
       });
       nameList.add({
         'member': currentId.value,
         'markAsComplete': false,
         'amount': amountPerPerson,
       });
-      // print("splitUserAmount: Added user ${currentId.value} with equal amount: $amountPerPerson");
     }
 
-    // Verify total matches (optional, for debugging)
-    double calculatedTotal =
-        nameList.fold(0.0, (sum, item) => sum + item['amount']);
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-    // print("splitUserAmount: Access token retrieved: ${accessToken != null ? 'Yes' : 'No'}");
+    double calculatedTotal = nameList.fold(0.0, (sum, item) => sum + item['amount']);
 
-    final response = await http.post(
-      Uri.parse('$url/split'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-      body: jsonEncode({
+    var response= await postDataApiCall(
+      '${url}/split',
+      {
         "subcategory": subCategories,
         "category": name,
         "amount": calculatedTotal,
         "paymentStatus": nameList,
         "image": '',
         "ismanual": true,
-      }),
+      },
     );
-    // print("splitUserAmount: API request sent with paymentStatus: $nameList");
-    // print("splitUserAmount: API response status: ${response.statusCode}, body: ${response.body}");
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
+   
+    if (getFlagOfResponse(response)) {
       final body = json.decode(response.body);
       splitID.value = body['id']['_id'];
-      // print("splitUserAmount: Split ID set: ${splitID.value}");
-
-      // Send notifications with individual amounts
-      for (var member in members) {
+        for (var member in members) {
         double memberAmount = amounts?[member['id']] ??
             (parsedTotalAmount / (members.length + 1));
         String formattedAmount = memberAmount.toStringAsFixed(2);
-        // print("splitUserAmount: Sending notification to ${member['id']} with amount: $formattedAmount");
+        
         sendNotificationsToDevice(
             member['id'],
             context,
@@ -992,17 +962,14 @@ class _ModalContentState extends State<ModalContent>
             "/chat");
       }
 
-      // Send socket messages with individual amounts
       if (amounts != null) {
         members.forEach((member) {
           double memberAmount = amounts[member['id']] ?? 0.0;
-          // print("splitUserAmount: Sending socket message to ${member['id']} with amount: $memberAmount");
           addSocketMessage([member], memberAmount.toString(), name,
               splitID.value, parsedTotalAmount);
         });
       } else {
         double amountPerPerson = parsedTotalAmount / (members.length + 1);
-        // print("splitUserAmount: Sending socket message (equal split) with amount: $amountPerPerson");
         addSocketMessage(members, amountPerPerson.toString(), name,
             splitID.value, parsedTotalAmount);
       }
@@ -1011,7 +978,6 @@ class _ModalContentState extends State<ModalContent>
       searchController.clear();
       getAllTransaction(context);
 
-      // print("splitUserAmount: Split successful, showing celebration");
       snackBarCalled(
           context,
          SnackbarData().splitAmountSuccess,
@@ -1022,12 +988,11 @@ class _ModalContentState extends State<ModalContent>
       _showCelebration();
 
     } else {
-      // print("splitUserAmount: API error - Status: ${response.statusCode}, Body: ${response.body}");
       snackBarCalled(context,SnackbarData().splitAmountError, Colors.red);
     }
 
     acceptReset.value = false;
-    // print("splitUserAmount: Finished execution");
+    cashInAndOut.value =false;
   }
 
   void addLendUserAmount(context, String amount, List members, String name,
@@ -1062,8 +1027,7 @@ class _ModalContentState extends State<ModalContent>
       });
 
       snackBarCalled(context,SnackbarData().lendAmountSuccess, Colors.black);
-      addTransaction(
-          amount, "Lend Bill (${subCategories})", name, context, 'cash', false);
+      addTransaction(amount, "Lend Bill (${subCategories})", name, context, 'cash', false,false);
       getUserLend(context);
       messageController.clear();
       addedMembers.clear();
@@ -1073,6 +1037,8 @@ class _ModalContentState extends State<ModalContent>
       snackBarCalledfail(
           context,SnackbarData().lendAmountError, Colors.red);
     }
+
     acceptReset.value = false;
+    cashInAndOut.value =false;
   }
 }

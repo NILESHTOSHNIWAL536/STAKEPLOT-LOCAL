@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
@@ -21,7 +22,7 @@ Future<bool?> showSkipModal2(BuildContext context) {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              "Are you sure you want to stop the process of linking your account(s) with Finvu?",
+               FinvuStrings().skipModalTitle,
               textAlign: TextAlign.center,
               style: FontManager().getTextStyle(
                 context,
@@ -47,7 +48,7 @@ Future<bool?> showSkipModal2(BuildContext context) {
                           borderRadius: BorderRadius.circular(24)),
                       child: Center(
                         child: Text(
-                          "Cancel",
+                         FinvuStrings().cancel,
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.bold,
                               fontSize: 15,
@@ -73,7 +74,7 @@ Future<bool?> showSkipModal2(BuildContext context) {
                           borderRadius: BorderRadius.circular(24)),
                       child: Center(
                         child: Text(
-                          "Yes",
+                           FinvuStrings().yes,
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.bold,
                               fontSize: 15,

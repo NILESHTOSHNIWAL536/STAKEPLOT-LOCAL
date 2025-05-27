@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/manual_transaction.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
+import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 // import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
@@ -118,9 +119,8 @@ void getAutoMationsTransactionsCustom(date, context,
   String urlPath = endDate != null && weekORmonth == 'Custom'
       ? "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date,${getNextDay(endDate)}"
       : "$url/transactionauto/getAllCustomTransactions/${accountId.value}/${weekORmonth.toLowerCase()}/$date";
-
   var response = await getDataApiCall(urlPath);
-
+  
   trasactionsDataDebitWeekly.clear();
 
   List<String> labelsLocal = [];
@@ -174,12 +174,6 @@ void getAutoMationsTransactionsCustom(date, context,
           }
         });
 
-        // Print month data for debugging only if selected button is 'Month'
-        if (selectedButton.value == 'Month') {
-          print("Debit List for Custom Month: $debitList");
-          print("Credit List for Custom Month: $creditList");
-          print("Labels for Custom Month: $labelsLocal");
-        }
       } else {
         // Keep original logic for non-custom cases
         data.forEach((key, value) {
@@ -190,13 +184,7 @@ void getAutoMationsTransactionsCustom(date, context,
           debitList.add(getDouble(value['debit']));
           creditList.add(getDouble(value['credit']));
         });
-
-        // Print month data for non-custom cases only if selected button is 'Month'
-        if (selectedButton.value == 'Month') {
-          print("Debit List for Non-Custom Month: $debitList");
-          print("Credit List for Non-Custom Month: $creditList");
-          print("Labels for Non-Custom Month: $labelsLocal");
-        }
+       
       }
     } catch (e) {
       maxYValue.value = 500.0;
@@ -300,7 +288,6 @@ String getCurrentWeek() {
   final now = DateTime.now().subtract(Duration(days: 7));
   final year = now.year;
   String s = '$year-W${now.weekOfYear.toString().padLeft(2, '0')}';
-  print("dfsjafslkfjaslkfjdlkj : $s");
   return s;
 }
 
@@ -401,9 +388,7 @@ void getHideTransactions(context) async {
 
 void addTransaction(String amount, String subCategory, String categories,
     BuildContext context, String dropdownValue,
-    [bool isSplit = false]) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
+    [bool isSplit = false,bool snackBar=true]) async {
 
   var body = {
     'amount': amount.toString(),
@@ -415,21 +400,13 @@ void addTransaction(String amount, String subCategory, String categories,
     'isDebit': isDebit
   };
 
-  final response = await http.post(
-    Uri.parse('${url}/transaction/add'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode(body),
-  );
-  print("body of mt: $body");
-  if (response.statusCode == 200) {
+  final response = await postDataApiCall("${url}/transaction/add", body);
+   printData(response);
+  if (getFlagOfResponse(response)) {
     final body = json.decode(response.body);
-    if (!isSplit)
-      snackBarCalled(context,  SnackbarData().transactionSuccess,
-          AppColors.primaryColor);
-    // getAllTransaction(context);
+    if (!isSplit && snackBar) {
+      snackBarCalled(context,  SnackbarData().transactionSuccess,AppColors.primaryColor);
+    }
     transactionsHistory.insert(0, body['data'][0]);
     reloadHistory.value = !reloadHistory.value;
     getCategoryData();
@@ -438,8 +415,10 @@ void addTransaction(String amount, String subCategory, String categories,
     getAutoMationsTransactionsCustom(getFormattedDate(), context);
     Navigator.pop(context);
   } else {
-    snackBarCalled(context, SnackbarData().transactionAddFail, Colors.red);
+    snackBarCalledfail(context, SnackbarData().transactionAddFail, Colors.red);
   }
+
+   cashInAndOut.value =false;
 }
 
 void processChartData() {

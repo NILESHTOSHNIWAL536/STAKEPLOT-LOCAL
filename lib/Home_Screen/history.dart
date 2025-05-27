@@ -39,7 +39,7 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
   final isSplit = transaction['isSplit'] ?? false;
 
   final formattedDate = date != null
-      ? formatWhatsAppDate3(convertStringToDateTime(date))
+      ? formatWhatsAppDate4(convertStringToDateTime(date))
       : 'Date';
   final formattedDateManual =
       date != null ? formatWhatsAppDate(convertStringToDateTime(date)) : 'Date';

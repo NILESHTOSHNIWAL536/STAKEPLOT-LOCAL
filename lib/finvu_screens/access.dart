@@ -3,6 +3,7 @@ import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
@@ -53,7 +54,7 @@ class _AccessState extends State<Access> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Give Permission",
+                 FinvuStrings().givePermission,
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.bold,
@@ -64,8 +65,7 @@ class _AccessState extends State<Access> {
               SizedBox(height: 10),
               RichText(
                 text: TextSpan(
-                  text:
-                      "To share your accounts with Stakeplot for ", // Regular text
+                   text: FinvuStrings().shareAccountsWithStakeplot,// Regular text
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.w400,
@@ -74,8 +74,7 @@ class _AccessState extends State<Access> {
                   ),
                   children: [
                     TextSpan(
-                      text:
-                          "Smart finance management & insights.", // Highlighted text
+                      text: FinvuStrings().smartFinanceInsights,// Highlighted text
                       style: FontManager().getTextStyle(
                         context,
                         lWeight:
@@ -143,12 +142,11 @@ class _AccessState extends State<Access> {
         child: Column(
           children: [
             accounts(
-                "Accounts Shared",
-                "${seletedAccountIds.length} Account(s) are shared",
+                FinvuStrings().accountsSharedTitle, // Direct access
+                "${seletedAccountIds.length} ${FinvuStrings().accountsSharedValue}",
                 Icons.account_balance_wallet_outlined),
-            accounts("Permission Validity", range, Icons.date_range_rounded),
-            accounts("Frequency of Access",
-                "We can access your information one-time.", Icons.access_time),
+            accounts(FinvuStrings().permissionValidity, range, Icons.date_range_rounded), // Direct access
+            accounts(FinvuStrings().frequencyOfAccess, FinvuStrings().frequencyOfAccess, Icons.access_time), // Direct access
             getInfomationsAboutUserConsnt(),
           ],
         ),
@@ -200,7 +198,7 @@ class _AccessState extends State<Access> {
       },
       child: Center(
         child: Text(
-          "View more Details",
+         FinvuStrings().viewMoreDetails,
           style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.w600,
@@ -232,7 +230,7 @@ class _AccessState extends State<Access> {
                           children: [
                             SizedBox(height: Colorcodes.space),
                             Text(
-                              "Approval Requested on",
+                              FinvuStrings().approvalRequestedOn,
                               style: FontManager().getTextStyle(
                                 context,
                                 lWeight: FontWeight.w400,
@@ -254,7 +252,7 @@ class _AccessState extends State<Access> {
                             ),
                             SizedBox(height: Colorcodes.space),
                             Text(
-                              "Purpose",
+                               FinvuStrings().purpose,
                               style: FontManager().getTextStyle(
                                 context,
                                 lWeight: FontWeight.w400,
@@ -274,7 +272,7 @@ class _AccessState extends State<Access> {
                             ),
                             SizedBox(height: Colorcodes.space),
                             Text(
-                              "Account Details",
+                              FinvuStrings().accountDetails, 
                               style: FontManager().getTextStyle(
                                 context,
                                 lWeight: FontWeight.w400,
@@ -284,7 +282,7 @@ class _AccessState extends State<Access> {
                             ),
                             SizedBox(height: 5),
                             Text(
-                              "Profile,Summary,Transactions",
+                              FinvuStrings().profileSummaryTransactions, 
                               style: FontManager().getTextStyle(
                                 context,
                                 lWeight: FontWeight.w600,
@@ -294,7 +292,7 @@ class _AccessState extends State<Access> {
                             ),
                             SizedBox(height: Colorcodes.space),
                             Text(
-                              "Data life",
+                               FinvuStrings().dataLife,
                               style: FontManager().getTextStyle(
                                 context,
                                 lWeight: FontWeight.w400,
@@ -319,7 +317,7 @@ class _AccessState extends State<Access> {
                             ),
                             SizedBox(height: Colorcodes.space),
                             Text(
-                              "Approval Expiry",
+                             FinvuStrings().approvalExpiry,
                               style: FontManager().getTextStyle(
                                 context,
                                 lWeight: FontWeight.w400,
@@ -341,7 +339,7 @@ class _AccessState extends State<Access> {
                             ),
                             SizedBox(height: Colorcodes.space),
                             Text(
-                              "Account Types",
+                             FinvuStrings().accountTypes,
                               style: FontManager().getTextStyle(
                                 context,
                                 lWeight: FontWeight.w400,
@@ -452,7 +450,7 @@ class _AccessState extends State<Access> {
       child: Padding(
         padding: const EdgeInsets.only(left: 3, top: 5),
         child: Text(
-          "View More",
+        FinvuStrings().viewMore,
           style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.w400,
@@ -480,7 +478,7 @@ class _AccessState extends State<Access> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  textStyle("Linked Bank Account", 15, AppColors.primaryColor,
+                  textStyle( FinvuStrings().linkedBankAccount, 15, AppColors.primaryColor,
                       FontWeight.bold),
                   InkWell(
                       onTap: () {
@@ -594,7 +592,7 @@ class _AccessState extends State<Access> {
           Container(
             width: MediaQuery.of(context).size.width / 1.2,
             child: Text(
-              "You can pause or cancel sharing anytime via your Finvu app.",
+               FinvuStrings().pauseOrCancelSharing, 
               style: FontManager().getTextStyle(
                 context,
                 lWeight: FontWeight.w400,
@@ -627,7 +625,7 @@ class _AccessState extends State<Access> {
               ),
               child: Center(
                 child: Text(
-                  "Give permission",
+                 FinvuStrings().givePermission,
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.bold,
@@ -654,7 +652,7 @@ class _AccessState extends State<Access> {
               ),
               child: Center(
                 child: Text(
-                  "Decline",
+                   FinvuStrings().decline,
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.bold,
@@ -732,10 +730,10 @@ void showDialogBoxForDecline(BuildContext context) {
             crossAxisAlignment: CrossAxisAlignment.start, // Prevent excessive height
             children: [
               textStyle(
-                "Are you sure?",20,AppColors.primaryColor,FontWeight.bold
+                FinvuStrings().areYouSure,20,AppColors.primaryColor,FontWeight.bold
               ),
               SizedBox(height: 10),
-              textStyle("Do you really want to decline?",15),
+              textStyle(FinvuStrings().declineConfirmation,15),
               Spacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -748,7 +746,7 @@ void showDialogBoxForDecline(BuildContext context) {
                       ),
                     ),
                     onPressed: () => Navigator.of(context).pop(),
-                    child: textStyle("No",15),
+                    child: textStyle(FinvuStrings().no,15),
                   ),
                   const SizedBox(width: 20,),
                   TextButton(
@@ -761,7 +759,7 @@ void showDialogBoxForDecline(BuildContext context) {
                     onPressed: () {
                        decline();
                     },
-                    child: textStyle("Yes",15),
+                    child: textStyle(FinvuStrings().yes,15),
                   ),
                 ],
               ),

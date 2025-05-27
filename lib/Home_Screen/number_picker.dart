@@ -69,7 +69,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
         ? AvatarProfileImage(url: bankImage, width: 10, height: 10)
         :PageView.builder(
                   itemCount: bankAccountLinkedList.length,
-                  controller: PageController(viewportFraction: 1.0),
+                  controller: PageController(viewportFraction: 1.0,initialPage:scrollBankPage.value ),
                    onPageChanged: (index) {
                       if (bankAccountLinkedList.isEmpty) return;
                       accountId.value = bankAccountLinkedList[index]['accountId'] ?? "";
@@ -78,6 +78,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                       fetchCount.value = bankAccountLinkedList[index]['fetchCount'].toString();
                       BankName.value = bankAccountLinkedList[index]['bankName'].toString();
                       BankUrl.value = bankAccountLinkedList[index]['bankLogo'].toString();
+                      scrollBankPage.value = index;
                       calledFunctionToFetchData(context);
                     },
                   itemBuilder: (context, index) {

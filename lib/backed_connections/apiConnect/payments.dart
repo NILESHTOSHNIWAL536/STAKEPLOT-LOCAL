@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
+import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -36,8 +37,10 @@ void getDebts() async {
 Future<void> fetchDebts() async {
   try {
     var fetchedDebts = await DebtService.fetchDebts();
-    if (fetchedDebts != null && fetchedDebts.isNotEmpty) {
+    if (fetchedDebts.isNotEmpty) {
       debts.assignAll(fetchedDebts);
+    } else {
+      debts.clear();
     }
   } catch (e) {
     Get.snackbar('Error', 'Failed to fetch debts: $e');
@@ -58,27 +61,6 @@ void getBudget() async {
   } catch (e) {}
 }
 
-void getBudget2() async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.get(
-    Uri.parse('${url}/budget/'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
-
-  if (response.statusCode == 200) {
-    var his = jsonDecode(response.body);
-    var obj = his['data'];
-    budgetList.clear();
-    budgetList.addAll(obj);
-    budgetLength.value = obj.length;
-  } else {}
-}
-
 getBills() async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
@@ -97,27 +79,6 @@ getBills() async {
     billLength.value = obj.length;
     //  billAmount.clear();
     //  billAmount.addAll(obj);
-  } else {}
-}
-
-getPayments() async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  final response = await http.get(
-    Uri.parse('${url}/payment/'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    var his = jsonDecode(response.body);
-    var obj = his['data'];
-    paymentLength.value = obj.length;
-    // payment.clear();
-    // payment.addAll(obj);
   } else {}
 }
 
@@ -155,6 +116,7 @@ void addBudget(BuildContext context, String name, String amount,
   }
 
   acceptReset.value = false;
+  createBudget.value = false;
 }
 
 void budgetUpdate(context, name, amount, expenseCategory, budgetType,
@@ -184,9 +146,8 @@ void budgetUpdate(context, name, amount, expenseCategory, budgetType,
     // Navigator.pushNamed(context, '/BudgetCheck');
     Navigator.pop(context);
     Navigator.pop(context);
-
   } else {
-    snackBarCalled(context,SnackbarData().budgetUpdateFailed, Colors.red);
+    snackBarCalled(context, SnackbarData().budgetUpdateFailed, Colors.red);
   }
 }
 
@@ -212,14 +173,13 @@ void addDebts(context, name, amount, interest, startDate, durations) async {
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
 
-    snackBarCalled(context,SnackbarData().debtAdded);
+    snackBarCalled(context, SnackbarData().debtAdded);
     acceptReset.value = false;
-  
+
     getDebts();
     Navigator.pop(context);
-
   } else {
-    snackBarCalled(context,SnackbarData().debtAddFailed, Colors.red);
+    snackBarCalled(context, SnackbarData().debtAddFailed, Colors.red);
   }
   acceptReset.value = false;
 }
@@ -254,61 +214,14 @@ void addBillTranscations(
       final body = json.decode(response.body);
 
       acceptReset.value = false;
-      snackBarCalled(
-          context,SnackbarData().billAdded , Colors.black);
+      snackBarCalled(context, SnackbarData().billAdded, Colors.black);
       getBills();
       Navigator.pop(context);
     } else {
-      snackBarCalled(context, SnackbarData().billAddFailed , Colors.red);
+      snackBarCalled(context, SnackbarData().billAddFailed, Colors.red);
     }
     acceptReset.value = false;
   }
-}
-
-void addPaymentTranscations(
-    List<TextEditingController> controller, context) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  int end = controller.length;
-
-  // paymentLength.value += (end/3) as int;
-
-  for (int i = 0; i < end; i += 3) {
-    paymentLength.value += 1;
-    String name = controller[i].text;
-    String amount = controller[i + 1].text;
-    String expenseCategory = controller[i + 2].text;
-
-    final response = await http.post(
-      Uri.parse('${url}/payment/'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-      body: jsonEncode({
-        'name': name.toString(),
-        'amount': amount,
-        'date': expenseCategory.toString(),
-      }),
-    );
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      final body = json.decode(response.body);
-      acceptReset.value = false;
-      snackBarCalled(
-          context,SnackbarData().paymentAdded, Colors.black);
-
-      getPayments();
-      //  Navigator.pushNamed(context, '/bsDisplay');
-      Navigator.pop(context);
-    } else {
-      snackBarCalled(context,SnackbarData().paymentAddFailed, Colors.red);
-    }
-    acceptReset.value = false;
-    // Navigator.pushNamed(context, '/SchedulePaymentsDisplay');
-  }
-
-  // Navigator.pop(context);
 }
 
 void deleteDebts(context, String id, [flag = false]) async {
@@ -324,7 +237,7 @@ void deleteDebts(context, String id, [flag = false]) async {
   );
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
-    snackBarCalled(context,SnackbarData().debtCleared , Colors.black);
+    snackBarCalled(context, SnackbarData().debtCleared, Colors.black);
     debtLength.value--;
     getDebts();
     if (flag) return;
@@ -335,8 +248,7 @@ void deleteDebts(context, String id, [flag = false]) async {
     //           ),
     //       );
   } else {
-    snackBarCalled(
-        context, SnackbarData().debtClearError, Colors.red);
+    snackBarCalled(context, SnackbarData().debtClearError, Colors.red);
   }
 }
 
@@ -354,34 +266,7 @@ void deleteAmount(context, String id, String am) async {
   if (response.statusCode == 200 || response.statusCode == 201) {
     final body = json.decode(response.body);
   } else {
-    snackBarCalled(
-        context,  SnackbarData().debtClearError, Colors.red);
-  }
-}
-
-void updateBill(context, String path, String objectId) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  String pathUrl = '${url}/${path}/${objectId}';
-
-  final response = await http.patch(
-    Uri.parse(pathUrl),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
-      'markAsComplete': true,
-    }),
-  );
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
-    getBills();
-    getPayments();
-    snackBarCalled(context, "${path} is paid!", Colors.black);
-  } else {
-    snackBarCalled(context,SnackbarData().debtUpdateError, Colors.red);
+    snackBarCalled(context, SnackbarData().debtClearError, Colors.red);
   }
 }
 
@@ -397,10 +282,10 @@ void deleteBudget(context, String id) async {
     },
   );
   if (response.statusCode == 200 || response.statusCode == 201) {
-    snackBarCalled(context,SnackbarData().processingBudgetDeletion, Colors.red);
-  } else {
     snackBarCalled(
-        context,SnackbarData().budgetDeletionError, Colors.red);
+        context, SnackbarData().processingBudgetDeletion, Colors.red);
+  } else {
+    snackBarCalled(context, SnackbarData().budgetDeletionError, Colors.red);
   }
 }
 
@@ -428,10 +313,10 @@ void clearDebts(context, String id, String amount, String value) async {
   );
   if (response.statusCode == 200) {
     final body = json.decode(response.body);
-    snackBarCalled(context,SnackbarData().allDebtsCleared, Colors.black);
+    snackBarCalled(context, SnackbarData().allDebtsCleared, Colors.black);
     //  Navigator.pushReplacementNamed(context, '/home');
   } else {
-    snackBarCalled(context,SnackbarData().debterror , Colors.red);
+    snackBarCalled(context, SnackbarData().debterror, Colors.red);
   }
 }
 
@@ -502,8 +387,6 @@ void sendNotificationsToDevice(id, context, msg,
       snackBarCalled(context, data["message"], Colorcodes.red);
       return;
     }
-
-    print(message);
     if (screen == "/remainder" || screen == "/remainders") {
       snackBarCalled(context, message);
     }

@@ -4,14 +4,15 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
+import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 class BudgetOverView extends StatefulWidget {
   final String amount;
@@ -123,7 +124,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                     c: AppColors.accentColor),
                 textStyle(
                     context: context,
-                    text:  PlotFinanceStaticData().totalAmountLabel,
+                    text: PlotFinanceStaticData().totalAmountLabel,
                     fontsize: 16,
                     fontWeight: FontWeight.w500),
               ],
@@ -137,16 +138,18 @@ class _BudgetOverViewState extends State<BudgetOverView> {
             ),
             InkWell(
                 onTap: () async {
+                  if (createBudget.value) return;
                   // Show loader
-                
+                  createBudget.value = true;
+
                   // Add budget
-                   addBudget(context, widget.name, widget.amount,
+                  addBudget(context, widget.name, widget.amount,
                       categoriesDividedList, widget.period);
 
                   // Dismiss loader
-                 
                 },
-                child: getButton(context, PlotFinanceStaticData().addBudgetButton)),
+                child: Obx(()=>createBudget.value?getspinner(context):getButton(
+                    context, PlotFinanceStaticData().addBudgetButton))),
           ],
         ),
       ),
@@ -208,13 +211,13 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                                 vertical: 0,
                                 horizontal: 4), // Removes extra spacing
                             isDense: true, // Reduces extra height
-                             hintText: PlotFinanceStaticData().enterAmountHint,
+                            hintText: PlotFinanceStaticData().enterAmountHint,
                             hintStyle: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.w400,
                                 fontSize: 12,
                                 color: AppColors.accentColor),
                             errorText: _isAmountExceeded(index)
-                                ?PlotFinanceStaticData().amountExceedsBudget
+                                ? PlotFinanceStaticData().amountExceedsBudget
                                 : null,
                           ),
                           keyboardType: TextInputType.number,
@@ -222,9 +225,8 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                             if (_validateAmount(value, widget.amount)) {
                               onsubmit(index, value);
                             } else {
-                              snackBarCalled(context, SnackbarData().amountExceed);
-
-                
+                              snackBarCalled(
+                                  context, SnackbarData().amountExceed);
                             }
                           },
                         ),

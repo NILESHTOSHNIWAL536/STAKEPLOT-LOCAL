@@ -33,8 +33,10 @@ class SigninData {
 
   Future<bool> fetchConstants() async {
     try {
+      
       final response = await getDataApiCall("$url/constant/signin");
       printData(response);
+
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
@@ -60,11 +62,9 @@ class SigninData {
 
         return true;
       } else {
-        print("Failed to load Signin constants: ${response.statusCode}");
         return false;
       }
     } catch (e) {
-      print("Error fetching Signin constants: $e");
       return false;
     }
   }

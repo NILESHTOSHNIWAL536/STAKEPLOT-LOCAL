@@ -49,7 +49,6 @@ void _handleNotificationClick(OSNotificationClickEvent event, BuildContext conte
   } 
   catch (e)
   {
-    print('Error handling notification click: $e');
   }
 
 }
@@ -90,13 +89,10 @@ void navigateScreens(context,screen){
 
 // void navigateScreen(context) {
 //   OneSignal.Notifications.addClickListener((event) {
-//     print("user clicked on notification: $event");
 //     String? screen = event.notification.additionalData?['screen'];
-//     print("user clicked on notification with screen: $screen");
 //     if (screen != null) {
 //       Navigator.pushNamed(context, screen);
 //     } else {
-//       print("No screen specified in additional data.");
 //     }
 //   });
 
@@ -110,7 +106,6 @@ Future<void> oneSignalInit() async {
     // OneSignal.Notifications.requestPermission(true);
   } catch (e)
   {
-     print('Error initializing OneSignal: $e'); 
   }
 
 }
@@ -219,7 +214,6 @@ void oneSignalAddClickListener(context)
 
  }catch(e)
  {
-   print('Error adding click listener: $e');
  }
 
 }

@@ -168,7 +168,6 @@
 
 //   void linkAccount(otp) async {
 //     try {
-//       // print(_controller.text);
 //       var data = await finvuManager.confirmAccountLinking(
 //           widget.linkingReference!, otp);
 //       snackBarCalled(context, "Bank account linked successfully.");

@@ -1,6 +1,7 @@
 import 'package:finvu_flutter_sdk_core/finvu_consent_info.dart';
 import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchTransaction.dart';
@@ -33,7 +34,7 @@ class _DiscoverAccountState extends State<FetchLinkedAccounts> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Bank Account..."),
+        title: Text("Bank Account"),
         backgroundColor: Colors.cyanAccent,
       ),
       body: Container(
@@ -63,7 +64,7 @@ class _DiscoverAccountState extends State<FetchLinkedAccounts> {
             onPressed: () {
               approveConsentRequest();
             },
-            child: Text('Approve consent'),
+            child: Text(FinvuStrings().approveConsent),
           ),
         ),
       ],

@@ -40,9 +40,8 @@ class _DebtDetailsScreenState extends State<DebtDetailsScreen> {
     final bool success = await DebtService.deleteDebt(widget.debt.id);
      
     if (success) {
-     
       await Future.delayed(Duration(seconds: 2));
-     fetchDebts();
+       fetchDebts();
       if (mounted) {
         Navigator.of(context).pop();
       }

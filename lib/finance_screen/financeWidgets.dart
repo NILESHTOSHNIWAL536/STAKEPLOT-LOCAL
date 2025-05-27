@@ -41,7 +41,7 @@ class FinanceWidgets {
                       const SizedBox(width: 8),
                       CardBuilders.globalText(
                         context: context,
-                        text:  PlotFinanceStaticData().calculatorsTitle,
+                        text:  PlotFinanceStaticData().addBudget,
                         fontsize: 12,
                         fontWeight: FontWeight.w600,
                         color: AppColors.primaryColor,

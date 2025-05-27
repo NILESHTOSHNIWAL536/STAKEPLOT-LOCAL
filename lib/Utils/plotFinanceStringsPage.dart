@@ -288,11 +288,9 @@ class PlotFinanceStaticData {
        
         return true;
       } else {
-        print("Failed to load PlotFinance constants: ${response.statusCode}");
         return false;
       }
     } catch (e) {
-      print("Error fetching PlotFinance constants: $e");
       return false;
     }
   }

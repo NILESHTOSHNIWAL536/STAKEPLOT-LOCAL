@@ -8,7 +8,6 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 class WidgetManager {
   static Future<void> initialize() async {
     try {
-      print('Initializing HomeWidget with group: group.com.stakeplot.adnan.dev');
       await HomeWidget.setAppGroupId('group.com.stakeplot.adnan.dev');
       // Fetch initial data
        getRemainders(Get.context!);
@@ -16,7 +15,6 @@ class WidgetManager {
       await updatePayableWidget();
       // Add updates for new widgets here (e.g., updateBudgetWidget())
     } catch (e) {
-      print('Error initializing WidgetManager: $e');
     }
     // Set up listeners for data changes
     ever(lendAmountRemainders, (_) => updatePayableWidget());
@@ -38,7 +36,6 @@ class WidgetManager {
         toPay =
             '${data["name"] ?? "Unknown"}: ₹${(data["amount"] ?? 0).toStringAsFixed(2)}';
       }
-      print('Updating PayableWidget: toReceive=$toReceive, toPay=$toPay');
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('payable_to_receive', toReceive);
       await prefs.setString('payable_to_pay', toPay);
@@ -49,9 +46,7 @@ class WidgetManager {
         androidName: 'PayableWidgetProvider',
         iOSName: 'PayableWidget',
       );
-      print('PayableWidget updated successfully');
     } catch (e) {
-      print('Error updating PayableWidget: $e');
     }
   }
 

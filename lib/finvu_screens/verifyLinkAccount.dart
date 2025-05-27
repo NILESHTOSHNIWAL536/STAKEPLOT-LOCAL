@@ -1,5 +1,6 @@
 import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/FetchLinkedAccounts.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
@@ -19,7 +20,7 @@ class _VerifyLinkAccountState extends State<VerifyLinkAccount> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Linked Account ..."),
+        title: Text(FinvuStrings().linkedAccount),
         backgroundColor: Colors.cyanAccent,
       ),
       body: Container(
@@ -38,7 +39,7 @@ class _VerifyLinkAccountState extends State<VerifyLinkAccount> {
           TextField(
             controller: _controller,
             decoration: InputDecoration(
-              labelText: 'Enter text',
+              labelText: FinvuStrings().enterText
             ),
           ),
           Padding(
@@ -65,7 +66,7 @@ class _VerifyLinkAccountState extends State<VerifyLinkAccount> {
                       Colors.red);
                 }
               },
-              child: Text('Verify And Link'),
+              child: Text( FinvuStrings().verifyAndLink),
             ),
           ),
         ],

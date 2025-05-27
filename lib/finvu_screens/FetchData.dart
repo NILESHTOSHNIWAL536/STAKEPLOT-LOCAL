@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
@@ -56,11 +57,12 @@ class _ShareAccountLoginState extends State<FetchBankData> {
                       // fetch(context);
                      
                   },
-                  child: getButton(context,"Fetch Data")
+                  child: getButton(context,FinvuStrings().fetchData)
                 ),
       
               SizedBox(height: 100,),
-            Obx(()=> Text(fetchedData.value ?"Data is Fetched successfully....":"waiting for response from bank.....")),
+                    Obx(()=> Text(fetchedData.value ?FinvuStrings().dataFetchedSuccessfully:FinvuStrings().waitingForBankResponse)),
+
               SizedBox(height: 100,),
             ],
           ),

@@ -39,7 +39,7 @@ String noNotificationsSent = "No notifications sent due to invalid data.";
   // Additional Messages
   String categoryAdded = "Category Added Successfully";
   String transactionAddFail = "Failed to add transaction!";
-  String transactionSuccess = "Transaction has been successfully saved!";
+  String transactionSuccess = "Transaction has been successfully Added!";
   String addingFriend = "Adding user as a friend...!";
   String addFriendFail = "Unable to add friend!";
   String friendRejected = "Unfortunately, your friend request has been rejected.";
@@ -351,11 +351,9 @@ noFriendsToNotify = data['noFriendsToNotify'] ?? noFriendsToNotify;
 
         return true;
       } else {
-        print("Failed to load Snackbar constants: ${response.statusCode}");
         return false;
       }
     } catch (e) {
-      print("Error fetching Snackbar constants: $e");
       return false;
     }
   }

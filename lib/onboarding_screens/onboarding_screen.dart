@@ -86,8 +86,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
             });
 
     socket.onConnectError((data) {
-      // print("error-----------");
-      // print(data);
+   
     });
   }
 

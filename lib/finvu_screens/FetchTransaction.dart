@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/bottombar.dart';
@@ -12,7 +13,7 @@ RxBool sessionId = false.obs;
 RxBool flagToFetchData = false.obs;
 
 class FetchTransaction extends StatefulWidget {
-  const   FetchTransaction({Key? key}) : super(key: key);
+  const FetchTransaction({Key? key}) : super(key: key);
 
   @override
   State<FetchTransaction> createState() => _FetchTransactionState();
@@ -44,7 +45,7 @@ class _FetchTransactionState extends State<FetchTransaction> {
               children: [
                 Center(
                   child: Text(
-                    ("Fetch Bank Transactions"),
+                    ( FinvuStrings().fetchAccountTransactions),
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.bold,
                         fontSize: 17,
@@ -87,7 +88,7 @@ class _FetchTransactionState extends State<FetchTransaction> {
                   // print(handle.value);
                   FetchTransactionFromFinvuApi(context);
                 },
-                child: getButton(context, "Fetch Trasactions")),
+                child: getButton(context, "Fetch Transactions")),
           ],
         ),
       ),

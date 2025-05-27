@@ -65,7 +65,7 @@ void expire(response, BuildContext context) {
       logoutUserFromDevice(context);
     }
   } catch (e) {
-    debugPrint("Error in expire(): $e");
+   
   }
 }
 
@@ -212,9 +212,7 @@ RxMap<String, String> ListOfBankImages = RxMap();
 
 void initialMap(context) async {
   // var isConnected = await finvuManager.isConnected();
-  // print("isConnected");
   // if (!isConnected) {return;}
-  // print(isConnected);
 
   // try{
   // List<FinvuFIPInfo>  fipDis = await finvuManager.fipsAllFIPOptions();
@@ -224,11 +222,8 @@ void initialMap(context) async {
   // });
   // }catch(e)
   // {
-  //    print(e);
   // }
 
-  // print("ListOfBankImages");
-  // print(ListOfBankImages);
 }
 
 void getAllContstant(context) async {
@@ -257,7 +252,6 @@ void logoutUserFromDevice(context2)async{
            }
            catch(e)
            {
-              print("error=====");
-              print(e);
+             
            }
 }

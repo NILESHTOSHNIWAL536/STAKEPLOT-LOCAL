@@ -20,8 +20,7 @@ void getAck() async {
 
 void setPasswordApiCalled(context, String password) async {
   if (password == "00") {
-    snackBarCalledfail(
-        context,SnackbarData().pinSetFail00, Colors.red);
+    snackBarCalledfail(context,SnackbarData().pinSetFail00, Colors.red);
     return; // Exit the function without setting the PIN
   }
 
@@ -158,7 +157,6 @@ Future<void> getAllTransactionHistory(
       }
     }
   } catch (e) {
-    print("erro in the tran his " + e.toString());
   }
 
   loadingDelay.value = false;

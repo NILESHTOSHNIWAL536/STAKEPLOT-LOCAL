@@ -12,8 +12,7 @@ void checkEmail(context, email, otp, name) async {
       'email': email,
       "otp": otp.toString(),
     });
- print(response.body);
- print(response.body);
+
   if (getFlagOfResponse(response))
   {
     snackBarCalled(context,SnackbarData().otpAccepted, Colors.black);

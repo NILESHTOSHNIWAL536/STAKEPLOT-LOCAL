@@ -58,7 +58,6 @@ class AppLifecycleHandler extends WidgetsBindingObserver {
       //   "The app has been closed. Please check your app for any updates or issues.",
       // );
     } catch (e) {
-      print('Error sending close event: $e');
     }
   }
 }
@@ -96,20 +95,16 @@ void setUpSocketListenerMainPage(BuildContext context) {
     //   }
     // });
       mainPageWebSocket.onConnect((_) {
-    print("Connected to socket server ✅");
 
     try {
       mainPageWebSocket.emit("addUserToSocket", currentId.value);
-      print("User emitted to server");
     } catch (e) {
-      print("Emit error: $e");
     }
   });
 
     // Listener for events from the socket
     mainPageWebSocket.on("addUserToSocket", (data) {
-       print("data");
-       print(data);
+     
       if(data['type'] == "Notify")
       {
         hasGetNewNotifications.value=!hasGetNewNotifications.value;
@@ -136,7 +131,6 @@ void setUpSocketListenerMainPage(BuildContext context) {
     });
 
   } catch (e) {
-    print("Socket connection error: $e");
   }
 }
 
@@ -161,7 +155,5 @@ void onPostDataCallWebSocket(data,context){
         }
         catch(e)
         {
-          print("error in adding....");
-          print(e);
         }
 }
