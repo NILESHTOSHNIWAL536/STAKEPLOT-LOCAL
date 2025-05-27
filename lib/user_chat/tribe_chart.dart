@@ -3,6 +3,7 @@ import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
+import "package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart";
@@ -44,6 +45,7 @@ class _TribeSearchState extends State<TribeChats> {
   //Added for chat split
    List<dynamic> chatSplitAccount = [];
   ValueNotifier<bool> getChatSplit = ValueNotifier<bool>(false);
+   final CommunityScreenStrings strings = CommunityScreenStrings();
   @override
   void initState() {
     super.initState();
@@ -181,7 +183,7 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
           ),
           const SizedBox(height: 4),
           Text(
-            '${getTotalUnopenedMessages() ?? 0} messages received', // Null check for chatList
+            strings.messagesReceived.replaceFirst('{count}', getTotalUnopenedMessages().toString()), // Null check for chatList
             style: FontManager().getTextStyle(
               context,
               lWeight: FontWeight.normal,
@@ -251,7 +253,7 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
             // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
                 
-              InputDate2("Search", TextInputType.name, search),
+             InputDate2(strings.searchHint, TextInputType.name, search),
               const SizedBox(
                 height: 16,
               ),
@@ -272,7 +274,7 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
                   width: MediaQuery.of(context).size.width / 1.1,
                   height: MediaQuery.of(context).size.height / 2,
                   child: Center(
-                      child: Text(StringConstant.chatText,
+                      child: Text( strings.noChatsAvailable ,
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.bold,
                               lineHeight: 1.2,
@@ -426,7 +428,7 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            item['type'] ?? 'No messages yet',
+                           item['type'] ?? strings.noMessagesYet,
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.w400,
                                 fontSize: 12,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/image_picker_utils.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
@@ -39,7 +40,7 @@ class _ImageScreenState extends State<ImageScreen> {
   final ImagePicker _picker = ImagePicker();
   final CustomImageCropController _cropController = CustomImageCropController();
   File? selectedImage;
-
+ final CommunityScreenStrings strings = CommunityScreenStrings();
   Future<void> _pickImage() async {
     try {
       final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -137,7 +138,7 @@ class _ImageScreenState extends State<ImageScreen> {
                                   color: AppColors.bg1),
                             ),
                             Text(
-                              'New post',
+                               strings.newPost, 
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.w400,
                                   fontSize: 12,
@@ -183,7 +184,7 @@ class _ImageScreenState extends State<ImageScreen> {
                 TextField(
                   controller: titleController,
                   decoration: InputDecoration(
-                    hintText: 'Enter title',
+                   hintText: strings.enterTitle,
                     hintStyle: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w600,
                         fontSize: 18,
@@ -197,7 +198,7 @@ class _ImageScreenState extends State<ImageScreen> {
                   // focusNode: _contentFocusNode,
                   maxLines: 5,
                   decoration: InputDecoration(
-                    hintText: 'Add your thoughts',
+                    hintText: strings.addThoughts,
                     border: InputBorder.none,
                     hintStyle: FontManager().getTextStyle(context,
                         lWeight: FontWeight.normal,
@@ -264,7 +265,7 @@ class _ImageScreenState extends State<ImageScreen> {
                       child: Obx(() => posting.value
                           ? Spinner(size: 20, color: Colorcodes.white)
                           : Text(
-                              'Continue',
+                             strings.continueButton, 
                               style: FontManager().getTextStyle(
                                 context,
                                 lWeight: FontWeight.bold,

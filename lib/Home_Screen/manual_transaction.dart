@@ -762,7 +762,6 @@ class _ModalContentState extends State<ModalContent>
             child: InkWell(
               onTap: () {
                 FocusScope.of(context).unfocus();
-        
                 if (isSplit.value && addedMembers.isNotEmpty) {
                   splitBill(selectedCategory2.toString(), amount.toString(),
                       selectedSubCategory2.toString(), true);

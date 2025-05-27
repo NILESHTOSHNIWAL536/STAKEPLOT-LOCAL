@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/image_picker_utils.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -48,7 +49,7 @@ class _ExploreModalState extends State<ExploreModal> {
   final List<TextEditingController> _textControllers = [];
   final List<TextEditingController> _amountControllers = [];
   bool exploreSubmitted = false;
-
+ final CommunityScreenStrings strings = CommunityScreenStrings();
   @override
   void initState() {
     super.initState();
@@ -117,7 +118,7 @@ class _ExploreModalState extends State<ExploreModal> {
                           color: Colors.grey[300],
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Text('Cancel',
+                        child: Text( strings.cancelButton,
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.normal,
                                 fontSize: 12,
@@ -164,7 +165,7 @@ class _ExploreModalState extends State<ExploreModal> {
                                   strokeWidth: 2,
                                 ),
                               )
-                            : Text('Save',
+                            : Text( strings.saveButton,
                                 style: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.normal,
                                     fontSize: 12,
@@ -438,7 +439,7 @@ class _ExploreModalState extends State<ExploreModal> {
       children: [
         const Icon(Icons.explore_sharp, size: 24, color: AppColors.accentColor),
         const SizedBox(width: 8),
-        Text('Exploria',
+        Text(strings.exploria, 
             style: FontManager().getTextStyle(context,
                 lWeight: FontWeight.bold, fontSize: 18, color: Colors.black)),
       ],
@@ -451,7 +452,7 @@ class _ExploreModalState extends State<ExploreModal> {
             CrossAxisAlignment.center, // Align items vertically centered
         children: [
           Text(
-            'Rate this place:',
+             strings.rateThisPlace,
             style: FontManager().getTextStyle(
               context,
               lWeight: FontWeight.w500,
@@ -489,7 +490,7 @@ class _ExploreModalState extends State<ExploreModal> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Photos (${selectedImages.length}/$maxImages)',
+           strings.photosLabel.replaceFirst('{count}', selectedImages.length.toString()),
           style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.bold,
@@ -509,7 +510,7 @@ class _ExploreModalState extends State<ExploreModal> {
           child: selectedImages.isEmpty
               ? Center(
                   child: Text(
-                    'No images selected',
+                   strings.noImagesSelected,
                     style: TextStyle(color: Colors.grey[600]),
                   ),
                 )
@@ -594,7 +595,7 @@ class _ExploreModalState extends State<ExploreModal> {
                 const Icon(Icons.add_a_photo, color: Colors.white, size: 20),
                 const SizedBox(width: 8),
                 Text(
-                  'Add Photo',
+                   strings.addPhoto,
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.normal,
@@ -614,18 +615,18 @@ class _ExploreModalState extends State<ExploreModal> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('About Place',
+        Text( strings.aboutPlace,
             style: FontManager().getTextStyle(context,
                 lWeight: FontWeight.normal, fontSize: 16, color: Colors.black)),
         const SizedBox(height: 10),
         TextField(
           controller: locationNameController,
-          decoration: _inputDecoration('Location Name', Icons.place_outlined),
+          decoration: _inputDecoration(strings.locationName, Icons.place),
         ),
         const SizedBox(height: 10),
         TextField(
           controller: locationAddressController,
-          decoration: _inputDecoration('Location Address', Icons.place_sharp),
+         decoration: _inputDecoration(strings.locationAddress, Icons.location_pin),
         ),
       ],
     );
@@ -637,7 +638,7 @@ class _ExploreModalState extends State<ExploreModal> {
       children: [
         Row(
           children: [
-            Text('Budget',
+            Text(strings.budgetLabel,
                 style: FontManager().getTextStyle(context,
                     lWeight: FontWeight.normal,
                     fontSize: 16,
@@ -657,7 +658,7 @@ class _ExploreModalState extends State<ExploreModal> {
                   child: TextField(
                     controller: _textControllers[index],
                     decoration:
-                        _inputDecoration('Add Category', Icons.description),
+                        _inputDecoration(strings.addCategory, Icons.description),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -666,7 +667,7 @@ class _ExploreModalState extends State<ExploreModal> {
                     controller: _amountControllers[index],
                     keyboardType: TextInputType.number,
                     decoration:
-                        _inputDecoration('Add Budget', Icons.currency_rupee),
+                        _inputDecoration(strings.addBudget, Icons.currency_rupee),
                   ),
                 ),
               ],
@@ -677,28 +678,34 @@ class _ExploreModalState extends State<ExploreModal> {
     );
   }
 
-  Widget _buildHighlightSection() {
+    Widget _buildHighlightSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Trip Highlights',
-            style: FontManager().getTextStyle(context,
-                lWeight: FontWeight.normal, fontSize: 16, color: Colors.black)),
+        Text(
+          strings.tripHighlights, // Updated
+          style: FontManager().getTextStyle(context,
+              lWeight: FontWeight.normal,
+              fontSize: 16,
+              color: Colors.black,
+          ),
+        ),
         const SizedBox(height: 10),
         TextField(
           controller: titleController,
-          decoration: _inputDecoration('Enter title', null),
+          decoration: _inputDecoration(strings.enterTitle, null), // Updated
         ),
         const SizedBox(height: 10),
         TextField(
           controller: contentController,
-          decoration: _inputDecoration('Add your thoughts', null),
+          decoration: _inputDecoration(strings.addThoughts, null), // Updated
           maxLines: 3,
           maxLength: 150,
         ),
       ],
     );
   }
+ 
 
   Widget _buildSubmitButton() {
     final isEnabled = locationNameController.text.isNotEmpty &&
@@ -722,7 +729,7 @@ class _ExploreModalState extends State<ExploreModal> {
                   borderRadius: BorderRadius.circular(24)),
               child: Center(
                 child: Text(
-                  "Continue",
+                 strings.continueButton, 
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.bold,

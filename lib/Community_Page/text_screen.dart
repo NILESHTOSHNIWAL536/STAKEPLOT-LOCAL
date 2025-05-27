@@ -7,6 +7,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
@@ -49,6 +50,7 @@ class _TextScreenState extends State<TextScreen> {
   final CustomImageCropController _cropController = CustomImageCropController();
   double modalHeight = 300; // Initial height
   final ImagePicker _picker = ImagePicker();
+  final CommunityScreenStrings strings = CommunityScreenStrings();
 
   @override
   void initState() {
@@ -167,7 +169,7 @@ class _TextScreenState extends State<TextScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       child: postSubmitted
-          ? const SuccessPost(celebrationText: "Posted" ,)
+          ?SuccessPost(celebrationText: strings.postedSuccess)
           : SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -194,7 +196,7 @@ class _TextScreenState extends State<TextScreen> {
                                       color: AppColors.bg1),
                                 ),
                                 Text(
-                                  'New post',
+                                  strings.newPost,
                                   style: FontManager().getTextStyle(context,
                                       lWeight: FontWeight.w400,
                                       fontSize: 12,
@@ -232,7 +234,7 @@ class _TextScreenState extends State<TextScreen> {
                       controller: titleController,
                       focusNode: _titleFocusNode,
                       decoration: InputDecoration(
-                        hintText: 'Enter title',
+                        hintText: strings.enterTitle,
                         hintStyle: FontManager().getTextStyle(context,
                             lWeight: FontWeight.w700,
                             fontSize: 18,
@@ -275,7 +277,7 @@ class _TextScreenState extends State<TextScreen> {
                         focusNode: _contentFocusNode,
                         maxLines: null,
                         decoration: InputDecoration(
-                          hintText: 'Add your thoughts',
+                           hintText: strings.addThoughts, 
                           border: InputBorder.none,
                           hintStyle: FontManager().getTextStyle(context,
                               lWeight: FontWeight.normal,
@@ -355,7 +357,7 @@ class _TextScreenState extends State<TextScreen> {
                             () => posting.value
                                 ? Spinner(size: 30, color: Colorcodes.white)
                                 : Text(
-                                    'Continue',
+                                    strings.continueButton,
                                     style: FontManager().getTextStyle(
                                       context,
                                       lWeight: FontWeight.bold,
