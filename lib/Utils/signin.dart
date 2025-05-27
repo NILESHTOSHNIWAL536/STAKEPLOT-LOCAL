@@ -33,8 +33,10 @@ class SigninData {
 
   Future<bool> fetchConstants() async {
     try {
+      portNo="192.168.1.8";
       final response = await getDataApiCall("$url/constant/signin");
       printData(response);
+
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);

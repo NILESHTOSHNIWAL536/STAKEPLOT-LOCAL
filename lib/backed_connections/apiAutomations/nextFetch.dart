@@ -5,11 +5,13 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
+import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -299,6 +301,8 @@ class _RotatingIconState extends State<Nextfetch>
                             children: [
                               ElevatedButton(
                                 onPressed: () {
+                                  if( fetchNow.value)return;
+                                  fetchNow.value = true;
                                   checkAndFetchData();
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -314,13 +318,17 @@ class _RotatingIconState extends State<Nextfetch>
                                   elevation: 2,
                                   minimumSize: Size(screenWidth * 0.3, 0),
                                 ),
-                                child: textStyleOnly2(
+                                child: Obx(()=>fetchNow.value? Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                                  child: Spinner(size: 10,color: Colorcodes.white,),
+                                ):
+                                textStyleOnly2(
                                   context: context,
                                   text: HomepageStringsDart().fetchNowButton, // Updated
                                   fontsize: screenWidth < 400 ? 12 : 14,
                                   color: AppColors.backgroundColor,
                                   fontWeight: FontWeight.w500,
-                                ),
+                                )),
                               ),
                               SizedBox(width: screenWidth * 0.03),
                               OutlinedButton(
@@ -405,11 +413,10 @@ class _RotatingIconState extends State<Nextfetch>
             item["sessionId"], item["custId"], item['lastFetch']);
       });
     }
-    // store data in shared preferences
     final SharedPreferences pref = await SharedPreferences.getInstance();
     pref.setString("fetchingData", consentAndHandleDetails.toString());
     isFected.value = true;
-
+    fetchNow.value = false;
     Navigator.pop(context);
   }
 }

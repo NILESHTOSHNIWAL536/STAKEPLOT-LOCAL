@@ -36,8 +36,10 @@ void getDebts() async {
 Future<void> fetchDebts() async {
   try {
     var fetchedDebts = await DebtService.fetchDebts();
-    if (fetchedDebts != null && fetchedDebts.isNotEmpty) {
+    if (fetchedDebts.isNotEmpty) {
       debts.assignAll(fetchedDebts);
+    }else{
+      debts.clear();
     }
   } catch (e) {
     Get.snackbar('Error', 'Failed to fetch debts: $e');
@@ -58,26 +60,7 @@ void getBudget() async {
   } catch (e) {}
 }
 
-void getBudget2() async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
 
-  final response = await http.get(
-    Uri.parse('${url}/budget/'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
-
-  if (response.statusCode == 200) {
-    var his = jsonDecode(response.body);
-    var obj = his['data'];
-    budgetList.clear();
-    budgetList.addAll(obj);
-    budgetLength.value = obj.length;
-  } else {}
-}
 
 getBills() async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
@@ -100,26 +83,7 @@ getBills() async {
   } else {}
 }
 
-getPayments() async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
 
-  final response = await http.get(
-    Uri.parse('${url}/payment/'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    var his = jsonDecode(response.body);
-    var obj = his['data'];
-    paymentLength.value = obj.length;
-    // payment.clear();
-    // payment.addAll(obj);
-  } else {}
-}
 
 void addBudget(BuildContext context, String name, String amount,
     List expenseCategory, String budgetPeriod) async {
@@ -265,52 +229,6 @@ void addBillTranscations(
   }
 }
 
-void addPaymentTranscations(
-    List<TextEditingController> controller, context) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-
-  int end = controller.length;
-
-  // paymentLength.value += (end/3) as int;
-
-  for (int i = 0; i < end; i += 3) {
-    paymentLength.value += 1;
-    String name = controller[i].text;
-    String amount = controller[i + 1].text;
-    String expenseCategory = controller[i + 2].text;
-
-    final response = await http.post(
-      Uri.parse('${url}/payment/'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-      body: jsonEncode({
-        'name': name.toString(),
-        'amount': amount,
-        'date': expenseCategory.toString(),
-      }),
-    );
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      final body = json.decode(response.body);
-      acceptReset.value = false;
-      snackBarCalled(
-          context,SnackbarData().paymentAdded, Colors.black);
-
-      getPayments();
-      //  Navigator.pushNamed(context, '/bsDisplay');
-      Navigator.pop(context);
-    } else {
-      snackBarCalled(context,SnackbarData().paymentAddFailed, Colors.red);
-    }
-    acceptReset.value = false;
-    // Navigator.pushNamed(context, '/SchedulePaymentsDisplay');
-  }
-
-  // Navigator.pop(context);
-}
-
 void deleteDebts(context, String id, [flag = false]) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
@@ -359,31 +277,7 @@ void deleteAmount(context, String id, String am) async {
   }
 }
 
-void updateBill(context, String path, String objectId) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  String pathUrl = '${url}/${path}/${objectId}';
 
-  final response = await http.patch(
-    Uri.parse(pathUrl),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
-      'markAsComplete': true,
-    }),
-  );
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    final body = json.decode(response.body);
-    getBills();
-    getPayments();
-    snackBarCalled(context, "${path} is paid!", Colors.black);
-  } else {
-    snackBarCalled(context,SnackbarData().debtUpdateError, Colors.red);
-  }
-}
 
 void deleteBudget(context, String id) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();

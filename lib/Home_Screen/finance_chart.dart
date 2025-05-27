@@ -33,7 +33,7 @@ class _FinancePageState extends State<FinancePage> {
   @override
   void initState() {
     super.initState();
-    getGraphData.value = false;
+    selectedButton.value = 'Month';
     calledFunctionToFetchData(context);
   }
 
