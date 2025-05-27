@@ -417,6 +417,8 @@ class _RotatingIconState extends State<Nextfetch>
     pref.setString("fetchingData", consentAndHandleDetails.toString());
     isFected.value = true;
     fetchNow.value = false;
+    scrollBankPage.value = 0;
+    await getBankAccounts();
     Navigator.pop(context);
   }
 }

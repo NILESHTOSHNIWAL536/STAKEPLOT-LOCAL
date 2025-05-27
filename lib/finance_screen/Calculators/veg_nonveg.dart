@@ -8,7 +8,6 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -143,8 +142,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
 
   @override
   Widget build(BuildContext context) {
-    double h = MediaQuery.sizeOf(context).height;
-    double w = MediaQuery.sizeOf(context).width;
+    
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
@@ -390,12 +388,12 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
             ),
           ),
           SizedBox(height: 10),
-          GestureDetector(
-            onTap: () {
-              _calculateShares();
-            },
-            child: getButton(context, PlotFinanceStaticData().calculateButton),
-          ),
+          // GestureDetector(
+          //   onTap: () {
+          //     _calculateShares();
+          //   },
+          //   child: getButton(context, PlotFinanceStaticData().calculateButton),
+          // ),
         ],
       ),
     );
@@ -662,6 +660,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
             keyboardType: keyboard,
             controller: textController,
             onChanged: (v) {
+
               List filtered = [];
 
               if (v.trim().isEmpty) {
@@ -679,6 +678,8 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                 frdsList.clear();
                 frdsList.addAll(limited);
               });
+
+            
             },
             decoration: InputDecoration(
               filled: true,
@@ -723,6 +724,9 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
             child: TextField(
               controller: controller,
               keyboardType: TextInputType.number,
+              onChanged: (value) {
+                 _calculateShares();
+              },
               decoration: InputDecoration(
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),

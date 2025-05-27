@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
@@ -15,9 +14,8 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-import 'package:getwidget/components/carousel/gf_carousel.dart';
-
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+
 
 // class NumberPickerController extends GetxController {
 RxInt firstDigit = 0.obs;
@@ -31,19 +29,12 @@ class NumberPickerScreen extends StatefulWidget {
 }
 
 class _NumberPickerScreenState extends State<NumberPickerScreen> {
-  // final NumberPickerController controller = Get.put(NumberPickerController());
   final FixedExtentScrollController firstDigitController =
       FixedExtentScrollController(initialItem: 0);
   final FixedExtentScrollController secondDigitController =
       FixedExtentScrollController(initialItem: 0);
 
-  List lock = [
-    "( ◐ o ◑ )",
-    "  (̿▀̿ ̿Ĺ̯̿̿▀̿ ̿)̄ ",
-    "(¬‿¬)",
-    " (-‿◦)",
-    " ヽ(͡◕ ͜ʖ ͡◕)ﾉ"
-  ];
+  List lock = HomepageStringsDart().lockPatterns;
 
   void initializeData() {
     getBankAccounts();
@@ -60,11 +51,10 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
         child: SizedBox(
             width: width,
             height: height > 0 ? height / 2.5 : 100, // Fallback height
-            child: Obx(
-                () => loadBanks.value ? BankSlider() : avatarSlider2())));
+            child: Obx(() => loadBanks.value ? BankSlider() : loadBalance.value?  avatarSlider(): avatarSlider())));
   }
 
-  Widget avatarSlider2() {
+  Widget avatarSlider() {
     return bankAccountLinkedList.isEmpty
         ? AvatarProfileImage(url: bankImage, width: 10, height: 10)
         :PageView.builder(
@@ -98,38 +88,12 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
                   },
                 );
 
-        // : GFCarousel(
-        //     viewportFraction: 1.0,
-        //     reverse: false,
-        //     enlargeMainPage: true,
-        //     autoPlay: false,
-        //     enableInfiniteScroll: false,
-            
-        //     items: bankAccountLinkedList.map(
-        //       (data) {
-        //         return Padding(
-        //           padding: EdgeInsets.symmetric(horizontal: 0, vertical: 2),
-        //           child: getListViewBankInfo(data),
-        //         );
-        //       },
-        //     ).toList(),
-        //     onPageChanged: (index) {
-        //       if (bankAccountLinkedList.isEmpty) return;
-        //       accountId.value = bankAccountLinkedList[index]['accountId'] ?? "";
-        //       LastFetchDate.value =  bankAccountLinkedList[index]['lastFetch'].toString() ;
-        //       nextFecthDate.value =  bankAccountLinkedList[index]['nextFetch'].toString() ;
-        //       fetchCount.value =  bankAccountLinkedList[index]['fetchCount'].toString();
-        //       BankName.value =  bankAccountLinkedList[index]['bankName'].toString();
-        //       calledFunctionToFetchData(context);
-        //     },
-          // );
   }
 
   Widget getListViewBankInfo(data) {
     int randomIndex = Random().nextInt(lock.length);
     if (randomIndex == lock.length) randomIndex = 0;
     return Container(
-       // width: MediaQuery.sizeOf(context).width/1.1,
         padding: EdgeInsets.symmetric(horizontal: Colorcodes.paddingHorizontal,vertical: Colorcodes.paddingHorizontal / 6),
         decoration: BoxDecoration(
           color: AppColors.accentColor,
@@ -227,7 +191,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
           } else {
             secondDigit.value = index;
           }
-          PinPasswordVerify(
+          pinPasswordVerifyDebounced(
               firstDigit.value.toString() + "" + secondDigit.value.toString(),
               context,
               setBack);

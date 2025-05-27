@@ -136,7 +136,7 @@ class PlotFinanceStaticData {
 
   // VegNonVegCalculator - Input Labels
   String vegLabel = "Veg";
-  String nonVegLabel = "Non-Veg";
+  String nonVegLabel = "Non veg";
   String alcoholLabel = "Alcohol";
   String searchHint = "Search";
 

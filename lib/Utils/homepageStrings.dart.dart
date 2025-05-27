@@ -22,6 +22,14 @@ class HomepageStringsDart {
   String notNowButton = "Not Now";
   String fetchingDuration = "Hang tight! Fetching will take ~10 minutes.";
   String notScheduled = "Not scheduled";
+   List lockPatterns =  [
+    "( ◐ o ◑ )",
+    "  (̿▀̿ ̿Ĺ̯̿̿▀̿ ̿)̄ ",
+    "(¬‿¬)",
+    " (-‿◦)",
+    " ヽ(͡◕ ͜ʖ ͡◕)ﾉ"
+  ];
+
 // Number picker screen
   String accountNumberLabel = "Acc No : ";
   String availableBalanceLabel = "Available balance";
@@ -147,6 +155,8 @@ class HomepageStringsDart {
         notNowButton = data['notNowButton'] ?? notNowButton;
         fetchingDuration = data['fetchingDuration'] ?? fetchingDuration;
         notScheduled = data['notScheduled'] ?? notScheduled;
+        lockPatterns =( data['lockPatterns']!=null && data['lockPatterns'] is List) ? data['lockPatterns'] : lockPatterns;
+        
 // number picker
 accountNumberLabel = data['accountNumberLabel'] ?? accountNumberLabel;
          availableBalanceLabel = data['availableBalanceLabel'] ?? availableBalanceLabel;
@@ -182,7 +192,7 @@ accountNumberLabel = data['accountNumberLabel'] ?? accountNumberLabel;
         //finora
         finora = data['finora'] ?? finora;
 
-        
+
         // New strings from DoughnutChartExample
         spendingsOnCategories = data['spendingsOnCategories'] ?? spendingsOnCategories;
         moreButton = data['moreButton'] ?? moreButton;
