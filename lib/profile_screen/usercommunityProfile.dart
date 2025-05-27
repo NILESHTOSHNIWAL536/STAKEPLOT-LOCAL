@@ -53,13 +53,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
    File? _profileImage;
   File? _coverImage;
 
-  final dummyData = {
-    "name": "Rohit Sharma",
-    "username": "@rohit45_",
-    "posts": "Posts Content",
-    "polls": "Polls Content",
-    "exploria": "Exploria Content"
-  };
+  
   String _networkImageUrl =
       "https://static.vecteezy.com/system/resources/thumbnails/045/713/367/small_2x/aesthetic-leaves-on-a-dark-background-free-photo.jpg"; // This can be dynamically set
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
@@ -37,10 +38,10 @@ class _EditDetailsState extends State<EditDetails> {
   }
 
   final Map<String, TextEditingController> _controllers = {
-    'name': TextEditingController(text: userName.value),
-    'Email': TextEditingController(text: email.value),
-    'dob': TextEditingController(text: dob.value),
-    'Number': TextEditingController(text: number.value),
+    ProfileScreenStrings().nameLabel: TextEditingController(text: userName.value),
+    ProfileScreenStrings().emailLabel: TextEditingController(text: email.value),
+    ProfileScreenStrings().dobLabel: TextEditingController(text: dob.value),
+    ProfileScreenStrings().numberLabel: TextEditingController(text: number.value),
   };
 
   @override
@@ -79,7 +80,7 @@ void checkBiometricsStatus() async {
 
     if (canCheckBiometrics || isDeviceSupported) {
       isAuthenticated = await auth.authenticate(
-        localizedReason: 'Authenticate to reset your PIN',
+        localizedReason: ProfileScreenStrings().resetPinAuthReason,
         options: const AuthenticationOptions(
           biometricOnly: false, // allow PIN fallback
           stickyAuth: true,
@@ -110,7 +111,7 @@ void checkBiometricsStatus() async {
             SizedBox(width: 8),
             textStyleOnly2(
               context: context,
-              text: "Reset PIN",
+              text:  ProfileScreenStrings().resetPinLabel,
               fontsize: 18,
               color: AppColors.bg2,
               fontWeight: FontWeight.bold,
@@ -122,20 +123,20 @@ void checkBiometricsStatus() async {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             textStyleOnly2(
-              context: context,
-              text: "Are you sure you want to reset your PIN?",
-              fontsize: 14,
-              color: AppColors.bg3,
-              fontWeight: FontWeight.w400,
-            ),
-            SizedBox(height: 8),
-            textStyleOnly2(
-              context: context,
-              text: "You'll need to set a new PIN after reset.",
-              fontsize: 12,
-              color: AppColors.bg3.withOpacity(0.7),
-              fontWeight: FontWeight.w400,
-            ),
+                context: context,
+                text: ProfileScreenStrings().resetPinSubLabel, // Direct access
+                fontsize: 14,
+                color: AppColors.bg3,
+                fontWeight: FontWeight.w400,
+              ),
+              SizedBox(height: 8),
+              textStyleOnly2(
+                context: context,
+                text: ProfileScreenStrings().resetPinInstructionSubLabel, // Direct access
+                fontsize: 12,
+                color: AppColors.bg3.withOpacity(0.7),
+                fontWeight: FontWeight.w400,
+              ),
           ],
         ),
         actions: [
@@ -146,7 +147,7 @@ void checkBiometricsStatus() async {
             },
             child: textStyleOnly2(
               context: context,
-              text: "Cancel",
+              text:ProfileScreenStrings().cancelLabel,
               fontsize: 14,
               color: AppColors.primaryColor,
               fontWeight: FontWeight.w600,
@@ -179,7 +180,7 @@ void checkBiometricsStatus() async {
             },
             child: textStyleOnly2(
               context: context,
-              text: "Reset",
+              text:ProfileScreenStrings().resetLabel, 
               fontsize: 14,
               color: AppColors.primaryColor,
               fontWeight: FontWeight.w600,
@@ -198,7 +199,7 @@ void checkBiometricsStatus() async {
       appBar: AppBar(
         title: textStyleOnly2(
           context: context,
-          text: "Edit Profile",
+          text: ProfileScreenStrings().editProfileTitle,
           fontsize: 18,
           color: AppColors.accentColor,
           fontWeight: FontWeight.bold,
@@ -264,7 +265,7 @@ void checkBiometricsStatus() async {
                   alignment: Alignment.topLeft,
                   child: textStyleOnly2(
                     context: context,
-                    text: "Personal details",
+                    text:  ProfileScreenStrings().personalDetailsLabel,
                     fontsize: 16,
                     color: AppColors.bg3,
                     fontWeight: FontWeight.w400,
@@ -284,7 +285,7 @@ void checkBiometricsStatus() async {
                       SizedBox(width: 4),
                       textStyleOnly2(
                         context: context,
-                        text: "Reset PIN",
+                        text: ProfileScreenStrings().resetPinLabel,
                         fontsize: 14,
                         color: AppColors.primaryColor,
                         fontWeight: FontWeight.w600,
@@ -300,19 +301,15 @@ void checkBiometricsStatus() async {
                 color: AppColors.mt,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Column(
+               child: Column(
                 children: [
-                  _buildNonEditableField(Icons.email, "Email", email.value),
+                  _buildNonEditableField(Icons.email, ProfileScreenStrings().emailLabel, email.value),
                   Divider(),
-                  _buildNonEditableField(Icons.person, "name", userName.value),
+                  _buildNonEditableField(Icons.person, ProfileScreenStrings().nameLabel, userName.value),
                   Divider(),
-                  _buildNonEditableField(Icons.phone, "Number", number.value),
+                  _buildNonEditableField(Icons.phone, ProfileScreenStrings().numberLabel, number.value),
                   Divider(),
-                  _buildNonEditableField(
-                      Icons.calendar_today, "dob", dob.value),
-                  // Divider(),
-                  // _buildEditableField(Icons.location_on, "Address",
-                  //     "6-10-128/3/A/5/A, Budwel, Telangana"),
+                  _buildNonEditableField(Icons.calendar_today, ProfileScreenStrings().dobLabel, dob.value),
                 ],
               ),
             ),
@@ -326,7 +323,7 @@ void checkBiometricsStatus() async {
                 Align(
                   alignment: Alignment.topLeft,
                   child: textStyle(
-                      text: 'Account Details',
+                      text: ProfileScreenStrings().accountDetailsLabel,
                       context: context,
                       fontWeight: FontWeight.bold,
                       fontsize: 14),
@@ -346,7 +343,7 @@ void checkBiometricsStatus() async {
                        );
                      },
                      child: textStyle(
-                         text: '+ Add Bank',
+                         text:  ProfileScreenStrings().addBankLabel,
                          context: context,
                          fontWeight: FontWeight.bold,
                          fontsize: 14)),

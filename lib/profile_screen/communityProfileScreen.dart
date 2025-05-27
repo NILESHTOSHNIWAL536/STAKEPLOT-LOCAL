@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
@@ -26,13 +27,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
   File? _profileImage;
   File? _coverImage;
 
-  final dummyData = {
-    "name": "Rohit Sharma",
-    "username": "@rohit45_",
-    "posts": "Posts Content",
-    "polls": "Polls Content",
-    "exploria": "Exploria Content"
-  };
+  
   String _networkImageUrl =
       "https://static.vecteezy.com/system/resources/thumbnails/045/713/367/small_2x/aesthetic-leaves-on-a-dark-background-free-photo.jpg"; // This can be dynamically set
 
@@ -123,7 +118,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
         Positioned(
           top:  MediaQuery.of(context).size.height / 5.8,
           left: MediaQuery.of(context).size.width / 6.7,
-          child: networkFriends("Network", friendsList.length.toString(),
+          child: networkFriends( ProfileScreenStrings().networkLabel, friendsList.length.toString(),
               Icons.person_2_outlined),
         ),
 
@@ -131,7 +126,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
           top: MediaQuery.of(context).size.height / 5.8,
           left: MediaQuery.of(context).size.width / 1.45,
           child: networkFriends(
-              "Posts", myPostList.length.toString(), Icons.post_add),
+               ProfileScreenStrings().postsLabel, myPostList.length.toString(), Icons.post_add),
         ),
 
         Positioned(

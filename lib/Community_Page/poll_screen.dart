@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -32,6 +33,7 @@ class _PollScreenState extends State<PollScreen> {
   List<String>? options;
   Map<String, int>? votes;
   List<bool> _showCross = [];
+  final CommunityScreenStrings strings = CommunityScreenStrings();
   @override
   void initState() {
     super.initState();
@@ -101,7 +103,7 @@ class _PollScreenState extends State<PollScreen> {
   @override
   Widget build(BuildContext context) {
     return pollSubmitted
-        ? const SuccessPost(celebrationText: "Posted",)
+        ?SuccessPost(celebrationText: strings.postedSuccess)
         : Container(
           
             child: AnimatedPadding(
@@ -130,7 +132,7 @@ class _PollScreenState extends State<PollScreen> {
                                     fontSize: 18,
                                     color: AppColors.bg1),
                               ),
-                              Text('New post',
+                              Text( strings.newPost,
                                   style: FontManager().getTextStyle(context,
                                       lWeight: FontWeight.w400,
                                       fontSize: 14,
@@ -147,7 +149,7 @@ class _PollScreenState extends State<PollScreen> {
                            textInputAction: TextInputAction.next,
                            
                           decoration: InputDecoration(
-                            hintText: 'Ask a question',
+                           hintText: strings.askQuestion,
                             hintStyle: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.w400,
                                 fontSize: 16,
@@ -171,7 +173,7 @@ class _PollScreenState extends State<PollScreen> {
                                       maxLength: 50,
                                       
                                       decoration: InputDecoration(
-                                        hintText: 'Option ${index + 1}',
+                                        hintText: "${strings.optionPrefix} ${index + 1}", 
                                         hintStyle: FontManager().getTextStyle(
                                             context,
                                             lWeight: FontWeight.normal,
@@ -218,7 +220,7 @@ class _PollScreenState extends State<PollScreen> {
                               onPressed: _addOptionController,
                               icon: const Icon(Icons.add),
                               label: Text(
-                                'Add Option',
+                                strings.addOption,
                                 style: FontManager().getTextStyle(
                                   context,
                                   lWeight: FontWeight.normal,
@@ -247,7 +249,7 @@ class _PollScreenState extends State<PollScreen> {
                                         color: Colorcodes.white,
                                       )
                                     : Text(
-                                        'Continue',
+                                         strings.continueButton, 
                                         style: FontManager().getTextStyle(
                                           context,
                                           lWeight: FontWeight.bold,

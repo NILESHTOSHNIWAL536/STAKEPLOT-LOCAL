@@ -4,6 +4,7 @@ import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
@@ -96,7 +97,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      "Pick atleast one to proceed",
+                      FinvuStrings().pickAtLeastOne,
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.bold,
                           fontSize: 18,
@@ -104,7 +105,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
                     ),
                   ),
                 ),
-                InputDate("Search for banks", TextInputType.name, search),
+                InputDate(FinvuStrings().searchForBanks, TextInputType.name, search),
                 Obx(() => getBanks.value
                     ? getListOfFinvuBanks()
                     : getListOfFinvuBanks()),

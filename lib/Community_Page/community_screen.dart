@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/Community_Page/text_screen.da
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
+import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -142,7 +143,7 @@ class _CommunityState extends State<Community> {
   final TextEditingController _searchController = TextEditingController();
   int likeCount = 0; // Counter for likes
   bool isLiked = false;
- 
+  final CommunityScreenStrings strings = CommunityScreenStrings();
 
   @override
   void initState() {
@@ -223,14 +224,14 @@ class _CommunityState extends State<Community> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Welcome back to',
+                  strings.welcomeBack,
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.normal,
                       fontSize: h / 60,
                       color: AppColors.accentColor),
                 ),
                 Text(
-                  'Finspace',
+                 strings.finspace,
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.bold,
                       fontSize: h / 38,
@@ -291,7 +292,7 @@ class _CommunityState extends State<Community> {
                             EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         filled: true,
                         enabled: false,
-                        hintText: 'Search',
+                        hintText: strings.searchHint,
                         fillColor: AppColors.button,
                         hintStyle: FontManager().getTextStyle(context,
                             lWeight: FontWeight.normal,
@@ -323,7 +324,7 @@ class _CommunityState extends State<Community> {
           height: 10,
         ),
         Text(
-          'Featured Posts',
+          strings.featuredPosts,
           style: FontManager().getTextStyle(context,
               lWeight: FontWeight.w500, fontSize: 18, color: AppColors.accentColor),
         ),
@@ -372,7 +373,7 @@ class _CommunityState extends State<Community> {
                     Padding(
                       padding: EdgeInsets.only(left: horizontalPadding / 2),
                       child: Text(
-                        'Create Post',
+                       strings.createPost,
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.bold,
@@ -389,7 +390,7 @@ class _CommunityState extends State<Community> {
                         _buildOptionButton(
                           context: context,
                           icon: Icons.text_fields,
-                          label: 'Text',
+                          label: strings.textOption,
                           onTap: () {
                             posting.value = false;
                             Navigator.of(context).pop();
@@ -421,7 +422,7 @@ class _CommunityState extends State<Community> {
                         _buildOptionButton(
                           context: context,
                           icon: Icons.image_rounded,
-                          label: 'Image',
+                           label: strings.imageOption,
                           onTap: () {
                             posting.value = false;
                             Navigator.of(context).pop();
@@ -452,7 +453,7 @@ class _CommunityState extends State<Community> {
                         _buildOptionButton(
                           context: context,
                           icon: Icons.poll_outlined,
-                          label: 'Poll',
+                           label: strings.pollOption,
                           onTap: () {
                             posting.value = false;
                             Navigator.of(context).pop();
@@ -531,7 +532,7 @@ class _CommunityState extends State<Community> {
                             SizedBox(width: horizontalPadding / 2),
                             Flexible(
                               child: Text(
-                                'Exploria',
+                                strings.exploria, 
                                 style: FontManager().getTextStyle(
                                   context,
                                   lWeight: FontWeight.w600,
@@ -558,6 +559,7 @@ class _CommunityState extends State<Community> {
   }
 
 // Helper method to build option buttons
+
   Widget _buildOptionButton({
     required BuildContext context,
     required IconData icon,
@@ -608,560 +610,459 @@ class _CommunityState extends State<Community> {
     );
   }
 
-  Widget _buildPostCard(Map<String, dynamic> post) {
-    if (post['postType'] == 'polled') {
-      return Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-          // Adjust the value for desired radius
-        ),
-        color: Colors.white,
-        margin: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundImage:
-                        NetworkImage('https://via.placeholder.com/50'),
-                    backgroundColor: Colors.grey[300],
-                  ),
-                  const SizedBox(width: 8),
-                  Text(post['name'],
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: Colors.black)),
-                ],
-              ),
-              const SizedBox(height: 8),
+  // Widget _buildPostCard(Map<String, dynamic> post) {
+  //   if (post['postType'] == 'polled') {
+  //     return Card(
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(20.0),
+  //         // Adjust the value for desired radius
+  //       ),
+  //       color: Colors.white,
+  //       margin: const EdgeInsets.symmetric(vertical: 8.0),
+  //       child: Padding(
+  //         padding: const EdgeInsets.all(16.0),
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             Row(
+  //               children: [
+  //                 CircleAvatar(
+  //                   radius: 20,
+  //                   backgroundImage:
+  //                       NetworkImage('https://via.placeholder.com/50'),
+  //                   backgroundColor: Colors.grey[300],
+  //                 ),
+  //                 const SizedBox(width: 8),
+  //                 Text(post['name'],
+  //                     style: FontManager().getTextStyle(context,
+  //                         lWeight: FontWeight.bold,
+  //                         fontSize: 18,
+  //                         color: Colors.black)),
+  //               ],
+  //             ),
+  //             const SizedBox(height: 8),
 
-              // Poll question
-              Text(post['question'],
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.black)),
-              const SizedBox(height: 16),
+  //             // Poll question
+  //             Text(post['question'],
+  //                 style: FontManager().getTextStyle(context,
+  //                     lWeight: FontWeight.bold,
+  //                     fontSize: 18,
+  //                     color: Colors.black)),
+  //             const SizedBox(height: 16),
 
-              // Poll widget using flutter_polls
-              FlutterPolls(
-                pollId: post['pollId'], // Unique poll ID
-                // pollTitle: Text(
-                //   post['question'],
-                //   style: const TextStyle(
-                //     fontSize: 16.0,
-                //     fontWeight: FontWeight.bold,
-                //   ),
-                // ),
+  //             // Poll widget using flutter_polls
+  //             FlutterPolls(
+  //               pollId: post['pollId'], // Unique poll ID
+  //               // pollTitle: Text(
+  //               //   post['question'],
+  //               //   style: const TextStyle(
+  //               //     fontSize: 16.0,
+  //               //     fontWeight: FontWeight.bold,
+  //               //   ),
+  //               // ),
 
-                pollTitle: Align(
-                  alignment: Alignment.topLeft,
-                  //Text('dgfhj'),
-                ),
+  //               pollTitle: Align(
+  //                 alignment: Alignment.topLeft,
+  //                 //Text('dgfhj'),
+  //               ),
 
-                pollOptions: (post['options'] as List<String>).map((option) {
-                  final totalVotes = (post['votes'].values as Iterable<int>)
-                      .fold<int>(0, (int a, int b) => a + b);
-                  final optionVotes = post['votes'][option] as int;
+  //               pollOptions: (post['options'] as List<String>).map((option) {
+  //                 final totalVotes = (post['votes'].values as Iterable<int>)
+  //                     .fold<int>(0, (int a, int b) => a + b);
+  //                 final optionVotes = post['votes'][option] as int;
 
-                  return PollOption(
-                    title: Text(option,
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.normal,
-                            fontSize: 16,
-                            color: Colors.black)),
-                    votes: optionVotes,
-                  );
-                }).toList(),
-                hasVoted: false, // Update this logic to track user votes
-                onVoted: (PollOption option, int optionIndex) async {
-                  // Update votes dynamically
-                  final selectedOption = post['options'][optionIndex];
-                  post['votes'][selectedOption] =
-                      (post['votes'][selectedOption] ?? 0) + 1;
+  //                 return PollOption(
+  //                   title: Text(option,
+  //                       style: FontManager().getTextStyle(context,
+  //                           lWeight: FontWeight.normal,
+  //                           fontSize: 16,
+  //                           color: Colors.black)),
+  //                   votes: optionVotes,
+  //                 );
+  //               }).toList(),
+  //               hasVoted: false, // Update this logic to track user votes
+  //               onVoted: (PollOption option, int optionIndex) async {
+  //                 // Update votes dynamically
+  //                 final selectedOption = post['options'][optionIndex];
+  //                 post['votes'][selectedOption] =
+  //                     (post['votes'][selectedOption] ?? 0) + 1;
 
-                  // Trigger a UI rebuild
-                  (context as Element).markNeedsBuild();
+  //                 // Trigger a UI rebuild
+  //                 (context as Element).markNeedsBuild();
 
-                  return true; // Return true to indicate vote was successful
-                },
-                // Handle logic for user-selected option
-                heightBetweenTitleAndOptions: 20,
-                // Optional customization
-              ),
+  //                 return true; // Return true to indicate vote was successful
+  //               },
+  //               // Handle logic for user-selected option
+  //               heightBetweenTitleAndOptions: 20,
+  //               // Optional customization
+  //             ),
 
-              const SizedBox(height: 16),
-              _buildPostActions(post),
-            ],
-          ),
-        ),
-      );
-    }
+  //             const SizedBox(height: 16),
+  //             _buildPostActions(post),
+  //           ],
+  //         ),
+  //       ),
+  //     );
+  //   }
 
-    if (post['contentType'] == 'Exploria') {
-      return Card(
-        margin: const EdgeInsets.symmetric(vertical: 8.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-          // Adjust the value for desired radius
-        ),
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 10, // Size of the profile picture
-                        backgroundImage: NetworkImage(
-                            'https://via.placeholder.com/50'), // Profile picture URL
-                        backgroundColor: Colors
-                            .grey[300], // Fallback color if image fails to load
-                      ),
-                      Text(post['name'],
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: Colors.black)),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              if (selectedImage != null) Image.network(selectedImage!),
-              if (selectedImage == null)
-                Container(
-                  height: 200,
-                  color: Colors.grey[300],
-                  child: Center(
-                    child: Icon(Icons.image, size: 50, color: Colors.grey),
-                  ),
-                ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Text('Place:',
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: Colors.black)),
-                        Text('${post['locationName']}',
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.normal,
-                                fontSize: 16,
-                                color: Colors.black)),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Text('Location:',
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: Colors.black)),
-                        Text('${post['locationAddress']}',
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.normal,
-                                fontSize: 16,
-                                color: Colors.black)),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: [
-                  Text(
-                    'Budget',
-                    style: FontManager().getTextStyle(
+  //   if (post['contentType'] == 'Exploria') {
+  //     return Card(
+  //       margin: const EdgeInsets.symmetric(vertical: 8.0),
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(20.0),
+  //         // Adjust the value for desired radius
+  //       ),
+  //       color: Colors.white,
+  //       child: Padding(
+  //         padding: const EdgeInsets.all(16.0),
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             Row(
+  //               children: [
+  //                 Row(
+  //                   children: [
+  //                     CircleAvatar(
+  //                       radius: 10, // Size of the profile picture
+  //                       backgroundImage: NetworkImage(
+  //                           'https://via.placeholder.com/50'), // Profile picture URL
+  //                       backgroundColor: Colors
+  //                           .grey[300], // Fallback color if image fails to load
+  //                     ),
+  //                     Text(post['name'],
+  //                         style: FontManager().getTextStyle(context,
+  //                             lWeight: FontWeight.bold,
+  //                             fontSize: 18,
+  //                             color: Colors.black)),
+  //                   ],
+  //                 ),
+  //               ],
+  //             ),
+  //             SizedBox(
+  //               height: 10,
+  //             ),
+  //             if (selectedImage != null) Image.network(selectedImage!),
+  //             if (selectedImage == null)
+  //               Container(
+  //                 height: 200,
+  //                 color: Colors.grey[300],
+  //                 child: Center(
+  //                   child: Icon(Icons.image, size: 50, color: Colors.grey),
+  //                 ),
+  //               ),
+  //             SizedBox(height: 10),
+  //             Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //               children: [
+  //                 Expanded(
+  //                   child: Row(
+  //                     children: [
+  //                       Text('Place:',
+  //                           style: FontManager().getTextStyle(context,
+  //                               lWeight: FontWeight.bold,
+  //                               fontSize: 18,
+  //                               color: Colors.black)),
+  //                       Text('${post['locationName']}',
+  //                           style: FontManager().getTextStyle(context,
+  //                               lWeight: FontWeight.normal,
+  //                               fontSize: 16,
+  //                               color: Colors.black)),
+  //                     ],
+  //                   ),
+  //                 ),
+  //                 SizedBox(
+  //                   width: 10,
+  //                 ),
+  //                 Expanded(
+  //                   child: Row(
+  //                     children: [
+  //                       Text('Location:',
+  //                           style: FontManager().getTextStyle(context,
+  //                               lWeight: FontWeight.bold,
+  //                               fontSize: 18,
+  //                               color: Colors.black)),
+  //                       Text('${post['locationAddress']}',
+  //                           style: FontManager().getTextStyle(context,
+  //                               lWeight: FontWeight.normal,
+  //                               fontSize: 16,
+  //                               color: Colors.black)),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //             SizedBox(
+  //               height: 10,
+  //             ),
+  //             Row(
+  //               children: [
+  //                 Text(
+  //                   'Budget',
+  //                   style: FontManager().getTextStyle(
             
-                    context,
-                      lWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.black,
-                    ),
-                  ),
-                  Text(
-                    '(Per Day)',
-                    style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.normal,
-                      fontSize: 14,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 8.0), // Space below the title
-              Wrap(
-                spacing: 8.0, // Space between items horizontally
-                runSpacing: 8.0, // Space between rows of items
-                children: List.generate(post['budgetItems'].length, (index) {
-                  final budgetItem = post['budgetItems'][index];
-                  return Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 8.0,
-                      vertical: 4.0,
-                    ), // Optional padding
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200], // Background color
-                      borderRadius:
-                          BorderRadius.circular(8.0), // Rounded corners
-                    ),
-                    child: Text(
-                      '${budgetItem['description']} ${budgetItem['amount']}',
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.normal,
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                  );
-                }),
-              ),
+  //                   context,
+  //                     lWeight: FontWeight.bold,
+  //                     fontSize: 18,
+  //                     color: Colors.black,
+  //                   ),
+  //                 ),
+  //                 Text(
+  //                   '(Per Day)',
+  //                   style: FontManager().getTextStyle(
+  //                     context,
+  //                     lWeight: FontWeight.normal,
+  //                     fontSize: 14,
+  //                     color: Colors.black,
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //             SizedBox(height: 8.0), // Space below the title
+  //             Wrap(
+  //               spacing: 8.0, // Space between items horizontally
+  //               runSpacing: 8.0, // Space between rows of items
+  //               children: List.generate(post['budgetItems'].length, (index) {
+  //                 final budgetItem = post['budgetItems'][index];
+  //                 return Container(
+  //                   padding: EdgeInsets.symmetric(
+  //                     horizontal: 8.0,
+  //                     vertical: 4.0,
+  //                   ), // Optional padding
+  //                   decoration: BoxDecoration(
+  //                     color: Colors.grey[200], // Background color
+  //                     borderRadius:
+  //                         BorderRadius.circular(8.0), // Rounded corners
+  //                   ),
+  //                   child: Text(
+  //                     '${budgetItem['description']} ${budgetItem['amount']}',
+  //                     style: FontManager().getTextStyle(
+  //                       context,
+  //                       lWeight: FontWeight.normal,
+  //                       fontSize: 16,
+  //                       color: Colors.black,
+  //                     ),
+  //                   ),
+  //                 );
+  //               }),
+  //             ),
 
-              //Text('${post['amount']}'),
-              // Text('${post['description']} ${post['amount']}'),
+  //             //Text('${post['amount']}'),
+  //             // Text('${post['description']} ${post['amount']}'),
 
-              SizedBox(
-                height: 10,
-              ),
-              Text('Trip Highlights',
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.black)),
-              SizedBox(
-                height: 10,
-              ),
+  //             SizedBox(
+  //               height: 10,
+  //             ),
+  //             Text('Trip Highlights',
+  //                 style: FontManager().getTextStyle(context,
+  //                     lWeight: FontWeight.bold,
+  //                     fontSize: 18,
+  //                     color: Colors.black)),
+  //             SizedBox(
+  //               height: 10,
+  //             ),
 
-              Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: 8.0, vertical: 4.0), // Optional padding
-                decoration: BoxDecoration(
-                  color: Colors.grey, // Background color
-                  borderRadius: BorderRadius.circular(8.0), // Rounded corners
-                ),
+  //             Container(
+  //               padding: EdgeInsets.symmetric(
+  //                   horizontal: 8.0, vertical: 4.0), // Optional padding
+  //               decoration: BoxDecoration(
+  //                 color: Colors.grey, // Background color
+  //                 borderRadius: BorderRadius.circular(8.0), // Rounded corners
+  //               ),
 
-                child: Text('${post['title']}',
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: Colors.black)),
-              ),
-              //Text('${post['title']}'),
-              SizedBox(
-                height: 10,
-              ),
-              Text('Description',
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.black)),
-              Text('${post['content']}',
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.normal,
-                    fontSize: 16,
-                  )),
+  //               child: Text('${post['title']}',
+  //                   style: FontManager().getTextStyle(context,
+  //                       lWeight: FontWeight.bold,
+  //                       fontSize: 16,
+  //                       color: Colors.black)),
+  //             ),
+  //             //Text('${post['title']}'),
+  //             SizedBox(
+  //               height: 10,
+  //             ),
+  //             Text('Description',
+  //                 style: FontManager().getTextStyle(context,
+  //                     lWeight: FontWeight.bold,
+  //                     fontSize: 18,
+  //                     color: Colors.black)),
+  //             Text('${post['content']}',
+  //                 style: FontManager().getTextStyle(
+  //                   context,
+  //                   lWeight: FontWeight.normal,
+  //                   fontSize: 16,
+  //                 )),
 
-              SizedBox(
-                height: 10,
-              ),
-              _buildPostActions(post)
-            ],
-          ),
-        ),
-      );
-    }
+  //             SizedBox(
+  //               height: 10,
+  //             ),
+  //             _buildPostActions(post)
+  //           ],
+  //         ),
+  //       ),
+  //     );
+  //   }
 
-    return Card(
-      //margin: const EdgeInsets.only(bottom: 16.0),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-        // Adjust the value for desired radius
-      ),
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Post Header
-            _buildPostHeader(post),
+  //   return Card(
+  //     //margin: const EdgeInsets.only(bottom: 16.0),
+  //     shape: RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.circular(20.0),
+  //       // Adjust the value for desired radius
+  //     ),
+  //     color: Colors.white,
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(16.0),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           // Post Header
+  //           _buildPostHeader(post),
 
-            const SizedBox(height: 16),
+  //           const SizedBox(height: 16),
 
-            // Post Content
-            _buildPostContent(post),
+  //           // Post Content
+  //           _buildPostContent(post),
 
-            const SizedBox(height: 16),
+  //           const SizedBox(height: 16),
 
-            // Post Actions (Like, Comment, Share)
-            _buildPostActions(post),
-          ],
-        ),
-      ),
-    );
-  }
+  //           // Post Actions (Like, Comment, Share)
+  //           _buildPostActions(post),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  Widget _buildPostHeader(Map<String, dynamic> post) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            CircleAvatar(
-              backgroundImage: NetworkImage(post['profilePic']),
-              radius: 24,
-            ),
-            const SizedBox(width: 8),
-            Text(post['name'],
-                style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.normal,
-                    fontSize: 18,
-                    color: Colors.black)),
+  // Widget _buildPostHeader(Map<String, dynamic> post) {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //     children: [
+  //       Row(
+  //         children: [
+  //           CircleAvatar(
+  //             backgroundImage: NetworkImage(post['profilePic']),
+  //             radius: 24,
+  //           ),
+  //           const SizedBox(width: 8),
+  //           Text(post['name'],
+  //               style: FontManager().getTextStyle(context,
+  //                   lWeight: FontWeight.normal,
+  //                   fontSize: 18,
+  //                   color: Colors.black)),
            
-          ],
-        ),
-        IconButton(onPressed: () {}, icon: Icon(Icons.more_vert))
-      ],
-    );
-  }
+  //         ],
+  //       ),
+  //       IconButton(onPressed: () {}, icon: Icon(Icons.more_vert))
+  //     ],
+  //   );
+  // }
 
-  Widget _buildPostContent(Map<String, dynamic> post) {
-    switch (post['contentType']) {
-      case 'text':
-        return Column(children: [
-          Text(
-            post['title'],
-            style: const TextStyle(
-              fontSize: 18, // Change font size
-              fontWeight: FontWeight.bold, // Change font weight
-              color: Colors.black, // Change text color
-               ),
-        ),
-          Text(
-            post['content'],
-            style: const TextStyle(fontSize: 14),
-          ),
-        ]);
-      case 'image':
-        return Image.network(
-          post['content'],
-          fit: BoxFit.contain,
-        );
-      case 'textImage':
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(post['title'],
-                style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Colors.black)),
-            Text(
-              post['content'],
-              style: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.normal,
-                  fontSize: 14,
-                  color: Colors.black),
-            ),
-            const SizedBox(height: 8),
-            if (post['imageContent'] != null &&
-                post['imageContent'].isNotEmpty) ...[
-              Image.file(
-                File(post['imageContent']),
-                fit: BoxFit.cover,
-              ),
-            ] else ...[
-              Text(" "),
-            ],
-          ],
-        );
-      default:
-        return const SizedBox.shrink();
-    }
-  }
+  // Widget _buildPostContent(Map<String, dynamic> post) {
+  //   switch (post['contentType']) {
+  //     case 'text':
+  //       return Column(children: [
+  //         Text(
+  //           post['title'],
+  //           style: const TextStyle(
+  //             fontSize: 18, // Change font size
+  //             fontWeight: FontWeight.bold, // Change font weight
+  //             color: Colors.black, // Change text color
+  //              ),
+  //       ),
+  //         Text(
+  //           post['content'],
+  //           style: const TextStyle(fontSize: 14),
+  //         ),
+  //       ]);
+  //     case 'image':
+  //       return Image.network(
+  //         post['content'],
+  //         fit: BoxFit.contain,
+  //       );
+  //     case 'textImage':
+  //       return Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Text(post['title'],
+  //               style: FontManager().getTextStyle(context,
+  //                   lWeight: FontWeight.bold,
+  //                   fontSize: 18,
+  //                   color: Colors.black)),
+  //           Text(
+  //             post['content'],
+  //             style: FontManager().getTextStyle(context,
+  //                 lWeight: FontWeight.normal,
+  //                 fontSize: 14,
+  //                 color: Colors.black),
+  //           ),
+  //           const SizedBox(height: 8),
+  //           if (post['imageContent'] != null &&
+  //               post['imageContent'].isNotEmpty) ...[
+  //             Image.file(
+  //               File(post['imageContent']),
+  //               fit: BoxFit.cover,
+  //             ),
+  //           ] else ...[
+  //             Text(" "),
+  //           ],
+  //         ],
+  //       );
+  //     default:
+  //       return const SizedBox.shrink();
+  //   }
+  // }
 
-  Widget _buildPostActions(post) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        // Like Button
-        IconButton(
-          onPressed: () {
-            setState(() {
-              if (post["isLiked"]) {
-                post["likeCount"]--;
-                post["isLiked"] = false;
-              } else {
-                post["likeCount"]++;
-                post["isLiked"] = true;
-              }
-            });
-          },
-          icon: Icon(
-            post["isLiked"] ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-            color: post["isLiked"] ? Colors.red : Colors.blue,
-          ),
-        ),
-        Text(post["likeCount"].toString()),
+  // Widget _buildPostActions(post) {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //     children: [
+  //       // Like Button
+  //       IconButton(
+  //         onPressed: () {
+  //           setState(() {
+  //             if (post["isLiked"]) {
+  //               post["likeCount"]--;
+  //               post["isLiked"] = false;
+  //             } else {
+  //               post["likeCount"]++;
+  //               post["isLiked"] = true;
+  //             }
+  //           });
+  //         },
+  //         icon: Icon(
+  //           post["isLiked"] ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+  //           color: post["isLiked"] ? Colors.red : Colors.blue,
+  //         ),
+  //       ),
+  //       Text(post["likeCount"].toString()),
 
-        // Comment Button
-        IconButton(
-          onPressed: () {
-            // Add Comment button logic here
-          },
-          icon: const Icon(
-            Icons.comment,
-            color: Colors.blue,
-            size: 24.0,
-          ),
-        ),
+  //       // Comment Button
+  //       IconButton(
+  //         onPressed: () {
+  //           // Add Comment button logic here
+  //         },
+  //         icon: const Icon(
+  //           Icons.comment,
+  //           color: Colors.blue,
+  //           size: 24.0,
+  //         ),
+  //       ),
 
-        // Share Button
-        IconButton(
-          onPressed: () {
-            // Add Share button logic here
-          },
-          icon: const Icon(
-            Icons.share,
-            color: Colors.blue,
-            size: 24.0,
-          ),
-        ),
-      ],
-    );
-  }
+  //       // Share Button
+  //       IconButton(
+  //         onPressed: () {
+  //           // Add Share button logic here
+  //         },
+  //         icon: const Icon(
+  //           Icons.share,
+  //           color: Colors.blue,
+  //           size: 24.0,
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 }
 
 
 
 
 
-
-
-
-// class Community extends StatefulWidget {
-//   const Community({Key? key}) : super(key: key);
-
-//   @override
-//   State<Community> createState() => _CommunityState();
-// }
-// class _CommunityState extends State<Community> {
-//   final List<Map<String, dynamic>> posts = [];
-//   String? selectedImage;
-//   String CurrentUser = 'user1';
-//   final ImagePicker _picker = ImagePicker();
-//   final TextEditingController _searchController = TextEditingController();
-//   int likeCount = 0;
-//   bool isLiked = false;
-//   late ScrollController scrollControllerPost;
-  
-//   // Use RxBool instead of regular bool
-//   final RxBool showScrollToTop = false.obs;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     scrollControllerPost = ScrollController();
-//     getPost();
-    
-//     // Add scroll listener using GetX reactive approach
-//     scrollControllerPost.addListener(() {
-//       // Update reactive variable instead of using setState
-//       showScrollToTop.value = scrollControllerPost.offset > 50;
-//     });
-//   }
-
-//   @override
-//   void dispose() {
-//     scrollControllerPost.dispose();
-//     _searchController.dispose();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       extendBody: true,
-//       backgroundColor: AppColors.backgroundColor,
-//       bottomNavigationBar: BottomNavigations(data: 2),
-//       body: SafeArea(
-//         child: Container(
-//         // color: Colors.green,
-//           height: MediaQuery.of(context).size.height / 1.1,
-//            padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 0,top: 8.0),
-//           child: SingleChildScrollView(
-//             controller: scrollControllerPost,
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Padding(
-//                   padding: const EdgeInsets.only(top: 10),
-//                   child: _buildWelcomeRow(),
-//                 ),
-//                 Obx(
-//                   () => getTrendingData.length == 0 && !isPost.value
-//                       ? Loader()
-//                       : isPost.value && getTrendingData.length == 0
-//                           ? noFriend(context,
-//                               "Make friends to see their posts or upload post")
-//                           : Obx(() => getPosted.value
-//                               ? LazyLoadingList()
-//                               : LazyLoadingList()),
-//                 )
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//       floatingActionButton: Obx(() => Visibility(
-//         visible: showScrollToTop.value, // Use .value with Obx
-//         child: Container(
-//           width: MediaQuery.of(context).size.width * 0.12, // Adjusted for responsiveness
-//               height: MediaQuery.of(context).size.height * 0.05, 
-//           child: FloatingActionButton(
-//             onPressed: () {
-//               scrollControllerPost.animateTo(
-//                 0,
-//                 duration: Duration(milliseconds: 300),
-//                 curve: Curves.easeInOut,
-//               );
-//             },
-//             backgroundColor: Colors.grey.withOpacity(0.8),
-//             child: Icon(
-//               Icons.arrow_upward,
-//               color: Colors.white,
-//               size: 25,
-//             ),
-//           ),
-//         ),
-//       )),
-//     );
-//   }

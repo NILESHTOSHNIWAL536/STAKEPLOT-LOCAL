@@ -3,6 +3,7 @@ import 'package:finvu_flutter_sdk_core/finvu_fip_details.dart';
 import 'package:finvu_flutter_sdk_core/finvu_fip_info.dart';
 import 'package:finvu_flutter_sdk_core/finvu_linked_accounts.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -100,7 +101,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 6 * textScale),
                   child: Text(
-                    "Select accounts to share",
+                    FinvuStrings().selectAccountsToShare,
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.bold,
@@ -151,7 +152,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
           ),
           child: Center(
             child: Text(
-              "Authorise",
+             FinvuStrings().authorise,
               style: FontManager().getTextStyle(
                 context,
                 lWeight: FontWeight.bold,
@@ -171,15 +172,15 @@ class _LinkingAccountState extends State<LinkingAccount> {
       height: MediaQuery.of(context).size.height / 3,
       padding: EdgeInsets.all(12 * textScale),
       child: accountAdded.isNotEmpty
-          ? getLinkNow(BankText.linkNow, BankText.linkNowproceeding, "Link Now", screenWidth)
+          ? getLinkNow(BankText.linkNow, BankText.linkNowproceeding, FinvuStrings().linkNow, screenWidth)
           : seletedAccountIds.isEmpty
-              ? getLinkNow(BankText.checkNow, BankText.checkNowproceeding, "check Now", screenWidth)
+              ? getLinkNow(BankText.checkNow, BankText.checkNowproceeding, FinvuStrings().checkNow, screenWidth)
               : Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "${seletedAccountIds.length} Bank Accounts are shared",
+                       "${seletedAccountIds.length} ${FinvuStrings().bankAccountsShared}", 
                       style: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.bold,
@@ -197,10 +198,10 @@ class _LinkingAccountState extends State<LinkingAccount> {
                           MaterialPageRoute(builder: (context) => Access()),
                         );
                       },
-                      child: getButton(context, "Continue", screenWidth),
+                      child: getButton(context, FinvuStrings().continueButton, screenWidth),
                     ),
                     SizedBox(height: 20 * textScale),
-                    textStyle("We will fetch this account transactions", 8 * textScale),
+                     textStyle(FinvuStrings().fetchAccountTransactions, 8 * textScale), 
                   ],
                 ),
     );
@@ -266,7 +267,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Bank Accounts",
+                    FinvuStrings().bankAccounts,
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.bold,
@@ -274,13 +275,13 @@ class _LinkingAccountState extends State<LinkingAccount> {
                       color: AppColors.bg1,
                     ),
                   ),
-                  Obx(() => textStyle("${count.value} accounts discovered", 12 * textScale, Colorcodes.graphColor1)),
+                  Obx(() => textStyle("${count.value} ${FinvuStrings().accountsDiscovered}", 12 * textScale, Colorcodes.graphColor1)),
                 ],
               ),
             ],
           ),
           SizedBox(height: 10 * textScale),
-          textStyle("Select at least 1 Account to share from", 14 * textScale),
+          textStyle(FinvuStrings().selectAtLeastOneAccount, 14 * textScale),
           SizedBox(height: 10 * textScale),
         ],
       ),
@@ -373,7 +374,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10 * textScale),
               child: Center(
-                child: textStyle("Securely authorize each selected account", 14 * textScale, Colorcodes.black, FontWeight.bold),
+                child: textStyle(FinvuStrings().securelyAuthorize,  14 * textScale, Colorcodes.black, FontWeight.bold),
               ),
             ),
             Padding(
@@ -382,11 +383,12 @@ class _LinkingAccountState extends State<LinkingAccount> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10 * textScale, horizontal: 20 * textScale),
-              child: textStyle("OTP Verification", 20 * textScale, AppColors.bg1, FontWeight.bold),
+              child: textStyle(FinvuStrings().otpVerification, 20 * textScale, AppColors.bg1, FontWeight.bold),
             ),
-            Padding(
+           Padding(
               padding: EdgeInsets.symmetric(vertical: 4 * textScale, horizontal: 20 * textScale),
-              child: textStyle("Enter the OTP sent to ${number.value}", 15 * textScale, AppColors.bg1, FontWeight.w400),
+              child: textStyle(
+                  "${FinvuStrings().enterOtpSentTo} ${number.value}", 15 * textScale, AppColors.bg1, FontWeight.w400), // Direct access
             ),
             SizedBox(height: 10 * textScale),
             Padding(
@@ -399,7 +401,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                   linkAccount(_otpCode.value, fid, context, fipDetails);
                 },
                 decoration: InputDecoration(
-                  hintText: 'Enter OTP',
+                  hintText:FinvuStrings().enterOtp, // 
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12 * textScale)),
                 ),
                 onChanged: (value) {
@@ -413,7 +415,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                 ? Padding(
                     padding: EdgeInsets.fromLTRB(40 * textScale, 0, 0, 5 * textScale),
                     child: Text(
-                      "Incorrect OTP entered",
+                      FinvuStrings().incorrectOtp,
                       style: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.w300,
@@ -431,7 +433,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                   Padding(
                     padding: EdgeInsets.only(right: 5 * textScale),
                     child: Text(
-                      "Didn't you receive the OTP?  ",
+                     FinvuStrings().didntReceiveOtp,
                       style: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.w200,
@@ -443,7 +445,9 @@ class _LinkingAccountState extends State<LinkingAccount> {
                   Obx(() => GestureDetector(
                         onTap: canResendOtp.value ? () async => reSendOtp(fipDetails, fid) : null,
                         child: Text(
-                          canResendOtp.value ? "Resend OTP" : "Resend in ${otpCountdown.value} seconds",
+                          canResendOtp.value
+                              ? FinvuStrings().resendOtp
+                              : "${FinvuStrings().resendInSeconds} ${otpCountdown.value} seconds",
                           style: FontManager().getTextStyle(
                             context,
                             lWeight: FontWeight.w400,
@@ -485,7 +489,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
       ),
       child: Center(
         child: Text(
-          "Verify",
+           FinvuStrings().verify,
           style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.bold,
@@ -548,7 +552,8 @@ class _LinkingAccountState extends State<LinkingAccount> {
                 formatMaskedAccount(bankData),
                 SizedBox(height: 2 * textScale),
                 Obx(() =>( listofLinkedAccount.contains(id))
-                    ? textStyle(FipIdsConnected.contains(maskedAccountNumber)? "Shared":"Linked", 13 * textScale, Colorcodes.graphColor2)
+                    ? textStyle(FipIdsConnected.contains(maskedAccountNumber) ? FinvuStrings().shared
+                          : FinvuStrings().linked, 13 * textScale, Colorcodes.graphColor2)
                     : SizedBox(height: 0)),
               ],
             ),
@@ -670,7 +675,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
                       borderRadius: BorderRadius.circular(12 * textScale),
                     ),
                     child: Text(
-                      "Link now",
+                      FinvuStrings().linkNow,
                       style: TextStyle(fontSize: 12 * textScale, color: Colorcodes.white),
                     ),
                   ),

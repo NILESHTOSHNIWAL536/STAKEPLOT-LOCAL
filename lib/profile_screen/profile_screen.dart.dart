@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/NavigatorScreens/userNavigator.dart';
+import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
@@ -49,7 +50,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
 
       if (canCheckBiometrics || isDeviceSupported) {
         isAuthenticated = await auth.authenticate(
-          localizedReason: 'Authenticate to view hidden transactions',
+          localizedReason:  ProfileScreenStrings().historyArchivesSubLabel,
           options: const AuthenticationOptions(
             biometricOnly: false, // Allow PIN fallback
             stickyAuth: true,
@@ -143,7 +144,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                 height: 40,
                                 width: 40,
                               ),
-                              Text('Edit',
+                              Text(ProfileScreenStrings().editProfileLabel,
                                   style: FontManager().getTextStyle(context,
                                       lWeight: FontWeight.w600,
                                       //fontSize: MediaQuery.of(context).size.width * 0.04,
@@ -172,26 +173,24 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                       padding: const EdgeInsets.fromLTRB(6, 8, 8, 4),
                       child: Column(
                         children: [
-                          _buildOption(
-                              ProfileImage(
-                                url: ProfileIcons.communityProf,
+                              _buildOption(
+                                ProfileImage(url: ProfileIcons.communityProf),
+                                ProfileScreenStrings().communityProfileLabel, // Direct access
+                                ProfileScreenStrings().communityProfileSubLabel, // Direct access
+                                onTap: () {
+                                  navigatorToMyOwnPage(context);
+                                },
                               ),
-                              'Community profile',
-                              'Check your community profile', onTap: () {
-                            navigatorToMyOwnPage(context);
-                          }),
-                          Divider(),
-                          _buildOption(
-                              ProfileImage(
-                                url: ProfileIcons.friends,
-                                // height: 20,
-                                // width: 20,
+                              Divider(),
+                              _buildOption(
+                                ProfileImage(url: ProfileIcons.friends),
+                                ProfileScreenStrings().friendsListLabel, // Direct access
+                                ProfileScreenStrings().friendsListSubLabel, // Direct access
+                                onTap: () {
+                                  Navigator.pushNamed(context, '/Friends');
+                                },
                               ),
-                              'Friends list',
-                              'Check your friends list here', onTap: () {
-                            Navigator.pushNamed(context, '/Friends');
-                          }),
-                        ],
+                            ],
                       ),
                     ),
                   ),
@@ -226,13 +225,10 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                               }
                             },
                             child: _buildOption(
-                                ProfileImage(
-                                  url: ProfileIcons.support,
-                                  // height: 20,
-                                  // width: 20,
+                                  ProfileImage(url: ProfileIcons.support),
+                                  ProfileScreenStrings().historyArchivesLabel, // Direct access
+                                  ProfileScreenStrings().historyArchivesSubLabel, // Direct access
                                 ),
-                                'History archives ',
-                                'Find your hidden history here'),
                           ),
                           Divider(),
                           InkWell(
@@ -250,13 +246,10 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                               );
                             },
                             child: _buildOption(
-                                ProfileImage(
-                                  url: ProfileIcons.terms,
-                                  // height: 20,
-                                  // width: 20,
+                                  ProfileImage(url: ProfileIcons.terms),
+                                  ProfileScreenStrings().termsConditionsLabel, // Direct access
+                                  ProfileScreenStrings().termsConditionsSubLabel, // Direct access
                                 ),
-                                'Terms & conditions',
-                                'Please follow our terms and conditions'),
                           ),
             
                           // InkWell(
@@ -315,15 +308,12 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                 border: Border.all(color: AppColors.border)),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(10, 14, 14, 14),
-              child: _buildOption(
-                  ProfileImage(
-                    url: ProfileIcons.logout,
-                    // height: 22,
-                    // width: 22,
-                  ),
-                  'Log out',
-                  'You can login and log out from your account',
-                  isLogout: true),
+            child: _buildOption(
+                ProfileImage(url: ProfileIcons.logout),
+                ProfileScreenStrings().logoutLabel, // Direct access
+                ProfileScreenStrings().logoutSubLabel, // Direct access
+                isLogout: true,
+              ),
             ),
           ),
         ),
@@ -331,7 +321,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
         Align(
           alignment: Alignment.bottomCenter,
           child: Text(
-            'Stakeplot\nApp version 2.0.0',
+            ProfileScreenStrings().appVersionLabel,
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.grey, fontSize: 12),
           ),

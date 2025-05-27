@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -31,13 +32,11 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
   double h = 28;
   double w = 28;
 
-  final List<Map<String, dynamic>> autoScrollItems = [
-    {'icon': Icons.account_balance_wallet, 'text': 'Budgeting'},
-    {'icon': Icons.business, 'text': 'Management'},
-    
-    {'icon': Icons.trending_up, 'text': 'Growth'},
-    {'icon': Icons.people, 'text': 'Community'},
-    
+   final List<Map<String, dynamic>> autoScrollItems = [
+    {'icon': Icons.account_balance_wallet, 'text': FinvuStrings().budgeting},
+    {'icon': Icons.business, 'text': FinvuStrings().management},
+    {'icon': Icons.trending_up, 'text': FinvuStrings().growth},
+    {'icon': Icons.people, 'text': FinvuStrings().community},
   ];
 
   @override
@@ -139,26 +138,19 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                     AvatarProfileImage(url: Sign.transform, width: 4, height: 4),
               ),
             
-              Text(
-                "Transform your money habits",
+             Text(
+                FinvuStrings().transformMoneyHabits, // Direct access
                 style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.bold,
-                    fontSize: 22,
-                    color: AppColors.bg1),
+                    lWeight: FontWeight.bold, fontSize: 22, color: AppColors.bg1),
               ),
               Text(
-                "with stakeplot",
+                FinvuStrings().withStakeplot, // Direct access
                 style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.bold,
-                    fontSize: 22,
-                    color: AppColors.bg1),
+                    lWeight: FontWeight.bold, fontSize: 22, color: AppColors.bg1),
               ),
-              SizedBox(
-                height: 15,
-              ),
-        
+              SizedBox(height: 15),
               Text(
-                "Fuel Your Dreams.Fuel Your Wallet:Your Journey To Financial Success Starts Here",
+                FinvuStrings().financialSuccessJourney, // Direct access
                 style: FontManager().getTextStyle(context,
                     lWeight: FontWeight.w200, fontSize: 10, color: AppColors.bg1),
               ),
@@ -177,7 +169,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                       );
                       
                     },
-                    child: getButton(context,"Start now")),
+                   child: getButton(context, FinvuStrings().startNow)),
               ),
             ],
           ),
@@ -222,7 +214,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                         Padding(
                           padding: const EdgeInsets.only(left: 10),
                           child: Text(
-                            "Connect your bank accounts using AA services",
+                            FinvuStrings().connectBankAccounts,
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.w500,
                                 fontSize: 12,
@@ -266,20 +258,16 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "What are Account Aggregators?",
-                    style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.w600,
-                              fontSize: 12,
-                              color: AppColors.bg1),
-                  ),
-                  const SizedBox(height: 4.0),
-                  Text(
-                    'Account Aggregators are RBI-authorized institutions that securely collect and share your financial information with us.',
-                    style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.w400,
-                              fontSize: 12,
-                              color: AppColors.bg1),
-                  ),
+                        FinvuStrings().whatAreAccountAggregators, // Direct access
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.w600, fontSize: 12, color: AppColors.bg1),
+                      ),
+                      const SizedBox(height: 4.0),
+                      Text(
+                        FinvuStrings().accountAggregatorsDescription, // Direct access
+                        style: FontManager().getTextStyle(context,
+                            lWeight: FontWeight.w400, fontSize: 12, color: AppColors.bg1),
+                      ),
                   // const SizedBox(height: 5.0),
                   //  Text("Supported by:",style: FontManager().getTextStyle(context,
                   //             lWeight: FontWeight.w500,
@@ -301,23 +289,16 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Secure & Quick Sharing",
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.bold,
-                        fontSize: 12,
-                        color: Colors.green,
-                      ),
-                    ),
-                    Text(
-                      "via RBI-authorised Account Aggregator Services",
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.bold,
-                        fontSize: 12,
-                        color: Colors.green,
-                      ),
-                    ),
+                          FinvuStrings().secureQuickSharing, // Direct access
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.bold, fontSize: 12, color: Colors.green),
+                        ),
+                        Text(
+                          FinvuStrings().viaRbiAuthorised, // Direct access
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.bold, fontSize: 12, color: Colors.green),
+                        ),
+                    
                   ],
                 ),
               ],

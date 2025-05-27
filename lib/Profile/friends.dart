@@ -3,6 +3,7 @@ import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
+import "package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart";
@@ -43,7 +44,7 @@ class _FriendsState extends State<Friends> {
           backgroundColor: AppColors.backgroundColor,
           title: textStyle(
                   context: context,
-                  text: "Friends list",
+                  text: ProfileScreenStrings().friendsListTitle,
                   fontsize: 18,
                   fontWeight: FontWeight.w600),
         ),
@@ -79,7 +80,7 @@ class _FriendsState extends State<Friends> {
                                   horizontal: 10, vertical: 0),
                               filled: true,
                               enabled: !friendsList.isEmpty,
-                              hintText: 'Search...',
+                              hintText:  ProfileScreenStrings().searchHint,
                               fillColor: AppColors.button,
                               hintStyle: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.normal,

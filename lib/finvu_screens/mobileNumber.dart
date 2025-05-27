@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
@@ -125,7 +126,7 @@ class _MobileNumberState extends State<MobileNumber> {
                 children: [
                 
                   Text(
-                    "OTP Verification",
+                    FinvuStrings().otpVerification,
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.bold,
@@ -136,8 +137,7 @@ class _MobileNumberState extends State<MobileNumber> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     child: Text(
-                     
-"Finvu will send an OTP to your mobile number.",
+FinvuStrings().finvuOtpMessage,
                       style: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.w400,
@@ -158,7 +158,7 @@ class _MobileNumberState extends State<MobileNumber> {
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.phone_android_outlined),
                       prefixIconColor: AppColors.primaryColor,
-                      hintText: 'Enter 10 digit Number',
+                      hintText: FinvuStrings().enter10DigitNumber,
                       hintStyle: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.w500,
@@ -210,7 +210,7 @@ class _MobileNumberState extends State<MobileNumber> {
                    }
                      loadConsentId.value=false;
                     },
-                    child: Obx(()=> loadConsentId.value?  getspinner(context,""):getButton(context, "Continue")),
+                    child: Obx(()=> loadConsentId.value?  getspinner(context,""):getButton(context, FinvuStrings().continueButton)),
                   ),
                 ],
               ),
@@ -219,7 +219,7 @@ class _MobileNumberState extends State<MobileNumber> {
                 child: Center(
                   child: RichText(
                     text: TextSpan(
-                      text: "By clicking continue, you agree to Finvu's ",
+                      text: FinvuStrings().termsAndConditionsAgreement,
                       style: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.w500,
@@ -228,7 +228,7 @@ class _MobileNumberState extends State<MobileNumber> {
                       ),
                       children: [
                         TextSpan(
-                            text: "Terms & Conditions",
+                            text:  FinvuStrings().termsAndConditions,
                             style: FontManager().getTextStyle(
                               context,
                               lWeight: FontWeight.w500,
@@ -286,7 +286,7 @@ class _MobileNumberState extends State<MobileNumber> {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 25, left: 20, right: 20),
-              child: textStyle("Register with Finvu to start sharing", 16,
+              child: textStyle( FinvuStrings().registerWithFinvu, 16,
                   AppColors.bg1, FontWeight.bold),
             ),
             // Padding(
@@ -296,7 +296,7 @@ class _MobileNumberState extends State<MobileNumber> {
             // ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: textStyle("Enter the OTP sent to ${number.value}", 15,
+              child: textStyle( "${FinvuStrings().enterOtpSentTo} ${number.value}", 15,
                   AppColors.bg1, FontWeight.w400),
             ),
             const SizedBox(
@@ -339,7 +339,7 @@ class _MobileNumberState extends State<MobileNumber> {
                   ? Padding(
                       padding: const EdgeInsets.fromLTRB(40, 0, 0, 5),
                       child: Text(
-                        "Incorrect OTP entered",
+                         FinvuStrings().incorrectOtp,
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.w300,
@@ -358,7 +358,7 @@ class _MobileNumberState extends State<MobileNumber> {
                   Padding(
                     padding: const EdgeInsets.only(right: 5),
                     child: Text(
-                      "Didn't you receive the OTP?  ",
+                      FinvuStrings().didntReceiveOtp,
                       style: FontManager().getTextStyle(
                         context,
                         lWeight: FontWeight.w200,
@@ -379,8 +379,8 @@ class _MobileNumberState extends State<MobileNumber> {
                           : null,
                       child: Text(
                         canResendOtp.value
-                            ? "Resend OTP"
-                            : "Resend in ${otpCountdown.value} seconds",
+                                ? FinvuStrings().resendOtp:
+                                "${FinvuStrings().resendInSeconds} ${otpCountdown.value} seconds",
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.w400,
@@ -446,7 +446,7 @@ class _MobileNumberState extends State<MobileNumber> {
       ),
       child: Center(
         child: Text(
-          "Verify",
+         FinvuStrings().verify,
           style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.bold,
