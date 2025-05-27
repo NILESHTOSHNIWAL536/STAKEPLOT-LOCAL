@@ -288,7 +288,6 @@ String getCurrentWeek() {
   final now = DateTime.now().subtract(Duration(days: 7));
   final year = now.year;
   String s = '$year-W${now.weekOfYear.toString().padLeft(2, '0')}';
-  print("dfsjafslkfjaslkfjdlkj : $s");
   return s;
 }
 

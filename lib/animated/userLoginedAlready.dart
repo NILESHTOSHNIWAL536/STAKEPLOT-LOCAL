@@ -22,7 +22,6 @@ class UserLoginedAlready extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var body = jsonDecode(data);
-    print(body);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
       width: MediaQuery.of(context).size.width,

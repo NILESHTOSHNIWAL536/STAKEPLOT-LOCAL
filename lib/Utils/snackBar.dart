@@ -351,11 +351,9 @@ noFriendsToNotify = data['noFriendsToNotify'] ?? noFriendsToNotify;
 
         return true;
       } else {
-        print("Failed to load Snackbar constants: ${response.statusCode}");
         return false;
       }
     } catch (e) {
-      print("Error fetching Snackbar constants: $e");
       return false;
     }
   }

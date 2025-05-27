@@ -396,8 +396,6 @@ void sendNotificationsToDevice(id, context, msg,
       snackBarCalled(context, data["message"], Colorcodes.red);
       return;
     }
-
-    print(message);
     if (screen == "/remainder" || screen == "/remainders") {
       snackBarCalled(context, message);
     }

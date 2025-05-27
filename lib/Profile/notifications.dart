@@ -370,12 +370,7 @@ class _NotificationsState extends State<Notifications> {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       if (!isFetchedData && avatar.isNotEmpty)
-    //     print("-----------------------${(!isFetchedData && avatar.isNotEmpty)}");
-        // UserAvatar(
-        //   url: avaterUrlPath(avatar),
-        //   width: 20,
-        //   height:17,
-        // )
+    
         AvatarProfile(name: avatar, width: 20, height: 17, background: "")
       else if (!isFetchedData)
         SizedBox(width: MediaQuery.of(context).size.width * 0.06),

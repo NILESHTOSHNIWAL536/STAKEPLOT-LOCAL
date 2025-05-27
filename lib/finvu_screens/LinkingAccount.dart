@@ -351,7 +351,6 @@ class _LinkingAccountState extends State<LinkingAccount> {
         builder: (BuildContext context) => verify(fipId, fipDetails, info, context),
       );
     } catch (e) {
-      print("Error during linking: $e");
       snackBarCalledSignup(context, SnackbarData().maxRetries);
     }
   }
@@ -736,11 +735,10 @@ class _LinkingAccountState extends State<LinkingAccount> {
             seletedAccountInfomations.add(finvuInfo);
           }
         } catch (e) {
-          print(e);
         }
       });
     } catch (e) {
-      print(e);
+      
     }
   }
 

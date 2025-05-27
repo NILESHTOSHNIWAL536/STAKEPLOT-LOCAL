@@ -87,11 +87,9 @@ class SignupData {
 
         return true;
       } else {
-        print("Failed to load constants: ${response.statusCode}");
         return false;
       }
     } catch (e) {
-      print("Error fetching constants: $e");
       return false;
     }
 

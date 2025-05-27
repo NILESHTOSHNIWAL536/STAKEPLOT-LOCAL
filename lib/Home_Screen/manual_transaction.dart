@@ -679,7 +679,6 @@ class _ModalContentState extends State<ModalContent>
             final result =
                 await showCustomFriendsModal(context, amount ?? 0.0, false);
             if (result != null && addedMembers.isNotEmpty) {
-              // print("buttonsWidget: Split mode - Received amounts: $result");
               splitUserAmountManualTransaction(
                 context,
                 amount.toString(),

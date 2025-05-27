@@ -22,7 +22,6 @@ void addReply(context, String data, String postId) async {
 
 void deletePost(id, context) async {
   var responce = await deleteDataApiCall("${url}/post/${id}");
-  print("Delete API Response: ${responce.body}"); // Log the response
   if (getFlagOfResponse(responce)) {
     snackBarCalled(context, "Deleted Post");
   } else {
@@ -158,7 +157,6 @@ void createPollOfCommunity(context, String title, String description) async {
 
 void getPost() async {
   var response = await getDataApiCall('${url}/post/feed');
-  print(response.statusCode);
   if (getFlagOfResponse(response)) {
    
     var his = jsonDecode(response.body); 

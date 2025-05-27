@@ -88,7 +88,6 @@ Widget getImageContainer(String imagePath) {
   return Obx(() => InkWell(
         onTap: () {
           cateName.value = imagePath;
-          debugPrint('Selected category image: ${cateName.value}');
         },
         child: Container(
           height: 50,

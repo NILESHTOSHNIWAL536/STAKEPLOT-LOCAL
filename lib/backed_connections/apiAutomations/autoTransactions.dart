@@ -73,7 +73,6 @@ void postCustomCategory(context,name,urlPath,narr)async
     "imageUrl":urlPath,
     "narration":narr
   };
-  print(body);
   
   var res = await postDataApiCall("${url}/custom/custom-category",body);
 

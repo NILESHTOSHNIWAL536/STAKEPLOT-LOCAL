@@ -88,7 +88,6 @@ Future<void> generatePdf(
 
     }
   } catch (e) {
-    print("error" + e.toString());
   }
 
   getPdgLoader.value = false;

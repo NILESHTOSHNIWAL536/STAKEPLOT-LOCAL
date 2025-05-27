@@ -244,11 +244,9 @@ accountNumberLabel = data['accountNumberLabel'] ?? accountNumberLabel;
         messageHint = data['messageHint'] ?? messageHint;
         return true;
       } else {
-        print("Failed to load Homepage constants: ${response.statusCode}");
         return false;
       }
     } catch (e) {
-      print("Error fetching Homepage constants: $e");
       return false;
     }
   }

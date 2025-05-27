@@ -94,7 +94,6 @@ void getWeeklyfetchData(
      await postDataApiCall(apiUrl,body);
 
    }catch(e){
-      print("error while fetching "+e.toString());
    }
 
 

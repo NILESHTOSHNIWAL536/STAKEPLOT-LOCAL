@@ -47,7 +47,7 @@ Future<String> login(context) async {
   otpReference = login.reference;
 
   }catch(e){
-      print(e);
+  
       snackBarCalled(context, e.toString());
   }
   return otpReference;
@@ -70,7 +70,6 @@ Future<void> getConsentHandleId(context) async
               handleId.value=consentHandleId;
             } 
   } catch (error){
-      print(error);
       snackBarCalled(context, error.toString());
   }
 }
@@ -80,13 +79,6 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
 
     final String apiUrl ="${url}/finvu/fetchData"; 
     final String custId ="${number.value}@finvu"; 
-
-    // print({
-    //     "token": "",
-    //     "handleId": handleId.value,
-    //     "custId": custId,
-    //     "images": bankImgMap,
-    //   });
 
    final SharedPreferences pref = await SharedPreferences.getInstance();
    String accessToken=pref.getString("accessToken").toString(); 
@@ -115,7 +107,6 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
      
     }
   }catch(e){
-      print("error in FetchTransactionFromFinvuApi");
   }
 
  
@@ -128,12 +119,11 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
  {
     //  var urlPath = url +"/transaction/storeBankUrl/" ;
     //  var body = bankImageAndid ;
-    //  print(body);
+   
     //  var response =await postDataApiCall(urlPath, body);
     //  if(getFlagOfResponse(response))
     //  {
     //     var json=jsonDecode(response.body);
-    //     print(json);
     //  }
 
  }

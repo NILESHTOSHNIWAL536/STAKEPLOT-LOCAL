@@ -20,7 +20,6 @@ void callbackDispatcher() {
         androidName: 'StakeplotWidgetProvider',
       );
     } catch (e) {
-      print('Error in background task: $e');
     }
     return Future.value(true);
   });

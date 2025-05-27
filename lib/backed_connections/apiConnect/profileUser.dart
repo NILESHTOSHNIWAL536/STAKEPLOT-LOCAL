@@ -24,13 +24,10 @@ void approveBill(context, id, type, notifyId) async {
 Future<void> getRemainders(context) async {
   String urlPath = "${url}/reminders";
   var responce = await getDataApiCall(urlPath);
-  //print("Response: ${responce.body}"); // Log the response body
   if (getFlagOfResponse(responce)) {
     var his = jsonDecode(responce.body);
     var userDue = his['data']['payables'] ?? [];
     var userDue2 = his['data']['owed'] ?? [];
-    // print("User Due: $userDue"); // Log userDue
-    // print("User Due2: $userDue2"); // Log userDue2
     dueAmountRemainders.clear();
     lendAmountRemainders.clear();
     dueAmountRemainders.addAll(userDue); //payables

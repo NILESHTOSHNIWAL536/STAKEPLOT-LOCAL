@@ -255,8 +255,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
   }
   
   void extractTransaction(bool isYearView, List obj) {
-    // print("------------------------ extra called...");
-    // print(isYearView);
+    
     if (isYearView) {
       getTransactionByYear(obj, selectedYear.value);
     } else {
