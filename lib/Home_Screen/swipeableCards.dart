@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart'; // Assuming AppColors is here
@@ -46,7 +47,7 @@ class _SwipeableCardsScreenState extends State<SwipeableCardsScreen> {
             Padding(
               padding: EdgeInsets.only(top: padding/2,right: padding,left: padding,),
               child: Text(
-                'Finora',
+                HomepageStringsDart().finora,
                 style:FontManager().getTextStyle(context,
                                         lWeight: FontWeight.w600,
                   fontSize: screenSize.width * 0.05,

@@ -43,7 +43,7 @@ class HomepageStringsDart {
   String detailedChartView = "Detailed Chart View";
 
 // manual transaction
- String manualTransaction = "Manual Transaction";
+  String manualTransaction = "Manual Transaction";
   String cashIn = "Cash in";
   String cashOut = "Cash out";
   String manualTransactions = "Manual Transactions";
@@ -56,10 +56,14 @@ class HomepageStringsDart {
   
 
   //spending categories
-   String spendingsOnCategories = "Spendings on categories";
+  String spendingsOnCategories = "Spendings on categories";
   String moreButton = "More";
   String allCategories = "All Categories";
- String noCategories = "No Spendings Available";
+  String noCategories = "No Spendings Available";
+
+
+  //Finora;
+  String finora = "Finora";
 
  //headsup 
  String yourHighlights = "Your Highlights";
@@ -173,6 +177,11 @@ accountNumberLabel = data['accountNumberLabel'] ?? accountNumberLabel;
         billSplit = data['billSplit'] ?? billSplit;
         lendMoney = data['lendMoney'] ?? lendMoney;
         addButton = data['addButton'] ?? addButton;
+        
+
+        //finora
+        finora = data['finora'] ?? finora;
+
         
         // New strings from DoughnutChartExample
         spendingsOnCategories = data['spendingsOnCategories'] ?? spendingsOnCategories;
