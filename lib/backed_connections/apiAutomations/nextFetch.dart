@@ -16,6 +16,9 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
+RxBool isBankLinked = false.obs;
+
 class Nextfetch extends StatefulWidget {
   @override
   _RotatingIconState createState() => _RotatingIconState();
@@ -65,8 +68,8 @@ class _RotatingIconState extends State<Nextfetch>
         formattedNextFetch = HomepageStringsDart().notScheduled; // Updated
       }
 
-      return consentAndHandleDetails.isEmpty
-          ? SizedBox.shrink()
+      return  !isBankLinked.value? SizedBox.shrink():(consentAndHandleDetails.isEmpty)
+          ? textStyle(context: context,text: HomepageStringsDart().noBankLinked, fontsize: 14, c: AppColors.bg1)
           : Container(
               width: MediaQuery.of(context).size.width / 1,
               child: Row(

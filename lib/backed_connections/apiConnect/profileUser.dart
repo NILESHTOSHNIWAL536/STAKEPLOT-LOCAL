@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Profile/notifications.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
@@ -53,7 +54,7 @@ Future<void> getFoodieFundsDetails(BuildContext context, String id) async {
     foodieFundsDetailsRemainders.refresh();
     getFoodieFundsUsers.value = !getFoodieFundsUsers.value;
   } else {
-    snackBarCalled(context,SnackbarData().failedToFetchFoodieFundsDetails);
+    snackBarCalled(context, SnackbarData().failedToFetchFoodieFundsDetails);
   }
 }
 
@@ -79,9 +80,10 @@ void getNotifications(context) async {
         friendRequestList.add(e['from_id']);
       }
     });
-    
-      hasGetNewNotifications.value = false;
+
+    hasGetNewNotifications.value = false;
     myNotificationBool.value = !myNotificationBool.value;
+    notificationsFlag.value = false;
   } else {}
 }
 
@@ -89,7 +91,7 @@ void getuserPost(id) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
   final response = await http.get(
-    Uri.parse('${url}/post/myDiscussions'),    
+    Uri.parse('${url}/post/myDiscussions'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       "Authorization": "$accessToken",
@@ -273,10 +275,9 @@ void aboutuser(context, String about) async {
   );
 
   if (response.statusCode == 200 || response.statusCode == 201) {
-    snackBarCalled(context,SnackbarData().userInfoUpdated,
-        Colors.black);
+    snackBarCalled(context, SnackbarData().userInfoUpdated, Colors.black);
   } else {
-    snackBarCalled(context,SnackbarData().errorUpdatingUserInfo, Colors.red);
+    snackBarCalled(context, SnackbarData().errorUpdatingUserInfo, Colors.red);
   }
 }
 
@@ -297,10 +298,11 @@ void addAccount(context, String account, String money) async {
   );
 
   if (response.statusCode == 200 || response.statusCode == 201) {
-    snackBarCalled(context,SnackbarData().accountAddedSuccessfully, Colors.black);
+    snackBarCalled(
+        context, SnackbarData().accountAddedSuccessfully, Colors.black);
     Navigator.pushNamed(context, '/home');
   } else {
-    snackBarCalled(context,SnackbarData().errorAddingAccount, Colors.red);
+    snackBarCalled(context, SnackbarData().errorAddingAccount, Colors.red);
   }
 }
 
@@ -334,16 +336,13 @@ void editUserDetails(
       return;
     }
     if (response.statusCode == 200 || response.statusCode == 201) {
-      snackBarCalled(context,SnackbarData().userInfoUpdated,
-          Colors.black);
+      snackBarCalled(context, SnackbarData().userInfoUpdated, Colors.black);
       // getUserInfomations();
       avatar.value = changeAvater.value;
       userName.value = controller['name']!.text.toString();
       Phone.value = controller['Number']!.text.toString();
       number.value = controller['Number']!.text.toString();
       dob.value = controller['dob']!.text.toString();
-    } else {
-      
-    }
+    } else {}
   } catch (e) {}
 }

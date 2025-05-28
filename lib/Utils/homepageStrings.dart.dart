@@ -13,6 +13,7 @@ class HomepageStringsDart {
   // Next fetch button labels
   String fetchingInProgress = "Hang tight! We're fetching the latest info for you.";
   String nextFetchLabel = "Next fetch on:";
+  String noBankLinked = "Please link your bank account to fetch data.";
   String lastFetchLabel = "Last Fetch";
   String nextFetchTitle = "Next Fetch";
   String fetchCountTitle = "Fetch Count";
@@ -135,6 +136,7 @@ class HomepageStringsDart {
   String enterMessageError = "Please enter a message.";
   String selectDueDateError = "Please select a due date.";
   String messageHint = "e.g., Lunch at Cafe";
+  String connectBankButton = "Connect Bank Account";
   Future<bool> fetchConstants() async {
     try {
       final response = await getDataApiCall("$url/constant/homepage");
@@ -155,6 +157,8 @@ class HomepageStringsDart {
         notNowButton = data['notNowButton'] ?? notNowButton;
         fetchingDuration = data['fetchingDuration'] ?? fetchingDuration;
         notScheduled = data['notScheduled'] ?? notScheduled;
+        noBankLinked = data['noBankLinked'] ?? noBankLinked;
+        connectBankButton = data['connectBankButton'] ?? connectBankButton;
         lockPatterns =( data['lockPatterns']!=null && data['lockPatterns'] is List) ? data['lockPatterns'] : lockPatterns;
         
 // number picker

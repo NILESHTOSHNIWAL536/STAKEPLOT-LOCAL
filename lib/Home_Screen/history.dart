@@ -67,8 +67,8 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
       ? Colors.green.shade700
       : const Color.fromARGB(255, 207, 118, 113);
   final formatAmount = type == 'CREDIT'
-      ? "+₹${formatMoneyIndian(amount.toString())}"
-      : "-₹${formatMoneyIndian(amount.toString())}";
+      ? "₹${formatMoneyIndian(amount.toString())}"
+      : "₹${formatMoneyIndian(amount.toString())}";
 
   // Responsive scaling with MediaQuery
   // final screenWidth = MediaQuery.of(context).size.width;

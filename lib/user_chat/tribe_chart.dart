@@ -26,6 +26,7 @@ RxBool load = true.obs;
 RxBool reloadCharts = true.obs;
 late IO.Socket socket;
 RxInt totalUnopenedMessages = 0.obs;
+
 class TribeChats extends StatefulWidget {
   const TribeChats({Key? key}) : super(key: key);
 
@@ -43,9 +44,9 @@ class _TribeSearchState extends State<TribeChats> {
   var myprofile;
   RxBool getChatData = false.obs;
   //Added for chat split
-   List<dynamic> chatSplitAccount = [];
+  List<dynamic> chatSplitAccount = [];
   ValueNotifier<bool> getChatSplit = ValueNotifier<bool>(false);
-   final CommunityScreenStrings strings = CommunityScreenStrings();
+  final CommunityScreenStrings strings = CommunityScreenStrings();
   @override
   void initState() {
     super.initState();
@@ -53,7 +54,6 @@ class _TribeSearchState extends State<TribeChats> {
     getChatLoader();
     getTransactions();
     getChatsSplitAccounts(context, myId);
-    
 
     socket = IO.io(
         urlWithLocallHost,
@@ -107,19 +107,18 @@ class _TribeSearchState extends State<TribeChats> {
         getChatData.value = true;
         load.value = false;
       });
-      
     } else {}
   }
 
-      int getTotalUnopenedMessages()
-      {
-        return chatList.fold<int>(0, (total, item) => total + (item['count']?.toInt() ?? 0) as int);
-    }
+  int getTotalUnopenedMessages() {
+    return chatList.fold<int>(
+        0, (total, item) => total + (item['count']?.toInt() ?? 0) as int);
+  }
 //   void updateTotalUnopenedMessages() {
 //     totalUnopenedMessages.value = chatList.fold<int>(0, (total, item) => total + (item['count']?.toInt() ?? 0) as int);
 // }
 
-void getChatsSplitAccounts(BuildContext context, String id) async {
+  void getChatsSplitAccounts(BuildContext context, String id) async {
     var response = await getDataApiCall("${url}/split/pending-user");
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
@@ -129,14 +128,12 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
         chatSplitAccount.addAll(obj);
         getChatSplit.value = !getChatSplit.value; // Trigger UI update
       });
-    } else {
-    }
+    } else {}
   }
 
   // ... existing code ...
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       // bottomNavigationBar: BottomNavigations(data: sizeRoom ? 3 : 2),
       extendBody: true,
@@ -159,101 +156,131 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
       //         size: 30,
       //       )),
       // ),
-                appBar: PreferredSize(
-  preferredSize: chatSplitAccount.isNotEmpty?const Size.fromHeight(140):const Size.fromHeight(100),
-  child: AppBar(
-    automaticallyImplyLeading: true,
-    backgroundColor: AppColors.appIcon,
-    titleSpacing: 0,
-    toolbarHeight:chatSplitAccount.isNotEmpty? 140:100,
-    title: Padding(
-      padding: const EdgeInsets.only(left: 16.0, top: 20.0, bottom: 10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Hi, ${myprofile != null ? myprofile['name'] ?? 'User' : 'User'}', // Null check for myprofile and myprofile['name']
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.bold,
-              fontSize: 24,
-              color: AppColors.backgroundColor,
+      appBar: PreferredSize(
+        preferredSize: chatSplitAccount.isNotEmpty
+            ? const Size.fromHeight(140)
+            : const Size.fromHeight(100),
+        child: AppBar(
+          automaticallyImplyLeading: true,
+          backgroundColor: AppColors.appIcon,
+          titleSpacing: 0,
+          toolbarHeight: chatSplitAccount.isNotEmpty ? 140 : 100,
+          leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+              size: 20,
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            strings.messagesReceived.replaceFirst('{count}', getTotalUnopenedMessages().toString()), // Null check for chatList
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.normal,
-              fontSize: 16,
-              color: AppColors.backgroundColor,
+          title: Padding(
+            padding: const EdgeInsets.only(left: 16.0, top: 20.0, bottom: 10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Hi, ${myprofile != null ? myprofile['name'] ?? 'User' : 'User'}', // Null check for myprofile and myprofile['name']
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 24,
+                    color: AppColors.backgroundColor,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  strings.messagesReceived.replaceFirst(
+                      '{count}',
+                      getTotalUnopenedMessages()
+                          .toString()), // Null check for chatList
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.normal,
+                    fontSize: 16,
+                    color: AppColors.backgroundColor,
+                  ),
+                ),
+                // Obx(() => Text(
+                //                       '${totalUnopenedMessages.value} messages received', // Use the reactive variable
+                //                       style: FontManager().getTextStyle(
+                //                           context,
+                //                           lWeight: FontWeight.normal,
+                //                           fontSize: 16,
+                //                           color: AppColors.backgroundColor,
+                //                       ),
+                //                   )),
+                const SizedBox(height: 8),
+                chatSplitAccount.isNotEmpty
+                    ? SizedBox(
+                        height: 40,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: chatSplitAccount?.length ??
+                              0, // Null check for frdsList
+                          itemBuilder: (context, index) {
+                            var friend = chatSplitAccount?[
+                                index]; // Safe access to frdsList[index]
+                            if (friend == null) {
+                              return const SizedBox
+                                  .shrink(); // Return empty widget if friend is null
+                            }
+                            return Row(
+                              children: [
+                                AvatarProfile(
+                                  name: friend['name'],
+                                  width: 9,
+                                  height: 12,
+                                  fontsize: 15,
+                                  background: friend['avatarBackGround'] ?? "",
+                                  flag: true,
+                                ),
+                                const SizedBox(
+                                  width: 2,
+                                ),
+                                Text(
+                                  friend['name'] ??
+                                      'Unknown', // Null check for friend['name']
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.normal,
+                                    fontSize: 14,
+                                    color: AppColors.backgroundColor,
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                              ],
+                            );
+                          },
+                        ),
+                      )
+                    : SizedBox.shrink(),
+              ],
             ),
           ),
-          // Obx(() => Text(
-          //                       '${totalUnopenedMessages.value} messages received', // Use the reactive variable
-          //                       style: FontManager().getTextStyle(
-          //                           context,
-          //                           lWeight: FontWeight.normal,
-          //                           fontSize: 16,
-          //                           color: AppColors.backgroundColor,
-          //                       ),
-          //                   )),
-          const SizedBox(height: 8),
-          chatSplitAccount.isNotEmpty?SizedBox(
-            height: 40,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: chatSplitAccount?.length ?? 0, // Null check for frdsList
-              itemBuilder: (context, index) {
-                var friend = chatSplitAccount?[index]; // Safe access to frdsList[index]
-                if (friend == null) {
-                  return const SizedBox.shrink(); // Return empty widget if friend is null
-                }
-                return Row(
-                  children: [
-                    AvatarProfile(name: friend['name'], width: 9, height: 12,fontsize: 15, background: friend['avatarBackGround']??"",flag: true,),
-                    const SizedBox(width: 2,),
-                    Text(
-                      friend['name'] ?? 'Unknown', // Null check for friend['name']
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.normal,
-                        fontSize: 14,
-                        color: AppColors.backgroundColor,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                  ],
-                );
-              },
-            ),
-          ):SizedBox.shrink(),
-        ],
+          centerTitle: false,
+          elevation: 0,
+        ),
       ),
-    ),
-    centerTitle: false,
-    elevation: 0,
-  ),
-),
       body: Container(
         decoration: BoxDecoration(
           color: AppColors.backgroundColor, // Set your desired color here
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(24), // Adjust the radius as needed
             topRight: Radius.circular(24), // Adjust the radius as needed
-          ),),
+          ),
+        ),
         child: Padding(
           padding: EdgeInsets.all(16),
-        
+
           //padding: const EdgeInsets.symmetric(vertical: 10),
           child: ListView(
             // mainAxisAlignment: MainAxisAlignment.start,
             // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-                
-             InputDate2(strings.searchHint, TextInputType.name, search),
+              InputDate2(strings.searchHint, TextInputType.name, search),
               const SizedBox(
                 height: 16,
               ),
@@ -267,14 +294,16 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
 
   Widget getChatList() {
     return load.value
-        ? Spinner(color: AppColors.primaryColor,)
+        ? Spinner(
+            color: AppColors.primaryColor,
+          )
         : chatList.isEmpty
             ? Center(
                 child: Container(
                   width: MediaQuery.of(context).size.width / 1.1,
                   height: MediaQuery.of(context).size.height / 2,
                   child: Center(
-                      child: Text( strings.noChatsAvailable ,
+                      child: Text(strings.noChatsAvailable,
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.bold,
                               lineHeight: 1.2,
@@ -371,12 +400,11 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
     String key = item['_id'];
     getChats2(id, key);
     double width = MediaQuery.of(context).size.width;
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       child: GestureDetector(
         onTap: () {
-          
           messages.clear();
           unSeenChat(context, item['_id']);
           getChatLoader();
@@ -386,10 +414,10 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => Chat(data: item, myId: myId, myprofile: myprofile),
+              builder: (context) =>
+                  Chat(data: item, myId: myId, myprofile: myprofile),
             ),
           );
-
         },
         child: Container(
           color: AppColors.backgroundColor,
@@ -405,7 +433,11 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
                     //   width: 10,
                     //   height: 16,
                     // ),
-                    AvatarProfile(name: item['name'], width: 1, height: 1, background: item['avatar']),
+                    AvatarProfile(
+                        name: item['name'],
+                        width: 1,
+                        height: 1,
+                        background: item['avatar']),
                     const SizedBox(width: 8),
                     Container(
                       width: width >= 500
@@ -428,7 +460,7 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                           item['type'] ?? strings.noMessagesYet,
+                            item['type'] ?? strings.noMessagesYet,
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.w400,
                                 fontSize: 12,
@@ -445,21 +477,19 @@ void getChatsSplitAccounts(BuildContext context, String id) async {
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           color: AppColors.primaryColor,
-                       
                           shape: BoxShape.circle,
                           border: Border.all(
                             width: 0.3,
                             color: Colorcodes.budgetDarkGreen,
                           ),
                         ),
-                        child:  Center(
-                            child: Text(
-                             item['count'].toString(),
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  color: AppColors.bg5),
-                            
+                        child: Center(
+                          child: Text(
+                            item['count'].toString(),
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.bold,
+                                fontSize: 12,
+                                color: AppColors.bg5),
                           ),
                         ),
                       ),

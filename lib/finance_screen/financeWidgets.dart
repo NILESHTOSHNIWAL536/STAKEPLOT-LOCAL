@@ -123,7 +123,7 @@ class FinanceWidgets {
         Row(
           children: [
             Expanded(
-              child: GestureDetector(
+              child: InkWell(
                 onTap: () {
                   Navigator.push(
                     context,
@@ -142,7 +142,7 @@ class FinanceWidgets {
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: GestureDetector(
+              child: InkWell(
                 onTap: () {
                   Navigator.push(
                     context,

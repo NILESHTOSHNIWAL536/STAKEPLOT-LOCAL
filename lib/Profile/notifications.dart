@@ -18,6 +18,9 @@ import "package:flutter_application_code_stakeplot/loader.dart";
 import "package:flutter_application_code_stakeplot/userAvatar.dart";
 import "package:get/get.dart";
 
+RxBool notificationsFlag = true.obs;
+
+
 class Notifications extends StatefulWidget {
   const Notifications({Key? key}) : super(key: key);
 
@@ -26,48 +29,21 @@ class Notifications extends StatefulWidget {
 }
 
 class _NotificationsState extends State<Notifications> {
-  RxBool flag = true.obs;
+  
 
   @override
   void initState() {
     super.initState();
-    // getTransaction();
     getNotifications(context);
   }
-
-
-  void getTransaction() async {
-    String urlPath = '${url}/user/myNotifications';
-    var response = await getDataApiCall(urlPath);
-    if (response.statusCode == 200) {
-      if (response.body.isEmpty) {
-         flag.value = false;
-        snackBarCalled(context,SnackbarData().noNotifications);
-        return;
-      }
-      var his = jsonDecode(response.body);
-      notificationList.clear();
-      notificationList.addAll(his['data'] ?? []);
-      notificationList.forEach((req) {
-        String? type = req['notificationMessage']?['type'];
-        var e = req['notificationMessage'];
-        if (type == "friendRequest" && e?['from_id'] != null) {
-          friendRequestList.add(e['from_id']);
-        }
-      });
-      flag.value = false;
-      hasGetNewNotifications.value = false;
-      myNotificationBool.value = !myNotificationBool.value;
-    }
-  }
-
 
   Future<void> deleteNotification(String? notifyId) async {
     if (notifyId == null) return;
     String urlPath = '${url}/user/deleteNotifications/$notifyId';
     var response = await getDataApiCall(urlPath);
-    if (response.statusCode != 200) {
-      snackBarCalled(context,SnackbarData().deleteNotificationFailed);
+    if (response.statusCode != 200)
+    {
+      snackBarCalled(context, SnackbarData().deleteNotificationFailed);
     }
   }
 
@@ -95,14 +71,14 @@ class _NotificationsState extends State<Notifications> {
             return Container(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
-             
-              padding: EdgeInsets.symmetric(horizontal: constraints.maxWidth * 0.04,vertical: constraints.maxHeight * 0.01,),
+              padding: EdgeInsets.symmetric(
+                horizontal: constraints.maxWidth * 0.04,
+                vertical: constraints.maxHeight * 0.01,
+              ),
               child: SingleChildScrollView(
-                
-                  child: Obx(() => myNotificationBool.value
-                      ? _buildNotificationList()
-                      : _buildNotificationList()),
-                
+                child: Obx(() => myNotificationBool.value
+                    ? _buildNotificationList()
+                    : _buildNotificationList()),
               ),
             );
           },
@@ -111,13 +87,16 @@ class _NotificationsState extends State<Notifications> {
     );
   }
 
- Widget _buildNotificationList() {
-  return notificationList.isEmpty && flag.value
-      ? const Loader()
-      :( notificationList.isEmpty && autoTransactionList.isEmpty)
-          ? Center(
+  Widget _buildNotificationList() {
+    return notificationList.isEmpty && notificationsFlag.value
+        ? Spinner()
+        : (notificationList.isEmpty && autoTransactionList.isEmpty)
+            ? Container(
+              width: MediaQuery.sizeOf(context).width/1.1,
+              height: MediaQuery.sizeOf(context).height/1.3,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   AvatarProfileImage(
                     url: HomePageIcons.none,
@@ -147,54 +126,57 @@ class _NotificationsState extends State<Notifications> {
                 ],
               ),
             )
-          : Column(
-            children: [
-                AutocategroiesTransactions(),
-              Container(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                    itemCount: notificationList.length,
-                    itemBuilder: (context, index) {
-                      var e = notificationList[index];
-                      var notifyId = e['_id'] as String?;
-                      return Dismissible(
-                        key: Key(notifyId ?? index.toString()),
-                        direction: DismissDirection.endToStart,
-                        onDismissed: (direction) {
-                          _deleteNotification(notifyId);
-                        },
-                        background: Container(
-                          // Match the margin and decoration of the foreground card
-                          margin: EdgeInsets.symmetric(
-                              vertical: MediaQuery.of(context).size.height * 0.008),
-                          decoration: BoxDecoration(
-                            color: Colors.redAccent,
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.1),
-                                blurRadius: 6,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
+            : Column(
+                children: [
+                  AutocategroiesTransactions(),
+                  Container(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: notificationList.length,
+                      itemBuilder: (context, index) {
+                        var e = notificationList[index];
+                        var notifyId = e['_id'] as String?;
+                        return Dismissible(
+                          key: Key(notifyId ?? index.toString()),
+                          direction: DismissDirection.endToStart,
+                          onDismissed: (direction) {
+                            _deleteNotification(notifyId);
+                          },
+                          background: Container(
+                            // Match the margin and decoration of the foreground card
+                            margin: EdgeInsets.symmetric(
+                                vertical:
+                                    MediaQuery.of(context).size.height * 0.008),
+                            decoration: BoxDecoration(
+                              color: Colors.redAccent,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.1),
+                                  blurRadius: 6,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            // Match padding with the foreground card
+                            padding: EdgeInsets.all(
+                                MediaQuery.of(context).size.width * 0.03),
+                            alignment: Alignment.centerRight,
+                            child: const Padding(
+                              padding: EdgeInsets.only(right: 20),
+                              child: Icon(Icons.delete, color: Colors.white),
+                            ),
                           ),
-                          // Match padding with the foreground card
-                          padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
-                          alignment: Alignment.centerRight,
-                          child: const Padding(
-                            padding: EdgeInsets.only(right: 20),
-                            child: Icon(Icons.delete, color: Colors.white),
-                          ),
-                        ),
-                        child: _buildNotificationCard(e),
-                      );
-                    },
+                          child: _buildNotificationCard(e),
+                        );
+                      },
+                    ),
                   ),
-              ),
-            ],
-          );
-}
+                ],
+              );
+  }
+
   Widget _buildNotificationCard(Map<String, dynamic> e) {
     var notifyId = e['_id'] as String?;
     var time = e['createdAt'] as String? ?? "";
@@ -202,7 +184,8 @@ class _NotificationsState extends State<Notifications> {
     var data = e['notificationMessage'] ?? {};
 
     return Container(
-      margin: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.008),
+      margin: EdgeInsets.symmetric(
+          vertical: MediaQuery.of(context).size.height * 0.008),
       decoration: BoxDecoration(
         color: AppColors.mt,
         borderRadius: BorderRadius.circular(12),
@@ -216,25 +199,26 @@ class _NotificationsState extends State<Notifications> {
       ),
       child: IntrinsicHeight(
         child: Row(
-         crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-           
             Container(
-             width: MediaQuery.of(context).size.width * 0.015,
+              width: MediaQuery.of(context).size.width * 0.015,
               decoration: BoxDecoration(
-                 color: AppColors.primaryColor,
+                color: AppColors.primaryColor,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(12),
                   bottomLeft: Radius.circular(12),
                 ),
               ),
             ),
-           
+
             //SizedBox(width: MediaQuery.of(context).size.width * 0.03),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
-                child: _getNotificationContent(type ?? "unknown", data, notifyId, time),
+                padding:
+                    EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
+                child: _getNotificationContent(
+                    type ?? "unknown", data, notifyId, time),
               ),
             ),
           ],
@@ -316,7 +300,8 @@ class _NotificationsState extends State<Notifications> {
             e['from_name'] as String? ?? "",
             time);
       case "FetchedData":
-        return _buildMessageCard("🔥 Data has been successfully fetched!", "", "", time);
+        return _buildMessageCard(
+            "🔥 Data has been successfully fetched!", "", "", time);
       case "lendApprovalRequest":
         return _buildApprovalCard(
             "${e['from_name'] ?? 'Someone'} has requested approval for settling ${e['name'] ?? 'unknown'} with an amount of ${e['amount'] ?? '00'}",
@@ -324,8 +309,8 @@ class _NotificationsState extends State<Notifications> {
             e['from_name'] as String? ?? "",
             time,
             "bill",
-             e['from_to'] as String? ?? "",notifyId.toString());
-
+            e['from_to'] as String? ?? "",
+            notifyId.toString());
 
       case "deleteAccountSplit":
         return _buildMessageCard(
@@ -348,7 +333,8 @@ class _NotificationsState extends State<Notifications> {
             e['from_name'] as String? ?? "",
             time,
             "split",
-            e['from_to'] as String? ?? "",notifyId.toString());
+            e['from_to'] as String? ?? "",
+            notifyId.toString());
 
       case "clearLend":
       case "clearSplit":
@@ -364,45 +350,49 @@ class _NotificationsState extends State<Notifications> {
     }
   }
 
-  Widget _buildMessageCard(String message, String id, String avatar, String time) {
-  bool isFetchedData = message.contains("🔥 Data has been successfully fetched!");
-  
-  return Row(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      if (!isFetchedData && avatar.isNotEmpty)
-    
-        AvatarProfile(name: avatar, width: 20, height: 17, background: "")
-      else if (!isFetchedData)
-        SizedBox(width: MediaQuery.of(context).size.width * 0.06),
-      if (!isFetchedData) SizedBox(width: MediaQuery.of(context).size.width * 0.03),
-      Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: MediaQuery.of(context).size.width * 0.015),
-              child: Text(
-                message,
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.w600,
-                  fontSize: 14,
-                  color: AppColors.bg1,
+  Widget _buildMessageCard(
+      String message, String id, String avatar, String time) {
+    bool isFetchedData =
+        message.contains("🔥 Data has been successfully fetched!");
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (!isFetchedData && avatar.isNotEmpty)
+          AvatarProfile(name: avatar, width: 20, height: 17, background: "")
+        else if (!isFetchedData)
+          SizedBox(width: MediaQuery.of(context).size.width * 0.06),
+        if (!isFetchedData)
+          SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.width * 0.015),
+                child: Text(
+                  message,
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: AppColors.bg1,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-            _buildTimeDivider(time),
-          ],
+              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+              _buildTimeDivider(time),
+            ],
+          ),
         ),
-      ),
-    ],
-  );
-}
-  Widget _buildFriendRequestCard(String name, String id, String avatar, Map<String, dynamic> e,
-      String? notifyId, String time) {
+      ],
+    );
+  }
+
+  Widget _buildFriendRequestCard(String name, String id, String avatar,
+      Map<String, dynamic> e, String? notifyId, String time) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -411,7 +401,7 @@ class _NotificationsState extends State<Notifications> {
         //   width: MediaQuery.of(context).size.width * 0.06,
         //   height: MediaQuery.of(context).size.width * 0.06,
         // ),
-         AvatarProfile(name: avatar, width: 20, height: 17, background: ""),
+        AvatarProfile(name: avatar, width: 20, height: 17, background: ""),
         SizedBox(width: MediaQuery.of(context).size.width * 0.03),
         Expanded(
           child: Column(
@@ -419,7 +409,8 @@ class _NotificationsState extends State<Notifications> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: EdgeInsets.only(top: MediaQuery.of(context).size.width * 0.015),
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.width * 0.015),
                 child: Text(
                   "$name sent you a friend request",
                   style: FontManager().getTextStyle(
@@ -464,8 +455,8 @@ class _NotificationsState extends State<Notifications> {
     );
   }
 
-  Widget _buildLendRequestCard(String name, String id, String avatar, Map<String, dynamic> e,
-      String itemName, String? notifyId, String time) {
+  Widget _buildLendRequestCard(String name, String id, String avatar,
+      Map<String, dynamic> e, String itemName, String? notifyId, String time) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -474,7 +465,7 @@ class _NotificationsState extends State<Notifications> {
         //   width: MediaQuery.of(context).size.width * 0.06,
         //   height: MediaQuery.of(context).size.width * 0.06,
         // ),
-         AvatarProfile(name: avatar, width: 20, height: 17, background: ""),
+        AvatarProfile(name: avatar, width: 20, height: 17, background: ""),
         SizedBox(width: MediaQuery.of(context).size.width * 0.03),
         Expanded(
           child: Column(
@@ -482,7 +473,8 @@ class _NotificationsState extends State<Notifications> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: EdgeInsets.only(top: MediaQuery.of(context).size.width * 0.015),
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.width * 0.015),
                 child: Text(
                   "$name has lent you ₹${e['amount'] ?? '500'} for $itemName",
                   style: FontManager().getTextStyle(
@@ -501,7 +493,8 @@ class _NotificationsState extends State<Notifications> {
                     AppColors.primaryColor,
                     Colors.white,
                     () {
-                      approveBill(context, e['bill_id'] as String? ?? "", "accept", notifyId);
+                      approveBill(context, e['bill_id'] as String? ?? "",
+                          "accept", notifyId);
                       _deleteNotification(notifyId);
                     },
                   ),
@@ -511,7 +504,8 @@ class _NotificationsState extends State<Notifications> {
                     Colors.white,
                     AppColors.bg3,
                     () {
-                      approveBill(context, e['bill_id'] as String? ?? "", "reject", notifyId);
+                      approveBill(context, e['bill_id'] as String? ?? "",
+                          "reject", notifyId);
                       _deleteNotification(notifyId);
                     },
                     border: true,
@@ -527,18 +521,19 @@ class _NotificationsState extends State<Notifications> {
     );
   }
 
-  Widget _buildApprovalCard(
-      String message, String id, String avatar, String time, String type, String endUser,String notifyId) {
+  Widget _buildApprovalCard(String message, String id, String avatar,
+      String time, String type, String endUser, String notifyId) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        avatar.isNotEmpty?
-        //  UserAvatar(
-        //         url: avaterUrlPath(avatar),
-        //         width: MediaQuery.of(context).size.width * 0.06,
-        //         height: MediaQuery.of(context).size.width * 0.06,
-        //       )
-         AvatarProfile(name: avatar, width: 20, height: 17, background: "")
+        avatar.isNotEmpty
+            ?
+            //  UserAvatar(
+            //         url: avaterUrlPath(avatar),
+            //         width: MediaQuery.of(context).size.width * 0.06,
+            //         height: MediaQuery.of(context).size.width * 0.06,
+            //       )
+            AvatarProfile(name: avatar, width: 20, height: 17, background: "")
             : SizedBox(width: MediaQuery.of(context).size.width * 0.06),
         SizedBox(width: MediaQuery.of(context).size.width * 0.03),
         Expanded(
@@ -547,7 +542,8 @@ class _NotificationsState extends State<Notifications> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: EdgeInsets.only(top: MediaQuery.of(context).size.width * 0.015),
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.width * 0.015),
                 child: Text(
                   message,
                   style: FontManager().getTextStyle(
@@ -567,7 +563,7 @@ class _NotificationsState extends State<Notifications> {
                     Colors.white,
                     () {
                       settleAmount(context, id, type, endUser);
-                        _deleteNotification(notifyId);
+                      _deleteNotification(notifyId);
                     },
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.03),
@@ -576,8 +572,8 @@ class _NotificationsState extends State<Notifications> {
                     Colors.white,
                     AppColors.bg3,
                     () {
-                          declineAmount(context, id, type, endUser);
-                          _deleteNotification(notifyId);
+                      declineAmount(context, id, type, endUser);
+                      _deleteNotification(notifyId);
                     },
                     border: true,
                   ),
@@ -592,7 +588,8 @@ class _NotificationsState extends State<Notifications> {
     );
   }
 
-  Widget _buildActionButton(String label, Color bgColor, Color textColor, VoidCallback onTap,
+  Widget _buildActionButton(
+      String label, Color bgColor, Color textColor, VoidCallback onTap,
       {bool border = false}) {
     return GestureDetector(
       onTap: onTap,
@@ -630,7 +627,9 @@ class _NotificationsState extends State<Notifications> {
     return Align(
       alignment: Alignment.centerRight,
       child: Text(
-        time.isNotEmpty ? formatWhatsAppDate(DateTime.parse(time)) : "Unknown time",
+        time.isNotEmpty
+            ? formatWhatsAppDate(DateTime.parse(time))
+            : "Unknown time",
         style: FontManager().getTextStyle(
           context,
           lWeight: FontWeight.w500,

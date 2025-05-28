@@ -17,7 +17,7 @@ void getCategoryData() async {
   {
     try{
     var data = jsonDecode(res.body);
-    print("data: ${data['data']['categorized']}");
+  
     categoriesList.clear();
     frequentPayments.clear();
     moreDrasticChange.clear();

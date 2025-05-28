@@ -61,7 +61,7 @@ void getBudget() async {
   } catch (e) {}
 }
 
-getBills() async {
+  getBills() async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
 

@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/integration.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
@@ -64,6 +65,7 @@ Future<void> getBankAccounts() async
               fetchCount.value =  bankAccountLinkedList[0]['fetchCount'].toString();
               BankName.value =  bankAccountLinkedList[0]['bankName'].toString();
               BankUrl.value =  bankAccountLinkedList[0]['bankLogo'].toString();
+              isBankLinked.value=true;
          }
 
   loadBanks.value = false;

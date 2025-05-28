@@ -18,12 +18,9 @@ void getAck() async {
   }
 }
 
-
-
-
 void setPasswordApiCalled(context, String password) async {
   if (password == "00") {
-    snackBarCalledfail(context,SnackbarData().pinSetFail00, Colors.red);
+    snackBarCalledfail(context, SnackbarData().pinSetFail00, Colors.red);
     return; // Exit the function without setting the PIN
   }
 
@@ -32,17 +29,14 @@ void setPasswordApiCalled(context, String password) async {
     'pin': password.toString(),
   });
 
-  if (getFlagOfResponse(response))
-  {
+  if (getFlagOfResponse(response)) {
     cupertinoPin.value = password;
-    snackBarCalled(context,SnackbarData().pinSetSuccess, Colors.black);
-  }
-  else {
-    snackBarCalled(context,SnackbarData().pinSetFail, Colors.red);
+    snackBarCalled(context, SnackbarData().pinSetSuccess, Colors.black);
+  } else {
+    snackBarCalled(context, SnackbarData().pinSetFail, Colors.red);
   }
   Navigator.pop(context);
 }
-
 
 // Lock flag to prevent duplicate API calls
 bool _isVerifyingPin = false;
@@ -51,7 +45,8 @@ bool _isVerifyingPin = false;
 Timer? _verifyDebounce;
 
 /// Call this function instead of [pinPasswordVerify] to apply debounce
-void pinPasswordVerifyDebounced(String password, BuildContext context, Function setBack) {
+void pinPasswordVerifyDebounced(
+    String password, BuildContext context, Function setBack) {
   if (_verifyDebounce?.isActive ?? false) _verifyDebounce?.cancel();
 
   _verifyDebounce = Timer(const Duration(milliseconds: 800), () {
@@ -60,7 +55,8 @@ void pinPasswordVerifyDebounced(String password, BuildContext context, Function 
 }
 
 /// Main PIN verification function with locking and error handling
-void pinPasswordVerify(String password, BuildContext context, Function setBack) async {
+void pinPasswordVerify(
+    String password, BuildContext context, Function setBack) async {
   if (_isVerifyingPin) return; // Prevent multiple calls
   _isVerifyingPin = true;
 
@@ -69,7 +65,7 @@ void pinPasswordVerify(String password, BuildContext context, Function setBack) 
 
     if (response.statusCode == 200) {
       hideBackAccountPassword.value = true;
-   
+
       // Auto-hide after 5 seconds
       Timer(const Duration(seconds: 5), () {
         hideBackAccountPassword.value = false;
@@ -81,8 +77,7 @@ void pinPasswordVerify(String password, BuildContext context, Function setBack) 
 
         setBack(); // Callback
       });
-    } else
-    {
+    } else {
       hideBackAccountPassword.value = false;
     }
   } catch (e) {
@@ -117,17 +112,16 @@ void seletedBankUpdateInfo(id, context) async {
 }
 
 void getAllTransaction(context) async {
-  var response =await getDataApiCall("${url}/transactionauto/getTransactions/${currentPage}/empty/-");
+  var response = await getDataApiCall(
+      "${url}/transactionauto/getTransactions/${currentPage}/empty/-");
   expire(response, context);
-  if (response.statusCode == 200)
-  {
+  if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
     currentPage = 2;
-    if (transactionsHistory.length < 20)
-    {
+    if (transactionsHistory.length < 20) {
       isLoadingMore.value = true;
-    } else{
+    } else {
       isLoadingMore.value = false;
     }
     transactionsHistory.clear();
@@ -171,15 +165,17 @@ Future<void> getAllTransactionHistory(
         : selectedYear.value.toString() +
             "-" +
             selectedMonth.value.toString().padLeft(2, '0');
-    String text = searchController.text.trim() == "" ? "empty" : searchController.text;
+    String text =
+        searchController.text.trim() == "" ? "empty" : searchController.text;
     String urlPath = flag
         ? "${url}/transactionauto/get-monthly-transactions-history/${accountId.value}/${type}/${currentPage}"
-        : "${url}/transactionauto/getTransactions/${currentPage}/${text}/${accountIdPdf.value.isEmpty?"-":accountIdPdf.value}";
-   
+        : "${url}/transactionauto/getTransactions/${currentPage}/${text}/${accountIdPdf.value.isEmpty ? "-" : accountIdPdf.value}";
+
     var response = await getDataApiCall(urlPath);
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       var obj = data['data'];
+      print("data for history_________$obj");
 
       if (obj != null && obj is List<dynamic>) {
         if (isRefreshing) {
@@ -192,9 +188,9 @@ Future<void> getAllTransactionHistory(
         if (obj.isEmpty || obj.length < 20) {
           hasMoreData = false;
           isLoadingMore.value = true;
-          havingMoreData.value=false;
+          havingMoreData.value = false;
         } else {
-          havingMoreData.value=true;
+          havingMoreData.value = true;
           isLoadingMore.value = false;
           currentPage++;
         }
@@ -205,11 +201,10 @@ Future<void> getAllTransactionHistory(
         }
         getHistory.value = !getHistory.value;
       } else {
-        snackBarCalled(context,SnackbarData().noTransactionData);
+        snackBarCalled(context, SnackbarData().noTransactionData);
       }
     }
-  } catch (e) {
-  }
+  } catch (e) {}
 
   loadingDelay.value = false;
 }
@@ -256,7 +251,6 @@ bool isCurrentMonth(String date, int m) {
   }
 }
 
-
 void getChatsSplitAccounts(context, String id) async {
   var response = await getDataApiCall("${url}/split/pending-user");
   if (response.statusCode == 200) {
@@ -267,4 +261,3 @@ void getChatsSplitAccounts(context, String id) async {
     getChatSplit.value = !getChatSplit.value;
   } else {}
 }
-
