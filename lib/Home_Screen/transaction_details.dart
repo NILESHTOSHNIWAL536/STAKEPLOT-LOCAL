@@ -13,7 +13,7 @@ class TransactionDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formattedDate = transaction['transactionTimestamp'] != null
-        ? formatWhatsAppDate(convertStringToDateTime(
+        ? formatWhatsAppDate4(convertStringToDateTime(
             transaction['transactionTimestamp'].toString()))
         : 'N/A'; // Default value if transactionTimestamp is null
 

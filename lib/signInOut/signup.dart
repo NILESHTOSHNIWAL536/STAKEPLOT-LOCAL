@@ -27,18 +27,13 @@ class _SigninState extends State<SignUp> {
   RxBool flag = false.obs;
   RxString passwordError = ''.obs;
   RxString confirmError = ''.obs;
-  TextEditingController emailController =
-      TextEditingController(text: "");
-  TextEditingController passwordController =
-      TextEditingController(text: "");
-  TextEditingController confirmController =
-      TextEditingController(text: "");
-  TextEditingController usernameController =
-      TextEditingController(text: "");
+  TextEditingController emailController = TextEditingController(text: "");
+  TextEditingController passwordController = TextEditingController(text: "");
+  TextEditingController confirmController = TextEditingController(text: "");
+  TextEditingController usernameController = TextEditingController(text: "");
   TextEditingController dobController = new TextEditingController(
       text: DateFormat('yyyy-MM-dd').format(DateTime.now()).toString());
-  TextEditingController phoneController =
-      TextEditingController(text: "");
+  TextEditingController phoneController = TextEditingController(text: "");
   @override
   void initState() {
     super.initState();
@@ -60,9 +55,11 @@ class _SigninState extends State<SignUp> {
       passwordError.value = 'Password cannot be empty';
     } else if (password.length < 8) {
       passwordError.value = 'Password must be at least 8 characters';
-    } else if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~])')
+    } else if (!RegExp(
+            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~])')
         .hasMatch(password)) {
-      passwordError.value = 'Must include uppercase, lowercase, number, and special character';
+      passwordError.value =
+          'Must include uppercase, lowercase, number, and special character';
     } else {
       passwordError.value = '';
     }
@@ -72,7 +69,7 @@ class _SigninState extends State<SignUp> {
   void validateConfirmPassword() {
     String password = passwordController.text;
     String confirm = confirmController.text;
-    
+
     if (confirm.isEmpty) {
       confirmError.value = 'Please confirm your password';
     } else if (password != confirm) {
@@ -198,53 +195,53 @@ class _SigninState extends State<SignUp> {
           //     keyBoard: TextInputType.phone,
           //     lableText: "Phone No"),
           TextFeildWidget(
-              textEditingController: emailController,
-              heading: SignupData().emailLabel,
-              keyBoard: TextInputType.emailAddress,
-              lableText: SignupData().emailSubLabel,
+            textEditingController: emailController,
+            heading: SignupData().emailLabel,
+            keyBoard: TextInputType.emailAddress,
+            lableText: SignupData().emailSubLabel,
           ),
           Obx(() => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFeildWidgetPassword(
-                textEditingController: passwordController,
-                heading: SignupData().passwordLabel,
-                keyBoard: TextInputType.visiblePassword,
-                lableText: SignupData().passwordSubLabel,
-                flag: false,
-                icon: Icons.lock_clock_outlined,
-              ),
-              if (passwordError.value.isNotEmpty)
-                Padding(
-                  padding: EdgeInsets.only(left: 20, top: 5),
-                  child: Text(
-                    passwordError.value,
-                    style: TextStyle(color: Colors.red, fontSize: 12),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextFeildWidgetPassword(
+                    textEditingController: passwordController,
+                    heading: SignupData().passwordLabel,
+                    keyBoard: TextInputType.visiblePassword,
+                    lableText: SignupData().passwordSubLabel,
+                    flag: false,
+                    icon: Icons.lock_clock_outlined,
                   ),
-                ),
-            ],
-          )),
-         Obx(() => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFeildWidgetPassword(
-                textEditingController: confirmController,
-                heading: SignupData().confirmPasswordLabel,
-                keyBoard: TextInputType.visiblePassword,
-                lableText: SignupData().confirmPasswordSubLabel,
-                flag: false,
-                icon: Icons.lock_clock_outlined,
-              ),
-              if (confirmError.value.isNotEmpty)
-                Padding(
-                  padding: EdgeInsets.only(left: 20, top: 5),
-                  child: Text(
-                    confirmError.value,
-                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  if (passwordError.value.isNotEmpty)
+                    Padding(
+                      padding: EdgeInsets.only(left: 20, top: 5),
+                      child: Text(
+                        passwordError.value,
+                        style: TextStyle(color: Colors.red, fontSize: 12),
+                      ),
+                    ),
+                ],
+              )),
+          Obx(() => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextFeildWidgetPassword(
+                    textEditingController: confirmController,
+                    heading: SignupData().confirmPasswordLabel,
+                    keyBoard: TextInputType.visiblePassword,
+                    lableText: SignupData().confirmPasswordSubLabel,
+                    flag: false,
+                    icon: Icons.lock_clock_outlined,
                   ),
-                ),
-            ],
-          )),
+                  if (confirmError.value.isNotEmpty)
+                    Padding(
+                      padding: EdgeInsets.only(left: 20, top: 5),
+                      child: Text(
+                        confirmError.value,
+                        style: TextStyle(color: Colors.red, fontSize: 12),
+                      ),
+                    ),
+                ],
+              )),
         ],
       ),
     );
@@ -276,8 +273,8 @@ class _SigninState extends State<SignUp> {
     //     builder: (context) => Avatar(data: data),
     //   ),
     // );
-      getOTP(context, usernameController.text,emailController.text);
-                    // openShowModal();
+    getOTP(context, usernameController.text, emailController.text);
+    // openShowModal();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -316,61 +313,78 @@ class _SigninState extends State<SignUp> {
     String phone = phoneController.text;
     String dob = dobController.text;
 
-  if (name.isEmpty) {
-    snackBarCalledfail(context, SignupData().emptyUsername, Colors.red);
-    return;
-  }
-  if (!RegExp(r'^[a-zA-Z]').hasMatch(name)) {
-  snackBarCalledfail(context, SignupData().invalidUsername, Colors.red);
-  return;
- }
+    print(
+        "Storing data: name=$name, email=$email, phone=$phone, dob=$dob"); // Debugging statement
 
-  if (name.length < 3) {
-    snackBarCalledfail(context, SignupData().shortUsername, Colors.red);
-    return;
-  }
+    if (name.isEmpty) {
+      print("Error: Name is empty"); // Debugging statement
+      snackBarCalledfail(context, SignupData().emptyUsername, Colors.red);
+      return;
+    }
+    if (!RegExp(r'^[a-zA-Z]').hasMatch(name)) {
+      print("Error: Invalid username format"); // Debugging statement
+      snackBarCalledfail(context, SignupData().invalidUsername, Colors.red);
+      return;
+    }
 
-  if (email.isEmpty) {
-    snackBarCalledfail(context, SignupData().emptyEmail, Colors.red);
-    return;
-  }
+    if (name.length < 3) {
+      print("Error: Username is too short"); // Debugging statement
+      snackBarCalledfail(context, SignupData().shortUsername, Colors.red);
+      return;
+    }
 
-  // Email format validation
-  if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(email)) {
-    snackBarCalledfail(context, SignupData().invalidEmail, Colors.red);
-    return;
-  }
+    if (email.isEmpty) {
+      print("Error: Email is empty"); // Debugging statement
+      snackBarCalledfail(context, SignupData().emptyEmail, Colors.red);
+      return;
+    }
 
-  if (password.isEmpty) {
-    snackBarCalledfail(context, SignupData().emptyPassword, Colors.red);
-    return;
-  }
+    // Email format validation
+    if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+        .hasMatch(email)) {
+      print("Error: Invalid email format"); // Debugging statement
+      snackBarCalledfail(context, SignupData().invalidEmail, Colors.red);
+      return;
+    }
 
-  
-  if (password.length < 8) {
-    snackBarCalledfail(context,  SignupData().shortPassword, Colors.red);
-    return;
-  }
+    if (password.isEmpty) {
+      print("Error: Password is empty"); // Debugging statement
+      snackBarCalledfail(context, SignupData().emptyPassword, Colors.red);
+      return;
+    }
 
-  if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~])').hasMatch(password)) {
-    snackBarCalledfail(context,  SignupData().weakPassword, Colors.red);
-    return;
-  }
+    if (password.length < 8) {
+      print("Error: Password is too short"); // Debugging statement
+      snackBarCalledfail(context, SignupData().shortPassword, Colors.red);
+      return;
+    }
 
-  if (conform.isEmpty) {
-    snackBarCalledfail(context,  SignupData().emptyConfirmPassword, Colors.red);
-    return;
-  }
+    if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~])')
+        .hasMatch(password)) {
+      print("Error: Weak password"); // Debugging statement
+      snackBarCalledfail(context, SignupData().weakPassword, Colors.red);
+      return;
+    }
 
-  if (password != conform) {
-    snackBarCalledfail(context, SignupData().passwordMismatch, Colors.red);
-    return;
-  }
+    if (conform.isEmpty) {
+      print("Error: Confirm password is empty"); // Debugging statement
+      snackBarCalledfail(
+          context, SignupData().emptyConfirmPassword, Colors.red);
+      return;
+    }
 
-  if (dob.isEmpty) {
-    snackBarCalledfail(context,  SignupData().emptyDob, Colors.red);
-    return;
-  }
+    if (password != conform) {
+      print("Error: Passwords do not match"); // Debugging statement
+      snackBarCalledfail(context, SignupData().passwordMismatch, Colors.red);
+      return;
+    }
+
+    if (dob.isEmpty) {
+      print("Error: Date of birth is empty"); // Debugging statement
+      snackBarCalledfail(context, SignupData().emptyDob, Colors.red);
+      return;
+    }
+
     flag.value = true;
     final response = await http.post(
       Uri.parse('${url}/user/register'),
@@ -390,7 +404,7 @@ class _SigninState extends State<SignUp> {
     );
 
     var responce = jsonDecode(response.body);
-
+    print("Response from server: $responce"); // Debugging statement
 
     bool boolvar = responce['success'];
 
@@ -400,7 +414,10 @@ class _SigninState extends State<SignUp> {
     }
 
     if (!boolvar) {
-      snackBarCalledSignup(context, responce['error']['explanation'], Colors.red);
+      print(
+          "Error: ${responce['error']['explanation']}"); // Debugging statement
+      snackBarCalledSignup(
+          context, responce['error']['explanation'], Colors.red);
       flag.value = false;
       return;
     }
