@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/transactionHistor
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_details.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -22,13 +23,13 @@ import 'package:lottie/lottie.dart'; // For haptic feedback
 
 RxMap<String, String> redioButton = <String, String>{}.obs;
 RxMap<String, int> redioButtonIndex = <String, int>{}.obs;
-RxList<String> addManually=<String>[].obs;
+RxList<String> addManually = <String>[].obs;
 RxBool showCheckBox =
     false.obs; // Initialize as false to avoid showing checkboxes by default
 
 Widget historyTransactions(Map<String, dynamic> transaction, String? date,
     int index, BuildContext context,
-    [bool hideReview = false,bool isexpanded=false]) {
+    [bool hideReview = false, bool isexpanded = false]) {
   String logo = transaction['bankLogo']?.toString() ?? "";
 
   final category = transaction['category']?.toString() ?? 'Uncategorized';
@@ -62,6 +63,10 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
           : parts.length >= 2
               ? parts[1]
               : parts[0];
+
+  // Print narration and nameOfUser
+  // print('Narration: $narration');
+  // print('Name of User: $nameOfUser');
 
   final amtColor = type == 'CREDIT'
       ? Colors.green.shade700
@@ -110,12 +115,13 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
         }
       },
       onLongPress: () {
-        if(!isexpanded) showCheckBox.value = true;
+        if (!isexpanded) showCheckBox.value = true;
         HapticFeedback.mediumImpact(); // Haptic feedback on long press
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
-        margin: EdgeInsets.symmetric(vertical: fontSizes.margin / 2, horizontal: fontSizes.margin),
+        margin: EdgeInsets.symmetric(
+            vertical: fontSizes.margin / 2, horizontal: fontSizes.margin),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16 * fontSizes.scaleFactor),
           border: !isReview
@@ -163,17 +169,18 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
                                   .containsKey('${transaction['_id']}'),
                               onChanged: (bool? isChecked) {
                                 String id = '${transaction['_id']}';
-                                 bool ismanual=transaction['manualTransaction']??false;
+                                bool ismanual =
+                                    transaction['manualTransaction'] ?? false;
                                 if (isChecked == true) {
                                   redioButton[id] = id;
                                   redioButtonIndex[id] = index;
-                                   if(ismanual) addManually.add(id);
+                                  if (ismanual) addManually.add(id);
                                   HapticFeedback
                                       .selectionClick(); // Feedback on check
                                 } else {
                                   redioButton.remove(id);
                                   redioButtonIndex.remove(id);
-                                  if(ismanual) addManually.remove(id);
+                                  if (ismanual) addManually.remove(id);
                                   HapticFeedback.selectionClick();
                                 }
                               },
@@ -189,31 +196,28 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
                   ),
                   // Main Transaction Content
                   GestureDetector(
-                        onTap: (){
-                          if(!showCheckBox.value)return;
-                            String id = '${transaction['_id']}';
-                            bool isChecked =redioButton.containsKey(id);
+                    onTap: () {
+                      if (!showCheckBox.value) return;
+                      String id = '${transaction['_id']}';
+                      bool isChecked = redioButton.containsKey(id);
 
-                           
+                      if (!isChecked) {
+                        redioButton[id] = id;
+                        redioButtonIndex[id] = index;
 
-                            if (!isChecked){
-                              redioButton[id] = id;
-                              redioButtonIndex[id] = index;
-                              
-                              HapticFeedback.selectionClick(); // Feedback on check
-                            } else
-                            {
-                            
-                              redioButton.remove(id);
-                              redioButtonIndex.remove(id);
-                              HapticFeedback.selectionClick();
-                            }
+                        HapticFeedback.selectionClick(); // Feedback on check
+                      } else {
+                        redioButton.remove(id);
+                        redioButtonIndex.remove(id);
+                        HapticFeedback.selectionClick();
+                      }
                     },
                     child: Container(
                       width: MediaQuery.of(context).size.width /
                           (showCheckBox.value ? 1.2 : 1.1),
-                      padding:
-                          EdgeInsets.only(top: fontSizes.padding / 6, bottom: fontSizes.padding / 6),
+                      padding: EdgeInsets.only(
+                          top: fontSizes.padding / 6,
+                          bottom: fontSizes.padding / 6),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -230,14 +234,17 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
                                   id)
                               : SizedBox(height: fontSizes.padding),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: fontSizes.padding),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: fontSizes.padding),
                             child: Row(
                               children: [
-                                getIconAvtar(fontSizes.avatarSize, category, fontSizes.scaleFactor),
+                                getIconAvtar(fontSizes.avatarSize, category,
+                                    fontSizes.scaleFactor),
                                 SizedBox(width: fontSizes.padding),
                                 Flexible(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         mainAxisAlignment:
@@ -254,9 +261,9 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
                                                 text: !isManual
                                                     ? nameOfUser
                                                     : subcategory,
-                                                 
                                                 c: AppColors.accentColor,
-                                                fontsize: fontSizes.fontSizeMedium,
+                                                fontsize:
+                                                    fontSizes.fontSizeMedium,
                                                 fontWeight: FontWeight.w600,
                                                 lineHeight: 1.5,
                                               ),
@@ -337,12 +344,11 @@ Widget reviewTagTransactions(
             // width: badgeSize,
             // height: badgeSize,
             decoration: BoxDecoration(
-             // color: AppColors.bg5,
+              // color: AppColors.bg5,
               shape: BoxShape.circle,
-             
             ),
             child: AvatarProfileImage(
-                url: HomePageIcons.isSplit, width: 50, height:50)),
+                url: HomePageIcons.isSplit, width: 50, height: 50)),
       if (isReview)
         Row(
           mainAxisSize: MainAxisSize.min,
@@ -425,8 +431,7 @@ Widget getIconsForHideUpdateSplit(
                       return SizedBox.shrink();
                     })(),
                     isManual
-                                               ?
-                                                  Container(
+                        ? Container(
                             height: 30,
                             width: 30,
                             child: Lottie.asset(
@@ -455,7 +460,7 @@ Widget getIconsForHideUpdateSplit(
                           ),
                     SizedBox(width: 8 * scaleFactor),
                     Tooltip(
-                      message:HomepageStringsDart().hideTooltip,
+                      message: HomepageStringsDart().hideTooltip,
                       child: GestureDetector(
                         onTap: () {
                           // Show confirmation dialog
@@ -506,8 +511,8 @@ Widget getIconsForHideUpdateSplit(
                                             vertical: screenWidth * 0.02),
                                         child: textStyleOnly2(
                                           context: context,
-                                          text:
-                                              HomepageStringsDart().hideTransactionPrompt,
+                                          text: HomepageStringsDart()
+                                              .hideTransactionPrompt,
                                           fontsize: screenWidth < 400 ? 14 : 16,
                                           color: AppColors.bg1,
                                           fontWeight: FontWeight.w500,
@@ -540,7 +545,8 @@ Widget getIconsForHideUpdateSplit(
                                             ),
                                             child: textStyleOnly2(
                                               context: context,
-                                              text: HomepageStringsDart().noButton,
+                                              text: HomepageStringsDart()
+                                                  .noButton,
                                               fontsize:
                                                   screenWidth < 400 ? 14 : 16,
                                               color: AppColors.bg1
@@ -554,10 +560,15 @@ Widget getIconsForHideUpdateSplit(
                                             color: Colors.grey[200],
                                           ),
                                           TextButton(
-                                            onPressed: () {
-                                              hideTransaction(index, true,
+                                            onPressed: ()async {
+                                              await hideTransaction(index, true,
                                                   context, transaction['_id']);
-                                              Navigator.of(context).pop();
+    
+     if (context.mounted) {
+        Navigator.of(context).pop(); // Pop the dialog after hiding
+      }
+    //                                           //Navigator.of(context).pop();
+                                             
                                             },
                                             style: TextButton.styleFrom(
                                               padding: EdgeInsets.symmetric(
@@ -574,7 +585,8 @@ Widget getIconsForHideUpdateSplit(
                                             ),
                                             child: textStyleOnly2(
                                               context: context,
-                                              text:  HomepageStringsDart().yesButton,
+                                              text: HomepageStringsDart()
+                                                  .yesButton,
                                               fontsize:
                                                   screenWidth < 400 ? 14 : 16,
                                               color: AppColors.primaryColor,
@@ -634,14 +646,13 @@ Widget getIconsForHideUpdateSplit(
                             size: iconSize,
                           ),
                           // child: AvatarProfileImage(url: HomePageIcons.transactionSplit, width: 90, height: 90)
-
                         ),
                       ),
                     ),
                     SizedBox(width: 8 * scaleFactor),
                     // Tag Action
                     Tooltip(
-                      message:HomepageStringsDart().tagTooltip,
+                      message: HomepageStringsDart().tagTooltip,
                       child: GestureDetector(
                         onTap: () {
                           tagName.value = category;

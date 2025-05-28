@@ -1,17 +1,16 @@
-import 'dart:convert';
-import 'package:flutter_application_code_stakeplot/Community_Page/success_post.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
+import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/animated/snackbar.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_service.dart';
-import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateDebtScreen extends StatefulWidget {
   @override
@@ -127,13 +126,14 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                 date: _date,
               ),
             );
-            showSuccessTopSnackBar(context,SnackbarData().debtCreatedSuccess);
+            showSuccessTopSnackBar(context, SnackbarData().debtCreatedSuccess);
           }
         } else {}
       } catch (e) {}
     } else {
       // Debug statement
     }
+    createDebtBool.value = false;
   }
 
   @override
@@ -164,14 +164,14 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                 ),
                 SizedBox(height: Colorcodes.paddingSize),
                 CustomFormField(
-                  hintText:PlotFinanceStaticData().selectLoanType,
+                  hintText: PlotFinanceStaticData().selectLoanType,
                   readOnly: true,
                   onTap: _showLoanTypeModal,
                   controller: TextEditingController(text: _loanType),
                   suffixIcon: Icon(Icons.arrow_drop_down),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                     return PlotFinanceStaticData().validateLoanType; 
+                      return PlotFinanceStaticData().validateLoanType;
                     }
                     return null;
                   },
@@ -194,13 +194,13 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                 ),
                 SizedBox(height: Colorcodes.paddingSize),
                 CustomFormField(
-                  hintText:PlotFinanceStaticData().enterInterestRate,
+                  hintText: PlotFinanceStaticData().enterInterestRate,
                   keyboardType: TextInputType.number,
                   onChanged: (value) =>
                       setState(() => _interest = double.tryParse(value) ?? 0.0),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                     return PlotFinanceStaticData().validateInterest; 
+                      return PlotFinanceStaticData().validateInterest;
                     }
                     if (double.tryParse(value) == null) {
                       return PlotFinanceStaticData().validateNumeric;
@@ -217,10 +217,10 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                   }),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return PlotFinanceStaticData().validateDuration; 
+                      return PlotFinanceStaticData().validateDuration;
                     }
                     if (int.tryParse(value) == null) {
-                      return  PlotFinanceStaticData().validateDuration; 
+                      return PlotFinanceStaticData().validateDuration;
                     }
                     return null;
                   },
@@ -248,28 +248,17 @@ class _CreateDebtScreenState extends State<CreateDebtScreen> {
                 // ),
                 // check the issue with continue...
                 GestureDetector(
-                  onTap: () {
-                    // Debug statement
-                    saveDebt();
-                    // Debug statement
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width / 1.1,
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
-                    decoration: BoxDecoration(
-                        color: AppColors.primaryColor,
-                        borderRadius: BorderRadius.circular(24)),
-                    child: Center(
-                      child: Text(
-                        PlotFinanceStaticData().continueButton,
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.bold,
-                            fontSize: Colorcodes.paddingSize,
-                            color: AppColors.bg5),
-                      ),
-                    ),
-                  ),
-                )
+                    onTap: () {
+                      // Debug statement
+                      if (createDebtBool.value) return;
+                      createDebtBool.value = true;
+                      saveDebt();
+                      // Debug statement
+                    },
+                    child: Obx(() => createDebtBool.value
+                        ? getspinner(context)
+                        : getButton(
+                            context, PlotFinanceStaticData().continueButton)))
               ],
             ),
           ),

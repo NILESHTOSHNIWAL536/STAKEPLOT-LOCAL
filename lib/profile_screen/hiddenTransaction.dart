@@ -343,10 +343,12 @@ Widget historyTransactions(
                           color: Colors.grey[200],
                         ),
                         TextButton(
-                          onPressed: () {
-                            hideTransaction(
+                          onPressed: () async{
+                            await hideTransaction(
                                 index, false, context, transaction['_id']);
-                            Navigator.of(context).pop();
+                            if (context.mounted) {
+        Navigator.of(context).pop(); // Pop the dialog after hiding
+      }
                           },
                           style: TextButton.styleFrom(
                             padding: EdgeInsets.symmetric(

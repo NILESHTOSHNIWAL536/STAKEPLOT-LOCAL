@@ -158,6 +158,7 @@ String lendAmountSuccess = "Lend amount has been successfully sent to users!";
 String lendAmountError = "An error occurred while trying to lend money!";
 String errorSettlingDue = "Error settling due";
 String transactionHiddenSuccess = "Transaction hidden Successfully";
+
 String transactionHideFailed = "Failed to hide transaction";
 String errorHidingTransaction = "Error hiding transaction";
 String provideLendDetails = "Please provide lend details";
