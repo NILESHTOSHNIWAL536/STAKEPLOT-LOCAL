@@ -41,6 +41,7 @@ class _NotificationsState extends State<Notifications> {
     var response = await getDataApiCall(urlPath);
     if (response.statusCode == 200) {
       if (response.body.isEmpty) {
+         flag.value = false;
         snackBarCalled(context,SnackbarData().noNotifications);
         return;
       }
