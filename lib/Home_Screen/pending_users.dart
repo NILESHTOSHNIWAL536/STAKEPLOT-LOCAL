@@ -189,39 +189,33 @@ class _UserListScreenState extends State<UserListScreen> {
                                   InkWell(
                                     onTap: () async {
                                       
-
+                                      if(data['isPaid'])return;
                                       String message;
                                       if (isDue) {
                                         // Handle "Settle Now" for due amounts
                                         int index = dueAmountRemainders
                                             .indexWhere((element) =>
                                                 element['_id'] == data['_id']);
-                                        if (index != -1) {
+                                        if (index != -1)
+                                        {
                                           duesPaid(context, index);
-                                          dueAmountRemainders[index]['isPaid'] =
-                                              true;
-                                          dueAmountRemainders[index]
-                                              ['billApproved'] = true;
+                                          dueAmountRemainders[index]['isPaid'] = true;
+                                          dueAmountRemainders[index]['billApproved'] = true;
                                           dueAmountRemainders.refresh();
-                                          message =
-                                              'Payment request has been initiated!';
+                                          message =SnackbarData().paymentsInit;
                                         } else {
-                                          message = 'Error: Payment not found.';
+                                          message = SnackbarData().paymentsError;
                                         }
                                       } else {
                                         // Handle "Send Reminder" for lend amounts
-                                        int index = lendAmountRemainders
-                                            .indexWhere((element) =>
-                                                element['_id'] == data['_id']);
+                                        int index = lendAmountRemainders.indexWhere((element) => element['_id'] == data['_id']);
                                         if (index != -1) {
                                           lendAmountRemainders[index]
                                               ['reminderSent'] = true;
                                           lendAmountRemainders.refresh();
-                                          message =
-                                              'Reminder sent successfully!';
+                                          message = SnackbarData().remainder ;//'Reminder sent successfully!';
                                         } else {
-                                          message =
-                                              'Error: Reminder not found.';
+                                          message = SnackbarData().remainderError; //'Error: Reminder not found.';
                                         }
                                       }
 
@@ -338,28 +332,14 @@ class _UserListScreenState extends State<UserListScreen> {
                                   ),
                                 ),
                               ),
-                              //  if (isLendAmount && data['dueDate'] != null) ...[
-                              //   const SizedBox(height: 4),
-                              //   Text(
-                              //     'Due : ${DateFormat('d MMM yyyy').format(DateTime.parse(data['dueDate']))}',
-                              //     style: FontManager().getTextStyle(
-                              //       context,
-                              //       lWeight: FontWeight.w400,
-                              //       fontSize: 10,
-                              //       color: AppColors.accentColor.withOpacity(0.6),
-                              //     ),
-                              //   ),
-                              // ],
+                             
                               if (isLendAmount && data['dueDate'] != null) ...[
                                 const SizedBox(height: 4),
                                 Text(
                                   () {
-                                    final dueDate =
-                                        DateTime.parse(data['dueDate']);
+                                    final dueDate = DateTime.parse(data['dueDate']);
                                     final today = DateTime.now();
-                                    final isToday =
-                                        dueDate.year == today.year &&
-                                            dueDate.month == today.month &&
+                                    final isToday = dueDate.year == today.year && dueDate.month == today.month &&
                                             dueDate.day == today.day;
                                     final isOverdue =
                                         dueDate.isBefore(today) && !isToday;
@@ -382,17 +362,7 @@ class _UserListScreenState extends State<UserListScreen> {
                                 ),
                               ],
 
-                              // Text(
-                              //   formatDateTime(data['createdAt']),
-                              //   textAlign: TextAlign.end,
-                              //   overflow: TextOverflow.ellipsis,
-                              //   style: FontManager().getTextStyle(
-                              //     context,
-                              //     lWeight: FontWeight.w400,
-                              //     fontSize: 10,
-                              //     color: AppColors.accentColor.withOpacity(0.6),
-                              //   ),
-                              // ),
+                        
                             ],
                           ),
                         ),

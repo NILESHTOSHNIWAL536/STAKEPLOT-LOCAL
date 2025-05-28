@@ -398,7 +398,7 @@ void duesPaid(BuildContext context, int index) async {
     final response = await updateDataApiCall(apiUrl, {});
     
   } catch (e) {
-    snackBarCalled(context,SnackbarData().errorSettlingDue);
+    snackBarCalledfail(context,SnackbarData().errorSettlingDue);
   
   }
 }
@@ -414,7 +414,7 @@ void settleAmount(
    
     
   } catch (e) {
-    snackBarCalled(context, SnackbarData().errorSettlingDue);
+    snackBarCalledfail(context, SnackbarData().errorSettlingDue);
   
   }
 
@@ -430,7 +430,7 @@ void declineAmount(
     final response = await updateDataApiCall(apiUrl, body);
     
   } catch (e) {
-    snackBarCalled(context, SnackbarData().errorSettlingDue);
+    snackBarCalledfail(context, SnackbarData().errorSettlingDue);
   }
 }
 

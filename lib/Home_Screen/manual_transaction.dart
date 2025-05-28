@@ -5,6 +5,7 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/lendMessage.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
@@ -403,6 +404,7 @@ class _ModalContentState extends State<ModalContent>
       controller: _amountController,
       keyboardType: TextInputType.number,
       autofocus: _isAmountFieldFocused,
+      inputFormatters: allowDecimalInput(),
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.currency_rupee),
         hintText: HomepageStringsDart().enterAmount,

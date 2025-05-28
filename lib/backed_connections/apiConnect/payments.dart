@@ -82,15 +82,33 @@ void getBudget() async {
   } else {}
 }
 
+bool isZeroAmount(String amount) {
+  try{
+  double parsed = double.parse(amount.trim().toString());
+  return  parsed == 0.0 || parsed == 0.00 || parsed == 0;
+  }catch (e) {
+    return true;
+  }
+}
+
 void addBudget(BuildContext context, String name, String amount,
     List expenseCategory, String budgetPeriod) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
 
+ List filteredCategories = expenseCategory
+        .where((e) => !isZeroAmount(e['amount'] ?? '0'))
+        .toList();
+  if (filteredCategories.isEmpty) {
+    createBudget.value = false;
+    snackBarCalledfail(context, SnackbarData().budgetAddFailed, Colors.red);
+    return;
+  }
+  print(filteredCategories);
   var body = {
     'name': name.toString(),
     'amount': amount.toString(),
-    'categoryBudgets': expenseCategory,
+    'categoryBudgets': filteredCategories,
     'budgetPeriod': budgetPeriod.toString(),
   };
 
@@ -384,7 +402,7 @@ void sendNotificationsToDevice(id, context, msg,
 
     if (response.statusCode == 429) {
       var data = jsonDecode(response.body);
-      snackBarCalled(context, data["message"], Colorcodes.red);
+      snackBarCalledfail(context, data["message"], Colorcodes.red);
       return;
     }
     if (screen == "/remainder" || screen == "/remainders") {
