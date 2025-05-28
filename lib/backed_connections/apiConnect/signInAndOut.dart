@@ -28,6 +28,7 @@ Future<void> loginUser(
       'userpassword': passwordController.text.toString(),
       'deviceInfo': deviceData,
     });
+
     if (response.statusCode == 409)
      {
       forceLoginShowModal(context, response, emailController, passwordController);
@@ -93,13 +94,14 @@ void loginCalledData(response,context) async
    final SharedPreferences pref = await SharedPreferences.getInstance();
    final body = json.decode(response.body);
     String accessToken = body['data']['accessToken'];
+    // pref.setString("accessToken", "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MmU0MGE5ZmM5ZmQxZWMxYmU3M2MwMyIsImlhdCI6MTc0Nzg2MTY3MywiZXhwIjoxNzUzMDQ1NjczfQ.WPDZZnfYbV906wtx6Dq-dA3pSGOg7Ikw85CgECzuA0s");
     pref.setString("accessToken", "Bearer " + accessToken);
     await initializeOneSignal(context);
     currentId.value = body['data']['_id'];
     isBankAccountLink.value = body['data']['isBankAccountLinked'];
     acceptReset.value = false;
     getPhoneNo(body);
-     await getBankAccounts();
+    await getBankAccounts();
     Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
 }
 

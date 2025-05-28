@@ -37,38 +37,12 @@ class _NotificationsState extends State<Notifications> {
     getNotifications(context);
   }
 
-  // void getTransaction() async {
-  //   String urlPath = '${url}/user/myNotifications';
-  //   var response = await getDataApiCall(urlPath);
-  //   printData(response);
-  //   if (response.statusCode == 200) {
-  //     if (response.body.isEmpty) {
-  //       flag.value = false;
-  //       snackBarCalled(context, SnackbarData().noNotifications);
-  //       return;
-  //     }
-
-  //     var his = jsonDecode(response.body);
-  //     notificationList.clear();
-  //     notificationList.addAll(his['data'] ?? []);
-  //     notificationList.forEach((req) {
-  //       String? type = req['notificationMessage']?['type'];
-  //       var e = req['notificationMessage'];
-  //       if (type == "friendRequest" && e?['from_id'] != null) {
-  //         friendRequestList.add(e['from_id']);
-  //       }
-  //     });
-  //     flag.value = false;
-  //     hasGetNewNotifications.value = false;
-  //     myNotificationBool.value = !myNotificationBool.value;
-  //   }
-  // }
-
   Future<void> deleteNotification(String? notifyId) async {
     if (notifyId == null) return;
     String urlPath = '${url}/user/deleteNotifications/$notifyId';
     var response = await getDataApiCall(urlPath);
-    if (response.statusCode != 200) {
+    if (response.statusCode != 200)
+    {
       snackBarCalled(context, SnackbarData().deleteNotificationFailed);
     }
   }

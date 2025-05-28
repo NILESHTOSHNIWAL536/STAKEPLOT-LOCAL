@@ -15,6 +15,7 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLog
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:lottie/lottie.dart';
 
 
 // class NumberPickerController extends GetxController {
@@ -56,7 +57,7 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
 
   Widget avatarSlider() {
     return bankAccountLinkedList.isEmpty
-        ? AvatarProfileImage(url: bankImage, width: 10, height: 10)
+        ? connectBankAccount(context)
         :PageView.builder(
                   itemCount: bankAccountLinkedList.length,
                   controller: PageController(viewportFraction: 1.0,initialPage:scrollBankPage.value ),
@@ -400,4 +401,72 @@ Widget setPinForAccountHide(context) {
       child: Text(bankName),
     );
   }
+  
+ Widget connectBankAccount(BuildContext context) {
+   return Container(
+  color: AppColors.backgroundColor,
+  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+  child: Center(
+    child: InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ShareAccountLogin(),
+          ),
+        );
+        // Uncomment the line below if you want to fetch bank accounts after connecting
+        // getBankAccounts();
+      },
+      child: Column(
+        children: [
+            Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                              height: 30,
+                              width: 30,
+                              child: Lottie.asset("assets/splashScreen/fetchLoad.json"),
+                 ),
+                 textStyle(context: context, text: HomepageStringsDart().noBankLinked, fontsize: 11, fontWeight: FontWeight.bold),
+                ],
+              ),
+          Card(
+            elevation: 2,
+            color: AppColors.primaryColor,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AvatarProfileImage(
+                    width: 2,
+                    height: 10,
+                    url: bankImage,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Securely connect your bank account",
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w500,
+                      fontSize: 15,
+                      color: Colorcodes.white,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  ),
+);
+
+      }
 }

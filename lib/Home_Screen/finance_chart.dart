@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
 import './colors.dart';
@@ -37,21 +38,6 @@ class _FinancePageState extends State<FinancePage> {
     calledFunctionToFetchData(context);
   }
 
-  // void _scrollToTransactionHistory() {
-  //   final RenderObject? renderObject =
-  //       widget.transactionHistoryKey.currentContext?.findRenderObject();
-  //   if (renderObject != null && renderObject is RenderBox) {
-  //     final position = renderObject.localToGlobal(Offset.zero);
-  //     final scrollOffset = widget.scrollController.offset;
-  //     final targetOffset =
-  //         position.dy - scrollOffset - MediaQuery.of(context).size.height / 8;
-  //     widget.scrollController.animateTo(
-  //       targetOffset > 0 ? targetOffset : 0,
-  //       duration: Duration(milliseconds: 500),
-  //       curve: Curves.easeInOut,
-  //     );
-  //   } else {}
-  // }
 
   int _getDaysInCurrentMonth() {
     final now = DateTime.now();
@@ -163,9 +149,9 @@ class _FinancePageState extends State<FinancePage> {
                 : getMonthWeekCustom(fontSizeFactor, screenWidth)),
             Obx(() => !getGraphData.value
                 ? Container(
-                    width: MediaQuery.of(context).size.width / 1.3,
+                    width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height / 2.6,
-                    child: Center(child: Spinner()),
+                    child: consentAndHandleDetails.isEmpty? Center(child: textStyleImage(context: context,text: HomepageStringsDart().noSpendingsAvailable, fontsize: fontSizeFactor * 4.0, c: AppColors.accentColor)):Spinner(),
                   )
                 : LineChartWidget(
                     chartData: transactionChatGraph,
@@ -223,33 +209,7 @@ class _FinancePageState extends State<FinancePage> {
                 ),
               ),
             ),
-            // SizedBox(width: screenWidth * 0.02),
-            // GestureDetector(
-            //   onTap: () {
-            //     selectedButton.value = 'Week';
-            //     // getGraphData.value = false;
-            //     getAutoMationsTransactionsCustom(
-            //         getCurrentWeek(), context, 'Week');
-            //   },
-            //   child: Container(
-            //     height: 35,
-            //     width: screenWidth * 0.15,
-            //     decoration: BoxDecoration(
-            //       borderRadius: BorderRadius.circular(16),
-            //       color: selectedButton.value == 'Week'
-            //           ? AppColors.button
-            //           : AppColors.backgroundColor,
-            //     ),
-            //     child: Center(
-            //       child: Text(
-            //             "Last Week",
-            //             style: FontManager().getTextStyle(context,
-            //                 lWeight: FontWeight.normal,
-            //                 fontSize: fontSizeFactor * 3,
-            //                 color: AppColors.accentColor),
-            //           )),
-            //     ),
-            //   ),
+          
 
             SizedBox(width: screenWidth * 0.02),
             GestureDetector(
@@ -471,6 +431,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                   padding: EdgeInsets.symmetric(vertical: 12),
                   child: _buildYAxisLabels(fontSizeFactor),
                 ),
+                // change in future 
               Expanded(
                 child: SingleChildScrollView(
                   controller: _scrollController,

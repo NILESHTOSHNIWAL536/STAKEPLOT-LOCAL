@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
+import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
+import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/signUp.dart';
 import 'package:flutter_application_code_stakeplot/Utils/signin.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
@@ -8,6 +11,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:lottie/lottie.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class SplashScreen extends StatefulWidget {
@@ -26,6 +30,7 @@ class _SplashScreenState extends State<SplashScreen>
   {
     super.initState();
     callApis();
+
   }
 
 
@@ -33,14 +38,21 @@ class _SplashScreenState extends State<SplashScreen>
     SignupData signup= SignupData();
     SnackbarData snackbarData= SnackbarData();
     SigninData signinData= SigninData();
+
     PlotFinanceStaticData plotFinanceStaticData= PlotFinanceStaticData();
     HomepageStringsDart homepageStringsDart= HomepageStringsDart();
+    CommunityScreenStrings communityScreenStrings= CommunityScreenStrings();
+    FinvuStrings finvuStrings= FinvuStrings();
+    ProfileScreenStrings profileScreenStrings= ProfileScreenStrings();
 
+    signinData.fetchConstants();
     signup.fetchConstants();
     snackbarData.fetchConstants();
     plotFinanceStaticData.fetchConstants();
-    signinData.fetchConstants();
+    communityScreenStrings.fetchConstants();
+    finvuStrings.fetchConstants();
     homepageStringsDart.fetchConstants();
+    profileScreenStrings.fetchConstants();
 
   }
 

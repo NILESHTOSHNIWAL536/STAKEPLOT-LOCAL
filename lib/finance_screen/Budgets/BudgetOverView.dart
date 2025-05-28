@@ -122,6 +122,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                     fontsize: 16,
                     fontWeight: FontWeight.w500,
                     c: AppColors.accentColor),
+                    SizedBox(width:10),
                 textStyle(
                     context: context,
                     text: PlotFinanceStaticData().totalAmountLabel,
@@ -141,6 +142,17 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                   if (createBudget.value) return;
                   // Show loader
                   createBudget.value = true;
+                   // Check if the sum of category amounts equals the total budget
+                  double totalCategoryAmount = categoriesDividedList.fold(0, (sum, item) {
+                    return sum + (double.tryParse(item['amount'].toString()) ?? 0);
+                  });
+
+                  if (totalCategoryAmount != double.tryParse(widget.amount)!) {
+                    // Show error message if amounts do not match
+                    snackBarCalledfail(context, SnackbarData().budgetAmountMismatch);
+                    createBudget.value = false; // Dismiss loader
+                    return;
+                  }
 
                   // Add budget
                   addBudget(context, widget.name, widget.amount,

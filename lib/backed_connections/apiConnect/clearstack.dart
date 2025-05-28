@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
@@ -206,6 +207,13 @@ void clearGetX() {
   isLoadingMore.value = false;
   isFected.value = false;
   currentPage = 1;
+  consentAndHandleDetails.clear();
+  isBankLinked.value=false;
+  totalDebitValue.value = 0.0;
+  totalDebitValuePercent.value = 0.0;
+  startDateCustom=DateTime.now().subtract(const Duration(days: 7));
+  endDateCustom =  DateTime.now();
+  loadBanks.value=true;
 }
 
 RxMap<String, String> ListOfBankImages = RxMap();

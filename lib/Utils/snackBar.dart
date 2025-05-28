@@ -70,6 +70,8 @@ String noNotificationsSent = "No notifications sent due to invalid data.";
   String processingBudgetDeletion = "Processing budget deletion...";
   String budgetDeletionError = "Error occurred while deleting the budget!";
   String budgetDeletionSuccess = "Budget deleted successfully";
+String budgetAmountMismatch = "Total amount is not equal to the sum of all category-wise amounts.";
+
 
   String debtAdded = "Debt has been successfully added!";
   String debtAddFailed = "Failed to add the debt!";
@@ -170,6 +172,7 @@ String splitError = "Can't split, error!";
 
 String maxFiveImagesAllowed = "Maximum 5 images allowed";
 String fillAllRequiredFields = "Please fill in all required fields";
+String emptycategoryList = "Please select atleast one category to proceed";
 String errorUploadingImage = "Error uploading image";
 String failedToSubmitPost = "Failed to submit post...";
 String errorSubmittingPost = "Error submitting post";
@@ -245,6 +248,7 @@ String amountExceed = "Amount exceeds the total budget!";
         budgetUpdateFailed = data['budgetUpdateFailed'] ?? budgetUpdateFailed;
         processingBudgetDeletion = data['processingBudgetDeletion'] ?? processingBudgetDeletion;
         budgetDeletionError = data['budgetDeletionError'] ?? budgetDeletionError;
+        budgetAmountMismatch = data['budgetAmountMismatch'] ?? budgetAmountMismatch;
 
         debtAdded = data['debtAdded'] ?? debtAdded;
         debtAddFailed = data['debtAddFailed'] ?? debtAddFailed;
@@ -335,6 +339,7 @@ splitError = data['splitError'] ?? splitError;
 
 maxFiveImagesAllowed = data['maxFiveImagesAllowed'] ?? maxFiveImagesAllowed;
 fillAllRequiredFields = data['fillAllRequiredFields'] ?? fillAllRequiredFields;
+emptycategoryList = data['emptycategoryList'] ?? emptycategoryList; 
 errorUploadingImage = data['errorUploadingImage'] ?? errorUploadingImage;
 failedToSubmitPost = data['failedToSubmitPost'] ?? failedToSubmitPost;
 errorSubmittingPost = data['errorSubmittingPost'] ?? errorSubmittingPost;
