@@ -56,20 +56,22 @@ Widget child;
                   Stack(
                     clipBehavior: Clip.none,
                     children: [
-                     Container(
-                       padding: EdgeInsets.all(8),
-                       decoration: BoxDecoration(
-                          color: AppColors.button,
-                          borderRadius: BorderRadius.circular(10)
-                       ),
-                       child: InkWell(
-                          onTap: (){
+                     InkWell(
+                      onTap: (){
                               Navigator.pushNamed(context, '/Notifications');
                           },
-                          child: SvgPicture.asset(HomePageIcons.notification,
-                              height: 22, width: 10,color: Colorcodes.black,),
-                                       ),
+                       child: Container(
+                         padding: EdgeInsets.all(8),
+                         decoration: BoxDecoration(
+                            color: AppColors.button,
+                            borderRadius: BorderRadius.circular(10)
+                         ),
+                         
+                            child: SvgPicture.asset(HomePageIcons.notification,
+                                height: 22, width: 10,color: Colorcodes.black,),
+                                         ),
                      ),
+                     
              Obx(()=> !hasGetNewNotifications.value?   SizedBox.shrink():   Positioned(
                         right: 10,
                         top: 9,

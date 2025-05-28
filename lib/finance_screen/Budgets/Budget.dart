@@ -163,6 +163,7 @@ class _BudgetState extends State<Budget> {
                       keyBoard: TextInputType.number,
                       lableText: PlotFinanceStaticData().enterAmountHintBudget, // Updated
                       icon: Icons.currency_rupee_rounded,
+                      needAmountFormat: true,
                     ),
                     SizedBox(height: 24),
                     textStyle(

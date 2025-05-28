@@ -10,6 +10,10 @@ class SnackbarData {
   factory SnackbarData() => _instance;
 
   // Snackbar Messages
+  String remainder = "Reminder sent successfully!";
+  String remainderError = "Error: Reminder not found.";
+  String paymentsInit = "Payment request has been initiated!";
+  String paymentsError = "Error: Payment not found.";
   String enterValidemail = "Please enter a valid email address.";
   String enterValidMobile = "Please enter valid mobile number";
   String errorGeneratingOtp = "Error while generating otp Ref / or internal issue";
@@ -193,6 +197,10 @@ String amountExceed = "Amount exceeds the total budget!";
       {
         var data = jsonDecode(response.body);
         data = data['data'] ?? {};
+        remainderError = data['remainderError'] ?? remainderError;
+        remainder = data['remainder'] ?? remainder;
+        paymentsInit = data['paymentsInit'] ?? paymentsInit;
+        paymentsError = data['paymentsError'] ?? paymentsError;
         budgetDeletionSuccess = data['budgetDeletionSuccess'] ?? budgetDeletionSuccess;
         amountExceed = data['amountExceed'] ?? amountExceed;
         uploadError = data['uploadError'] ?? uploadError;

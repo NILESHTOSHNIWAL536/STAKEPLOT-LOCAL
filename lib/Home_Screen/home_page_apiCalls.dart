@@ -375,7 +375,8 @@ void duesPaid(BuildContext context, int index) async {
   try {
     final response = await updateDataApiCall(apiUrl, {});
   } catch (e) {
-    snackBarCalled(context, SnackbarData().errorSettlingDue);
+    snackBarCalledfail(context,SnackbarData().errorSettlingDue);
+  
   }
 }
 
@@ -388,7 +389,8 @@ void settleAmount(
     };
     final response = await updateDataApiCall(apiUrl, body);
   } catch (e) {
-    snackBarCalled(context, SnackbarData().errorSettlingDue);
+    snackBarCalledfail(context, SnackbarData().errorSettlingDue);
+  
   }
 }
 
@@ -399,7 +401,7 @@ void declineAmount(
     var body = {"splittedUserId": endUser};
     final response = await updateDataApiCall(apiUrl, body);
   } catch (e) {
-    snackBarCalled(context, SnackbarData().errorSettlingDue);
+    snackBarCalledfail(context, SnackbarData().errorSettlingDue);
   }
 }
 

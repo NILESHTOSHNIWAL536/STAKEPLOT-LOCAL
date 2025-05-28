@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
@@ -776,4 +777,12 @@ List<Map<String, dynamic>> getthelistAll()
 String getFormattedDateForScreenTime() {
   final now = DateTime.now();
   return "${now.day.toString().padLeft(2, '0')}:${now.month.toString().padLeft(2, '0')}:${now.year}";
+}
+
+
+List<TextInputFormatter> allowDecimalInput({int decimalPlaces = 2}) {
+  final regex = RegExp(r'^\d*\.?\d{0,' + decimalPlaces.toString() + r'}');
+  return [
+    FilteringTextInputFormatter.allow(regex),
+  ];
 }

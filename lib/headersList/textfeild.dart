@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -406,6 +407,7 @@ class TextFeildWidgetCustom extends StatelessWidget {
   int? maxLength;
   TextInputType keyBoard;
   bool flag;
+  bool needAmountFormat = false;
 
   final FocusNode? focusNode;
   TextFeildWidgetCustom({
@@ -419,6 +421,7 @@ class TextFeildWidgetCustom extends StatelessWidget {
     this.focusNode,
     this.maxLines,
     this.maxLength,
+    this.needAmountFormat = false,
   }) : super(key: key);
 
   RxBool show = false.obs;
@@ -453,10 +456,10 @@ class TextFeildWidgetCustom extends StatelessWidget {
               focusNode: focusNode,
               maxLines: 1,
               maxLength: 30,
+              inputFormatters: needAmountFormat?allowDecimalInput():[],
               decoration: InputDecoration(
                 // contentPadding: EdgeInsets.all(0),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                contentPadding:EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                 filled: true,
                 hintText: lableText,
                 hintStyle: getStyle1(context),
@@ -472,6 +475,7 @@ class TextFeildWidgetCustom extends StatelessWidget {
                     borderSide: BorderSide(color: Colorcodes.white)),
                 fillColor: Colorcodes.white,
                 border: InputBorder.none,
+              
                 prefixIcon: flag
                     ? Icon(
                         icon,
