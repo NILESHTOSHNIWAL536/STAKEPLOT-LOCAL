@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
+import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
+import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/signUp.dart';
 import 'package:flutter_application_code_stakeplot/Utils/signin.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
@@ -35,13 +38,21 @@ class _SplashScreenState extends State<SplashScreen>
     SignupData signup= SignupData();
     SnackbarData snackbarData= SnackbarData();
     SigninData signinData= SigninData();
+
     PlotFinanceStaticData plotFinanceStaticData= PlotFinanceStaticData();
     HomepageStringsDart homepageStringsDart= HomepageStringsDart();
+    CommunityScreenStrings communityScreenStrings= CommunityScreenStrings();
+    FinvuStrings finvuStrings= FinvuStrings();
+    ProfileScreenStrings profileScreenStrings= ProfileScreenStrings();
+
+    signinData.fetchConstants();
     signup.fetchConstants();
     snackbarData.fetchConstants();
     plotFinanceStaticData.fetchConstants();
-    signinData.fetchConstants();
+    communityScreenStrings.fetchConstants();
+    finvuStrings.fetchConstants();
     homepageStringsDart.fetchConstants();
+    profileScreenStrings.fetchConstants();
 
   }
 
