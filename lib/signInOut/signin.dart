@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
@@ -12,6 +16,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
 import 'package:flutter_application_code_stakeplot/Utils/signin.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/googlesignin/google.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -19,6 +24,8 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/userName.dart';
 import 'package:get/get.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -30,8 +37,10 @@ class Signin extends StatefulWidget {
 }
 
 class _SigninState extends State<Signin> {
-  TextEditingController emailController = TextEditingController(text: "lalatoshniwal2002@gmail.com");
-  TextEditingController passwordController = TextEditingController(text: "1234567");
+  TextEditingController emailController =
+      TextEditingController(text: "lalatoshniwal2002@gmail.com");
+  TextEditingController passwordController =
+      TextEditingController(text: "1234567");
 
   // TextEditingController emailController = TextEditingController(text: "");
   // TextEditingController passwordController = TextEditingController(text: "");
@@ -41,7 +50,6 @@ class _SigninState extends State<Signin> {
     super.initState();
     check(context, "loginuser");
     // Initialize signin data
-   
   }
 
   @override
@@ -63,7 +71,7 @@ class _SigninState extends State<Signin> {
               textHeader(),
               getTextFeilds(),
               siginButton(),
-               signinWith(),
+              signinWith(),
               forgotPassword(),
               dontHaveAccount(),
             ],
@@ -207,7 +215,6 @@ class _SigninState extends State<Signin> {
           const SizedBox(height: 10),
           InkWell(
             onTap: () async {
-            
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
@@ -234,7 +241,18 @@ class _SigninState extends State<Signin> {
   Widget containerIconSiginWith(IconData icon, Color color) {
     return InkWell(
       onTap: () async {
-        await AuthService().signInWithGoogle();
+        final userdata = await AuthService().signInWithGoogle(context);
+        print(userdata);
+        if (userdata != "") {
+          if (userdata!['data']['accessToken'] != null) {
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => UserDetailsPage(data: userdata!)),
+            );
+          }
+        }
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
@@ -261,14 +279,19 @@ class _SigninState extends State<Signin> {
           onTap: () async {
             if (acceptReset.value) return;
 
-            if (emailController.text.isEmpty || passwordController.text.isEmpty) {
-              snackBarCalledfail(context,SnackbarData().enterAllFields); // You might want to update this to use signinData validation messages
+            if (emailController.text.isEmpty ||
+                passwordController.text.isEmpty) {
+              snackBarCalledfail(
+                  context,
+                  SnackbarData()
+                      .enterAllFields); // You might want to update this to use signinData validation messages
               return;
             }
 
             acceptReset.value = true;
-            
-            await getDeviceInfo("deviceData.value".toString(), context, emailController, passwordController);
+
+            await getDeviceInfo("deviceData.value".toString(), context,
+                emailController, passwordController);
           },
           child: Obx(
             () => Center(
@@ -292,9 +315,3 @@ class _SigninState extends State<Signin> {
     );
   }
 }
-
-
-
-
-
-
