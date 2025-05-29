@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -116,7 +117,7 @@ class _BudgetSearchState extends State<BudgetSearch> {
                   SizedBox(height: 15),
                   textStyle(
                     context: context,
-                     text: PlotFinanceStaticData().chooseCategoryTitle,
+                    text: PlotFinanceStaticData().chooseCategoryTitle,
                     fontsize: 18,
                     fontWeight: FontWeight.w500,
                   ),
@@ -124,7 +125,7 @@ class _BudgetSearchState extends State<BudgetSearch> {
                   searchList(width, height),
                   SizedBox(height: 15),
                   Text(
-                    PlotFinanceStaticData().curatedCategoriesText, 
+                    PlotFinanceStaticData().curatedCategoriesText,
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w300,
                         fontSize: 14,
@@ -139,7 +140,12 @@ class _BudgetSearchState extends State<BudgetSearch> {
           Center(
             child: InkWell(
               onTap: () {
-                calculateBudget(widget.amount, widget.name, widget.period);
+                if (categoriesSeleted.isEmpty) {
+                  // Show Snackbar if no category is selected
+                  snackBarCalledfail(context, SnackbarData().emptycategoryList);
+                } else {
+                  calculateBudget(widget.amount, widget.name, widget.period);
+                }
               },
               child: getButton(context, PlotFinanceStaticData().continueButton),
             ),
@@ -261,7 +267,7 @@ class _BudgetSearchState extends State<BudgetSearch> {
             }).toList(),
           )
         : Center(
-            child: Text( PlotFinanceStaticData().noCategoriesFound,
+            child: Text(PlotFinanceStaticData().noCategoriesFound,
                 style: TextStyle(color: Colors.grey)),
           );
   }

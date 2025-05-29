@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
@@ -56,20 +57,23 @@ Widget child;
                   Stack(
                     clipBehavior: Clip.none,
                     children: [
-                     Container(
-                       padding: EdgeInsets.all(8),
-                       decoration: BoxDecoration(
-                          color: AppColors.button,
-                          borderRadius: BorderRadius.circular(10)
-                       ),
-                       child: InkWell(
-                          onTap: (){
+                     InkWell(
+                      onTap: (){
+                        HapticFeedback.mediumImpact();
                               Navigator.pushNamed(context, '/Notifications');
                           },
-                          child: SvgPicture.asset(HomePageIcons.notification,
-                              height: 22, width: 10,color: Colorcodes.black,),
-                                       ),
+                       child: Container(
+                         padding: EdgeInsets.all(8),
+                         decoration: BoxDecoration(
+                            color: AppColors.button,
+                            borderRadius: BorderRadius.circular(10)
+                         ),
+                         
+                            child: SvgPicture.asset(HomePageIcons.notification,
+                                height: 22, width: 10,color: Colorcodes.black,),
+                                         ),
                      ),
+                     
              Obx(()=> !hasGetNewNotifications.value?   SizedBox.shrink():   Positioned(
                         right: 10,
                         top: 9,

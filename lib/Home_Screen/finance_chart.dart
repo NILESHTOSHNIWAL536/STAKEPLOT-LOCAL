@@ -431,6 +431,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
                   padding: EdgeInsets.symmetric(vertical: 12),
                   child: _buildYAxisLabels(fontSizeFactor),
                 ),
+                // change in future 
               Expanded(
                 child: SingleChildScrollView(
                   controller: _scrollController,

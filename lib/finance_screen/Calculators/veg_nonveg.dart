@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
@@ -29,7 +30,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
   List<Map<dynamic, dynamic>> get friends =>
       frdsList.map((e) => e as Map<dynamic, dynamic>).toList();
 
- List<String> options = [
+  List<String> options = [
     PlotFinanceStaticData().vegLabel, // Updated
     PlotFinanceStaticData().nonVegLabel, // Updated
     PlotFinanceStaticData().alcoholLabel // Updated
@@ -143,13 +144,12 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         backgroundColor: AppColors.backgroundColor,
         title: Text(
-           PlotFinanceStaticData().foodieFundsTitle,
+          PlotFinanceStaticData().foodieFundsTitle,
           style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.w600,
@@ -173,17 +173,21 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
               padding: const EdgeInsets.all(5.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                  _buildInputColumn(PlotFinanceStaticData().vegLabel, vegController), // Updated
-                  _buildInputColumn(PlotFinanceStaticData().nonVegLabel, nonVegController), // Updated
-                  _buildInputColumn(PlotFinanceStaticData().alcoholLabel, alcoholController), // Updated
+                children: [
+                  _buildInputColumn(PlotFinanceStaticData().vegLabel,
+                      vegController), // Updated
+                  _buildInputColumn(PlotFinanceStaticData().nonVegLabel,
+                      nonVegController), // Updated
+                  _buildInputColumn(PlotFinanceStaticData().alcoholLabel,
+                      alcoholController), // Updated
                 ],
               ),
             ),
             // Fixed search bar
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-              child: InputDat(PlotFinanceStaticData().searchHint, TextInputType.name, Textcontroller),
+              child: InputDat(PlotFinanceStaticData().searchHint,
+                  TextInputType.name, Textcontroller),
             ),
             // Scrollable section: commentedData and vegNonvegdata
             Expanded(
@@ -223,32 +227,38 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                   //   splitUserAmountFood(context, "3000", addedMembers,
                   //       "foodie split", "Veg & Non Veg", friendShares);
                   // },
-                                                      onTap: () {
-                    double totalVeg = double.tryParse(vegController.text) ?? 0.0;
-                    double totalNonVeg = double.tryParse(nonVegController.text) ?? 0.0;
-                    double totalAlcohol = double.tryParse(alcoholController.text) ?? 0.0;
+                  onTap: () {
+                    double totalVeg =
+                        double.tryParse(vegController.text) ?? 0.0;
+                    double totalNonVeg =
+                        double.tryParse(nonVegController.text) ?? 0.0;
+                    double totalAlcohol =
+                        double.tryParse(alcoholController.text) ?? 0.0;
 
                     // Check if at least one category has a valid amount
-                    bool hasValidAmount = totalVeg > 0 || totalNonVeg > 0 || totalAlcohol > 0;
+                    bool hasValidAmount =
+                        totalVeg > 0 || totalNonVeg > 0 || totalAlcohol > 0;
 
                     // Check if there are shares for the added members
                     bool hasShares = addedMembers.any((member) {
-                                           String? friendId = member['id'];
-                      return friendShares[friendId]?['Total'] != null && 
-                             (friendShares[friendId]!['Total'] ?? 0) > 0;
+                      String? friendId = member['id'];
+                      return friendShares[friendId]?['Total'] != null &&
+                          (friendShares[friendId]!['Total'] ?? 0) > 0;
                     });
 
                     if (hasValidAmount && hasShares) {
                       // Proceed with the split if conditions are met
-                      splitUserAmountFood(context, 
-                          (totalVeg + totalNonVeg + totalAlcohol).toString(), 
+                      splitUserAmountFood(
+                          context,
+                          (totalVeg + totalNonVeg + totalAlcohol).toString(),
                           addedMembers,
-                          "foodie split", 
-                          "Veg & Non Veg", 
+                          "foodie split",
+                          "Veg & Non Veg",
                           friendShares);
                     } else {
                       // Show a message to the user that they need to add money or select shares
-                     snackBarCalledfail(context,SnackbarData().validAmountAndShares);
+                      snackBarCalledfail(
+                          context, SnackbarData().validAmountAndShares);
                     }
                   },
                   child: Container(
@@ -260,7 +270,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                     ),
                     child: Center(
                       child: Text(
-                       PlotFinanceStaticData().billSplitButton, // Updated
+                        PlotFinanceStaticData().billSplitButton, // Updated
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.bold,
@@ -283,88 +293,101 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                   //           "/remainders", "",
                   //                       "",
                   //                       "Notified successfully");
-                             
+
                   //     }
                   //   });
                   // },
                   onTap: () {
-  // Check if friendShares is null or empty
-  if (friendShares == null || friendShares.isEmpty) {
-    snackBarCalledfail(context,SnackbarData().noSharesCalculated);
-    return;
-  }
+                    // Check if friendShares is null or empty
+                    if (friendShares == null || friendShares.isEmpty) {
+                      snackBarCalledfail(
+                          context, SnackbarData().noSharesCalculated);
+                      return;
+                    }
 
-  // Check if currentId is null
-  if (currentId.value == null) {
-    snackBarCalledfail(context,SnackbarData().userIdNotAvailable);
-    return;
-  }
+                    // Check if currentId is null
+                    if (currentId.value == null) {
+                      snackBarCalledfail(
+                          context, SnackbarData().userIdNotAvailable);
+                      return;
+                    }
 
-  // Check if userName is null
-  if (userName.value == null || userName.value.isEmpty) {
-    snackBarCalledfail(context,SnackbarData().userNameNotAvailable);
-    return;
-  }
+                    // Check if userName is null
+                    if (userName.value == null || userName.value.isEmpty) {
+                      snackBarCalledfail(
+                          context, SnackbarData().userNameNotAvailable);
+                      return;
+                    }
 
-  // Check if there are valid recipients other than the current user
-  bool hasValidRecipients = friendShares.keys.any((key) => key != currentId.value);
+                    // Check if there are valid recipients other than the current user
+                    bool hasValidRecipients =
+                        friendShares.keys.any((key) => key != currentId.value);
 
-  if (!hasValidRecipients) {
-    snackBarCalledfail(context,SnackbarData().noFriendsToNotify);
-    return;
-  }
+                    if (!hasValidRecipients) {
+                      snackBarCalledfail(
+                          context, SnackbarData().noFriendsToNotify);
+                      return;
+                    }
 
-  // Check if shares have valid amounts
-  bool hasValidShares = friendShares.entries.any((entry) {
-    String? key = entry.key;
-    var value = entry.value;
-    return key != null &&
-        key != currentId.value &&
-        value != null &&
-        value['Total'] != null &&
-        (value['Total'] is double || value['Total'] is int) &&
-        (value['Total'] as num) > 0;
-  });
+                    // Check if shares have valid amounts
+                    bool hasValidShares = friendShares.entries.any((entry) {
+                      String? key = entry.key;
+                      var value = entry.value;
+                      return key != null &&
+                          key != currentId.value &&
+                          value != null &&
+                          value['Total'] != null &&
+                          (value['Total'] is double || value['Total'] is int) &&
+                          (value['Total'] as num) > 0;
+                    });
 
-  if (!hasValidShares) {
-    snackBarCalledfail(context,SnackbarData().noValidSharesToNotify);
-    return;
-  }
+                    if (!hasValidShares) {
+                      snackBarCalledfail(
+                          context, SnackbarData().noValidSharesToNotify);
+                      return;
+                    }
 
-  // Proceed with sending notifications
-  bool atLeastOneNotificationSent = false;
-  friendShares.forEach((key, value) {
-    if (key != null && key != currentId.value) {
-      // Ensure value and total are valid
-      if (value != null && value['Total'] != null && (value['Total'] is num) && (value['Total'] as num) > 0) {
-        try {
-          sendNotificationsToDevice(
-            key,
-            context,
-            "${userName.value} has shared the foodie expense of ₹${(value['Total'] as num).toStringAsFixed(2)}",
-            "/remainders",
-            "",
-            "",
-            "Notified successfully",
-          );
-          atLeastOneNotificationSent = true;
-        } catch (e) {
-          // Handle notification sending failure
-          snackBarCalledfail(context,SnackbarData().failedToSendNotification);
-        }
-      } else {
-        // Log or show warning for invalid share
-        snackBarCalledfail(context,SnackbarData().invalidShareAmount);
-      }
-    }
-  });
+                    // Proceed with sending notifications
+                    bool atLeastOneNotificationSent = false;
+                    friendShares.forEach((key, value) {
+                      if (key != null && key != currentId.value) {
+                        // Ensure value and total are valid
+                        if (value != null &&
+                            value['Total'] != null &&
+                            (value['Total'] is num) &&
+                            (value['Total'] as num) > 0) {
+                          try {
+                            sendNotificationsToDevice(
+                              key,
+                              context,
+                              "${userName.value} has shared the foodie expense of ₹${(value['Total'] as num).toStringAsFixed(2)}",
+                              "/remainders",
+                              "",
+                              "",
+                              "Notified successfully",
+                            );
+                            atLeastOneNotificationSent = true;
+                            Navigator.pop(context);
+                          } catch (e) {
+                            // Handle notification sending failure
+                            snackBarCalledfail(context,
+                                SnackbarData().failedToSendNotification);
+                          }
+                        } else {
+                          // Log or show warning for invalid share
+                          snackBarCalledfail(
+                              context, SnackbarData().invalidShareAmount);
+                        }
+                      }
+                    });
 
-  // Show success message if at least one notification was sent
-  if (atLeastOneNotificationSent) {
-  } else {
-    snackBarCalledfail(context,SnackbarData().noNotificationsSent);
-  }
-},
+                    // Show success message if at least one notification was sent
+                    if (atLeastOneNotificationSent) {
+                    } else {
+                      snackBarCalledfail(
+                          context, SnackbarData().noNotificationsSent);
+                    }
+                  },
                   child: Container(
                     width: MediaQuery.of(context).size.width / 2.2,
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
@@ -374,7 +397,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                     ),
                     child: Center(
                       child: Text(
-                       PlotFinanceStaticData().notifyButton,
+                        PlotFinanceStaticData().notifyButton,
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.bold,
@@ -423,7 +446,8 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                     alignment: Alignment.topRight,
                     children: [
                       AvatarProfile(
-                        background: friend['avatarBackGround'] ?? defaultBackGround.value,
+                        background: friend['avatarBackGround'] ??
+                            defaultBackGround.value,
                         width: 8,
                         height: 18,
                         name: friend['name'],
@@ -484,39 +508,46 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
             children: options.map((option) {
               bool isSelected =
                   selectedOptions[friendId]?.contains(option) == true;
+              bool isDisabled =
+                  (option == 'Veg' && vegController.text.isEmpty) ||
+                      (option == 'Non veg' && nonVegController.text.isEmpty) ||
+                      (option == 'Alcohol' && alcoholController.text.isEmpty);
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: ChoiceChip(
                   label: Text(
                     option,
-                    style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.w700,
-                      fontSize: 14,
-                      color: isSelected?AppColors.backgroundColor:AppColors.accentColor
-                    ),
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.w700,
+                        fontSize: 14,
+                        color: isSelected
+                            ? AppColors.backgroundColor
+                            : AppColors.accentColor),
                   ),
                   selected: isSelected,
                   showCheckmark: false,
                   selectedColor: AppColors.primaryColor,
                   backgroundColor: AppColors.mt,
-                  onSelected: (selected) {
-                    setState(() {
-                      if (friendId != null) {
-                        if (selected) {
-                          selectedOptions
-                              .putIfAbsent(friendId, () => [])
-                              .add(option);
-                        } else {
-                          selectedOptions[friendId]?.remove(option);
-                          if (selectedOptions[friendId]?.isEmpty ?? false) {
-                            selectedOptions.remove(friendId);
-                          }
-                        }
-                        _calculateShares();
-                      }
-                    });
-                  },
+                  onSelected: isDisabled
+                      ? null
+                      : (selected) {
+                          setState(() {
+                            if (friendId != null) {
+                              if (selected) {
+                                selectedOptions
+                                    .putIfAbsent(friendId, () => [])
+                                    .add(option);
+                              } else {
+                                selectedOptions[friendId]?.remove(option);
+                                if (selectedOptions[friendId]?.isEmpty ??
+                                    false) {
+                                  selectedOptions.remove(friendId);
+                                }
+                              }
+                              _calculateShares();
+                            }
+                          });
+                        },
                 ),
               );
             }).toList(),
@@ -537,7 +568,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
           limitedFriends.isEmpty
               ? Center(
                   child: Text(
-                   PlotFinanceStaticData().calculateButton,
+                    PlotFinanceStaticData().calculateButton,
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.w500,
@@ -574,7 +605,8 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                               "name": limitedFriends[index]['name'],
                               "id": id,
                               'avatar': limitedFriends[index]['avatar'],
-                              'avatarBackGround': limitedFriends[index]['avatarBackGround'],
+                              'avatarBackGround': limitedFriends[index]
+                                  ['avatarBackGround'],
                               "balance": 200,
                             });
                             selectedOptions[id] = [];
@@ -586,7 +618,9 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        color: isSelected ? Colors.green[50] :  AppColors.backgroundColor,
+                        color: isSelected
+                            ? Colors.green[50]
+                            : AppColors.backgroundColor,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 2, vertical: 5),
@@ -598,7 +632,8 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                   name: limitedFriends[index]['name'],
                                   width: 10,
                                   height: 10,
-                                  background: limitedFriends[index]['avatarBackGround'],
+                                  background: limitedFriends[index]
+                                      ['avatarBackGround'],
                                   flag: true,
                                   fontsize: 7,
                                 ),
@@ -624,8 +659,11 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                       addedMembers.add({
                                         "name": limitedFriends[index]['name'],
                                         "id": id,
-                                        'avatar': limitedFriends[index]['avatar'],
-                                        'avatarBackGround': limitedFriends[index]['avatarBackGround'],
+                                        'avatar': limitedFriends[index]
+                                            ['avatar'],
+                                        'avatarBackGround':
+                                            limitedFriends[index]
+                                                ['avatarBackGround'],
                                         "balance": 200,
                                       });
                                       selectedOptions[id] = [];
@@ -661,7 +699,6 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
             keyboardType: keyboard,
             controller: textController,
             onChanged: (v) {
-
               List filtered = [];
 
               if (v.trim().isEmpty) {
@@ -679,8 +716,6 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                 frdsList.clear();
                 frdsList.addAll(limited);
               });
-
-            
             },
             decoration: InputDecoration(
               filled: true,
@@ -705,6 +740,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       ),
     );
   }
+
   Widget _buildInputColumn(String label, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
@@ -727,7 +763,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
               keyboardType: TextInputType.number,
               inputFormatters: allowDecimalInput(),
               onChanged: (value) {
-                 _calculateShares();
+                _calculateShares();
               },
               decoration: InputDecoration(
                 contentPadding:
@@ -742,6 +778,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       ),
     );
   }
+
   void addSocketMessage(addedUser, String amount, String splitName,
       String splitID, double totalAmount) {
     if (addedUser.isEmpty) return;
@@ -775,6 +812,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       socket.emit("LoadCharts", {"roomId": userToSend});
     });
   }
+
   void splitUserAmountFood(context, String amount, List members, String name,
       String subCategories, dynamic shareFriends) async {
     List nameList = [];
@@ -792,8 +830,6 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
         'amount': doubleToFixed(data['Total'].toString()),
         'isVegNonVeg': true,
         'priorities': data,
-        
-
       });
     });
     final SharedPreferences _pref = await SharedPreferences.getInstance();
@@ -807,11 +843,9 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       "paymentStatus": nameList,
       "image": '',
       'isVegNonVeg': true,
-      "ismanual":true,
-      'isFoodie':true
+      "ismanual": true,
+      'isFoodie': true
     };
-
-  
 
     final response = await http.post(
       Uri.parse('${url}/split'),
@@ -826,15 +860,14 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       final body = json.decode(response.body);
       splitID.value = body['id']['_id'];
 
-      List<dynamic> uniqueNameList = {
-        for (var item in nameList) item['id']: item
-      }.values.toList();
+      List<dynamic> uniqueNameList =
+          {for (var item in nameList) item['id']: item}.values.toList();
 
       uniqueNameList.forEach((e) {
         for (var e in nameList) {
           if (e['id'] != currentId.value) {
             // Log notification details
-           
+
             sendNotificationsToDevice(
                 e['id'],
                 context,
@@ -847,10 +880,10 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
       addSocketMessage(nameList, amount.toString(), "Calculation".toString(),
           splitID.value, totalAmount);
 
-      snackBarCalled(context,SnackbarData().splitAmountSent);
+      snackBarCalled(context, SnackbarData().splitAmountSent);
       Navigator.pop(context);
     } else {
-      snackBarCalled(context,SnackbarData().authenticationError, Colors.red);
+      snackBarCalled(context, SnackbarData().authenticationError, Colors.red);
     }
     acceptReset.value = false;
   }
