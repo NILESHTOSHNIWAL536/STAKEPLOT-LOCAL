@@ -12,6 +12,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/backServic
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/resetPin.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -214,13 +215,18 @@ class _NumberPickerScreenState extends State<NumberPickerScreen> {
   }
 Widget setPinForAccountHide(context) {
   return Obx(() {
-    if (cupertinoPin.value == "0" || cupertinoPin.value.isEmpty) { // Handle empty case too
+    if (cupertinoPin.value == "0" || cupertinoPin.value.isEmpty || AttemptCount.value) { // Handle empty case too
      
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 5),
         child: InkWell(
           onTap: () {
-          
+
+            if(AttemptCount.value)
+            {
+              resetCupertinoPin(context);
+              return;
+            }
             showModalBottomSheet(
               context: context,
               backgroundColor: Colorcodes.appBarColor,
@@ -237,15 +243,15 @@ Widget setPinForAccountHide(context) {
               color: AppColors.bg3,
             ),
             child: Center(
-              child: Text(
-                HomepageStringsDart().setPinButton,
+              child: Obx(()=>  Text(
+               ! AttemptCount.value?  HomepageStringsDart().setPinButton: HomepageStringsDart().resetCupertinoPin,
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.normal,
                   fontSize: 12,
                   color: AppColors.backgroundColor,
                 ),
-              ),
+              )),
             ),
           ),
         ),
@@ -333,30 +339,29 @@ Widget setPinForAccountHide(context) {
                     onTap: isInvalidPin
                         ? null
                         : () {
-                          
                             setPasswordApiCalled(context, combinedInput);
                           },
                     child:  Container(
-        width: MediaQuery.of(context).size.width / 1.1,
-        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
-        decoration: BoxDecoration(
-          color: isInvalidPin
-              ? AppColors.bg3
-              : AppColors.primaryColor, // Button color based on validity
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: Center(
-          child: Text(
-            HomepageStringsDart().confirmButton,
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.bold,
-              fontSize: 18,
-              color: AppColors.bg5,
-            ),
-          ),
-        ),
-      ),
+                      width: MediaQuery.of(context).size.width / 1.1,
+                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 20),
+                      decoration: BoxDecoration(
+                        color: isInvalidPin
+                            ? AppColors.bg3
+                            : AppColors.primaryColor, // Button color based on validity
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Center(
+                        child: Text(
+                          HomepageStringsDart().confirmButton,
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: AppColors.bg5,
+                          ),
+                        ),
+                      ),
+                    ),
                   );
                 }),
               ],

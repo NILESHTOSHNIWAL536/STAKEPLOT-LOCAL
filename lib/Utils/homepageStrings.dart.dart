@@ -35,6 +35,7 @@ class HomepageStringsDart {
   String accountNumberLabel = "Acc No : ";
   String availableBalanceLabel = "Available balance";
   String setPinButton = "Set Pin";
+  String resetCupertinoPin = "Reset Pin";
   String setLockTitle = "Set lock";
   String confirmButton = "Confirm";
 
@@ -165,6 +166,7 @@ class HomepageStringsDart {
 accountNumberLabel = data['accountNumberLabel'] ?? accountNumberLabel;
          availableBalanceLabel = data['availableBalanceLabel'] ?? availableBalanceLabel;
         setPinButton = data['setPinButton'] ?? setPinButton;
+        resetCupertinoPin = data['resetCupertinoPin'] ?? resetCupertinoPin;
         setLockTitle = data['setLock'] ?? setLockTitle;
         confirmButton = data['confirmButton'] ?? confirmButton;
 // Finance page

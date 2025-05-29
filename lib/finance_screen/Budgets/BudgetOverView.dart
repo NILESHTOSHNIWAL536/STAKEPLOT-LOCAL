@@ -202,17 +202,11 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                       Expanded(
                         flex: 2,
                         child: TextField(
-                          controller: TextEditingController(
-                            text: categoriesDividedList[index]['amount']
-                                .toString(),
-                          ),
+                          controller: TextEditingController(text: categoriesDividedList[index]['amount'].toString(),),
                           inputFormatters: allowDecimalInput(),
                           decoration: InputDecoration(
-                            //  prefixIcon: Icon(Icons.currency_rupee),
-                            contentPadding: EdgeInsets.symmetric(
-                                vertical: 0,
-                                horizontal: 4), // Removes extra spacing
-                            isDense: true, // Reduces extra height
+                            contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 4), 
+                            isDense: true,
                             hintText: PlotFinanceStaticData().enterAmountHint,
                             hintStyle: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.w400,
@@ -227,8 +221,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                             if (_validateAmount(value, widget.amount)) {
                               onsubmit(index, value);
                             } else {
-                              snackBarCalled(
-                                  context, SnackbarData().amountExceed);
+                              snackBarCalled(context, SnackbarData().amountExceed);
                             }
                           },
                         ),

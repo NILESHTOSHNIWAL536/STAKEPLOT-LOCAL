@@ -74,6 +74,7 @@ RxBool myNotificationBool = false.obs;
 RxBool clickedLinkedBackAccount = false.obs;
 RxBool setBankAccountPassword = false.obs;
 RxBool hideBackAccountPassword = false.obs;
+RxBool AttemptCount = false.obs;
 var coin = "Loading....";
 
 bool sizeRoom = false;

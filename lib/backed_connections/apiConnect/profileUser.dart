@@ -163,6 +163,7 @@ void getUserInfomations() async {
     aboutMe.value = (obj['aboutMe'] == "Hello");
     aboutUS.value = obj['aboutMe'];
     selectedBank.value = obj['selectedBank'] ?? "";
+    AttemptCount.value = obj['cupertinoAttemptCount'] != null ?  obj['cupertinoAttemptCount'] > 5:false;
     userAvatarBackGround.value = obj['avatarBackGround'] ?? "#FA7070";
 
     List s = obj['accounts'];

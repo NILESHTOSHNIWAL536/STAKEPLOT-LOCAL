@@ -29,7 +29,8 @@ void setPasswordApiCalled(context, String password) async {
     'pin': password.toString(),
   });
 
-  if (getFlagOfResponse(response)) {
+  if (getFlagOfResponse(response))
+  {
     cupertinoPin.value = password;
     snackBarCalled(context, SnackbarData().pinSetSuccess, Colors.black);
   } else {
@@ -77,8 +78,13 @@ void pinPasswordVerify(
 
         setBack(); // Callback
       });
-    } else {
+    } else
+     {
+      var errorResponse = jsonDecode(response.body);
+      
+      AttemptCount.value = (errorResponse['count'] ?? 0) >4;
       hideBackAccountPassword.value = false;
+
     }
   } catch (e) {
     hideBackAccountPassword.value = false;
