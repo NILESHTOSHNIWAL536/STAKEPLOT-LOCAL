@@ -55,13 +55,7 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
   if (parts.isEmpty || parts.length == 1) parts = narration.split('&');
   if (parts.isEmpty || parts.length == 1) parts = narration.split(' ');
 
-  String nameOfUser = parts.length >= 4
-      ? parts[3]
-      : parts.length >= 3
-          ? parts[2]
-          : parts.length >= 2
-              ? parts[1]
-              : parts[0];
+  String nameOfUser =  transaction['title'] !=null ?  transaction['title'] :  parts.length >= 4? parts[3]: parts.length >= 3? parts[2]: parts.length >= 2? parts[1]: parts[0];
 
   final amtColor = type == 'CREDIT'
       ? Colors.green.shade700
@@ -246,9 +240,10 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
                                           Tooltip(
                                             message: narration,
                                             child: Container(
+                                              // color: Colorcodes.red,
                                               width: MediaQuery.sizeOf(context)
                                                       .width /
-                                                  3,
+                                                  2.4,
                                               child: textStyle(
                                                 context: context,
                                                 text: !isManual
@@ -262,12 +257,15 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
                                               ),
                                             ),
                                           ),
-                                          textStyle(
-                                            context: context,
-                                            text: formatAmount,
-                                            c: amtColor,
-                                            fontsize: fontSizes.fontSizeLarge,
-                                            fontWeight: FontWeight.bold,
+                                          Container(
+                                            // color: Colorcodes.red,
+                                            child: textStyle(
+                                              context: context,
+                                              text: formatAmount,
+                                              c: amtColor,
+                                              fontsize: fontSizes.fontSizeLarge,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ],
                                       ),

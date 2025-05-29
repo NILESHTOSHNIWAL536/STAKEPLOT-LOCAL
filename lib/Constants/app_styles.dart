@@ -886,7 +886,7 @@ class FontSizeFactor {
         iconSize = 14.0 * MediaQuery.of(context).size.width / 360,
         avatarSize = 40.0 * MediaQuery.of(context).size.width / 360,
         fontSizeLarge = 16.0 * MediaQuery.of(context).size.width / 360,
-        fontSizeMedium = 12.0 * MediaQuery.of(context).size.width / 360,
+        fontSizeMedium = 11.0 * MediaQuery.of(context).size.width / 360,
         fontSizeSmall = 10.0 * MediaQuery.of(context).size.width / 360,
         badgeSize = 20.0 * MediaQuery.of(context).size.width / 360;
 }

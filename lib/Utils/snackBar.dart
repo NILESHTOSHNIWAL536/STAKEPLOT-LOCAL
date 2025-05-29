@@ -56,6 +56,7 @@ String noNotificationsSent = "No notifications sent due to invalid data.";
   String pinSetFail00 = "Unable to set the PIN 00 except 00 try other!";
   String pinSetSuccess = "Your PIN has been set successfully!";
   String pinSetFail = "Unable to set the PIN!";
+  String maxLimitSetFail = "Attempted to set a maximum limit, but it failed. Please Reset Pin.";
   String otpAccepted = "OTP Accepted!";
   String otpInvalid = "Invalid OTP!";
   String passwordChanged = "Password changed!";
@@ -193,6 +194,7 @@ String amountExceed = "Amount exceeds the total budget!";
       {
         var data = jsonDecode(response.body);
         data = data['data'] ?? {};
+        maxLimitSetFail = data['maxLimitSetFail'] ?? maxLimitSetFail;
         remainderError = data['remainderError'] ?? remainderError;
         remainder = data['remainder'] ?? remainder;
         paymentsInit = data['paymentsInit'] ?? paymentsInit;
