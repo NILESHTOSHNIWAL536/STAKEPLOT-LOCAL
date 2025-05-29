@@ -63,7 +63,7 @@ class _SigninState extends State<Signin> {
               textHeader(),
               getTextFeilds(),
               siginButton(),
-              // signinWith(),
+               signinWith(),
               forgotPassword(),
               dontHaveAccount(),
             ],
@@ -234,7 +234,7 @@ class _SigninState extends State<Signin> {
   Widget containerIconSiginWith(IconData icon, Color color) {
     return InkWell(
       onTap: () async {
-        await GoogleAuthService().signInWithGoogle();
+        await AuthService().signInWithGoogle();
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 Widget historyButton(double fontSizeFactor,BuildContext context) {
     return InkWell(
       onTap: (){
+        HapticFeedback.selectionClick();
   
                     // getAllTransaction(context);
                     isLoadingMore.value=false;

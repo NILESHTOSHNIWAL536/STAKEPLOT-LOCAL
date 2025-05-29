@@ -588,6 +588,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
       },
       onTap: () {
         if (widget.data == i) return;
+         HapticFeedback.mediumImpact();
         try {
           String tabName = _tabNames[i];
           ScreenTimeTracker().switchTab(tabName);

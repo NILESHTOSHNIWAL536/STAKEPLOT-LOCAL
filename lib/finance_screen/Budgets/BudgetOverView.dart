@@ -36,9 +36,18 @@ class BudgetOverView extends StatefulWidget {
 class _BudgetOverViewState extends State<BudgetOverView> {
   Map<String, double> updatedAmounts = {};
   bool _isProcessing = false;
+  List<TextEditingController> _controllers = [];
+  List<FocusNode> _focusNodes = [];
+
   @override
   void initState() {
     super.initState();
+    // Initialize controllers and focus nodes for each category
+    for (var category in widget.categoryList) {
+      _controllers.add(TextEditingController(
+          text: category['amount']?.toString() ?? '0'));
+      _focusNodes.add(FocusNode());
+    }
   }
 
   @override
@@ -214,10 +223,12 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                       Expanded(
                         flex: 2,
                         child: TextField(
-                          controller: TextEditingController(
-                            text: categoriesDividedList[index]['amount']
-                                .toString(),
-                          ),
+                          // controller: TextEditingController(
+                          //   text: categoriesDividedList[index]['amount']
+                          //       .toString(),
+                          // ),
+                           controller: _controllers[index],
+                          focusNode: _focusNodes[index],
                           
                           inputFormatters: allowDecimalInput(),
                           decoration: InputDecoration(
@@ -239,6 +250,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                           onSubmitted: (value) {
                             if (_validateAmount(value, widget.amount)) {
                               onsubmit(index, value);
+                               setState(() {});
                             } else {
                               snackBarCalled(
                                   context, SnackbarData().amountExceed);
@@ -260,7 +272,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
 
   void onsubmit(index, value) async {
     categoriesDividedList[index]['amount'] = double.tryParse(value) ?? 0;
-
+_controllers[index].text = value;
     var d = await adjustBudget(double.parse(widget.amount),
         categoriesDividedList[index]['category'], double.parse(value), cat);
     // {Bills: 1500.67, Insurance: 1791.39, Travel: 2507.94}
