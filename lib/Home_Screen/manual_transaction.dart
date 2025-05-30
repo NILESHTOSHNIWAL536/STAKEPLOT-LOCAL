@@ -1222,9 +1222,7 @@ class ModalContent extends StatefulWidget {
 }
 
 class _ModalContentState extends State<ModalContent>
-    with TickerProviderStateMixin
-
- {
+    with TickerProviderStateMixin {
   String? selectedCategory;
   String? selectedSubCategory;
   final TextEditingController _amountController = TextEditingController();
@@ -1243,14 +1241,14 @@ class _ModalContentState extends State<ModalContent>
   // List addedMembers=[];
   bool _isAmountFieldFocused = true;
   late IO.Socket socket;
- 
+
   late stt.SpeechToText _speech;
   bool _isListening = false;
   bool _isProcessing = false;
   String _recognizedText = '';
   late AnimationController _micAnimationController;
   late Animation<double> _micAnimation;
-
+  int _retryCount = 0;
   @override
   void initState() {
     super.initState();
@@ -1258,7 +1256,8 @@ class _ModalContentState extends State<ModalContent>
     getAllTransaction(context);
     getCategoryData();
     filteredCategories = categories.keys.toList();
-    _confettiController = ConfettiController(duration: const Duration(seconds: 2));
+    _confettiController =
+        ConfettiController(duration: const Duration(seconds: 2));
     _iconAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -1270,15 +1269,30 @@ class _ModalContentState extends State<ModalContent>
     _micAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
       CurvedAnimation(parent: _micAnimationController, curve: Curves.easeInOut),
     );
-    socket = IO.io(urlWithLocallHost, IO.OptionBuilder().setTransports(['websocket']).build());
+    socket = IO.io(urlWithLocallHost,
+        IO.OptionBuilder().setTransports(['websocket']).build());
     setUpSocketListener();
+    _checkInitialPermissions();
+  }
+
+  Future<void> _checkInitialPermissions() async {
+    var status = await Permission.microphone.status;
+    if (status.isPermanentlyDenied) {
+      snackBarCalled(
+          context,
+          'Microphone permission denied. Please enable it in settings.',
+          Colors.red);
+    }
   }
 
   // Request microphone permission
   Future<bool> _requestMicrophonePermission() async {
     var status = await Permission.microphone.request();
     if (status.isPermanentlyDenied) {
-      snackBarCalled(context, 'Microphone permission denied. Please enable it in settings.', Colors.red);
+      snackBarCalled(
+          context,
+          'Microphone permission denied. Please enable it in settings.',
+          Colors.red);
       await openAppSettings();
       return false;
     }
@@ -1304,7 +1318,8 @@ class _ModalContentState extends State<ModalContent>
           _isProcessing = false;
           _micAnimationController.stop();
         });
-        snackBarCalled(context, 'Speech recognition failed: ${error.errorMsg}', Colors.red);
+        snackBarCalled(context, 'Speech recognition failed: ${error.errorMsg}',
+            Colors.red);
       },
     );
 
@@ -1335,7 +1350,10 @@ class _ModalContentState extends State<ModalContent>
         _isListening = false;
         _isProcessing = false;
       });
-      snackBarCalled(context, 'Speech recognition not available. Ensure Google Speech Services are installed.', Colors.red);
+      snackBarCalled(
+          context,
+          'Speech recognition not available. Ensure Google Speech Services are installed.',
+          Colors.red);
     }
   }
 
@@ -1360,50 +1378,96 @@ class _ModalContentState extends State<ModalContent>
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  _isListening ? 'Speak now' : 'Processing...',
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.bold, fontSize: 18, color: AppColors.accentColor),
-                ),
-                const SizedBox(height: 16),
-                ScaleTransition(
-                  scale: _micAnimation,
-                  child: Icon(
-                    Icons.mic,
-                    size: 48,
-                    color: AppColors.primaryColor,
+            child: FocusScope(
+              node: FocusScopeNode(),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    _isListening ? 'Speak now' : 'Processing...',
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.bold, fontSize: 18, color: AppColors.accentColor),
+                    semanticsLabel: _isListening ? 'Speak now' : 'Processing',
                   ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  _recognizedText.isEmpty ? 'Say amount and category (e.g., "500 Zomato")' : 'Heard: $_recognizedText',
-                  style: FontManager().getTextStyle(context, fontSize: 16, color: AppColors.accentColor),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                TextButton(
-                  onPressed: () {
-                    _stopListening();
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    'Cancel',
-                    style: FontManager().getTextStyle(context, fontSize: 14, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      if (!_isListening)
+                        CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.yellow),
+                          strokeWidth: 3,
+                        ),
+                      ScaleTransition(
+                        scale: _micAnimation,
+                        child: Container(
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: _isListening ? Colors.green.withOpacity(0.2) : Colors.yellow.withOpacity(0.2),
+                          ),
+                          child: Icon(
+                            Icons.mic,
+                            size: 48,
+                            color: _isListening ? Colors.green : Colors.yellow,
+                            semanticLabel: 'Microphone',
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                  const SizedBox(height: 16),
+                  Text(
+                    _recognizedText.isEmpty
+                        ? 'Say amount and category (e.g., "500 Zomato", "Zomato 500")'
+                        : 'Heard: $_recognizedText',
+                    style: FontManager().getTextStyle(context, fontSize: 16, color: AppColors.accentColor),
+                    textAlign: TextAlign.center,
+                    semanticsLabel: _recognizedText.isEmpty
+                        ? 'Say amount and category'
+                        : 'Heard: $_recognizedText',
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        focusNode: FocusNode(),
+                        onPressed: () {
+                          _stopListening();
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          'Cancel',
+                          style: FontManager().getTextStyle(context, fontSize: 14, color: Colors.red),
+                          semanticsLabel: 'Cancel speech input',
+                        ),
+                      ),
+                      if (!_isListening)
+                        TextButton(
+                          focusNode: FocusNode(),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            _startListening();
+                          },
+                          child: Text(
+                            'Retry',
+                            style: FontManager().getTextStyle(context, fontSize: 14, color: AppColors.primaryColor),
+                            semanticsLabel: 'Retry speech input',
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         );
       },
     );
   }
-
   // Process spoken text
-  void _processSpokenText(String text) async {
+ void _processSpokenText(String text) async {
     Navigator.pop(context); // Close listening modal
     if (text.isEmpty) {
       snackBarCalled(context, 'No speech detected', Colors.red);
@@ -1411,20 +1475,15 @@ class _ModalContentState extends State<ModalContent>
       return;
     }
 
-    // Normalize text and split into words
-    String normalizedText = text.toLowerCase().replaceAll(RegExp(r'^(add|for|to|in) '), '').trim();
+    // Normalize text and tokenize
+    String normalizedText = text.toLowerCase().replaceAll(RegExp(r'^(add|spend|paid|for|to|on|in|and) '), '').trim();
     List<String> parts = normalizedText.split(RegExp(r'\s+'));
-    if (parts.length < 2) {
-      snackBarCalled(context, 'Please say both amount and category/subcategory', Colors.red);
-      _isProcessing = false;
-      return;
-    }
 
     double? parsedAmount;
     String? spokenCategory;
     String? spokenSubCategory;
 
-    // Parse spoken numbers (e.g., "five hundred")
+    // Parse amount
     String numberPart = '';
     for (String part in parts) {
       double? number = double.tryParse(part.replaceAll(RegExp(r'[^0-9.]'), ''));
@@ -1435,74 +1494,110 @@ class _ModalContentState extends State<ModalContent>
       numberPart += part + ' ';
     }
 
-    // Simple number parsing for spoken numbers (e.g., "five hundred")
-    Map<String, double> numberWords = {
-      'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5,
-      'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10,
-      'hundred': 100, 'thousand': 1000
-    };
+    // Parse spoken numbers
     if (parsedAmount == null) {
+      Map<String, double> numberWords = {
+        'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5,
+        'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10,
+        'eleven': 11, 'twelve': 12, 'thirteen': 13, 'fourteen': 14, 'fifteen': 15,
+        'sixteen': 16, 'seventeen': 17, 'eighteen': 18, 'nineteen': 19,
+        'twenty': 20, 'thirty': 30, 'forty': 40, 'fifty': 50, 'sixty': 60,
+        'seventy': 70, 'eighty': 80, 'ninety': 90,
+        'hundred': 100, 'thousand': 1000
+      };
       double tempAmount = 0;
       double multiplier = 1;
-      for (String word in numberPart.trim().split(' ')) {
+      List<String> numberTokens = numberPart.trim().split(' ');
+      for (int i = 0; i < numberTokens.length; i++) {
+        String word = numberTokens[i];
         if (numberWords.containsKey(word)) {
           if (word == 'hundred' || word == 'thousand') {
             multiplier = numberWords[word]!;
           } else {
-            tempAmount += numberWords[word]! * multiplier;
-            multiplier = 1;
+            double value = numberWords[word]!;
+            if (i + 1 < numberTokens.length && numberTokens[i + 1] == 'hundred') {
+              tempAmount += value * 100;
+              i++;
+            } else if (i + 1 < numberTokens.length && numberTokens[i + 1] == 'thousand') {
+              tempAmount += value * 1000;
+              i++;
+            } else {
+              tempAmount += value * multiplier;
+              multiplier = 1;
+            }
           }
         }
       }
       if (tempAmount > 0) parsedAmount = tempAmount;
     }
 
-    // Find category or subcategory
-    for (String part in parts) {
-      String? foundCategory = categories.keys.firstWhere(
-        (cat) => cat.toLowerCase() == part,
-        orElse: () => '',
-      );
-      if (foundCategory.isNotEmpty) {
-        spokenCategory = foundCategory;
-        spokenSubCategory = 'Other';
-        continue;
+    // Parse category/subcategory with multi-word support
+    List<String> potentialWords = [];
+    for (int i = 0; i < parts.length; i++) {
+      potentialWords.add(parts[i]);
+      if (i < parts.length - 1) {
+        potentialWords.add('${parts[i]} ${parts[i + 1]}'); // Two-word phrases
       }
+      if (i < parts.length - 2) {
+        potentialWords.add('${parts[i]} ${parts[i + 1]} ${parts[i + 2]}'); // Three-word phrases
+      }
+    }
+
+    // Check for subcategory first (most specific)
+    for (String word in potentialWords) {
       categories.forEach((category, subCategories) {
-        if (subCategories.any((sub) => sub.toLowerCase() == part)) {
-          spokenCategory = category;
-          spokenSubCategory = subCategories.firstWhere((sub) => sub.toLowerCase() == part);
+        if (subCategories.any((sub) => sub.toLowerCase() == word)) {
+          if (spokenCategory == null) { // Take first valid match
+            spokenCategory = category;
+            spokenSubCategory = subCategories.firstWhere((sub) => sub.toLowerCase() == word);
+          }
         }
       });
-      if (spokenCategory == null) {
+    }
+
+    // Then check categories
+    if (spokenCategory == null) {
+      for (String word in potentialWords) {
+        String? foundCategory = categories.keys.firstWhere(
+          (cat) => cat.toLowerCase() == word,
+          orElse: () => '',
+        );
+        if (foundCategory.isNotEmpty) {
+          spokenCategory = foundCategory;
+          spokenSubCategory = 'Other';
+          break; // Take first valid category
+        }
+      }
+    }
+
+    // Then check custom categories
+    if (spokenCategory == null) {
+      for (String word in potentialWords) {
         var customCat = customCategoryList.firstWhere(
-          (cat) => cat['name'].toString().toLowerCase() == part,
+          (cat) => cat['name'].toString().toLowerCase() == word,
           orElse: () => {},
         );
         if (customCat.isNotEmpty) {
           spokenCategory = customCat['name'];
           spokenSubCategory = '';
+          break; // Take first valid custom category
         }
       }
     }
 
     if (parsedAmount == null) {
-      snackBarCalled(context, 'Invalid amount detected', Colors.red);
+      snackBarCalled(context, 'Invalid or missing amount. Please try again.', Colors.red);
       _isProcessing = false;
       return;
     }
 
     if (spokenCategory == null) {
-      snackBarCalled(context, 'Category or subcategory not recognized', Colors.red);
+      snackBarCalled(context, 'Category or subcategory not recognized. Please try again.', Colors.red);
       _isProcessing = false;
       return;
     }
 
-    if (widget.isDebit && spokenCategory == 'Income') {
-      snackBarCalled(context, 'Income category not allowed for Cash Out', Colors.red);
-      _isProcessing = false;
-      return;
-    } else if (!widget.isDebit && spokenCategory != 'Income') {
+     if (!widget.isDebit && spokenCategory != 'Income') {
       snackBarCalled(context, 'Only Income category allowed for Cash In', Colors.red);
       _isProcessing = false;
       return;
@@ -1515,7 +1610,7 @@ class _ModalContentState extends State<ModalContent>
       selectedSubCategory = spokenSubCategory ?? '';
       selectedCategory2 = selectedCategory;
       selectedSubCategory2 = selectedSubCategory;
-      fin = '$selectedCategory (${selectedSubCategory?.isEmpty==true ? 'None' : selectedSubCategory})';
+      fin = '$selectedCategory (${selectedSubCategory?.isEmpty ==true? 'None' : selectedSubCategory})';
       _isAmountFieldFocused = false;
       isCategoryFieldExpanded = false;
     });
@@ -1524,20 +1619,26 @@ class _ModalContentState extends State<ModalContent>
   }
 
   // Show confirmation dialog
-  void _showConfirmationDialog(double amount, String category, String? subCategory) {
+  void _showConfirmationDialog(
+      double amount, String category, String? subCategory) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: AppColors.mt,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: Text(
             'Confirm Transaction',
-            style: FontManager().getTextStyle(context, lWeight: FontWeight.bold, fontSize: 18, color: AppColors.accentColor),
+            style: FontManager().getTextStyle(context,
+                lWeight: FontWeight.bold,
+                fontSize: 18,
+                color: AppColors.accentColor),
           ),
           content: Text(
-            'Add ₹$amount to $category (${subCategory?.isEmpty ==true ?'None' : subCategory})?',
-            style: FontManager().getTextStyle(context, fontSize: 16, color: AppColors.accentColor),
+            'Add ₹$amount to $category (${subCategory?.isEmpty == true ? 'None' : subCategory})?',
+            style: FontManager().getTextStyle(context,
+                fontSize: 16, color: AppColors.accentColor),
           ),
           actions: [
             TextButton(
@@ -1547,7 +1648,8 @@ class _ModalContentState extends State<ModalContent>
               },
               child: Text(
                 'No',
-                style: FontManager().getTextStyle(context, fontSize: 14, color: Colors.red),
+                style: FontManager()
+                    .getTextStyle(context, fontSize: 14, color: Colors.red),
               ),
             ),
             TextButton(
@@ -1557,7 +1659,8 @@ class _ModalContentState extends State<ModalContent>
               },
               child: Text(
                 'Yes',
-                style: FontManager().getTextStyle(context, fontSize: 14, color: AppColors.primaryColor),
+                style: FontManager().getTextStyle(context,
+                    fontSize: 14, color: AppColors.primaryColor),
               ),
             ),
           ],
@@ -1572,7 +1675,7 @@ class _ModalContentState extends State<ModalContent>
     cashInAndOut.value = true;
 
     try {
-       addTransaction(
+      addTransaction(
         amount.toString(),
         selectedSubCategory2 ?? '',
         selectedCategory2!,

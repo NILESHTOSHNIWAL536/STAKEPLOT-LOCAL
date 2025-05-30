@@ -30,7 +30,6 @@ class _SigninState extends State<Signin> {
   TextEditingController passwordController =
       TextEditingController(text: "Sid@1234");
 
-
   @override
   void initState() {
     super.initState();
@@ -227,16 +226,20 @@ class _SigninState extends State<Signin> {
     return InkWell(
       onTap: () async {
         final userdata = await AuthService().signInWithGoogle(context);
-        print(userdata);
+        print("User data received: $userdata");
         if (userdata != "") {
           if (userdata!['data']['accessToken'] != null) {
+            print("Access token is present.");
           } else {
+            print("Navigating to UserDetailsPage with userdata: $userdata");
             Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => UserDetailsPage(data: userdata!)),
             );
           }
+        } else {
+          print("No user data received.");
         }
       },
       child: Container(
