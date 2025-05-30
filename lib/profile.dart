@@ -8,7 +8,6 @@ class ProfileImage extends StatelessWidget {
   ProfileImage(
       {Key? key, this.url = "assets/images2/user.svg", this.flag = false})
       : super(key: key);
-//  ProfileImage({ Key? key, this.url="assets/images/profile2.svg" }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +23,6 @@ class TrasactionIconImage extends StatelessWidget {
   TrasactionIconImage(
       {Key? key, this.url = "assets/images2/user.svg", this.flag = false})
       : super(key: key);
-//  ProfileImage({ Key? key, this.url="assets/images/profile2.svg" }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

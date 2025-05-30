@@ -3,22 +3,18 @@ import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
-import "package:flutter_application_code_stakeplot/Tribe/userDetails.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends.dart";
 import "package:flutter_application_code_stakeplot/bottomNavigations.dart";
 import "package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart";
 import "package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart";
 import "package:flutter_application_code_stakeplot/loader.dart";
-import "package:flutter_application_code_stakeplot/profile.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart";
-import "package:flutter_svg/svg.dart";
 import "package:get/get.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import 'package:http/http.dart' as http;
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
-import "package:flutter_application_code_stakeplot/colorcodes.dart";
 
 List ids = [];
 
@@ -56,9 +52,6 @@ class _TribeSearchState extends State<TribeSearch> {
   void initState() {
     super.initState();
     getTransaction();
-      // getDis();
-      // getStatus();
-      // getConnections();
   }
 
 
@@ -109,6 +102,7 @@ class _TribeSearchState extends State<TribeSearch> {
     
     } else {}
   }
+  
   void getStatus(data) async {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
@@ -164,9 +158,8 @@ class _TribeSearchState extends State<TribeSearch> {
       setState(() {
         frdsList = obj;
         frdsListOrigin = obj;
-        // frdsList = getLastTenUsers(frdsListOrigin);
         frdsThere = true;
-        frdsList =[]; //getLastTenUsers(getSearchData("", frdsListOrigin));
+        frdsList =[]; 
       });
     } else {}
   }
@@ -179,14 +172,11 @@ class _TribeSearchState extends State<TribeSearch> {
       bottomNavigationBar: BottomNavigations(data: sizeRoom ? 3 : 2),
       extendBody: true,
       body: Container(
-        // height: MediaQuery.of(context).size.height+400,
         color: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
         child: ListView(
-          // mainAxisAlignment: MainAxisAlignment.start,
-          // crossAxisAlignment: CrossAxisAlignment.center,
+         
           children: [
-            //  const SizedBox(height: 20,),
             Hero(
                 tag: "TribeSearc",
                 child: InputDate("Search", TextInputType.name, search)),
@@ -211,35 +201,30 @@ class _TribeSearchState extends State<TribeSearch> {
   Widget InputDate(lableText, keyBoard, Textcontroller) {
     return Center(
       child: Container(
-        // margin: EdgeInsets.symmetric(vertical: 5),
-        // color:  Color.fromRGBO(246, 246, 246, 1),
-        // height: 50,
+       
         width: MediaQuery.of(context).size.width / 1.1,
         child: Center(
           child: TextFormField(
             keyboardType: keyBoard,
             controller: Textcontroller,
-            onChanged: (value) {
+            onChanged: (value) 
+            {
               setState(() {
                 if(value=="")frdsList=[];
                 else frdsList = getLastTenUsers(getSearchData(value, frdsListOrigin));
               });
+              
             },
             decoration: InputDecoration(
               prefixIcon: Icon(Icons.search),
-              //prefixIconColor: Colorcodes.budgetDarkGreen,
               filled: true,
               contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 14),
               hintText: lableText,
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(24),
-                // borderSide: BorderSide(color: Colorcodes.budgetDarkGreen
-                //     // color: Color.fromRGBO(249, 246, 238, 1)
-                //     )
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(24),
-                //borderSide: BorderSide(color: Colorcodes.budgetDarkGreen)
               ),
               fillColor: AppColors.button,
               border: InputBorder.none,
@@ -272,18 +257,7 @@ class _TribeSearchState extends State<TribeSearch> {
             children: [
               Row(
                 children: [
-                  //  const Icon(
-                  //         Icons.person_pin_sharp,
-                  //         size: 35,
-                  //         color: Colors.black,
-                  //       ),
-
-                  // Container(
-                  //     child: AvatarProfileImage(
-                  //         url:avaterUrlPath( data['name'] ?? userAvatar) ,
-                  //         width: 20,
-                  //         height: 20
-                  // )),
+                 
                   AvatarProfile(name: data['name'], width: 30, height: 13,background:data['avatarBackGround'] ?? defaultBackGround.value,),
 
                   const SizedBox(
@@ -366,15 +340,8 @@ void showmodalWidget(data){
                 Text(data['name'].toString(),
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w600,
-                        //fontSize: MediaQuery.of(context).size.width * 0.04,
-                        //fontSize: 12,
-                        color: AppColors.bg1)),
-                // Text((data['email'] ?? "").toString(),
-                //     style: FontManager().getTextStyle(context,
-                //         lWeight: FontWeight.w400,
-                //         //fontSize: MediaQuery.of(context).size.width * 0.04,
-                //         //fontSize: 12,
-                //         color: AppColors.userName)),
+                       color: AppColors.bg1)),
+               
                 const SizedBox(height:10),
 
                  InkWell(

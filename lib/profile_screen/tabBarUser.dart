@@ -87,7 +87,6 @@ class TabBarUser extends StatelessWidget {
     }
     return SingleChildScrollView(
       child: Column(
-        // mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
             child: Column(
@@ -101,15 +100,7 @@ class TabBarUser extends StatelessWidget {
               }).toList(),
             ),
           ),
-          // Container(
-          //   child: Column(
-          //     children: userPostList
-          //         .map((item) => (item['isPoll'] ?? false )
-          //             ? const SizedBox.shrink()
-          //             : PostCard(data: item,index: ,))
-          //         .toList(),
-          //   ),
-          // ),
+          
           SizedBox(
             height: 100,
           ),
@@ -140,13 +131,7 @@ class TabBarUser extends StatelessWidget {
               }).toList(),
             ),
           ),
-          // Container(
-          //     child: Wrap(
-          //         children: userPostList
-          //             .map((item) => (item['isPoll'] ?? false)
-          //                 ? PostCard(data: item,index: ,)
-          //                 : SizedBox.shrink())
-          //             .toList())),
+        
           SizedBox(
             height: 100,
           ),
@@ -177,9 +162,7 @@ class TabBarUser extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          // Subtitle
-
-          // Optional: Subtle decorative container
+          
         ],
       ),
     );

@@ -2,28 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/NavigatorScreens/userNavigator.dart';
 import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
-import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/onboarding_screens/onboarding_screen.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
-import 'package:flutter_application_code_stakeplot/profile_screen/communityProfileScreen.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_Details.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/hiddenTransaction.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/webView.dart';
-import 'package:http/http.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class ProfileScreenDart extends StatefulWidget {

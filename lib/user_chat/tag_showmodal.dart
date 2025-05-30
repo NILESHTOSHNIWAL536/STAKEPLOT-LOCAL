@@ -5,7 +5,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
@@ -14,7 +14,6 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/openShowModal.dart';
@@ -72,16 +71,10 @@ class _TagShowmodalState extends State<TagShowmodal>
       curve: Curves.easeOut,
     ));
 
-    // Start animation
+    
     _controller.forward();
     custom = getthelist();
 
-    // Delay opacity animation
-    // Future.delayed(Duration(milliseconds: 1000), () {
-    //   setState(() {
-    //     opacity = 1.0;
-    //   });
-    // });
   }
 
   String getIconPath(String category) {
@@ -483,16 +476,7 @@ class _TagShowmodalState extends State<TagShowmodal>
         padding: const EdgeInsets.symmetric(horizontal: 5),
         child: Column(
           children: [
-            //     Chip(
-            // avatar: ProfileImage(
-            //   url: BudgetSubCategories.listofSubCategories[s].toString(),
-            // ),
-            // label: textStyle(context: context,text:s,fontsize: widget.data['subcategory']==s?13:11,fontWeight: FontWeight.bold,c: widget.data['subcategory']==s?AppColors.bg2:AppColors.primaryColor),
-            // backgroundColor: AppColors.button,
-            // shape: RoundedRectangleBorder(
-            //   borderRadius: BorderRadius.circular(12),
-            // ),
-            // ),
+          
             SizedBox(
               height: MediaQuery.sizeOf(context).height / 30,
               width: MediaQuery.sizeOf(context).width / 10,

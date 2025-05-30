@@ -3,9 +3,10 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_Api.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/tagandhidebutton.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_AppBar.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/tagandhidebutton.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
@@ -13,7 +14,6 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:get/get.dart';
 
 final TextEditingController searchController = TextEditingController();
@@ -34,7 +34,6 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize filtered transactions with all transactions
     currentPage=1;
     addManually.clear();
     getAllTransactionHistory(context, false, false,isRefreshing: true);
@@ -58,86 +57,7 @@ void _onScroll() {
   Widget build(BuildContext context) {
     return  Scaffold(
       backgroundColor: AppColors.backgroundColor,
-     appBar: AppBar(
-       backgroundColor: AppColors.backgroundColor,
-     // Flat design for a modern look
-      title: Text(
-     HomepageStringsDart().historyTitle,
-    style: FontManager().getTextStyle(
-      context,
-      lWeight: FontWeight.w600, // Slightly bolder for emphasis
-      fontSize: 18, // Slightly larger for better readability
-      color: AppColors.accentColor,
-    ),
-      ),
-       // Center the title for symmetry
-      leading: IconButton(
-    icon: Icon(
-      Icons.arrow_back_ios, // More refined back icon
-      color: AppColors.accentColor,
-      size: 24, // Slightly smaller for balance
-    ),
-    onPressed: (){
-     clearTransactions(context: context);
-      Navigator.pop(context);
-    },
-    splashRadius: 20, // Smaller splash radius for a subtle effect
-      ),
-      actions: [
-    Padding(
-      padding: const EdgeInsets.only(right: 16.0), // Proper spacing
-      child: InkWell(
-        onTap: ()
-        {
-            int len=bankAccountLinkedList.length;
-          if(len==0){
-               snackBarCalled(context, SnackbarData().noBankForLinking);
-          }
-          else if(len==1)
-          {
-             accountIdPdf.value=bankAccountLinkedList[0]['accountId'];
-             showModalForPdfDownload(context);
-          }
-          else
-          {
-             accountIdPdf.value=bankAccountLinkedList[0]['accountId'];
-             showModalForPdfDownloadBankUiCheckBox(context);
-          }
-        },
-        splashColor: AppColors.accentColor.withOpacity(0.2), // Subtle splash effect
-        borderRadius: BorderRadius.circular(12), // Rounded ripple effect
-        child: Container(
-          padding: const EdgeInsets.all(8.0), 
-                   decoration: BoxDecoration(
-            color: Colors.grey.withOpacity(0.1), // Added filled color grey
-            borderRadius: BorderRadius.circular(16), // Added rounded borders
-          ), // Comfortable tap area// Comfortable tap area
-        
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.download_for_offline, // Modern, appealing download icon
-                size: 15, // Slightly smaller to balance with text
-                color: AppColors.accentColor,
-              ),
-              const SizedBox(width: 2), // Spacing between icon and text
-              Text(
-                HomepageStringsDart().myStatement,
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.w600, // Semi-bold for readability
-                  fontSize: 10, // Compact to fit AppBar
-                  color: AppColors.accentColor,
-                ),
-              ),
-            ])
-        ),
-      ),
-    ),
-      ],
-     
-    ),
+     appBar: historyAppBar(context),
     
      body: Column(
         children: [
@@ -167,7 +87,7 @@ void _onScroll() {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                             getTextFeild(),
+                            getTextFeild(),
                             InkWell(onTap: ()
                             { 
                                showModalBottomSheet(context: context, builder: (_)=>

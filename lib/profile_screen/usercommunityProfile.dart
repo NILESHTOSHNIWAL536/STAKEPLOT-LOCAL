@@ -1,24 +1,15 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
-import 'package:flutter_application_code_stakeplot/loader.dart';
-import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/tabBarUser.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
+
 
 class CommunityUserProfile extends StatefulWidget {
    final data;
@@ -50,12 +41,10 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
   RxString buttonValue="Add".obs;
   RxString frdRequest="Friend Request not sent before".obs;
   RxString frdRequestCheck="Friend Request not sent before".obs;
-   File? _profileImage;
   File? _coverImage;
 
   
-  String _networkImageUrl =
-      "https://static.vecteezy.com/system/resources/thumbnails/045/713/367/small_2x/aesthetic-leaves-on-a-dark-background-free-photo.jpg"; // This can be dynamically set
+  String _networkImageUrl = "https://static.vecteezy.com/system/resources/thumbnails/045/713/367/small_2x/aesthetic-leaves-on-a-dark-background-free-photo.jpg"; // This can be dynamically set
 
 
 
@@ -67,18 +56,12 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
   }
 
   void getDis() async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-    final response = await http.get(
-      Uri.parse('${url}/post/userDiscussions/${widget.data['_id']}'),
-      // Uri.parse('https://stakeplot.in/api/v1/post/all'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-    );
- 
-    if (response.statusCode == 200) {
+   
+    
+    var response=await getDataApiCall('${url}/post/userDiscussions/${widget.data['_id']}');
+    
+    if (getFlagOfResponse(response))
+     {
       var his = jsonDecode(response.body);
       var obj = his['data'];
        
@@ -97,43 +80,26 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
   }
 
   void getConnections() async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-    
-    final response = await http.get(
-      Uri.parse(
-          '${url}/user/connections/${widget.data['_id']}'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-    );
+  
+    var response= await getDataApiCall(
+        '${url}/user/connections/${widget.data['_id']}');
 
-    if (response.statusCode == 200) {
+     if (getFlagOfResponse(response)){
       var his = jsonDecode(response.body);
       
        count.value = his['data']['connections'];
        score.value = his['data']['score'];
-      // fl.value = !fl.value;
+      
     } else {}
   }
   void getStatus() async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-    
-    final response = await http.post(
-      Uri.parse("${url}/user/friend/acceptRequestStatus"),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-       body: jsonEncode({
-          'userName':widget.data['name'],
-          'friendUserId':widget.data['_id'],
-       }),
-    );
+  
+    var response=await postDataApiCallwithOutSharedPref("${url}/user/friend/acceptRequestStatus", {
+      'userName':widget.data['name'],
+      'friendUserId':widget.data['_id'],
+    });
 
-    if (response.statusCode == 200) {
+    if (getFlagOfResponse(response)) {
       var his = jsonDecode(response.body);
        frdRequestCheck.value=his['data'];
         if(frdRequestCheck.value=="Friend Request already sent"){
@@ -240,21 +206,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
                     top: 90,
                     left: MediaQuery.of(context).size.width / 2 - 40,
                     child: AvatarProfile(name: data['name'], width: 5, height: 10,background:data['avatarBackGround'] ?? defaultBackGround.value,flag: true,),
-                //     child: GestureDetector(
-                //       // onTap: () => _pickImage(ImageSource.gallery, "profile"),
-                //       child:CircleAvatar(
-                //   radius: 50,
-                //   backgroundColor: Colors.transparent,
-                //   child: ClipOval(
-                //     child: SvgPicture.asset(
-                //       avaterUrlPath(data['name']),
-                //       width: 100,
-                //       height: 100,
-                //       fit: BoxFit.cover,
-                //     ),
-                //   ),
-                // ),
-                //     ),
+                
                   ),
                 ],
               );

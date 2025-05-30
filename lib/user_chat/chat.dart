@@ -1,28 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/exploreCard.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
-import 'package:flutter_application_code_stakeplot/Tribe/userDetails.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart';
-import 'package:flutter_application_code_stakeplot/userAvatar.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/fullScreen.dart';
 import 'package:get/get_rx/get_rx.dart';
-// import 'package:getwidget/components/image/gf_image_overlay.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:flutter/cupertino.dart';
@@ -36,7 +29,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 late IO.Socket socket;
 
@@ -74,30 +66,14 @@ class _ChatState extends State<Chat> {
   void initState() {
     super.initState();
     data = widget.data;
-    //  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     String room1 = userName.value + data['name'];
     String room2 = data['name'] + userName.value;
 
     roomId.value = (room1.compareTo(room2) <= 0) ? room1 : room2;
 
     getChats(data);
-    path = avatar.value; //widget.myprofile['avatarType'];
-    // socket=SocketIOManager().createSocketIO(
-    //     urlWithLocallHost, '/',
-    //     query: 'chatID=${data['_id']}');
-    // socket = IO.io("https://stakeplot.in/",IO.OptionBuilder().setTransports(['websocket']).enableForceNewConnection().build());
-    // if (socket.connected) {
-    //     socket.disconnect();
-    //     socket.close();
-    //  }
-    // socket = IO.io(urlWithLocallHost, IO.OptionBuilder()
-    //   .setQuery({'chatID': data['_id']})
-    //   .setTransports(['websocket'])
-    //   .disableAutoConnect()
-    //   .build());
-    // socket=IO.io(url,IO.OptionBuilder().setTransports(['websocket']).setPath("/io").disableAutoConnect().build());
-
-    // initFunt();
+    path = avatar.value; 
+    
     socket = IO.io(urlWithLocallHost,
         IO.OptionBuilder().setTransports(['websocket']).build());
     socket.connect();
@@ -204,14 +180,7 @@ class _ChatState extends State<Chat> {
     } else if (message.type == "image") {
       return imageDisplay(message.text, message.isMe, message.image);
     } else if (message.type == "post") {
-      // var dataObj = jsonDecode(message.post);
-
-      // if (dataObj['isPoll'])
-      //   return polled(
-      //     message.isMe,
-      //     dataObj['pollData'],
-      //   );
-
+      
       return postDisplay(message.text, message.isMe, message.image, message);
     } else if (message.type == "split") {
       return spliDisplay(message.text, message.isMe, message.image, message);
@@ -420,15 +389,6 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  // void clear(){
-  //   int index=0;
-  //                 chatList.forEach((element) {
-  //                        if(element['_id']==data['_id']){
-  //                           chatList[index]['count']=0;
-  //                        }
-  //                        index++;
-  //                 },);
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -481,8 +441,7 @@ class _ChatState extends State<Chat> {
           ),
           child: Column(
             children: [
-              //  height: MediaQuery.of(context).size.height/1.28,
-              // List of messages
+             
               Obx(() => Expanded(
                     child: ListView.builder(
                       shrinkWrap: true,
@@ -493,10 +452,8 @@ class _ChatState extends State<Chat> {
                       },
                     ),
                   )),
-              // Text input and send button
               Container(
-                // margin: EdgeInsets.all(8.0),
-
+               
                 child: SafeArea(
                     child: InputDate("Message", TextInputType.name, search)),
               ),
@@ -743,16 +700,7 @@ class _ChatState extends State<Chat> {
           hintText: labelText,
           filled: true,
           fillColor: AppColors.mt,
-          // prefixIcon: IconButton(
-          //   icon: Icon(
-          //     Icons.emoji_emotions,
-          //     size: 25,
-          //     color: AppColors.primaryColor,
-          //   ),
-          //   onPressed: () {
-          //     // Implement emoji picker or logic here
-          //   },
-          // ),
+          
           suffixIcon: Row(
             mainAxisSize: MainAxisSize.min, // Takes minimum space needed
             children: [
@@ -833,38 +781,6 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  // Widget image(url) {
-  //   if (url == "" || url == "None") return SizedBox.shrink();
-
-  //   return Container(
-  //     decoration: BoxDecoration(
-  //       borderRadius: BorderRadius.circular(20),
-
-  //       // border: Border.all(
-  //       //    width: .5,
-  //       //    color: Colorcodes.poll1
-  //       // )
-  //     ),
-  //     padding: const EdgeInsets.symmetric(vertical: 3.0),
-  //     child: Image.network(
-  //       url,
-  //       width: MediaQuery.of(context).size.width / 2,
-  //       height: MediaQuery.of(context).size.height / 5,
-  //       fit: BoxFit.cover,
-  //       color: Colors.black.withOpacity(0.0),
-  //       colorBlendMode: BlendMode.exclusion,
-  //     ),
-  //     // child: GFImageOverlay(
-  //     //                   width: MediaQuery.of(context).size.width / 1.5,
-  //     //                   height: MediaQuery.of(context).size.height/3.5,
-  //     //                   // shape: BoxShape.values,
-  //     //                   image: NetworkImage(url!),
-  //     //                   borderRadius:BorderRadius.circular(10),
-  //     //                   colorFilter:ColorFilter.mode(Colors.black.withOpacity(0.0),
-  //     //                   BlendMode.exclusion),
-  //     //              ),
-  //   );
-  // }
 // poll card display in community
   Widget poll(e) {
     List options = e['options'] ?? [];
@@ -940,11 +856,6 @@ class _ChatState extends State<Chat> {
                                           :  AppColors.accentColor)),
                             ),
 
-                            //  myvote ? Text(cal=="0.00"?'0%':cal=="100.00"?"100%":cal+"%",
-                            //     style: FontManager().getTextStyle(context,
-                            //             lWeight: FontWeight.w400,
-                            //             fontSize: 14,
-                            //             color: Colors.black)):SizedBox.shrink(),
                           ],
                         )),
                   );

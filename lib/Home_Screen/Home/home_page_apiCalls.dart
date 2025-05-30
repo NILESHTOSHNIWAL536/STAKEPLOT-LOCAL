@@ -4,16 +4,14 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
-import "package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart";
+import "package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart";
 import "package:flutter_application_code_stakeplot/Utils/snackBar.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
-
 import 'package:intl/intl.dart';
-import "package:shared_preferences/shared_preferences.dart";
 import 'package:http/http.dart' as http;
 
 // expanded finance apis and functions

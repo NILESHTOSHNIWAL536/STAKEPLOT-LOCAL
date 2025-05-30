@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:flutter_application_code_stakeplot/Home_Screen/expanded_finance.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history_button.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/history_button.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
@@ -18,12 +18,8 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class FinancePage extends StatefulWidget {
-  final ScrollController scrollController;
-  final GlobalKey transactionHistoryKey;
   const FinancePage({
     super.key,
-    required this.scrollController,
-    required this.transactionHistoryKey,
   });
 
   @override
