@@ -144,8 +144,6 @@ flutter:
   assets:
     - assets/icons/
     - assets/
-    - assets/avatar2/
-    - assets/avatars/
     - assets/svgs/
     - assets/msg.mp3
     - assets/icons/Navigation_bar/

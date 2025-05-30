@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/resetPin.dart';
@@ -37,10 +38,12 @@ class _EditDetailsState extends State<EditDetails> {
   }
 
   final Map<String, TextEditingController> _controllers = {
-    ProfileScreenStrings().nameLabel: TextEditingController(text: userName.value),
+    ProfileScreenStrings().nameLabel:
+        TextEditingController(text: userName.value),
     ProfileScreenStrings().emailLabel: TextEditingController(text: email.value),
     ProfileScreenStrings().dobLabel: TextEditingController(text: dob.value),
-    ProfileScreenStrings().numberLabel: TextEditingController(text: number.value),
+    ProfileScreenStrings().numberLabel:
+        TextEditingController(text: number.value),
   };
 
   @override
@@ -58,16 +61,14 @@ class _EditDetailsState extends State<EditDetails> {
     super.dispose();
   }
 
-void checkBiometricsStatus() async {
-  final LocalAuthentication auth = LocalAuthentication();
+  void checkBiometricsStatus() async {
+    final LocalAuthentication auth = LocalAuthentication();
 
-  bool canCheckBiometrics = await auth.canCheckBiometrics;
-  bool isDeviceSupported = await auth.isDeviceSupported();
-  List<BiometricType> availableBiometrics = await auth.getAvailableBiometrics();
-
- 
-}
-
+    bool canCheckBiometrics = await auth.canCheckBiometrics;
+    bool isDeviceSupported = await auth.isDeviceSupported();
+    List<BiometricType> availableBiometrics =
+        await auth.getAvailableBiometrics();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +85,40 @@ void checkBiometricsStatus() async {
         backgroundColor: AppColors.backgroundColor,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.delete, color: Colors.red),
+            onPressed: () {
+              // Show dialog box for confirmation
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Delete Account'),
+                    content: Text(
+                        'Are you sure you want to delete your account? This action cannot be undone.'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close the dialog
+                        },
+                        child: Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          
+                          deleteUserAccount(context);
+                           // Close the dialog
+                        },
+                        child: Text('Delete'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -93,7 +128,13 @@ void checkBiometricsStatus() async {
             // Profile Picture
             Column(
               children: [
-               Obx(() =>  AvatarProfile(name: userName.value, width: 5, height: 10,background:userAvatarBackGround.value,flag: true,)),
+                Obx(() => AvatarProfile(
+                      name: userName.value,
+                      width: 5,
+                      height: 10,
+                      background: userAvatarBackGround.value,
+                      flag: true,
+                    )),
                 // Obx(() => AvatarProfileImage(
                 //       url: avaterUrlPath(userName.value),
                 //       width: 14,
@@ -117,9 +158,10 @@ void checkBiometricsStatus() async {
                     // );
 
                     Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => UserStatsScreen()),
-    );
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => UserStatsScreen()),
+                    );
                   },
                   child: Padding(
                     padding: EdgeInsets.only(top: 0.0),
@@ -142,33 +184,35 @@ void checkBiometricsStatus() async {
                   alignment: Alignment.topLeft,
                   child: textStyleOnly2(
                     context: context,
-                    text:  ProfileScreenStrings().personalDetailsLabel,
+                    text: ProfileScreenStrings().personalDetailsLabel,
                     fontsize: 16,
                     color: AppColors.bg3,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-            Obx(()=>  (bankAccountLinkedList.isEmpty || (hideBackAccountPassword.value || cupertinoPin.value == "0"))? SizedBox.shrink(): InkWell(
-                  onTap: () {
-                  
-                    resetCupertinoPin(context);
-                   
-                  },
-                  child: Row(
-                    children: [
-                      Icon(Icons.lock_reset,
-                          color: AppColors.primaryColor, size: 20),
-                      SizedBox(width: 4),
-                      textStyleOnly2(
-                        context: context,
-                        text: ProfileScreenStrings().resetPinLabel,
-                        fontsize: 14,
-                        color: AppColors.primaryColor,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ],
-                  ),
-                )),
+                Obx(() => (bankAccountLinkedList.isEmpty ||
+                        (hideBackAccountPassword.value ||
+                            cupertinoPin.value == "0"))
+                    ? SizedBox.shrink()
+                    : InkWell(
+                        onTap: () {
+                          resetCupertinoPin(context);
+                        },
+                        child: Row(
+                          children: [
+                            Icon(Icons.lock_reset,
+                                color: AppColors.primaryColor, size: 20),
+                            SizedBox(width: 4),
+                            textStyleOnly2(
+                              context: context,
+                              text: ProfileScreenStrings().resetPinLabel,
+                              fontsize: 14,
+                              color: AppColors.primaryColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ],
+                        ),
+                      )),
               ],
             ),
             const SizedBox(height: 20),
@@ -177,15 +221,19 @@ void checkBiometricsStatus() async {
                 color: AppColors.mt,
                 borderRadius: BorderRadius.circular(10),
               ),
-               child: Column(
+              child: Column(
                 children: [
-                  _buildNonEditableField(Icons.email, ProfileScreenStrings().emailLabel, email.value),
+                  _buildNonEditableField(Icons.email,
+                      ProfileScreenStrings().emailLabel, email.value),
                   Divider(),
-                  _buildNonEditableField(Icons.person, ProfileScreenStrings().nameLabel, userName.value),
+                  _buildNonEditableField(Icons.person,
+                      ProfileScreenStrings().nameLabel, userName.value),
                   Divider(),
-                  _buildNonEditableField(Icons.phone, ProfileScreenStrings().numberLabel, number.value),
+                  _buildNonEditableField(Icons.phone,
+                      ProfileScreenStrings().numberLabel, number.value),
                   Divider(),
-                  _buildNonEditableField(Icons.calendar_today, ProfileScreenStrings().dobLabel, dob.value),
+                  _buildNonEditableField(Icons.calendar_today,
+                      ProfileScreenStrings().dobLabel, dob.value),
                 ],
               ),
             ),
@@ -204,25 +252,25 @@ void checkBiometricsStatus() async {
                       fontWeight: FontWeight.bold,
                       fontsize: 14),
                 ),
-                 InkWell(
-                     onTap: () {
-                       number.value = Phone.value;
-                       isFromEditDeatils.value=true;
-                       Navigator.push(
-                         context,
-                         MaterialPageRoute(
-                           builder: (context) => MobileNumber(
-                             flag: true,
-                             formEditDetails: true,
-                           ),
-                         ),
-                       );
-                     },
-                     child: textStyle(
-                         text:  ProfileScreenStrings().addBankLabel,
-                         context: context,
-                         fontWeight: FontWeight.bold,
-                         fontsize: 14)),
+                InkWell(
+                    onTap: () {
+                      number.value = Phone.value;
+                      isFromEditDeatils.value = true;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MobileNumber(
+                            flag: true,
+                            formEditDetails: true,
+                          ),
+                        ),
+                      );
+                    },
+                    child: textStyle(
+                        text: ProfileScreenStrings().addBankLabel,
+                        context: context,
+                        fontWeight: FontWeight.bold,
+                        fontsize: 14)),
               ],
             ),
             // Account Details
@@ -242,16 +290,16 @@ void checkBiometricsStatus() async {
   }
 
   Widget getListOfBankConnected() {
-
     return Container(
       child: Column(
         children: [
           Column(
             children: bankAccountLinkedList.map((e) {
-              return _buildAccountDetails(e['bankName'], e['maskedAccNumber'], e,e['bankLogo']);
+              return _buildAccountDetails(
+                  e['bankName'], e['maskedAccNumber'], e, e['bankLogo']);
             }).toList(),
           ),
-         
+
           // Align(
           //   alignment: Alignment.bottomRight,
           //   child: InkWell(
@@ -274,7 +322,6 @@ void checkBiometricsStatus() async {
           //           fontWeight: FontWeight.bold,
           //           fontsize: 16)),
           // ),
-         
         ],
       ),
     );
@@ -289,9 +336,10 @@ void checkBiometricsStatus() async {
       width: MediaQuery.of(context).size.width / 1.1,
       child: Center(
         child: TextFormField(
-          controller: controller, // Use the controller to manage the text
+          controller: controller,
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             //prefixIcon: Icon(icon, color: Colors.blueGrey),
             prefixIcon: Padding(
               padding: const EdgeInsets.all(6.0),
@@ -342,18 +390,19 @@ void checkBiometricsStatus() async {
     );
   }
 
-  Widget _buildAccountDetails(String bankName, String accountNumber, var data,String logo) {
+  Widget _buildAccountDetails(
+      String bankName, String accountNumber, var data, String logo) {
     return Card(
       //shape: ,
       elevation: 2,
       color: AppColors.mt,
       child: ListTile(
-         leading: Image.network(
-                          logo,
-                          width: 30,
-                          height: 30,
-                          fit: BoxFit.fitWidth,
-            ),
+        leading: Image.network(
+          logo,
+          width: 30,
+          height: 30,
+          fit: BoxFit.fitWidth,
+        ),
         title: textStyleOnly2(
           context: context,
           text: bankName,
@@ -361,13 +410,43 @@ void checkBiometricsStatus() async {
           color: AppColors.bg2,
           fontWeight: FontWeight.w600,
         ),
-
         subtitle: textStyleOnly2(
           context: context,
           text: accountNumber,
           fontsize: 14,
           color: AppColors.bg3,
           fontWeight: FontWeight.w400,
+        ),
+        trailing: IconButton(
+          icon: Icon(Icons.delete, color: AppColors.debitColor),
+          onPressed: () {
+            // Show dialog box for confirmation
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Delete Account'),
+                  content:
+                      Text('Are you sure you want to delete this account?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close the dialog
+                      },
+                      child: Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        // Add your delete logic here
+                        Navigator.of(context).pop(); // Close the dialog
+                      },
+                      child: Text('Delete'),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
         ),
       ),
     );
