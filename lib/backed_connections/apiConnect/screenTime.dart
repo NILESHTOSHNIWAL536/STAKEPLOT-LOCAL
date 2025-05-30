@@ -45,7 +45,7 @@ class ScreenTimeTracker with WidgetsBindingObserver {
       await clearUserData(); // Clear previous user data
       _userId = userId;
       await _loadUserData();
-      print('Set user: $_userId');
+      
     }
   }
 
