@@ -18,6 +18,7 @@ RxMap bankImagemap = {}.obs;
 Future<void> getBankAccounts() async
 {
   var response =await getDataApiCall("${url}/transactionauto/get-banks-linked/");
+  printData(response);
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     consentAndHandleDetails.clear();
@@ -106,18 +107,7 @@ void getWeeklyfetchData(
 
 }
 
-void storeImageinMapFinvu(context) async {
-  var isConnected = await finvuManager.isConnected();
-  if (!isConnected) initFinvuManager(context);
 
-  try {
-    // List<FinvuFIPInfo> finvuFIPInfo=await finvuManager.fipsAllFIPOptions();
-
-    // finvuFIPInfo.forEach((FinvuFIPInfo info){
-    //            bankImagemap[info.productName]=info.productIconUri;
-    // });
-  } catch (e) {}
-}
 
 void calledFunctionToFetchData(context) async {
   if (accountId.value.isEmpty)

@@ -4,6 +4,8 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart'; 
 
@@ -45,13 +47,10 @@ class _SwipeableCardsScreenState extends State<SwipeableCardsScreen> {
           children: [
             Padding(
               padding: EdgeInsets.only(top: padding/2,right: padding,left: padding,),
-              child: Text(
-                HomepageStringsDart().finora,
-                style:FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.w600,
-                  fontSize: screenSize.width * 0.05,
-                  color: AppColors.accentColor,
-                ),
+              child: textStyleImage(context: context,text: HomepageStringsDart().finora,
+                fontsize: screenSize.width * 0.05,
+                c: AppColors.accentColor,
+                fontWeight: FontWeight.w600,
               ),
             ),
             Row(
@@ -59,7 +58,21 @@ class _SwipeableCardsScreenState extends State<SwipeableCardsScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // PageView for Cards
-              SizedBox(
+              sliderCard(padding,screenSize),
+              // Indicator Dots
+              indicators(padding),
+              
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+
+
+  Widget sliderCard(padding,screenSize){
+    return  SizedBox(
                 height: screenSize.height * 0.14,
                 width: screenSize.width /1.2,
                 child: PageView.builder(
@@ -95,9 +108,11 @@ class _SwipeableCardsScreenState extends State<SwipeableCardsScreen> {
                     );
                   },
                 ),
-              ),
-              // Indicator Dots
-              Padding(
+              );
+  }
+
+  Widget indicators(padding){
+    return Padding(
                 padding: EdgeInsets.only(right: padding * 0.1),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -118,16 +133,9 @@ class _SwipeableCardsScreenState extends State<SwipeableCardsScreen> {
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  
-            // Uncomment and use if needed
-
+          );
   }
+
 
   Widget _buildCard(int cardIndex, BuildContext context, Size screenSize) {
     Widget card;

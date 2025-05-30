@@ -35,10 +35,6 @@ class _FinancePageState extends State<FinancePage> {
   }
 
 
-  int _getDaysInCurrentMonth() {
-    final now = DateTime.now();
-    return DateTime(now.year, now.month + 1, 0).day;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +153,7 @@ class _FinancePageState extends State<FinancePage> {
                     daysInMonth: selectedButton == "Week"
                         ? 7
                         : selectedButton == "Month"
-                            ? _getDaysInCurrentMonth()
+                            ? getDaysInCurrentMonth()
                             : labels.length,
                   )),
           ],

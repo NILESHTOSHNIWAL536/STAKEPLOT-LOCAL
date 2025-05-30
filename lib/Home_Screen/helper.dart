@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
@@ -310,6 +311,33 @@ String formatMoneyIndian(String value) {
     return '0';
   }
 }
+
+
+
+ Future<void> updateWidgetSpendingCategories() async {
+    try {
+      final total = '₹${totalValue.value?.toStringAsFixed(2) ?? '0.00'}';
+      final timestamp = getMonthlyRange();
+      String categories = 'None';
+      if (chartData.isNotEmpty) {
+        categories = chartData
+            .map(
+                (data) => '${data.category}: ₹${data.value.toStringAsFixed(2)}')
+            .join('\n');
+      }
+
+      await HomeWidget.saveWidgetData<String>('total_spending', total);
+      await HomeWidget.saveWidgetData<String>('categories', categories);
+      await HomeWidget.saveWidgetData<String>('timestamp', timestamp);
+
+      await HomeWidget.updateWidget(
+        name: 'StakeplotWidgetProvider',
+        androidName: 'StakeplotWidgetProvider',
+        iOSName: 'StakeplotWidget',
+      );
+    } catch (e) {}
+  }
+
 
 Future<void> updateWidget() async {
   final prefs = await SharedPreferences.getInstance();
@@ -785,4 +813,10 @@ List<TextInputFormatter> allowDecimalInput({int decimalPlaces = 2}) {
   return [
     FilteringTextInputFormatter.allow(regex),
   ];
+}
+
+
+int getDaysInCurrentMonth() {
+  final now = DateTime.now();
+  return DateTime(now.year, now.month + 1, 0).day;
 }
