@@ -140,7 +140,7 @@ class _SigninState extends State<conform> {
         child: InkWell(
           onTap: () {
             acceptReset.value = true;
-            storeData(context, widget.data, _otpCode.value, avaterUrlPath(widget.data['name']));
+            
           },
           child: Obx(
             () => Center(
