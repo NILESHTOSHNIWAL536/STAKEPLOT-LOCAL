@@ -18,6 +18,7 @@ import '../../Utils/snackBar.dart';
 Future<void> loginUser(TextEditingController emailController,
     TextEditingController passwordController, BuildContext context,
     [bool flag = false]) async {
+    
   try {
     var response = await postDataApiCallwithOutSharedPref('${url}/user/login', {
       'email': emailController.text.toString(),

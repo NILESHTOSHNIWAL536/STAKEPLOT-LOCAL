@@ -278,11 +278,7 @@ class _EditDetailsState extends State<EditDetails> {
             getListOfBankConnected(),
             const SizedBox(height: 20),
 
-            // InkWell(
-            //     onTap: () {
-            //       editUserDetails(context, _controllers);
-            //     },
-            //     child: getButton(context, "Save Changes"))
+    
           ],
         ),
       ),
@@ -293,35 +289,13 @@ class _EditDetailsState extends State<EditDetails> {
     return Container(
       child: Column(
         children: [
-          Column(
+        Obx(()=>  Column(
             children: bankAccountLinkedList.map((e) {
-              return _buildAccountDetails(
-                  e['bankName'], e['maskedAccNumber'], e, e['bankLogo']);
+            
+              return _buildAccountDetails(e['bankName'], e['maskedAccNumber'], e,e['bankLogo']);
             }).toList(),
-          ),
-
-          // Align(
-          //   alignment: Alignment.bottomRight,
-          //   child: InkWell(
-          //       onTap: () {
-          //         number.value = Phone.value;
-          //         isFromEditDeatils.value=true;
-          //         Navigator.push(
-          //           context,
-          //           MaterialPageRoute(
-          //             builder: (context) => MobileNumber(
-          //               flag: true,
-          //               formEditDetails: true,
-          //             ),
-          //           ),
-          //         );
-          //       },
-          //       child: textStyle(
-          //           text: '+ Add Bank',
-          //           context: context,
-          //           fontWeight: FontWeight.bold,
-          //           fontsize: 16)),
-          // ),
+          )),
+         
         ],
       ),
     );
@@ -426,8 +400,7 @@ class _EditDetailsState extends State<EditDetails> {
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: Text('Delete Account'),
-                  content:
-                      Text('Are you sure you want to delete this account?'),
+                  content: Text('Are you sure you want to delete this account?'),
                   actions: [
                     TextButton(
                       onPressed: () {
@@ -438,7 +411,8 @@ class _EditDetailsState extends State<EditDetails> {
                     TextButton(
                       onPressed: () {
                         // Add your delete logic here
-                        Navigator.of(context).pop(); // Close the dialog
+                        deleteBankAccount(bankid: data['bankId'],AccountId: data['accountId'],context: context);
+                         // Close the dialog
                       },
                       child: Text('Delete'),
                     ),
@@ -446,9 +420,12 @@ class _EditDetailsState extends State<EditDetails> {
                 );
               },
             );
-          },
-        ),
-      ),
-    );
-  }
+          }
+        )
+      )
+        );
+  
+      
+      }
+        
 }

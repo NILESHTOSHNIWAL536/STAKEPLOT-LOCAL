@@ -223,10 +223,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                       Expanded(
                         flex: 2,
                         child: TextField(
-                          // controller: TextEditingController(
-                          //   text: categoriesDividedList[index]['amount']
-                          //       .toString(),
-                          // ),
+                         
                            controller: _controllers[index],
                           focusNode: _focusNodes[index],
                           

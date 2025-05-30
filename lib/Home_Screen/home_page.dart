@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
     getCustomCategory(context);
     custom = getthelist();
     allOrGroupTransactionsName.value = StringConstant.allTransactions;
-   clearAllFlags();
+    clearAllFlags();
     await getRemainders(context);
     await updateWidget();
     lifecycleHandler = AppLifecycleHandler(currentId.value); // Replace with actual user ID

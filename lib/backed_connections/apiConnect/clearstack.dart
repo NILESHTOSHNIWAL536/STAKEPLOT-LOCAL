@@ -141,6 +141,13 @@ Future<void> storeDeviceInfoLocalBackState() async
 
 
 
+void clearGraph() {
+  totalDebitValue.value = 0.0;
+  totalDebitValuePercent.value = 0.0;
+  startDateCustom=DateTime.now().subtract(const Duration(days: 7));
+  endDateCustom =  DateTime.now();
+
+}
 void clearGetX() {
   income = 0.obs;
   messages.clear();
@@ -209,12 +216,11 @@ void clearGetX() {
   currentPage = 1;
   consentAndHandleDetails.clear();
   isBankLinked.value=false;
-  totalDebitValue.value = 0.0;
-  totalDebitValuePercent.value = 0.0;
-  startDateCustom=DateTime.now().subtract(const Duration(days: 7));
-  endDateCustom =  DateTime.now();
+  clearGraph();
   loadBanks.value=true;
 }
+
+
 
 RxMap<String, String> ListOfBankImages = RxMap();
 

@@ -48,6 +48,7 @@ class _SigninState extends State<Signin> {
   @override
   void initState() {
     super.initState();
+    
     check(context, "loginuser");
     // Initialize signin data
   }

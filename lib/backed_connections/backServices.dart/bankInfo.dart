@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
@@ -95,3 +97,21 @@ void deleteUserAccount(BuildContext context) async {
   clearStackLocalInfo();
   clearStack(context);
 }
+
+void deleteBankAccount({required String bankid,required String AccountId,required BuildContext context})async
+{
+  var res = await deleteDataApiCall("${url}/transactionauto/${bankid}/${AccountId}");
+  if (getFlagOfResponse(res))
+  {
+     accountId.value="";
+     getBankAccounts();
+     getCategoryData();
+     clearGraph();
+     getAutoMationsTransactionsCustom(getFormattedDate(), context);
+     Navigator.of(context).pop();
+     bankAccountLinkedList.refresh();   
+  }
+
+}
+
+
