@@ -4,16 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 import 'package:get/get.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 bool flag = true;
 String portNo = flag ? "192.168.1.3" : "localhost";
-String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String urlWithLocallHost = flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Fields";
 RxString expenses = "Loading".obs;
@@ -369,16 +367,7 @@ void snackBarCalledFrds(context, String text, [Color colors = Colors.black]) {
     action: SnackBarAction(
       label: 'Click Here',
       onPressed: () {
-        //        Navigator.push(
-        //   context,
-        //   PageTransition(
-        //     type: PageTransitionType.fade,
-        //     alignment: Alignment.bottomRight,
-        //      duration: Durations.long1,
-        //     child: TribeSearch(),
-        //     isIos: true,
-        //   ),
-        // );
+        
       },
     ),
     content: Row(
@@ -460,28 +449,3 @@ RxList getSearchDataRx(String val, List data) {
   return findOne;
 }
 
-void clearStackLocalInfo() {
-  fetchedData.value = false;
-  listOfAccountAdded.clear();
-  FinvuFIPDetailsList.clear();
-  accountCountList.clear();
-  accountAdded.clear();
-  accountLinked.clear();
-  fipDis.clear();
-  fipDisOrginal.clear();
-  isSeletedBankAccout.clear();
-  bankImageAndid.clear();
-  listOfBankAccount.clear();
-  fetchAccountData.clear();
-  seletedAccountInfomations.clear();
-  fipDis.clear();
-  seletedAccountIds.clear();
-  fiTypes.clear();
-  getBanks.value = false;
-  addAccount.value = false;
-  getFetch.value = false;
-  addBank.value = false;
-  directFetch.value = false;
-  fetchedData.value = false;
-  count.value = 0;
-}

@@ -2,14 +2,14 @@
 import 'dart:convert';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_details.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page_apiCalls.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_details.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';

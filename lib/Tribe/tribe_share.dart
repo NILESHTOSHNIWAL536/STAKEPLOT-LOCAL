@@ -1,10 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
@@ -14,7 +12,6 @@ import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/readmore.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-// import 'package:getwidget/components/image/gf_image_overlay.dart';
 import 'package:page_transition/page_transition.dart';
 import "package:flutter_application_code_stakeplot/Community_Page/postCard.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
@@ -36,8 +33,7 @@ class TribeShare extends StatefulWidget {
 }
 
 class _TribeHomeState extends State<TribeShare> {
-  // RxList frdsList=[].obs;
-  // RxList  frdsListOrigin=[].obs;
+
   RxBool frdsThere = false.obs;
   List addedUser = [];
   List nameList = [];
@@ -79,29 +75,6 @@ class _TribeHomeState extends State<TribeShare> {
   @override
   Widget build(BuildContext context) {
     return commentedData();
-
-    // return Scaffold(
-    //   bottomNavigationBar:  BottomNavigations(data: sizeRoom?3:2),
-    //    extendBody: true,
-    //   body: Container(
-    //     height: MediaQuery.of(context).size.height,
-    //     color: Colors.white,
-    //     // padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-    //     child: SingleChildScrollView(
-    //       child: Column(
-    //         mainAxisAlignment: MainAxisAlignment.start,
-    //         crossAxisAlignment: CrossAxisAlignment.center,
-    //         children: [
-    //            tribeHeader(context),
-    //            Container(
-    //                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-    //             child: uploadData(widget.data)
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 
   setUpSocketListener() {
@@ -158,11 +131,7 @@ class _TribeHomeState extends State<TribeShare> {
                           ],
                         ),
                       ),
-                      // Icon(
-                      //   Icons.more_vert_outlined,
-                      //   size: 25,
-                      //   color: Colors.black,
-                      // )
+                      
                       popUpBox(dataObj['_id']),
                     ],
                   ),
@@ -174,32 +143,6 @@ class _TribeHomeState extends State<TribeShare> {
                             fontSize: 16,
                             color: Colors.black)),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(bottom: 10.0),
-                  //   child: Text((dataObj['description']['message']),
-                  //       style: FontManager().getTextStyle(context,
-                  //           lWeight: FontWeight.w400,
-                  //           fontSize: 16,
-                  //           color: Colors.black)),
-                  // ),
-
-                  //  dataObj['image'] != null
-                  //     ? Container(
-                  //         width: MediaQuery.of(context).size.width / 1.3,
-                  //         child: Image.network(dataObj['image']['filePath'],
-                  //             fit: BoxFit.fill),
-                  //         // child: Image.asset("assets/images/news.jpg", fit: BoxFit.fill),
-                  //       )
-                  //     : SizedBox.shrink(),
-
-                  //  dataObj['image'] != null?  GFImageOverlay(
-                  //         width: MediaQuery.of(context).size.width / 1.1,
-                  //         height: MediaQuery.of(context).size.height/2.5,
-                  //         shape: BoxShape.rectangle,
-                  //         image: NetworkImage(dataObj['image']),
-                  //         colorFilter:ColorFilter.mode(Colors.black.withOpacity(0.0),
-                  //         BlendMode.exclusion),
-                  //    ):SizedBox.shrink(),
 
                   Container(
                       child: !dataObj['isItenary']
@@ -266,7 +209,6 @@ class _TribeHomeState extends State<TribeShare> {
   Widget commentedData() {
     double height = MediaQuery.of(context).size.height / 3;
     return Container(
-      //  padding: const EdgeInsets.symmetric(vertical: 20),
       child: Container(
         padding: const EdgeInsets.fromLTRB(16, 20, 16, 12),
         decoration: BoxDecoration(
@@ -295,8 +237,7 @@ class _TribeHomeState extends State<TribeShare> {
       children: [
         InkWell(
           onTap: () {
-            //  home
-            //  Navigator.pushNamed(context, '/home');
+          
             if (frdsList.isEmpty) {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/TribeSearch');
@@ -518,10 +459,7 @@ class _TribeHomeState extends State<TribeShare> {
     );
 
     return Container(
-      // margin: const EdgeInsets.symmetric(vertical: 30),
-      // width: MediaQuery.of(context).size.width/2,
-      // width: 300,
-      // height:170,
+     
       height: MediaQuery.of(context).size.height / 4.7,
 
       child: SfCartesianChart(

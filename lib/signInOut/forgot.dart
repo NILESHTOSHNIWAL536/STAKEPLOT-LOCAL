@@ -6,10 +6,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:intl/intl.dart';
+
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);
@@ -45,13 +42,6 @@ class _SigninState extends State<ForgotPassword> {
             fillColor: Color.fromRGBO(249, 246, 238, 1),
             border: InputBorder.none,
           ),
-
-          // decoration: InputDecoration(
-          //   labelText: lableText,
-          //   border:const OutlineInputBorder(
-          //         borderSide: BorderSide(color:Color.fromRGBO(249, 246, 238, 1))
-          //   ),
-          // ),
         ),
       ),
     );
@@ -62,8 +52,7 @@ class _SigninState extends State<ForgotPassword> {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 9.0),
         child: Container(
-          // padding: EdgeInsets.symmetric(vertical: 5),
-          // color:  Color.fromRGBO(246, 246, 246, 1),
+      
           height: 60,
           width: MediaQuery.of(context).size.width / 1.3,
           child: Center(
@@ -109,39 +98,7 @@ class _SigninState extends State<ForgotPassword> {
             const SizedBox(
               height: 30,
             ),
-            // Center(
-            //   child: Container(
-            //    width: MediaQuery.of(context).size.width/1.15,
-            //    padding:  EdgeInsets.symmetric(vertical: Colorcodes.paddingSize/3),
-            //    child: Text(("Reset password?"),
-            //                        style: FontManager().getTextStyle(context,
-            //                            lWeight: FontWeight.bold,
-            //                            fontSize: 15,
-            //                            color: Colorcodes.iconBackGround)),
-            //                         ),
-            // ),
-            // Center(
-            //   child: Container(
-            //     width: MediaQuery.of(context).size.width/1.15,
-            //     padding:  EdgeInsets.symmetric(vertical: Colorcodes.paddingSize/3),
-            //     child: Text((StringConstant.resetpassword),
-            //                         style: FontManager().getTextStyle(context,
-            //                             lWeight: FontWeight.w400,
-            //                             fontSize: 12,
-            //                             color: Colors.black)),
-            //   ),
-            // ),
-
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(vertical: 10),
-            //   child: TextFeildWidget(
-            //     textEditingController: nameController,
-            //     heading: "Username",
-            //     keyBoard: TextInputType.name,
-            //     lableText: "Username",
-            //     icon: Icons.person_3_outlined,
-            //   ),
-            // ),
+            
 
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),

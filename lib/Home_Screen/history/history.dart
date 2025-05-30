@@ -3,12 +3,10 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/home_page_apiCalls.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/transactionHistoryScreen.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_details.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/transaction_history.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page_apiCalls.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_details.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
-import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -69,17 +67,7 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
       ? "₹${formatMoneyIndian(amount.toString())}"
       : "₹${formatMoneyIndian(amount.toString())}";
 
-  // Responsive scaling with MediaQuery
-  // final screenWidth = MediaQuery.of(context).size.width;
-  // final scaleFactor = screenWidth / 360; // Base width: 360px
-  // final padding = 14.0 * scaleFactor;
-  // final margin = 10.0 * scaleFactor;
-  // final iconSize = 14.0 * scaleFactor;
-  // final avatarSize = 40.0 * scaleFactor;
-  // final fontSizeLarge = 16.0 * scaleFactor;
-  // final fontSizeMedium = 12.0 * scaleFactor;
-  // final fontSizeSmall = 10.0 * scaleFactor;
-  // final badgeSize = 20.0 * scaleFactor;
+
   final fontSizes = FontSizeFactor(context);
 
   return WillPopScope(
@@ -391,8 +379,7 @@ Widget getIconsForHideUpdateSplit(
   final screenWidth = MediaQuery.of(context).size.width;
   final scaleFactor = screenWidth / 360; // Base width: 360px
   final fontSizeMedium = 12.0 * scaleFactor;
-  final fontSizeSmall = 10.0 * scaleFactor;
-  final badgeSize = 20.0 * scaleFactor;
+  
   bool isValidUrl(String? url) {
     return url != null &&
         url.isNotEmpty &&

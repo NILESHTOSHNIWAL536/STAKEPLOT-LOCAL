@@ -2,18 +2,14 @@ import "dart:convert";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
-import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
-import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
-import "package:flutter_application_code_stakeplot/bottomNavigations.dart";
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
 import "package:flutter_application_code_stakeplot/loader.dart";
-import "package:flutter_application_code_stakeplot/userAvatar.dart";
 import "package:flutter_application_code_stakeplot/user_chat/chat.dart";
 import "package:get/get.dart";
 import "package:shared_preferences/shared_preferences.dart";
@@ -203,15 +199,7 @@ class _TribeSearchState extends State<TribeChats> {
                     color: AppColors.backgroundColor,
                   ),
                 ),
-                // Obx(() => Text(
-                //                       '${totalUnopenedMessages.value} messages received', // Use the reactive variable
-                //                       style: FontManager().getTextStyle(
-                //                           context,
-                //                           lWeight: FontWeight.normal,
-                //                           fontSize: 16,
-                //                           color: AppColors.backgroundColor,
-                //                       ),
-                //                   )),
+                
                 const SizedBox(height: 8),
                 chatSplitAccount.isNotEmpty
                     ? SizedBox(
@@ -277,8 +265,7 @@ class _TribeSearchState extends State<TribeChats> {
 
           //padding: const EdgeInsets.symmetric(vertical: 10),
           child: ListView(
-            // mainAxisAlignment: MainAxisAlignment.start,
-            // crossAxisAlignment: CrossAxisAlignment.center,
+          
             children: [
               InputDate2(strings.searchHint, TextInputType.name, search),
               const SizedBox(
@@ -315,9 +302,6 @@ class _TribeSearchState extends State<TribeChats> {
                 children:
                     chatList.map((item) => profileContainer(item)).toList(),
               );
-    // return   Column(
-    //         children: frdsList.map((item) => profileContainer(item)).toList(),
-    //    );
   }
 
   Widget InputDate2(lableText, keyBoard, Textcontroller) {

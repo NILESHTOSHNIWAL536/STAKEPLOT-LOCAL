@@ -33,18 +33,5 @@ class FontManager {
       decorationThickness: decorationThickness,
       decorationStyle: decorationStyle,
     );
-    // return TextStyle(
-    //   fontSize: fontSize,
-    //   fontWeight: lWeight,
-    //   height: lineHeight,
-    //   fontFamily: 'Lora',
-    //   fontStyle: lFontStyle,
-    //   color: color,
-    //   letterSpacing: letterSpacing,
-    //   decoration: decoration,
-    //   decorationColor: decorationColor,
-    //   decorationThickness: decorationThickness,
-    //   decorationStyle: decorationStyle,
-    // );
   }
 }

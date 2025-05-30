@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/donut_chart.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/history.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/insightsController.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/transactionHistoryScreen.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
@@ -19,6 +19,8 @@ import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 
 void clearStack(BuildContext context) {
   try {
@@ -268,4 +270,31 @@ void logoutUserFromDevice(context2)async{
            {
              
            }
+}
+
+
+void clearStackLocalInfo() {
+  fetchedData.value = false;
+  listOfAccountAdded.clear();
+  FinvuFIPDetailsList.clear();
+  accountCountList.clear();
+  accountAdded.clear();
+  accountLinked.clear();
+  fipDis.clear();
+  fipDisOrginal.clear();
+  isSeletedBankAccout.clear();
+  bankImageAndid.clear();
+  listOfBankAccount.clear();
+  fetchAccountData.clear();
+  seletedAccountInfomations.clear();
+  fipDis.clear();
+  seletedAccountIds.clear();
+  fiTypes.clear();
+  getBanks.value = false;
+  addAccount.value = false;
+  getFetch.value = false;
+  addBank.value = false;
+  directFetch.value = false;
+  fetchedData.value = false;
+  count.value = 0;
 }

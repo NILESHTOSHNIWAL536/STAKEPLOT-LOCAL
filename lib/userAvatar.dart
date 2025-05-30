@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
 
@@ -13,12 +11,9 @@ UserAvatar({ Key? key,required this.url,required this.width,required this.height
 
   @override
   Widget build(BuildContext context){
-    //  url="https://lh3.googleusercontent.com/a/ACg8ocKYmUXUyRRJMokLs9MV_LdZsO3-x8WJJGTOtPw41A72KO-4QMaF=s96-c";
     return  Container(
         margin: EdgeInsets.only(top: 4),
-        // padding: EdgeInsetsDirectional.all(2),
         alignment: Alignment.center,
-        // color: Colorcodes.red,
         child: isSvgUrl(url)? Center(
           child: SvgPicture.asset(url.toString().trim(),
                 width: MediaQuery.of(context).size.width/ width,
@@ -29,7 +24,6 @@ UserAvatar({ Key? key,required this.url,required this.width,required this.height
              width: MediaQuery.of(context).size.width /width,
              height: MediaQuery.of(context).size.height/height,
              padding: EdgeInsets.all(0),
-            //  color: Colorcodes.appBarColor,
             child: GFImageOverlay(     
                                   shape: BoxShape.circle,
                                   boxFit: BoxFit.contain,

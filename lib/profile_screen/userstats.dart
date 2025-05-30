@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/insightsController.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
-// import 'package:flutter_application_code_stakeplot/screen_time_tracker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserStatsScreen extends StatefulWidget {
@@ -18,7 +16,6 @@ class _UserStatsScreenState extends State<UserStatsScreen> {
   void initState() 
  {
     super.initState();
-    // Initialize the screen time tracker
   }
 
 

@@ -1,11 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-import 'package:http/http.dart' as http;
-import 'package:page_transition/page_transition.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 
 
@@ -35,7 +31,6 @@ const GoogleSignIn({ Key? key }) : super(key: key);
                     Image.network(svgIconPath.google,height: 30,width: 30,),
                     const SizedBox(width: 10,),
                     Container(
-                      // width: MediaQuery.of(context).size.width/1.8,
                       child: Text(("Continue with Google"),
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.bold,

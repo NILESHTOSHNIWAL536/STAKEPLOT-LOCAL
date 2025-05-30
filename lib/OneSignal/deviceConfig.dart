@@ -1,6 +1,9 @@
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
@@ -10,7 +13,10 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/firebase_options.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
+import 'package:get/get.dart';
+import 'package:home_widget/home_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -156,4 +162,47 @@ void onPostDataCallWebSocket(data,context){
         catch(e)
         {
         }
+}
+
+
+
+void checkFirebase() async {
+   WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+  mainPageWebSocket = IO.io(urlWithLocallHost,
+        IO.OptionBuilder()
+            .setTransports(['websocket'])
+            .enableForceNewConnection()
+            .build());
+    mainPageWebSocket.connect();
+
+  } catch (e) {
+    print('❌ Firebase setup error: $e');
+  }
+
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]).then((_) {
+    runApp(MyApp());
+  });
+}
+
+
+HomeWidgetBindUpdate()
+{
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        await HomeWidget.setAppGroupId('group.com.stakeplot.adnan.dev');
+        await updateWidget();
+      } catch (e) {
+      }
+    });
+    ever(lendAmountRemainders, (_) => updateWidget());
+    ever(dueAmountRemainders, (_) => updateWidget());
 }

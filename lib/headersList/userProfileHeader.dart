@@ -5,11 +5,8 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/customNoti.dart';
-import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:flutter_application_code_stakeplot/userAvatar.dart';
-import 'package:get/get.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:intl/intl.dart';
+
 
 // ignore: must_be_immutable
 class UserProfileHeader extends StatefulWidget {
@@ -96,10 +93,6 @@ class _UserProfileHeaderState extends State<UserProfileHeader> {
               ),
             ),
           ),
-
-          // SizedBox(
-          //   height: 50,
-          // )
         ],
       ),
     );
