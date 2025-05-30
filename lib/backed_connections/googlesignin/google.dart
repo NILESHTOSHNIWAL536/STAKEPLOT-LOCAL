@@ -1,4 +1,5 @@
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -31,7 +32,7 @@ class AuthService {
 
       if (idToken != null) {
         final response = await http.post(
-          Uri.parse('http://192.168.1.10:5000/api/v1/user/google-auth'),
+          Uri.parse('$url/user/google-auth'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({'idToken': idToken}),
         );

@@ -473,5 +473,5 @@ Widget setPinForAccountHide(context) {
   ),
 );
 
-      }
+}
 }

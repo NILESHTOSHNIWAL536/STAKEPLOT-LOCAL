@@ -17,46 +17,44 @@ RxString selectedBank = "".obs;
 
 void getCategoryData() async {
   var res = await getDataApiCall("${url}/transactionauto/categorize");
-  if (getFlagOfResponse(res)) 
-  {
-    try{
-    var data = jsonDecode(res.body);
-  
-    categoriesList.clear();
-    frequentPayments.clear();
-    moreDrasticChange.clear();
+  if (getFlagOfResponse(res)) {
+    try {
+      var data = jsonDecode(res.body);
 
-    categoriesListWeek.clear();
-    frequentPaymentsWeek.clear();
-    moreDrasticChangeWeek.clear();
+      categoriesList.clear();
+      frequentPayments.clear();
+      moreDrasticChange.clear();
 
-    //month
+      categoriesListWeek.clear();
+      frequentPaymentsWeek.clear();
+      moreDrasticChangeWeek.clear();
 
-    categoriesList.addAll(data["data"]['categorized']);
-    frequentPayments.addAll(data["data"]['frequentPayments']);
-    moreDrasticChange.addAll(data["data"]['moreDrasticChange']);
-    
-    totalDebitThisMonth.value = double.parse(doubleToFixed(data["data"]['totalDebitThisMonth'].toString()));
-   
-   
-    categoriesListWeek.addAll(data["data"]['week']['categorized']);
-    frequentPaymentsWeek.addAll(data["data"]['week']['frequentPayments']);
-    moreDrasticChangeWeek.addAll(data["data"]['week']['moreDrasticChange']);
-    totalDebitThisWeek.value = double.parse(doubleToFixed(data["data"]['week']['totalDebitThisMonth'].toString()));
-   
+      //month
 
-    categoriesList.refresh();
-    frequentPayments.refresh();
-    moreDrasticChange.refresh();
+      categoriesList.addAll(data["data"]['categorized']);
+      frequentPayments.addAll(data["data"]['frequentPayments']);
+      moreDrasticChange.addAll(data["data"]['moreDrasticChange']);
 
-    categoriesListWeek.refresh();
-    frequentPaymentsWeek.refresh();
-    moreDrasticChangeWeek.refresh();
+      totalDebitThisMonth.value = double.parse(
+          doubleToFixed(data["data"]['totalDebitThisMonth'].toString()));
 
-    setDonectChat.value = !setDonectChat.value;
-   
-    }catch(e){
-        print(e);
+      categoriesListWeek.addAll(data["data"]['week']['categorized']);
+      frequentPaymentsWeek.addAll(data["data"]['week']['frequentPayments']);
+      moreDrasticChangeWeek.addAll(data["data"]['week']['moreDrasticChange']);
+      totalDebitThisWeek.value = double.parse(doubleToFixed(
+          data["data"]['week']['totalDebitThisMonth'].toString()));
+
+      categoriesList.refresh();
+      frequentPayments.refresh();
+      moreDrasticChange.refresh();
+
+      categoriesListWeek.refresh();
+      frequentPaymentsWeek.refresh();
+      moreDrasticChangeWeek.refresh();
+
+      setDonectChat.value = !setDonectChat.value;
+    } catch (e) {
+      print(e);
     }
     processChartData();
   }
@@ -82,6 +80,23 @@ void getdebts() async {
   }
 }
 
+void deleteUserAccount(BuildContext context) async {
+  try {
+    var response = await deleteDataApiCall("${url}/user");
+
+    if (response.statusCode == 200) {
+      print("User account deleted successfully.");
+    } else {
+      print(
+          "Failed to delete user account. Status code: ${response.statusCode}");
+    }
+  } catch (e, stackTrace) {
+    print("Error occurred while deleting user account: $e");
+    print("Stack trace: $stackTrace");
+  }
+  clearStackLocalInfo();
+  clearStack(context);
+}
 
 void deleteBankAccount({required String bankid,required String AccountId,required BuildContext context})async
 {

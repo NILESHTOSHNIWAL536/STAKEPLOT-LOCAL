@@ -5,8 +5,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart'; // Assuming AppColors is here
-import 'package:flutter_application_code_stakeplot/colorcodes.dart'; // Additional color definitions
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart'; 
 
 final RxString selectedPeriod = 'Month'.obs;
 
