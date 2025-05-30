@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/firebase_options.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
@@ -193,6 +195,16 @@ void checkFirebase() async {
   });
 }
 
+
+catWidgetBindUpdate(){
+  WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await HomeWidget.setAppGroupId('group.com.stakeplot.adnan.dev');
+      getCategoryData();
+      await updateWidgetSpendingCategories();
+    });
+    ever(chartData, (_) => updateWidgetSpendingCategories());
+    ever(totalValue, (_) => updateWidgetSpendingCategories());
+}
 
 HomeWidgetBindUpdate()
 {

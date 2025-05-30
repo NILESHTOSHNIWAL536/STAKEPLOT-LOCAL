@@ -3,17 +3,16 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
+import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'colors.dart';
 import 'package:get/get.dart';
-import 'package:home_widget/home_widget.dart';
-// Import the new colors class
+
 
 RxInt selectedIndex = (-1).obs;
 RxList<ChartData> chartData = <ChartData>[].obs;
@@ -37,38 +36,10 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
   void initState() {
     super.initState();
     selectedIndex.value = -1;
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await HomeWidget.setAppGroupId('group.com.stakeplot.adnan.dev');
-      getCategoryData();
-      await _updateWidget();
-    });
-    ever(chartData, (_) => _updateWidget());
-    ever(totalValue, (_) => _updateWidget());
+    catWidgetBindUpdate();
   }
 
-  Future<void> _updateWidget() async {
-    try {
-      final total = '₹${totalValue.value?.toStringAsFixed(2) ?? '0.00'}';
-      final timestamp = getMonthlyRange();
-      String categories = 'None';
-      if (chartData.isNotEmpty) {
-        categories = chartData
-            .map(
-                (data) => '${data.category}: ₹${data.value.toStringAsFixed(2)}')
-            .join('\n');
-      }
-
-      await HomeWidget.saveWidgetData<String>('total_spending', total);
-      await HomeWidget.saveWidgetData<String>('categories', categories);
-      await HomeWidget.saveWidgetData<String>('timestamp', timestamp);
-
-      await HomeWidget.updateWidget(
-        name: 'StakeplotWidgetProvider',
-        androidName: 'StakeplotWidgetProvider',
-        iOSName: 'StakeplotWidget',
-      );
-    } catch (e) {}
-  }
+ 
 
   @override
   Widget build(BuildContext context) {

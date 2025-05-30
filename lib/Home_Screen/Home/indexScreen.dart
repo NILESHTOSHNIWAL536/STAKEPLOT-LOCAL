@@ -43,7 +43,8 @@ class IndexScreen extends StatelessWidget {
             ),
             SizedBox(
                 height: height * 0.5,
-                child: InsightsScreen()),
+                child: InsightsScreen()
+            ),
             DoughnutChartExample()
           ],
         ),
