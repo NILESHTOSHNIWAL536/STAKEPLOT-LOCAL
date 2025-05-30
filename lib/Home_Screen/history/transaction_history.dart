@@ -1,8 +1,8 @@
 
 import 'package:flutter_application_code_stakeplot/GroupTrans/group_transactions.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/animated/pdf.dart';
@@ -130,6 +130,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
     sectionReached.value = true;
     Navigator.pop(context);
   }
+    
 
   Widget getlist() {
     // Group transactions by month and year

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/cardAnimations.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/headsUpAndMoneyMap.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/donut_chart.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/manual_transaction.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/swipeableCards.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/number_picker.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/finora.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/banksCardsSlider.dart';
 
 class IndexScreen extends StatelessWidget {
   const IndexScreen({Key? key}) : super(key: key);

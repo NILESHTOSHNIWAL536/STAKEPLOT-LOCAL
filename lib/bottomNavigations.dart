@@ -6,7 +6,7 @@ import "package:flutter_application_code_stakeplot/Community_Page/community_scre
 import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
-import "package:flutter_application_code_stakeplot/Home_Screen/home_page.dart";
+import "package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart";
