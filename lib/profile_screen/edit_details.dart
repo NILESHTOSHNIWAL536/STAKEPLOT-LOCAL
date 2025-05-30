@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/resetPin.dart';
@@ -230,11 +231,7 @@ void checkBiometricsStatus() async {
             getListOfBankConnected(),
             const SizedBox(height: 20),
 
-            // InkWell(
-            //     onTap: () {
-            //       editUserDetails(context, _controllers);
-            //     },
-            //     child: getButton(context, "Save Changes"))
+    
           ],
         ),
       ),
@@ -246,34 +243,12 @@ void checkBiometricsStatus() async {
     return Container(
       child: Column(
         children: [
-          Column(
+        Obx(()=>  Column(
             children: bankAccountLinkedList.map((e) {
+            
               return _buildAccountDetails(e['bankName'], e['maskedAccNumber'], e,e['bankLogo']);
             }).toList(),
-          ),
-         
-          // Align(
-          //   alignment: Alignment.bottomRight,
-          //   child: InkWell(
-          //       onTap: () {
-          //         number.value = Phone.value;
-          //         isFromEditDeatils.value=true;
-          //         Navigator.push(
-          //           context,
-          //           MaterialPageRoute(
-          //             builder: (context) => MobileNumber(
-          //               flag: true,
-          //               formEditDetails: true,
-          //             ),
-          //           ),
-          //         );
-          //       },
-          //       child: textStyle(
-          //           text: '+ Add Bank',
-          //           context: context,
-          //           fontWeight: FontWeight.bold,
-          //           fontsize: 16)),
-          // ),
+          )),
          
         ],
       ),
@@ -369,7 +344,38 @@ void checkBiometricsStatus() async {
           color: AppColors.bg3,
           fontWeight: FontWeight.w400,
         ),
+        trailing: IconButton(
+          icon: Icon(Icons.delete, color: AppColors.debitColor),
+          onPressed: () {
+            // Show dialog box for confirmation
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Delete Account'),
+                  content: Text('Are you sure you want to delete this account?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close the dialog
+                      },
+                      child: Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        // Add your delete logic here
+                        deleteBankAccount(bankid: data['bankId'],AccountId: data['accountId'],context: context);
+                         // Close the dialog
+                      },
+                      child: Text('Delete'),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
-}
+  }
