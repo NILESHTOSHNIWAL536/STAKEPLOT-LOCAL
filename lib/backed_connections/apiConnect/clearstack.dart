@@ -19,6 +19,8 @@ import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 
 void clearStack(BuildContext context) {
   try {
@@ -268,4 +270,31 @@ void logoutUserFromDevice(context2)async{
            {
              
            }
+}
+
+
+void clearStackLocalInfo() {
+  fetchedData.value = false;
+  listOfAccountAdded.clear();
+  FinvuFIPDetailsList.clear();
+  accountCountList.clear();
+  accountAdded.clear();
+  accountLinked.clear();
+  fipDis.clear();
+  fipDisOrginal.clear();
+  isSeletedBankAccout.clear();
+  bankImageAndid.clear();
+  listOfBankAccount.clear();
+  fetchAccountData.clear();
+  seletedAccountInfomations.clear();
+  fipDis.clear();
+  seletedAccountIds.clear();
+  fiTypes.clear();
+  getBanks.value = false;
+  addAccount.value = false;
+  getFetch.value = false;
+  addBank.value = false;
+  directFetch.value = false;
+  fetchedData.value = false;
+  count.value = 0;
 }
