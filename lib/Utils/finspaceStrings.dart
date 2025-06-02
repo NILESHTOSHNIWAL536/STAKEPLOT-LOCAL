@@ -49,7 +49,7 @@ class FinspaceStrings
 
   void fetchConstants() async {
     try {
-      final response = await getDataApiCall("${url}/constant/finvu");
+      final response = await getDataApiCall("${url}/constant/finvuCommunity");
       if (getFlagOfResponse(response)) {
         
         var data = jsonDecode(response.body);
@@ -60,4 +60,5 @@ class FinspaceStrings
     } catch (e) { 
     }
   }
+  
 }

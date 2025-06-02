@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Utils/finspaceStrings.dart';
 
 
 class InterestSelectionScreen extends StatefulWidget {
@@ -16,35 +17,7 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
-  final Map<String, List<String>> categories = {
-    'Personal Finance': [],
-    'Budgeting': [],
-    'Debt Management': [],
-    'Savings Strategies': [],
-    'Investments': [
-      'Stocks & Equities',
-      'Mutual Funds & SIPs',
-      'Cryptocurrency & Blockchain',
-      'Real Estate & Property'
-    ],
-    'Tax Planning & Filing': [],
-    'Spending Confessions': [],
-    'Behavioural Finance': [],
-    'Retirement & Pension Planning': [],
-    'Side Hustles & Passive Income': [],
-    'Tech Trends in Finance': [],
-    'College & Education Funding': [],
-    'Scholarships and Stipends': [],
-    'Global Market News & Analysis': [],
-    'Alternative Investments': [
-      'Art',
-      'Collectibles',
-      'P2P Lending'
-    ],
-    'Salary Talks': [],
-    'Spent Stories': [],
-    'Smart Savers': [],
-  };
+  final Map<String, List<String>> categories = FinspaceStrings().categories;
 
   @override
   void initState() {

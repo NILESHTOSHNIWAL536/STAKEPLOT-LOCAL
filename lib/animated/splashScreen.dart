@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
+import 'package:flutter_application_code_stakeplot/Utils/finspaceStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
@@ -43,7 +44,9 @@ class _SplashScreenState extends State<SplashScreen>
     CommunityScreenStrings communityScreenStrings= CommunityScreenStrings();
     FinvuStrings finvuStrings= FinvuStrings();
     ProfileScreenStrings profileScreenStrings= ProfileScreenStrings();
+    FinspaceStrings finspaceStrings= FinspaceStrings();
 
+    finspaceStrings.fetchConstants();
     signinData.fetchConstants();
     signup.fetchConstants();
     snackbarData.fetchConstants();
