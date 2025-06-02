@@ -35,6 +35,7 @@ var routes =
       '/Notifications': (context) => Notifications(),  
       '/comment': (context) => Notifications(),  
       '/TribeSearch': (context) => TribeSearch(),  
+      '/post': (context) => Community(),  
       '/Friends': (context) => Friends(),    
       '/TribeChats': (context) => TribeChats(), 
       '/discover': (context) =>  DiscoverAccount(),     

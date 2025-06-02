@@ -21,6 +21,7 @@ void callApi(context)async
     getUserInfomations();
     getBankAccounts();
     getPost();
+    getTranding();
     getAck();
     getBudget();
     contextGlobal=context;

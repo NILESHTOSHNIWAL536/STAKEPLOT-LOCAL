@@ -22,6 +22,8 @@ bool findData = true;
 bool findTranding = true;
 RxInt indexFlag = 0.obs;
 RxBool  isPost = false.obs;
+RxBool  isPostTranding = false.obs;
+RxBool  isTrending = false.obs;
 
 Widget noFriend(context, [text = ""]) {
   return GestureDetector(

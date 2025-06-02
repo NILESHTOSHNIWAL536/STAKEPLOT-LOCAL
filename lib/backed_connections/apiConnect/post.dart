@@ -174,6 +174,24 @@ void getPost() async {
   } else {}
 }
 
+void getTranding() async {
+  var response = await getDataApiCall('${url}/post/trending/');
+  if (getFlagOfResponse(response)) {
+    var his = jsonDecode(response.body); 
+    var obj = his['data'];
+    historyListData.clear();
+    historyListData.addAll(obj);
+    getAllPostData.clear();
+    getAllPostData.addAll(obj);
+    historyListData.forEach((element){
+      postData[element["_id"]]=true;
+      postCount[element["_id"]] = element['upvotes'];
+      postCommentCount[element["_id"]] = element['comments'];
+    });
+    isPostTranding.value = true;
+  } else {}
+}
+
 void savePostData(context, data) async {
   var urlPath = "${url}/post/save";
   var body = {"postId": data['_id']};

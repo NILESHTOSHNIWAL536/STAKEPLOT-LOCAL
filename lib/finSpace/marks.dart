@@ -249,11 +249,8 @@ class MaskNameFormWidget extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () {
                 // Handle done action
-                // Navigator.pushNamed(context, '/interestScreen');
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => InterestSelectionScreen()),
-                    );
+                 Navigator.pushNamed(context, '/interestScreen');
+                  
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF4A4E69),

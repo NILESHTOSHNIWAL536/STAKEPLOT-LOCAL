@@ -27,6 +27,8 @@ class CommunityScreenStrings {
   String addThoughts = "Add your thoughts";
   String continueButton = "Continue";
   String postedSuccess = "Posted";
+  String trending = "Trending";
+  String feed = "Feed";
 
   // PollScreen
   String askQuestion = "Ask a question";
