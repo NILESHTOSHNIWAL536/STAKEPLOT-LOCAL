@@ -1054,6 +1054,7 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/lendMessage.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/speechToText.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
@@ -1242,17 +1243,11 @@ class _ModalContentState extends State<ModalContent>
   bool _isAmountFieldFocused = true;
   late IO.Socket socket;
 
-  late stt.SpeechToText _speech;
-  bool _isListening = false;
-  bool _isProcessing = false;
-  String _recognizedText = '';
-  late AnimationController _micAnimationController;
-  late Animation<double> _micAnimation;
-  int _retryCount = 0;
+  late SpeechToTextService speechService;
   @override
   void initState() {
     super.initState();
-    _speech = stt.SpeechToText();
+  
     getAllTransaction(context);
     getCategoryData();
     filteredCategories = categories.keys.toList();
@@ -1262,363 +1257,33 @@ class _ModalContentState extends State<ModalContent>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    _micAnimationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    )..repeat(reverse: true);
-    _micAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
-      CurvedAnimation(parent: _micAnimationController, curve: Curves.easeInOut),
-    );
+    
     socket = IO.io(urlWithLocallHost,
         IO.OptionBuilder().setTransports(['websocket']).build());
     setUpSocketListener();
-    _checkInitialPermissions();
-  }
-
-  Future<void> _checkInitialPermissions() async {
-    var status = await Permission.microphone.status;
-    if (status.isPermanentlyDenied) {
-      snackBarCalled(
-          context,
-          'Microphone permission denied. Please enable it in settings.',
-          Colors.red);
-    }
-  }
-
-  // Request microphone permission
-  Future<bool> _requestMicrophonePermission() async {
-    var status = await Permission.microphone.request();
-    if (status.isPermanentlyDenied) {
-      snackBarCalled(
-          context,
-          'Microphone permission denied. Please enable it in settings.',
-          Colors.red);
-      await openAppSettings();
-      return false;
-    }
-    return status.isGranted;
-  }
-
-  // Start speech recognition
-  Future<void> _startListening() async {
-    if (_isProcessing) return;
-    bool hasPermission = await _requestMicrophonePermission();
-    if (!hasPermission) return;
-
-    bool available = await _speech.initialize(
-      onStatus: (status) {
-        if (status == 'done' || status == 'notListening') {
-          setState(() => _isListening = false);
-          _micAnimationController.stop();
-        }
-      },
-      onError: (error) {
-        setState(() {
-          _isListening = false;
-          _isProcessing = false;
-          _micAnimationController.stop();
-        });
-        snackBarCalled(context, 'Speech recognition failed: ${error.errorMsg}',
-            Colors.red);
-      },
-    );
-
-    if (available) {
-      setState(() {
-        _isListening = true;
-        _isProcessing = true;
-        _recognizedText = '';
-        _micAnimationController.repeat(reverse: true);
-      });
-      _showListeningModal();
-      _speech.listen(
-        onResult: (result) {
-          setState(() {
-            _recognizedText = result.recognizedWords;
-            if (result.finalResult) {
-              _isListening = false;
-              _micAnimationController.stop();
-              _processSpokenText(_recognizedText);
-            }
-          });
-        },
-        listenFor: Duration(seconds: 10),
-        pauseFor: Duration(seconds: 3),
-      );
-    } else {
-      setState(() {
-        _isListening = false;
-        _isProcessing = false;
-      });
-      snackBarCalled(
-          context,
-          'Speech recognition not available. Ensure Google Speech Services are installed.',
-          Colors.red);
-    }
-  }
-
-  // Stop listening
-  void _stopListening() {
-    _speech.stop();
-    setState(() {
-      _isListening = false;
-      _isProcessing = false;
-      _micAnimationController.stop();
-    });
-  }
-
-  // Show listening modal
-  void _showListeningModal() {
-    showDialog(
+     speechService = SpeechToTextService(
       context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: AppColors.mt,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: FocusScope(
-              node: FocusScopeNode(),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    _isListening ? 'Speak now' : 'Processing...',
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.bold, fontSize: 18, color: AppColors.accentColor),
-                    semanticsLabel: _isListening ? 'Speak now' : 'Processing',
-                  ),
-                  const SizedBox(height: 16),
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      if (!_isListening)
-                        CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.yellow),
-                          strokeWidth: 3,
-                        ),
-                      ScaleTransition(
-                        scale: _micAnimation,
-                        child: Container(
-                          padding: EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: _isListening ? Colors.green.withOpacity(0.2) : Colors.yellow.withOpacity(0.2),
-                          ),
-                          child: Icon(
-                            Icons.mic,
-                            size: 48,
-                            color: _isListening ? Colors.green : Colors.yellow,
-                            semanticLabel: 'Microphone',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    _recognizedText.isEmpty
-                        ? 'Say amount and category (e.g., "500 Zomato", "Zomato 500")'
-                        : 'Heard: $_recognizedText',
-                    style: FontManager().getTextStyle(context, fontSize: 16, color: AppColors.accentColor),
-                    textAlign: TextAlign.center,
-                    semanticsLabel: _recognizedText.isEmpty
-                        ? 'Say amount and category'
-                        : 'Heard: $_recognizedText',
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextButton(
-                        focusNode: FocusNode(),
-                        onPressed: () {
-                          _stopListening();
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          'Cancel',
-                          style: FontManager().getTextStyle(context, fontSize: 14, color: Colors.red),
-                          semanticsLabel: 'Cancel speech input',
-                        ),
-                      ),
-                      if (!_isListening)
-                        TextButton(
-                          focusNode: FocusNode(),
-                          onPressed: () {
-                            Navigator.pop(context);
-                            _startListening();
-                          },
-                          child: Text(
-                            'Retry',
-                            style: FontManager().getTextStyle(context, fontSize: 14, color: AppColors.primaryColor),
-                            semanticsLabel: 'Retry speech input',
-                          ),
-                        ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
+      categories: categories,
+      customCategoryList: customCategoryList.cast<Map<String, dynamic>>(),
+      isDebit: widget.isDebit,
+      tickerProvider: this,
+      onSpeechProcessed: (double parsedAmount, String category, String? subCategory) {
+        setState(() {
+          amount = parsedAmount;
+          _amountController.text = parsedAmount.toString();
+          selectedCategory = category;
+          selectedSubCategory = subCategory ?? '';
+          selectedCategory2 = selectedCategory;
+          selectedSubCategory2 = selectedSubCategory;
+          fin = '$selectedCategory (${selectedSubCategory?.isEmpty == true ? 'None' : selectedSubCategory})';
+          _isAmountFieldFocused = false;
+          isCategoryFieldExpanded = false;
+        });
+        _showConfirmationDialog(parsedAmount, category, subCategory);
       },
     );
   }
-  // Process spoken text
- void _processSpokenText(String text) async {
-    Navigator.pop(context); // Close listening modal
-    if (text.isEmpty) {
-      snackBarCalled(context, 'No speech detected', Colors.red);
-      _isProcessing = false;
-      return;
-    }
 
-    // Normalize text and tokenize
-    String normalizedText = text.toLowerCase().replaceAll(RegExp(r'^(add|spend|paid|for|to|on|in|and) '), '').trim();
-    List<String> parts = normalizedText.split(RegExp(r'\s+'));
-
-    double? parsedAmount;
-    String? spokenCategory;
-    String? spokenSubCategory;
-
-    // Parse amount
-    String numberPart = '';
-    for (String part in parts) {
-      double? number = double.tryParse(part.replaceAll(RegExp(r'[^0-9.]'), ''));
-      if (number != null && number > 0) {
-        parsedAmount = number;
-        continue;
-      }
-      numberPart += part + ' ';
-    }
-
-    // Parse spoken numbers
-    if (parsedAmount == null) {
-      Map<String, double> numberWords = {
-        'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5,
-        'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10,
-        'eleven': 11, 'twelve': 12, 'thirteen': 13, 'fourteen': 14, 'fifteen': 15,
-        'sixteen': 16, 'seventeen': 17, 'eighteen': 18, 'nineteen': 19,
-        'twenty': 20, 'thirty': 30, 'forty': 40, 'fifty': 50, 'sixty': 60,
-        'seventy': 70, 'eighty': 80, 'ninety': 90,
-        'hundred': 100, 'thousand': 1000
-      };
-      double tempAmount = 0;
-      double multiplier = 1;
-      List<String> numberTokens = numberPart.trim().split(' ');
-      for (int i = 0; i < numberTokens.length; i++) {
-        String word = numberTokens[i];
-        if (numberWords.containsKey(word)) {
-          if (word == 'hundred' || word == 'thousand') {
-            multiplier = numberWords[word]!;
-          } else {
-            double value = numberWords[word]!;
-            if (i + 1 < numberTokens.length && numberTokens[i + 1] == 'hundred') {
-              tempAmount += value * 100;
-              i++;
-            } else if (i + 1 < numberTokens.length && numberTokens[i + 1] == 'thousand') {
-              tempAmount += value * 1000;
-              i++;
-            } else {
-              tempAmount += value * multiplier;
-              multiplier = 1;
-            }
-          }
-        }
-      }
-      if (tempAmount > 0) parsedAmount = tempAmount;
-    }
-
-    // Parse category/subcategory with multi-word support
-    List<String> potentialWords = [];
-    for (int i = 0; i < parts.length; i++) {
-      potentialWords.add(parts[i]);
-      if (i < parts.length - 1) {
-        potentialWords.add('${parts[i]} ${parts[i + 1]}'); // Two-word phrases
-      }
-      if (i < parts.length - 2) {
-        potentialWords.add('${parts[i]} ${parts[i + 1]} ${parts[i + 2]}'); // Three-word phrases
-      }
-    }
-
-    // Check for subcategory first (most specific)
-    for (String word in potentialWords) {
-      categories.forEach((category, subCategories) {
-        if (subCategories.any((sub) => sub.toLowerCase() == word)) {
-          if (spokenCategory == null) { // Take first valid match
-            spokenCategory = category;
-            spokenSubCategory = subCategories.firstWhere((sub) => sub.toLowerCase() == word);
-          }
-        }
-      });
-    }
-
-    // Then check categories
-    if (spokenCategory == null) {
-      for (String word in potentialWords) {
-        String? foundCategory = categories.keys.firstWhere(
-          (cat) => cat.toLowerCase() == word,
-          orElse: () => '',
-        );
-        if (foundCategory.isNotEmpty) {
-          spokenCategory = foundCategory;
-          spokenSubCategory = 'Other';
-          break; // Take first valid category
-        }
-      }
-    }
-
-    // Then check custom categories
-    if (spokenCategory == null) {
-      for (String word in potentialWords) {
-        var customCat = customCategoryList.firstWhere(
-          (cat) => cat['name'].toString().toLowerCase() == word,
-          orElse: () => {},
-        );
-        if (customCat.isNotEmpty) {
-          spokenCategory = customCat['name'];
-          spokenSubCategory = '';
-          break; // Take first valid custom category
-        }
-      }
-    }
-
-    if (parsedAmount == null) {
-      snackBarCalled(context, 'Invalid or missing amount. Please try again.', Colors.red);
-      _isProcessing = false;
-      return;
-    }
-
-    if (spokenCategory == null) {
-      snackBarCalled(context, 'Category or subcategory not recognized. Please try again.', Colors.red);
-      _isProcessing = false;
-      return;
-    }
-
-     if (!widget.isDebit && spokenCategory != 'Income') {
-      snackBarCalled(context, 'Only Income category allowed for Cash In', Colors.red);
-      _isProcessing = false;
-      return;
-    }
-
-    setState(() {
-      amount = parsedAmount;
-      _amountController.text = parsedAmount.toString();
-      selectedCategory = spokenCategory;
-      selectedSubCategory = spokenSubCategory ?? '';
-      selectedCategory2 = selectedCategory;
-      selectedSubCategory2 = selectedSubCategory;
-      fin = '$selectedCategory (${selectedSubCategory?.isEmpty ==true? 'None' : selectedSubCategory})';
-      _isAmountFieldFocused = false;
-      isCategoryFieldExpanded = false;
-    });
-
-    _showConfirmationDialog(parsedAmount, spokenCategory??'', spokenSubCategory);
-  }
-
-  // Show confirmation dialog
   void _showConfirmationDialog(
       double amount, String category, String? subCategory) {
     showDialog(
@@ -1644,7 +1309,7 @@ class _ModalContentState extends State<ModalContent>
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                setState(() => _isProcessing = false);
+                setState(() => isProcessing = false);
               },
               child: Text(
                 'No',
@@ -1688,7 +1353,7 @@ class _ModalContentState extends State<ModalContent>
       snackBarCalled(context, 'Failed to add transaction: $error', Colors.red);
     } finally {
       cashInAndOut.value = false;
-      _isProcessing = false;
+      isProcessing = false;
     }
   }
 
@@ -1792,16 +1457,7 @@ class _ModalContentState extends State<ModalContent>
                             children: [
                               Expanded(child: AmountWidget()),
                               const SizedBox(width: 8),
-                              IconButton(
-                                icon: Icon(
-                                  _isListening ? Icons.mic : Icons.mic_none,
-                                  color: AppColors.primaryColor,
-                                ),
-                                onPressed: _isListening
-                                    ? _stopListening
-                                    : _startListening,
-                                tooltip: 'Speech to Text',
-                              ),
+                             
                             ],
                           ),
                           const SizedBox(height: 16),
@@ -1893,6 +1549,16 @@ class _ModalContentState extends State<ModalContent>
       inputFormatters: allowDecimalInput(),
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.currency_rupee),
+         suffixIcon: IconButton(
+          icon: Icon(
+            speechService.isListening ? Icons.mic : Icons.mic_none,
+            color: AppColors.primaryColor,
+          ),
+          onPressed: speechService.isListening
+              ? speechService.stopListening
+              : speechService.startListening,
+          tooltip: 'Speech to Text',
+        ),
         hintText: HomepageStringsDart().enterAmount,
         fillColor: AppColors.button,
         filled: true,
