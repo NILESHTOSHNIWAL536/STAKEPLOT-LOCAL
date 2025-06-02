@@ -40,10 +40,12 @@ void addLendUserAmount(context, String amount, List members, String name,
       addedUser.clear();
       selectedDueDate = null;
     } else {
-      snackBarCalledfail(
-          context,SnackbarData().lendAmountError, Colors.red);
+      snackBarCalledfail(context,SnackbarData().lendAmountError, Colors.red);
     }
 
     acceptReset.value = false;
     cashInAndOut.value =false;
   }
+
+
+  

@@ -1,12 +1,11 @@
 import 'dart:convert';
-import 'package:cached_network_image/cached_network_image.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/exploreCard.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/pop-up-menu.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/Tribe/resportHide.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
@@ -16,7 +15,6 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/readmore.dart';
-import 'package:flutter_application_code_stakeplot/userAvatar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
@@ -57,7 +55,6 @@ class _PostCardState extends State<PostCard> {
   @override
   void initState() {
     super.initState();
-    // postData[widget.data['_id']]=true;
     getInfo();
     getIndex();
   }
@@ -66,15 +63,12 @@ class _PostCardState extends State<PostCard> {
   Widget build(BuildContext context) {
     var data = widget.data;
     return  uploadData(data, widget.flag) ;
-    // return  Obx(()=>( postData[widget.data['_id']] ??false) ?uploadData(data, widget.flag)  :uploadData(data, widget.flag));
   }
 
   void getIndex()
   {
      try{
-      widget.index = widget.index != -1
-        ? widget.index
-        : getTrendingData.indexWhere((d) => d['_id'] == widget.data['_id']);
+      widget.index = widget.index != -1 ? widget.index : getTrendingData.indexWhere((d) => d['_id'] == widget.data['_id']);
     }catch(e)
     {
       print(e);
@@ -185,8 +179,8 @@ class _PostCardState extends State<PostCard> {
                           children: [
                             // Save user posts 
                            // flag ? saved() : SizedBox.shrink(),
-                            popUpBox(dataObj['_id'], context,
-                                dataObj["author"]['name'],widget.index),
+                            popUpBoxHideDelete(dataObj['_id'], context,
+                                dataObj["author"]['name'],widget.index,widget.flag),
                             const SizedBox(width: 20),
                           ],
                         ),
@@ -287,10 +281,8 @@ class _PostCardState extends State<PostCard> {
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 10, horizontal: 10),
                                 child: !dataObj['isItenary']
-                                    ? text(dataObj)
-                                    : dataObj['chartType'] == "bargraph"
-                                        ? barGraph(dataObj)
-                                        : pieChart(dataObj),
+                                    ? text(dataObj):SizedBox.shrink()
+      
                               )
                         : SizedBox.shrink(),
                     vote(context, dataObj, dataObj),
@@ -304,60 +296,7 @@ class _PostCardState extends State<PostCard> {
     );
   }
 
-  Future<ui.Image> _loadImage(String url) async {
-    final http.Response response = await http.get(Uri.parse(url));
 
-    final bytes = response.bodyBytes;
-    final codec = await ui.instantiateImageCodec(bytes);
-    final frame = await codec.getNextFrame();
-
-    return frame.image;
-  }
-
-  Widget imageget(imageUrl) {
-    return FutureBuilder<ui.Image>(
-      future: _loadImage(imageUrl),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData) {
-          return RawImage(image: snapshot.data);
-        }
-        return CircularProgressIndicator();
-      },
-    );
-  }
-
-  Future<void> _redirectToURL(String url) async {
-    // final Uri uri = Uri.parse(url);
-    // if (await canLaunchUrl(uri)) {
-    //   await launchUrl(uri, mode: LaunchMode.externalApplication);
-    // } else {
-    //   throw 'Could not launch $url';
-    // }
-  }
-
-  Widget saved() {
-    return Padding(
-      padding: const EdgeInsets.only(right: 10.0),
-      child: InkWell(
-          onTap: () {
-            if (!fill.value) {
-              savePostData(context, widget.data);
-              snackBarCalled(context, "Saved post successfully!!");
-              fill.value = true;
-            } else
-              snackBarCalled(context, "You have already saved the post!!");
-          },
-          child: Obx(() => SvgPicture.asset(
-                fill.value
-                    ? "assets/images/Saved.svg"
-                    : "assets/images/Save.svg",
-                height: 25,
-                width: 25,
-                color: AppColors.accentColor,
-              ))),
-    );
-  }
 
   Widget text(item) {
     try {
@@ -366,226 +305,9 @@ class _PostCardState extends State<PostCard> {
       return Readmore(str: item['description'].toString());
     }
   }
-
-  Widget popUpBox(id, context, userId, int index) {
-   
-    return PopupMenuButton(
-      initialValue: 2,
-      color: Colorcodes.white,
-      child: Center(
-          child: Icon(
-        Icons.more_vert_outlined,
-        size: 25,
-        color: AppColors.bg2,
-      )),
-      onSelected: (value) {
-        if (value == 0 && userId == userName.value)
-        {
-          deletePost(id, context);
-          clearPostReportHide(index);
-        }
-        else if (value == 1) {
-          BuildContext c=context;
-          showModalBottomSheet(
-            context: context,
-            builder: (contextBuild) {
-              return showModel(c, id, widget.flag,index);
-            },
-          );
-
-        } else {
-          reportPost(context, id, "hide post", "hide",index);
-          if (widget.flag)
-          {
-            getPost();
-            Navigator.pop(context);
-          }
-         
-        }
-
-    
-      },
-      itemBuilder: (context) {
-        return userId == userName.value
-            ? [
-                PopupMenuItem(
-                  value: 0,
-                  child: getTextMenuItem(
-                    context: context,
-                    text: "Delete",
-                    color: Colorcodes.red,
-                  ),
-                ),
-              ]
-            : [
-                PopupMenuItem(
-                  value: 0,
-                  child: getTextMenuItem(context: context, text: "Hide"),
-                ),
-                PopupMenuItem(
-                  value: 1,
-                  child: getTextMenuItem(context: context, text: "Report"),
-                ),
-              ];
-      },
-    );
-  }
-
-
-
-
-  Widget getTextMenuItem({
-    required BuildContext context,
-    text,
-    Color color = AppColors.bg1,
-  }) {
-    return textStyle(
-        context: context, text: text, c: color, fontWeight: FontWeight.bold);
-  }
-
-  Widget barGraph(item) {
-    List<SalesData> chartData = <SalesData>[];
-    List list = item['description']['itemlist'];
-
-    int j = 0;
-    list.forEach(
-      (element) {
-        String t1 = element['item'];
-        String t2 = element['amount'].toString();
-        if (j == color.length) j = 0;
-        String b = t2 == "" ? "0" : t2;
-        chartData.add(
-          SalesData(t1, double.parse(b), color[j]),
-        );
-        j++;
-      },
-    );
-
-    return Container(
-      // margin: const EdgeInsets.symmetric(vertical: 30),
-      // width: MediaQuery.of(context).size.width/2,
-      // width: 300,
-      // height:170,
-      height: MediaQuery.of(context).size.height / 4.7,
-
-      child: SfCartesianChart(
-        //  primaryXAxis: CategoryAxis(),
-        primaryYAxis: NumericAxis(
-          labelStyle: FontManager().getTextStyle(context,
-              color: Colorcodes.white,
-              fontSize: 13,
-              // color: Colorcodes.white,
-              lWeight: FontWeight.bold),
-          // borderWidth: 0,
-          // majorGridLines: MajorGridLines(
-          //     color: Colorcodes.iconBackGround,
-          //     dashArray: [3, 3, 3, 3]),
-          // axisLine: AxisLine(color: Colorcodes.black),
-          numberFormat: NumberFormat.compact(),
-        ),
-        primaryXAxis: CategoryAxis(
-          labelStyle: FontManager().getTextStyle(context,
-              color: Colorcodes.white, fontSize: 11, lWeight: FontWeight.bold),
-          // axisLine: AxisLine(color: Colorcodes.black),
-        ),
-        isTransposed: true,
-        series: <CartesianSeries>[
-          BarSeries<SalesData, String>(
-            dataSource: chartData,
-            onPointTap: (pointInteractionDetails) {
-             
-              if (widget.flag) return;
-              Navigator.push(
-                  context,
-                  PageTransition(
-                    type: PageTransitionType.fade,
-                    duration: Durations.long1,
-                    child: TribeUnique(
-                      id: item["_id"],
-                      dataObj: item,
-                    ),
-                    isIos: true,
-                  ));
-            },
-            xValueMapper: (SalesData sales, _) => sales.month,
-            yValueMapper: (SalesData sales, _) => sales.sales,
-            pointColorMapper: (SalesData data, _) => data.color,
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget pieChart(item) {
-    final List<ChartData> chartData = [];
-
-    if (item['description'] == null || item['description']['itemlist'] == null)
-      return SizedBox.shrink();
-
-    List list = item['description']['itemlist'];
-
-    int j = 0;
-
-    list.forEach((element) {
-      String t1 = element['item'];
-      String t2 = element['amount'].toString();
-      if (j == color.length) j = 0;
-      String b = t2 == "" ? "0" : t2;
-      chartData.add(
-        ChartData(t1, list.length == 1 ? 100 : double.parse(b), color[j++], t1),
-      );
-    });
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20.0),
-      child: Container(
-
-          //  width: 30,
-          height: MediaQuery.of(context).size.height / 4.4,
-          child: SfCircularChart(series: <CircularSeries>[
-            // Render pie chart
-            PieSeries<ChartData, String>(
-              dataSource: chartData,
-
-              radius: "100",
-              explodeOffset: "20%",
-
-              dataLabelMapper: (ChartData data, _) => '${data.name}',
-              pointColorMapper: (ChartData data, _) => data.color,
-              xValueMapper: (ChartData data, _) => data.x,
-              yValueMapper: (ChartData data, _) => data.y,
-              onPointTap: (pointInteractionDetails) {
-                if (widget.flag) return;
-
-                Navigator.push(
-                    context,
-                    PageTransition(
-                      type: PageTransitionType.fade,
-                      duration: Durations.long1,
-                      child: TribeUnique(
-                        id: item["_id"],
-                        dataObj: item,
-                      ),
-                      isIos: true,
-                    ));
-              },
-              // strokeWidth: 5.0,
-              dataLabelSettings: DataLabelSettings(
-                isVisible: true,
-                textStyle: FontManager().getTextStyle(context,
-                    color: Colorcodes.black,
-                    fontSize: 12,
-                    lWeight: FontWeight.w500), // Show labels
-                labelIntersectAction: LabelIntersectAction.hide,
-                connectorLineSettings: ConnectorLineSettings(
-                  type: ConnectorType.curve,
-                ),
-              ),
-            )
-          ])),
-    );
-  }
 }
+  
+ 
 
 class SalesData {
   final String month;

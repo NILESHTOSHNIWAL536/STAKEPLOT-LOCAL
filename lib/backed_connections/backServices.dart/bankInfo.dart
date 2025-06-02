@@ -35,8 +35,7 @@ void getCategoryData() async {
       frequentPayments.addAll(data["data"]['frequentPayments']);
       moreDrasticChange.addAll(data["data"]['moreDrasticChange']);
 
-      totalDebitThisMonth.value = double.parse(
-          doubleToFixed(data["data"]['totalDebitThisMonth'].toString()));
+      totalDebitThisMonth.value = double.parse(doubleToFixed(data["data"]['totalDebitThisMonth'].toString()));
 
       categoriesListWeek.addAll(data["data"]['week']['categorized']);
       frequentPaymentsWeek.addAll(data["data"]['week']['frequentPayments']);
@@ -51,10 +50,9 @@ void getCategoryData() async {
       categoriesListWeek.refresh();
       frequentPaymentsWeek.refresh();
       moreDrasticChangeWeek.refresh();
-
       setDonectChat.value = !setDonectChat.value;
     } catch (e) {
-      print(e);
+      
     }
     processChartData();
   }
@@ -85,14 +83,12 @@ void deleteUserAccount(BuildContext context) async {
     var response = await deleteDataApiCall("${url}/user");
 
     if (response.statusCode == 200) {
-      print("User account deleted successfully.");
+      
     } else {
-      print(
-          "Failed to delete user account. Status code: ${response.statusCode}");
+     
     }
   } catch (e, stackTrace) {
-    print("Error occurred while deleting user account: $e");
-    print("Stack trace: $stackTrace");
+   
   }
   clearStackLocalInfo();
   clearStack(context);

@@ -21,20 +21,22 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 bool isDebit = true;
 
+
 class ModalContent extends StatefulWidget {
   final bool isDebit;
-  const ModalContent(this.isDebit,{Key? key}) : super(key: key);
+  const ModalContent(this.isDebit, {Key? key}) : super(key: key);
 
   @override
   _ModalContentState createState() => _ModalContentState();
 }
 
-class _ModalContentState extends State<ModalContent>
-    with SingleTickerProviderStateMixin {
+class _ModalContentState extends State<ModalContent> with TickerProviderStateMixin {
   String? selectedCategory;
   String? selectedSubCategory;
   final TextEditingController _amountController = TextEditingController();
@@ -54,23 +56,454 @@ class _ModalContentState extends State<ModalContent>
   bool _isAmountFieldFocused = true;
   late IO.Socket socket;
 
+  late stt.SpeechToText _speech;
+  bool _isListening = false;
+  bool _isProcessing = false;
+  String _recognizedText = '';
+  late AnimationController _micAnimationController;
+  late Animation<double> _micAnimation;
+
+  @override
   void initState() {
     super.initState();
+    _speech = stt.SpeechToText();
     getAllTransaction(context);
     getCategoryData();
     filteredCategories = categories.keys.toList();
     _confettiController =
         ConfettiController(duration: const Duration(seconds: 2));
-
-    // Animation controller for the tick mark
     _iconAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
+    _micAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )..repeat(reverse: true);
+    _micAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(parent: _micAnimationController, curve: Curves.easeInOut),
+    );
     socket = IO.io(urlWithLocallHost,
         IO.OptionBuilder().setTransports(['websocket']).build());
     setUpSocketListener();
-    // Initialize with all categories
+    _checkInitialPermissions();
+  }
+
+  Future<void> _checkInitialPermissions() async {
+    var status = await Permission.microphone.status;
+    if (status.isPermanentlyDenied) {
+      snackBarCalled(
+          context,
+          'Microphone permission denied. Please enable it in settings.',
+          Colors.red);
+    }
+  }
+
+  // Request microphone permission
+  Future<bool> _requestMicrophonePermission() async {
+    var status = await Permission.microphone.request();
+    if (status.isPermanentlyDenied) {
+      snackBarCalled(
+          context,
+          'Microphone permission denied. Please enable it in settings.',
+          Colors.red);
+      await openAppSettings();
+      return false;
+    }
+    return status.isGranted;
+  }
+
+  // Start speech recognition
+  Future<void> _startListening() async {
+    if (_isProcessing) return;
+    bool hasPermission = await _requestMicrophonePermission();
+    if (!hasPermission) return;
+
+    bool available = await _speech.initialize(
+      onStatus: (status) {
+        if (status == 'done' || status == 'notListening') {
+          setState(() => _isListening = false);
+          _micAnimationController.stop();
+        }
+      },
+      onError: (error) {
+        setState(() {
+          _isListening = false;
+          _isProcessing = false;
+          _micAnimationController.stop();
+        });
+        snackBarCalled(context, 'Speech recognition failed: ${error.errorMsg}',
+            Colors.red);
+      },
+    );
+
+    if (available) {
+      setState(() {
+        _isListening = true;
+        _isProcessing = true;
+        _recognizedText = '';
+        _micAnimationController.repeat(reverse: true);
+      });
+      _showListeningModal();
+      _speech.listen(
+        onResult: (result) {
+          setState(() {
+            _recognizedText = result.recognizedWords;
+            if (result.finalResult) {
+              _isListening = false;
+              _micAnimationController.stop();
+              _processSpokenText(_recognizedText);
+            }
+          });
+        },
+        listenFor: Duration(seconds: 10),
+        pauseFor: Duration(seconds: 3),
+      );
+    } else {
+      setState(() {
+        _isListening = false;
+        _isProcessing = false;
+      });
+      snackBarCalled(
+          context,
+          'Speech recognition not available. Ensure Google Speech Services are installed.',
+          Colors.red);
+    }
+  }
+
+  // Stop listening
+  void _stopListening() {
+    _speech.stop();
+    setState(() {
+      _isListening = false;
+      _isProcessing = false;
+      _micAnimationController.stop();
+    });
+  }
+
+  // Show listening modal
+  void _showListeningModal() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: AppColors.mt,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: FocusScope(
+              node: FocusScopeNode(),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    _isListening ? 'Speak now' : 'Processing...',
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.bold, fontSize: 18, color: AppColors.accentColor),
+                    semanticsLabel: _isListening ? 'Speak now' : 'Processing',
+                  ),
+                  const SizedBox(height: 16),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      if (!_isListening)
+                        CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.yellow),
+                          strokeWidth: 3,
+                        ),
+                      ScaleTransition(
+                        scale: _micAnimation,
+                        child: Container(
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: _isListening ? Colors.green.withOpacity(0.2) : Colors.yellow.withOpacity(0.2),
+                          ),
+                          child: Icon(
+                            Icons.mic,
+                            size: 48,
+                            color: _isListening ? Colors.green : Colors.yellow,
+                            semanticLabel: 'Microphone',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    _recognizedText.isEmpty
+                        ? 'Say amount and category (e.g., "500 Zomato", "Zomato 500")'
+                        : 'Heard: $_recognizedText',
+                    style: FontManager().getTextStyle(context, fontSize: 16, color: AppColors.accentColor),
+                    textAlign: TextAlign.center,
+                    semanticsLabel: _recognizedText.isEmpty
+                        ? 'Say amount and category'
+                        : 'Heard: $_recognizedText',
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        focusNode: FocusNode(),
+                        onPressed: () {
+                          _stopListening();
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          'Cancel',
+                          style: FontManager().getTextStyle(context, fontSize: 14, color: Colors.red),
+                          semanticsLabel: 'Cancel speech input',
+                        ),
+                      ),
+                      if (!_isListening)
+                        TextButton(
+                          focusNode: FocusNode(),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            _startListening();
+                          },
+                          child: Text(
+                            'Retry',
+                            style: FontManager().getTextStyle(context, fontSize: 14, color: AppColors.primaryColor),
+                            semanticsLabel: 'Retry speech input',
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+  // Process spoken text
+ void _processSpokenText(String text) async {
+    Navigator.pop(context); // Close listening modal
+    if (text.isEmpty) {
+      snackBarCalled(context, 'No speech detected', Colors.red);
+      _isProcessing = false;
+      return;
+    }
+
+    // Normalize text and tokenize
+    String normalizedText = text.toLowerCase().replaceAll(RegExp(r'^(add|spend|paid|for|to|on|in|and) '), '').trim();
+    List<String> parts = normalizedText.split(RegExp(r'\s+'));
+
+    double? parsedAmount;
+    String? spokenCategory;
+    String? spokenSubCategory;
+
+    // Parse amount
+    String numberPart = '';
+    for (String part in parts) {
+      double? number = double.tryParse(part.replaceAll(RegExp(r'[^0-9.]'), ''));
+      if (number != null && number > 0) {
+        parsedAmount = number;
+        continue;
+      }
+      numberPart += part + ' ';
+    }
+
+    // Parse spoken numbers
+    if (parsedAmount == null) {
+      Map<String, double> numberWords = {
+        'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5,
+        'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10,
+        'eleven': 11, 'twelve': 12, 'thirteen': 13, 'fourteen': 14, 'fifteen': 15,
+        'sixteen': 16, 'seventeen': 17, 'eighteen': 18, 'nineteen': 19,
+        'twenty': 20, 'thirty': 30, 'forty': 40, 'fifty': 50, 'sixty': 60,
+        'seventy': 70, 'eighty': 80, 'ninety': 90,
+        'hundred': 100, 'thousand': 1000
+      };
+      double tempAmount = 0;
+      double multiplier = 1;
+      List<String> numberTokens = numberPart.trim().split(' ');
+      for (int i = 0; i < numberTokens.length; i++) {
+        String word = numberTokens[i];
+        if (numberWords.containsKey(word)) {
+          if (word == 'hundred' || word == 'thousand') {
+            multiplier = numberWords[word]!;
+          } else {
+            double value = numberWords[word]!;
+            if (i + 1 < numberTokens.length && numberTokens[i + 1] == 'hundred') {
+              tempAmount += value * 100;
+              i++;
+            } else if (i + 1 < numberTokens.length && numberTokens[i + 1] == 'thousand') {
+              tempAmount += value * 1000;
+              i++;
+            } else {
+              tempAmount += value * multiplier;
+              multiplier = 1;
+            }
+          }
+        }
+      }
+      if (tempAmount > 0) parsedAmount = tempAmount;
+    }
+
+    // Parse category/subcategory with multi-word support
+    List<String> potentialWords = [];
+    for (int i = 0; i < parts.length; i++) {
+      potentialWords.add(parts[i]);
+      if (i < parts.length - 1) {
+        potentialWords.add('${parts[i]} ${parts[i + 1]}'); // Two-word phrases
+      }
+      if (i < parts.length - 2) {
+        potentialWords.add('${parts[i]} ${parts[i + 1]} ${parts[i + 2]}'); // Three-word phrases
+      }
+    }
+
+    // Check for subcategory first (most specific)
+    for (String word in potentialWords) {
+      categories.forEach((category, subCategories) {
+        if (subCategories.any((sub) => sub.toLowerCase() == word)) {
+          if (spokenCategory == null) { // Take first valid match
+            spokenCategory = category;
+            spokenSubCategory = subCategories.firstWhere((sub) => sub.toLowerCase() == word);
+          }
+        }
+      });
+    }
+
+    // Then check categories
+    if (spokenCategory == null) {
+      for (String word in potentialWords) {
+        String? foundCategory = categories.keys.firstWhere(
+          (cat) => cat.toLowerCase() == word,
+          orElse: () => '',
+        );
+        if (foundCategory.isNotEmpty) {
+          spokenCategory = foundCategory;
+          spokenSubCategory = 'Other';
+          break; // Take first valid category
+        }
+      }
+    }
+
+    // Then check custom categories
+    if (spokenCategory == null) {
+      for (String word in potentialWords) {
+        var customCat = customCategoryList.firstWhere(
+          (cat) => cat['name'].toString().toLowerCase() == word,
+          orElse: () => {},
+        );
+        if (customCat.isNotEmpty) {
+          spokenCategory = customCat['name'];
+          spokenSubCategory = '';
+          break; // Take first valid custom category
+        }
+      }
+    }
+
+    if (parsedAmount == null) {
+      snackBarCalled(context, 'Invalid or missing amount. Please try again.', Colors.red);
+      _isProcessing = false;
+      return;
+    }
+
+    if (spokenCategory == null) {
+      snackBarCalled(context, 'Category or subcategory not recognized. Please try again.', Colors.red);
+      _isProcessing = false;
+      return;
+    }
+
+     if (!widget.isDebit && spokenCategory != 'Income') {
+      snackBarCalled(context, 'Only Income category allowed for Cash In', Colors.red);
+      _isProcessing = false;
+      return;
+    }
+
+    setState(() {
+      amount = parsedAmount;
+      _amountController.text = parsedAmount.toString();
+      selectedCategory = spokenCategory;
+      selectedSubCategory = spokenSubCategory ?? '';
+      selectedCategory2 = selectedCategory;
+      selectedSubCategory2 = selectedSubCategory;
+      fin = '$selectedCategory (${selectedSubCategory?.isEmpty ==true? 'None' : selectedSubCategory})';
+      _isAmountFieldFocused = false;
+      isCategoryFieldExpanded = false;
+    });
+
+    _showConfirmationDialog(parsedAmount, spokenCategory??'', spokenSubCategory);
+  }
+
+  // Show confirmation dialog
+  void _showConfirmationDialog(
+      double amount, String category, String? subCategory) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppColors.mt,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Text(
+            'Confirm Transaction',
+            style: FontManager().getTextStyle(context,
+                lWeight: FontWeight.bold,
+                fontSize: 18,
+                color: AppColors.accentColor),
+          ),
+          content: Text(
+            'Add ₹$amount to $category (${subCategory?.isEmpty == true ? 'None' : subCategory})?',
+            style: FontManager().getTextStyle(context,
+                fontSize: 16, color: AppColors.accentColor),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                setState(() => _isProcessing = false);
+              },
+              child: Text(
+                'No',
+                style: FontManager()
+                    .getTextStyle(context, fontSize: 14, color: Colors.red),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _addTransactionAutomatically();
+              },
+              child: Text(
+                'Yes',
+                style: FontManager().getTextStyle(context,
+                    fontSize: 14, color: AppColors.primaryColor),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Add transaction
+  void _addTransactionAutomatically() async {
+    if (cashInAndOut.value) return;
+    cashInAndOut.value = true;
+
+    try {
+      addTransaction(
+        amount.toString(),
+        selectedSubCategory2 ?? '',
+        selectedCategory2!,
+        context,
+        "cash",
+      );
+      // snackBarCalled(context, SnackbarData()., Colors.black);
+      Navigator.pop(context); // Close modal
+    } catch (error) {
+      snackBarCalled(context, 'Failed to add transaction: $error', Colors.red);
+    } finally {
+      cashInAndOut.value = false;
+      _isProcessing = false;
+    }
   }
 
   setUpSocketListener() {
@@ -131,83 +564,87 @@ class _ModalContentState extends State<ModalContent>
   @override
   Widget build(BuildContext context) {
     return Directionality(
-        // Added Directionality widget
-
-        textDirection: TextDirection.ltr,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: _isCelebrationVisible
-              // Show Celebration if Continue button is tapped
-              ? celebration()
-              : AnimatedPadding(
-                  padding: MediaQuery.of(context)
-                      .viewInsets, // Adjusts padding when keyboard appears
-                  duration: const Duration(milliseconds: 200),
-
-                  curve: Curves.easeOut,
-                  child: Container(
-                    color: AppColors.mt,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Title
-                          Text(
-                            selectedSubCategory == null
-                                ? selectedCategory == null
-                                    ? HomepageStringsDart().manualTransaction
-                                    : ''
-                                : HomepageStringsDart().manualTransactions,
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: AppColors.accentColor),
+      textDirection: TextDirection.ltr,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: _isCelebrationVisible
+            ? celebration()
+            : AnimatedPadding(
+                padding: MediaQuery.of(context).viewInsets,
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeOut,
+                child: Container(
+                  color: AppColors.mt,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          selectedSubCategory == null
+                              ? selectedCategory == null
+                                  ? HomepageStringsDart().manualTransaction
+                                  : ''
+                              : HomepageStringsDart().manualTransactions,
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: AppColors.accentColor),
+                        ),
+                        const SizedBox(height: 16),
+                        if ((selectedCategory == null &&
+                                selectedSubCategory == null) ||
+                            !widget.isDebit) ...[
+                          Row(
+                            children: [
+                              Expanded(child: AmountWidget()),
+                              const SizedBox(width: 8),
+                              IconButton(
+                                icon: Icon(
+                                  _isListening ? Icons.mic : Icons.mic_none,
+                                  color: AppColors.primaryColor,
+                                ),
+                                onPressed: _isListening
+                                    ? _stopListening
+                                    : _startListening,
+                                tooltip: 'Speech to Text',
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 16),
-
-                          // Enter Amount Field (Only shown if no category is selected)
-
-                          if ((selectedCategory == null &&
-                              selectedSubCategory == null) || !isDebit) ...[
-                            AmountWidget(),
-                            const SizedBox(height: 16),
-                          ],
-
-                          if (amount != null) ...[
-                              categoryWidget(),
-                          ],
-                          const SizedBox(height: 8),
-                          if (isCategoryFieldExpanded) ...[
-                            categoryExpandedWidget(),
-                            // getListOfCustomCategory(),
-                          ],
-
-                          // Subcategories List (Visible after category is selected)
-                          if (selectedCategory != null &&
-                              selectedSubCategory == null) ...[
-                            Text('$selectedCategory',
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.normal,
-                                    fontSize: 16,
-                                    color: AppColors.accentColor)),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            subcategoryWidget(),
-                          ],
-
-                          if (fin != null) ...[
-                            isDebit?  SplitLendButton():SizedBox.shrink(),
-                            continueButton(),
-                          ],
                         ],
-                      ),
+                        if (amount != null) ...[
+                          categoryWidget(),
+                        ],
+                        const SizedBox(height: 8),
+                        if (isCategoryFieldExpanded) ...[
+                          categoryExpandedWidget(),
+                          // getListOfCustomCategory(),
+                        ],
+                        if (selectedCategory != null &&
+                            selectedSubCategory == null) ...[
+                          Text('$selectedCategory',
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.normal,
+                                  fontSize: 16,
+                                  color: AppColors.accentColor)),
+                          SizedBox(height: 5),
+                          subcategoryWidget(),
+                        ],
+                        if (fin != null) ...[
+                          widget.isDebit
+                              ? SplitLendButton()
+                              : SizedBox.shrink(),
+                          continueButton(),
+                        ],
+                      ],
                     ),
                   ),
                 ),
-        ));
+              ),
+      ),
+    );
   }
 
   Widget celebration() {
@@ -296,16 +733,16 @@ class _ModalContentState extends State<ModalContent>
         setState(() {
           // Update the amount variable whenever the input changes
           amount = double.tryParse(value);
-          if(!isDebit){
-            selectedCategory="Income";
-            categoryFieldController.text="Income";
+          if (!isDebit) {
+            selectedCategory = "Income";
+            categoryFieldController.text = "Income";
           }
-          fin=null;
+          fin = null;
           _isAmountFieldFocused = false; // Convert string to double
         });
       },
       onEditingComplete: () {
-         fin = '$selectedCategory ($selectedSubCategory)';
+        fin = '$selectedCategory ($selectedSubCategory)';
         FocusScope.of(context).unfocus(); // Dismiss keyboard when done
       },
     );
@@ -345,14 +782,14 @@ class _ModalContentState extends State<ModalContent>
         ),
         onTap: () {
           if (!isCategoryFieldExpanded) {
-            if(isDebit)  toggleCategoryField();
-            else{
+            if (isDebit)
+              toggleCategoryField();
+            else {
               setState(() {
-                selectedCategory="Income";
-                selectedSubCategory=null;
-                categoryFieldController.text="Income";
+                selectedCategory = "Income";
+                selectedSubCategory = null;
+                categoryFieldController.text = "Income";
               });
-
             }
           }
         },
@@ -581,12 +1018,10 @@ class _ModalContentState extends State<ModalContent>
             isSplit.value = false;
             isLend.value = true;
 
-            final result =
-                await showCustomFriendsModal(context, amount ?? 0.0, true);
+            await showCustomFriendsModal(context, amount ?? 0.0, true);
             setState(() {
               _isAmountFieldFocused = false; // Prevent amount field refocus
             });
-
           },
           child: Container(
             width: MediaQuery.of(context).size.width / 2.4,
@@ -623,16 +1058,11 @@ class _ModalContentState extends State<ModalContent>
             child: InkWell(
               onTap: () {
                 FocusScope.of(context).unfocus();
-                if(cashInAndOut.value)return;
+                if (cashInAndOut.value) return;
                 cashInAndOut.value = true;
                 if (isSplit.value && addedMembers.isNotEmpty) {
                   splitBill(selectedCategory2.toString(), amount.toString(),selectedSubCategory2.toString(), true);
                 } else if (isLend.value && addedMembers.isNotEmpty) {
-                  if (addedMembers.length > 1)
-                  {
-                    snackBarCalled(context,SnackbarData().selectOnlyOneFriendLend,Colors.red);
-                    return;
-                  }
                   addLendUserAmount(
                     context,
                     amount.toString(),
@@ -649,9 +1079,10 @@ class _ModalContentState extends State<ModalContent>
                     "cash",
                   );
                 }
-              
               },
-              child: Obx(()=>  cashInAndOut.value? getspinner(context) :getButton(context, HomepageStringsDart().addButton)),
+              child: Obx(() => cashInAndOut.value
+                  ? getspinner(context)
+                  : getButton(context, HomepageStringsDart().addButton)),
             ),
           ),
         ),
@@ -664,20 +1095,13 @@ class _ModalContentState extends State<ModalContent>
       snackBarAllFeilds(context);
       return;
     }
-    if (addedMembers.length <= 0) {
-      snackBarCalled(context,SnackbarData().addMembersToProceed, Colors.red);
-      return;
-    }
 
     if (acceptReset.value) return;
     acceptReset.value = true;
     isLend.value = false;
     isSplit.value = false;
-    if (isSplitAmount)
-      splitUserAmountManualTransaction(
-          context, amount, addedMembers, categories, subCategories);
-    else
-      addLendUserAmount(context, amount, addedMembers, categories, subCategories);
+
+    splitUserAmountManualTransaction(context, amount, addedMembers, categories, subCategories);
   }
 
   void addSocketMessage(addedUser, String amount, String splitName,
@@ -748,23 +1172,21 @@ class _ModalContentState extends State<ModalContent>
     List members,
     String name,
     String subCategories, {
-    Map<String, double>? amounts, 
+    Map<String, double>? amounts,
   }) async {
     double? parsedTotalAmount = double.tryParse(totalAmount);
     if (parsedTotalAmount == null || parsedTotalAmount <= 0) {
-     
-      snackBarCalled(context,SnackbarData().invalidAmountEntered, Colors.red);
+      snackBarCalled(context, SnackbarData().invalidAmountEntered, Colors.red);
       return;
     }
 
     if (members.isEmpty) {
-      snackBarCalled(context,SnackbarData().noMembersSelected, Colors.red);
+      snackBarCalled(context, SnackbarData().noMembersSelected, Colors.red);
       return;
     }
-   
+
     List<Map<String, dynamic>> nameList = [];
     if (amounts != null) {
-      
       members.forEach((element) {
         double memberAmount = amounts[element['id']] ?? 0.0;
         nameList.add({
@@ -773,7 +1195,6 @@ class _ModalContentState extends State<ModalContent>
           'amount': memberAmount,
         });
       });
-      
     } else {
       double amountPerPerson = parsedTotalAmount / (members.length + 1);
       members.forEach((element) {
@@ -790,9 +1211,10 @@ class _ModalContentState extends State<ModalContent>
       });
     }
 
-    double calculatedTotal = nameList.fold(0.0, (sum, item) => sum + item['amount']);
+    double calculatedTotal =
+        nameList.fold(0.0, (sum, item) => sum + item['amount']);
 
-    var response= await postDataApiCall(
+    var response = await postDataApiCall(
       '${url}/split',
       {
         "subcategory": subCategories,
@@ -803,15 +1225,15 @@ class _ModalContentState extends State<ModalContent>
         "ismanual": true,
       },
     );
-   
+
     if (getFlagOfResponse(response)) {
       final body = json.decode(response.body);
       splitID.value = body['id']['_id'];
-        for (var member in members) {
+      for (var member in members) {
         double memberAmount = amounts?[member['id']] ??
             (parsedTotalAmount / (members.length + 1));
         String formattedAmount = memberAmount.toStringAsFixed(2);
-        
+
         sendNotificationsToDevice(
             member['id'],
             context,
@@ -835,20 +1257,16 @@ class _ModalContentState extends State<ModalContent>
       searchController.clear();
       getAllTransaction(context);
 
-      snackBarCalled(
-          context,
-         SnackbarData().splitAmountSuccess,
-          Colors.black);
+      snackBarCalled(context, SnackbarData().splitAmountSuccess, Colors.black);
       Navigator.pop(context);
       addedMembers.clear();
       addedUser.clear();
       _showCelebration();
-
     } else {
-      snackBarCalled(context,SnackbarData().splitAmountError, Colors.red);
+      snackBarCalled(context, SnackbarData().splitAmountError, Colors.red);
     }
 
     acceptReset.value = false;
-    cashInAndOut.value =false;
+    cashInAndOut.value = false;
   }
 }
