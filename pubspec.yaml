@@ -156,6 +156,7 @@ flutter:
     - assets/icons/financeScreen/
     - assets/splashScreen/
     - assets/onboarding/
+    - assets/icons/finSpaceIcons/
     
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

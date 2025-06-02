@@ -4,16 +4,17 @@ import "package:flutter/widgets.dart";
 import "package:flutter/material.dart";
 import "package:flutter_application_code_stakeplot/Community_Page/community_screen.dart";
 import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
-import "package:flutter_application_code_stakeplot/Home_Screen/InterestSelectionScreen.dart";
+import "package:flutter_application_code_stakeplot/finSpace/InterestSelectionScreen.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/history/transaction_history.dart";
-import "package:flutter_application_code_stakeplot/Home_Screen/marks.dart";
+import "package:flutter_application_code_stakeplot/finSpace/marks.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart";
+import "package:flutter_application_code_stakeplot/finSpace/welcomeScreen.dart";
 import "package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/profile_screen.dart.dart";
 import "package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart";
@@ -175,10 +176,10 @@ class _BottomNavigationsState extends State<BottomNavigations> {
             pushName(HomePage());
           else if (i == 1)
             pushName(PlotFinance());
-          else if (i == 2)
-            // pushName(Community());
-            // pushName(InterestSelectionScreen());
-            pushName(MaskNameScreen());
+          // else if (i == 2)
+          //   pushName(Community());
+           else if (i == 2)
+            pushName(WelcomeScreen());
           else if (i == 3) pushName(ProfileScreenDart());
 
           setState(() {

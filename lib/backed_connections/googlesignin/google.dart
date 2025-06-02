@@ -18,16 +18,12 @@ class AuthService {
 
   Future<Map<String, dynamic>?> signInWithGoogle(context) async {
     try {
-      print('Starting Google Sign-In process...');
       // Trigger Google Sign-In
       await _googleSignIn.signOut();
-      print('User signed out, attempting to sign in...');
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
-        print('Sign-in canceled');
         return null;
       }
-      print('User signed in: ${googleUser.email}');
 
       // Get authentication details
       final GoogleSignInAuthentication googleAuth =
@@ -36,7 +32,6 @@ class AuthService {
       // final String? accessToken = googleAuth.accessToken;
 
       if (idToken != null) {
-        print('ID Token received: $idToken');
         final response = await http.post(
           Uri.parse('$url/user/google-auth'),
           headers: {'Content-Type': 'application/json'},
@@ -44,17 +39,15 @@ class AuthService {
         );
 
         if (response.statusCode == 200) {
-          print('Login successful, processing response...');
+        
           loginCalledData(response, context);
           return json.decode(response.body);
         } else {
-          print('Login failed with status code: ${response.statusCode}');
+         
         }
       } else {
-        print('No ID Token received');
       }
     } catch (e) {
-      print('Error during Google Sign-In: $e');
     }
     return null;
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/finSpace/InterestSelectionScreen.dart';
 
 class MaskNameScreen extends StatefulWidget {
   const MaskNameScreen({Key? key}) : super(key: key);
@@ -87,7 +88,7 @@ class HeaderWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Welcome back to',
+              'Welcome to',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.black54,
@@ -241,7 +242,11 @@ class MaskNameFormWidget extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () {
                 // Handle done action
-                Navigator.pushNamed(context, '/interestScreen');
+                // Navigator.pushNamed(context, '/interestScreen');
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => InterestSelectionScreen()),
+                    );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF4A4E69),

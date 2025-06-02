@@ -158,7 +158,7 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
         context,
         "cash",
       );
-      // snackBarCalled(context, SnackbarData()., Colors.black);
+        snackBarCalled(context,"Successfully added", Colors.black);
       Navigator.pop(context); // Close modal
     } catch (error) {
       snackBarCalled(context, 'Failed to add transaction: $error', Colors.red);
@@ -354,16 +354,18 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
       inputFormatters: allowDecimalInput(),
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.currency_rupee),
-         suffixIcon: IconButton(
-          icon: Icon(
-            speechService.isListening ? Icons.mic : Icons.mic_none,
-            color: AppColors.primaryColor,
-          ),
-          onPressed: speechService.isListening
-              ? speechService.stopListening
-              : speechService.startListening,
-          tooltip: 'Speech to Text',
-        ),
+           suffixIcon: widget.isDebit 
+            ? IconButton(
+                icon: Icon(
+                  speechService.isListening ? Icons.mic : Icons.mic_none,
+                  color: AppColors.primaryColor,
+                ),
+                onPressed: speechService.isListening
+                    ? speechService.stopListening
+                    : speechService.startListening,
+                tooltip: 'Speech to Text',
+              )
+            : null,
         hintText: HomepageStringsDart().enterAmount,
         fillColor: AppColors.button,
         filled: true,
