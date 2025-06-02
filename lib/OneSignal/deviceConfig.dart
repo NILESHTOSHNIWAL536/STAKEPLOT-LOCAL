@@ -2,13 +2,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
@@ -19,7 +17,6 @@ import 'package:flutter_application_code_stakeplot/firebase_options.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:get/get.dart';
 import 'package:home_widget/home_widget.dart';
-import 'package:http/http.dart' as http;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -92,18 +89,7 @@ void setUpSocketListenerMainPage(BuildContext context) {
 
     // Connect the socket
     mainPageWebSocket.connect();
-
-
-    // On successful connection
-    // mainPageWebSocket.onConnect((_){
-    //   try{
-    //    mainPageWebSocket.emit("addUserToSocket", currentId.value);
-    //   }catch(e){
-    //     pritn(e);
-    //   }
-    // });
-      mainPageWebSocket.onConnect((_) {
-
+    mainPageWebSocket.onConnect((_) {
     try {
       mainPageWebSocket.emit("addUserToSocket", currentId.value);
     } catch (e) {

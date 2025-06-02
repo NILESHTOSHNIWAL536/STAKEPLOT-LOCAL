@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
 import 'package:flutter_application_code_stakeplot/Profile/friends.dart';
 import 'package:flutter_application_code_stakeplot/Profile/notifications.dart';
@@ -52,3 +53,31 @@ var routes =
       '/editDetails':(context) => EditDetails() ,
       '/post':(context) => Community() ,
 };
+
+
+var colorcodes={
+    "Food": Color(0xFFE74C3C), // Red
+    "Shopping": Color(0xFF8E44AD), // Purple
+    "Travel": Color(0xFF3498DB), // Blue
+    "Health": Color(0xFF2ECC71), // Green
+    "Subscriptions": Color(0xFFF1C40F), // Yellow
+    "Entertainment": Color(0xFFE67E22), // Orange
+    "Insurance": Color(0xFF1ABC9C), // Teal
+    "Emi": Color(0xFFD35400), // Dark Orange
+    "Investments": Color(0xFF9B59B6), // Dark Purple
+    "Untagged": Color(0xFF34495E), // Dark Gray-Blue
+    "Bills": Color(0xFF16A085), // Dark Teal
+    "Events": Color(0xFF27AE60), // Green
+    "Personal Care": Color(0xFF2980B9), // Dark Blue
+    "Services": Color(0xFFC0392B), // Dark Red
+    "Current": Color(0xFF7D3C98), // Violet
+    "Children": Color(0xFFF39C12), // Bright Yellow
+    "Pet Care": Color(0xFF52BE80), // Soft Green
+    "Sports": Color(0xFF5DADE2), // Sky Blue
+    "Alcohol": Color(0xFFCD6155), // Soft Red
+    "Hobbies": Color(0xFFAF7AC5), // Light Purple
+    "Education": Color(0xFF45B39D), // Turquoise
+    "Commerce": Color(0xFFDC7633), // Copper Orange
+    "snacks": Color(0xFF5D6D7E), // Muted Blue-Gray
+    "UPI": Color(0xFF5D6D7E), // Muted Blue-Gray
+  };

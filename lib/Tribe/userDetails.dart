@@ -13,7 +13,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import "package:flutter_application_code_stakeplot/Community_Page/postCard.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
-import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
 import "package:flutter_application_code_stakeplot/headersList/userProfileHeader.dart";
@@ -140,6 +139,7 @@ class _UserDetailsState extends State<UserDetails> {
       
     } else {}
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -215,82 +215,6 @@ class _UserDetailsState extends State<UserDetails> {
   }
   
 
-  Widget uploadData1() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        children: [
-          InkWell(
-            onTap: () {
-              //  TribeUnique
-              Navigator.pushNamed(context, '/TribeUnique');
-            },
-            child: Container(
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                  color: const Color.fromRGBO(249, 246, 238, 1),
-                  borderRadius: BorderRadius.circular(20)),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text(('Title'),
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w400,
-                            fontSize: 16,
-                            color: Colors.black)),
-                  ),
-                  Center(
-                    child: Text(('Content'),
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w400,
-                            fontSize: 16,
-                            color: Colors.black)),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.arrow_drop_up_outlined,
-                              size: 35,
-                              color: Colors.black,
-                            ),
-                            Text(('1'),
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w400,
-                                    fontSize: 18,
-                                    color: Colors.black)),
-                            const Icon(
-                              Icons.arrow_drop_down_outlined,
-                              size: 30,
-                              color: Colors.black,
-                            ),
-                          ],
-                        ),
-                      ),
-                      imageurl('assets/images/Share.svg')
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // index==id ?commentedData():SizedBox.shrink(),
-        ],
-      ),
-    );
-  }
-
   Widget imageurl(url) {
     return SvgPicture.asset(
       url,
@@ -301,9 +225,7 @@ class _UserDetailsState extends State<UserDetails> {
   Widget InputDate(lableText, keyBoard, Textcontroller) {
     return Center(
       child: Container(
-        // padding: EdgeInsets.symmetric(vertical: 2),
-        // color:  Color.fromRGBO(246, 246, 246, 1),
-        // height: 50,
+      
         width: MediaQuery.of(context).size.width / 1.1,
         child: Center(
           child: TextFormField(
@@ -333,11 +255,7 @@ class _UserDetailsState extends State<UserDetails> {
   }
 
   Widget reportData() {
-//    Report
-// User will not know that you have reported them
-// I am not interested.
-// Inappropriate Post.
-// Spam
+
     return Container(
       padding: const EdgeInsets.only(top: 20, left: 20),
       child: Column(
@@ -379,8 +297,6 @@ class _UserDetailsState extends State<UserDetails> {
           style: FontManager().getTextStyle(
             context,
             fontSize: 14,
-            //  fontWeight: FontWeight.w400,
-            //  fontFamily: AutofillHints.birthdayDay
           ),
         ),
       ),
@@ -392,10 +308,7 @@ class _UserDetailsState extends State<UserDetails> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Text("Discussions:",style: FontManager().getTextStyle(context,
-        //                                                lWeight: FontWeight.w400,
-        //                                                fontSize: 18,
-        //                                                color: Colors.black)),
+      
         findData
             ? Loader()
             : getTrendingData.length == 0
@@ -451,11 +364,7 @@ class _UserDetailsState extends State<UserDetails> {
                         ],
                       ),
                     ),
-                    // Icon(
-                    //   Icons.more_vert_outlined,
-                    //   size: 25,
-                    //   color: Colors.black,
-                    // ),
+                  
                     popUpBox(dataObj['_id'], context),
                   ],
                 ),
@@ -468,15 +377,6 @@ class _UserDetailsState extends State<UserDetails> {
                           color: Colors.black)),
                 ),
 
-                // Padding(
-                //   padding: const EdgeInsets.only(bottom: 10.0),
-                //   child: Text((dataObj['description']['message']),
-                //       style: FontManager().getTextStyle(context,
-                //           lWeight: FontWeight.w400,
-
-                //           fontSize: 16,
-                //           color: Colors.black)),
-                // ),
 
                 dataObj['image'] != null && dataObj['image'] != "none"
                     ? Container(
@@ -487,68 +387,12 @@ class _UserDetailsState extends State<UserDetails> {
                           fit: BoxFit.contain,
                           filterQuality: FilterQuality.high,
                         ),
-                        // child: Image.asset("assets/images/news.jpg", fit: BoxFit.fill),
                       )
                     : SizedBox.shrink(),
                 const SizedBox(
                   height: 20,
                 ),
                 vote(context, dataObj, dataObj),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   crossAxisAlignment: CrossAxisAlignment.center,
-                //   children: [
-                //     Container(
-                //       child: Row(
-                //         children: [
-                //            GestureDetector(
-                //             onTap: (){
-                //                  upvote(context,"Post",dataObj["_id"]);
-                //             },
-                //             child: const Icon(
-                //               Icons.arrow_drop_up_outlined,
-                //               size: 35,
-                //               color: Colors.black,
-                //             ),
-                //           ),
-                //           Text((dataObj["upvotes"].toString()),
-                //               style: FontManager().getTextStyle(context,
-                //                   lWeight: FontWeight.w400,
-                //                   fontSize: 18,
-                //                   color: Colors.black)),
-                //           GestureDetector(
-                //             onTap: (){
-                //                  downvote(context,"Post",dataObj["_id"]);
-                //             },
-                //             child: const Icon(
-                //               Icons.arrow_drop_down_outlined,
-                //               size: 35,
-                //               color: Colors.black,
-                //             ),
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //     Container(
-                //       child: Row(
-                //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //         children: [
-                //           Container(
-                //             height: 20,
-                //             child: ProfileImage(url: "assets/images/comment.svg",)
-                //             ),
-                //           const SizedBox(width: 2,),
-                //           Text(dataObj["comments"].toString(),style: FontManager().getTextStyle(context,
-                //                                  lWeight: FontWeight.w400,
-                //                                  fontSize: 18,
-                //                                  color: Colors.black)),
-                //            const SizedBox(width: 15),
-                //           imageurl('assets/images2/share.svg'),
-                //         ],
-                //       ),
-                //     )
-                //   ],
-                // ),
               ],
             ),
           ),
@@ -563,9 +407,7 @@ class _UserDetailsState extends State<UserDetails> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          // text('Score ${score.value} '),
-          // textStyleDesign("Score "+doubleToFixed(score.value.toString()),Colorcodes.dropdown,18,context),
-          Container(
+           Container(
             height: MediaQuery.of(context).size.height / 22,
             width: MediaQuery.of(context).size.width / 10,
             child: InkWell(
@@ -591,11 +433,7 @@ class _UserDetailsState extends State<UserDetails> {
               child: ProfileImage(
                 url: svgIconPath.settingUser,
               ),
-              // child: Icon(
-              // Icons.settings,
-              // size: 25,
-              // color: Colorcodes.red,
-              //                       ),
+              
             ),
           )
         ],
@@ -604,8 +442,6 @@ class _UserDetailsState extends State<UserDetails> {
   }
 
   Widget nameAndAddFrd(data) {
-    String avatar= data['avatarType'] !=null ? data['avatarType']
-    :data['avatar']!=null?data['avatar']:userAvatar;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -613,12 +449,7 @@ class _UserDetailsState extends State<UserDetails> {
       children: [
         Row(
           children: [
-            // Container(
-            //     // color: Colorcodes.black,
-            //     child: AvatarProfileImage(
-            //         url: data['avatarType'] ?? data['avatar'] ?? userAvatar,
-            //         width: 10,
-            //         height: 18)),
+           
             const SizedBox(
               width: 5,
             ),
@@ -652,23 +483,6 @@ class _UserDetailsState extends State<UserDetails> {
                addUserAsFrd(data['_id'], context);
             }
 
-            ///removded
-            // if (widget.flag) {
-            //     getRemoveFrds(context, data['_id']);
-            //     widget.flag=false;
-            // } else if (already)
-            //   addUsersendRequest(data['_id'], data['name'], context);
-            //   else if(frdRequestCheck.value!=frdRequest.value){
-            //        frdRequestCheck.value==frdRequest.value;
-            //        removeRequest(data['_id'], data['name'], context);
-            //   }
-            // else {
-            //   already=false;
-            //   widget.flag=false;
-            //   addUserAsFrd(data['_id'], context);
-            // }
-
-
           },
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 7),
@@ -689,16 +503,6 @@ class _UserDetailsState extends State<UserDetails> {
                     lWeight: FontWeight.w400,
                     fontSize: 18,
                     color: Colors.white));
-    // return Text(
-    //             (widget.flag
-    //                 ? "Remove"
-    //                 : already
-    //                     ? "Accept"
-    //                     :frdRequestCheck.value!=frdRequest.value? "Requested" : "Add"),
-    //             style: FontManager().getTextStyle(context,
-    //                 lWeight: FontWeight.w400,
-    //                 fontSize: 18,
-    //                 color: Colors.white));
   }
 
   Widget aboutUser() {

@@ -114,7 +114,7 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
 }
 
 
-
+//don't delete this function, it is used to store the map of images in the backend
  void storeMapOfImagesInBackend() async
  {
     //  var urlPath = url +"/transaction/storeBankUrl/" ;
@@ -125,7 +125,6 @@ Future<void> FetchTransactionFromFinvuApi(BuildContext context) async {
     //  {
     //     var json=jsonDecode(response.body);
     //  }
-
  }
 
 
