@@ -19,7 +19,6 @@ import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.dart';
 
 void clearStack(BuildContext context) {
@@ -226,21 +225,6 @@ void clearGetX() {
 
 RxMap<String, String> ListOfBankImages = RxMap();
 
-void initialMap(context) async {
-  // var isConnected = await finvuManager.isConnected();
-  // if (!isConnected) {return;}
-
-  // try{
-  // List<FinvuFIPInfo>  fipDis = await finvuManager.fipsAllFIPOptions();
-
-  // fipDis.forEach((FinvuFIPInfo bankData){
-  //       ListOfBankImages[bankData.productName.toString()]=bankData.productIconUri.toString();
-  // });
-  // }catch(e)
-  // {
-  // }
-
-}
 
 void getAllContstant(context) async {
   var responce = await getDataApiCall("${url}/constant/weekmonth");

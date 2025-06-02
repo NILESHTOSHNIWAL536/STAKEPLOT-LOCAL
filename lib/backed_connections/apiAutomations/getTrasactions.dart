@@ -10,13 +10,11 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/history/transacti
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
-// import 'package:flutter_application_code_stakeplot/Home_Screen/finance_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
+import 'package:flutter_application_code_stakeplot/routes.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import 'package:week_of_year/week_of_year.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
@@ -38,10 +36,7 @@ void getAutoMationsTransactions() async {
 
 void changeTrasactiondata() async {
   List allTransactions = [];
-  //  for (var category in trasactionsData)
-  //  {
-  //       allTransactions.addAll(category["transactions"]);trasactionsData
-  //  }
+ 
   for (var category in trasactionsData) {
     String categoryId = category['_id'];
     String categoryName = category['category'];
@@ -425,32 +420,7 @@ void processChartData() {
   List<ChartData> newData = [];
   double newTotalValue = 0.0;
 
-  Map<String, Color> categoryColors = {
-    "Food": Color(0xFFE74C3C), // Red
-    "Shopping": Color(0xFF8E44AD), // Purple
-    "Travel": Color(0xFF3498DB), // Blue
-    "Health": Color(0xFF2ECC71), // Green
-    "Subscriptions": Color(0xFFF1C40F), // Yellow
-    "Entertainment": Color(0xFFE67E22), // Orange
-    "Insurance": Color(0xFF1ABC9C), // Teal
-    "Emi": Color(0xFFD35400), // Dark Orange
-    "Investments": Color(0xFF9B59B6), // Dark Purple
-    "Untagged": Color(0xFF34495E), // Dark Gray-Blue
-    "Bills": Color(0xFF16A085), // Dark Teal
-    "Events": Color(0xFF27AE60), // Green
-    "Personal Care": Color(0xFF2980B9), // Dark Blue
-    "Services": Color(0xFFC0392B), // Dark Red
-    "Current": Color(0xFF7D3C98), // Violet
-    "Children": Color(0xFFF39C12), // Bright Yellow
-    "Pet Care": Color(0xFF52BE80), // Soft Green
-    "Sports": Color(0xFF5DADE2), // Sky Blue
-    "Alcohol": Color(0xFFCD6155), // Soft Red
-    "Hobbies": Color(0xFFAF7AC5), // Light Purple
-    "Education": Color(0xFF45B39D), // Turquoise
-    "Commerce": Color(0xFFDC7633), // Copper Orange
-    "snacks": Color(0xFF5D6D7E), // Muted Blue-Gray
-    "UPI": Color(0xFF5D6D7E), // Muted Blue-Gray
-  };
+  Map<String, Color> categoryColors = colorcodes;
 
   for (var item in categoriesList) {
     String category = item["category"];

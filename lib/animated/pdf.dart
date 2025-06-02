@@ -300,17 +300,6 @@ pw.Widget firstPage(
 
         pw.SizedBox(height: 12),
 
-        // Profile Info
-        // pw.Column(
-        //   crossAxisAlignment: pw.CrossAxisAlignment.start,
-        //   children: [
-        //     pw.Text("Name: ${profile['holder']['name']}"),
-        //     pw.Text("Email: ${profile['holder']['email']}"),
-        //     pw.Text("Mobile: ${profile['holder']['mobile']}"),
-        //     pw.Text("DOB: ${profile['holder']['dob']}"),
-        //   ],
-        // ),
-
         pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
@@ -329,15 +318,6 @@ pw.Widget firstPage(
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
-            // pw.Column(
-            //   crossAxisAlignment: pw.CrossAxisAlignment.start,
-            //   children: [
-            //     pw.Text("Account No: $accountNo"),
-            //     pw.Text("Branch: ${summary['data']['branch']}"),
-            //     pw.Text("IFSC: ${summary['data']['ifscCode']}"),
-            //     pw.Text("Opening Date: ${summary['data']['openingDate'].toString().split('T')[0]}"),
-            //   ],
-            // ),
         pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           mainAxisAlignment: pw.MainAxisAlignment.end,
