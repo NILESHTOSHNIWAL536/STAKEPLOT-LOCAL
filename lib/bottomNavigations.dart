@@ -12,6 +12,7 @@ import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart";
+import "package:flutter_application_code_stakeplot/finSpace/welcomeScreen.dart";
 import "package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/profile_screen.dart.dart";
 import "package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart";
@@ -173,8 +174,10 @@ class _BottomNavigationsState extends State<BottomNavigations> {
             pushName(HomePage());
           else if (i == 1)
             pushName(PlotFinance());
-          else if (i == 2)
-            pushName(Community());
+          // else if (i == 2)
+          //   pushName(Community());
+           else if (i == 2)
+            pushName(WelcomeScreen());
           else if (i == 3) pushName(ProfileScreenDart());
 
           setState(() {

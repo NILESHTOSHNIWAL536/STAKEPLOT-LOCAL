@@ -12,6 +12,17 @@ class NavBarIcons {
   static String screen2 = "assets/icons/Navigation_bar/financeInActive.svg";
   //Home page icons
 }
+class FinSpaceIcons {
+  static String welcome = "assets/icons/finSpaceIcons/finspaceWelcome.svg";
+  // static String home = "assets/icons/Navigation_bar/homepageActive.svg";
+  // static String home1 = "assets/icons/Navigation_bar/homePageInactive.svg";
+  // static String community1 = "assets/icons/Navigation_bar/communityInactive.svg";
+  // static String community = "assets/icons/Navigation_bar/communityActive.svg";
+  // static String screen21 = "assets/icons/Navigation_bar/financeActive.svg";
+  // static String screen2 = "assets/icons/Navigation_bar/financeInActive.svg";
+  
+}
+
 
 class HomePageIcons {
   static String history = "assets/icons/Home-page/TransactionHistoryBtn.svg";
