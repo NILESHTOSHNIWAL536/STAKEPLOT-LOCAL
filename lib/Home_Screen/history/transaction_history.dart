@@ -3,12 +3,10 @@ import 'package:flutter_application_code_stakeplot/GroupTrans/group_transactions
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page_apiCalls.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/animated/pdf.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
-import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
@@ -55,33 +53,23 @@ class _TransactionHistoryState extends State<TransactionHistory>
   final List<Map<String, dynamic>> hiddenTransactions = [];
   final targetKey = GlobalKey();
   BuildContext? _stableContext;
-  // For smooth animations
 
   @override
   void initState() {
     super.initState();
     _stableContext = context;
-    //  Future.delayed(Duration(seconds: 5),() {
-
-    //  });
-
+  
     if (!widget.expandedPage) currentPage = 1;
 
-    // getAllTransactionHistory(context, widget.isflag!, widget.isYearView!);
-    // _animationController = AnimationController(
-    //   vsync: this,
-    //   duration: const Duration(milliseconds: 200),
-    // );
     _scrollController2.addListener(() {
       if (_scrollController2.position.pixels >=_scrollController2.position.maxScrollExtent - 100) {
         getAllTransactionHistory(
           context,
           widget.isflag!,
           widget.isYearView!,
-        ); // Fetch next page
+        ); 
       }
     });
-    // if(!widget.expandedPage) isLoadingMore.value=false;
     getAllTransactionHistory(context, widget.isflag!, widget.isYearView!,
         isRefreshing: true);
   }
@@ -99,16 +87,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
         child: Column(
         
           children: [
-            // (widget.showIcon ?? false)
-            //     ? SizedBox(
-            //         height: 15,
-            //       )
-            //     : Obx(() => redioButton.isNotEmpty
-            //         ? getTagHideButtons()
-            //         : allOrGroupTransactionsName.value ==
-            //                 StringConstant.allTransactions
-            //             ? getTabsForTransactions()
-            //             : getTabsForTransactions()),
+          
             Obx(() {
               if (widget.showIcon ?? false) {
                 return reloadHistory.value ? getlist() : getlist();
@@ -173,8 +152,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
     List<dynamic> displayItems = [];
     for (var monthYear in sortedMonths) {
       displayItems.add(monthYear); // Add the month header
-      displayItems
-          .addAll(groupedTransactions[monthYear] ?? []); // Null-safe access
+      displayItems.addAll(groupedTransactions[monthYear] ?? []); // Null-safe access
     }
 
     // Add a loading indicator at the end if more data is being fetched
@@ -190,10 +168,8 @@ class _TransactionHistoryState extends State<TransactionHistory>
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         final item = displayItems[index];
-        // Case 1: Month Header
         if (item is String && item != 'loader') {
           String monthYear = item;
-          // int transactionCount = groupedTransactions[monthYear]?.length ?? 0;
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             child: Row(
@@ -208,8 +184,7 @@ class _TransactionHistoryState extends State<TransactionHistory>
                     color: AppColors.accentColor,
                   ),
                 ),
-                // transactionCount == 0
-                //     ? const SizedBox(
+                
               ],
             ),
           );
@@ -365,8 +340,7 @@ final matched = custom.firstWhere(
   orElse: () => {},
 );
 
-// final url = matched.isNotEmpty && matched['imageUrl'] != null ? matched['imageUrl']
-//     : Categories.link + (imageMapForHistory[lowerCategory] ?? 'default_image.png');
+
 final url = matched.isNotEmpty && matched['imageUrl'] != null ? matched['imageUrl']
     :  imageMapForHistory[lowerCategory] !=null ?  Categories.link + imageMapForHistory[lowerCategory].toString()  : "assets/icons/subCategoryIcons/other.svg";
  
@@ -386,7 +360,7 @@ final url = matched.isNotEmpty && matched['imageUrl'] != null ? matched['imageUr
     ),
     child: Center(
       child:  AvatarProfileImage(
-        url:  url,//custom.contains(category.toLowerCase())? custom[category.toLowerCase()]['imageUrl']:(Categories.link + (imageMapForHistory[category.toLowerCase()] ?? 'default_image.png')),
+        url:  url,
         height: avatarSize * 0.5,
         width: avatarSize * 0.5,
       ),
@@ -394,15 +368,3 @@ final url = matched.isNotEmpty && matched['imageUrl'] != null ? matched['imageUr
   );
 }
 
-// void hideSelectedTransactions(BuildContext context, bool hidden) {
-//   int index = 0; // Or get from another list/map if you have matching indexes
-
-//   redioButton.forEach((id, value) {
-//     hideTransaction(redioButtonIndex[id] ?? 0, hidden, context, id);
-//     index++;
-//   });
-
-//   redioButton.clear(); // Optionally clear selection after hiding
-//   redioButtonIndex.clear(); // Optionally clear selection after hiding
-//   Navigator.pop(context);
-// }

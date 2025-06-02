@@ -820,3 +820,17 @@ int getDaysInCurrentMonth() {
   final now = DateTime.now();
   return DateTime(now.year, now.month + 1, 0).day;
 }
+
+const List<Map<String, dynamic>> reportOptions = [
+  {
+    'title': 'Helps us understand the issue',
+    'subtitle': 'Provide details about the problem',
+    'isDescription': true
+  },
+  {'title': 'Not interested', 'subtitle': ''},
+  {'title': 'Harassment or hateful speech', 'subtitle': ''},
+  {'title': 'Self-harm or suicide', 'subtitle': ''},
+  {'title': 'Adult content', 'subtitle': ''},
+  {'title': 'False information or misleading', 'subtitle': ''},
+  {'title': 'Spam', 'subtitle': ''},
+];
