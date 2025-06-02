@@ -13,7 +13,6 @@ import "package:flutter_application_code_stakeplot/loader.dart";
 import "package:flutter_application_code_stakeplot/user_chat/chat.dart";
 import "package:get/get.dart";
 import "package:shared_preferences/shared_preferences.dart";
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:http/http.dart' as http;
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -50,13 +49,7 @@ class _TribeSearchState extends State<TribeChats> {
     getChatLoader();
     getTransactions();
     getChatsSplitAccounts(context, myId);
-
-    socket = IO.io(
-        urlWithLocallHost,
-        IO.OptionBuilder()
-            .setTransports(['websocket'])
-            .enableForceNewConnection()
-            .build());
+    socket = IO.io(urlWithLocallHost,IO.OptionBuilder().setTransports(['websocket']).enableForceNewConnection().build());
     socket.connect();
     setUpSocketListener();
   }
@@ -110,9 +103,6 @@ class _TribeSearchState extends State<TribeChats> {
     return chatList.fold<int>(
         0, (total, item) => total + (item['count']?.toInt() ?? 0) as int);
   }
-//   void updateTotalUnopenedMessages() {
-//     totalUnopenedMessages.value = chatList.fold<int>(0, (total, item) => total + (item['count']?.toInt() ?? 0) as int);
-// }
 
   void getChatsSplitAccounts(BuildContext context, String id) async {
     var response = await getDataApiCall("${url}/split/pending-user");
@@ -127,31 +117,12 @@ class _TribeSearchState extends State<TribeChats> {
     } else {}
   }
 
-  // ... existing code ...
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // bottomNavigationBar: BottomNavigations(data: sizeRoom ? 3 : 2),
       extendBody: true,
       backgroundColor: AppColors.appIcon,
-      // appBar: AppBar(
-      //   automaticallyImplyLeading: false,
-      //   backgroundColor: AppColors.appIcon,
-      //   title: Text('Messages',
-      //           style: FontManager().getTextStyle(context,
-      //               lWeight: FontWeight.bold,
-      //               fontSize: 24,
-      //               color: AppColors.backgroundColor)),
-      //   leading: InkWell(
-      //       onTap: () {
-      //         Navigator.pop(context);
-      //       },
-      //       child: Icon(
-      //         Icons.arrow_back_sharp,
-      //         color: AppColors.primaryColor,
-      //         size: 30,
-      //       )),
-      // ),
+
       appBar: PreferredSize(
         preferredSize: chatSplitAccount.isNotEmpty
             ? const Size.fromHeight(140)
@@ -206,14 +177,11 @@ class _TribeSearchState extends State<TribeChats> {
                         height: 40,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: chatSplitAccount?.length ??
-                              0, // Null check for frdsList
+                          itemCount: chatSplitAccount?.length ??0, 
                           itemBuilder: (context, index) {
-                            var friend = chatSplitAccount?[
-                                index]; // Safe access to frdsList[index]
+                            var friend = chatSplitAccount?[index]; 
                             if (friend == null) {
-                              return const SizedBox
-                                  .shrink(); // Return empty widget if friend is null
+                              return const SizedBox.shrink(); 
                             }
                             return Row(
                               children: [
@@ -253,7 +221,7 @@ class _TribeSearchState extends State<TribeChats> {
         ),
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration:const BoxDecoration(
           color: AppColors.backgroundColor, // Set your desired color here
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(24), // Adjust the radius as needed
@@ -262,12 +230,9 @@ class _TribeSearchState extends State<TribeChats> {
         ),
         child: Padding(
           padding: EdgeInsets.all(16),
-
-          //padding: const EdgeInsets.symmetric(vertical: 10),
           child: ListView(
-          
             children: [
-              InputDate2(strings.searchHint, TextInputType.name, search),
+              InputDate(strings.searchHint, TextInputType.name, search),
               const SizedBox(
                 height: 16,
               ),
@@ -304,7 +269,7 @@ class _TribeSearchState extends State<TribeChats> {
               );
   }
 
-  Widget InputDate2(lableText, keyBoard, Textcontroller) {
+  Widget InputDate(lableText, keyBoard, Textcontroller) {
     return Center(
       child: Container(
         width: MediaQuery.of(context).size.width / 1.1,
@@ -339,45 +304,6 @@ class _TribeSearchState extends State<TribeChats> {
     );
   }
 
-  Widget InputDate(lableText, keyBoard, Textcontroller) {
-    return Center(
-      child: Container(
-        padding: EdgeInsets.only(top: 5),
-        // color:  Color.fromRGBO(246, 246, 246, 1),
-        width: MediaQuery.of(context).size.width / 1.1,
-        height: 50,
-        child: Center(
-          child: TextField(
-            keyboardType: keyBoard,
-            controller: Textcontroller,
-            onChanged: (value) {
-              setState(() {
-                frdsList = getSearchData(value, frdsListOrigin);
-              });
-            },
-            decoration: InputDecoration(
-              filled: true,
-              suffixIcon: Icon(Icons.search),
-              hintText: lableText,
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Colors.white
-                      // color: Color.fromRGBO(249, 246, 238, 1)
-                      )),
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide:
-                      BorderSide(color: Color.fromRGBO(246, 246, 246, 1))),
-              fillColor: Color.fromRGBO(246, 246, 246, 1),
-
-              // border: InputBorder.none,
-              // fillColor:
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget profileContainer(item) {
     var id = {'_id': item['_id']};
@@ -412,11 +338,7 @@ class _TribeSearchState extends State<TribeChats> {
                 //width: width / 1,
                 child: Row(
                   children: [
-                    // AvatarProfileImage(
-                    //   url: item['avatar'] ?? userAvatar,
-                    //   width: 10,
-                    //   height: 16,
-                    // ),
+                    
                     AvatarProfile(
                         name: item['name'],
                         width: 1,
@@ -485,13 +407,6 @@ class _TribeSearchState extends State<TribeChats> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget imageurl(url) {
-    return SvgPicture.asset(
-      url,
-      height: 25,
     );
   }
 }

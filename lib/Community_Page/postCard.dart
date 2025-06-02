@@ -1,31 +1,18 @@
-import 'dart:convert';
 import "package:flutter/material.dart";
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/exploreCard.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/pop-up-menu.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-import 'package:flutter_application_code_stakeplot/Tribe/resportHide.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/readmore.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
-import 'dart:ui' as ui;
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-
 class ChartData {
   ChartData(this.x, this.y, [this.color, this.name]);
   final String x;
@@ -34,7 +21,7 @@ class ChartData {
   final String? name;
 }
 
-class PostCard extends StatefulWidget {
+class PostCard extends StatelessWidget {
   var data;
   bool flag = false;
   int index;
@@ -46,58 +33,11 @@ class PostCard extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _PostCardState createState() => _PostCardState();
-}
-
-class _PostCardState extends State<PostCard> {
-  RxBool fill = false.obs;
-
-  @override
-  void initState() {
-    super.initState();
-    getInfo();
-    getIndex();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    var data = widget.data;
-    return  uploadData(data, widget.flag) ;
+    return  uploadData(data, flag,context) ;
   }
 
-  void getIndex()
-  {
-     try{
-      widget.index = widget.index != -1 ? widget.index : getTrendingData.indexWhere((d) => d['_id'] == widget.data['_id']);
-    }catch(e)
-    {
-      print(e);
-    }
-
-  }
-
-  void getInfo() async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-    final response = await http.get(
-      Uri.parse('${url}/user/info'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-    );
-    if (response.statusCode == 200) {
-      var his = jsonDecode(response.body);
-      var obj = his['data'];
-
-      setState(() {
-        var postList = obj['saved'];
-        fill.value = postList.contains(widget.data['_id']);
-      });
-    } else {}
-  }
-
-  Widget uploadData(dataObj, bool flag) {
+  Widget uploadData(dataObj, bool flag,BuildContext context) {  
     bool isExploria = dataObj['postType'] == "explore";
     var extractdata = isExploria
         ? dataObj['description']['message']
@@ -180,7 +120,7 @@ class _PostCardState extends State<PostCard> {
                             // Save user posts 
                            // flag ? saved() : SizedBox.shrink(),
                             popUpBoxHideDelete(dataObj['_id'], context,
-                                dataObj["author"]['name'],widget.index,widget.flag),
+                                dataObj["author"]['name'],index,flag),
                             const SizedBox(width: 20),
                           ],
                         ),
@@ -296,8 +236,6 @@ class _PostCardState extends State<PostCard> {
     );
   }
 
-
-
   Widget text(item) {
     try {
       return Readmore(str: item['description']['message'].toString());
@@ -305,15 +243,6 @@ class _PostCardState extends State<PostCard> {
       return Readmore(str: item['description'].toString());
     }
   }
-}
-  
- 
-
-class SalesData {
-  final String month;
-  final double sales;
-  final Color? color;
-  SalesData(this.month, this.sales, this.color);
 }
 
 Widget poll(e, context) {
@@ -323,14 +252,6 @@ Widget poll(e, context) {
 
   return Padding(
     padding: const EdgeInsets.only(right: 0.0, top: 5),
-    // child: Container(
-    //   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-    //   width: MediaQuery.of(context).size.width / 1.4,
-    //   decoration: BoxDecoration(
-    //     //  color: Colorcodes.appBarColor,
-    //     border: Border.all(width: .5, color: Colorcodes.poll1),
-    //     borderRadius: BorderRadius.circular(9),
-    //   ),
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -347,9 +268,7 @@ Widget poll(e, context) {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: options.map((op) {
-              // List ll=op['votes'];
-              // String cal=((ll.length/len)* 100).toStringAsFixed(2);
-              // len += ll.length ;
+
               s++;
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -395,62 +314,6 @@ Widget poll(e, context) {
   );
 }
 
-Widget demiData(context) {
-  var options = [1, 2, 3, 4];
-  return Padding(
-    padding: const EdgeInsets.only(right: 0.0, top: 5),
-    child: Container(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      width: MediaQuery.of(context).size.width / 1.4,
-      decoration: BoxDecoration(
-        //  color: Colorcodes.appBarColor,
-        border: Border.all(width: .5),
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text("",
-                style: FontManager().getTextStyle(context,
-                    lWeight: FontWeight.w500,
-                    fontSize: 13,
-                    color: Colors.black)),
-          ),
-          Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: options.map((op) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 13, horizontal: 10),
-                      width: MediaQuery.of(context).size.width / 1.5,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5),
-                        // border: Border.all()
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("",
-                              style: FontManager().getTextStyle(context,
-                                  lWeight: FontWeight.w400,
-                                  fontSize: 14,
-                                  color: Colors.black)),
-                        ],
-                      )),
-                );
-              }).toList()),
-        ],
-      ),
-    ),
-  );
-}
 
 Widget getQuestionsAndOptions(e, context, flag, PostId) {
   String id = currentId.value;

@@ -3,23 +3,17 @@ import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
-import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
-import 'package:flutter_application_code_stakeplot/readmore.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:page_transition/page_transition.dart';
-import "package:flutter_application_code_stakeplot/Community_Page/postCard.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
-import "package:flutter_application_code_stakeplot/colorcodes.dart";
 import 'package:http/http.dart' as http;
 import "package:shared_preferences/shared_preferences.dart";
-import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class TribeShare extends StatefulWidget {
@@ -33,7 +27,6 @@ class TribeShare extends StatefulWidget {
 }
 
 class _TribeHomeState extends State<TribeShare> {
-
   RxBool frdsThere = false.obs;
   List addedUser = [];
   List nameList = [];
@@ -44,8 +37,7 @@ class _TribeHomeState extends State<TribeShare> {
   void initState() {
     super.initState();
     getTransaction();
-    socket = IO.io(urlWithLocallHost,
-        IO.OptionBuilder().setTransports(['websocket']).build());
+    socket = IO.io(urlWithLocallHost,IO.OptionBuilder().setTransports(['websocket']).build());
     setUpSocketListener();
   }
 
@@ -92,120 +84,6 @@ class _TribeHomeState extends State<TribeShare> {
     );
   }
 
-  Widget uploadData(dataObj) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
-      child: Column(
-        children: [
-          InkWell(
-            onTap: () {},
-            child: Container(
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                  color: const Color.fromRGBO(249, 246, 238, 1),
-                  borderRadius: BorderRadius.circular(20)),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.person_pin_sharp,
-                              size: 35,
-                              color: Colors.black,
-                            ),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Text((dataObj["author"]['name']),
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w400,
-                                    fontSize: 18,
-                                    color: Colors.black)),
-                          ],
-                        ),
-                      ),
-                      
-                      popUpBox(dataObj['_id']),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text((dataObj['title']),
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w400,
-                            fontSize: 16,
-                            color: Colors.black)),
-                  ),
-
-                  Container(
-                      child: !dataObj['isItenary']
-                          ? text(dataObj)
-                          : dataObj['chartType'] == "bargraph"
-                              ? barGraph(dataObj)
-                              : pieChart(dataObj)),
-
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        child: Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                upvote(
-                                    context, "Post", dataObj['_id'], dataObj);
-                                // navigate();
-                              },
-                              child: const Icon(
-                                Icons.arrow_drop_up_outlined,
-                                size: 35,
-                                color: Colors.black,
-                              ),
-                            ),
-                            Text((dataObj["upvotes"].toString()),
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w400,
-                                    fontSize: 18,
-                                    color: Colors.black)),
-                            GestureDetector(
-                              onTap: () {
-                                downvote(
-                                    context, "Post", dataObj['_id'], dataObj);
-                                // navigate();
-                              },
-                              child: const Icon(
-                                Icons.arrow_drop_down_outlined,
-                                size: 35,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      imageurl('assets/images2/share.svg')
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          commentedData(),
-        ],
-      ),
-    );
-  }
-
   Widget commentedData() {
     double height = MediaQuery.of(context).size.height / 3;
     return Container(
@@ -237,7 +115,6 @@ class _TribeHomeState extends State<TribeShare> {
       children: [
         InkWell(
           onTap: () {
-          
             if (frdsList.isEmpty) {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/TribeSearch');
@@ -245,7 +122,7 @@ class _TribeHomeState extends State<TribeShare> {
             }
 
             if (addedUser.isEmpty) {
-              snackBarCalled(context,SnackbarData().noFriendsAdded);
+              snackBarCalled(context, SnackbarData().noFriendsAdded);
               return;
             }
 
@@ -282,7 +159,13 @@ class _TribeHomeState extends State<TribeShare> {
                 "roomId": userToSend,
               });
               index++;
-              sendNotificationsToDevice(rec, context,"Hey there! 👋, ${userName.value} has shared a post 📩. Please check it out 🛒 ","/chat/${currentId.value}",widget.dataObj['title'],widget.dataObj['image']);
+              sendNotificationsToDevice(
+                  rec,
+                  context,
+                  "Hey there! 👋, ${userName.value} has shared a post 📩. Please check it out 🛒 ",
+                  "/chat/${currentId.value}",
+                  widget.dataObj['title'],
+                  widget.dataObj['image']);
             });
             Navigator.pop(context);
           },
@@ -338,8 +221,12 @@ class _TribeHomeState extends State<TribeShare> {
                       // backgroundColor:const Color.fromRGBO(249, 246, 238, 1),
                       child: Stack(
                         children: [
-                          AvatarProfile(name: frdsList[index]['name'], width: 21, height: height, background: frdsList[index]['avatarBackGround']??defaultBackGround.value),
-                          
+                          AvatarProfile(
+                              name: frdsList[index]['name'],
+                              width: 21,
+                              height: height,
+                              background: frdsList[index]['avatarBackGround'] ??
+                                  defaultBackGround.value),
                           addedUser.contains(values)
                               ? const Positioned(
                                   right: 2,
@@ -378,19 +265,8 @@ class _TribeHomeState extends State<TribeShare> {
   }
 
   void sendPost(context, jsonData) async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-    final response = await http.post(
-      Uri.parse('${url}/chat/'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-      body: jsonEncode(jsonData),
-    );
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      final body = json.decode(response.body);
-
+    var responce = await postDataApiCall("${url}/chat/", jsonData);
+    if (getFlagOfResponse(responce)) {
       snackBarCalled(context, SnackbarData().postSentSuccessfully);
       Navigator.pop(context);
     } else {
@@ -418,8 +294,6 @@ class _TribeHomeState extends State<TribeShare> {
               //contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
               filled: true,
               hintText: lableText,
-
-              
               fillColor: AppColors.mt,
               border: OutlineInputBorder(
                 borderRadius:
@@ -433,216 +307,4 @@ class _TribeHomeState extends State<TribeShare> {
       ),
     );
   }
-
-  Widget text(item) {
-    return Readmore(
-      str: item['description']['message'].toString(),
-    );
-  }
-
-  Widget barGraph(item) {
-    List<SalesData> chartData = <SalesData>[];
-    List list = item['description']['itemlist'];
-
-    int j = 0;
-    list.forEach(
-      (element) {
-        String t1 = element['item'];
-        String t2 = element['amount'].toString();
-        if (j == color.length) j = 0;
-        String b = t2 == "" ? "0" : t2;
-
-        chartData.add(
-          SalesData(t1, double.parse(b)),
-        );
-      },
-    );
-
-    return Container(
-     
-      height: MediaQuery.of(context).size.height / 4.7,
-
-      child: SfCartesianChart(
-        primaryXAxis: CategoryAxis(),
-        isTransposed: true,
-        series: <CartesianSeries>[
-          BarSeries<SalesData, String>(
-            dataSource: chartData,
-            onPointTap: (pointInteractionDetails) {
-              Navigator.push(
-                  context,
-                  PageTransition(
-                    type: PageTransitionType.fade,
-                    duration: Durations.long1,
-                    child: TribeUnique(
-                      id: item["_id"],
-                      dataObj: item,
-                    ),
-                    isIos: true,
-                  ));
-            },
-            xValueMapper: (SalesData sales, _) => sales.month,
-            yValueMapper: (SalesData sales, _) => sales.sales,
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget pieChart(item) {
-    final List<ChartData> chartData = [];
-
-    List list = item['description']['itemlist'];
-
-    int j = 0;
-
-    list.forEach((element) {
-      String t1 = element['item'];
-      String t2 = element['amount'].toString();
-      if (j == color.length) j = 0;
-      String b = t2 == "" ? "0" : t2;
-
-      chartData.add(
-        ChartData(t1, list.length == 1 ? 100 : double.parse(b), color[j++], t1),
-      );
-    });
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20.0),
-      child: Container(
-
-          //  width: 30,
-          height: MediaQuery.of(context).size.height / 4.7,
-          child: SfCircularChart(series: <CircularSeries>[
-            // Render pie chart
-            PieSeries<ChartData, String>(
-              dataSource: chartData,
-
-              radius: "100",
-              explodeOffset: "4%",
-
-              dataLabelMapper: (ChartData data, _) => '${data.name}',
-              pointColorMapper: (ChartData data, _) => data.color,
-              xValueMapper: (ChartData data, _) => data.x,
-              yValueMapper: (ChartData data, _) => data.y,
-              onPointTap: (pointInteractionDetails) {
-                Navigator.push(
-                    context,
-                    PageTransition(
-                      type: PageTransitionType.fade,
-                      duration: Durations.long1,
-                      child: TribeUnique(
-                        id: item["_id"],
-                        dataObj: item,
-                      ),
-                      isIos: true,
-                    ));
-              },
-              // strokeWidth: 5.0,
-              dataLabelSettings: DataLabelSettings(
-                isVisible: true, // Show labels
-              ),
-            )
-          ])),
-    );
-  }
-
-  void upvote(context, String str, String objectId, dataObj) async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-    final response = await http.post(
-      Uri.parse('${url}/upvote/'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-      body: jsonEncode({
-        'onModel': str.toString(),
-        'objectId': objectId,
-      }),
-    );
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      final body = json.decode(response.body);
-      snackBarCalled(context, SnackbarData().likedPost);
-
-      if (!postListIds.contains(objectId)) {
-        setState(() {
-          dataObj["upvotes"]++;
-        });
-        postListIds.add(objectId);
-      } else {
-        setState(() {
-          dataObj["upvotes"]--;
-        });
-        postListIds.remove(objectId);
-      }
-      //  Navigator.pop(context);
-      //  Navigator.pushNamed(context, '/TribeHome');
-    } else {
-      snackBarCalled(context, SnackbarData().errorLikingPost, Colors.red);
-    }
-  }
-
-  void downvote(context, String str, String objectId, dataObj) async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-
-    final response = await http.post(
-      Uri.parse('${url}/downvote/'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-      body: jsonEncode({
-        'onModel': str.toString(),
-        'objectId': objectId,
-      }),
-    );
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      final body = json.decode(response.body);
-      snackBarCalled(context, SnackbarData().dislikedPost);
-
-      if (postListIds.contains(objectId)) {
-        setState(() {
-          dataObj["upvotes"]--;
-        });
-        postListIds.remove(objectId);
-      }
-    } else {
-      snackBarCalled(context, SnackbarData().errorDislikingPost, Colors.red);
-    }
-  }
-}
-
-Widget popUpBox(id) {
-  return PopupMenuButton(
-    initialValue: 2,
-    color: Colorcodes.appBarColor,
-    child: const Center(
-        child: Icon(
-      Icons.more_vert_outlined,
-      size: 25,
-      color: Colors.black,
-    )),
-    itemBuilder: (context) {
-      return [
-        const PopupMenuItem(
-          value: 0,
-          child: Text("hide"),
-        ),
-        const PopupMenuItem(
-          value: 1,
-          child: Text("Report"),
-        ),
-      ];
-    },
-  );
-}
-
-class SalesData {
-  final String month;
-  final double sales;
-
-  SalesData(this.month, this.sales);
 }
