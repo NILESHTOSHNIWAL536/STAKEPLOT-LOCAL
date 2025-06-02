@@ -114,10 +114,9 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen>
                       child: DoneButtonWidget(
                         onPressed: () {
                           // Handle done action
-                          print('Selected Categories: $selectedCategories');
-                          print('Selected SubCategories: $selectedSubCategories');
+                           
                           final combinedList = [...selectedSubCategories, ...selectedCategories];
-
+                          print("Selected Categories: $combinedList");
                           addMyIntreastAndName(
                             "Niles_3gt473",
                             combinedList,
