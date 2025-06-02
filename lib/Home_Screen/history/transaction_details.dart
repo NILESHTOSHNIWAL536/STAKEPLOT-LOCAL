@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
-import 'package:intl/intl.dart'; // For date formatting
 
 class TransactionDetailsPage extends StatelessWidget {
   final Map<String, dynamic> transaction;
@@ -15,7 +14,7 @@ class TransactionDetailsPage extends StatelessWidget {
     final formattedDate = transaction['transactionTimestamp'] != null
         ? formatWhatsAppDate4(convertStringToDateTime(
             transaction['transactionTimestamp'].toString()))
-        : 'N/A'; // Default value if transactionTimestamp is null
+        : 'N/A'; 
 
     return Scaffold(
       backgroundColor: Colors.grey[100], // Light background
@@ -159,7 +158,6 @@ class TransactionDetailsPage extends StatelessWidget {
   bool _isCategoryTagged(dynamic category, dynamic subcategory) {
     final cat = category?.toString().trim() ?? 'Uncategorized';
     final subcat = subcategory?.toString().trim() ?? 'Uncategorized';
-    // Consider it untagged if BOTH are Uncategorized, null, or empty
     return !(cat == 'Uncategorized' && (subcat == 'Uncategorized' || subcat.isEmpty));
   }
 }

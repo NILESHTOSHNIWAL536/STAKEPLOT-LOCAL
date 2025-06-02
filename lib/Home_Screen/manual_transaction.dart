@@ -1,17 +1,16 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/ManuallyTransactions/apicalls.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/friends_bill_split.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/lendMessage.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/autoTransactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
@@ -22,145 +21,9 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 bool isDebit = true;
-
-class Manualtransaction extends StatefulWidget {
-  const Manualtransaction({super.key});
-
-  @override
-  State<Manualtransaction> createState() => _ManualtransactionState();
-}
-
-class _ManualtransactionState extends State<Manualtransaction> {
-  @override
-  void initState() {
-    super.initState();
-    getCustomCategory(context);
-  }
-
-  Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.sizeOf(context).width / 0.8,
-      decoration: BoxDecoration(
-        color: AppColors.mt,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              AvatarProfileImage(
-                url: HomePageIcons.manualTransaction,
-                height: 24,
-                width: 24,
-              ),
-              SizedBox(width: MediaQuery.of(context).size.width / 52),
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(HomepageStringsDart().manualTransaction,
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w600,
-                            fontSize: MediaQuery.of(context).size.width * 0.04,
-                            color: AppColors.accentColor)),
-                    const SizedBox(height: 8),
-                    Container(
-                        decoration: BoxDecoration(
-                                  color: AppColors.button,
-                                 // borderRadius: BorderRadius.circular(16)
-                                  ),
-                      child: Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              isDebit = false;
-                              showCustomModal(context,isDebit);
-                          
-                              // player.play(UrlSource('https://www.soundjay.com/button/beep-07.wav'));
-                            },
-                            child: Container(
-                              height: Colorcodes.paddingSize * 1.5,
-                              width: Colorcodes.paddingSize * 3,
-                              // decoration: BoxDecoration(
-                              //     color: AppColors.button,
-                              //     borderRadius: BorderRadius.circular(16)),
-                              child: Center(
-                                child: Text(HomepageStringsDart().cashIn,
-                                    style: FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.normal,
-                                        fontSize: 12,
-                                        color: AppColors.primaryColor)),
-                              ),
-                            ),
-                          ),
-                         Container(
-                            width: 0.5, // Width of the divider
-                            height: Colorcodes.paddingSize * 1.2, // Match the height of the buttons
-                            color: AppColors.accentColor, // Color of the divider
-                          ),
-                          InkWell(
-                            onTap: () {
-                              isDebit = true;
-                              showCustomModal(context,isDebit);
-                            },
-                            child: Container(
-                              height: Colorcodes.paddingSize * 1.5,
-                              width: Colorcodes.paddingSize * 3,
-                              // decoration: BoxDecoration(
-                              //     color: AppColors.button,
-                              //     borderRadius: BorderRadius.circular(16)),
-                              child: Center(
-                                child: Text(HomepageStringsDart().cashOut,
-                                    style: FontManager().getTextStyle(context,
-                                        lWeight: FontWeight.normal,
-                                        fontSize: 12,
-                                        color: AppColors.primaryColor)),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
-          AvatarProfileImage(
-            url: LikeComment.manualTransaction,
-            height: 10,
-            width: 14,
-          )
-        ],
-      ),
-    );
-  }
-}
-
-void showCustomModal(BuildContext context, bool isDebit) {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: AppColors.mt,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(
-        top: Radius.circular(16),
-      ),
-    ),
-    builder: (BuildContext context) {
-      return SafeArea(
-          child: ModalContent(isDebit)); // Use the modal widget here
-    },
-  );
-}
 
 class ModalContent extends StatefulWidget {
   final bool isDebit;
@@ -245,9 +108,6 @@ class _ModalContentState extends State<ModalContent>
       selectedSubCategory = null;
       isCategoryFieldExpanded = false;
       _isAmountFieldFocused = false;
-      // isSplitbill = (selectedCategory != null &&
-      //     selectedSubCategory != null &&
-      //     amount != null);
     });
   }
 
@@ -259,16 +119,13 @@ class _ModalContentState extends State<ModalContent>
     });
   }
 
-//celebration after tapping continue
   void _showCelebration() {
-    // Trigger confetti and animation
 
     setState(() {
       _isCelebrationVisible = true;
     });
     _confettiController.play(); // Start confetti animation
     _iconAnimationController.forward();
-    // Start tick icon animation
   }
 
   @override
@@ -830,11 +687,9 @@ class _ModalContentState extends State<ModalContent>
     }
 
     // int index=0;
-
     addedUser.forEach((rec) {
       String room1 = rec['name'] + userName.value;
       String room2 = userName.value + rec['name'];
-      // index++;
       String roomId = (room1.compareTo(room2) <= 0) ? room1 : room2;
 
       var jsonData = {
@@ -991,53 +846,6 @@ class _ModalContentState extends State<ModalContent>
 
     } else {
       snackBarCalled(context,SnackbarData().splitAmountError, Colors.red);
-    }
-
-    acceptReset.value = false;
-    cashInAndOut.value =false;
-  }
-
-  void addLendUserAmount(context, String amount, List members, String name,
-      String subCategories) async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-    final response = await http.post(
-      Uri.parse('${url}/bill'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-      body: jsonEncode({
-        "userName": members[0]['name'],
-        "avatarType": members[0]['avatar'],
-        "billReceiverId": members[0]['id'],
-        "avatarBackGround": members[0]['avatarBackGround'] ?? "#68B2A0",
-        "category": name,
-        "subcategory": subCategories,
-        "type": "Lend Money",
-        "amount": amount,
-        'message': messageController.text.toString(),
-        'dueDate': selectedDueDate.toString().substring(0, 10)
-      }),
-    );
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      final body = json.decode(response.body);
-
-      members.forEach((e) {
-        sendNotificationsToDevice(e['id'], context,"${userName.value} has sent u a lend bill..Of ${name} Of ${amount}");
-      });
-
-      snackBarCalled(context,SnackbarData().lendAmountSuccess, Colors.black);
-      addTransaction(amount, "Lend Bill (${subCategories})", name, context, 'cash', false,false);
-      getUserLend(context);
-      messageController.clear();
-      addedMembers.clear();
-      addedUser.clear();
-      selectedDueDate = null;
-    } else {
-      snackBarCalledfail(
-          context,SnackbarData().lendAmountError, Colors.red);
     }
 
     acceptReset.value = false;

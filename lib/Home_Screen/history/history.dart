@@ -56,10 +56,6 @@ Widget historyTransactions(Map<String, dynamic> transaction, String? date,
 
   String nameOfUser =  transaction['title'] !=null ?  transaction['title'] :  parts.length >= 4? parts[3]: parts.length >= 3? parts[2]: parts.length >= 2? parts[1]: parts[0];
 
-  // Print narration and nameOfUser
-  // print('Narration: $narration');
-  // print('Name of User: $nameOfUser');
-
   final amtColor = type == 'CREDIT'
       ? Colors.green.shade700
       : const Color.fromARGB(255, 207, 118, 113);
