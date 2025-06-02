@@ -174,13 +174,10 @@ class _BottomNavigationsState extends State<BottomNavigations> {
          
           if (i == 0)
             pushName(HomePage());
-          else if (i == 1)
-            pushName(PlotFinance());
-          // else if (i == 2)
-          //   pushName(Community());
-           else if (i == 2)
-            pushName(WelcomeScreen());
-          else if (i == 3) pushName(ProfileScreenDart());
+          else if (i == 1) pushName(PlotFinance());
+        
+           else if (i == 2) pushName(interestedTags.isEmpty? WelcomeScreen():Community());
+           else if (i == 3) pushName(ProfileScreenDart());
 
           setState(() {
             widget.data = i; // Update selected index

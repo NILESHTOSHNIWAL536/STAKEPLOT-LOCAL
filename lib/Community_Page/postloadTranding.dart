@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:get/get.dart';
 
-final ScrollController scrollControllerPost = ScrollController();
+// final ScrollController scrollControllerPost2 = ScrollController();
 final RxList displayedData = [].obs;
 final int itemsPerLoad = 10;
 
 
 
-class LazyLoadingList extends StatefulWidget 
+class LazyLoadingTranding extends StatefulWidget 
 {
   @override
   _LazyLoadingListState createState() => _LazyLoadingListState();
 }
 
-class _LazyLoadingListState extends State<LazyLoadingList> {
+class _LazyLoadingListState extends State<LazyLoadingTranding> {
  
 
   @override
@@ -35,9 +36,9 @@ class _LazyLoadingListState extends State<LazyLoadingList> {
   }
 
   void _loadMoreData() {
-    if (displayedData.length < getTrendingData.length) {
-      int nextItems = (displayedData.length + itemsPerLoad).clamp(0, getTrendingData.length);
-      displayedData.addAll(getTrendingData.sublist(displayedData.length, nextItems));
+    if (displayedData.length < getAllPostData.length) {
+      int nextItems = (displayedData.length + itemsPerLoad).clamp(0, getAllPostData.length);
+      displayedData.addAll(getAllPostData.sublist(displayedData.length, nextItems));
     }
   }
 
@@ -60,7 +61,7 @@ class _LazyLoadingListState extends State<LazyLoadingList> {
 
  void loadInitialData()
  {
-    displayedData.addAll(getTrendingData.take(itemsPerLoad).toList()); // Load first batch
+    displayedData.addAll(getAllPostData.take(itemsPerLoad).toList()); // Load first batch
  }
 
 

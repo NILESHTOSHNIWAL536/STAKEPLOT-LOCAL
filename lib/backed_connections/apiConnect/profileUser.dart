@@ -165,6 +165,9 @@ void getUserInfomations() async {
     selectedBank.value = obj['selectedBank'] ?? "";
     AttemptCount.value = obj['cupertinoAttemptCount'] != null ?  obj['cupertinoAttemptCount'] > 5:false;
     userAvatarBackGround.value = obj['avatarBackGround'] ?? "#FA7070";
+    interestedTags.value = obj['interestedTags'] ?? [];
+    maskedName.value = obj['maskedName'] ?? "";
+
 
     List s = obj['accounts'];
     income.value = 0;

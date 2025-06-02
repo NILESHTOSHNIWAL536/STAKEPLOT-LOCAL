@@ -115,12 +115,17 @@ RxBool allOrGroupTransactions = true.obs;
 RxString accountId = "".obs;
 RxString searchAccountId = "".obs;
 RxString accountIdPdf = "".obs;
+
+RxString maskedName="".obs;
+RxList interestedTags = [].obs;
+
 RxString allOrGroupTransactionsName = "All".obs;
 RxList totalInSights = [].obs;
 RxBool getTotalInsightsHistory = false.obs;
 RxList foodieFundsDetailsRemainders = [].obs;
 RxBool getFoodieFundsUsers = false.obs;
 late BuildContext contextGlobal;
+
 List<String> month = [
   "",
   "January",
@@ -169,6 +174,7 @@ RxBool reloadUniquePost = false.obs;
 RxBool postDis = false.obs;
 RxBool posting=false.obs;
 RxBool getPosted=false.obs;
+RxBool getPostedTranding=false.obs;
 RxBool acceptReset = false.obs;
 RxBool LoadTag = false.obs;
 RxList budgetList = [].obs;
@@ -176,6 +182,7 @@ final RxList<Debt> debts = <Debt>[].obs;
 RxList debtsList = [].obs;
 RxList historyListData = [].obs;
 RxList getTrendingData = [].obs;
+RxList getAllPostData = [].obs;
 RxBool hasGetNewNotifications = false.obs;
 RxBool getGraphData=false.obs;
 RxBool loadBanks=true.obs;

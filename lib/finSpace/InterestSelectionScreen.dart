@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Utils/finspaceStrings.dart';
+import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 
 
 class InterestSelectionScreen extends StatefulWidget {
@@ -115,6 +116,13 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen>
                           // Handle done action
                           print('Selected Categories: $selectedCategories');
                           print('Selected SubCategories: $selectedSubCategories');
+                          final combinedList = [...selectedSubCategories, ...selectedCategories];
+
+                          addMyIntreastAndName(
+                            "Niles_3gt473",
+                            combinedList,
+                            context
+                          );
                         },
                       ),
                     )
