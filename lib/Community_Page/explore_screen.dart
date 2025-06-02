@@ -2,26 +2,20 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_code_stakeplot/Community_Page/image_picker_utils.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:custom_image_crop/custom_image_crop.dart';
 import 'dart:io';
-import './success_post.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Constants/decorated_box.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:path_provider/path_provider.dart';
 
 class ExploreModal extends StatefulWidget {
@@ -712,9 +706,6 @@ class _ExploreModalState extends State<ExploreModal> {
         locationAddressController.text.isNotEmpty &&
         !_isSubmitting;
 
-    // return GestureDetector( onTap: isEnabled ? _submitPost : null,child:
-    //  ( isEnabled ) ?  getButton(context,  "Continue"): getButton(context, "Continue",AppColors.mt,AppColors.bg1)
-    // );
     return GestureDetector(
       onTap: () {
         isEnabled ? _submitPost() : null;
@@ -743,28 +734,6 @@ class _ExploreModalState extends State<ExploreModal> {
               ),
             ),
     );
-    // return Container(
-    //   color: isEnabled ? AppColors.primaryColor : Colors.grey,
-    //   child: Center(
-    //     child: TextButton(
-    //       onPressed: isEnabled ? _submitPost : null,
-    //       child: _isSubmitting
-    //           ? const CircularProgressIndicator(color: Colors.white)
-    //           : Text(
-    //               'Continue',
-    //               style: FontManager().getTextStyle(
-    //                 context,
-    //                 lWeight: FontWeight.bold,
-    //                 fontSize: 15,
-    //                 color: locationNameController.text.isNotEmpty &&
-    //                         locationAddressController.text.isNotEmpty
-    //                     ? Colors.white
-    //                     : Colors.black,
-    //               ),
-    //             ),
-    //     ),
-    //   ),
-    // );
   }
 
   InputDecoration _inputDecoration(String hintText, IconData? icon) {

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/readmore.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
 
 class ExploreCard extends StatefulWidget {
@@ -189,12 +188,7 @@ class _ExploreCardState extends State<ExploreCard> {
 
   Widget _buildPlaceInfo(BuildContext context) {
     return Container(
-      //padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
       margin: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.015),
-      // decoration: BoxDecoration(
-      //   color: Colors.white.withOpacity(0.2),
-      //   borderRadius: BorderRadius.circular(8),
-      // ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -246,7 +240,6 @@ class _ExploreCardState extends State<ExploreCard> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        //SizedBox(height: MediaQuery.of(context).size.height * 0.015),
         Text(
           "Budget",
           style: FontManager().getTextStyle(
@@ -352,58 +345,6 @@ class _ExploreCardState extends State<ExploreCard> {
     );
   }
 
-  //  Widget _buildDescription(BuildContext context) {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       Text(
-  //         "Description",
-  //         style: FontManager().getTextStyle(
-  //           context,
-  //           lWeight: FontWeight.w600,
-  //           fontSize: _getResponsiveFontSize(context, 16),
-  //           color: AppColors.bg1,
-  //         ),
-  //       ),
-  //       Padding(
-  //         padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
-  //         child: Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: [
-  //             Text(
-  //               widget.extractdata['description'],
-  //               maxLines: _showFullDescription ? null : 2,
-  //               overflow: _showFullDescription ? TextOverflow.visible : TextOverflow.ellipsis,
-  //               style: FontManager().getTextStyle(
-  //                 context,
-  //                 lWeight: FontWeight.w400,
-  //                 fontSize: _getResponsiveFontSize(context, 14),
-  //                 color: AppColors.bg1,
-  //               ),
-  //             ),
-  //             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-  //             GestureDetector(
-  //               onTap: () {
-  //                 setState(() {
-  //                   _showFullDescription = !_showFullDescription;
-  //                 });
-  //               },
-  //               child: Text(
-  //                 _showFullDescription ? "Show Less" : "Show More",
-  //                 style: FontManager().getTextStyle(
-  //                   context,
-  //                   lWeight: FontWeight.w600,
-  //                   fontSize: _getResponsiveFontSize(context, 14),
-  //                   color: Colors.blue,
-  //                 ),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
 
   Widget _buildDescription(BuildContext context) {
   // Check if text exceeds one line

@@ -96,14 +96,13 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
 
   Future<void> storeData2(
       context, Map<String, dynamic> data, String avatarUrl) async {
-    print("came till here");
+   
     String name = data['name'];
     String email = data['email'];
     String dob = data['dob'];
     String colorString =
         avatarBackGroundList[getRandomValue(avatarBackGroundList)];
-    print("Body got printed-----------------------$colorString");
-    print("Sending request to register user with data: $data");
+  
     final response = await http.post(
       Uri.parse('${url}/user/register'),
       headers: <String, String>{
@@ -118,7 +117,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         'isGoogleUser': true,
       }),
     );
-    print("Received response: ${response.body}");
+    
 
     try {
       var data2 = jsonDecode(response.body);

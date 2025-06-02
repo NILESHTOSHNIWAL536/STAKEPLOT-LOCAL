@@ -38,19 +38,12 @@ class _LazyLoadingListState extends State<LazyLoadingList> {
     }
   }
 
-  // @override
-  // void dispose() {
-  //   scrollControllerPost.dispose();
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
     return Obx(() => Container(
       width: MediaQuery.of(context).size.width,
-      // height: MediaQuery.of(context).size.height/1.3,
       child: ListView.builder(
-              // controller: _scrollController,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: displayedData.length,
@@ -69,6 +62,6 @@ class _LazyLoadingListState extends State<LazyLoadingList> {
 
 
 void resetAndLoadData() {
-  displayedData.clear();  // Clear existing data
-  loadInitialData();  // Reload initial data
+  displayedData.clear();  
+  loadInitialData(); 
 }
