@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 
 class InterestSelectionScreen extends StatefulWidget {
   const InterestSelectionScreen({Key? key}) : super(key: key);
 
   @override
-  State<InterestSelectionScreen> createState() => _InterestSelectionScreenState();
+  State<InterestSelectionScreen> createState() =>
+      _InterestSelectionScreenState();
 }
 
 class _InterestSelectionScreenState extends State<InterestSelectionScreen>
     with TickerProviderStateMixin {
-  
   Set<String> selectedCategories = {};
   Set<String> selectedSubCategories = {};
   late AnimationController _animationController;
@@ -18,32 +20,28 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen>
 
   final Map<String, List<String>> categories = {
     'Personal Finance': [],
-    'Budgeting': [],
     'Debt Management': [],
     'Savings Strategies': [],
+    'Tax Planning & Filing': [],
     'Investments': [
-      'Stocks & Equities',
+      'Stocks & Equities','Cryptocurrency & Blockchain',
       'Mutual Funds & SIPs',
-      'Cryptocurrency & Blockchain',
+      
       'Real Estate & Property'
     ],
-    'Tax Planning & Filing': [],
     'Spending Confessions': [],
     'Behavioural Finance': [],
+    'Smart Savers': [],
+    'Alternative Investments': ['Art', 'Collectibles', 'P2P Lending'],
     'Retirement & Pension Planning': [],
     'Side Hustles & Passive Income': [],
     'Tech Trends in Finance': [],
-    'College & Education Funding': [],
-    'Scholarships and Stipends': [],
-    'Global Market News & Analysis': [],
-    'Alternative Investments': [
-      'Art',
-      'Collectibles',
-      'P2P Lending'
-    ],
     'Salary Talks': [],
+    'College & Education Funding': [],
     'Spent Stories': [],
-    'Smart Savers': [],
+    'Scholarships and Stipends': [],
+    'Budgeting': [],
+    'Global Market News & Analysis': [],
   };
 
   @override
@@ -72,9 +70,8 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen>
     setState(() {
       if (selectedCategories.contains(category)) {
         selectedCategories.remove(category);
-        // Remove all subcategories of this category
-        selectedSubCategories.removeWhere((sub) => 
-            categories[category]?.contains(sub) ?? false);
+        selectedSubCategories
+            .removeWhere((sub) => categories[category]?.contains(sub) ?? false);
       } else {
         selectedCategories.add(category);
       }
@@ -94,58 +91,76 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen>
     });
   }
 
-  bool get _hasSelections => 
+  bool get _hasSelections =>
       selectedCategories.isNotEmpty || selectedSubCategories.isNotEmpty;
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            // Header
-            HeaderWidget(),
-            
-            // Title Section
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: screenSize.width * 0.05,
-                vertical: 16,
-              ),
-              child: TitleWidget(),
-            ),
-            
-            // Categories List
-            Expanded(
-              child: CategoriesListWidget(
-                categories: categories,
-                selectedCategories: selectedCategories,
-                selectedSubCategories: selectedSubCategories,
-                onCategoryToggle: _toggleCategory,
-                onSubCategoryToggle: _toggleSubCategory,
-                fadeAnimation: _fadeAnimation,
+            // Background SVG Image
+            Center(
+              child: AvatarProfileImage(
+                url: FinSpaceIcons.bgMarks,
+                height: 2, // 50% of screen height
+                width: 1, // 50% of screen width
               ),
             ),
-            
-            // Done Button
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              height: _hasSelections ? 80 : 0,
-              child: _hasSelections
-                  ? Padding(
-                      padding: EdgeInsets.all(16),
-                      child: DoneButtonWidget(
-                        onPressed: () {
-                          // Handle done action
-                          print('Selected Categories: $selectedCategories');
-                          print('Selected SubCategories: $selectedSubCategories');
-                        },
-                      ),
-                    )
-                  : null,
+            // Main Content
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  // Header
+                  HeaderWidget(),
+                  // Title Section
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenSize.width * 0.05,
+                      vertical: 16,
+                    ),
+                    child: TitleWidget(),
+                  ),
+                  // Categories List
+                  Container(
+                    height: screenSize.height *
+                        0.63, // 60% of screen height for categories
+                    child: CategoriesListWidget(
+                      categories: categories,
+                      selectedCategories: selectedCategories,
+                      selectedSubCategories: selectedSubCategories,
+                      onCategoryToggle: _toggleCategory,
+                      onSubCategoryToggle: _toggleSubCategory,
+                      fadeAnimation: _fadeAnimation,
+                    ),
+                  ),
+                  // Done Button
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    height: _hasSelections ? 70 : 0,
+                    alignment: _hasSelections
+                        ? Alignment.topCenter
+                        : Alignment.bottomCenter, // Change alignment
+                    child: _hasSelections
+                        ? Padding(
+                            padding: EdgeInsets.all(12),
+                            child: DoneButtonWidget(
+                              onPressed: () {
+                                print(
+                                    'Selected Categories: $selectedCategories');
+                                print(
+                                    'Selected SubCategories: $selectedSubCategories');
+                              },
+                            ),
+                          )
+                        : null,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -160,7 +175,7 @@ class HeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    
+
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: screenSize.width * 0.05,
@@ -173,7 +188,7 @@ class HeaderWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Welcome back to',
+                'Welcome to',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.black54,
@@ -248,50 +263,63 @@ class CategoriesListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    
-    return ListView.builder(
-      padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.05),
-      itemCount: categories.length,
-      itemBuilder: (context, index) {
-        final category = categories.keys.elementAt(index);
-        final subCategories = categories[category] ?? [];
-        final isSelected = selectedCategories.contains(category);
-        final hasSubCategories = subCategories.isNotEmpty;
-        
-        return Column(
-          children: [
-            // Main Category Chip
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              margin: EdgeInsets.symmetric(vertical: 4),
-              child: CategoryChip(
-                label: category,
-                isSelected: isSelected,
-                onTap: () => onCategoryToggle(category),
-              ),
-            ),
-            
-            // Subcategories (if main category is selected)
-            if (isSelected && hasSubCategories)
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                margin: EdgeInsets.only(left: 20, bottom: 8),
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: subCategories.map((subCategory) {
-                    final isSubSelected = selectedSubCategories.contains(subCategory);
-                    return CategoryChip(
-                      label: subCategory,
-                      isSelected: isSubSelected,
-                      onTap: () => onSubCategoryToggle(subCategory),
-                    );
-                  }).toList(),
+
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.05),
+        child: Wrap(
+          spacing:
+              screenSize.width * 0.015, // Further reduced horizontal spacing
+          runSpacing:
+              screenSize.height * 0.005, // Further reduced vertical spacing
+          alignment:
+              WrapAlignment.start, // Align to start for brick-like effect
+          children: categories.keys.map((category) {
+            final subCategories = categories[category] ?? [];
+            final isSelected = selectedCategories.contains(category);
+            final hasSubCategories = subCategories.isNotEmpty;
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Main Category Chip
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 1), // Minimal vertical margin
+                  child: CategoryChip(
+                    label: category,
+                    isSelected: isSelected,
+                    onTap: () => onCategoryToggle(category),
+                    isSubCategory: false,
+                  ),
                 ),
-              ),
-          ],
-        );
-      },
+                // Subcategories (if main category is selected)
+                if (isSelected && hasSubCategories)
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    margin: const EdgeInsets.only(bottom: 2),
+                    child: Wrap(
+                      alignment: WrapAlignment.start,
+                      spacing: screenSize.width * 0.015,
+                      runSpacing: screenSize.height * 0.005,
+                      children: subCategories.map((subCategory) {
+                        final isSubSelected =
+                            selectedSubCategories.contains(subCategory);
+                        return CategoryChip(
+                          label: subCategory,
+                          isSelected: isSubSelected,
+                          onTap: () => onSubCategoryToggle(subCategory),
+                          isSubCategory: true,
+                        );
+                      }).toList(),
+                    ),
+                  ),
+              ],
+            );
+          }).toList(),
+        ),
+      ),
     );
   }
 }
@@ -300,80 +328,47 @@ class CategoryChip extends StatelessWidget {
   final String label;
   final bool isSelected;
   final VoidCallback onTap;
+  final bool isSubCategory;
 
   const CategoryChip({
     Key? key,
     required this.label,
     required this.isSelected,
     required this.onTap,
+    this.isSubCategory = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: isSelected ? Color(0xFF4A4E69) : Colors.grey.shade100,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: isSelected ? Color(0xFF4A4E69) : Colors.grey.shade300,
-              width: 1,
+      child: IntrinsicWidth(
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+                horizontal: 10, vertical: 6), // Further reduced padding
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? AppColors.finSpaceColor
+                  : AppColors.backgroundColor,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: isSelected
+                    ? const Color(0xFF4A4E69)
+                    : const Color(0xFF8A8A8A),
+                width: 1,
+              ),
             ),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              color: isSelected ? Colors.white : Colors.black87,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class SubCategoryChip extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const SubCategoryChip({
-    Key? key,
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      // duration: const Duration(milliseconds: 200),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            color: isSelected ? Colors.blue.shade100 : Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: isSelected ? Colors.blue : Colors.grey.shade300,
-              width: 1,
-            ),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              color: isSelected ? Colors.blue.shade700 : Colors.black54,
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
+            child: Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? AppColors.backgroundColor : AppColors.bg1,
+                fontSize: isSubCategory ? 12 : 14,
+                fontWeight: isSubCategory ? FontWeight.w400 : FontWeight.w400,
+              ),
+              textAlign: TextAlign.center,
             ),
           ),
         ),
@@ -394,7 +389,7 @@ class DoneButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 48,
+      height: 40,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
@@ -403,7 +398,7 @@ class DoneButtonWidget extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          elevation: 2,
+          elevation: 0,
         ),
         child: Text(
           'Done',

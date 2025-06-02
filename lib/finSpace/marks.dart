@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/InterestSelectionScreen.dart';
 
 class MaskNameScreen extends StatefulWidget {
@@ -28,11 +30,16 @@ class _MaskNameScreenState extends State<MaskNameScreen> {
       body: Stack(
         children: [
           // Background pattern
-          Positioned.fill(
-            child: CustomPaint(
-              painter: WavePatternPainter(),
-            ),
-          ),
+          // Positioned.fill(
+          //   child: CustomPaint(
+          //     painter: WavePatternPainter(),
+          //   ),
+          // ),
+           AvatarProfileImage(
+                url: FinSpaceIcons.bgMarks,
+                height: 1,
+                width: 1,
+              ),
           
           // Main content
           SafeArea(

@@ -14,7 +14,7 @@ class NavBarIcons {
 }
 class FinSpaceIcons {
   static String welcome = "assets/icons/finSpaceIcons/finspaceWelcome.svg";
-  // static String home = "assets/icons/Navigation_bar/homepageActive.svg";
+   static String bgMarks = "assets/icons/finSpaceIcons/finspaceBg.svg";
   // static String home1 = "assets/icons/Navigation_bar/homePageInactive.svg";
   // static String community1 = "assets/icons/Navigation_bar/communityInactive.svg";
   // static String community = "assets/icons/Navigation_bar/communityActive.svg";
