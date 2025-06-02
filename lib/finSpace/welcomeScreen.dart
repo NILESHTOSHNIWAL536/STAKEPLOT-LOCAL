@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
+import 'package:flutter_application_code_stakeplot/finSpace/marks.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -36,10 +37,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => NextPage()),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MaskNameScreen()),
+                    );
                   },
                   child: const Text("Continue"),
                 ),
