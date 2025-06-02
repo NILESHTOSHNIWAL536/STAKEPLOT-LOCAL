@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/InterestSelectionScreen.dart';
+ final TextEditingController maskNameController = TextEditingController();
 
 class MaskNameScreen extends StatefulWidget {
   const MaskNameScreen({Key? key}) : super(key: key);
@@ -11,13 +12,8 @@ class MaskNameScreen extends StatefulWidget {
 }
 
 class _MaskNameScreenState extends State<MaskNameScreen> {
-  final TextEditingController _maskNameController = TextEditingController();
+ 
 
-  @override
-  void dispose() {
-    _maskNameController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +62,7 @@ class _MaskNameScreenState extends State<MaskNameScreen> {
                     child: Center(
                       child: SingleChildScrollView(
                         child: MaskNameFormWidget(
-                          controller: _maskNameController,
+                          controller: maskNameController,
                           isSmallScreen: isSmallScreen,
                         ),
                       ),
@@ -249,6 +245,7 @@ class MaskNameFormWidget extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () {
                 // Handle done action
+                
                  Navigator.pushNamed(context, '/interestScreen');
                   
               },

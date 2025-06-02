@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/Utils/finspaceStrings.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
-
 
 class InterestSelectionScreen extends StatefulWidget {
   const InterestSelectionScreen({Key? key}) : super(key: key);
@@ -153,14 +151,12 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen>
                             padding: EdgeInsets.all(12),
                             child: DoneButtonWidget(
                               onPressed: () {
-                             
-                          final combinedList = [...selectedSubCategories, ...selectedCategories];
-
-                          addMyIntreastAndName(
-                            "Niles_3gt473",
-                            combinedList,
-                            context
-                          );
+                               final combinedList = [...selectedSubCategories, ...selectedCategories];
+                                addMyIntreastAndName(
+                                  "Niles_3gt473",
+                                  combinedList,
+                                  context
+                                );
                               },
                             ),
                           )
