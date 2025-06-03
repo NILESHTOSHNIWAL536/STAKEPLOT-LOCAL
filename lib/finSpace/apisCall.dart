@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/marks.dart';
+import 'package:get/get.dart';
 
-Set<String> selectedCategories = {};
-Set<String> selectedSubCategories = {};
-
+RxSet<String> selectedCategories = <String>{}.obs;
+RxSet<String> selectedSubCategories = <String>{}.obs;
+RxBool isListEnabled = false.obs;
 Future<void> getMaskedNumber(BuildContext context) async
 {
    maskNameController.clear();
@@ -29,7 +30,7 @@ Future<void> getMaskedNumber(BuildContext context) async
 }
 
 
-Future<void> addMyIntreastAndName(String name,List list,BuildContext context) async
+Future<void> addMyIntreastAndName(List list,BuildContext context) async
 {
 
   try{
@@ -40,7 +41,7 @@ Future<void> addMyIntreastAndName(String name,List list,BuildContext context) as
   printData(response);
   if (getFlagOfResponse(response))
   {
-     selectedSubCategories.clear();
+      selectedSubCategories.clear();
       selectedCategories.clear();
   }
   

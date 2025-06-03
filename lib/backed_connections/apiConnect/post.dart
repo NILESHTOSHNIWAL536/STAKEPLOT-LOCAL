@@ -175,7 +175,7 @@ void getPost() async {
 }
 
 void getTranding() async {
-  var response = await getDataApiCall('${url}/post/trending/');
+  var response = await getDataApiCall('${url}/post/trending/1');
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body); 
     var obj = his['data'];
