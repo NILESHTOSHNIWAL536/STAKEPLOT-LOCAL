@@ -331,6 +331,7 @@ class _TextScreenState extends State<TextScreen> {
 
   void callBack()async
   {
+     Navigator.pop(context);
        if (contentController.text.isNotEmpty) {
                           if (showImage && selectedImage == null) {
                             snackBarAllFeilds2(context,SnackbarData().uploadError);
@@ -364,9 +365,9 @@ class _TextScreenState extends State<TextScreen> {
                           croppedImageFile,
                         );
 
-                        if (mounted) {
-                          Navigator.pop(context);
-                        }
+                        // if (mounted) {
+                        //   Navigator.pop(context);
+                        // }
                       } catch (e) {
               
                       } finally {
@@ -376,9 +377,7 @@ class _TextScreenState extends State<TextScreen> {
                       }
                             
                           } else {
-                            createPostWithOutImage(
-                                context, titleController.text, contentController.text);
-                                Navigator.pop(context);
+                            createPostWithOutImage(context, titleController.text, contentController.text);
                           }
                         }
   }

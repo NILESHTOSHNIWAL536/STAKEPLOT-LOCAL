@@ -284,7 +284,7 @@ void createPollOfCommunityPost(context, String question, List options,
   if (response.statusCode == 200 || response.statusCode == 201) {
       final data = (json.decode(response.body));
       uploadRefreshCall( data['data'],context);
-      Navigator.pop(context);
+      // Navigator.pop(context);
   } else
   {
       snackBarCalledSignup(context, " 'An error occurred while uploading...!'", Colors.red);
