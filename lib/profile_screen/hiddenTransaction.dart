@@ -54,11 +54,21 @@ class _HiddenTransactionsScreenState extends State<HiddenTransactionsScreen> {
       body: SafeArea(
           child: Obx(() => hiddentrasactionsHistory.isEmpty
               ? Center(
-                  child: Text('No hidden transactions.',
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: AppColors.accentColor)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                       AvatarProfileImage(
+                                        url: FinSpaceIcons.empty,
+                                        height: 4.5,
+                                        width: 4.5,
+                                      ),
+                      Text('No hidden transactions.',
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: AppColors.accentColor)),
+                    ],
+                  ),
                 )
               :  hideTransactionReload.value? hiddenTransactionsWidget():hiddenTransactionsWidget())),
     );

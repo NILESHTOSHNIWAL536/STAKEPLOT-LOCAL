@@ -27,4 +27,5 @@ class AppColors {
   static const Color likesharecommentCount = Color(0xFF454545);
   static const Color debitColor =  Color.fromARGB(255, 207, 118, 113);
   static  Color creditColor = Colors.green.shade700;
+  static  Color grey = Colors.black54;
 }

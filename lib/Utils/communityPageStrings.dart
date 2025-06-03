@@ -53,7 +53,7 @@ class CommunityScreenStrings {
 // tribechat
    String messagesTitle = "Messages";
   String messagesReceived = "{count} messages received";
-  String noChatsAvailable = "No chats available";
+  String noChatsAvailable = "Oops! Inbox is empty";
   String noMessagesYet = "No messages yet";
 
   //chat 

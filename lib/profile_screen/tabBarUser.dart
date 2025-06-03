@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:getwidget/components/image/gf_image_overlay.dart';
 
 class TabBarUser extends StatelessWidget {
   List userPostList;
@@ -78,40 +81,136 @@ class TabBarUser extends StatelessWidget {
       ),
     );
   }
+Widget feedWidgets(String type, {bool showOnlyImages = false}) {
+  final validPosts = userPostList.where((item) => item['image'] != 'none').toList();
+  print('Valid posts with images: ${validPosts.map((item) => item['image']).toList()}');
+  final hasPosts = validPosts.isNotEmpty;
+  print('Checking for posts with images: hasPosts = $hasPosts');
 
-  Widget feedWidgets(String type) {
-    final hasPosts = userPostList.any((item) => !(item['isPoll'] ?? false));
-    if (!hasPosts) {
-      return buildEmptyState(
-          'No Posts Found', 'This user hasn\'t shared any posts yet.');
-    }
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: userPostList.asMap().entries.map((entry) {
-                int index = entry.key;
-                var item = entry.value;
-                return (item['isPoll'] ?? false)
-                    ? const SizedBox.shrink()
-                    : PostCard(data: item, index: index);
-              }).toList(),
+  if (!hasPosts) {
+    return buildEmptyState(
+        'No Posts Found', 'This user hasn\'t shared any posts yet.');
+  }
+
+  if (!showOnlyImages) {
+    return GridView.builder(
+      padding: EdgeInsets.zero,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2, // 3 images per row
+        crossAxisSpacing: 0,
+        mainAxisSpacing: 0,
+        
+        childAspectRatio: 1, // Square images
+      ),
+      itemCount: validPosts.length,
+      itemBuilder: (context, index) {
+        var item = validPosts[index];
+        return GestureDetector(
+          onTap: () {
+            // Optionally, navigate to post details
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    TribeUnique(
+                  id: item["_id"],
+                  dataObj: item,
+                ),
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  const begin = Offset(1.0, 0.0);
+                  const end = Offset.zero;
+                  const curve = Curves.easeInOut;
+                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                  var offsetAnimation = animation.drive(tween);
+                  return SlideTransition(
+                    position: offsetAnimation,
+                    child: child,
+                  );
+                },
+                transitionDuration: const Duration(milliseconds: 300),
+              ),
+            );
+          },
+          child: Container(
+             margin: EdgeInsets.zero,
+            child: GFImageOverlay(
+              width: double.infinity,
+              height: double.infinity,
+              boxFit: BoxFit.cover,
+              borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
+              image: NetworkImage(item['image']),
+              colorFilter: null,
+              color: Colors.transparent,
+              border: Border.all(color: AppColors.bg1),
+              margin: EdgeInsets.zero, // Ensure GFImageOverlay has no margin
+              padding: EdgeInsets.zero,
             ),
           ),
-          
-          SizedBox(
-            height: 100,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
+  return SingleChildScrollView(
+    child: Column(
+      children: [
+        Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: validPosts.asMap().entries.map((entry) {
+              int index = entry.key;
+              var item = entry.value;
+              return (item['image'] == 'none')
+                  ? const SizedBox.shrink()
+                  : PostCard(data: item, index: index);
+            }).toList(),
+          ),
+        ),
+        SizedBox(
+          height: 100,
+        ),
+      ],
+    ),
+  );
+}
+  // Widget feedWidgets(String type) {
+  //   // final hasPosts = userPostList.any((item) => !(item['isPoll'] ?? false));
+  //    final validPosts = userPostList.where((item) => item['image'] != 'none').toList();
+  //   print('Valid posts with images: ${validPosts.map((item) => item['image']).toList()}'); // Log valid images
+  //   final hasPosts = validPosts.isNotEmpty; // Check if there are valid posts
+  //   print('Checking for posts with images: hasPosts = $hasPosts'); // Print statement to check if there are posts with images// Print statement to check if there are posts with images
+  //   if (!hasPosts) {
+  //     return buildEmptyState(
+  //         'No Posts Found', 'This user hasn\'t shared any posts yet.');
+  //   }
+  //   return SingleChildScrollView(
+  //     child: Column(
+  //       children: [
+  //         Container(
+  //           child: Column(
+  //             mainAxisAlignment: MainAxisAlignment.start,
+  //             children: validPosts.asMap().entries.map((entry) {
+  //               int index = entry.key;
+  //               var item = entry.value;
+  //               // return (item['isPoll'] ?? false)
+  //               return (item['image'] == 'none')
+  //                   ? const SizedBox.shrink()
+  //                   : PostCard(data: item, index: index);
+  //             }).toList(),
+  //           ),
+  //         ),
+  //         SizedBox(
+  //           height: 100,
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
   Widget pollWidgets(String type) {
-    final hasPolls = userPostList.any((item) => item['isPoll'] ?? false);
-  // Log whether there are polls
+    // final hasPolls = userPostList.any((item) => item['isPoll'] ?? false);
+    final hasPolls = userPostList.any((item) => item['image'] == 'none');
+    // Log whether there are polls
     if (!hasPolls) {
       return buildEmptyState(
           'No Polls Found', 'This user hasn\'t created any polls yet.');
@@ -124,14 +223,17 @@ class TabBarUser extends StatelessWidget {
               children: userPostList.asMap().entries.map((entry) {
                 int index = entry.key;
                 var item = entry.value;
-               // Log each item being processed
-                return (item['isPoll'] ?? false)
-                    ? PostCard(data: item, index: index) //change here if incase anything goes wrong
+                // Log each item being processed
+                // return (item['isPoll'] ?? false)
+                return (item['image'] == 'none' ?? false)
+                    ? PostCard(
+                        data: item,
+                        index:
+                            index) //change here if incase anything goes wrong
                     : const SizedBox.shrink();
               }).toList(),
             ),
           ),
-        
           SizedBox(
             height: 100,
           ),
@@ -162,7 +264,6 @@ class TabBarUser extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          
         ],
       ),
     );

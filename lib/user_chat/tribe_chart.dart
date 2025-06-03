@@ -1,6 +1,7 @@
 import "dart:convert";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
+import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
@@ -254,13 +255,27 @@ class _TribeSearchState extends State<TribeChats> {
                 child: Container(
                   width: MediaQuery.of(context).size.width / 1.1,
                   height: MediaQuery.of(context).size.height / 2,
+                  
                   child: Center(
-                      child: Text(strings.noChatsAvailable,
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.bold,
-                              lineHeight: 1.2,
-                              fontSize: 24,
-                              color: Colorcodes.dropdown))),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AvatarProfileImage(
+                                        url: FinSpaceIcons.empty,
+                                        height: 4.5,
+                                        width: 4.5,
+                                      ),
+                                       Text(strings.noChatsAvailable,
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.w400,
+                                    lineHeight: 1.2,
+                                    fontSize: 20,
+                                    color: AppColors.grey)),
+                                    
+                      ],
+                    ),
+                  ),
+
                 ),
               )
             : Column(

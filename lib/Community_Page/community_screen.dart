@@ -19,12 +19,11 @@ import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart'; 
+import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:flutter_application_code_stakeplot/Community_Page/poll_screen.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/image_screen.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-
 
 class Community extends StatefulWidget {
   const Community({Key? key}) : super(key: key);
@@ -47,37 +46,34 @@ class _CommunityState extends State<Community> {
 
   @override
   void initState() {
-        getPost();
-        getTranding();
-        setUpSocketListenerMainPage(context);
+    getPost();
+    getTranding();
+    setUpSocketListenerMainPage(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       floatingActionButton: PostImage(),
       bottomNavigationBar: SafeArea(child: BottomNavigations(data: 2)),
+    
       body: SafeArea(
         child: Container(
-          
-          height: MediaQuery.of(context).size.height/1.1,
-         padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 0,top: 8.0),
+          height: MediaQuery.of(context).size.height / 1.1,
+          padding: const EdgeInsets.only(
+              left: 12.0, right: 12.0, bottom: 0, top: 8.0),
           child: SingleChildScrollView(
-            controller:  scrollControllerPost,
+            controller: scrollControllerPost,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: _buildWelcomeRow(),
                 ),
-                  
-              Obx(()=> isTrending.value?getTabs(context): getTabs(context)),
-
-              Obx(() => isTrending.value? getTranding():getFeed())
-
+                Obx(() =>
+                    isTrending.value ? getTabs(context) : getTabs(context)),
+                Obx(() => isTrending.value ? getTranding() : getFeed())
               ],
             ),
           ),
@@ -86,91 +82,132 @@ class _CommunityState extends State<Community> {
     );
   }
 
-
-  Widget getFeed(){
+  Widget getFeed() {
     return getTrendingData.length == 0 && !isPost.value
-                      ? Loader()
-                      : isPost.value && getTrendingData.length == 0
-                          ? noFriend(context, "Make friends to see their posts or upload post")
-                          : Obx(() => getPosted.value
-                              ? LazyLoadingList()
-                              : LazyLoadingList());
+        ? Loader()
+        : isPost.value && getTrendingData.length == 0
+            ? noFriend(
+                context, "Make friends to see their posts or upload post")
+            : Obx(
+                () => getPosted.value ? LazyLoadingList() : LazyLoadingList());
   }
 
-  Widget getTranding(){
+  Widget getTranding() {
     return getAllPostData.length == 0 && !isPostTranding.value
-                      ? Loader()
-                      : isPostTranding.value && getAllPostData.length == 0
-                          ? noFriend(context, "Make friends to see their posts or upload post")
-                          : Obx(() => getPostedTranding.value
-                              ? LazyLoadingTranding()
-                              : LazyLoadingTranding());
+        ? Loader()
+        : isPostTranding.value && getAllPostData.length == 0
+            ? noFriend(
+                context, "Make friends to see their posts or upload post")
+            : Obx(() => getPostedTranding.value
+                ? LazyLoadingTranding()
+                : LazyLoadingTranding());
   }
 
- Widget PostImage(){
-  return Container(
-                      width: MediaQuery.sizeOf(context).width / 8.5,
-                      height: MediaQuery.sizeOf(context).width / 8.5,
-                      decoration: BoxDecoration(
-                          color: AppColors.primaryColor,
-                          borderRadius: BorderRadius.circular(30)),
-                      child: GestureDetector(
-                        onTap: () async {
-                          await showModal({});
-                        },
-                        child: AvatarProfileImage(
-                          url: LikeComment.plus,
-                          height: 24,
-                          width: 24,
-                        ),
-              ));
- }
+  Widget PostImage() {
+    return Container(
+      width: MediaQuery.of(context).size.width /
+          8, // Slightly larger for better visibility
+      height:
+          MediaQuery.of(context).size.width / 8, // Maintain square aspect ratio
+      decoration: BoxDecoration(
+        color: AppColors.pollSelected, // Ensure this color contrasts well with the background
+        borderRadius:
+            BorderRadius.circular(16), // Reduced radius for a modern look
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2), // Subtle shadow for depth
+            spreadRadius: 2,
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors
+            .transparent, // Transparent to allow Container's color to show
+        borderRadius:
+            BorderRadius.circular(16), // Match Container's border radius
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16), // Match for ripple effect
+          onTap: () async {
+            await showModal(
+                {}); // Ensure showModal is defined and handles UI appropriately
+          },
+          splashColor: Colors.white.withOpacity(0.3), // Visual feedback on tap
+          child: Center(
+            // child: AvatarProfileImage(
+            //   url:
+            //       LikeComment.plus, // Ensure this is a valid image URL or asset
+            //   height: 28, // Slightly larger for clarity
+            //   width: 28,
+            // ),
+            child: Icon(
+              Icons.add_box_sharp, // Generic icon for adding content
+              size: 26, // Slightly larger for visibility
+              color: Colors.white, // High contrast with primaryColor
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
- Widget getPostListview() {
-     double width = MediaQuery.of(context).size.width;
+  Widget getPostListview() {
+    double width = MediaQuery.of(context).size.width;
     //  double height = MediaQuery.of(context).size.height;
     return Container(
-      width: width,
-      // height:  height,
-      child: ListView.builder(
-        padding: EdgeInsets.zero, 
-        itemCount: getTrendingData.length,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (context, index) {
-          final dataObj = getTrendingData[index];
-          return PostCard(data: dataObj,index: index,);
-        },
-      ));
+        width: width,
+        // height:  height,
+        child: ListView.builder(
+          padding: EdgeInsets.zero,
+          itemCount: getTrendingData.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            final dataObj = getTrendingData[index];
+            return PostCard(
+              data: dataObj,
+              index: index,
+            );
+          },
+        ));
+  }
 
-}
-
- Widget getTabs(context)
- {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20),
-        child: Row(
-            children:[
-                   Padding(
-                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                     child: InkWell(
-                      onTap: (){
-                        isTrending.value = true;
-                      },
-                      child: textStyleImage(context: context,text: strings.trending,fontsize:isTrending.value?20: 18,fontWeight:isTrending.value?FontWeight.bold:  FontWeight.w500,c: AppColors.accentColor)),
-                   ),
-                 Padding(
-                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                     child: InkWell(
-                      onTap: (){
-                        isTrending.value = false;
-                      },
-                      child: textStyleImage(context: context,text: strings.feed,fontsize: !isTrending.value?20: 18,fontWeight: !isTrending.value?FontWeight.bold:  FontWeight.w500,c: AppColors.accentColor)),
-                   ),
-            ]
+  Widget getTabs(context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: Row(children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: InkWell(
+              onTap: () {
+                isTrending.value = true;
+              },
+              child: textStyleImage(
+                  context: context,
+                  text: strings.trending,
+                  fontsize: isTrending.value ? 20 : 18,
+                  fontWeight:
+                      isTrending.value ? FontWeight.bold : FontWeight.w500,
+                  c: AppColors.accentColor)),
         ),
-      );   
- }
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: InkWell(
+              onTap: () {
+                isTrending.value = false;
+              },
+              child: textStyleImage(
+                  context: context,
+                  text: strings.feed,
+                  fontsize: !isTrending.value ? 20 : 18,
+                  fontWeight:
+                      !isTrending.value ? FontWeight.bold : FontWeight.w500,
+                  c: AppColors.accentColor)),
+        ),
+      ]),
+    );
+  }
 
   Widget _buildWelcomeRow() {
     double w = MediaQuery.of(context).size.width;
@@ -194,7 +231,7 @@ class _CommunityState extends State<Community> {
                       color: AppColors.accentColor),
                 ),
                 Text(
-                 strings.finspace,
+                  strings.finspace,
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.bold,
                       fontSize: h / 38,
@@ -208,7 +245,6 @@ class _CommunityState extends State<Community> {
                 alignment: Alignment.topRight,
                 child: Row(
                   children: [
-
                     InkWell(
                       onTap: () {
                         Navigator.pushNamed(context, '/TribeChats');
@@ -218,21 +254,25 @@ class _CommunityState extends State<Community> {
                         height: 26,
                         width: 26,
                       ),
-                   ),
-
+                    ),
                     Container(
-                        width: MediaQuery.sizeOf(context).width / 9,
-                        height: MediaQuery.sizeOf(context).width / 9,
+                        width: MediaQuery.sizeOf(context).width / 8.5,
+                        height: MediaQuery.sizeOf(context).width / 8.5,
                         decoration: BoxDecoration(
-                            color: AppColors.button,
+                            //  color: AppColors.button,
                             borderRadius: BorderRadius.circular(30)),
                         child: GestureDetector(
                           onTap: () async {
-                             navigatorToMyOwnPage(context);
+                            navigatorToMyOwnPage(context);
                           },
-                          child: AvatarProfile(name: userName.value, width: 8, height: 10,background:userAvatarBackGround.value,flag: false,),
+                          child: AvatarProfile(
+                            name: userName.value,
+                            width: 7,
+                            height: 8,
+                            background: userAvatarBackGround.value,
+                            flag: false,
+                          ),
                         )),
-                    
                   ],
                 ),
               ),
@@ -278,7 +318,6 @@ class _CommunityState extends State<Community> {
                   ),
                 ),
               ),
-              
             ],
           ),
         ),
@@ -288,7 +327,9 @@ class _CommunityState extends State<Community> {
         Text(
           strings.featuredPosts,
           style: FontManager().getTextStyle(context,
-              lWeight: FontWeight.w500, fontSize: 18, color: AppColors.accentColor),
+              lWeight: FontWeight.w500,
+              fontSize: 18,
+              color: AppColors.accentColor),
         ),
       ],
     );
@@ -335,7 +376,7 @@ class _CommunityState extends State<Community> {
                     Padding(
                       padding: EdgeInsets.only(left: horizontalPadding / 2),
                       child: Text(
-                       strings.createPost,
+                        strings.createPost,
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.bold,
@@ -358,15 +399,15 @@ class _CommunityState extends State<Community> {
                             Navigator.of(context).pop();
                             showModalBottomSheet(
                               isScrollControlled: true,
-                               backgroundColor: AppColors.backgroundColor,
+                              backgroundColor: AppColors.backgroundColor,
                               context: context,
                               builder: (context) {
                                 return Container(
-                                   decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(16),topRight: Radius.circular(16))
-
-                                  ),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(16),
+                                          topRight: Radius.circular(16))),
                                   child: TextScreen(
                                     userInfo: post,
                                     onPostCreated: (newPost) {
@@ -384,21 +425,21 @@ class _CommunityState extends State<Community> {
                         _buildOptionButton(
                           context: context,
                           icon: Icons.image_rounded,
-                           label: strings.imageOption,
+                          label: strings.imageOption,
                           onTap: () {
                             posting.value = false;
                             Navigator.of(context).pop();
                             showModalBottomSheet(
                               isScrollControlled: true,
-                               backgroundColor: AppColors.backgroundColor,
+                              backgroundColor: AppColors.backgroundColor,
                               context: context,
                               builder: (context) {
                                 return Container(
-                                   decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(16),topRight: Radius.circular(16))
-
-                                  ),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(16),
+                                          topRight: Radius.circular(16))),
                                   child: ImageScreen(
                                     userInfo: post,
                                     onPostCreated: (newPost) {
@@ -415,24 +456,23 @@ class _CommunityState extends State<Community> {
                         _buildOptionButton(
                           context: context,
                           icon: Icons.poll_outlined,
-                           label: strings.pollOption,
+                          label: strings.pollOption,
                           onTap: () {
                             posting.value = false;
                             Navigator.of(context).pop();
                             showModalBottomSheet(
                               isScrollControlled: true,
-                               backgroundColor: AppColors.backgroundColor,
+                              backgroundColor: AppColors.backgroundColor,
                               context: context,
                               builder: (context) {
                                 return Container(
                                   padding: const EdgeInsets.all(16.0),
-                                  
                                   width: MediaQuery.sizeOf(context).width,
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(16),topRight: Radius.circular(16))
-
-                                  ),
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(16),
+                                          topRight: Radius.circular(16))),
                                   child: PollScreen(
                                     userInfo: post,
                                     onPollPosted: (pollData) {
@@ -494,7 +534,7 @@ class _CommunityState extends State<Community> {
                             SizedBox(width: horizontalPadding / 2),
                             Flexible(
                               child: Text(
-                                strings.exploria, 
+                                strings.exploria,
                                 style: FontManager().getTextStyle(
                                   context,
                                   lWeight: FontWeight.w600,
@@ -761,7 +801,7 @@ class _CommunityState extends State<Community> {
   //                 Text(
   //                   'Budget',
   //                   style: FontManager().getTextStyle(
-            
+
   //                   context,
   //                     lWeight: FontWeight.bold,
   //                     fontSize: 18,
@@ -909,7 +949,7 @@ class _CommunityState extends State<Community> {
   //                   lWeight: FontWeight.normal,
   //                   fontSize: 18,
   //                   color: Colors.black)),
-           
+
   //         ],
   //       ),
   //       IconButton(onPressed: () {}, icon: Icon(Icons.more_vert))
@@ -1023,8 +1063,3 @@ class _CommunityState extends State<Community> {
   //   );
   // }
 }
-
-
-
-
-
