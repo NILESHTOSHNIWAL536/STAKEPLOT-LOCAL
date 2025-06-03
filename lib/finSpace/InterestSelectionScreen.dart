@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/finspaceStrings.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:get/get.dart';
 
@@ -19,9 +20,7 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen>
   @override
   void initState() {
     super.initState();
-    selectedSubCategories.clear();
-    isListEnabled.value = false;
-    selectedCategories.clear();
+     clearInterest();
   }
 
   @override
@@ -87,8 +86,8 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen>
 
 
 class GetListOfInterest extends StatefulWidget  {
-
-  const GetListOfInterest({Key? key}) : super(key: key);
+  double height=0.63;
+  GetListOfInterest({Key? key,this.height=0.63}) : super(key: key);
 
   @override
   State<GetListOfInterest> createState() => _GetListOfInterestState();
@@ -112,7 +111,7 @@ class _GetListOfInterestState extends State<GetListOfInterest>  with TickerProvi
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return  Container(
-                    height: screenSize.height * 0.63, // 60% of screen height for categories
+                    height: screenSize.height * widget.height, // 60% of screen height for categories
                     child: CategoriesListWidget(
                       onCategoryToggle: _toggleCategory,
                       onSubCategoryToggle: _toggleSubCategory,

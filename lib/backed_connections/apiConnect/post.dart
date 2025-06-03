@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:http/http.dart' as http;
 
 void addReply(context, String data, String postId) async {
@@ -78,19 +79,24 @@ Future<Map<String, dynamic>> createPost(BuildContext context, String title,
     String description, File imageFile) async {
   try {
     String urlPath = await addImageToCloud2(imageFile);
-
+     final TagList = [...selectedSubCategories, ...selectedCategories];
+     
     var body = {
       'title': title,
       'description': {'message': description},
       'image': urlPath,
-      'fileName': ''
+      'fileName': '',
+      'tag': TagList
     };
+
+    print(body);
 
     String apiCall = '${url}/post';
 
     var response = await postDataApiCall(apiCall, body);
-
+    print(response.body);
     if (getFlagOfResponse(response)) {
+       clearInterest();
       var postData = jsonDecode(response.body);
       uploadRefreshCall(postData, context);
       return {
@@ -105,24 +111,29 @@ Future<Map<String, dynamic>> createPost(BuildContext context, String title,
       };
     }
   } catch (e) {
+     clearInterest();
     snackBarCalled(context,SnackbarData().errorCreatingPost, Colors.red);
     return {
       'success': false,
       'error': e.toString(),
     };
   }
+ 
+
 }
 
 void createPostWithOutImage(context, String title, String description) async {
   var urlPath = '${url}/post/withOutImage';
-
+   final TagList = [...selectedSubCategories, ...selectedCategories];
   var body = {
     'title': title,
     'description': {
       'message': description,
     },
     'isPoll': false,
+    'tag': TagList
   };
+ 
 
   var response = await postDataApiCall(urlPath, body);
 
@@ -130,17 +141,19 @@ void createPostWithOutImage(context, String title, String description) async {
     var his = jsonDecode(response.body);
     uploadRefreshCall(his, context);
   } else {}
+  clearInterest();
 }
 
 void createPollOfCommunity(context, String title, String description) async {
   var urlPath = '${url}/createPollPost';
-
+  final TagList = [...selectedSubCategories, ...selectedCategories];
   var body = {
     'title': title,
     'description': {
       'message': description,
     },
     'isPoll': true,
+    'tag': TagList
   };
 
   var response = await postDataApiCall(urlPath, body);
@@ -150,13 +163,14 @@ void createPollOfCommunity(context, String title, String description) async {
     uploadRefreshCall(his, context);
   } else {}
 
+  clearInterest();
   postDis.value = false;
 }
 
 
 
 void getPost() async {
-  var response = await getDataApiCall('${url}/post/feed');
+  var response = await getDataApiCall('${url}/post/feed/1');
   if (getFlagOfResponse(response)) {
    
     var his = jsonDecode(response.body); 

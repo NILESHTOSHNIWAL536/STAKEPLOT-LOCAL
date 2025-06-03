@@ -16,6 +16,7 @@ import "package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart";
 import "package:flutter_application_code_stakeplot/finSpace/welcomeScreen.dart";
 import "package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart";
+import "package:flutter_application_code_stakeplot/posts/feed_screen.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/profile_screen.dart.dart";
 import "package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart";
 import "package:get/get.dart";
@@ -176,6 +177,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
             pushName(HomePage());
           else if (i == 1) pushName(PlotFinance());
         
+          //  else if (i == 2) pushName(FeedScreen());
            else if (i == 2) pushName(interestedTags.isEmpty? WelcomeScreen():Community());
            else if (i == 3) pushName(ProfileScreenDart());
 

@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/post_interest.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
@@ -699,6 +700,15 @@ class _ExploreModalState extends State<ExploreModal> {
       ],
     );
   }
+
+    void callBack()async
+  {
+      final isEnabled = locationNameController.text.isNotEmpty &&
+        locationAddressController.text.isNotEmpty &&
+        !_isSubmitting;
+
+       isEnabled ? _submitPost() : null;
+  }
  
 
   Widget _buildSubmitButton() {
@@ -708,7 +718,7 @@ class _ExploreModalState extends State<ExploreModal> {
 
     return GestureDetector(
       onTap: () {
-        isEnabled ? _submitPost() : null;
+         showTagListOfInterestModal(context:  context,onConfirm: callBack);
       },
       child: _isSubmitting
           ? Center(child: const CircularProgressIndicator(color: Colors.black))

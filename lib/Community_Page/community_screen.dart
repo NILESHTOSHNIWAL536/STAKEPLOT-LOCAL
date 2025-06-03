@@ -48,6 +48,7 @@ class _CommunityState extends State<Community> {
   @override
   void initState() {
         getPost();
+        getTranding();
         setUpSocketListenerMainPage(context);
   }
 

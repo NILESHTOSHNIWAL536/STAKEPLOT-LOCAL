@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'package:custom_image_crop/custom_image_crop.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/post_interest.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finSpace/InterestSelectionScreen.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -160,6 +162,7 @@ class _TextScreenState extends State<TextScreen> {
   Widget build(BuildContext context) {
     return Container(
       height: modalHeight + MediaQuery.of(context).viewInsets.bottom,
+      // height: MediaQuery.of(context).size.height /1.1,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
@@ -283,60 +286,10 @@ class _TextScreenState extends State<TextScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
+                    
                     GestureDetector(
                       onTap: () async {
-                        if (contentController.text.isNotEmpty) {
-                          if (showImage && selectedImage == null) {
-                            snackBarAllFeilds2(context,SnackbarData().uploadError);
-                            return;
-                          }
-
-                          if (posting.value) return;
-                          posting.value = true;
-
-                          if (titleController.text.trim().isEmpty ||
-                              contentController.text.trim().isEmpty) {
-                            snackBarAllFeilds(context);
-                            posting.value = false;
-                            return;
-                          }
-
-                          if (selectedImage != null && showImage) {
-                             try {
-                        posting.value = true;
-
-                        final croppedImageFile = await _cropAndSaveImage();
-                        if (croppedImageFile == null) {
-                          posting.value = false;
-                          return;
-                        }
-
-                        await createPost(
-                          context,
-                          titleController.text,
-                          contentController.text,
-                          croppedImageFile,
-                        );
-
-                        if (mounted) {
-                          Navigator.pop(context);
-                        }
-                      } catch (e) {
-                       
-                      } finally {
-                        if (mounted) {
-                          posting.value = false;
-                        }
-                      }
-                            
-                          } else {
-                            createPostWithOutImage(
-                                context, titleController.text, contentController.text);
-                                Navigator.pop(context);
-                          }
-
-                          
-                        }
+                          showTagListOfInterestModal(context:  context,onConfirm: callBack);
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width / 1.1,
@@ -374,4 +327,60 @@ class _TextScreenState extends State<TextScreen> {
             ),
     );
   }
+
+
+  void callBack()async
+  {
+       if (contentController.text.isNotEmpty) {
+                          if (showImage && selectedImage == null) {
+                            snackBarAllFeilds2(context,SnackbarData().uploadError);
+                            return;
+                          }
+
+                          if (posting.value) return;
+                          posting.value = true;
+
+                          if (titleController.text.trim().isEmpty ||
+                              contentController.text.trim().isEmpty) {
+                            snackBarAllFeilds(context);
+                            posting.value = false;
+                            return;
+                          }
+
+                          if (selectedImage != null && showImage) {
+                             try {
+                        posting.value = true;
+
+                        final croppedImageFile = await _cropAndSaveImage();
+                        if (croppedImageFile == null) {
+                          posting.value = false;
+                          return;
+                        }
+
+                        await createPost(
+                          context,
+                          titleController.text,
+                          contentController.text,
+                          croppedImageFile,
+                        );
+
+                        if (mounted) {
+                          Navigator.pop(context);
+                        }
+                      } catch (e) {
+              
+                      } finally {
+                        if (mounted) {
+                          posting.value = false;
+                        }
+                      }
+                            
+                          } else {
+                            createPostWithOutImage(
+                                context, titleController.text, contentController.text);
+                                Navigator.pop(context);
+                          }
+                        }
+  }
+
 }
