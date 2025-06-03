@@ -15,6 +15,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/main.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
 import 'package:get/get.dart';
@@ -281,4 +282,11 @@ void clearStackLocalInfo() {
   directFetch.value = false;
   fetchedData.value = false;
   count.value = 0;
+}
+
+
+void clearInterest() {
+  selectedCategories.clear();
+  selectedSubCategories.clear();
+  isListEnabled.value = false;
 }

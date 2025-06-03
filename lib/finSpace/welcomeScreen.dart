@@ -25,7 +25,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         enableDrag: false,
         builder: (BuildContext context) {
           return Container(
-            height: 300,
+            height: MediaQuery.sizeOf(context).height/4,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               color: AppColors.finSpaceColor,
@@ -35,10 +35,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 28),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                    Text(
                     "Finspace",
@@ -49,7 +50,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   ),
                    Text(
                     "A safe and supportive space to share your financial thoughts, questions, and experiences—completely anonymously. No names, no pressure—just open, respectful conversations.",
-                     textAlign: TextAlign.center,
+                    //  textAlign: TextAlign.center,
                    style: FontManager2().getTextStyle(context,
                       lWeight: FontWeight.w500,
                       fontSize: 16,
@@ -68,7 +69,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   //     color: AppColors.finSpaceColor)),
                   // ),
                    SizedBox(
-            width: double.infinity,
+            width: MediaQuery.sizeOf(context).width/4,
             child: ElevatedButton(
                   onPressed: () {
                       getMaskedNumber(context);

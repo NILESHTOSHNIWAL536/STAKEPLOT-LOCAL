@@ -366,7 +366,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
 
           // Description text
           Text(
-              'You can create a mask name to keep your identity private, or use the name and interact anonymously. You\'re always in control, and you can update this anytime.',
+              'You can create a mask name to keep your identity private, or use the name and interact anonymously. You\'re always in control.',
               // textAlign: TextAlign.center,
               // style: TextStyle(
               //   fontSize: widget.isSmallScreen ? 12 : 14,
@@ -383,7 +383,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
 
           // Done button
           SizedBox(
-            width: double.infinity,
+             width: MediaQuery.sizeOf(context).width/4,
             child: ElevatedButton(
               onPressed: () {
                 // Handle done action

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:custom_image_crop/custom_image_crop.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/post_interest.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
@@ -205,8 +206,52 @@ class _ImageScreenState extends State<ImageScreen> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () async {
-                    if (selectedImage == null) {
+                  onTap: () async
+                  {
+                      showTagListOfInterestModal(context:  context,onConfirm: callBack);
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 1.1,
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                    decoration: BoxDecoration(
+                      color: titleController.text.isNotEmpty &&
+                              textController.text.isNotEmpty
+                          ? AppColors.primaryColor
+                          : AppColors.button,
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: Center(
+                      child: Obx(() => posting.value
+                          ? Spinner(size: 20, color: Colorcodes.white)
+                          : Text(
+                             strings.continueButton, 
+                              style: FontManager().getTextStyle(
+                                context,
+                                lWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: titleController.text.isNotEmpty &&
+                                        textController.text.isNotEmpty
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+                            )),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+
+ void callBack()async
+{
+
+
+ if (selectedImage == null) {
                       snackBarAllFeilds2(context,SnackbarData().uploadError);
                       return;
                     }
@@ -248,48 +293,9 @@ class _ImageScreenState extends State<ImageScreen> {
                         posting.value = false;
                       }
                     }
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width / 1.1,
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
-                    decoration: BoxDecoration(
-                      color: titleController.text.isNotEmpty &&
-                              textController.text.isNotEmpty
-                          ? AppColors.primaryColor
-                          : AppColors.button,
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    child: Center(
-                      child: Obx(() => posting.value
-                          ? Spinner(size: 20, color: Colorcodes.white)
-                          : Text(
-                             strings.continueButton, 
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.bold,
-                                fontSize: 15,
-                                color: titleController.text.isNotEmpty &&
-                                        textController.text.isNotEmpty
-                                    ? Colors.white
-                                    : Colors.black,
-                              ),
-                            )),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+                    
+}
 
-  @override
-  void dispose() {
-    textController.dispose();
-    titleController.dispose();
-    _cropController.dispose();
-    super.dispose();
-  }
+    
+
 }
