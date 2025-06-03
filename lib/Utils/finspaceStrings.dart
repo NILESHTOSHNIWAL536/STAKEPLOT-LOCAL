@@ -18,32 +18,28 @@ class FinspaceStrings
 
    Map<String, List<String>> categories = {
     'Personal Finance': [],
-    'Budgeting': [],
     'Debt Management': [],
     'Savings Strategies': [],
+    'Tax Planning & Filing': [],
     'Investments': [
-      'Stocks & Equities',
+      'Stocks & Equities','Cryptocurrency & Blockchain',
       'Mutual Funds & SIPs',
-      'Cryptocurrency & Blockchain',
+      
       'Real Estate & Property'
     ],
-    'Tax Planning & Filing': [],
     'Spending Confessions': [],
     'Behavioural Finance': [],
+    'Smart Savers': [],
+    'Alternative Investments': ['Art', 'Collectibles', 'P2P Lending'],
     'Retirement & Pension Planning': [],
     'Side Hustles & Passive Income': [],
     'Tech Trends in Finance': [],
-    'College & Education Funding': [],
-    'Scholarships and Stipends': [],
-    'Global Market News & Analysis': [],
-    'Alternative Investments': [
-      'Art',
-      'Collectibles',
-      'P2P Lending'
-    ],
     'Salary Talks': [],
+    'College & Education Funding': [],
     'Spent Stories': [],
-    'Smart Savers': [],
+    'Scholarships and Stipends': [],
+    'Budgeting': [],
+    'Global Market News & Analysis': [],
   };
 
 

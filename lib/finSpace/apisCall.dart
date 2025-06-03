@@ -6,6 +6,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomat
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/marks.dart';
 
+Set<String> selectedCategories = {};
+Set<String> selectedSubCategories = {};
 
 Future<void> getMaskedNumber(BuildContext context) async
 {
@@ -38,7 +40,8 @@ Future<void> addMyIntreastAndName(String name,List list,BuildContext context) as
   printData(response);
   if (getFlagOfResponse(response))
   {
-     
+     selectedSubCategories.clear();
+      selectedCategories.clear();
   }
   
   }catch(e) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/finspaceStrings.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 
@@ -13,36 +14,11 @@ class InterestSelectionScreen extends StatefulWidget {
 
 class _InterestSelectionScreenState extends State<InterestSelectionScreen>
     with TickerProviderStateMixin {
-  Set<String> selectedCategories = {};
-  Set<String> selectedSubCategories = {};
+  
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
-  final Map<String, List<String>> categories = {
-    'Personal Finance': [],
-    'Debt Management': [],
-    'Savings Strategies': [],
-    'Tax Planning & Filing': [],
-    'Investments': [
-      'Stocks & Equities','Cryptocurrency & Blockchain',
-      'Mutual Funds & SIPs',
-      
-      'Real Estate & Property'
-    ],
-    'Spending Confessions': [],
-    'Behavioural Finance': [],
-    'Smart Savers': [],
-    'Alternative Investments': ['Art', 'Collectibles', 'P2P Lending'],
-    'Retirement & Pension Planning': [],
-    'Side Hustles & Passive Income': [],
-    'Tech Trends in Finance': [],
-    'Salary Talks': [],
-    'College & Education Funding': [],
-    'Spent Stories': [],
-    'Scholarships and Stipends': [],
-    'Budgeting': [],
-    'Global Market News & Analysis': [],
-  };
+  final Map<String, List<String>> categories = FinspaceStrings().categories;
 
   @override
   void initState() {
