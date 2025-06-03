@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -76,7 +77,7 @@ class _PollScreenState extends State<PollScreen> {
 
       if (posting.value) return;
       posting.value = true;
-
+      clearInterest();
       createPollOfCommunityPost(context, question.toString(), options, {}, [], "casual");
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -285,7 +286,7 @@ class _PollScreenState extends State<PollScreen> {
                                       color: Colors.black),
                                 ),
                                 const SizedBox(height: 10),
-                                for (var option in options!)
+                          for (var option in ( options==null? [] : options!))
                                   GestureDetector(
                                     onTap: () => _vote(option),
                                     child: Column(
@@ -353,6 +354,7 @@ class _PollScreenState extends State<PollScreen> {
 
    void callBack()async
   {
+       Navigator.pop(context);
       _createPoll();
   }
 
