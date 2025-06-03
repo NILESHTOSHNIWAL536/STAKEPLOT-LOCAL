@@ -3,6 +3,7 @@ import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
+import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
 import "package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
@@ -10,6 +11,7 @@ import "package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
+import "package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart";
 import "package:flutter_application_code_stakeplot/loader.dart";
 import "package:flutter_application_code_stakeplot/user_chat/chat.dart";
 import "package:get/get.dart";
@@ -20,6 +22,8 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 RxBool load = true.obs;
 RxBool reloadCharts = true.obs;
+RxBool reloadMaskedCharts = true.obs;
+RxBool ismaskedUsers= false.obs;
 late IO.Socket socket;
 RxInt totalUnopenedMessages = 0.obs;
 
@@ -47,7 +51,8 @@ class _TribeSearchState extends State<TribeChats> {
   void initState() {
     super.initState();
     getUserInfomations();
-    getChatLoader();
+    ismaskedUsers.value = false;
+    getChatLoader(false);
     getTransactions();
     getChatsSplitAccounts(context, myId);
     socket = IO.io(urlWithLocallHost,IO.OptionBuilder().setTransports(['websocket']).enableForceNewConnection().build());
@@ -68,11 +73,9 @@ class _TribeSearchState extends State<TribeChats> {
               socket.close(),
             });
 
-    socket.on(
-        "LoadCharts",
-        (loadData) => {
-              getChatLoader(),
-            });
+    socket.on("LoadCharts",(loadData) => {
+              getChatLoader(false),
+        });
   }
 
   void getTransactions() async {
@@ -237,7 +240,9 @@ class _TribeSearchState extends State<TribeChats> {
               const SizedBox(
                 height: 16,
               ),
-              Obx(() => reloadCharts.value ? getChatList() : getChatList()),
+              Obx(()=>  ismaskedUsers.value? getTabs(context): getTabs(context) ),
+
+              Obx(() => reloadCharts.value ? getChatList( ) : getChatList()),
             ],
           ),
         ),
@@ -245,7 +250,42 @@ class _TribeSearchState extends State<TribeChats> {
     );
   }
 
-  Widget getChatList() {
+
+   Widget getTabs(context)
+ {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Row(
+            children:[
+                   Padding(
+                     padding: const EdgeInsets.symmetric(horizontal: 20),
+                     child: InkWell(
+                      onTap: (){
+                         ismaskedUsers.value = false;
+                         reloadCharts.value =! reloadCharts.value;
+                         getChatLoader(false);
+                      },
+                      child: textStyleImage(context: context,text: strings.All,fontsize:! ismaskedUsers.value?20: 18,fontWeight:! ismaskedUsers.value?FontWeight.bold:  FontWeight.w500,c: AppColors.accentColor)),
+                   ),
+                 Padding(
+                     padding: const EdgeInsets.symmetric(horizontal: 20),
+                     child: InkWell(
+                      onTap: (){
+                          reloadCharts.value =! reloadCharts.value;
+                           ismaskedUsers.value = true;
+                           getChatLoader(true);
+                      },
+                      child: textStyleImage(context: context,text: strings.maskeduser,fontsize:ismaskedUsers.value?20: 18,fontWeight: ismaskedUsers.value?FontWeight.bold:  FontWeight.w500,c: AppColors.accentColor)),
+                   ),
+            ]
+        ),
+      );   
+ }
+
+  Widget getChatList() 
+  {  
+
+
     return load.value
         ? Spinner(
             color: AppColors.primaryColor,
@@ -279,8 +319,7 @@ class _TribeSearchState extends State<TribeChats> {
                 ),
               )
             : Column(
-                children:
-                    chatList.map((item) => profileContainer(item)).toList(),
+                children: chatList.map((item) => profileContainer(item)).toList(),
               );
   }
 
@@ -329,10 +368,11 @@ class _TribeSearchState extends State<TribeChats> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       child: GestureDetector(
-        onTap: () {
+        onTap: ()
+         {
           messages.clear();
           unSeenChat(context, item['_id']);
-          getChatLoader();
+          getChatLoader(ismaskedUsers.value);
           getChats(item);
           clear(item);
 
@@ -355,7 +395,7 @@ class _TribeSearchState extends State<TribeChats> {
                   children: [
                     
                     AvatarProfile(
-                        name: item['name'],
+                        name: item['name'].toString() ,
                         width: 1,
                         height: 1,
                         background: item['avatar']),

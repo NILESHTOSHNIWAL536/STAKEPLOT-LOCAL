@@ -54,14 +54,14 @@ class _CommunityState extends State<Community> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: PostImage(),
+      
+      floatingActionButton: Obx(()=> isTrending.value?SizedBox.shrink() :PostImage()),
       bottomNavigationBar: SafeArea(child: BottomNavigations(data: 2)),
     
       body: SafeArea(
         child: Container(
-          height: MediaQuery.of(context).size.height / 1.1,
-          padding: const EdgeInsets.only(
-              left: 12.0, right: 12.0, bottom: 0, top: 8.0),
+         height: MediaQuery.of(context).size.height/1.1,
+         padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 0,top: 8.0),
           child: SingleChildScrollView(
             controller: scrollControllerPost,
             child: Column(

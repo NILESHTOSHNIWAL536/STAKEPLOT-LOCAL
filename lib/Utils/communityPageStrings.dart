@@ -29,6 +29,8 @@ class CommunityScreenStrings {
   String postedSuccess = "Posted";
   String trending = "Trending";
   String feed = "Feed";
+  String maskeduser = "maskeduser";
+  String All = "All";
 
   // PollScreen
   String askQuestion = "Ask a question";

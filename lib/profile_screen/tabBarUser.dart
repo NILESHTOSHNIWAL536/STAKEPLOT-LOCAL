@@ -16,18 +16,22 @@ class TabBarUser extends StatelessWidget {
       child: Column(
         children: [
           Container(
+            // color: Colors.amber,
+                      decoration: BoxDecoration(
+              border: Border.all(color: AppColors.grey, width: 0.1), // Added border
+            ),
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: TabBar(
               indicatorPadding: EdgeInsets.zero, // Ensures no extra spacing
               labelPadding: EdgeInsets.zero, // Controls padding inside tabs
-              indicator: BoxDecoration(
-                color: AppColors.tab, // Background for selected tab
-                borderRadius: BorderRadius.circular(12),
-              ),
+              // indicator: BoxDecoration(
+              //   color: AppColors.tab, // Background for selected tab
+              //   borderRadius: BorderRadius.circular(12),
+              // ),
               labelColor: AppColors.primaryColor, // Text color for selected tab
               unselectedLabelColor:
                   AppColors.bg1, // Text color for unselected tabs
-              indicatorSize: TabBarIndicatorSize.tab, // Indicator fills the tab
+               indicatorSize: TabBarIndicatorSize.tab, // Indicator fills the tab
               tabs: [
                 Tab(
                   child: AnimatedContainer(
@@ -40,11 +44,12 @@ class TabBarUser extends StatelessWidget {
                           Colors.transparent, // No background when unselected
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Text('Posts',
+                    child: Text('Aa',
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w500)),
                   ),
                 ),
+                
                 Tab(
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 200),
@@ -55,26 +60,25 @@ class TabBarUser extends StatelessWidget {
                           Colors.transparent, // No background when unselected
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Text('Polls',
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w500)),
+                    child: Icon(Icons.image_outlined, size: 20),
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 10),
+          // const SizedBox(height: 10),
           SizedBox(
-            height: MediaQuery.of(context).size.height / 1.68,
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 0, horizontal: 12.0),
-              child: TabBarView(
-                children: [
-                  feedWidgets("post"),
-                  pollWidgets("poll"),
-                ],
-              ),
+            height: MediaQuery.of(context).size.height / 1.57,
+            child: TabBarView(
+              children: [
+                 Padding(
+                 padding:
+                  const EdgeInsets.symmetric(vertical: 0, horizontal: 10.0),
+                  child: pollWidgets("poll"),
+                ),
+                feedWidgets("post"),
+               
+              ],
             ),
           ),
         ],
@@ -83,9 +87,7 @@ class TabBarUser extends StatelessWidget {
   }
 Widget feedWidgets(String type, {bool showOnlyImages = false}) {
   final validPosts = userPostList.where((item) => item['image'] != 'none').toList();
-  print('Valid posts with images: ${validPosts.map((item) => item['image']).toList()}');
   final hasPosts = validPosts.isNotEmpty;
-  print('Checking for posts with images: hasPosts = $hasPosts');
 
   if (!hasPosts) {
     return buildEmptyState(
@@ -137,11 +139,11 @@ Widget feedWidgets(String type, {bool showOnlyImages = false}) {
               width: double.infinity,
               height: double.infinity,
               boxFit: BoxFit.cover,
-              borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
+              // borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
               image: NetworkImage(item['image']),
               colorFilter: null,
               color: Colors.transparent,
-              border: Border.all(color: AppColors.bg1),
+              border: Border.all(color: AppColors.grey),
               margin: EdgeInsets.zero, // Ensure GFImageOverlay has no margin
               padding: EdgeInsets.zero,
             ),

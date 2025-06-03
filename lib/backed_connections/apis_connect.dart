@@ -58,8 +58,13 @@ RxList userPostList = [].obs;
 RxList savedList = [].obs;
 RxList myPostList = [].obs;
 RxList friendsList = [].obs;
+
 RxList chatList = [].obs;
 RxList chatListOriginal = [].obs;
+
+RxList chatListMasked = [].obs;
+RxList chatListOriginalMasked = [].obs;
+
 RxList customCategoryList = [].obs;
 RxMap friendsListDetails = {}.obs;
 RxMap chatOfUserList = {}.obs;
