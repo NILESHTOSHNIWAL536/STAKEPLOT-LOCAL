@@ -276,7 +276,7 @@ class _ExploreModalState extends State<ExploreModal> {
   }
 
   Future<void> _submitPost() async {
-     Navigator.pop(context);
+     
     if (locationNameController.text.isEmpty || locationAddressController.text.isEmpty) {
        snackBarCalled(context, SnackbarData().fillAllRequiredFields);
       return;
@@ -360,7 +360,7 @@ class _ExploreModalState extends State<ExploreModal> {
         posting.value = false;
         postDis.value = false;
         widget.onPostCreated(jsonDecode(response.body));
-        // Navigator.pop(context);
+        Navigator.pop(context);
       } else {
         snackBarCalled(context,SnackbarData().failedToSubmitPost);
         setState(() => _isSubmitting = false);
