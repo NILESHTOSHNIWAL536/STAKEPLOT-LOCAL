@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/InterestSelectionScreen.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_svg/svg.dart';
- final TextEditingController maskNameController = TextEditingController();
+
+final TextEditingController maskNameController = TextEditingController();
 
 class MaskNameScreen extends StatefulWidget {
   const MaskNameScreen({Key? key}) : super(key: key);
@@ -14,15 +17,12 @@ class MaskNameScreen extends StatefulWidget {
 }
 
 class _MaskNameScreenState extends State<MaskNameScreen> {
- 
-
-
   @override
   Widget build(BuildContext context) {
     // Get screen dimensions for responsive layout
     final screenSize = MediaQuery.of(context).size;
     final isSmallScreen = screenSize.width < 360;
-    
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -33,12 +33,12 @@ class _MaskNameScreenState extends State<MaskNameScreen> {
           //     painter: WavePatternPainter(),
           //   ),
           // ),
-           AvatarProfileImage(
-                url: FinSpaceIcons.bgMarks,
-                height: 1,
-                width: 1,
-              ),
-          
+          AvatarProfileImage(
+            url: FinSpaceIcons.bgMarks,
+            height: 1,
+            width: 1,
+          ),
+
           // Main content
           SafeArea(
             child: Padding(
@@ -51,16 +51,17 @@ class _MaskNameScreenState extends State<MaskNameScreen> {
                 children: [
                   // Header with welcome text and skip button
                   HeaderWidget(),
-                  
+
                   SizedBox(height: screenSize.height * 0.05),
-                  
+
                   // Title with underline
                   Center(child: TitleWidget()),
-                  
-                  SizedBox(height: screenSize.height * 0.03),
-                  
+
+                  SizedBox(height: screenSize.height * 0.05),
+
                   // Avatar and form section
-                  Expanded(
+                  Container(
+                    height: MediaQuery.sizeOf(context).height / 2,
                     child: Center(
                       child: SingleChildScrollView(
                         child: MaskNameFormWidget(
@@ -92,38 +93,34 @@ class HeaderWidget extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Welcome to',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.black54,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              'Finspace',
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.black87,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            Text('Welcome to',
+                // style: TextStyle(
+                //   fontSize: 16,
+                //   color: Colors.black54,
+                //   fontWeight: FontWeight.w400,
+                // ),
+                style: FontManager2().getTextStyle(context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.black54)),
+            Text('Finspace',
+                style: FontManager2().getTextStyle(context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: AppColors.accentColor)),
           ],
         ),
-        
+
         // Skip button
         TextButton(
           onPressed: () {
             // Handle skip action
           },
-          child: Text(
-            'Skip',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.black54,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+          child: Text('Skip',
+              style: FontManager2().getTextStyle(context,
+                  lWeight: FontWeight.w500,
+                  fontSize: 16,
+                  color: Colors.black54)),
         ),
       ],
     );
@@ -137,13 +134,20 @@ class TitleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
-          'Choose your Mask Name',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: Colors.black87,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Choose your ',
+                style: FontManager2().getTextStyle(context,
+                    lWeight: FontWeight.w600,
+                    fontSize: 20,
+                    color: Colors.black54)),
+            Text('Mask Name',
+                style: FontManager2().getTextStyle(context,
+                    lWeight: FontWeight.w600,
+                    fontSize: 20,
+                    color: AppColors.finSpaceColor)),
+          ],
         ),
         Container(
           width: 180,
@@ -174,8 +178,8 @@ class MaskNameFormWidget extends StatefulWidget {
 }
 
 class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
-  String selectedAvatarInital = MaskedAvatars.profileIcon1; 
-final List<String> maskedAvatarsList = [
+  String selectedAvatarInital = MaskedAvatars.profileIcon1;
+  final List<String> maskedAvatarsList = [
     MaskedAvatars.profileIcon1,
     MaskedAvatars.profileIcon2,
     MaskedAvatars.profileIcon3,
@@ -188,7 +192,7 @@ final List<String> maskedAvatarsList = [
     MaskedAvatars.profileIcon10,
   ];
 
- void _showAvatarSelectionSheet(BuildContext context) {
+  void _showAvatarSelectionSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -238,8 +242,8 @@ final List<String> maskedAvatarsList = [
                           ),
                           borderRadius: BorderRadius.circular(50),
                         ),
-                        child:AvatarProfileImage(url: avatar, width: 6, height: 6
-                        ),
+                        child: AvatarProfileImage(
+                            url: avatar, width: 6, height: 6),
                       ),
                     );
                   },
@@ -255,10 +259,10 @@ final List<String> maskedAvatarsList = [
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    
+
     return Container(
       width: screenSize.width * 0.85,
-      padding: EdgeInsets.all(20),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -272,6 +276,8 @@ final List<String> maskedAvatarsList = [
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+       
         children: [
           // Avatar
           // CircleAvatar(
@@ -289,19 +295,17 @@ final List<String> maskedAvatarsList = [
           //     ),
           //   ),
           // ),
-           GestureDetector(
+          GestureDetector(
             onTap: () => _showAvatarSelectionSheet(context),
             child: Stack(
               alignment: Alignment.center,
               children: [
-              
-                  CircleAvatar(
-                    radius: 40,
-                    
-                   // backgroundColor: Colors.grey.shade200,
-                    child:  AvatarProfileImage(url: selectedAvatarInital, width: 6, height: 6)
-                    ,
-                  
+                CircleAvatar(
+                  radius: 40,
+
+                  // backgroundColor: Colors.grey.shade200,
+                  child: AvatarProfileImage(
+                      url: selectedAvatarInital, width: 6, height: 6),
                 ),
                 Positioned(
                   bottom: 0,
@@ -323,57 +327,68 @@ final List<String> maskedAvatarsList = [
               ],
             ),
           ),
-          
-          SizedBox(height: 16),
-          
+
+          SizedBox(height: 6),
+
           // Mask name input field
-          TextField(
-            controller: widget.controller,
-            textAlign: TextAlign.center,
-            readOnly: true,
-            decoration: InputDecoration(
-              hintText: '',
-              hintStyle: TextStyle(color: Colors.black54),
-              border: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.blue),
-              ),
-             suffixIcon: IconButton( // Change to IconButton for tap handling
-                icon: Icon(Icons.auto_fix_high, color: Colors.indigo),
-                onPressed: () async{
-                  
-                 await getMaskedNumber(context);
-                },
+          Padding(
+            padding: const EdgeInsets.only(left: 40),
+            child: Container(
+            //  color: Colors.amber,
+             width: screenSize.width /2.3,
+              child: TextField(
+                controller: widget.controller,
+                textAlign: TextAlign.center,
+                readOnly: true,
+                decoration: InputDecoration(
+                  hintText: '',
+                  hintStyle: FontManager2().getTextStyle(context,
+                      lWeight: FontWeight.w600, fontSize: 14, color: AppColors.bg1),
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 0), 
+                  suffixIcon: Padding(
+                    padding: EdgeInsets.only(right: 4,bottom: 2),
+                    child: IconButton(
+                      icon: Icon(Icons.auto_fix_high, color: AppColors.finSpaceColor),
+                      onPressed: () async {
+                        await getMaskedNumber(context);
+                      },
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
-          
-          SizedBox(height: 16),
-          
+
+         const SizedBox(height: 6),
+
           // Description text
           Text(
-            'You can create a mask name to keep your identity private, or use the name and interact anonymously. You\'re always in control, and you can update this anytime.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: widget.isSmallScreen ? 12 : 14,
-              color: Colors.black54,
-              height: 1.4,
-            ),
-          ),
-          
-          SizedBox(height: 24),
-          
+              'You can create a mask name to keep your identity private, or use the name and interact anonymously. You\'re always in control, and you can update this anytime.',
+              // textAlign: TextAlign.center,
+              // style: TextStyle(
+              //   fontSize: widget.isSmallScreen ? 12 : 14,
+              //   color: Colors.black54,
+              //   height: 1.4,
+              // ),
+              style: FontManager2().getTextStyle(context,
+                  lWeight: FontWeight.w500,
+                  fontSize: widget.isSmallScreen ? 12 : 14,
+                  lineHeight: 1.4,
+                  color: Colors.black54)),
+
+          SizedBox(height: 10),
+
           // Done button
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
                 // Handle done action
-                
-                 Navigator.pushNamed(context, '/interestScreen');
-                  
+
+                Navigator.pushNamed(context, '/interestScreen');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF4A4E69),
@@ -383,13 +398,11 @@ final List<String> maskedAvatarsList = [
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: Text(
-                'Done',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              child: Text('Done',
+                  style: FontManager2().getTextStyle(context,
+                      lWeight: FontWeight.w500,
+                      fontSize: 16,
+                      color: AppColors.backgroundColor)),
             ),
           ),
         ],

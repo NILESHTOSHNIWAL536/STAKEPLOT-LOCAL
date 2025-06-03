@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
@@ -33,20 +34,66 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 topRight: Radius.circular(20.0),
               ),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                   Text(
+                    "Finspace",
+                    style: FontManager2().getTextStyle(context,
+                      lWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: AppColors.backgroundColor)
+                  ),
+                   Text(
+                    "A safe and supportive space to share your financial thoughts, questions, and experiences—completely anonymously. No names, no pressure—just open, respectful conversations.",
+                     textAlign: TextAlign.center,
+                   style: FontManager2().getTextStyle(context,
+                      lWeight: FontWeight.w500,
+                      fontSize: 16,
+                      color: AppColors.backgroundColor)),
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     getMaskedNumber(context);
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(builder: (context) => MaskNameScreen()),
+                  //     );
+                  //   },
+                  //   child:  Text("Continue",style: FontManager2().getTextStyle(context,
+                  //     lWeight: FontWeight.w600,
+                  //     fontSize: 20,
+                  //     color: AppColors.finSpaceColor)),
+                  // ),
+                   SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
                   onPressed: () {
-                    getMaskedNumber(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MaskNameScreen()),
-                    );
-                  },
-                  child: const Text("Continue"),
+                      getMaskedNumber(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MaskNameScreen()),
+                      );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.backgroundColor,
+               
+                padding: EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
-              ],
+              ),
+              child: Text('Continue',
+                  style: FontManager2().getTextStyle(context,
+                      lWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: AppColors.finSpaceColor)),
+            ),
+          ),
+                ],
+              ),
             ),
           );
         },
