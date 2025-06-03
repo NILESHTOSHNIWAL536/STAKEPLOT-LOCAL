@@ -1,104 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/finspaceStrings.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
+import 'package:get/get.dart';
 
 class InterestSelectionScreen extends StatefulWidget {
   const InterestSelectionScreen({Key? key}) : super(key: key);
 
   @override
-  State<InterestSelectionScreen> createState() =>
-      _InterestSelectionScreenState();
+  State<InterestSelectionScreen> createState() => _InterestSelectionScreenState();
 }
 
 class _InterestSelectionScreenState extends State<InterestSelectionScreen>
     with TickerProviderStateMixin {
-  Set<String> selectedCategories = {};
-  Set<String> selectedSubCategories = {};
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-
-  final Map<String, List<String>> categories = {
-    'Personal Finance': [],
-    'Debt Management': [],
-    'Savings Strategies': [],
-    'Tax Planning & Filing': [],
-    'Investments': [
-      'Stocks & Equities','Cryptocurrency & Blockchain',
-      'Mutual Funds & SIPs',
-      
-      'Real Estate & Property'
-    ],
-    'Spending Confessions': [],
-    'Behavioural Finance': [],
-    'Smart Savers': [],
-    'Alternative Investments': ['Art', 'Collectibles', 'P2P Lending'],
-    'Retirement & Pension Planning': [],
-    'Side Hustles & Passive Income': [],
-    'Tech Trends in Finance': [],
-    'Salary Talks': [],
-    'College & Education Funding': [],
-    'Spent Stories': [],
-    'Scholarships and Stipends': [],
-    'Budgeting': [],
-    'Global Market News & Analysis': [],
-  };
-
+  
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    selectedSubCategories.clear();
+    isListEnabled.value = false;
+    selectedCategories.clear();
   }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  void _toggleCategory(String category) {
-    setState(() {
-      if (selectedCategories.contains(category)) {
-        selectedCategories.remove(category);
-        selectedSubCategories
-            .removeWhere((sub) => categories[category]?.contains(sub) ?? false);
-      } else {
-        selectedCategories.add(category);
-      }
-    });
-    _animationController.forward().then((_) {
-      _animationController.reset();
-    });
-  }
-
-  void _toggleSubCategory(String subCategory) {
-    setState(() {
-      if (selectedSubCategories.contains(subCategory)) {
-        selectedSubCategories.remove(subCategory);
-      } else {
-        selectedSubCategories.add(subCategory);
-      }
-    });
-  }
-
-  bool get _hasSelections =>
-      selectedCategories.isNotEmpty || selectedSubCategories.isNotEmpty;
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-
+   final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -127,40 +55,25 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen>
                     child: TitleWidget(),
                   ),
                   // Categories List
-                  Container(
-                    height: screenSize.height *
-                        0.63, // 60% of screen height for categories
-                    child: CategoriesListWidget(
-                      categories: categories,
-                      selectedCategories: selectedCategories,
-                      selectedSubCategories: selectedSubCategories,
-                      onCategoryToggle: _toggleCategory,
-                      onSubCategoryToggle: _toggleSubCategory,
-                      fadeAnimation: _fadeAnimation,
-                    ),
-                  ),
+                  GetListOfInterest(),
                   // Done Button
-                  AnimatedContainer(
+                Obx(()=> !isListEnabled.value? SizedBox.shrink(): AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
-                    height: _hasSelections ? 70 : 0,
-                    alignment: _hasSelections
-                        ? Alignment.topCenter
-                        : Alignment.bottomCenter, // Change alignment
-                    child: _hasSelections
-                        ? Padding(
+                    height:   70,
+                    alignment:  Alignment.topCenter, // Change alignment
+                    child:   Padding(
                             padding: EdgeInsets.all(12),
                             child: DoneButtonWidget(
                               onPressed: () {
                                final combinedList = [...selectedSubCategories, ...selectedCategories];
                                 addMyIntreastAndName(
-                                  "Niles_3gt473",
                                   combinedList,
                                   context
                                 );
                               },
                             ),
                           )
-                        : null,
+                      ),
                   ),
                 ],
               ),
@@ -169,6 +82,71 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen>
         ),
       ),
     );
+  }
+}
+
+
+class GetListOfInterest extends StatefulWidget  {
+
+  const GetListOfInterest({Key? key}) : super(key: key);
+
+  @override
+  State<GetListOfInterest> createState() => _GetListOfInterestState();
+}
+
+class _GetListOfInterestState extends State<GetListOfInterest>  with TickerProviderStateMixin  {
+    late AnimationController _animationController;
+
+
+     @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    return  Container(
+                    height: screenSize.height * 0.63, // 60% of screen height for categories
+                    child: CategoriesListWidget(
+                      onCategoryToggle: _toggleCategory,
+                      onSubCategoryToggle: _toggleSubCategory,
+                    ),
+          );
+  }
+
+   void _toggleCategory(String category) {
+    setState(() {
+      if (selectedCategories.contains(category)) {
+        selectedCategories.remove(category);
+        selectedSubCategories
+            .removeWhere((sub) => categories[category]?.contains(sub) ?? false);
+      } else {
+        selectedCategories.add(category);
+      }
+    });
+    _animationController.forward().then((_) {
+      _animationController.reset();
+    });
+     isListEnabled.value = selectedCategories.isNotEmpty ||
+        selectedSubCategories.isNotEmpty;
+  }
+
+  void _toggleSubCategory(String subCategory) {
+    setState(() {
+      if (selectedSubCategories.contains(subCategory)) {
+        selectedSubCategories.remove(subCategory);
+      } else {
+        selectedSubCategories.add(subCategory);
+      }
+    });
+    isListEnabled.value = selectedCategories.isNotEmpty ||
+        selectedSubCategories.isNotEmpty;
   }
 }
 
@@ -246,22 +224,16 @@ class TitleWidget extends StatelessWidget {
 }
 
 class CategoriesListWidget extends StatelessWidget {
-  final Map<String, List<String>> categories;
-  final Set<String> selectedCategories;
-  final Set<String> selectedSubCategories;
   final Function(String) onCategoryToggle;
   final Function(String) onSubCategoryToggle;
-  final Animation<double> fadeAnimation;
 
-  const CategoriesListWidget({
+   CategoriesListWidget({
     Key? key,
-    required this.categories,
-    required this.selectedCategories,
-    required this.selectedSubCategories,
     required this.onCategoryToggle,
     required this.onSubCategoryToggle,
-    required this.fadeAnimation,
   }) : super(key: key);
+
+ final Map<String, List<String>> categoriesInterest = FinspaceStrings().categories;
 
   @override
   Widget build(BuildContext context) {
@@ -275,10 +247,9 @@ class CategoriesListWidget extends StatelessWidget {
               screenSize.width * 0.015, // Further reduced horizontal spacing
           runSpacing:
               screenSize.height * 0.005, // Further reduced vertical spacing
-          alignment:
-              WrapAlignment.start, // Align to start for brick-like effect
-          children: categories.keys.map((category) {
-            final subCategories = categories[category] ?? [];
+          alignment: WrapAlignment.start, // Align to start for brick-like effect
+          children: categoriesInterest.keys.map((category) {
+            final subCategories = categoriesInterest[category] ?? [];
             final isSelected = selectedCategories.contains(category);
             final hasSubCategories = subCategories.isNotEmpty;
 
@@ -307,8 +278,7 @@ class CategoriesListWidget extends StatelessWidget {
                       spacing: screenSize.width * 0.015,
                       runSpacing: screenSize.height * 0.005,
                       children: subCategories.map((subCategory) {
-                        final isSubSelected =
-                            selectedSubCategories.contains(subCategory);
+                        final isSubSelected = selectedSubCategories.contains(subCategory);
                         return CategoryChip(
                           label: subCategory,
                           isSelected: isSubSelected,
