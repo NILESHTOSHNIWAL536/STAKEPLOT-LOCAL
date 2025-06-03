@@ -250,7 +250,6 @@ class _ImageScreenState extends State<ImageScreen> {
  void callBack()async
 {
 
- Navigator.pop(context);
  if (selectedImage == null) {
                       snackBarAllFeilds2(context,SnackbarData().uploadError);
                       return;

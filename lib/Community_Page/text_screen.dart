@@ -331,7 +331,6 @@ class _TextScreenState extends State<TextScreen> {
 
   void callBack()async
   {
-     Navigator.pop(context);
        if (contentController.text.isNotEmpty) {
                           if (showImage && selectedImage == null) {
                             snackBarAllFeilds2(context,SnackbarData().uploadError);
@@ -365,9 +364,9 @@ class _TextScreenState extends State<TextScreen> {
                           croppedImageFile,
                         );
 
-                        // if (mounted) {
-                        //   Navigator.pop(context);
-                        // }
+                        if (mounted) {
+                          Navigator.pop(context);
+                        }
                       } catch (e) {
               
                       } finally {

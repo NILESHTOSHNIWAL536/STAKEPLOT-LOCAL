@@ -142,6 +142,7 @@ void createPostWithOutImage(context, String title, String description) async {
     uploadRefreshCall(his, context);
   } else {}
   clearInterest();
+   Navigator.pop(context);
 }
 
 void createPollOfCommunity(context, String title, String description) async {
