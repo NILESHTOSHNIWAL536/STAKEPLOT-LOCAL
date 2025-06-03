@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,13 +15,13 @@ void getChats(data) async {
   var accessToken = _pref.getString("accessToken");
 
   final response = await http.get(
-    Uri.parse('${url}/chat/${data['_id']}'),
+    Uri.parse('${url}/chat/${data['_id']}/${ismaskedUsers.value}'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       "Authorization": "$accessToken",
     },
   );
-
+  printData(response);
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     List obj = his['data'];
@@ -392,11 +393,11 @@ void updateRoom(
   }
 }
 
-void getChatLoader() async {
+void getChatLoader(bool flag) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
   final response = await http.get(
-    Uri.parse(url + '/chat/users/order'),
+    Uri.parse(url + '/chat/users/order/${flag}'),
     // Uri.parse(url+'/chat/un/viewed'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
@@ -413,6 +414,7 @@ void getChatLoader() async {
     obj.forEach((element) {
       try {
         var userInfo = element['chats']['details']['_id'];
+        String name =(element['chats']['details']['name'] == null || element['chats']['details']['name'] == "null") ? "": element['chats']['details']['name'];
         String key = userInfo['sender'] == currentId.value
             ? userInfo['receiver']
             : userInfo['sender'];
@@ -438,7 +440,7 @@ void getChatLoader() async {
 
         var data = {
           '_id': key,
-          'name': friendsListDetails[key]['name'],
+          'name': name,
           'avatar': friendsListDetails[key]['avatar'] ?? defaultBackGround.value,
           'item': friendsListDetails[key]['avatar'],
           'count': element['chats']['unseenCount'],
@@ -596,6 +598,7 @@ void addMessageImage(context, String messageType, String messageObj, String id,
     "post": null,
     "split": null,
     "roomId": roomIdVal,
+    'isMasked': ismaskedUsers.value,
   };
 
   socket.emit("message", imageJson);

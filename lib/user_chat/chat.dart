@@ -14,6 +14,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/fullScreen.dart';
+import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -129,7 +130,7 @@ class _ChatState extends State<Chat> {
                         // post:  postData,//data2['messageType']=="post"? (data2['post']['postLocation'])??"":"",
                         )),
               unSeenChat(context, data['_id']),
-              getChatLoader(),
+              getChatLoader(ismaskedUsers.value),
               getChats(widget.data),
             });
   }
@@ -148,7 +149,8 @@ class _ChatState extends State<Chat> {
       "poll": null,
       "post": null,
       "split": null,
-      "roomId": roomId.value,
+      "roomId": roomId.value, 
+      'isMasked': ismaskedUsers.value,
     };
 
     messages.insert(
@@ -395,7 +397,7 @@ class _ChatState extends State<Chat> {
     return WillPopScope(
       onWillPop: () async {
         clearChatData();
-        getChatLoader();
+        getChatLoader(ismaskedUsers.value);
         return true;
       },
       child: Scaffold(
@@ -408,7 +410,7 @@ class _ChatState extends State<Chat> {
           leading: GestureDetector(
             onTap: () {
               clearChatData();
-              getChatLoader();
+              getChatLoader(ismaskedUsers.value);
             },
             child:
                 const Icon(Icons.arrow_back, color: AppColors.backgroundColor),
@@ -469,7 +471,6 @@ class _ChatState extends State<Chat> {
     chatOfUserList.remove(data['_id']);
     clear(data);
     unSeenChat(context, data['_id']);
-    // getChatLoader();
     Navigator.pop(context);
   }
 
@@ -693,7 +694,7 @@ class _ChatState extends State<Chat> {
             snackBarCalled(context, SnackbarData().pleaseEnterMessage);
           }
           textController.clear();
-          getChatLoader();
+          getChatLoader(ismaskedUsers.value);
           myFocusNode.requestFocus();
         },
         decoration: InputDecoration(
@@ -727,7 +728,7 @@ class _ChatState extends State<Chat> {
                     snackBarCalled(context,SnackbarData().pleaseEnterValidData);
                   }
                   textController.clear();
-                  getChatLoader();
+                  getChatLoader(ismaskedUsers.value);
                   myFocusNode.requestFocus();
                 },
               ),
@@ -967,8 +968,7 @@ class _ChatState extends State<Chat> {
                     const SizedBox(
                       width: 5,
                     ),
-                    textStyleColor(
-                        " Send ", AppColors.primaryColor, data, imageData),
+                    textStyleColor(" Send ", AppColors.primaryColor, data, imageData),
                   ],
                 ),
               ],
@@ -998,7 +998,7 @@ class _ChatState extends State<Chat> {
               roomId.value,
             );
           }
-          getChatLoader();
+          getChatLoader(ismaskedUsers.value);
           Navigator.pop(context);
         },
         child: Container(
