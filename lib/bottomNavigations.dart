@@ -177,8 +177,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
             pushName(HomePage());
           else if (i == 1) pushName(PlotFinance());
         
-          //  else if (i == 2) pushName(FeedScreen());
-           else if (i == 2) pushName(interestedTags.isEmpty? WelcomeScreen():Community());
+           else if (i == 2) pushName(!interestedTags.isEmpty? WelcomeScreen():Community());
            else if (i == 3) pushName(ProfileScreenDart());
 
           setState(() {

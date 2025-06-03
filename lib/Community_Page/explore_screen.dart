@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/post_interest.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
@@ -662,6 +663,7 @@ class _ExploreModalState extends State<ExploreModal> {
                   child: TextField(
                     controller: _amountControllers[index],
                     keyboardType: TextInputType.number,
+                    inputFormatters: allowDecimalInput(),
                     decoration:
                         _inputDecoration(strings.addBudget, Icons.currency_rupee),
                   ),

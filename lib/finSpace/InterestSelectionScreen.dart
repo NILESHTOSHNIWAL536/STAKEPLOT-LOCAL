@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/finspaceStrings.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
@@ -169,19 +170,17 @@ class HeaderWidget extends StatelessWidget {
             children: [
               Text(
                 'Welcome to',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black54,
-                  fontWeight: FontWeight.w400,
-                ),
+                style: FontManager2().getTextStyle(context,
+                      lWeight: FontWeight.w500,
+                      fontSize: 20,
+                      color: Colors.black54)
               ),
               Text(
                 'Finspace',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: FontManager2().getTextStyle(context,
+                      lWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: AppColors.finSpaceColor)
               ),
             ],
           ),
@@ -200,21 +199,20 @@ class TitleWidget extends StatelessWidget {
       children: [
         Text(
           'Select Your Interest',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
+          style: FontManager2().getTextStyle(context,
+                      lWeight: FontWeight.w500,
+                      fontSize: 20,
+                      color: Colors.black87),
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 8),
         Text(
           'Choose some categories you like. You can change them anytime',
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.black54,
-            height: 1.4,
-          ),
+          style: FontManager2().getTextStyle(context,
+                      lWeight: FontWeight.w500,
+                      fontSize: 14,
+                      lineHeight: 1.4,
+                      color: Colors.black54),
           textAlign: TextAlign.center,
         ),
       ],
@@ -325,7 +323,7 @@ class CategoryChip extends StatelessWidget {
               color: isSelected
                   ? AppColors.finSpaceColor
                   : AppColors.backgroundColor,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: isSelected
                     ? const Color(0xFF4A4E69)
@@ -335,11 +333,11 @@ class CategoryChip extends StatelessWidget {
             ),
             child: Text(
               label,
-              style: TextStyle(
-                color: isSelected ? AppColors.backgroundColor : AppColors.bg1,
-                fontSize: isSubCategory ? 12 : 14,
-                fontWeight: isSubCategory ? FontWeight.w400 : FontWeight.w400,
-              ),
+              style: FontManager2().getTextStyle(context,
+                      lWeight: FontWeight.w400,
+                      fontSize:  isSubCategory ? 12 : 14,
+                      color: isSelected ? AppColors.backgroundColor : AppColors.bg1),
+              
               textAlign: TextAlign.center,
             ),
           ),
@@ -360,7 +358,7 @@ class DoneButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
+       width: MediaQuery.sizeOf(context).width/4,
       height: 40,
       child: ElevatedButton(
         onPressed: onPressed,

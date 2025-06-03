@@ -157,6 +157,7 @@ flutter:
     - assets/splashScreen/
     - assets/onboarding/
     - assets/icons/finSpaceIcons/
+    - assets/icons/maskAvatars/
     
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
