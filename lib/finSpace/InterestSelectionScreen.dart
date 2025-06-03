@@ -8,8 +8,7 @@ class InterestSelectionScreen extends StatefulWidget {
   const InterestSelectionScreen({Key? key}) : super(key: key);
 
   @override
-  State<InterestSelectionScreen> createState() =>
-      _InterestSelectionScreenState();
+  State<InterestSelectionScreen> createState() => _InterestSelectionScreenState();
 }
 
 class _InterestSelectionScreenState extends State<InterestSelectionScreen>
