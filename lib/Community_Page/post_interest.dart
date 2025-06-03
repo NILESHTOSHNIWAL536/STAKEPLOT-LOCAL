@@ -1,8 +1,9 @@
+
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart'; // Assuming FontManager2 is here
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/InterestSelectionScreen.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
 import 'package:get/get.dart';
 
@@ -10,23 +11,64 @@ void showTagListOfInterestModal({
   required BuildContext context,
   required VoidCallback onConfirm,
 }) {
-   final screenSize = MediaQuery.of(context).size;
+  final screenSize = MediaQuery.of(context).size;
   showModalBottomSheet(
     context: context,
+    isScrollControlled: true, // Allows dynamic height
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
     ),
     builder: (context) {
-      return Container(
-        height:  screenSize.height ,
-        padding: const EdgeInsets.all(16.0),
+      return AnimatedContainer(
+        duration: Duration(milliseconds: 100),
+        curve: Curves.easeInOut,
+        height: screenSize.height * 0.7, // 60% of screen height
+        padding: EdgeInsets.symmetric(
+          horizontal: screenSize.width * 0.05, // Responsive padding
+          vertical: 16,
+        ),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            textStyleImage(context: context, text: 'Select the Tag...!', fontsize: 20, fontWeight: FontWeight.bold),
-            const SizedBox(height: 20),
-            GetListOfInterest(height: 0.25,),
-            const SizedBox(height: 20),
-           Obx(()=> InkWell(
+            // Drag handle
+            Container(
+              width: 40,
+              height: 4,
+              margin: EdgeInsets.symmetric(vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            // Title
+            Semantics(
+              label: 'Select Your Interests',
+              child: Text(
+                'Select Your Interests',
+                style: FontManager2().getTextStyle(
+                  context,
+                  lWeight: FontWeight.bold,
+                  fontSize: screenSize.width < 360 ? 18 : 20,
+                  color: AppColors.finSpaceColor,
+                ),
+              ),
+            ),
+            SizedBox(height: screenSize.height * 0.02), // Responsive spacing
+            // List of interests
+            
+              Container(
+                height: MediaQuery.sizeOf(context).height/2,
+                
+                child: GetListOfInterest(height: 0), // Let it take available space
+              ),
+            
+            SizedBox(height: screenSize.height * 0.02),
+            // Continue button
+            Obx(()=> InkWell(
               onTap: ()
               {
                 if(!isListEnabled.value)return;

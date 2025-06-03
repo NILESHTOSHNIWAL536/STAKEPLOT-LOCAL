@@ -53,7 +53,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     //  textAlign: TextAlign.center,
                    style: FontManager2().getTextStyle(context,
                       lWeight: FontWeight.w500,
-                      fontSize: 16,
+                      fontSize: 14,
+                      lineHeight: 1.3,
                       color: AppColors.backgroundColor)),
                   // ElevatedButton(
                   //   onPressed: () {
