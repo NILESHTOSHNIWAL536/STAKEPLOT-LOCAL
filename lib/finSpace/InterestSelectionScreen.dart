@@ -66,10 +66,10 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen>
                             child: DoneButtonWidget(
                               onPressed: () {
                                final combinedList = [...selectedSubCategories, ...selectedCategories];
-                                addMyIntreastAndName(
-                                  combinedList,
-                                  context
-                                );
+                                var body = {
+                                  "interestedTags": combinedList,
+                                };
+                                addMyIntreastAndName(context,body);
                               },
                             ),
                           )

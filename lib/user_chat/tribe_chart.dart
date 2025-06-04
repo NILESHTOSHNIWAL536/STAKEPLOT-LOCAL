@@ -78,9 +78,7 @@ class _TribeSearchState extends State<TribeChats> {
             });
 
     socket.on("LoadCharts",(loadData) => {
-            print(loadData),
-            print(ismaskedUsers.value),
-           if(loadData['isMasked']== ismaskedUsers.value) getChatLoader(false),
+           if(loadData['isMasked']== ismaskedUsers.value) getChatLoader(ismaskedUsers.value),
         });
   }
 

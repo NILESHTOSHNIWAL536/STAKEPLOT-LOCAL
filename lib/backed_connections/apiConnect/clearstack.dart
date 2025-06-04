@@ -282,6 +282,10 @@ void clearStackLocalInfo() {
   directFetch.value = false;
   fetchedData.value = false;
   count.value = 0;
+   maskedName.value="";
+   interestedTags.clear();
+   clearInterest();
+   
 }
 
 

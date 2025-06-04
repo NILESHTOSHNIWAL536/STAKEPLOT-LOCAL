@@ -30,19 +30,20 @@ Future<void> getMaskedNumber(BuildContext context) async
 }
 
 
-Future<void> addMyIntreastAndName(List list,BuildContext context) async
+Future<void> addMyIntreastAndName(BuildContext context,var body,[bool falg=false]) async
 {
 
   try{
-  var response =await updateDataApiCall2("${url}/user/", {
-    "interestedTags":list ,
-    "maskedName": maskNameController.text
-  });
+  var response =await updateDataApiCall2("${url}/user/", body);
   printData(response);
   if (getFlagOfResponse(response))
   {
       selectedSubCategories.clear();
       selectedCategories.clear();
+      if(flag)
+      {
+         Navigator.pushNamed(context, '/interestScreen');
+      }
   }
   
   }catch(e) {
