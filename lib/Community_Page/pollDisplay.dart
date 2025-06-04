@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/maskedNameDialogbox.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart';
@@ -140,9 +141,15 @@ Widget getQuestionsAndOptions(e, context, flag, PostId) {
                               padding:
                                   const EdgeInsets.symmetric(vertical: 4.0),
                               child: InkWell(
-                                onTap: myvote.value
+                                onTap:
+                      
+                      myvote.value
                                     ? null
                                     : () {
+                                       if (maskedName.value.trim().isEmpty) {
+                        MaskedNameDialogBox.showMaskedNameDialog(context);
+                      }
+                      else{
                                         s = op['option'];
                                         //  if(!flag)cal =  s == op['option'] ? "100" :"0";
 
@@ -163,7 +170,7 @@ Widget getQuestionsAndOptions(e, context, flag, PostId) {
                                         //     questionRoom.removeAt(place);
                                         //     questionRoom.insert(place,e);
                                         //  }
-                                      },
+                                      }},
                                 child: Container(
                                     padding: EdgeInsets.symmetric(
                                         vertical: 13, horizontal: 10),

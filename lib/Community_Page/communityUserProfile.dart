@@ -5,6 +5,8 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
+import 'package:flutter_application_code_stakeplot/finSpace/InterestSelectionScreen.dart';
+import 'package:flutter_application_code_stakeplot/finSpace/updateInterestScreen.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/communityProfileScreen.dart';
 
 class CommunityUserProfileScreen extends StatefulWidget {
@@ -35,7 +37,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
             Column(
               children: [
                 _buildHeader(),
-                
+
                    Container(
                     height: MediaQuery.sizeOf(context).height/1.27,
                     color: const Color(0xFFC2C3D5),
@@ -127,11 +129,11 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
             const SizedBox(height: 12),
             GestureDetector(
               onTap: (){
-      //             Navigator.push(
-      //    context,
-      //    MaterialPageRoute(
-      //        builder: (context) =>CommunityProfileScreen( id: currentId.value,)),
-      //  );
+                  Navigator.push(
+         context,
+         MaterialPageRoute(
+             builder: (context) =>UpdateInterestScreen()),
+       );
 
               },
               child: _buildMenuItem('Update Interest', hasArrow: true)),

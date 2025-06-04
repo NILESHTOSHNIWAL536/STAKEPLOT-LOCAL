@@ -120,8 +120,16 @@ class PostCard extends StatelessWidget {
                           children: [
                             // Save user posts 
                            // flag ? saved() : SizedBox.shrink(),
-                            popUpBoxHideDelete(dataObj['_id'], context,
-                                dataObj["author"]['name'],index,flag),
+                           maskedName.value.trim().isEmpty
+        ? SizedBox.shrink()
+        : popUpBoxHideDelete(
+            dataObj['_id'],
+            context,
+            dataObj["author"]['name'],
+            index,
+            flag,
+          ),
+                            
                             const SizedBox(width: 20),
                           ],
                         ),

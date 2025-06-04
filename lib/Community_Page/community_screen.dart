@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/explore_screen.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/maskedNameDialogbox.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postloadTranding.dart';
@@ -54,7 +55,7 @@ class _CommunityState extends State<Community> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Obx(()=> isTrending.value?SizedBox.shrink() :  maskedName.value.trim().isEmpty ? SizedBox.shrink():PostImage()),
+      floatingActionButton: Obx(()=> isTrending.value?SizedBox.shrink() :PostImage()),
       bottomNavigationBar: SafeArea(child: BottomNavigations(data: 2)),
       body: SafeArea(
         child: Container(
@@ -122,14 +123,15 @@ class _CommunityState extends State<Community> {
       ),
       child: Material(
         color: Colors
-            .transparent, // Transparent to allow Container's color to show
+            .transparent,
         borderRadius:
-            BorderRadius.circular(16), // Match Container's border radius
+            BorderRadius.circular(16),
         child: InkWell(
-          borderRadius: BorderRadius.circular(16), // Match for ripple effect
+          borderRadius: BorderRadius.circular(16), 
           onTap: () async {
-            await showModal(
-                {}); // Ensure showModal is defined and handles UI appropriately
+            maskedName.value.trim().isEmpty ?MaskedNameDialogBox.showMaskedNameDialog(context)
+            :await showModal(
+                {});
           },
           splashColor: Colors.white.withOpacity(0.3), // Visual feedback on tap
           child: Center(
