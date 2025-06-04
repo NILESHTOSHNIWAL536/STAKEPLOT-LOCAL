@@ -24,6 +24,7 @@ RxBool load = true.obs;
 RxBool reloadCharts = true.obs;
 RxBool reloadMaskedCharts = true.obs;
 RxBool ismaskedUsers= false.obs;
+RxBool countOpen= false.obs;
 late IO.Socket socket;
 RxInt totalUnopenedMessages = 0.obs;
 
@@ -51,6 +52,7 @@ class _TribeSearchState extends State<TribeChats> {
   void initState() {
     super.initState();
     getUserInfomations();
+    totalUnopenedMessages.value=0;
     ismaskedUsers.value = false;
     getChatLoader(false);
     getTransactions();
@@ -162,18 +164,15 @@ class _TribeSearchState extends State<TribeChats> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  strings.messagesReceived.replaceFirst(
-                      '{count}',
-                      getTotalUnopenedMessages()
-                          .toString()), // Null check for chatList
+             Obx(()=>  Text(
+               countOpen.value ? strings.messagesReceived.replaceFirst('{count}', totalUnopenedMessages.value.toString())  :strings.messagesReceived.replaceFirst('{count}', totalUnopenedMessages.value.toString()), // Null check for chatList
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.normal,
                     fontSize: 16,
                     color: AppColors.backgroundColor,
                   ),
-                ),
+                )),
                 
                 const SizedBox(height: 8),
                 chatSplitAccount.isNotEmpty
