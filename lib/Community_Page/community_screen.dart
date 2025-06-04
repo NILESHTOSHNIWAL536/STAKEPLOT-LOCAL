@@ -54,10 +54,8 @@ class _CommunityState extends State<Community> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
-      floatingActionButton: Obx(()=> isTrending.value?SizedBox.shrink() :PostImage()),
+      floatingActionButton: Obx(()=> isTrending.value?SizedBox.shrink() :  maskedName.value.trim().isEmpty ? SizedBox.shrink():PostImage()),
       bottomNavigationBar: SafeArea(child: BottomNavigations(data: 2)),
-    
       body: SafeArea(
         child: Container(
          height: MediaQuery.of(context).size.height/1.1,

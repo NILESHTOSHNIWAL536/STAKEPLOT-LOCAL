@@ -115,6 +115,10 @@ class HeaderWidget extends StatelessWidget {
         TextButton(
           onPressed: () {
             // Handle skip action
+                Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => InterestSelectionScreen()),
+                      );
           },
           child: Text('Skip',
               style: FontManager2().getTextStyle(context,
@@ -388,7 +392,13 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
               onPressed: () {
                 // Handle done action
 
-                Navigator.pushNamed(context, '/interestScreen');
+                           var body={
+                                    "maskedName": maskNameController.text
+                                  };
+                 addMyIntreastAndName(context,body,true);
+                
+
+
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF4A4E69),
