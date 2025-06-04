@@ -65,6 +65,7 @@ class _TribeSearchState extends State<TribeChats> {
   setUpSocketListener() {
     socket.onConnect((_) {
       socket.emit("joinRoom", userName.value + userName.value);
+      if(maskedName.value!="")socket.emit("joinRoom", maskedName.value + maskedName.value);
 
     });
 
@@ -77,6 +78,8 @@ class _TribeSearchState extends State<TribeChats> {
             });
 
     socket.on("LoadCharts",(loadData) => {
+            print(loadData),
+            print(ismaskedUsers.value),
            if(loadData['isMasked']== ismaskedUsers.value) getChatLoader(false),
         });
   }

@@ -11,6 +11,7 @@ import "package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget
 import "package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart";
 import "package:flutter_application_code_stakeplot/loader.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart";
+import "package:flutter_application_code_stakeplot/user_chat/chat.dart";
 import "package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart";
 import "package:get/get.dart";
 import "package:shared_preferences/shared_preferences.dart";
@@ -430,7 +431,25 @@ void showmodalWidget(data){
                    children: [
                      GestureDetector(
                   onTap: (){
-                     
+                          messages.clear();
+                          var item={
+                            '_id': data['_id'],
+                            'name': data['name'],
+                            'avatar': avatar,
+                            'avatarBackGround': data['avatarBackGround'] ?? defaultBackGround.value,
+                          };
+                          unSeenChat(context, item['_id']);
+                          getChatLoader(ismaskedUsers.value);
+                          getChats(item);
+                          clear(item);
+                          ismaskedUsers.value = true;
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  Chat(data: item, myId: currentId.value, myprofile: {}),
+                            ),
+                          );
                   },
                   child: getButton(context, "chat",AppColors.bg5,AppColors.primaryColor)),
                     //  GestureDetector(

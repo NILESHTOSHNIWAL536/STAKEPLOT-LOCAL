@@ -24,7 +24,6 @@ class FinspaceStrings
     'Investments': [
       'Stocks & Equities','Cryptocurrency & Blockchain',
       'Mutual Funds & SIPs',
-      
       'Real Estate & Property'
     ],
     'Spending Confessions': [],

@@ -274,8 +274,8 @@ class _ImageScreenState extends State<ImageScreen> {
 
                       await createPost(
                         context,
-                        titleController.text,
-                        textController.text,
+                        titleController.text.toString().trim(),
+                        textController.text.toString().trim(),
                         croppedImageFile,
                       );
 
