@@ -70,7 +70,10 @@ class _ChatState extends State<Chat> {
     String room1 = userName.value + data['name'];
     String room2 = data['name'] + userName.value;
 
-    roomId.value = (room1.compareTo(room2) <= 0) ? room1 : room2;
+    String room3 = maskedName.value + data['name'];
+    String room4 = data['name'] + maskedName.value;
+
+    roomId.value =  ismaskedUsers.value?  (room3.compareTo(room4) <= 0) ? room3 : room4  :(room1.compareTo(room2) <= 0) ? room1 : room2;
 
     getChats(data);
     path = avatar.value; 

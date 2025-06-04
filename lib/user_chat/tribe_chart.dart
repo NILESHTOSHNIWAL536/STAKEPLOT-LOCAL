@@ -65,6 +65,7 @@ class _TribeSearchState extends State<TribeChats> {
   setUpSocketListener() {
     socket.onConnect((_) {
       socket.emit("joinRoom", userName.value + userName.value);
+      if(maskedName.value!="")socket.emit("joinRoom", maskedName.value + maskedName.value);
 
     });
 
