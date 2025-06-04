@@ -587,8 +587,9 @@ void addMessageImage(context, String messageType, String messageObj, String id,
   };
 
     socket.emit("message", imageJson);
-    socket.emit("LoadCharts", {
+    socket.emit("LoadCharts",{
         "roomId": data['name'] + "" + data['name'],
+        'isMasked': ismaskedUsers.value,
     });
 
 }

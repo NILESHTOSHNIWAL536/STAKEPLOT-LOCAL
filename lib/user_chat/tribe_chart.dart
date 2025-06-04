@@ -65,6 +65,7 @@ class _TribeSearchState extends State<TribeChats> {
   setUpSocketListener() {
     socket.onConnect((_) {
       socket.emit("joinRoom", userName.value + userName.value);
+
     });
 
     socket.onConnectError((data) {});
@@ -76,7 +77,7 @@ class _TribeSearchState extends State<TribeChats> {
             });
 
     socket.on("LoadCharts",(loadData) => {
-              getChatLoader(false),
+           if(loadData['isMasked']== ismaskedUsers.value) getChatLoader(false),
         });
   }
 

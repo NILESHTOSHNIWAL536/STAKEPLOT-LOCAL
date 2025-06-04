@@ -168,6 +168,7 @@ class _ChatState extends State<Chat> {
     socket.emit("message", jsonData);
     socket.emit("LoadCharts", {
       "roomId": data['name'] + "" + data['name'],
+      'isMasked': ismaskedUsers.value,
     });
   }
 
