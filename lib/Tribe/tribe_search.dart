@@ -4,6 +4,7 @@ import "package:flutter/widgets.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
+import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart";
 import "package:flutter_application_code_stakeplot/bottomNavigations.dart";
@@ -143,16 +144,8 @@ class _TribeSearchState extends State<TribeSearch> {
 
 
  
-  void getTransaction() async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-    final response = await http.get(
-      Uri.parse('${url}/user/friends/find'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-    );
+  void getTransaction() async {   
+    var response=await getDataApiCall("${url}/user/friends/find");
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
 

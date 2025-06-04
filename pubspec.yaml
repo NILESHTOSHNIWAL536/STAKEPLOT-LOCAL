@@ -109,6 +109,7 @@ dependencies:
   flutter_background_service: ^5.1.0
   flutter_charts: ^0.5.2
   speech_to_text: ^7.0.0
+  flutter_dotenv: ^5.2.1
  
   
 
