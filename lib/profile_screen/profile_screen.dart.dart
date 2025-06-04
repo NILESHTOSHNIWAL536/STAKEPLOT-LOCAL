@@ -12,6 +12,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/profile.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/communityProfileScreen.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/edit_Details.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/hiddenTransaction.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/webView.dart';
@@ -170,7 +171,12 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                 ProfileScreenStrings().communityProfileLabel, // Direct access
                                 ProfileScreenStrings().communityProfileSubLabel, // Direct access
                                 onTap: () {
-                                  navigatorToMyOwnPage(context);
+                                  // navigatorToMyOwnPage(context);
+                                   Navigator.push(
+         context,
+         MaterialPageRoute(
+             builder: (context) =>CommunityProfileScreen( id: currentId.value,)));
+      //  );
                                 },
                               ),
                               Divider(),

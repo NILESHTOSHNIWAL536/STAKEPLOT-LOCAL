@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 
 class CommunityUserProfileScreen extends StatefulWidget {
@@ -23,15 +26,22 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
   Widget build(BuildContext context) {
     return Scaffold(
         bottomNavigationBar: SafeArea(child: BottomNavigations(data: 2)),
-      backgroundColor: const Color(0xFFB8B5D1), // Light purple background
+      backgroundColor: AppColors.backgroundColor, 
       body: SafeArea(
         child: Column(
           children: [
            
             _buildHeader(),
-            _buildProfileSection(),
-            _buildMenuItems(),
-            const Spacer(),
+            Container(
+              color: AppColors.finSpaceColor,
+              child: Column(
+                children: [
+                  _buildProfileSection(),
+                  _buildMenuItems(),
+                ],
+              ),
+            ),
+           
            
           ],
         ),
@@ -66,44 +76,9 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
       padding: const EdgeInsets.symmetric(vertical: 20.0),
       child: Stack(
         children: [
-          Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: ClipOval(
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                child: Image.asset(
-                  'assets/images/profile_avatar.png', // Replace with your avatar asset
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    // Fallback avatar if image not found
-                    return Container(
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xFFFFB366),
-                      ),
-                      child: const Icon(
-                        Icons.person,
-                        size: 50,
-                        color: Colors.white,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
+           AvatarProfile(name: userName.value, width: 4.4, height: 10,background:userAvatarBackGround.value ?? defaultBackGround.value,flag: true,),
+
+              
           Positioned(
             bottom: 0,
             right: 0,
@@ -113,7 +88,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
               decoration: BoxDecoration(
                 color: const Color(0xFF4A4A68),
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 2),
+                border: Border.all(color: Colors.white, width: .1),
               ),
               child: const Icon(
                 Icons.edit,
@@ -135,8 +110,6 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
           children: [
             _buildMenuItem('View Profile', hasArrow: true),
             const SizedBox(height: 12),
-            _buildMenuItem('Connection', hasArrow: true),
-            const SizedBox(height: 12),
             _buildMenuItem('Saved', hasArrow: true),
             const SizedBox(height: 12),
             _buildMenuItem('Update Interest', hasArrow: true),
@@ -153,10 +126,10 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
   Widget _buildMenuItem(String title, {bool hasArrow = false, bool hasToggle = false}) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -191,6 +164,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
                 });
               },
               activeColor: const Color(0xFF4A4A68),
+              
               inactiveThumbColor: Colors.grey,
               inactiveTrackColor: Colors.grey.withOpacity(0.3),
             ),
