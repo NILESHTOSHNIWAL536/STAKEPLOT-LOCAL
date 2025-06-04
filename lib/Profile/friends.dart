@@ -62,7 +62,7 @@ class _FriendsState extends State<Friends> {
                     tag: "TribeSearch",
                     child: GestureDetector(
                       onTap: () {
-                       if( friendsList.isEmpty)Navigator.pushNamed(context, '/TribeSearch');
+                        if( friendsList.isEmpty)Navigator.pushNamed(context, '/TribeSearch');
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 18),
@@ -117,15 +117,15 @@ class _FriendsState extends State<Friends> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
       child: Center(
-          child: InkWell(
+          child: GestureDetector(
         onTap: () {
         
-          Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CommunityUserProfile(data: data,ids:[],flag: true,),
-                      ),
-                  );
+          // Navigator.push(
+          //             context,
+          //             MaterialPageRoute(
+          //               builder: (context) => CommunityUserProfile(data: data,ids:[],flag: true,),
+          //             ),
+          //         );
         },
         child: Container(
           
