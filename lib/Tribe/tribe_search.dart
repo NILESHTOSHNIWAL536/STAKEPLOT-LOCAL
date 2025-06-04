@@ -363,7 +363,7 @@ void showmodalWidget(data){
       return Container(
          width: MediaQuery.of(context).size.width,
          height: MediaQuery.of(context).size.height/2.7,
-         decoration: BoxDecoration(
+         decoration: const BoxDecoration(
         //  color: Colorcodes.white,
          borderRadius: BorderRadius.only(
           topLeft: Radius.circular(70),
