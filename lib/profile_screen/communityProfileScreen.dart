@@ -62,14 +62,12 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
             children: [
               topUserProfile(),
 
-              const SizedBox(height: 60),
+             
               Column(
                 children: [
-                  Text(userName.value.toString(),
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.w600, color: AppColors.bg1)),
+                 
                           const SizedBox(height: 10),
-                     TabBarUser(userPostList: myPostList)
+                      TabBarUser(userPostList: myPostList)
                 ],
               ),
              
@@ -81,114 +79,124 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
   }
 
  
-  Widget topUserProfile() {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
+  // Widget topUserProfile() {
+  //   return Stack(
+  //     clipBehavior: Clip.none,
+  //     children: [
         
       
-        GestureDetector(
-          onTap: () {
-            // Add the action to be triggered on tap, like picking an image
-          },
-          child: Container(
-            height: MediaQuery.of(context).size.height / 6.7,
+  //       GestureDetector(
+  //         onTap: () {
+  //           // Add the action to be triggered on tap, like picking an image
+  //         },
+  //         child: Container(
+  //           height: MediaQuery.of(context).size.height / 6.7,
+  //           // height: 200,
+  //           decoration: BoxDecoration(
+  //             color: Colors.lightBlueAccent,
+  //             image: _coverImage != null
+  //                 ? DecorationImage(
+  //                     image: FileImage(_coverImage!),
+  //                     fit: BoxFit.cover,
+  //                   )
+  //                 : _networkImageUrl != null && _networkImageUrl.isNotEmpty
+  //                     ? DecorationImage(
+  //                         image: NetworkImage(_networkImageUrl),
+  //                         fit: BoxFit.cover,
+  //                       )
+  //                     : const DecorationImage(
+  //                         image: AssetImage(
+  //                             'assets/cover_placeholder.jpg'), // Default placeholder asset
+  //                         fit: BoxFit.cover,
+  //                       ),
+  //           ),
+  //         ),
+  //       ),
+
+  //       Positioned(
+  //         top:  MediaQuery.of(context).size.height / 5.8,
+  //         left: MediaQuery.of(context).size.width / 6.7,
+  //         child: networkFriends( ProfileScreenStrings().networkLabel, friendsList.length.toString(),
+  //             Icons.person_2_outlined),
+  //       ),
+
+  //       Positioned(
+  //         top: MediaQuery.of(context).size.height / 5.8,
+  //         left: MediaQuery.of(context).size.width / 1.45,
+  //         child: networkFriends(
+  //              ProfileScreenStrings().postsLabel, myPostList.length.toString(), Icons.post_add),
+  //       ),
+
+  //       Positioned(
+  //         top:  MediaQuery.of(context).size.height / 10,
+  //         left: MediaQuery.of(context).size.width / 2 - 40,
+  //         child: AvatarProfile(name: userName.value, width: 4.4, height: 10,background:userAvatarBackGround.value ?? defaultBackGround.value,flag: true,),
+         
+  //       ),
+  //     ],
+  //   );
+  // }
+ Widget topUserProfile() {
+    return 
+         Container(
+            height: MediaQuery.of(context).size.height / 5.4,
             // height: 200,
-            decoration: BoxDecoration(
-              color: Colors.lightBlueAccent,
-              image: _coverImage != null
-                  ? DecorationImage(
-                      image: FileImage(_coverImage!),
-                      fit: BoxFit.cover,
-                    )
-                  : _networkImageUrl != null && _networkImageUrl.isNotEmpty
-                      ? DecorationImage(
-                          image: NetworkImage(_networkImageUrl),
-                          fit: BoxFit.cover,
-                        )
-                      : const DecorationImage(
-                          image: AssetImage(
-                              'assets/cover_placeholder.jpg'), // Default placeholder asset
-                          fit: BoxFit.cover,
-                        ),
+           child: Column(
+            children: [
+               AvatarProfile(name: userName.value, width: 4.4, height: 10,background:userAvatarBackGround.value ?? defaultBackGround.value,flag: true,),
+           Text(userName.value.toString(),
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w600, color: AppColors.bg1)),
+                          SizedBox(height: 10,),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                networkFriends(
+                     ProfileScreenStrings().postsLabel, myPostList.length.toString(), Icons.post_add),
+                     networkFriends( ProfileScreenStrings().networkLabel, friendsList.length.toString(),
+                    Icons.person_2_outlined),
+              ],
             ),
           ),
-        ),
-
-        Positioned(
-          top:  MediaQuery.of(context).size.height / 5.8,
-          left: MediaQuery.of(context).size.width / 6.7,
-          child: networkFriends( ProfileScreenStrings().networkLabel, friendsList.length.toString(),
-              Icons.person_2_outlined),
-        ),
-
-        Positioned(
-          top: MediaQuery.of(context).size.height / 5.8,
-          left: MediaQuery.of(context).size.width / 1.45,
-          child: networkFriends(
-               ProfileScreenStrings().postsLabel, myPostList.length.toString(), Icons.post_add),
-        ),
-
-        Positioned(
-          top:  MediaQuery.of(context).size.height / 10,
-          left: MediaQuery.of(context).size.width / 2 - 40,
-          child: AvatarProfile(name: userName.value, width: 4.4, height: 10,background:userAvatarBackGround.value ?? defaultBackGround.value,flag: true,),
-          // child: GestureDetector(
-          //   // onTap: () => _pickImage(ImageSource.gallery, "profile"),
-          //   child: CircleAvatar(
-          //         radius: 50,
-          //         backgroundColor: Colors.transparent,
-          //         child: ClipOval(
-          //           child: SvgPicture.asset(
-          //             avaterUrlPath(userName.value),
-          //             width: 100,
-          //             height: 100,
-          //             fit: BoxFit.cover,
-          //           ),
-                  // ),
-                // ),
-            // child: CircleAvatar(
-            //   radius: 50,
-            //   // backgroundImage: AssetImage(avaterUrlPath(userName.value)),
-            //   child: Center(child: UserAvatar(url: avaterUrlPath(userAvatarProfile.value),height: 10,width: 10,)),
-            // ),
-          // ),
-        ),
-      ],
-    );
+        
+            ],
+           ),
+          );
+       
+    
   }
 
   Widget networkFriends(String network, String count, IconData icon) {
-    return Column(
-      children: [
-        Container(
-            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 14),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: AppColors.primaryColor, width: .5),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  icon,
-                  size: 20,
-                ),
-                textStyle(
-                    context: context,
-                    text: count.toString(),
-                    fontWeight: FontWeight.bold,
-                    fontsize: 12),
-              ],
-            )),
-        const SizedBox(
-          height: 5,
+    return Container(
+      width: MediaQuery.sizeOf(context).width/2.4,
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: AppColors.primaryColor, width: .5),
+          
         ),
-        textStyle(
-            context: context,
-            text: network.toString(),
-            fontWeight: FontWeight.w400,
-            fontsize: 12),
-      ],
-    );
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+           
+            textStyle(
+                context: context,
+                text: count.toString(),
+                fontWeight: FontWeight.w500,
+                c: AppColors.finSpaceColor,
+                fontsize: 16),
+                 const SizedBox(
+      width: 5,
+    ),
+                 textStyle(
+        context: context,
+        text: network.toString(),
+        fontWeight: FontWeight.w400,
+        c: AppColors.finSpaceColor,
+        fontsize: 16),
+          ],
+        ));
   }
 }

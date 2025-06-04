@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
-import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
 
 class TabBarUser extends StatelessWidget {
@@ -28,9 +28,9 @@ class TabBarUser extends StatelessWidget {
               //   color: AppColors.tab, // Background for selected tab
               //   borderRadius: BorderRadius.circular(12),
               // ),
-              labelColor: AppColors.primaryColor, // Text color for selected tab
+              labelColor: AppColors.finSpaceColor, // Text color for selected tab
               unselectedLabelColor:
-                  AppColors.bg1, // Text color for unselected tabs
+                  AppColors.grey, // Text color for unselected tabs
                indicatorSize: TabBarIndicatorSize.tab, // Indicator fills the tab
               tabs: [
                 Tab(
@@ -44,9 +44,11 @@ class TabBarUser extends StatelessWidget {
                           Colors.transparent, // No background when unselected
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Text('Aa',
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w500)),
+                   child: Text('Aa',
+                         style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w500,
+                           
+                          )),
                   ),
                 ),
                 
@@ -98,7 +100,7 @@ Widget feedWidgets(String type, {bool showOnlyImages = false}) {
     return GridView.builder(
       padding: EdgeInsets.zero,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // 3 images per row
+        crossAxisCount: 2, 
         crossAxisSpacing: 0,
         mainAxisSpacing: 0,
         
@@ -143,7 +145,7 @@ Widget feedWidgets(String type, {bool showOnlyImages = false}) {
               image: NetworkImage(item['image']),
               colorFilter: null,
               color: Colors.transparent,
-              border: Border.all(color: AppColors.grey),
+              border: Border.all(color: AppColors.grey.withOpacity(0.1)),
               margin: EdgeInsets.zero, // Ensure GFImageOverlay has no margin
               padding: EdgeInsets.zero,
             ),

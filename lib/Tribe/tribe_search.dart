@@ -5,11 +5,13 @@ import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends.dart";
+import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart";
 import "package:flutter_application_code_stakeplot/bottomNavigations.dart";
 import "package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart";
 import "package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart";
 import "package:flutter_application_code_stakeplot/loader.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart";
+import "package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart";
 import "package:get/get.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import 'package:http/http.dart' as http;
@@ -234,21 +236,25 @@ class _TribeSearchState extends State<TribeSearch> {
       ),
     );
   }
+Widget profileContainer(data) {
+  // Early return if critical fields are null
+  if (data['name'] == null || data['avatarType'] == null) {
+    return SizedBox.shrink(); // or return a placeholder widget
+  }
 
-  Widget profileContainer(data) {
-    if (data['name'] == null || data['avatarType'] == null) {}
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-      child: Center(
-          child: InkWell(
-        onTap: ()
-        {
-          
+  // Ensure non-null values with defaults
+  String name = data['name'] ?? "Unknown User";
+  String background = data['avatarBackGround'] ?? defaultBackGround.value ?? "#FFFFFF"; // Fallback to a default color
+
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+    child: Center(
+      child: InkWell(
+        onTap: () {
           getDis(data);
           getStatus(data);
           getConnections(data);
           showmodalWidget(data);
-
         },
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
@@ -257,22 +263,23 @@ class _TribeSearchState extends State<TribeSearch> {
             children: [
               Row(
                 children: [
-                 
-                  AvatarProfile(name: data['name'], width: 30, height: 13,background:data['avatarBackGround'] ?? defaultBackGround.value,),
-
-                  const SizedBox(
-                    width: 5,
+                  AvatarProfile(
+                    name: name,
+                    width: 30,
+                    height: 13,
+                    background: background,
                   ),
-
+                  const SizedBox(width: 5),
                   Container(
                     width: MediaQuery.of(context).size.width / 1.5,
-                    //  color: Colorcodes.black,
                     child: Text(
-                      (data['name'] ?? "name"),
-                      style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: AppColors.accentColor),
+                      name,
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: AppColors.accentColor,
+                      ),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -282,9 +289,60 @@ class _TribeSearchState extends State<TribeSearch> {
             ],
           ),
         ),
-      )),
-    );
-  }
+      ),
+    ),
+  );
+}
+  // Widget profileContainer(data) {
+  //   if (data['name'] == null || data['avatarType'] == null) {}
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+  //     child: Center(
+  //         child: InkWell(
+  //       onTap: ()
+  //       {
+          
+  //         getDis(data);
+  //         getStatus(data);
+  //         getConnections(data);
+  //         showmodalWidget(data);
+
+  //       },
+  //       child: Container(
+  //         padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+  //         width: MediaQuery.of(context).size.width,
+  //         child: Column(
+  //           children: [
+  //             Row(
+  //               children: [
+                 
+  //                 AvatarProfile(name: data['name'], width: 30, height: 13,background:data['avatarBackGround'] ?? defaultBackGround.value,),
+
+  //                 const SizedBox(
+  //                   width: 5,
+  //                 ),
+
+  //                 Container(
+  //                   width: MediaQuery.of(context).size.width / 1.5,
+  //                   //  color: Colorcodes.black,
+  //                   child: Text(
+  //                     (data['name'] ?? "name"),
+  //                     style: FontManager().getTextStyle(context,
+  //                         lWeight: FontWeight.bold,
+  //                         fontSize: 18,
+  //                         color: AppColors.accentColor),
+  //                     overflow: TextOverflow.ellipsis,
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //             Divider(),
+  //           ],
+  //         ),
+  //       ),
+  //     )),
+  //   );
+  // }
 
 
 void showmodalWidget(data){
@@ -368,16 +426,26 @@ void showmodalWidget(data){
                    ),
                  ),
 
-                 GestureDetector(
+                 Row(
+                   children: [
+                     GestureDetector(
                   onTap: (){
-                     Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CommunityUserProfile(data: data,ids:[],flag: true,),
-                      ),
-                    );
+                     
                   },
-                  child: getButton(context, "View Profile",AppColors.bg5,AppColors.primaryColor)),
+                  child: getButton(context, "chat",AppColors.bg5,AppColors.primaryColor)),
+                    //  GestureDetector(
+                    //   onTap: (){
+                    //      Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //         builder: (context) => CommunityUserProfile(data: data,ids:[],flag: true,),
+                    //       ),
+                    //     );
+                    //   },
+                    //   child: getButton(context, "View Profile",AppColors.bg5,AppColors.primaryColor)),
+                   ],
+                 ),
+                 
 
                      
 
