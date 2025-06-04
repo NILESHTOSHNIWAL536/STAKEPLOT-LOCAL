@@ -411,6 +411,8 @@ void getChatLoader(bool flag) async {
 
     chatList.clear();
     chatListOriginal.clear();
+    totalUnopenedMessages.value=0;
+    int count = 0;
     obj.forEach((element) {
       try {
         var userInfo = element['chats']['details']['_id'];
@@ -437,7 +439,7 @@ void getChatLoader(bool flag) async {
         } catch (e) {
           
         }
-
+       
         var data = {
           '_id': key,
           'name': name,
@@ -446,12 +448,22 @@ void getChatLoader(bool flag) async {
           'count': element['chats']['unseenCount'],
           'type': type,
         };
+       
+        count +=  int.parse(data['count'].toString());
         chatList.add(data);
         chatListOriginal.add(data);
-      } catch (e) {}
+      } catch (e) {
+
+          print("Error in chat loader: $e");
+      }
     });
 
+    totalUnopenedMessages.value=count;
+
   } else {}
+
+  
+
 }
 
 void addMessage(
@@ -548,25 +560,8 @@ Future<String> addImageToCloud2(imageFile) async {
 
 void addMessageImage(context, String messageType, String messageObj, String id,
     File imageFile, data, me, socket, myId, roomIdVal) async {
-  var urlChat = Uri.parse('${url}/chat/');
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
 
-  final url2 = Uri.parse('https://api.cloudinary.com/v1_1/deus5rcgl/upload');
-
-  final request = http.MultipartRequest('POST', url2)
-    ..fields['upload_preset'] = 'zu3td0li'
-    ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
-
-  final response2 = await request.send();
-
-  final responseData = await response2.stream.toBytes();
-
-  final responseString = String.fromCharCodes(responseData);
-
-  final jsonMap = jsonDecode(responseString);
-
-  String urlPath = jsonMap['secure_url'];
+  String urlPath = await addImageToCloud2(imageFile);  
 
   messages.insert(
       0,
@@ -577,16 +572,6 @@ void addMessageImage(context, String messageType, String messageObj, String id,
           image: urlPath.toString(),
           poll: id
         ));
-
-  // {
-//     "messageType": "image",
-//     "receiver": "66376959a9d930859de4695d",
-//     "message": null,
-//     "image": "www.image.com",
-//     "poll": null,
-//     "post" : null,
-//     "split" : null
-// }
 
   var imageJson = {
     "messageType": messageType,
@@ -601,48 +586,11 @@ void addMessageImage(context, String messageType, String messageObj, String id,
     'isMasked': ismaskedUsers.value,
   };
 
-  socket.emit("message", imageJson);
-
-  final response = await http.post(
-    Uri.parse('${urlChat}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-    body: jsonEncode({
-      "messageType": messageType,
-      "receiver": id,
-      "message": messageObj,
-      "image": urlPath,
-      "poll": id
-    }),
-  );
-
-  if (response.statusCode == 200 || response.statusCode == 201) {
-    messages.insert(
-        0,
-        Message(
-            text: messageObj,
-            isMe: true,
-            type: messageType,
-            image: urlPath.toString(),
-            poll: id));
-
-    // socket.emit("message", imageJson);
-
+    socket.emit("message", imageJson);
     socket.emit("LoadCharts", {
-      "roomId": data['name'] + "" + data['name'],
+        "roomId": data['name'] + "" + data['name'],
     });
 
-    // Navigator.pushReplacement(
-    //                   context,
-    //                   MaterialPageRoute(
-    //                     builder: (context) => Chat( data:data,myId:me ,),
-    //                   ),
-    //               );
-  } else {
-    // snackBarCalled(context, "payload limit increase pls, share image with less size",Colors.red);
-  }
 }
 
 void getChats2(data, key) async {
