@@ -101,11 +101,13 @@ class PostCard extends StatelessWidget {
                           child: Row(
                             children: [
                               
-                              AvatarProfile(name: dataObj["author"]['name'], width: 4, height: 10,background:dataObj["author"]['avatarBackGround'] ?? defaultBackGround.value,flag: false,),
+                              AvatarProfile(name:  (dataObj["author"]['maskedName'] ??
+                                    dataObj["author"]['name']), width: 4, height: 10,background:dataObj["author"]['avatarBackGround'] ?? defaultBackGround.value,flag: false,),
                             
                               const SizedBox(width: 2),
                               Text(
-                                (dataObj["author"]['name']),
+                                (dataObj["author"]['maskedName'] ??
+                                    dataObj["author"]['name']),
                                 style: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.w500,
                                     fontSize: 18,

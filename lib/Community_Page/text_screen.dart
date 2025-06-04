@@ -359,8 +359,8 @@ class _TextScreenState extends State<TextScreen> {
 
                         await createPost(
                           context,
-                          titleController.text,
-                          contentController.text,
+                          titleController.text.toString().trim(),
+                          contentController.text.toString().trim(),
                           croppedImageFile,
                         );
 
@@ -376,7 +376,7 @@ class _TextScreenState extends State<TextScreen> {
                       }
                             
                           } else {
-                            createPostWithOutImage(context, titleController.text, contentController.text);
+                            createPostWithOutImage(context, titleController.text.toString().trim(), contentController.text.toString().trim());
                           }
                         }
   }
