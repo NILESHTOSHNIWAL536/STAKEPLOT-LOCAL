@@ -58,7 +58,7 @@ class ProfileScreenStrings {
   String resetLabel = "Reset";
 
     // ✅ Field labels (for Friends List or similar screen)
-  String networkLabel = "Network";
+  String networkLabel = "Connections";
   String postsLabel = "Posts";
   String friendsListTitle = "Friends list";
   String searchHint = "Search...";
