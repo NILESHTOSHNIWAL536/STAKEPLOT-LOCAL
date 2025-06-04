@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -25,24 +26,44 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        bottomNavigationBar: SafeArea(child: BottomNavigations(data: 2)),
-      backgroundColor: AppColors.backgroundColor, 
+      bottomNavigationBar: SafeArea(child: BottomNavigations(data: 2)),
+      backgroundColor: AppColors.backgroundColor,
       body: SafeArea(
-        child: Column(
+        child: Stack(
+          clipBehavior: Clip.none, 
           children: [
-           
-            _buildHeader(),
-            Container(
-              color: AppColors.finSpaceColor,
-              child: Column(
-                children: [
-                  _buildProfileSection(),
-                  _buildMenuItems(),
-                ],
+            Column(
+              children: [
+                _buildHeader(),
+                
+                   Container(
+                    height: MediaQuery.sizeOf(context).height/1.24,
+                    color: const Color(0xFFC2C3D5),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 50), // Space for half of the avatar
+                        _buildMenuItems(),
+                      ],
+                    ),
+                  
+                ),
+              ],
+            ),
+            // Position the AvatarProfile to straddle the boundary
+            Positioned(
+              top: 16, // Adjust this value based on your header height
+              left: 0,
+              right: 0,
+              child: Center(
+                child: AvatarProfile(
+                  name: userName.value,
+                  width: 4.4,
+                  height: 10,
+                  background: userAvatarBackGround.value ?? defaultBackGround.value,
+                  flag: true,
+                ),
               ),
             ),
-           
-           
           ],
         ),
       ),
@@ -72,34 +93,8 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
   }
 
   Widget _buildProfileSection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20.0),
-      child: Stack(
-        children: [
-           AvatarProfile(name: userName.value, width: 4.4, height: 10,background:userAvatarBackGround.value ?? defaultBackGround.value,flag: true,),
-
-              
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: Container(
-              width: 32,
-              height: 32,
-              decoration: BoxDecoration(
-                color: const Color(0xFF4A4A68),
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: .1),
-              ),
-              child: const Icon(
-                Icons.edit,
-                color: Colors.white,
-                size: 16,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    return 
+           AvatarProfile(name: userName.value, width: 4.4, height: 10,background:userAvatarBackGround.value ?? defaultBackGround.value,flag: true);
   }
 
   Widget _buildMenuItems() {
@@ -116,7 +111,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
             const SizedBox(height: 12),
             _buildMenuItem('Message And Replies', hasToggle: true),
             const SizedBox(height: 12),
-            _buildMenuItem('Hide Chat'),
+            _buildMenuItem('Hide Chat', hasToggle: true),
           ],
         ),
       ),
@@ -143,11 +138,8 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
-            ),
+           style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w600, color: AppColors.bg1)
           ),
           if (hasArrow)
             const Icon(
