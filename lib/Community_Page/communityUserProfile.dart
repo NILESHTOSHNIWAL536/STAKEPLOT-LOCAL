@@ -182,7 +182,6 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
                 });
               },
               activeColor: const Color(0xFF4A4A68),
-              
               inactiveThumbColor: Colors.grey,
               inactiveTrackColor: Colors.grey.withOpacity(0.3),
             ),
