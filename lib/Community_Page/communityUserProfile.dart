@@ -16,8 +16,7 @@ class CommunityUserProfileScreen extends StatefulWidget {
 
 class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen> {
   bool _messageRepliesEnabled = true;
-  int _selectedNavIndex = 3; // Profile tab selected
-
+  
   @override
   void initState() {
     super.initState();
@@ -38,7 +37,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
                 _buildHeader(),
                 
                    Container(
-                    height: MediaQuery.sizeOf(context).height/1.24,
+                    height: MediaQuery.sizeOf(context).height/1.27,
                     color: const Color(0xFFC2C3D5),
                     child: Column(
                       children: [
@@ -52,7 +51,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
             ),
             // Position the AvatarProfile to straddle the boundary
             Positioned(
-              top: 16, // Adjust this value based on your header height
+              top: MediaQuery.sizeOf(context).height/18, // Adjust this value based on your header height
               left: 0,
               right: 0,
               child: Center(
@@ -75,20 +74,23 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
   Widget _buildHeader() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              child: const Icon(
-                Icons.arrow_back,
-                color: Colors.black,
-                size: 24,
+      child: Container(
+         height: MediaQuery.sizeOf(context).height/12,
+        child: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                child:  Icon(
+                  Icons.arrow_back,
+                  color: AppColors.grey,
+                  size: 24,
+                ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -135,8 +137,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
               child: _buildMenuItem('Update Interest', hasArrow: true)),
             const SizedBox(height: 12),
             _buildMenuItem('Message And Replies', hasToggle: true),
-            const SizedBox(height: 12),
-            _buildMenuItem('Hide Chat', hasToggle: true),
+           
           ],
         ),
       ),
@@ -174,7 +175,9 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
               color: Colors.grey,
             )
           else if (hasToggle)
-            Switch(
+            Transform.scale(
+  scale: 0.8,
+  child:Switch(
               value: _messageRepliesEnabled,
               onChanged: (value) {
                 setState(() {
@@ -184,7 +187,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
               activeColor: const Color(0xFF4A4A68),
               inactiveThumbColor: Colors.grey,
               inactiveTrackColor: Colors.grey.withOpacity(0.3),
-            ),
+            ),)
         ],
       ),
     );

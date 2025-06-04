@@ -31,7 +31,8 @@ class TabBarUser extends StatelessWidget {
               labelColor: AppColors.finSpaceColor, // Text color for selected tab
               unselectedLabelColor:
                   AppColors.grey, // Text color for unselected tabs
-               indicatorSize: TabBarIndicatorSize.tab, // Indicator fills the tab
+               indicatorSize: TabBarIndicatorSize.tab,
+               indicatorColor: AppColors.finSpaceColor, // Indicator fills the tab
               tabs: [
                 Tab(
                   child: AnimatedContainer(
@@ -70,7 +71,7 @@ class TabBarUser extends StatelessWidget {
           ),
           // const SizedBox(height: 10),
           SizedBox(
-            height: MediaQuery.of(context).size.height / 1.57,
+            height: MediaQuery.of(context).size.height / 1.46,
             child: TabBarView(
               children: [
                  Padding(
