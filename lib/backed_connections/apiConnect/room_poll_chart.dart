@@ -394,16 +394,8 @@ void updateRoom(
 }
 
 void getChatLoader(bool flag) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  final response = await http.get(
-    Uri.parse(url + '/chat/users/order/${flag}'),
-    // Uri.parse(url+'/chat/un/viewed'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
+
+  var response =await getDataApiCall(url + '/chat/users/order/${flag}');
   
   if (response.statusCode == 200 || response.statusCode == 201) {
     var his = jsonDecode(response.body);
@@ -530,13 +522,6 @@ void addChatSplitAmount(
   } catch (e) {}
 }
 
-// Future<String> addImageToCloud(imageFile)async
-// {
-
-//           String urlPath=jsonMap['secure_url'];
-
-//    return urlPath;
-// }
 
 Future<String> addImageToCloud2(imageFile) async {
   final url2 = Uri.parse('https://api.cloudinary.com/v1_1/deus5rcgl/upload');
