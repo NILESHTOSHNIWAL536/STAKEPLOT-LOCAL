@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
@@ -49,7 +50,7 @@ class _MobileNumberState extends State<MobileNumber> {
 
   late final WebViewController controller;
   final RxBool show = true.obs;
- 
+  final regex = RegExp(r'^[0-9]*$');
 
   @override
   void initState() {
@@ -156,9 +157,15 @@ FinvuStrings().finvuOtpMessage,
                     autocorrect: false,
                     enableSuggestions: false,
                     keyboardType: TextInputType.phone,
+                    inputFormatters:  [
+                      FilteringTextInputFormatter.allow(regex),
+                    ],
                     onChanged: (c){
                        loadConsentId.value=false;
                     },
+                    contextMenuBuilder: (context, editableTextState) {
+                          return Container(); // returns empty widget to disable menu
+                        },
                     decoration: InputDecoration(
                       
                       prefixIcon: const Icon(Icons.phone_android_outlined),
@@ -273,6 +280,8 @@ FinvuStrings().finvuOtpMessage,
       ),
     );
   }
+
+
 
   void click() {
     // Step 4: Reuse the initialized controller instead of creating a new one
