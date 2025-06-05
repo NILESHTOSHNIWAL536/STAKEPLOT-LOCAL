@@ -90,7 +90,8 @@ class FinvuStrings {
   String accountsSharedTitle = "Accounts Shared";
   String accountsSharedValue = "Account(s) are shared"; // Used with count
   String permissionValidity = "Permission Validity";
-  String frequencyOfAccess = "We can access your information one-time.";
+  String frequencyOfAccess = "Frequency of Access";
+  String frequencyOfAccessSubText = "We can access your information one-time.";
   String viewMoreDetails = "View More Details";
   String approvalRequestedOn = "Approval Requested on";
   String purpose = "Purpose";
@@ -190,6 +191,7 @@ class FinvuStrings {
         accountsSharedValue = data['accountsSharedValue'] ?? accountsSharedValue;
         permissionValidity = data['permissionValidity'] ?? permissionValidity;
         frequencyOfAccess = data['frequencyOfAccess'] ?? frequencyOfAccess;
+        frequencyOfAccessSubText=data['frequencyOfAccessSubText'] ?? frequencyOfAccessSubText;
         viewMoreDetails = data['viewMoreDetails'] ?? viewMoreDetails;
         approvalRequestedOn = data['approvalRequestedOn'] ?? approvalRequestedOn;
         purpose = data['purpose'] ?? purpose;

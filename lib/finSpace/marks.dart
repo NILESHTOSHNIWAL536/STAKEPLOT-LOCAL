@@ -5,12 +5,12 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/InterestSelectionScreen.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
-import 'package:flutter_svg/svg.dart';
 
 final TextEditingController maskNameController = TextEditingController();
 
 class MaskNameScreen extends StatefulWidget {
-  const MaskNameScreen({Key? key}) : super(key: key);
+  bool isupdate = false;
+   MaskNameScreen({Key? key,this. isupdate=false}) : super(key: key);
 
   @override
   State<MaskNameScreen> createState() => _MaskNameScreenState();
@@ -67,6 +67,7 @@ class _MaskNameScreenState extends State<MaskNameScreen> {
                         child: MaskNameFormWidget(
                           controller: maskNameController,
                           isSmallScreen: isSmallScreen,
+                          flag: widget.isupdate,
                         ),
                       ),
                     ),
@@ -115,10 +116,11 @@ class HeaderWidget extends StatelessWidget {
         TextButton(
           onPressed: () {
             // Handle skip action
-                Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => InterestSelectionScreen()),
-                      );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => InterestSelectionScreen()),
+            );
           },
           child: Text('Skip',
               style: FontManager2().getTextStyle(context,
@@ -170,11 +172,12 @@ class TitleWidget extends StatelessWidget {
 class MaskNameFormWidget extends StatefulWidget {
   final TextEditingController controller;
   final bool isSmallScreen;
-
-  const MaskNameFormWidget({
+  bool flag = false;
+  MaskNameFormWidget({
     Key? key,
     required this.controller,
     required this.isSmallScreen,
+    this.flag = false,
   }) : super(key: key);
 
   @override
@@ -281,7 +284,6 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
-       
         children: [
           // Avatar
           // CircleAvatar(
@@ -338,8 +340,8 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
           Padding(
             padding: const EdgeInsets.only(left: 40),
             child: Container(
-            //  color: Colors.amber,
-             width: screenSize.width /2.3,
+              //  color: Colors.amber,
+              width: screenSize.width / 2.3,
               child: TextField(
                 controller: widget.controller,
                 textAlign: TextAlign.center,
@@ -347,15 +349,19 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                 decoration: InputDecoration(
                   hintText: '',
                   hintStyle: FontManager2().getTextStyle(context,
-                      lWeight: FontWeight.w600, fontSize: 14, color: AppColors.bg1),
+                      lWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: AppColors.bg1),
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 0), 
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 10, horizontal: 0),
                   suffixIcon: Padding(
-                    padding: EdgeInsets.only(right: 4,bottom: 2),
+                    padding: EdgeInsets.only(right: 4, bottom: 2),
                     child: IconButton(
-                      icon: Icon(Icons.auto_fix_high, color: AppColors.finSpaceColor),
+                      icon: Icon(Icons.auto_fix_high,
+                          color: AppColors.finSpaceColor),
                       onPressed: () async {
                         await getMaskedNumber(context);
                       },
@@ -366,7 +372,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
             ),
           ),
 
-         const SizedBox(height: 6),
+          const SizedBox(height: 6),
 
           // Description text
           Text(
@@ -387,18 +393,13 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
 
           // Done button
           SizedBox(
-             width: MediaQuery.sizeOf(context).width/4,
+            width: MediaQuery.sizeOf(context).width / 4,
             child: ElevatedButton(
               onPressed: () {
                 // Handle done action
 
-                           var body={
-                                    "maskedName": maskNameController.text
-                                  };
-                 addMyIntreastAndName(context,body,true);
-                
-
-
+                var body = {"maskedName": maskNameController.text};
+                addMyIntreastAndName(context, body, true,widget.flag);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF4A4E69),

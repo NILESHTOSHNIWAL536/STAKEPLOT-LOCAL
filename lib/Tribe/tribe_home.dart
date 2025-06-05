@@ -24,7 +24,7 @@ RxInt indexFlag = 0.obs;
 RxBool isPost = false.obs;
 RxBool isPostTranding = false.obs;
 RxBool isTrending = false.obs;
-
+RxSet<String> savedPostIds = <String>{}.obs;
 Widget noFriend(context, [text = ""]) {
   return GestureDetector(
     onTap: () {
@@ -143,6 +143,35 @@ Widget vote(context, dataObj, data) {
                           color: AppColors.bg1),
                     ),
                   ),
+                  SizedBox(width: 10),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     savePostData(context, data);
+                  //   },
+                  //   child: Icon(Icons.save),
+                  // )
+                   // declare this in your StatefulWidget
+
+
+
+   Obx(() {
+     bool isSaved = savedPostIds.contains(dataObj['_id']);
+     return GestureDetector(
+       onTap: () {
+         if (isSaved) {
+           savedPostIds.remove(dataObj['_id']);
+         } else {
+           savedPostIds.add(dataObj['_id']);
+           savePostData(context, data);
+         }
+       },
+       child: Icon(
+         isSaved ? Icons.bookmark : Icons.bookmark_border,
+         color: isSaved ? Colors.blue : Colors.grey,
+       ),
+     );
+   }),
+
                 ],
               ),
             ),

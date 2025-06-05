@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/savedPosts.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
@@ -118,11 +119,11 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
             const SizedBox(height: 12),
             GestureDetector(
               onTap: (){
-      //             Navigator.push(
-      //    context,
-      //    MaterialPageRoute(
-      //        builder: (context) =>CommunityProfileScreen( id: currentId.value,)),
-      //  );
+                  Navigator.push(
+         context,
+         MaterialPageRoute(
+             builder: (context) =>SavedPostsScreen()),
+       );
 
               },
               child: _buildMenuItem('Saved', hasArrow: true)),

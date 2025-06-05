@@ -72,7 +72,7 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
                     child: UpdateTitleWidget(),
                   ),
                   // Categories List (filtered to exclude selected interests)
-                  GetListOfInterest(height: 0.55),
+                  GetListOfInterest(height: 0.5),
                   // Previously Selected Interests (now with deselection)
                   Padding(
                     padding: EdgeInsets.symmetric(
@@ -86,9 +86,8 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
                   ),
                   // Update Button
                   Obx(
-                    () => !isListEnabled.value
-                        ? SizedBox.shrink()
-                        : AnimatedContainer(
+                    () => 
+                     AnimatedContainer(
                             duration: const Duration(milliseconds: 300),
                             height: 70,
                             alignment: Alignment.topCenter,
@@ -101,13 +100,13 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
                                     ...selectedCategories
                                   ];
                                   // Update interestedTags
-                                  interestedTags.value = combinedList;
+                                 
                                   var body = {
                                     "interestedTags": combinedList,
                                   };
                                   // Call API to update interests
-                                  addMyIntreastAndName(context, body);
-                                  Get.back();
+                                  addMyIntreastAndName(context, body,false,true);
+                                 
                                 },
                               ),
                             ),
@@ -147,7 +146,7 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
   }
 }
 
-// Modified GetListOfInterest to use FilteredCategoriesListWidget
+
 class GetListOfInterest extends StatefulWidget {
   final double height;
   GetListOfInterest({Key? key, this.height = 0.63}) : super(key: key);
@@ -372,7 +371,7 @@ class UpdateButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: MediaQuery.sizeOf(context).width / 4,
+      width: MediaQuery.sizeOf(context).width / 2.8,
       height: 40,
       child: ElevatedButton(
         onPressed: onPressed,

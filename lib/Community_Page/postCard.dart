@@ -234,7 +234,7 @@ class PostCard extends StatelessWidget {
       
                               )
                         : SizedBox.shrink(),
-                    vote(context, dataObj, dataObj),
+                     vote(context, dataObj, dataObj),
                   ],
                 ),
               ),

@@ -70,9 +70,8 @@ class _CommunityState extends State<Community> {
                   padding: const EdgeInsets.only(top: 10),
                   child: _buildWelcomeRow(),
                 ),
-                Obx(() =>
-                    isTrending.value ? getTabs(context) : getTabs(context)),
-                Obx(() => isTrending.value ? getTranding() : getFeed())
+                Obx(() =>isTrending.value ? getTabs(context) : getTabs(context)),
+                 Obx(() => isTrending.value ? getTranding() : getFeed())
               ],
             ),
           ),

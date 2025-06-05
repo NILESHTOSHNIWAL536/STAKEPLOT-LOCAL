@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/marks.dart';
 
 class MaskedNameDialogBox {
@@ -60,9 +61,12 @@ class MaskedNameDialogBox {
           Row(
             children: [
                TextButton(
-                onPressed: () {   Navigator.push(
+                onPressed: () async{  
+                  await getMaskedNumber(context);
+                   Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => MaskNameScreen()),
+                        MaterialPageRoute(builder: (context) => MaskNameScreen(isupdate: true,)),
+                        
                       );},
                 child: const Text(
                   'Create ',

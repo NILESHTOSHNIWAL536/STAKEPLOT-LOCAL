@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -220,17 +222,72 @@ class TitleWidget extends StatelessWidget {
   }
 }
 
-class CategoriesListWidget extends StatelessWidget {
+
+class CategoriesListWidget extends StatefulWidget {
   final Function(String) onCategoryToggle;
   final Function(String) onSubCategoryToggle;
 
-   CategoriesListWidget({
+  const CategoriesListWidget({
     Key? key,
     required this.onCategoryToggle,
     required this.onSubCategoryToggle,
   }) : super(key: key);
 
- final Map<String, List<String>> categoriesInterest = FinspaceStrings().categories;
+  @override
+  _CategoriesListWidgetState createState() => _CategoriesListWidgetState();
+}
+
+class _CategoriesListWidgetState extends State<CategoriesListWidget>
+    with TickerProviderStateMixin {
+  final Map<String, List<String>> categoriesInterest = FinspaceStrings().categories;
+  late List<AnimationController> _controllers;
+  late List<Animation<Offset>> _animations;
+ 
+ @override
+  void initState() {
+    super.initState();
+    _controllers = categoriesInterest.keys.map((_) {
+      return AnimationController(
+        duration: const Duration(milliseconds: 1400), // Increased duration
+        vsync: this,
+      )..forward(); // Start animation immediately
+    }).toList();
+
+    _animations = categoriesInterest.keys.toList().asMap().entries.map((entry) {
+      final index = entry.key;
+      Offset beginOffset;
+      // Estimate rows (assuming 2 categories per row)
+      final totalCategories = categoriesInterest.keys.length;
+      final estimatedRows = (totalCategories / 2).ceil();
+      final rowIndex = (index / 2).floor(); // Which row this category is in
+
+      if (totalCategories % 2 == 1 && index == totalCategories - 1) {
+        // Single category in the last row
+        beginOffset = Offset(0, rowIndex % 2 == 0 ? -2 : 2); // Top or bottom, increased distance
+      } else if (estimatedRows >= 3 && rowIndex > 0 && rowIndex < estimatedRows - 1) {
+        // Middle rows: alternate top/bottom per category
+        beginOffset = Offset(0, index % 2 == 0 ? -2 : 2); // Top for even index, bottom for odd
+      } else {
+        // First and last rows: left/right
+        beginOffset = index % 2 == 0 ? Offset(-2, 0) : Offset(2, 0); // Increased distance
+      }
+
+      return Tween<Offset>(
+        begin: beginOffset,
+        end: Offset.zero,
+      ).animate(CurvedAnimation(
+        parent: _controllers[index],
+        curve: Curves.easeOutCubic,
+      ));
+    }).toList();
+  }
+  @override
+  void dispose() {
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -240,52 +297,54 @@ class CategoriesListWidget extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.05),
         child: Wrap(
-          spacing:
-              screenSize.width * 0.015, // Further reduced horizontal spacing
-          runSpacing:
-              screenSize.height * 0.005, // Further reduced vertical spacing
-          alignment: WrapAlignment.start, // Align to start for brick-like effect
-          children: categoriesInterest.keys.map((category) {
+          spacing: screenSize.width * 0.015,
+          runSpacing: screenSize.height * 0.005,
+          alignment: WrapAlignment.start,
+          children: categoriesInterest.keys.toList().asMap().entries.map((entry) {
+            final index = entry.key;
+            final category = entry.value;
             final subCategories = categoriesInterest[category] ?? [];
             final isSelected = selectedCategories.contains(category);
             final hasSubCategories = subCategories.isNotEmpty;
 
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Main Category Chip
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  margin: const EdgeInsets.symmetric(
-                      vertical: 1), // Minimal vertical margin
-                  child: CategoryChip(
-                    label: category,
-                    isSelected: isSelected,
-                    onTap: () => onCategoryToggle(category),
-                    isSubCategory: false,
-                  ),
-                ),
-                // Subcategories (if main category is selected)
-                if (isSelected && hasSubCategories)
+            return SlideTransition(
+              position: _animations[index],
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Main Category Chip
                   AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    margin: const EdgeInsets.only(bottom: 2),
-                    child: Wrap(
-                      alignment: WrapAlignment.start,
-                      spacing: screenSize.width * 0.015,
-                      runSpacing: screenSize.height * 0.005,
-                      children: subCategories.map((subCategory) {
-                        final isSubSelected = selectedSubCategories.contains(subCategory);
-                        return CategoryChip(
-                          label: subCategory,
-                          isSelected: isSubSelected,
-                          onTap: () => onSubCategoryToggle(subCategory),
-                          isSubCategory: true,
-                        );
-                      }).toList(),
+                    duration: const Duration(milliseconds: 200),
+                    margin: const EdgeInsets.symmetric(vertical: 1),
+                    child: CategoryChip(
+                      label: category,
+                      isSelected: isSelected,
+                      onTap: () => widget.onCategoryToggle(category),
+                      isSubCategory: false,
                     ),
                   ),
-              ],
+                  // Subcategories (if main category is selected)
+                  if (isSelected && hasSubCategories)
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      margin: const EdgeInsets.only(bottom: 2),
+                      child: Wrap(
+                        alignment: WrapAlignment.start,
+                        spacing: screenSize.width * 0.015,
+                        runSpacing: screenSize.height * 0.005,
+                        children: subCategories.map((subCategory) {
+                          final isSubSelected = selectedSubCategories.contains(subCategory);
+                          return CategoryChip(
+                            label: subCategory,
+                            isSelected: isSubSelected,
+                            onTap: () => widget.onSubCategoryToggle(subCategory),
+                            isSubCategory: true,
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                ],
+              ),
             );
           }).toList(),
         ),
@@ -293,7 +352,6 @@ class CategoriesListWidget extends StatelessWidget {
     );
   }
 }
-
 class CategoryChip extends StatelessWidget {
   final String label;
   final bool isSelected;
@@ -372,10 +430,10 @@ class DoneButtonWidget extends StatelessWidget {
         ),
         child: Text(
           'Done',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+           style:FontManager2().getTextStyle(context,
+                      lWeight: FontWeight.w500,
+                      fontSize: 16,
+                      color:  AppColors.backgroundColor)
         ),
       ),
     );

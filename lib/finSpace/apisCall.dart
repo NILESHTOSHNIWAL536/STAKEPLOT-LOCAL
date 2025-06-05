@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -10,47 +9,51 @@ import 'package:get/get.dart';
 RxSet<String> selectedCategories = <String>{}.obs;
 RxSet<String> selectedSubCategories = <String>{}.obs;
 RxBool isListEnabled = false.obs;
-Future<void> getMaskedNumber(BuildContext context) async
-{
-   maskNameController.clear();
-    var response = await getDataApiCall("${url}/user/maskedName"); 
-    printData(response);  
-    if(getFlagOfResponse(response)){
-         var body=jsonDecode(response.body);
-         print(body);
-         if(body['data']!=null)
-         {
-           maskNameController.text=body['data'];
-         }
-         else
-         {
-           maskNameController.text="";
-         }
+Future<void> getMaskedNumber(BuildContext context) async {
+  maskNameController.clear();
+  var response = await getDataApiCall("${url}/user/maskedName");
+  printData(response);
+  if (getFlagOfResponse(response)) {
+    var body = jsonDecode(response.body);
+    print(body);
+    if (body['data'] != null) {
+      maskNameController.text = body['data'];
+    } else {
+      maskNameController.text = "";
     }
+  }
 }
 
-
-Future<void> addMyIntreastAndName(BuildContext context,var body,[bool falg=false]) async
-{
-
-  try{
-  var response =await updateDataApiCall2("${url}/user/", body);
-  printData(response);
-  if (getFlagOfResponse(response))
-  {
-      selectedSubCategories.clear();
-      selectedCategories.clear();
-      if(flag)
-      {
-         Navigator.pushNamed(context, '/interestScreen');
+Future<void> addMyIntreastAndName(BuildContext context, var body,
+    [bool falg = false, bool ifFromUpdate = false]) async {
+  try {
+    var response = await updateDataApiCall2("${url}/user/", body);
+    printData(response);
+    if (getFlagOfResponse(response)) {
+      if (falg) {
+        maskedName.value = maskNameController.text;
+        if(ifFromUpdate){
+             Navigator.pop(context);
+             Navigator.pop(context);
+        }else Navigator.pushNamed(context, '/interestScreen');
+        return;
+      } else {
+        interestedTags.clear();
+        interestedTags
+            .addAll([...selectedSubCategories, ...selectedCategories]);
+        selectedSubCategories.clear();
+        selectedCategories.clear();
       }
-  }
-  
-  }catch(e) {
+      if (ifFromUpdate) {
+        Navigator.pop(context);
+        return;
+      }
+    }
+  } catch (e) {
     print("Error fetching bank accounts: $e");
   }
 
-  Navigator.of(context).pushNamedAndRemoveUntil('/interestScreen', (Route<dynamic> route) => false);
+  Navigator.of(context).pushNamedAndRemoveUntil(
+      '/interestScreen', (Route<dynamic> route) => false);
   Navigator.pushNamed(context, '/post');
- 
 }

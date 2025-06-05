@@ -7,17 +7,12 @@ final ScrollController scrollControllerPost = ScrollController();
 final RxList displayedData = [].obs;
 final int itemsPerLoad = 10;
 
-
-
-class LazyLoadingList extends StatefulWidget 
-{
+class LazyLoadingList extends StatefulWidget {
   @override
   _LazyLoadingListState createState() => _LazyLoadingListState();
 }
 
 class _LazyLoadingListState extends State<LazyLoadingList> {
- 
-
   @override
   void initState() {
     super.initState();
@@ -26,45 +21,55 @@ class _LazyLoadingListState extends State<LazyLoadingList> {
     scrollControllerPost.addListener(_onScroll);
   }
 
- 
-
   void _onScroll() {
-    if (scrollControllerPost.position.pixels >= scrollControllerPost.position.maxScrollExtent * 0.9) {
+    if (scrollControllerPost.position.pixels >=
+        scrollControllerPost.position.maxScrollExtent * 0.9) {
       _loadMoreData();
     }
   }
 
   void _loadMoreData() {
     if (displayedData.length < getTrendingData.length) {
-      int nextItems = (displayedData.length + itemsPerLoad).clamp(0, getTrendingData.length);
-      displayedData.addAll(getTrendingData.sublist(displayedData.length, nextItems));
+      int nextItems = (displayedData.length + itemsPerLoad)
+          .clamp(0, getTrendingData.length);
+      displayedData
+          .addAll(getTrendingData.sublist(displayedData.length, nextItems));
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Obx(() => Container(
-      width: MediaQuery.of(context).size.width,
-      child: ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: displayedData.length,
-              itemBuilder: (context, index) {
-                return   Obx(()=> ( postData[displayedData[index]['_id']] ??false) ?   PostCard(data: displayedData[index],index: index,) :PostCard(data: displayedData[index],index: index,));
-              },
-            ),
-    ));
+          width: MediaQuery.of(context).size.width,
+          child: ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: displayedData.length,
+            itemBuilder: (context, index) {
+              print(
+                  'Building PostCard for index:${postData[displayedData[index]['_id']]}');
+              return Obx(() => (postData[displayedData[index]['_id']] ?? false)
+                  ? PostCard(
+                      data: displayedData[index],
+                      index: index,
+                    )
+                  : PostCard(
+                      data: displayedData[index],
+                      index: index,
+                      
+                    ));
+            },
+          ),
+        ));
   }
 }
 
- void loadInitialData()
- {
-    displayedData.addAll(getTrendingData.take(itemsPerLoad).toList()); // Load first batch
- }
-
+void loadInitialData() {
+  displayedData
+      .addAll(getTrendingData.take(itemsPerLoad).toList()); // Load first batch
+}
 
 void resetAndLoadData() {
-  displayedData.clear();  
-  loadInitialData(); 
+  displayedData.clear();
+  loadInitialData();
 }

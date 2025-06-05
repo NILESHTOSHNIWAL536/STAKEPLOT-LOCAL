@@ -67,6 +67,7 @@ Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2) {
                   value: 1,
                   child: getTextMenuItem(context: context, text: "Report"),
                 ),
+                
               ];
       },
     );
