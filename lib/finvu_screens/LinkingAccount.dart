@@ -80,6 +80,12 @@ class _LinkingAccountState extends State<LinkingAccount> {
   }
 
   @override
+  void dispose() {
+    otpController.dispose(); // Add this
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;

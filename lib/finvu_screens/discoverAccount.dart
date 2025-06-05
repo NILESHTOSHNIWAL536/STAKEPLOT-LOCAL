@@ -37,6 +37,12 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
     getFetch.value = false;
   }
 
+  @override
+  void dispose() {
+    search.dispose(); // Add this
+    super.dispose();
+  }
+
   void getData() async {
     fipDis = await finvuManager.fipsAllFIPOptions();
     fipDisOrginal.clear();

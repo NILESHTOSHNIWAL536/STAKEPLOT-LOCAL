@@ -1,9 +1,13 @@
 
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
+import 'package:flutter_application_code_stakeplot/OneSignal/invalidUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
@@ -19,6 +23,7 @@ import 'package:get/get.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+
 
 
 DateTime? _lastSent;
@@ -154,7 +159,7 @@ void onPostDataCallWebSocket(data,context){
 
 
 
-void checkFirebase() async {
+void checkFirebaseAndValidUser() async {
    WidgetsFlutterBinding.ensureInitialized();
   try {
     await Firebase.initializeApp(
@@ -177,8 +182,66 @@ void checkFirebase() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]).then((_) {
-    runApp(MyApp());
+      checkIsUserValid();
   });
+}
+
+
+
+Future<void> checkIsUserValid() async {
+  try {
+
+    if(kDebugMode){
+         return runApp(const MyApp());
+    }
+
+    final isFromPlayStore = await InstallationChecker.isInstalledFromPlayStore();
+    if (isFromPlayStore) {
+      debugPrint('✅ App installed from official source');
+      runApp(const MyApp());
+    } else {
+        debugPrint('⚠️ App not installed from official source');
+        runApp( UnverifiedApp());
+    }
+  } catch (e) {
+    debugPrint('Error in security check: $e');
+    runApp(const MyApp());
+  }
+}
+
+
+class InstallationChecker {
+  static Future<bool> isInstalledFromPlayStore() async {
+    if (!Platform.isAndroid) {
+      return true; // iOS apps are generally from App Store
+    }
+
+    try {
+      final deviceInfo = DeviceInfoPlugin();
+      final androidInfo = await deviceInfo.androidInfo;
+      
+      // Method 1: Check installer package name (if available)
+      final installer = androidInfo.systemFeatures;
+      if (installer.any((feature) => feature.contains('com.android.vending'))) {
+        return true;
+      }
+      
+      // Method 2: Check for Google Play Services
+      final hasPlayServices = androidInfo.systemFeatures.any(
+        (feature) => feature.contains('com.google.android.gms')
+      );
+      
+      // Method 3: Check device characteristics
+      final isOfficialDevice = androidInfo.isPhysicalDevice && 
+                              !androidInfo.brand.toLowerCase().contains('generic');
+      
+      return hasPlayServices && isOfficialDevice;
+      
+    } catch (e) {
+      debugPrint('Error checking installation source: $e');
+      return false; // Assume not from Play Store if we can't verify
+    }
+  }
 }
 
 

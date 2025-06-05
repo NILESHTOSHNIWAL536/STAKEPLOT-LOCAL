@@ -20,6 +20,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
+import 'package:uuid/uuid.dart';
 
 RxBool loadConsentId=false.obs;
 RxBool isOtpWrong = false.obs;
@@ -47,7 +48,7 @@ class _MobileNumberState extends State<MobileNumber> {
   final String termsUrl = "https://finvu.in/terms"; // Replace with actual URL
 
   late final WebViewController controller;
-  
+  final RxBool show = true.obs;
  
 
   @override
@@ -147,15 +148,19 @@ FinvuStrings().finvuOtpMessage,
                     ),
                   ),
                   // TextField for entering phone number
-                  TextFormField(
-                    controller: _phoneController, // Attach the controller
+                Obx(()=>  TextFormField(
+                    controller: _phoneController,
                     maxLength: 10,
-                    autocorrect: true,
-                    keyboardType: TextInputType.phone, // Phone input keyboard
+                    obscureText: show.value, 
+                    enableInteractiveSelection: false, 
+                    autocorrect: false,
+                    enableSuggestions: false,
+                    keyboardType: TextInputType.phone,
                     onChanged: (c){
                        loadConsentId.value=false;
                     },
                     decoration: InputDecoration(
+                      
                       prefixIcon: const Icon(Icons.phone_android_outlined),
                       prefixIconColor: AppColors.primaryColor,
                       hintText: FinvuStrings().enter10DigitNumber,
@@ -171,7 +176,18 @@ FinvuStrings().finvuOtpMessage,
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide.none,
                       ),
-
+                      suffixIcon:  Obx(() => GestureDetector(
+                                  onTap: () {
+                                    show.value = !show.value;
+                                  },
+                                  child: Icon(
+                                    !show.value
+                                        ? Icons.visibility_outlined
+                                        : Icons.visibility_off_outlined,
+                                    color: AppColors.primaryColor,
+                                  ))))
+                                  
+    
                       //prefixIcon: Icon(Icons.phone),
                       //hintText: 'Mobile Number',
                     ),
@@ -187,7 +203,10 @@ FinvuStrings().finvuOtpMessage,
                         snackBarCalled(context,SnackbarData().enterValidMobile, Colorcodes.red);
                         return;
                       }
-                      ;
+
+                      // final uuid = Uuid();
+                      // handleId.value = uuid.v4();
+
                       String phoneNumber = _phoneController.text;
                       number.value = phoneNumber;
 

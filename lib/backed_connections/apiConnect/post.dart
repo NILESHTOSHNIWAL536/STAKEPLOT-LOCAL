@@ -208,12 +208,13 @@ void getTranding() async {
 }
 
 void savePostData(context, data) async {
+
   var urlPath = "${url}/post/save";
   var body = {"postId": data['_id']};
-
   var response = await postDataApiCall(urlPath, body);
 
-  if (getFlagOfResponse(response)) {
+  if (getFlagOfResponse(response))
+  {
     snackBarCalled(context,SnackbarData().postSavedSuccessfully);
   } else {
     snackBarCalled(context,SnackbarData().failedToSavePost, Colors.red);

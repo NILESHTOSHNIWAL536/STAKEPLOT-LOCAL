@@ -14,7 +14,7 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main()async {
   Get.put(UserController());
-  checkFirebase();
+  checkFirebaseAndValidUser();
 }
 
 
