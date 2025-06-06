@@ -10,8 +10,8 @@ import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 bool flag = true;
-String portNo = flag ? "192.168.1.4" : "localhost";
-String urlWithLocallHost = flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
+String portNo = flag ? "192.168.1.37" : "localhost";
+String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Fields";
 RxString expenses = "Loading".obs;
@@ -58,6 +58,7 @@ RxList userPostList = [].obs;
 RxList savedList = [].obs;
 RxList myPostList = [].obs;
 RxList friendsList = [].obs;
+RxList MaskedFriendsList = [].obs;
 
 RxList chatList = [].obs;
 RxList chatListOriginal = [].obs;

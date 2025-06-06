@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/NavigatorScreens/userNavigator.dart';
+import 'package:flutter_application_code_stakeplot/Profile/friends.dart';
 import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
@@ -186,6 +187,21 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                 ProfileScreenStrings().friendsListSubLabel, // Direct access
                                 onTap: () {
                                   Navigator.pushNamed(context, '/Friends');
+                                },
+                              ),
+                              Divider(),
+                              _buildOption(
+                                ProfileImage(url: ProfileIcons.friends),
+                                ProfileScreenStrings().friendsListLabelMasked, // Direct access
+                                ProfileScreenStrings().friendsListSubLabelMasked, // Direct access
+                                onTap: () {
+
+                                  Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>Friends(isMasked: true,),
+                            ),
+                          );
                                 },
                               ),
                             ],

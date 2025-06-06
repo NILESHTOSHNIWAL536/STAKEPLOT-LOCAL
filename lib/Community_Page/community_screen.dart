@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/explore_screen.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/maskedNameDialogbox.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postloadTranding.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/NavigatorScreens/userNavigator.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
+import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
@@ -18,12 +20,14 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:flutter_application_code_stakeplot/Community_Page/poll_screen.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/image_screen.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:page_transition/page_transition.dart';
 
 class Community extends StatefulWidget {
   const Community({Key? key}) : super(key: key);
@@ -54,7 +58,7 @@ class _CommunityState extends State<Community> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Obx(()=> isTrending.value?SizedBox.shrink() :  maskedName.value.trim().isEmpty ? SizedBox.shrink():PostImage()),
+      floatingActionButton: Obx(()=> isTrending.value?SizedBox.shrink() :PostImage()),
       bottomNavigationBar: SafeArea(child: BottomNavigations(data: 2)),
       body: SafeArea(
         child: Container(
@@ -69,9 +73,8 @@ class _CommunityState extends State<Community> {
                   padding: const EdgeInsets.only(top: 10),
                   child: _buildWelcomeRow(),
                 ),
-                Obx(() =>
-                    isTrending.value ? getTabs(context) : getTabs(context)),
-                Obx(() => isTrending.value ? getTranding() : getFeed())
+                Obx(() =>isTrending.value ? getTabs(context) : getTabs(context)),
+                 Obx(() => isTrending.value ? getTranding() : getFeed())
               ],
             ),
           ),
@@ -122,14 +125,15 @@ class _CommunityState extends State<Community> {
       ),
       child: Material(
         color: Colors
-            .transparent, // Transparent to allow Container's color to show
+            .transparent,
         borderRadius:
-            BorderRadius.circular(16), // Match Container's border radius
+            BorderRadius.circular(16),
         child: InkWell(
-          borderRadius: BorderRadius.circular(16), // Match for ripple effect
+          borderRadius: BorderRadius.circular(16), 
           onTap: () async {
-            await showModal(
-                {}); // Ensure showModal is defined and handles UI appropriately
+            maskedName.value.trim().isEmpty ?MaskedNameDialogBox.showMaskedNameDialog(context)
+            :await showModal(
+                {});
           },
           splashColor: Colors.white.withOpacity(0.3), // Visual feedback on tap
           child: Center(
@@ -245,7 +249,8 @@ class _CommunityState extends State<Community> {
                   children: [
                     InkWell(
                       onTap: () {
-                        Navigator.pushNamed(context, '/TribeChats');
+                         ismaskedUsers.value=true;
+                         Navigator.pushNamed(context, '/TribeChats');
                       },
                       child: AvatarProfileImage(
                         url: LikeComment.message,
@@ -289,7 +294,19 @@ class _CommunityState extends State<Community> {
                 tag: "TribeSearch",
                 child: InkWell(
                   onTap: () {
-                    Navigator.pushNamed(context, '/TribeSearch');
+              // Navigator.pushNamed(context, '/TribeSearch');
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      type: PageTransitionType.bottomToTop,
+                      alignment: Alignment.bottomCenter,
+                      duration: const Duration(milliseconds: 2000), // Increase duration
+                      curve: Curves.easeInOut, // Smooth transition
+                      child: TribeSearch(isMasked: true,),
+                      isIos: true,
+                    ),
+                  );
+
                   },
                   child: Container(
                     width: MediaQuery.sizeOf(context).width / 1.1,

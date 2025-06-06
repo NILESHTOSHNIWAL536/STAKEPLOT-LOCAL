@@ -17,6 +17,7 @@ class ProfileScreenStrings {
   String editProfileLabel = "Edit";
   String communityProfileLabel = "Community profile";
   String friendsListLabel = "Friends list";
+  String friendsListLabelMasked = "Masked list";
   String historyArchivesLabel = "History archives";
   String termsConditionsLabel = "Terms & conditions";
   String logoutLabel = "Log out";
@@ -25,6 +26,7 @@ class ProfileScreenStrings {
   // ✅ Sublabels
   String communityProfileSubLabel = "Check your community profile";
   String friendsListSubLabel = "Check your friends list here";
+  String friendsListSubLabelMasked = "Check your Masked list here";
   String historyArchivesSubLabel = "Find your hidden history here";
   String termsConditionsSubLabel = "Please follow our terms and conditions";
   String logoutSubLabel = "You can login and log out from your account";
@@ -61,6 +63,7 @@ class ProfileScreenStrings {
   String networkLabel = "Connections";
   String postsLabel = "Posts";
   String friendsListTitle = "Friends list";
+  String friendsListTitleMaked = "Masked Friends list";
   String searchHint = "Search...";
 
   Future<bool> fetchConstants() async {
@@ -109,6 +112,7 @@ class ProfileScreenStrings {
         networkLabel = data['networkLabel'] ?? networkLabel;
         postsLabel = data['postsLabel'] ?? postsLabel;
         friendsListTitle = data['friendsListTitle'] ?? friendsListTitle;
+        friendsListTitleMaked = data['friendsListTitleMaked'] ?? friendsListTitleMaked;
         searchHint = data['searchHint'] ?? searchHint;
         return true;
       } else {

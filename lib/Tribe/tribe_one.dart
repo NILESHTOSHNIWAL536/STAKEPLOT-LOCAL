@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
+import "package:flutter_application_code_stakeplot/Community_Page/maskedNameDialogbox.dart";
 import "package:flutter_application_code_stakeplot/Community_Page/postCard.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
@@ -40,7 +41,6 @@ class _TribeHomeState extends State<TribeUnique> {
   List historyListData = [];
   List commentListData = [];
   List postList = [];
- 
 
   RxList<Comments> commentList = <Comments>[].obs;
   RxList<int> indexArray = <int>[].obs;
@@ -68,7 +68,8 @@ class _TribeHomeState extends State<TribeUnique> {
       String postName, String name) async {
     if (data == "") {
       FocusScope.of(context).requestFocus(_replyFocusNode);
-      snackBarCalled(context,SnackbarData().emptyCommentNotAllowed, Colors.red);
+      snackBarCalled(
+          context, SnackbarData().emptyCommentNotAllowed, Colors.red);
       return;
     }
 
@@ -115,9 +116,10 @@ class _TribeHomeState extends State<TribeUnique> {
       var id = body['data']['_id'];
       obj.sId = id;
       postCount[id] = 0;
-      snackBarCalled(context,SnackbarData().commentAddedSuccessfully, Colors.black);
+      snackBarCalled(
+          context, SnackbarData().commentAddedSuccessfully, Colors.black);
     } else {
-      snackBarCalled(context,SnackbarData().unableToAddComment, Colors.red);
+      snackBarCalled(context, SnackbarData().unableToAddComment, Colors.red);
     }
   }
 
@@ -125,7 +127,7 @@ class _TribeHomeState extends State<TribeUnique> {
   void initState() {
     super.initState();
     dataObj = widget.dataObj;
-    uniquePostDeatils= widget.dataObj;
+    uniquePostDeatils = widget.dataObj;
     getpost(widget.id);
     getTransactionComments();
     getInfo();
@@ -205,7 +207,7 @@ class _TribeHomeState extends State<TribeUnique> {
         Comments obj = Comments.fromJson(e);
         indexArray.add(i);
         i++;
-       
+
         commentList.add(obj);
       });
     } else {}
@@ -247,14 +249,17 @@ class _TribeHomeState extends State<TribeUnique> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-               
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child:Obx(()=> PostCard(data: reloadUniquePost.value? uniquePostDeatils:uniquePostDeatils, flag: true,index: -1,)),
+                  child: Obx(() => PostCard(
+                        data: reloadUniquePost.value
+                            ? uniquePostDeatils
+                            : uniquePostDeatils,
+                        flag: true,
+                        index: -1,
+                      )),
                 ),
-
                 uploadData(uniquePostDeatils),
-
                 SizedBox(
                   height: 100,
                 ),
@@ -431,38 +436,47 @@ class _TribeHomeState extends State<TribeUnique> {
                                     children: [
                                       GestureDetector(
                                           onTap: () {
-                                            upvote2(
-                                                context,
-                                                "Comment",
-                                                data.sId!,
-                                                data,
-                                                historyListData,
-                                                data,
-                                                index);
-
-                                            String l1 = "liked" + idData;
-                                            bool liked = likedList.contains(l1);
-
-                                            String l2 = "disliked" + idData;
-                                            bool disliked =
-                                                likedList.contains(l2);
-                                            // upvoteGlobal(context,"Post",dataObj["_id"],dataObj);
-                                            // likedList.remove("liked"+dataObj["_id"])  :likedList.add("liked"+dataObj["_id"]);
-
-                                            if (liked) {
-                                              likedList.remove(l1);
-                                              postCount[idData] =
-                                                  postCount[idData]! - 1;
-                                              if (postCount[idData]! < 0) {
-                                                postCount[idData] = 0;
-                                              }
+                                            if (maskedName.value
+                                                .trim()
+                                                .isEmpty) {
+                                              MaskedNameDialogBox
+                                                  .showMaskedNameDialog(
+                                                      context);
                                             } else {
-                                              likedList.add(l1);
-                                              postCount[idData] =
-                                                  postCount[idData]! + 1;
+                                              upvote2(
+                                                  context,
+                                                  "Comment",
+                                                  data.sId!,
+                                                  data,
+                                                  historyListData,
+                                                  data,
+                                                  index);
+
+                                              String l1 = "liked" + idData;
+                                              bool liked =
+                                                  likedList.contains(l1);
+
+                                              String l2 = "disliked" + idData;
+                                              bool disliked =
+                                                  likedList.contains(l2);
+                                              // upvoteGlobal(context,"Post",dataObj["_id"],dataObj);
+                                              // likedList.remove("liked"+dataObj["_id"])  :likedList.add("liked"+dataObj["_id"]);
+
+                                              if (liked) {
+                                                likedList.remove(l1);
+                                                postCount[idData] =
+                                                    postCount[idData]! - 1;
+                                                if (postCount[idData]! < 0) {
+                                                  postCount[idData] = 0;
+                                                }
+                                              } else {
+                                                likedList.add(l1);
+                                                postCount[idData] =
+                                                    postCount[idData]! + 1;
+                                              }
+                                              likedList.remove(l2);
+                                              reRender.value = !reRender.value;
                                             }
-                                            likedList.remove(l2);
-                                            reRender.value = !reRender.value;
                                           },
                                           // child: const Icon(
                                           //   Icons.arrow_drop_up_outlined,
@@ -500,7 +514,6 @@ class _TribeHomeState extends State<TribeUnique> {
                                                 fontSize: 20,
                                                 color: Colors.black)),
                                       ),
-                                      
                                     ],
                                   ),
                                 ),
@@ -555,12 +568,10 @@ class _TribeHomeState extends State<TribeUnique> {
         ));
   }
 
-
   Widget InputDate(lableText, keyBoard, TextEditingController Textcontroller,
       String postId) {
     return Center(
       child: Container(
-       
         width: MediaQuery.of(context).size.width / 1.1,
         child: Center(
           child: TextField(
@@ -569,12 +580,21 @@ class _TribeHomeState extends State<TribeUnique> {
             autofocus: true,
             controller: Textcontroller,
             onSubmitted: (value) {
-              addComment(context, value, postId, widget.dataObj['author']['id'],
-                  widget.dataObj['title'], name);
-              postCommentCount.putIfAbsent(
-                  postId, () => widget.dataObj["comments"] ?? 0);
-              postCommentCount.update(postId, (value) => value + 1);
-              Textcontroller.clear();
+              if (maskedName.value.trim().isEmpty) {
+                MaskedNameDialogBox.showMaskedNameDialog(context);
+              } else {
+                addComment(
+                    context,
+                    value,
+                    postId,
+                    widget.dataObj['author']['id'],
+                    widget.dataObj['title'],
+                    name);
+                postCommentCount.putIfAbsent(
+                    postId, () => widget.dataObj["comments"] ?? 0);
+                postCommentCount.update(postId, (value) => value + 1);
+                Textcontroller.clear();
+              }
             },
             decoration: InputDecoration(
               filled: true,
@@ -659,14 +679,18 @@ class _TribeHomeState extends State<TribeUnique> {
   Widget suffixcomment(TextEditingController Textcontroller, postId) {
     return GestureDetector(
       onTap: () {
-        String value = Textcontroller.text;
+        if (maskedName.value.trim().isEmpty) {
+          MaskedNameDialogBox.showMaskedNameDialog(context);
+        } else {
+          String value = Textcontroller.text;
 
-              addComment(context, value, postId, widget.dataObj['author']['id'],
-                  widget.dataObj['title'], name);
-              postCommentCount.putIfAbsent(
-                  postId, () => widget.dataObj["comments"] ?? 0);
-              postCommentCount.update(postId, (value) => value + 1);
-              Textcontroller.clear();
+          addComment(context, value, postId, widget.dataObj['author']['id'],
+              widget.dataObj['title'], name);
+          postCommentCount.putIfAbsent(
+              postId, () => widget.dataObj["comments"] ?? 0);
+          postCommentCount.update(postId, (value) => value + 1);
+          Textcontroller.clear();
+        }
       },
       child: Container(
         height: 10,
@@ -741,8 +765,6 @@ class _TribeHomeState extends State<TribeUnique> {
     );
   }
 
- 
-
   void upvote2(context, String str, String objectId, dataObj, historyListData2,
       Comments commentObj, int index) async {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
@@ -768,13 +790,10 @@ class _TribeHomeState extends State<TribeUnique> {
 
       setState(() {
         if (flag) {
-         
           boolVar.value = !boolVar.value;
           commentList[index].upvotes = commentList[index].upvotes! + 1;
           postListIds.add(objectId);
-          
         } else {
-         
           boolVar.value = !boolVar.value;
           commentList[index].upvotes = commentList[index].upvotes! - 1;
           postListIds.remove(objectId);
@@ -783,50 +802,41 @@ class _TribeHomeState extends State<TribeUnique> {
 
       commentList.add(dataObj);
       commentList.removeLast();
-     
     } else {
-      snackBarCalled(context,SnackbarData().errorLikingComment, Colors.red);
+      snackBarCalled(context, SnackbarData().errorLikingComment, Colors.red);
     }
   }
-
- 
-
 
   void reply(value, commentId, Textcontroller) {
-    if (value == "") {
-      FocusScope.of(context).requestFocus(_replyNode);
-      snackBarCalled(context,SnackbarData().emptyReplyNotAllowed, Colors.red);
-      return;
-    }
+    if (maskedName.value.trim().isEmpty) {
+      MaskedNameDialogBox.showMaskedNameDialog(context);
+    } else {
+      if (value == "") {
+        FocusScope.of(context).requestFocus(_replyNode);
+        snackBarCalled(
+            context, SnackbarData().emptyReplyNotAllowed, Colors.red);
+        return;
+      }
 
-    if (commentId == "") return;
-    addReply(context, value, commentId);
-    replyid = "";
-    Replies rep = Replies();
-    rep.commentId = replyid;
-    rep.replyText = value;
-    Author author = Author();
-    author.name = name;
-    author.id = name;
-    author.avatar = userAvatar;
-    author.name = userName.value;
-    author.avatar = avatar.value;
-    author.avatarBackGround = userAvatarBackGround.value;
-    //  author.avatar=avatar;
-    rep.author = author;
-    commentObj.replies!.add(rep);
-    Textcontroller.clear();
-    autofocus.value = false;
-    setState(() {});
+      if (commentId == "") return;
+      addReply(context, value, commentId);
+      replyid = "";
+      Replies rep = Replies();
+      rep.commentId = replyid;
+      rep.replyText = value;
+      Author author = Author();
+      author.name = name;
+      author.id = name;
+      author.avatar = userAvatar;
+      author.name = userName.value;
+      author.avatar = avatar.value;
+      author.avatarBackGround = userAvatarBackGround.value;
+      //  author.avatar=avatar;
+      rep.author = author;
+      commentObj.replies!.add(rep);
+      Textcontroller.clear();
+      autofocus.value = false;
+      setState(() {});
+    }
   }
 }
-
-
-
-
-
-
-
-
-
- 

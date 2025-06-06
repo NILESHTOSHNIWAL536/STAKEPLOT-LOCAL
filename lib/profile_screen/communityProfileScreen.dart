@@ -65,8 +65,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
              
               Column(
                 children: [
-                 
-                          const SizedBox(height: 10),
+                 const SizedBox(height: 10),
                       TabBarUser(userPostList: myPostList)
                 ],
               ),
@@ -79,63 +78,6 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
   }
 
  
-  // Widget topUserProfile() {
-  //   return Stack(
-  //     clipBehavior: Clip.none,
-  //     children: [
-        
-      
-  //       GestureDetector(
-  //         onTap: () {
-  //           // Add the action to be triggered on tap, like picking an image
-  //         },
-  //         child: Container(
-  //           height: MediaQuery.of(context).size.height / 6.7,
-  //           // height: 200,
-  //           decoration: BoxDecoration(
-  //             color: Colors.lightBlueAccent,
-  //             image: _coverImage != null
-  //                 ? DecorationImage(
-  //                     image: FileImage(_coverImage!),
-  //                     fit: BoxFit.cover,
-  //                   )
-  //                 : _networkImageUrl != null && _networkImageUrl.isNotEmpty
-  //                     ? DecorationImage(
-  //                         image: NetworkImage(_networkImageUrl),
-  //                         fit: BoxFit.cover,
-  //                       )
-  //                     : const DecorationImage(
-  //                         image: AssetImage(
-  //                             'assets/cover_placeholder.jpg'), // Default placeholder asset
-  //                         fit: BoxFit.cover,
-  //                       ),
-  //           ),
-  //         ),
-  //       ),
-
-  //       Positioned(
-  //         top:  MediaQuery.of(context).size.height / 5.8,
-  //         left: MediaQuery.of(context).size.width / 6.7,
-  //         child: networkFriends( ProfileScreenStrings().networkLabel, friendsList.length.toString(),
-  //             Icons.person_2_outlined),
-  //       ),
-
-  //       Positioned(
-  //         top: MediaQuery.of(context).size.height / 5.8,
-  //         left: MediaQuery.of(context).size.width / 1.45,
-  //         child: networkFriends(
-  //              ProfileScreenStrings().postsLabel, myPostList.length.toString(), Icons.post_add),
-  //       ),
-
-  //       Positioned(
-  //         top:  MediaQuery.of(context).size.height / 10,
-  //         left: MediaQuery.of(context).size.width / 2 - 40,
-  //         child: AvatarProfile(name: userName.value, width: 4.4, height: 10,background:userAvatarBackGround.value ?? defaultBackGround.value,flag: true,),
-         
-  //       ),
-  //     ],
-  //   );
-  // }
  Widget topUserProfile() {
     return 
          Container(

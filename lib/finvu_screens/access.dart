@@ -144,7 +144,7 @@ class _AccessState extends State<Access> {
                 "${seletedAccountIds.length} ${FinvuStrings().accountsSharedValue}",
                 Icons.account_balance_wallet_outlined),
             accounts(FinvuStrings().permissionValidity, range, Icons.date_range_rounded), // Direct access
-            accounts(FinvuStrings().frequencyOfAccess, FinvuStrings().frequencyOfAccess, Icons.access_time), // Direct access
+            accounts(FinvuStrings().frequencyOfAccess, FinvuStrings().frequencyOfAccessSubText, Icons.access_time), // Direct access
             getInfomationsAboutUserConsnt(),
           ],
         ),

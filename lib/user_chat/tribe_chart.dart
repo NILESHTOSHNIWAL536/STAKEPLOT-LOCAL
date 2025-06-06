@@ -53,8 +53,8 @@ class _TribeSearchState extends State<TribeChats> {
     super.initState();
     getUserInfomations();
     totalUnopenedMessages.value=0;
-    ismaskedUsers.value = false;
-    getChatLoader(false);
+    // ismaskedUsers.value = false;
+    getChatLoader(ismaskedUsers.value);
     getTransactions();
     getChatsSplitAccounts(context, myId);
     socket = IO.io(urlWithLocallHost,IO.OptionBuilder().setTransports(['websocket']).enableForceNewConnection().build());
@@ -139,7 +139,7 @@ class _TribeSearchState extends State<TribeChats> {
           automaticallyImplyLeading: true,
           backgroundColor: AppColors.appIcon,
           titleSpacing: 0,
-          toolbarHeight: chatSplitAccount.isNotEmpty ? 140 : 100,
+          toolbarHeight: chatSplitAccount.isNotEmpty && !ismaskedUsers.value ? 140 : 100,
           leading: InkWell(
             onTap: () {
               Navigator.pop(context);
@@ -176,15 +176,15 @@ class _TribeSearchState extends State<TribeChats> {
                   ),
                 )),
                 
-                const SizedBox(height: 8),
-                chatSplitAccount.isNotEmpty
+                 SizedBox(height:ismaskedUsers.value ?0: 8),
+                chatSplitAccount.isNotEmpty && !ismaskedUsers.value
                     ? SizedBox(
                         height: 40,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: chatSplitAccount?.length ??0, 
+                          itemCount: chatSplitAccount.length, 
                           itemBuilder: (context, index) {
-                            var friend = chatSplitAccount?[index]; 
+                            var friend = chatSplitAccount[index]; 
                             if (friend == null) {
                               return const SizedBox.shrink(); 
                             }
@@ -241,8 +241,7 @@ class _TribeSearchState extends State<TribeChats> {
               const SizedBox(
                 height: 16,
               ),
-              Obx(()=>  ismaskedUsers.value? getTabs(context): getTabs(context) ),
-
+              // Obx(()=>  ismaskedUsers.value? getTabs(context): getTabs(context) ),
               Obx(() => reloadCharts.value ? getChatList( ) : getChatList()),
             ],
           ),

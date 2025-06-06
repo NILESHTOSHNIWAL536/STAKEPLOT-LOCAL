@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/untaggedcards.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
@@ -12,7 +13,6 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'colors.dart';
 import 'package:get/get.dart';
-
 
 RxInt selectedIndex = (-1).obs;
 RxList<ChartData> chartData = <ChartData>[].obs;
@@ -39,8 +39,6 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
     catWidgetBindUpdate();
   }
 
- 
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -52,7 +50,7 @@ class _DoughnutChartExampleState extends State<DoughnutChartExample> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                 HomepageStringsDart().spendingsOnCategories,
+                HomepageStringsDart().spendingsOnCategories,
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.bold,
@@ -184,14 +182,28 @@ class CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        searchController.text = category.toLowerCase();
-        onChanedAutoTransactionStatus(context);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => TransactionHistoryScreen(),
-          ),
-        );
+        if (category.toLowerCase() == 'untagged' ||
+            category.toLowerCase() == 'uncategorized' ){
+          // Navigate to UntaggedTransactionScreen
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => UntaggedTransactionScreen(
+                selectedTransaction:
+                    null, // You can pass specific transaction data here
+              ),
+            ),
+          );
+        } else {
+          searchController.text = category.toLowerCase();
+          onChanedAutoTransactionStatus(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TransactionHistoryScreen(),
+            ),
+          );
+        }
       },
       child: Container(
         height: MediaQuery.sizeOf(context).height / 5,
@@ -317,7 +329,7 @@ class AllCategoriesPage extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-         HomepageStringsDart().allCategories,
+          HomepageStringsDart().allCategories,
           style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.bold,

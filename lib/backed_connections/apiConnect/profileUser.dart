@@ -198,7 +198,9 @@ void getUserInfomations() async {
     // savedList.addAll(data['saved'] );
 
     friendsList.clear();
+    MaskedFriendsList.clear();
     friendsList.addAll(obj['friendsList']);
+    MaskedFriendsList.addAll(obj['maskedConnections']);
 
     friendsList.forEach((element) {
       friendsListDetails[element['_id']] = {

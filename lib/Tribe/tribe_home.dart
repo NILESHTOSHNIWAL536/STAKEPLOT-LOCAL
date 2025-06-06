@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
+import 'package:flutter_application_code_stakeplot/Community_Page/maskedNameDialogbox.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/resportHide.dart';
+import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_share.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
@@ -16,19 +18,28 @@ import "package:flutter_application_code_stakeplot/colorcodes.dart";
 import 'package:http/http.dart' as http;
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 
-
 List postListIds = [];
 bool findData = true;
 bool findTranding = true;
 RxInt indexFlag = 0.obs;
-RxBool  isPost = false.obs;
-RxBool  isPostTranding = false.obs;
-RxBool  isTrending = false.obs;
-
-Widget noFriend(context, [text = ""]) {
+RxBool isPost = false.obs;
+RxBool isPostTranding = false.obs;
+RxBool isTrending = false.obs;
+RxSet<String> savedPostIds = <String>{}.obs;
+Widget noFriend(context,[text = "",bool isMasked=false,]) {
   return GestureDetector(
     onTap: () {
-      Navigator.pushNamed(context, "/TribeSearch");
+                if( friendsList.isEmpty)
+                        {
+                          if(isMasked){
+                             Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>TribeSearch(isMasked: true,),
+                            ),
+                          );
+                          }else Navigator.pushNamed(context, '/TribeSearch');
+                        }
     },
     child: Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
@@ -70,7 +81,7 @@ Widget popUpBox(id, context) {
           },
         );
       } else {
-        reportPost(context, id, "hide post","hide",0);
+        reportPost(context, id, "hide post", "hide", 0);
       }
     },
     itemBuilder: (context) {
@@ -103,24 +114,28 @@ Widget vote(context, dataObj, data) {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      String likeKey = "liked" + dataObj["_id"];
-                      bool isLiked = likedList.contains(likeKey);
-
-                      // Toggle like status
-                      if (isLiked) {
-                        likedList.remove(likeKey);
-                        postCount[idData] = postCount[idData]! - 1;
-                        if (postCount[idData]! < 0) {
-                          postCount[idData] = 0;
-                        }
+                      if (maskedName.value.trim().isEmpty) {
+                        MaskedNameDialogBox.showMaskedNameDialog(context);
                       } else {
-                        likedList.add(likeKey);
-                        postCount[idData] = postCount[idData]! + 1;
-                      }
+                        String likeKey = "liked" + dataObj["_id"];
+                        bool isLiked = likedList.contains(likeKey);
 
-                      // Update the server with new vote status
-                      upvoteGlobal(context, "Post", dataObj["_id"], dataObj);
-                      reRender.value = !reRender.value;
+                        // Toggle like status
+                        if (isLiked) {
+                          likedList.remove(likeKey);
+                          postCount[idData] = postCount[idData]! - 1;
+                          if (postCount[idData]! < 0) {
+                            postCount[idData] = 0;
+                          }
+                        } else {
+                          likedList.add(likeKey);
+                          postCount[idData] = postCount[idData]! + 1;
+                        }
+
+                        // Update the server with new vote status
+                        upvoteGlobal(context, "Post", dataObj["_id"], dataObj);
+                        reRender.value = !reRender.value;
+                      }
                     },
                     child: likeIcon(
                         context, likedList.contains("liked" + dataObj["_id"])),
@@ -139,6 +154,35 @@ Widget vote(context, dataObj, data) {
                           color: AppColors.bg1),
                     ),
                   ),
+                  SizedBox(width: 10),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     savePostData(context, data);
+                  //   },
+                  //   child: Icon(Icons.save),
+                  // )
+                   // declare this in your StatefulWidget
+
+
+
+   Obx(() {
+     bool isSaved = savedPostIds.contains(dataObj['_id']);
+     return GestureDetector(
+       onTap: () {
+         if (isSaved) {
+           savedPostIds.remove(dataObj['_id']);
+         } else {
+           savedPostIds.add(dataObj['_id']);
+           savePostData(context, data);
+         }
+       },
+       child: Icon(
+         isSaved ? Icons.bookmark : Icons.bookmark_border,
+         color: isSaved ? Colors.blue : Colors.grey,
+       ),
+     );
+   }),
+
                 ],
               ),
             ),
@@ -175,13 +219,17 @@ Widget vote(context, dataObj, data) {
                   Container(
                     child: InkWell(
                       onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          backgroundColor: AppColors.backgroundColor,
-                          builder: (context) {
-                            return TribeShare(data: data, dataObj: dataObj);
-                          },
-                        );
+                        if (maskedName.value.trim().isEmpty) {
+                          MaskedNameDialogBox.showMaskedNameDialog(context);
+                        } else {
+                          showModalBottomSheet(
+                            context: context,
+                            backgroundColor: AppColors.backgroundColor,
+                            builder: (context) {
+                              return TribeShare(data: data, dataObj: dataObj);
+                            },
+                          );
+                        }
                       },
                       child: SvgPicture.asset(
                         LikeComment.share,
@@ -202,7 +250,7 @@ Widget vote(context, dataObj, data) {
 Widget likeIcon(BuildContext context, bool isLiked) {
   return AnimatedContainer(
     width: 50,
-   // color: Colors.green,
+    // color: Colors.green,
     duration: const Duration(milliseconds: 300), // Animation duration
     curve: Curves.easeInOut, // Animation curve
     height: isLiked ? 24 : 22, // Change height on like

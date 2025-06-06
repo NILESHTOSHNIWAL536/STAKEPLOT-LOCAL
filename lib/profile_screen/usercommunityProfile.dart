@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -10,22 +11,19 @@ import 'package:flutter_application_code_stakeplot/profile_screen/tabBarUser.dar
 import 'package:get/get.dart';
 import 'dart:io';
 
-
 class CommunityUserProfile extends StatefulWidget {
-   final data;
+  final data;
   final List ids;
   bool flag = false;
   CommunityUserProfile(
       {Key? key, required this.data, required this.ids, this.flag = false})
       : super(key: key);
 
-
   @override
   State<CommunityUserProfile> createState() => _CommunityProfileScreenState();
 }
 
 class _CommunityProfileScreenState extends State<CommunityUserProfile> {
-
   TextEditingController about = TextEditingController();
   String dataReport = "";
   List getTrendingData = [];
@@ -38,83 +36,74 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
   RxInt score = 0.obs;
   RxBool fl = false.obs;
   RxBool reload = false.obs;
-  RxString buttonValue="Add".obs;
-  RxString frdRequest="Friend Request not sent before".obs;
-  RxString frdRequestCheck="Friend Request not sent before".obs;
+  RxString buttonValue = "Add".obs;
+  RxString frdRequest = "Friend Request not sent before".obs;
+  RxString frdRequestCheck = "Friend Request not sent before".obs;
   File? _coverImage;
 
-  
-  String _networkImageUrl = "https://static.vecteezy.com/system/resources/thumbnails/045/713/367/small_2x/aesthetic-leaves-on-a-dark-background-free-photo.jpg"; // This can be dynamically set
-
-
+  String _networkImageUrl =
+      "https://static.vecteezy.com/system/resources/thumbnails/045/713/367/small_2x/aesthetic-leaves-on-a-dark-background-free-photo.jpg"; // This can be dynamically set
 
   @override
   void initState() {
-      getDis();
-      getStatus();
-      getConnections();
+    getDis();
+    getStatus();
+    getConnections();
   }
 
   void getDis() async {
-   
-    
-    var response=await getDataApiCall('${url}/post/userDiscussions/${widget.data['_id']}');
-    
-    if (getFlagOfResponse(response))
-     {
+    var response = await getDataApiCall(
+        '${url}/post/userDiscussions/${widget.data['_id']}');
+
+    if (getFlagOfResponse(response)) {
       var his = jsonDecode(response.body);
       var obj = his['data'];
-       
-       setState(() {
+     
+
+      setState(() {
         getTrendingData = obj;
         findData = false;
-       });
+      });
       getuerPost.clear();
       getuerPost.addAll(obj);
       getTrendingData.forEach((element) {
         postCount[element["_id"]] =
             element['upvotes'] < 0 ? 0 : element['upvotes'];
       });
-   
     } else {}
   }
 
   void getConnections() async {
-  
-    var response= await getDataApiCall(
-        '${url}/user/connections/${widget.data['_id']}');
+    var response =
+        await getDataApiCall('${url}/user/connections/${widget.data['_id']}');
 
-     if (getFlagOfResponse(response)){
+    if (getFlagOfResponse(response)) {
       var his = jsonDecode(response.body);
-      
-       count.value = his['data']['connections'];
-       score.value = his['data']['score'];
-      
+
+      count.value = his['data']['connections'];
+      score.value = his['data']['score'];
     } else {}
   }
+
   void getStatus() async {
-  
-    var response=await postDataApiCallwithOutSharedPref("${url}/user/friend/acceptRequestStatus", {
-      'userName':widget.data['name'],
-      'friendUserId':widget.data['_id'],
+    var response = await postDataApiCallwithOutSharedPref(
+        "${url}/user/friend/acceptRequestStatus", {
+      'userName': widget.data['name'],
+      'friendUserId': widget.data['_id'],
     });
 
     if (getFlagOfResponse(response)) {
       var his = jsonDecode(response.body);
-       frdRequestCheck.value=his['data'];
-        if(frdRequestCheck.value=="Friend Request already sent"){
-                    buttonValue.value="Requested";
-        }
-        else if(frdRequestCheck.value=="Friend Request not sent before"){
-                    buttonValue.value="Add";
-        }
-        else if(frdRequestCheck.value=="User is already your friend")
-        {
-                    buttonValue.value="Remove";
-        }else{
-             buttonValue.value="Accept";
-        }
-      
+      frdRequestCheck.value = his['data'];
+      if (frdRequestCheck.value == "Friend Request already sent") {
+        buttonValue.value = "Requested";
+      } else if (frdRequestCheck.value == "Friend Request not sent before") {
+        buttonValue.value = "Add";
+      } else if (frdRequestCheck.value == "User is already your friend") {
+        buttonValue.value = "Remove";
+      } else {
+        buttonValue.value = "Accept";
+      }
     } else {}
   }
 
@@ -131,19 +120,20 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
             children: [
               // Top Cover and Profile Picture
               topUserProfile(widget.data),
-             
-              const SizedBox(height: 60),
-              
-              Text(widget.data['name'].toString(),
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.w600,
-                      //fontSize: MediaQuery.of(context).size.width * 0.04,
-                      //fontSize: 12,
-                      color: AppColors.bg1)),
-            const SizedBox(height: 10),
-              
-             TabBarUser(userPostList: getTrendingData),
-             
+
+              // Text(widget.data['name'].toString(),
+              //     style: FontManager().getTextStyle(context,
+              //         lWeight: FontWeight.w600,
+              //         //fontSize: MediaQuery.of(context).size.width * 0.04,
+              //         //fontSize: 12,
+              //         color: AppColors.bg1)),
+
+              Column(
+                children: [
+                  const SizedBox(height: 10),
+                  TabBarUser(userPostList: getTrendingData)
+                ],
+              ),
             ],
           ),
         ),
@@ -151,92 +141,70 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
     );
   }
 
-
-  Widget topUserProfile(data){
-    //  String avatar= data['avatarType'] !=null ? data['avatarType']
-    // :data['avatar']!=null?data['avatar']:userAvatar;
-
-     return  Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  // Positioned button to edit cover image
-                  
-                  GestureDetector(
-                    onTap: () {
-                      // Add the action to be triggered on tap, like picking an image
-                    },
-                    child: Container(
-                      height: MediaQuery.of(context).size.height/6,
-                      // height: 200,
-                      decoration: BoxDecoration(
-                        color: Colors.lightBlueAccent,
-                        image: _coverImage != null
-                            ? DecorationImage(
-                                image: FileImage(_coverImage!),
-                                fit: BoxFit.cover,
-                              )
-                            : _networkImageUrl != null &&
-                                    _networkImageUrl.isNotEmpty
-                                ? DecorationImage(
-                                    image: NetworkImage(_networkImageUrl),
-                                    fit: BoxFit.cover,
-                                  )
-                                : const DecorationImage(
-                                    image: AssetImage(
-                                        'assets/cover_placeholder.jpg'), // Default placeholder asset
-                                    fit: BoxFit.cover,
-                                  ),
-                      ),
-                    ),
-                  ),
-
-                  Positioned(
-                    top: 140,
-                    left:  MediaQuery.of(context).size.width /6.7,
-                    child: networkFriends("Network",count.toString(),Icons.person_2_outlined),
-                  ),
-
-                  Positioned(
-                    top: 140,
-                    left: MediaQuery.of(context).size.width / 1.45,
-                    child: networkFriends("Posts",getTrendingData.length.toString(),Icons.post_add),
-                  ),
-                  
-                  Positioned(
-                    top: 90,
-                    left: MediaQuery.of(context).size.width / 2 - 40,
-                    child: AvatarProfile(name: data['name'], width: 5, height: 10,background:data['avatarBackGround'] ?? defaultBackGround.value,flag: true,),
-                
-                  ),
-                ],
-              );
+ 
+  Widget topUserProfile(data) {
+    return Container(
+      height: MediaQuery.of(context).size.height / 5.4,
+      // height: 200,
+      child: Column(
+        children: [
+          AvatarProfile(
+            name: data['name'],
+            width: 5,
+            height: 10,
+            background: data['avatarBackGround'] ?? defaultBackGround.value,
+            flag: true,
+          ),
+          Text(widget.data['name'].toString(),
+              style: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.w600, color: AppColors.bg1)),
+          SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                networkFriends(ProfileScreenStrings().postsLabel,
+                    getTrendingData.length.toString(), Icons.post_add),
+                networkFriends(ProfileScreenStrings().networkLabel,
+                    count.toString(), Icons.person_2_outlined),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
-
-
-
-  Widget networkFriends(String network,String count,IconData icon){
-      return Column(
-        children: [
-          Container(
-              padding: EdgeInsets.symmetric(vertical: 5,horizontal: 14),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                      color: AppColors.primaryColor,
-                      width: .5
-                  ),
-              ),
-              child:Row(
-                children: [
-                   Icon(icon,size: 20,),
-                   textStyle(context: context,text: count.toString(),fontWeight: FontWeight.bold,fontsize: 12),
-                ],
-              )  
-          ),
-          const SizedBox(height: 5,),
-          textStyle(context: context,text: network.toString(),fontWeight: FontWeight.w400,fontsize: 12),
-        ],
-      );
+  Widget networkFriends(String network, String count, IconData icon) {
+    return Container(
+        width: MediaQuery.sizeOf(context).width / 2.4,
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: AppColors.primaryColor, width: .5),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            textStyle(
+                context: context,
+                text: count.toString(),
+                fontWeight: FontWeight.w500,
+                c: AppColors.finSpaceColor,
+                fontsize: 16),
+            const SizedBox(
+              width: 5,
+            ),
+            textStyle(
+                context: context,
+                text: network.toString(),
+                fontWeight: FontWeight.w400,
+                c: AppColors.finSpaceColor,
+                fontsize: 16),
+          ],
+        ));
   }
 }

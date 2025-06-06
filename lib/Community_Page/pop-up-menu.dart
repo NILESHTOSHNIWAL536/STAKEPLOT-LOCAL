@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/maskedNameDialogbox.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/resportHide.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
@@ -8,7 +9,7 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 
 Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2) {
-   
+     
     return PopupMenuButton(
       initialValue: 2,
       color: Colorcodes.white,
@@ -66,6 +67,7 @@ Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2) {
                   value: 1,
                   child: getTextMenuItem(context: context, text: "Report"),
                 ),
+                
               ];
       },
     );

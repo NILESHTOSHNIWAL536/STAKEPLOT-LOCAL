@@ -26,9 +26,10 @@ void deletePost(id, context) async {
   if (getFlagOfResponse(responce)) {
     snackBarCalled(context, "Deleted Post");
   } else {
-    snackBarCalled(context,SnackbarData().errorWhileDeletingPost);
+    snackBarCalled(context, SnackbarData().errorWhileDeletingPost);
   }
 }
+
 Future<String> postImageToCloud(imageFile, context) async {
   try {
     final url2 = Uri.parse('https://api.cloudinary.com/v1_1/deus5rcgl/upload');
@@ -40,7 +41,7 @@ Future<String> postImageToCloud(imageFile, context) async {
     final response2 = await request.send();
 
     if (response2.statusCode != 200) {
-      snackBarCalled(context,SnackbarData().imageUploadFailed, Colors.red);
+      snackBarCalled(context, SnackbarData().imageUploadFailed, Colors.red);
       return 'Image upload failed';
     }
 
@@ -54,23 +55,21 @@ Future<String> postImageToCloud(imageFile, context) async {
   }
 }
 
-void reportPost(context, String id, String spam, String type,int index) async {
-  var response = await postDataApiCall('${url}/user/report/${type}/$id', {'reason': spam});
-  
-  if (getFlagOfResponse(response)){
-   
+void reportPost(context, String id, String spam, String type, int index) async {
+  var response =
+      await postDataApiCall('${url}/user/report/${type}/$id', {'reason': spam});
+
+  if (getFlagOfResponse(response)) {
     snackBarCalled(
         context,
         spam == "hide post"
             ? SnackbarData().postHidden
             : SnackbarData().reportedSuccessfully,
-        Colors.green
-      );
+        Colors.green);
 
-    if(index>-1)clearPostReportHide(index);
-
+    if (index > -1) clearPostReportHide(index);
   } else {
-    snackBarCalled(context,SnackbarData().errorWhileReporting, Colors.red);
+    snackBarCalled(context, SnackbarData().errorWhileReporting, Colors.red);
   }
   // getPost();
 }
@@ -79,8 +78,8 @@ Future<Map<String, dynamic>> createPost(BuildContext context, String title,
     String description, File imageFile) async {
   try {
     String urlPath = await addImageToCloud2(imageFile);
-     final TagList = [...selectedSubCategories, ...selectedCategories];
-     
+    final TagList = [...selectedSubCategories, ...selectedCategories];
+
     var body = {
       'title': title,
       'description': {'message': description},
@@ -96,7 +95,7 @@ Future<Map<String, dynamic>> createPost(BuildContext context, String title,
     var response = await postDataApiCall(apiCall, body);
     print(response.body);
     if (getFlagOfResponse(response)) {
-       clearInterest();
+      clearInterest();
       var postData = jsonDecode(response.body);
       uploadRefreshCall(postData, context);
       return {
@@ -104,27 +103,26 @@ Future<Map<String, dynamic>> createPost(BuildContext context, String title,
         'data': postData,
       };
     } else {
-      snackBarCalled( context, "Server error: ${response.statusCode}", Colors.red);
+      snackBarCalled(
+          context, "Server error: ${response.statusCode}", Colors.red);
       return {
         'success': false,
         'error': 'Server error: ${response.statusCode}',
       };
     }
   } catch (e) {
-     clearInterest();
-    snackBarCalled(context,SnackbarData().errorCreatingPost, Colors.red);
+    clearInterest();
+    snackBarCalled(context, SnackbarData().errorCreatingPost, Colors.red);
     return {
       'success': false,
       'error': e.toString(),
     };
   }
- 
-
 }
 
 void createPostWithOutImage(context, String title, String description) async {
   var urlPath = '${url}/post/withOutImage';
-   final TagList = [...selectedSubCategories, ...selectedCategories];
+  final TagList = [...selectedSubCategories, ...selectedCategories];
   var body = {
     'title': title,
     'description': {
@@ -133,7 +131,6 @@ void createPostWithOutImage(context, String title, String description) async {
     'isPoll': false,
     'tag': TagList
   };
- 
 
   var response = await postDataApiCall(urlPath, body);
 
@@ -142,7 +139,7 @@ void createPostWithOutImage(context, String title, String description) async {
     uploadRefreshCall(his, context);
   } else {}
   clearInterest();
-   Navigator.pop(context);
+  Navigator.pop(context);
 }
 
 void createPollOfCommunity(context, String title, String description) async {
@@ -168,20 +165,17 @@ void createPollOfCommunity(context, String title, String description) async {
   postDis.value = false;
 }
 
-
-
 void getPost() async {
   var response = await getDataApiCall('${url}/post/feed/1');
   if (getFlagOfResponse(response)) {
-   
-    var his = jsonDecode(response.body); 
+    var his = jsonDecode(response.body);
     var obj = his['data'];
     historyListData.clear();
     historyListData.addAll(obj);
     getTrendingData.clear();
     getTrendingData.addAll(obj);
-    historyListData.forEach((element){
-      postData[element["_id"]]=true;
+    historyListData.forEach((element) {
+      postData[element["_id"]] = true;
       postCount[element["_id"]] = element['upvotes'];
       postCommentCount[element["_id"]] = element['comments'];
     });
@@ -192,14 +186,14 @@ void getPost() async {
 void getTranding() async {
   var response = await getDataApiCall('${url}/post/trending/1');
   if (getFlagOfResponse(response)) {
-    var his = jsonDecode(response.body); 
+    var his = jsonDecode(response.body);
     var obj = his['data'];
     historyListData.clear();
     historyListData.addAll(obj);
     getAllPostData.clear();
     getAllPostData.addAll(obj);
-    historyListData.forEach((element){
-      postData[element["_id"]]=true;
+    historyListData.forEach((element) {
+      postData[element["_id"]] = true;
       postCount[element["_id"]] = element['upvotes'];
       postCommentCount[element["_id"]] = element['comments'];
     });
@@ -213,12 +207,35 @@ void savePostData(context, data) async {
   var body = {"postId": data['_id']};
   var response = await postDataApiCall(urlPath, body);
 
-  if (getFlagOfResponse(response))
-  {
-    snackBarCalled(context,SnackbarData().postSavedSuccessfully);
+  if (getFlagOfResponse(response)) {
+    snackBarCalled(context, SnackbarData().postSavedSuccessfully);
   } else {
-    snackBarCalled(context,SnackbarData().failedToSavePost, Colors.red);
+    snackBarCalled(context, SnackbarData().failedToSavePost, Colors.red);
   }
 }
 
+Future<List<dynamic>> savePostGetData(context) async {
+  try {
+   
+    var urlPath = "${url}/post/saved";
+    // Print the URL being called
 
+    var response = await getDataApiCall(urlPath);
+   
+
+   
+    if (getFlagOfResponse(response)) {
+      var responseData = jsonDecode(response.body); // Decode the response body
+     
+      return responseData['data'] ?? [];
+    } else {
+      
+     
+      return [];
+    }
+  } catch (e) {
+   
+   
+    return [];
+  }
+}
