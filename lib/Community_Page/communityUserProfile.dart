@@ -154,6 +154,8 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
+
+        
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -173,24 +175,31 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
                       color: AppColors.accentColor)),
           if (hasArrow)
             const Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
+              Icons.arrow_forward,
+              size: 18,
               color: Colors.grey,
             )
           else if (hasToggle)
-            Transform.scale(
-  scale: 0.8,
-  child:Switch(
-              value: _messageRepliesEnabled,
-              onChanged: (value) {
-                setState(() {
-                  _messageRepliesEnabled = value;
-                });
-              },
-              activeColor: const Color(0xFF4A4A68),
-              inactiveThumbColor: Colors.grey,
-              inactiveTrackColor: Colors.grey.withOpacity(0.3),
-            ),)
+            Container(
+            //  color: Colors.green,
+              height: 20,
+              width: 30,
+              child: Transform.scale(
+                scale: 0.7,
+                child:Switch(
+                value: _messageRepliesEnabled,
+                onChanged: (value) {
+                  setState(() {
+                    _messageRepliesEnabled = value;
+                  });
+                },
+                padding: EdgeInsets.zero,
+                
+                activeColor: const Color(0xFF4A4A68),
+                inactiveThumbColor: Colors.grey,
+                inactiveTrackColor: Colors.grey.withOpacity(0.3),
+              ),),
+            )
         ],
       ),
     );

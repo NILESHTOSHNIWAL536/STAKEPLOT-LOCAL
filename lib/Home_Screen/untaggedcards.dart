@@ -2,349 +2,363 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
-import 'package:flutter_application_code_stakeplot/Utils/homepageStrings.dart.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/getTrasactions.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
+
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
-import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tag_showmodal.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+
+import 'package:card_swiper/card_swiper.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class UntaggedTransactionScreen extends StatefulWidget {
-  final Map<String, dynamic>? selectedTransaction;
-
-  const UntaggedTransactionScreen({Key? key, this.selectedTransaction})
-      : super(key: key);
+  const UntaggedTransactionScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  State<UntaggedTransactionScreen> createState() =>
+  _UntaggedTransactionScreenState createState() =>
       _UntaggedTransactionScreenState();
 }
 
-class _UntaggedTransactionScreenState extends State<UntaggedTransactionScreen>
-    with SingleTickerProviderStateMixin {
-  RxList<Map<String, dynamic>> untaggedTransactions = <Map<String, dynamic>>[].obs;
-  RxList<Map<String, dynamic>> skippedTransactions = <Map<String, dynamic>>[].obs;
-  int currentIndex = 0;
-  AnimationController? _swipeController;
-  Animation<double>? _swipeAnimation;
-  double _dragPosition = 0.0;
-  bool _isSwipingRight = false;
-  RxString selectedCategory = ''.obs;
+class _UntaggedTransactionScreenState extends State<UntaggedTransactionScreen> {
+  RxList<Map<String, dynamic>> untaggedTransactions =
+      <Map<String, dynamic>>[].obs;
   RxBool showSubcategories = false.obs;
+  RxString selectedCategory = "".obs;
+  RxList<String> subcategories = <String>[].obs;
 
   @override
   void initState() {
     super.initState();
-    _fetchUntaggedTransactions();
-    _swipeController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    );
-    _swipeController!.addListener(() {
-      setState(() {
-        _dragPosition = _swipeAnimation!.value;
+    print('UntaggedTransactionScreen: initState called');
+    _filterUntaggedTransactionsForCurrentMonth();
+  }
+
+  void _filterUntaggedTransactionsForCurrentMonth() {
+  print('Filtering untagged transactions...');
+  print('Total transactions in transactionsHistory: ${transactionsHistory.length}');
+
+  try {
+    untaggedTransactions.value = transactionsHistory.where((transaction) {
+      // Log transaction details for debugging
+      print('Processing transaction: ${transaction['_id']}');
+      print('  Category: ${transaction['category']}');
+      print('  TransactionTimestamp: ${transaction['transactionTimestamp']}');
+
+      // Only include transactions with category 'Untagged' (case-insensitive)
+      final category = transaction['category']?.toString().toLowerCase().trim();
+      final isUntagged = category == 'untagged';
+      print('  IsUntagged: $isUntagged');
+
+      if (!isUntagged) {
+        print('  Transaction filtered out due to category not being "untagged"');
+        return false;
+      }
+
+      // Validate transactionTimestamp (optional, for sorting)
+      final transactionDate = DateTime.tryParse(transaction['transactionTimestamp']?.toString() ?? '');
+      if (transactionDate == null) {
+        print('  Invalid transaction date for transaction: ${transaction['_id']}');
+        return false; // Skip transactions with invalid dates
+      }
+
+      print('  Transaction ${transaction['_id']} is untagged');
+      return true;
+    }).toList().cast<Map<String, dynamic>>()
+      ..sort((a, b) {
+        final dateA = DateTime.tryParse(a['transactionTimestamp']?.toString() ?? '') ?? DateTime.now();
+        final dateB = DateTime.tryParse(b['transactionTimestamp']?.toString() ?? '') ?? DateTime.now();
+        return dateB.compareTo(dateA); // Sort by date descending
       });
-    });
-  }
 
-  void _fetchUntaggedTransactions() {
-    untaggedTransactions.value = transactionsHistory
-        .where((transaction) =>
-            (transaction['needsReview'] == true) ||
-            (transaction['category']?.toString().toLowerCase() == 'untagged') ||
-            (transaction['category']?.toString().toLowerCase() == 'uncategorized'))
-        .toList()
-        .cast<Map<String, dynamic>>()
-      ..sort((a, b) => DateTime.parse(b['transactionTimestamp'])
-          .compareTo(DateTime.parse(a['transactionTimestamp']))); // Sort by most recent
-  }
-
-  void _onDragStart(DragStartDetails details) {
-    _swipeController!.reset();
-    _dragPosition = 0.0;
-  }
-
-  void _onDragUpdate(DragUpdateDetails details) {
-    setState(() {
-      _dragPosition += details.delta.dx;
-      _isSwipingRight = _dragPosition > 0;
-    });
-  }
-
-  void _onDragEnd(DragEndDetails details) {
-    if (_dragPosition.abs() > MediaQuery.of(context).size.width * 0.3) {
-      // Swipe threshold reached
-      _swipeAnimation = Tween<double>(
-        begin: _dragPosition,
-        end: _isSwipingRight
-            ? MediaQuery.of(context).size.width
-            : -MediaQuery.of(context).size.width,
-      ).animate(CurvedAnimation(
-        parent: _swipeController!,
-        curve: Curves.easeOut,
-      ));
-      _swipeController!.forward().then((_) {
-        if (_isSwipingRight) {
-          // Swipe right: Remove transaction
-          if (currentIndex < untaggedTransactions.length) {
-            untaggedTransactions.removeAt(currentIndex);
-            if (untaggedTransactions.isEmpty && skippedTransactions.isNotEmpty) {
-              untaggedTransactions.addAll(skippedTransactions);
-              skippedTransactions.clear();
-              currentIndex = 0;
-            }
-          }
-        } else {
-          // Swipe left: Skip transaction
-          if (currentIndex < untaggedTransactions.length) {
-            final skipped = untaggedTransactions[currentIndex];
-            untaggedTransactions.removeAt(currentIndex);
-            skippedTransactions.add(skipped);
-            if (untaggedTransactions.isEmpty && skippedTransactions.isNotEmpty) {
-              untaggedTransactions.addAll(skippedTransactions);
-              skippedTransactions.clear();
-              currentIndex = 0;
-            } else {
-              currentIndex = currentIndex >= untaggedTransactions.length ? 0 : currentIndex;
-            }
-          }
-        }
-        setState(() {
-          _dragPosition = 0.0;
-        });
-      });
-    } else {
-      // Return to original position
-      _swipeAnimation = Tween<double>(
-        begin: _dragPosition,
-        end: 0.0,
-      ).animate(CurvedAnimation(
-        parent: _swipeController!,
-        curve: Curves.easeOut,
-      ));
-      _swipeController!.forward();
+    print('Filtered transactions: ${untaggedTransactions.length} found');
+    if (untaggedTransactions.isNotEmpty) {
+      print('Filtered transactions:');
+      for (var tx in untaggedTransactions) {
+        print('  ${tx['_id']}: ${tx['title']}, ${tx['category']}, ${tx['transactionTimestamp']}');
+      }
     }
+  } catch (e, stackTrace) {
+    print('Error filtering transactions: $e');
+    print('Stack trace: $stackTrace');
+    untaggedTransactions.value = [];
   }
+}
+  void tagTransaction(int index, String category, String subcategory) {
+    print(
+        'Tagging transaction at index $index with category: $category, subcategory: $subcategory');
+    var transaction = untaggedTransactions[index];
+    transaction['category'] = category;
+    transaction['subcategory'] = subcategory;
+    transaction['needsReview'] = false;
 
-  @override
-  void dispose() {
-    _swipeController?.dispose();
-    super.dispose();
+    int globalIndex =
+        transactionsHistory.indexWhere((t) => t['_id'] == transaction['_id']);
+    if (globalIndex != -1) {
+      print('Updating global transaction at index $globalIndex');
+      transactionsHistory[globalIndex]['category'] = category;
+      transactionsHistory[globalIndex]['subcategory'] = subcategory;
+      transactionsHistory[globalIndex]['needsReview'] = false;
+      transactionsHistory.refresh();
+    }
+
+    untaggedTransactions.removeAt(index);
+    print('Transaction tagged and removed from untagged list');
   }
 
   @override
   Widget build(BuildContext context) {
+    print('Building UntaggedTransactionScreen UI');
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
+        backgroundColor: AppColors.finSpaceColor,
+        elevation: 0,
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.backgroundColor),
+          onPressed: () {
+            print('Back button pressed');
+            Navigator.pop(context);
+          },
+        ),
         title: Text(
-          "",
+          "History",
           style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.bold,
             fontSize: 18,
-            color: AppColors.bg3,
+            color: AppColors.backgroundColor,
           ),
         ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.bg3),
-          onPressed: () => Navigator.pop(context),
-        ),
       ),
-      body: Obx(() => untaggedTransactions.isEmpty
-          ? Center(
-              child: Text(
-                "HomepageStringsDart().noUntaggedTransactions",
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: AppColors.bg3.withOpacity(0.8),
-                ),
-              ),
-            )
-          : Column(
-              children: [
-                Expanded(
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      // Background cards for stacked effect
-                      for (int i = currentIndex + 2; i >= currentIndex; i--)
-                        if (i < untaggedTransactions.length && i >= 0)
-                          Positioned(
-                            top: 20.0 + (i - currentIndex) * 10.0,
-                            left: 16.0 - (i - currentIndex) * 5.0,
-                            right: 16.0 - (i - currentIndex) * 5.0,
-                            child: Opacity(
-                              opacity: i == currentIndex ? 0.0 : 0.5,
-                              child: _buildTransactionCard(
-                                context,
-                                untaggedTransactions[i],
-                                i,
-                                isBackground: true,
-                              ),
-                            ),
-                          ),
-                      // Foreground card (swipeable)
-                      if (currentIndex < untaggedTransactions.length)
-                        Transform.translate(
-                          offset: Offset(_dragPosition, 0),
-                          child: Transform.rotate(
-                            angle: _dragPosition / MediaQuery.of(context).size.width * 0.5,
-                            child: GestureDetector(
-                              onHorizontalDragStart: _onDragStart,
-                              onHorizontalDragUpdate: _onDragUpdate,
-                              onHorizontalDragEnd: _onDragEnd,
-                              child: _buildTransactionCard(
-                                context,
-                                untaggedTransactions[currentIndex],
-                                currentIndex,
-                                isBackground: false,
-                              ),
-                            ),
+      body: Column(
+        children: [
+          Container(
+            height: MediaQuery.sizeOf(context).height / 2.2,
+            color: AppColors.finSpaceColor,
+            child: Obx(() {
+              print('Building Swiper for untagged transactions');
+              if (untaggedTransactions.isEmpty) {
+                print('No untagged transactions for this month');
+                return Center(
+                  child: Text(
+                    "No untagged transactions for this month",
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: AppColors.bg3.withOpacity(0.8),
+                    ),
+                  ),
+                );
+              }
+
+              return Swiper(
+                itemCount: untaggedTransactions.length,
+                itemBuilder: (BuildContext context, int index) {
+                  print('Building transaction card for index $index');
+                  var transaction = untaggedTransactions[index];
+                  return _buildTransactionCard(transaction, context);
+                },
+                loop: false,
+                itemHeight: MediaQuery.of(context).size.height * 0.3,
+                itemWidth: MediaQuery.of(context).size.width * 0.9,
+                layout: SwiperLayout.STACK,
+                onIndexChanged: (index) {
+                  print('Swiper index changed to $index');
+                },
+              );
+            }),
+          ),
+          Container(
+            color: AppColors.backgroundColor,
+            height: MediaQuery.sizeOf(context).height / 2.6,
+            padding: const EdgeInsets.all(16.0),
+            child: Obx(() {
+              print('Building category/subcategory grid');
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (showSubcategories.value) ...[
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back,
+                              color: AppColors.bg3),
+                          onPressed: () {
+                            print('Back to categories from subcategories');
+                            showSubcategories.value = false;
+                            selectedCategory.value = "";
+                            subcategories.clear();
+                          },
+                        ),
+                        Text(
+                          "Subcategories",
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: AppColors.bg3,
                           ),
                         ),
-                    ],
-                  ),
-                ),
-                _buildTagOptions(context, untaggedTransactions[currentIndex], currentIndex),
-                const SizedBox(height: 20),
-              ],
-            )),
-    );
-  }
-
-  Widget _buildTransactionCard(BuildContext context, Map<String, dynamic> transaction, int index,
-      {required bool isBackground}) {
-    final narration = transaction['narration'] ?? 'Unnamed Transaction';
-    final amount = double.parse(doubleToFixed((transaction['amount'] ?? 0.0).toString()));
-    final type = transaction['type']?.toString() ?? 'DEBIT';
-    final formattedAmount = '₹${formatMoneyIndian(amount.toString())}';
-    final isCredit = type == 'CREDIT';
-
-    // Extract name from narration similar to the screenshot
-    List<String> parts = narration.split('/');
-    if (parts.isEmpty || parts.length == 1) parts = narration.split('-');
-    if (parts.isEmpty || parts.length == 1) parts = narration.split('&');
-    if (parts.isEmpty || parts.length == 1) parts = narration.split(' ');
-    String nameOfUser = transaction['title'] != null
-        ? transaction['title']
-        : parts.length >= 4
-            ? parts[3]
-            : parts.length >= 3
-                ? parts[2]
-                : parts.length >= 2
-                    ? parts[1]
-                    : parts[0];
-
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.25, // Adjusted height
-      width: MediaQuery.of(context).size.width * 0.95, // Adjusted width
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.15),
-            spreadRadius: 2,
-            blurRadius: 8,
-            offset: const Offset(0, 4),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    _buildSubcategoriesGrid(context),
+                  ] else ...[
+                    Text(
+                      "Tag Now",
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: AppColors.bg3,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    _buildCategoriesGrid(context),
+                  ],
+                ],
+              );
+            }),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildTransactionCard(
+      Map<String, dynamic> transaction, BuildContext context) {
+    print('Building transaction card for transaction: \\${transaction['_id']}');
+    final isCredit = transaction['type']?.toString().toUpperCase() == 'CREDIT';
+    final amountColor = isCredit ? Colors.green : Colors.red;
+    String logo = transaction['bankLogo']?.toString() ?? "";
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      color: AppColors.backgroundColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  nameOfUser,
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w600,
-                    fontSize: 18,
-                    color: AppColors.bg3,
-                  ),
-                ),
-                Row(
-                  children: [
-                    Text(
-                      formattedAmount,
-                      style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: isCredit ? Colorcodes.green : AppColors.accentColor,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    if (isCredit)
-                      Icon(
-                        Icons.arrow_upward,
-                        size: 18,
-                        color: Colorcodes.green,
-                      ),
-                  ],
-                ),
-              ],
+            // Top Row: Title and Amount
+
+            Container(
+              color: AppColors.finSpaceColor,
+              height: MediaQuery.sizeOf(context).height / 25,
+              width: MediaQuery.sizeOf(context).width / 10,
+              child: Icon(
+                Icons.arrow_outward,
+                color: Colors.white,
+                size: 20,
+              ),
             ),
+            const SizedBox(height: 8),
+            Text(
+              transaction['title']?.toString() ?? 'Unknown',
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.bold,
+                fontSize: 16,
+                color: AppColors.bg3,
+              ),
+            ),
+
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  isCredit ? 'credited from' : 'debited to',
+                  '₹${transaction['amount']?.toStringAsFixed(2) ?? '0.00'}',
                   style: FontManager().getTextStyle(
                     context,
-                    lWeight: FontWeight.w400,
-                    fontSize: 14,
-                    color: AppColors.bg3.withOpacity(0.7),
+                    lWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: amountColor,
                   ),
                 ),
                 const SizedBox(width: 4),
-                Icon(
-                  Icons.account_balance_wallet,
-                  size: 14,
-                  color: AppColors.bg3.withOpacity(0.7),
+                Text(
+                  isCredit ? 'Credited from' : 'Debited to',
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.normal,
+                    fontSize: 12,
+                    color: AppColors.bg3.withOpacity(0.6),
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Image.network(
+                  logo,
+                  width: 22,
+                  height: 22,
+                  fit: BoxFit.fitWidth,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return CircularProgressIndicator(
+                        strokeWidth: 2); // Loading indicator
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return Icon(Icons.error,
+                        size: 22); // Fallback for failed image load
+                  },
                 ),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  narration,
-                  style: FontManager().getTextStyle(
-                    context,
-                    lWeight: FontWeight.w400,
-                    fontSize: 14,
-                    color: AppColors.bg3.withOpacity(0.7),
+                Container(
+                  height: MediaQuery.sizeOf(context).height / 20,
+                  width: MediaQuery.sizeOf(context).width / 2.4,
+                  color: AppColors.button,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Narration: ',
+                        style: FontManager().getTextStyle(
+                          context,
+                          lWeight: FontWeight.normal,
+                          fontSize: 14,
+                          color: AppColors.bg3.withOpacity(0.7),
+                        ),
+                      ),
+                      Container(
+                        child: Text(
+                          transaction['narration']?.toString() ?? '',
+                          style: FontManager().getTextStyle(
+                            context,
+                            lWeight: FontWeight.normal,
+                            fontSize: 14,
+                            color: AppColors.bg1,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colorcodes.red.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    'Untagged',
-                    style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.w500,
-                      fontSize: 12,
-                      color: Colorcodes.red,
+                  height: MediaQuery.sizeOf(context).height / 20,
+                  width: MediaQuery.sizeOf(context).width / 4,
+                  color: AppColors.button,
+                  child: Center(
+                    child: Text(
+                      transaction['category']?.toString() ?? 'Untagged',
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.normal,
+                        fontSize: 16,
+                        color: AppColors.accentColor,
+                      ),
                     ),
                   ),
-                ),
+                )
               ],
             ),
           ],
@@ -353,148 +367,123 @@ class _UntaggedTransactionScreenState extends State<UntaggedTransactionScreen>
     );
   }
 
-  Widget _buildTagOptions(BuildContext context, Map<String, dynamic> transaction, int index) {
-    final List<Map<String, dynamic>> categories = BudgetCategories.listofCategories.entries
-        .map((entry) => {
-              'name': entry.key,
-              'icon': '${Categories.link}${entry.value}',
-            })
-        .toList();
+  Widget _buildCategoriesGrid(BuildContext context) {
+    print('Building categories grid');
+    final List<Map<String, String>> categoryList = [
+      {"name": "Food", "icon": Categories.food},
+      {"name": "Shopping", "icon": Categories.shopping},
+      {"name": "Travel", "icon": Categories.travel},
+      {"name": "Health", "icon": Categories.health},
+      {"name": "Bills", "icon": Categories.bills},
+      {"name": "Subscription", "icon": Categories.subscription},
+      {"name": "Events", "icon": Categories.events},
+      {"name": "Personal Care", "icon": Categories.personalCare},
+      {"name": "Services", "icon": Categories.services},
+      {"name": "EMI's", "icon": Categories.emi},
+      {"name": "Investment", "icon": Categories.income},
+      {"name": "Insurance", "icon": Categories.insurance},
+      {"name": "Support", "icon": Categories.support},
+      {"name": "Current", "icon": Categories.current},
+      {"name": "Children", "icon": Categories.children},
+      {"name": "Pet Care", "icon": Categories.petCare},
+      {"name": "Sports", "icon": Categories.sports},
+      {"name": "Alcohol", "icon": Categories.alcohal},
+      {"name": "Hobbies", "icon": Categories.hobbies},
+      {"name": "Education", "icon": Categories.education},
+      {"name": "Commerce", "icon": Categories.commerce},
+      {"name": "Snacks", "icon": Categories.snacks},
+      {"name": "Entertainment", "icon": Categories.entertainment},
+    ];
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "",
-            style: FontManager().getTextStyle(
-              context,
-              lWeight: FontWeight.bold,
-              fontSize: 16,
-              color: AppColors.bg3,
-            ),
-          ),
-          const SizedBox(height: 8),
-          SizedBox(
-            height: 80,
-            child: GridView.builder(
-              scrollDirection: Axis.horizontal,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-                childAspectRatio: 0.8,
-              ),
-              itemCount: categories.length,
-              itemBuilder: (context, catIndex) {
-                final category = categories[catIndex];
-                return GestureDetector(
-                  onTap: () {
-                    selectedCategory.value = category['name'];
-                    showSubcategories.value = true;
-                  },
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8.0),
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Image.network(
-                          category['icon'],
-                          width: 24,
-                          height: 24,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Icon(Icons.error, size: 24),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        category['name'],
-                        style: FontManager().getTextStyle(
-                          context,
-                          lWeight: FontWeight.w500,
-                          fontSize: 12,
-                          color: AppColors.bg3,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-          Obx(() => showSubcategories.value && selectedCategory.value.isNotEmpty
-              ? _buildSubcategories(context, transaction, index)
-              : const SizedBox.shrink()),
-        ],
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 5,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+        childAspectRatio: 1,
       ),
+      itemCount: categoryList.length,
+      itemBuilder: (context, index) {
+        final category = categoryList[index];
+        return GestureDetector(
+          onTap: () {
+            print('Category tapped: \\${category["name"]}');
+            selectedCategory.value = category["name"]!;
+            subcategories.value = categories[category["name"]!] ?? ["Other"];
+            showSubcategories.value = true;
+          },
+          child: Column(
+            children: [
+              AvatarProfileImage(
+                url: category["icon"]!,
+                height: 40,
+                width: 40,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                category["name"]!,
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w500,
+                  fontSize: 12,
+                  color: AppColors.bg3,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildSubcategories(BuildContext context, Map<String, dynamic> transaction, int index) {
-    final subcategories = BudgetCategories.listofCategories[selectedCategory.value] != null
-        ? categories[selectedCategory.value] ?? ['Other']
-        : ['Other'];
-
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      height: 60,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: subcategories.length,
-        itemBuilder: (context, subIndex) {
-          final subcategory = subcategories[subIndex];
-          return GestureDetector(
-            onTap: () {
-              // Tag the transaction and remove it from the stack
-              updateTheTagOfTarnsactions(
-                selectedCategory.value,
-                subcategory,
-                transaction['_id'],
-                context,
-                index,
-              );
-              transactionsHistory[index]['category'] = selectedCategory.value;
-              transactionsHistory[index]['subcategory'] = subcategory;
-              transactionsHistory[index]['needsReview'] = false;
-              transactionsHistory.refresh();
-
-              untaggedTransactions.removeAt(currentIndex);
-              if (untaggedTransactions.isEmpty && skippedTransactions.isNotEmpty) {
-                untaggedTransactions.addAll(skippedTransactions);
-                skippedTransactions.clear();
-                currentIndex = 0;
-              } else {
-                currentIndex = currentIndex >= untaggedTransactions.length ? 0 : currentIndex;
-              }
-              showSubcategories.value = false;
-              selectedCategory.value = '';
-              setState(() {});
-            },
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 4.0),
-              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
+  Widget _buildSubcategoriesGrid(BuildContext context) {
+    print(
+        'Building subcategories grid for category: \\${selectedCategory.value}');
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 5,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+        childAspectRatio: 1,
+      ),
+      itemCount: subcategories.length,
+      itemBuilder: (context, index) {
+        final subcategory = subcategories[index];
+        return GestureDetector(
+          onTap: () {
+            print('Subcategory tapped: $subcategory');
+            if (untaggedTransactions.isNotEmpty) {
+              tagTransaction(0, selectedCategory.value, subcategory);
+            }
+          },
+          child: Column(
+            children: [
+              AvatarProfileImage(
+                url: BudgetSubCategories.listofSubCategories[subcategory] ??
+                    Categories.link + Categories.groceries,
+                height: 40,
+                width: 40,
               ),
-              child: Text(
+              const SizedBox(height: 4),
+              Text(
                 subcategory,
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.w500,
-                  fontSize: 14,
+                  fontSize: 12,
                   color: AppColors.bg3,
                 ),
+                textAlign: TextAlign.center,
               ),
-            ),
-          );
-        },
-      ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
