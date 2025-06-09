@@ -170,6 +170,7 @@ void getPost() async {
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
+    print("response for feed :$obj");
     historyListData.clear();
     historyListData.addAll(obj);
     getTrendingData.clear();
@@ -216,26 +217,19 @@ void savePostData(context, data) async {
 
 Future<List<dynamic>> savePostGetData(context) async {
   try {
-   
     var urlPath = "${url}/post/saved";
     // Print the URL being called
 
     var response = await getDataApiCall(urlPath);
-   
 
-   
     if (getFlagOfResponse(response)) {
       var responseData = jsonDecode(response.body); // Decode the response body
-     
+
       return responseData['data'] ?? [];
     } else {
-      
-     
       return [];
     }
   } catch (e) {
-   
-   
     return [];
   }
 }

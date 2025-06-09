@@ -217,7 +217,7 @@ Widget vote(context, dataObj, data) {
                         }
                       },
                       child: SvgPicture.asset(
-                        LikeComment.likeCommentShare,
+                        LikeComment.sharePost,
                         height: 22,
                       ),
                     ),

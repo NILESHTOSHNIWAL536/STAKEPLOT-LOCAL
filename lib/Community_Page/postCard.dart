@@ -108,7 +108,7 @@ class PostCard extends StatelessWidget {
                                     dataObj["author"]['name']),
                                 style: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.w500,
-                                    fontSize: 14,
+                                    fontSize: 16,
                                     color: AppColors.bg1),
                               ),
                             ],
@@ -151,7 +151,7 @@ class PostCard extends StatelessWidget {
                               child: Text(
                                 (dataObj['title']),
                                 style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w500,
+                                    lWeight: FontWeight.w600,
                                     fontSize: 16,
                                     color: AppColors.bg1),
                               ),
@@ -221,13 +221,17 @@ class PostCard extends StatelessWidget {
                               context, true, dataObj['_id'])
                           : Container(
                              
-                              padding: const EdgeInsets.only(left: 27.0, right: 27.0),
-                              child: !dataObj['isItenary']
-                                  ? text(dataObj):SizedBox.shrink()
-            
+                              padding:!(dataObj['image']!='none' && dataObj["postType"]== "feed")? const EdgeInsets.only(left: 27.0, right: 27.0):EdgeInsets.only(left: 0.0, right: 0.0),
+                              // child: !dataObj['isItenary']
+                                  // ? text(dataObj):SizedBox.shrink()
+            child:(dataObj['image']!='none' && dataObj["postType"]== "feed")?vote(context, dataObj, dataObj):text(dataObj),
                             )
+                            
                       : SizedBox.shrink(),
-                   vote(context, dataObj, dataObj),
+                   Padding(
+                    padding: (dataObj['image']!='none' && dataObj["postType"]== "feed")?const EdgeInsets.only(left: 27.0, right: 27.0):EdgeInsets.only(left: 0.0, right: 0.0),
+                     child: !(dataObj['image']!='none' && dataObj["postType"]== "feed")?vote(context, dataObj, dataObj):text(dataObj),
+                   ),
                 ],
               ),
             ),
