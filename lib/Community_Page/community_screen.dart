@@ -60,17 +60,20 @@ class _CommunityState extends State<Community> {
       body: SafeArea(
         child: Container(
          height: MediaQuery.of(context).size.height/1.1,
-         padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 0,top: 8.0),
+         padding: const EdgeInsets.only(left: 0.0, right: 0.0, bottom: 0,top: 8.0),
           child: SingleChildScrollView(
             controller: scrollControllerPost,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 10),
+                  padding: const EdgeInsets.only(left: 27.0, right: 27.0,top: 10),
                   child: _buildWelcomeRow(),
                 ),
-                Obx(() =>isTrending.value ? getTabs(context) : getTabs(context)),
+                Padding(
+                  padding: const EdgeInsets.only(left: 27.0, right: 27.0,top: 10),
+                  child: Obx(() =>isTrending.value ? getTabs(context) : getTabs(context)),
+                ),
                  Obx(() => isTrending.value ? getTranding() : getFeed())
               ],
             ),
@@ -174,22 +177,19 @@ class _CommunityState extends State<Community> {
 
   Widget getTabs(context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: InkWell(
-              onTap: () {
-                isTrending.value = true;
-              },
-              child: textStyleImage(
-                  context: context,
-                  text: strings.trending,
-                  fontsize: isTrending.value ? 20 : 18,
-                  fontWeight:
-                      isTrending.value ? FontWeight.bold : FontWeight.w500,
-                  c: AppColors.accentColor)),
-        ),
+        InkWell(
+            onTap: () {
+              isTrending.value = true;
+            },
+            child: textStyleImage(
+                context: context,
+                text: strings.trending,
+                fontsize: isTrending.value ? 20 : 18,
+                fontWeight:
+                    isTrending.value ? FontWeight.bold : FontWeight.w500,
+                c: AppColors.accentColor)),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: InkWell(
@@ -225,16 +225,16 @@ class _CommunityState extends State<Community> {
                 Text(
                   strings.welcomeBack,
                   style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.normal,
+                      lWeight: FontWeight.w500,
                       fontSize: h / 60,
                       color: AppColors.accentColor),
                 ),
                 Text(
                   strings.finspace,
                   style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.bold,
+                      lWeight: FontWeight.w700,
                       fontSize: h / 38,
-                      color: AppColors.accentColor),
+                      color: AppColors.finSpaceColor),
                 ),
               ],
             ),
@@ -281,55 +281,47 @@ class _CommunityState extends State<Community> {
         const SizedBox(
           height: 10,
         ),
-        Container(
-          width: w / 0.8,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Hero(
-                tag: "TribeSearch",
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/TribeSearch');
-                  },
-                  child: Container(
-                    width: MediaQuery.sizeOf(context).width / 1.1,
-                    height: MediaQuery.sizeOf(context).height / 22,
-                    child: TextField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                        filled: true,
-                        enabled: false,
-                        hintText: strings.searchHint,
-                        fillColor: AppColors.button,
-                        hintStyle: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.normal,
-                            fontSize: 14,
-                            color: Colors.black),
-                        prefixIcon: Icon(Icons.search),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(24.0),
-                        ),
-                      ),
-                    ),
+        Hero(
+          tag: "TribeSearch",
+          child: InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, '/TribeSearch');
+            },
+            child: Container(
+              width: MediaQuery.sizeOf(context).width * 348 / 390,
+              height: MediaQuery.sizeOf(context).width *(32/348),
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                  filled: true,
+                  enabled: false,
+                  hintText: strings.searchHint,
+                  fillColor: AppColors.backgroundColor,
+                  hintStyle: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.normal,
+                      fontSize: 14,
+                      color: Colors.black),
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
                   ),
                 ),
               ),
-            ],
+            ),
           ),
         ),
-        SizedBox(
-          height: 10,
-        ),
-        Text(
-          strings.featuredPosts,
-          style: FontManager().getTextStyle(context,
-              lWeight: FontWeight.w500,
-              fontSize: 18,
-              color: AppColors.accentColor),
-        ),
+       
+       
+       
+        // Text(
+          // strings.featuredPosts,
+          // style: FontManager().getTextStyle(context,
+              // lWeight: FontWeight.w500,
+              // fontSize: 18,
+              // color: AppColors.accentColor),
+        // ),
       ],
     );
   }

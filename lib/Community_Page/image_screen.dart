@@ -164,6 +164,7 @@ class _ImageScreenState extends State<ImageScreen> {
                             image: FileImage(selectedImage!),
                             cropController: _cropController,
                             shape: CustomCropShape.Square,
+                             ratio: Ratio(width: 402, height: 214),
                             outlineStrokeWidth: 0.0,
                             //  ratio: Ratio(16, 9),
                             // forceInsideCropArea:true,

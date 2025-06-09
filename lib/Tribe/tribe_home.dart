@@ -93,7 +93,7 @@ Widget vote(context, dataObj, data) {
   String likeKey = "liked" + dataObj["_id"];
   bool isLiked = likedList.contains(likeKey);
   return Obx(() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
+       padding: const EdgeInsets.only(left: 27.0, right: 27.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,

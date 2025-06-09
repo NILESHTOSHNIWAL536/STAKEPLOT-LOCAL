@@ -43,57 +43,55 @@ class PostCard extends StatelessWidget {
         : {}; //  dataObj.containsKey('place') && dataObj.containsKey('tripHighlight')
     
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
-      child: Card(
-       // elevation: Colorcodes.elevation3,
-        color: AppColors.mt,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
-        ),
-        child: Column(
-          children: [
-            GestureDetector(
-              onTap: flag
-                  ? null
-                  : () {
-                     
-                      Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder:
-                              (context, animation, secondaryAnimation) =>
-                                  TribeUnique(
-                            id: dataObj["_id"],
-                            dataObj: dataObj,
-                          ),
-                          transitionsBuilder:
-                              (context, animation, secondaryAnimation, child) {
-                            const begin = Offset(1.0, 0.0);
-                            const end = Offset.zero;
-                            const curve = Curves.easeInOut;
-                            var tween = Tween(begin: begin, end: end)
-                                .chain(CurveTween(curve: curve));
-                            var offsetAnimation = animation.drive(tween);
-                            return SlideTransition(
-                              position: offsetAnimation,
-                              child: child,
-                            );
-                          },
-                          transitionDuration: const Duration(milliseconds: 300),
+      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 0),
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: flag
+                ? null
+                : () {
+                   
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder:
+                            (context, animation, secondaryAnimation) =>
+                                TribeUnique(
+                          id: dataObj["_id"],
+                          dataObj: dataObj,
                         ),
-                      );
-                    },
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(0, 2, 0, 4),
-                decoration: BoxDecoration(
-                    color: AppColors.mt,
-                    borderRadius:
-                        BorderRadius.circular(Colorcodes.borderRadius)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
+                          const begin = Offset(1.0, 0.0);
+                          const end = Offset.zero;
+                          const curve = Curves.easeInOut;
+                          var tween = Tween(begin: begin, end: end)
+                              .chain(CurveTween(curve: curve));
+                          var offsetAnimation = animation.drive(tween);
+                          return SlideTransition(
+                            position: offsetAnimation,
+                            child: child,
+                          );
+                        },
+                        transitionDuration: const Duration(milliseconds: 300),
+                      ),
+                    );
+                  },
+            child: Container(
+             
+              decoration: BoxDecoration(
+                  color: AppColors.backgroundColor,
+                  // borderRadius:
+                  //     BorderRadius.circular(Colorcodes.borderRadius)
+                      ),
+      
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 23.0, right: 27.0,top: 0),
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -102,7 +100,7 @@ class PostCard extends StatelessWidget {
                             children: [
                               
                               AvatarProfile(name:  (dataObj["author"]['maskedName'] ??
-                                    dataObj["author"]['name']), width: 4, height: 10,background:dataObj["author"]['avatarBackGround'] ?? defaultBackGround.value,flag: false,),
+                                    dataObj["author"]['name']), width: 12, height: 22,background:dataObj["author"]['avatarBackGround'] ?? defaultBackGround.value,flag: true,),
                             
                               const SizedBox(width: 2),
                               Text(
@@ -110,137 +108,131 @@ class PostCard extends StatelessWidget {
                                     dataObj["author"]['name']),
                                 style: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.w500,
-                                    fontSize: 18,
+                                    fontSize: 14,
                                     color: AppColors.bg1),
                               ),
                             ],
                           ),
                         ),
-                        Row(
-                          children: [
-                            // Save user posts 
-                           // flag ? saved() : SizedBox.shrink(),
-                           maskedName.value.trim().isEmpty
-        ? SizedBox.shrink()
-        : popUpBoxHideDelete(
-            dataObj['_id'],
-            context,
-            dataObj["author"]['name'],
-            index,
-            flag,
-          ),
-                            
-                            const SizedBox(width: 20),
-                          ],
-                        ),
+                        maskedName.value.trim().isEmpty
+                              ? SizedBox.shrink()
+                              : popUpBoxHideDelete(
+                                  dataObj['_id'],
+                                  context,
+                                  dataObj["author"]['name'],
+                                  index,
+                                  flag,
+                                ),
+                        
+                        
                       ],
                     ),
-                    // Exploria Post UI
-                    isExploria
-                        ? ExploreCard(
-                            extractdata: extractdata,
-                            dataObj: dataObj,
-                          )
-                        : (dataObj['isPoll'] ?? false)
-                            ? Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  dataObj['pollData']['question'] + "?",
-                                  style: FontManager().getTextStyle(context,
-                                      lWeight: FontWeight.w600,
-                                      fontSize: 18,
-                                      color: AppColors.bg1),
-                                ),
-                              )
-                            : Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 4, horizontal: 10),
-                                child: Text(
-                                  (dataObj['title']),
-                                  style: FontManager().getTextStyle(context,
-                                      lWeight: FontWeight.w500,
-                                      fontSize: 16,
-                                      color: AppColors.bg1),
+                  ),
+                  // Exploria Post UI
+                  isExploria
+                      ? ExploreCard(
+                          extractdata: extractdata,
+                          dataObj: dataObj,
+                        )
+                      : (dataObj['isPoll'] ?? false)
+                          ? Padding(
+                             padding: const EdgeInsets.only(left: 27.0, right: 27.0),
+                              child: Text(
+                                dataObj['pollData']['question'] + "?",
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                    color: AppColors.bg1),
+                              ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.only(left: 27.0, right: 27.0),
+                             
+                              child: Text(
+                                (dataObj['title']),
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                    color: AppColors.bg1),
+                              ),
+                            ),
+                  // Image Section (Exploria or Others)
+                  isExploria
+                      ? SizedBox.shrink()
+                      : dataObj['image'] != null &&
+                              (dataObj['image'] != "none" &&
+                                  dataObj['image'] != "")
+                          ? Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: Colorcodes.borderRadius/3),
+                              child: Center(
+                                child: GFImageOverlay(
+                                  width:MediaQuery.of(context).size.width ,
+                                  height: MediaQuery.of(context).size.width * 214 / 402,
+                                  boxFit: BoxFit.fill,
+                                  // borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
+                                  image: NetworkImage(dataObj['image']),
+                                  colorFilter: null, // Disable any color tint
+                                  color: Colors.transparent,
+                                  border: Border.all(color: AppColors.bg5),
+                                  
                                 ),
                               ),
-                    // Image Section (Exploria or Others)
-                    isExploria
-                        ? SizedBox.shrink()
-                        : dataObj['image'] != null &&
-                                (dataObj['image'] != "none" &&
-                                    dataObj['image'] != "")
-                            ? Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: Colorcodes.borderRadius/3),
-                                child: Center(
-                                  child: GFImageOverlay(
-                                    width:MediaQuery.of(context).size.width / 1.2,
-                                    height: MediaQuery.of(context).size.height /3,
-                                    boxFit: BoxFit.fill,
-                                    borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
-                                    image: NetworkImage(dataObj['image']),
-                                    colorFilter: null, // Disable any color tint
-                                    color: Colors.transparent,
-                                    border: Border.all(color: AppColors.bg5),
-                                    
-                                  ),
-                                ),
-                              )
-                            : isExploria &&
-                                    dataObj['backGroundPicture'] != null &&
-                                    dataObj['backGroundPicture'] != ""
-                                ? Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: Colorcodes.borderRadius),
-                                    child: Center(
-                                      child: GFImageOverlay(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                1.2,
-                                        height:
-                                            MediaQuery.of(context).size.height /
-                                                3,
-                                        boxFit: BoxFit.fill,
-                                        borderRadius: BorderRadius.circular(
-                                            Colorcodes.borderRadius),
-                                        image: NetworkImage(
-                                            dataObj['backGroundPicture']),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              begin: Alignment.bottomCenter,
-                                              end: Alignment.topCenter,
-                                              colors: [
-                                                Colors.black.withOpacity(0.6),
-                                                Colors.transparent,
-                                              ],
-                                            ),
+                            )
+                          : isExploria &&
+                                  dataObj['backGroundPicture'] != null &&
+                                  dataObj['backGroundPicture'] != ""
+                              ? Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: Colorcodes.borderRadius),
+                                  child: Center(
+                                    child: GFImageOverlay(
+                                      width:
+                                          MediaQuery.of(context).size.width /
+                                              1.2,
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              3,
+                                      boxFit: BoxFit.fill,
+                                      borderRadius: BorderRadius.circular(
+                                          Colorcodes.borderRadius),
+                                      image: NetworkImage(
+                                          dataObj['backGroundPicture']),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            begin: Alignment.bottomCenter,
+                                            end: Alignment.topCenter,
+                                            colors: [
+                                              Colors.black.withOpacity(0.6),
+                                              Colors.transparent,
+                                            ],
                                           ),
                                         ),
                                       ),
                                     ),
-                                  )
-                                : SizedBox.shrink(),
-                    // Content for Non-Exploria Posts
-                    !isExploria
-                        ? (dataObj['isPoll'] ?? false)
-                            ? getQuestionsAndOptions(dataObj['pollData'],
-                                context, true, dataObj['_id'])
-                            : Container(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 10),
-                                child: !dataObj['isItenary']
-                                    ? text(dataObj):SizedBox.shrink()
-      
-                              )
-                        : SizedBox.shrink(),
-                     vote(context, dataObj, dataObj),
-                  ],
-                ),
+                                  ),
+                                )
+                              : SizedBox.shrink(),
+                  // Content for Non-Exploria Posts
+                  !isExploria
+                      ? (dataObj['isPoll'] ?? false)
+                          ? getQuestionsAndOptions(dataObj['pollData'],
+                              context, true, dataObj['_id'])
+                          : Container(
+                             
+                              padding: const EdgeInsets.only(left: 27.0, right: 27.0),
+                              child: !dataObj['isItenary']
+                                  ? text(dataObj):SizedBox.shrink()
+            
+                            )
+                      : SizedBox.shrink(),
+                   vote(context, dataObj, dataObj),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
