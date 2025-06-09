@@ -93,7 +93,7 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
                             alignment: Alignment.topCenter,
                             child: Padding(
                               padding: EdgeInsets.all(12),
-                              child: isListEnabled.value? UpdateButtonWidget(
+                              child: UpdateButtonWidget(
                                 onPressed: () {
                                   final combinedList = [
                                     ...selectedSubCategories,
@@ -108,7 +108,7 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
                                   addMyIntreastAndName(context, body,false,true);
                                  
                                 },
-                              ):null,
+                              ),
                             ),
                           ),
                   ),

@@ -17,7 +17,7 @@ Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2) {
           child: Icon(
         Icons.more_vert_outlined,
         size: 25,
-        color: AppColors.bg2,
+        color: AppColors.finSpaceColor,
       )),
       onSelected: (value) {
         if (value == 0 && userId == userName.value)

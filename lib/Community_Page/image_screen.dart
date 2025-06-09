@@ -181,22 +181,22 @@ class _ImageScreenState extends State<ImageScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                TextField(
-                  controller: titleController,
-                  decoration: InputDecoration(
-                   hintText: strings.enterTitle,
-                    hintStyle: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: AppColors.bg1),
-                    border: InputBorder.none,
-                  ),
-                ),
+                // TextField(
+                  // controller: titleController,
+                  // decoration: InputDecoration(
+                  //  hintText: strings.enterTitle,
+                    // hintStyle: FontManager().getTextStyle(context,
+                        // lWeight: FontWeight.w600,
+                        // fontSize: 18,
+                        // color: AppColors.bg1),
+                    // border: InputBorder.none,
+                  // ),
+                // ),
                 const SizedBox(height: 10),
                 TextField(
                   controller: textController,
                   // focusNode: _contentFocusNode,
-                  maxLines: 5,
+                  maxLines: null,
                   decoration: InputDecoration(
                     hintText: strings.addThoughts,
                     border: InputBorder.none,
@@ -256,7 +256,7 @@ class _ImageScreenState extends State<ImageScreen> {
                       return;
                     }
 
-                    if (titleController.text.trim().isEmpty ||
+                    if (
                         textController.text.trim().isEmpty) {
                       snackBarAllFeilds(context);
                       return;

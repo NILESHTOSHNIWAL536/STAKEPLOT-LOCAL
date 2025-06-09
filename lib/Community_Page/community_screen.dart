@@ -66,12 +66,9 @@ class _CommunityState extends State<Community> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                _buildWelcomeRow(),
                 Padding(
-                  padding: const EdgeInsets.only(left: 27.0, right: 27.0,top: 10),
-                  child: _buildWelcomeRow(),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 27.0, right: 27.0,top: 10),
+                  padding: const EdgeInsets.only(left: 27.0, right: 27.0,top: 4),
                   child: Obx(() =>isTrending.value ? getTabs(context) : getTabs(context)),
                 ),
                  Obx(() => isTrending.value ? getTranding() : getFeed())
@@ -179,19 +176,8 @@ class _CommunityState extends State<Community> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(children: [
-        InkWell(
-            onTap: () {
-              isTrending.value = true;
-            },
-            child: textStyleImage(
-                context: context,
-                text: strings.trending,
-                fontsize: isTrending.value ? 20 : 18,
-                fontWeight:
-                    isTrending.value ? FontWeight.bold : FontWeight.w500,
-                c: AppColors.accentColor)),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.only(right: 10),
           child: InkWell(
               onTap: () {
                 isTrending.value = false;
@@ -203,7 +189,19 @@ class _CommunityState extends State<Community> {
                   fontWeight:
                       !isTrending.value ? FontWeight.bold : FontWeight.w500,
                   c: AppColors.accentColor)),
+                  
         ),
+         InkWell(
+     onTap: () {
+       isTrending.value = true;
+     },
+     child: textStyleImage(
+         context: context,
+         text: strings.trending,
+         fontsize: isTrending.value ? 20 : 18,
+         fontWeight:
+             isTrending.value ? FontWeight.bold : FontWeight.w500,
+         c: AppColors.accentColor)),
       ]),
     );
   }
@@ -214,33 +212,33 @@ class _CommunityState extends State<Community> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  strings.welcomeBack,
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.w500,
-                      fontSize: h / 60,
-                      color: AppColors.accentColor),
-                ),
-                Text(
-                  strings.finspace,
-                  style: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.w700,
-                      fontSize: h / 38,
-                      color: AppColors.finSpaceColor),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 6),
-              child: Align(
+        Padding(
+         padding: const EdgeInsets.only(left: 27.0, right: 23.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    strings.welcomeBack,
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.w500,
+                        fontSize: h / 60,
+                        color: AppColors.accentColor),
+                  ),
+                  Text(
+                    strings.finspace,
+                    style: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.w700,
+                        fontSize: h / 50,
+                        color: AppColors.finSpaceColor),
+                  ),
+                ],
+              ),
+              Align(
                 alignment: Alignment.topRight,
                 child: Row(
                   children: [
@@ -249,63 +247,63 @@ class _CommunityState extends State<Community> {
                         Navigator.pushNamed(context, '/TribeChats');
                       },
                       child: AvatarProfileImage(
-                        url: LikeComment.message,
+                        url: LikeComment.chatMessage,
                         height: 26,
                         width: 26,
                       ),
                     ),
                     Container(
-                        width: MediaQuery.sizeOf(context).width / 8.5,
-                        height: MediaQuery.sizeOf(context).width / 8.5,
-                        decoration: BoxDecoration(
-                            //  color: AppColors.button,
-                            borderRadius: BorderRadius.circular(30)),
-                        child: GestureDetector(
-                          onTap: () async {
-                            navigatorToMyOwnPage(context);
-                          },
-                          child: AvatarProfile(
-                            name: userName.value,
-                            width: 7,
-                            height: 8,
-                            background: userAvatarBackGround.value,
-                            flag: false,
-                          ),
-                        )),
+                     
+                      child: GestureDetector(
+                        onTap: () async {
+                          navigatorToMyOwnPage(context);
+                        },
+                        child: AvatarProfile(
+                          name: userName.value,
+                          width: 9,
+                          height: 14,
+                          background: userAvatarBackGround.value,
+                          flag: true,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         const SizedBox(
-          height: 10,
+          height: 6,
         ),
-        Hero(
-          tag: "TribeSearch",
-          child: InkWell(
-            onTap: () {
-              Navigator.pushNamed(context, '/TribeSearch');
-            },
-            child: Container(
-              width: MediaQuery.sizeOf(context).width * 348 / 390,
-              height: MediaQuery.sizeOf(context).width *(32/348),
-              child: TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                  filled: true,
-                  enabled: false,
-                  hintText: strings.searchHint,
-                  fillColor: AppColors.backgroundColor,
-                  hintStyle: FontManager().getTextStyle(context,
-                      lWeight: FontWeight.normal,
-                      fontSize: 14,
-                      color: Colors.black),
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
+        Padding(
+          padding: const EdgeInsets.only(left: 27.0, right: 27.0),
+          child: Hero(
+            tag: "TribeSearch",
+            child: InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, '/TribeSearch');
+              },
+              child: Container(
+                width: MediaQuery.sizeOf(context).width * 348 / 390,
+                height: MediaQuery.sizeOf(context).width *(32/348),
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                    filled: true,
+                    enabled: false,
+                    hintText: strings.searchHint,
+                    fillColor: AppColors.backgroundColor,
+                    hintStyle: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.normal,
+                        fontSize: 14,
+                        color: Colors.black),
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
                   ),
                 ),
               ),

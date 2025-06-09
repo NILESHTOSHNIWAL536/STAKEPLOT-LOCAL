@@ -205,27 +205,27 @@ class _TextScreenState extends State<TextScreen> {
                             ),
                           ],
                         ),
-                        Stack(
-                          children: [
-                            DecoratedContainer(
-                              borderRadius: 10,
-                              child: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    showImage = !showImage;
-                                    _adjustHeight(); // Adjust height when toggling showImage
-                                  });
-                                },
-                                icon: FaIcon(FontAwesomeIcons.images),
-                              ),
-                            ),
-                            const Positioned(
-                              top: 10,
-                              right: 2,
-                              child: Icon(Icons.add),
-                            ),
-                          ],
-                        ),
+                        // Stack(
+                          // children: [
+                            // DecoratedContainer(
+                              // borderRadius: 10,
+                              // child: IconButton(
+                                // onPressed: () {
+                                  // setState(() {
+                                    // showImage = !showImage;
+                                    // _adjustHeight(); // Adjust height when toggling showImage
+                                  // });
+                                // },
+                                // icon: FaIcon(FontAwesomeIcons.images),
+                              // ),
+                            // ),
+                            // const Positioned(
+                              // top: 10,
+                              // right: 2,
+                              // child: Icon(Icons.add),
+                            // ),
+                          // ],
+                        // ),
                       ],
                     ),
                     const SizedBox(height: 10),

@@ -209,6 +209,13 @@ class LikeComment {
   static String message = "assets/icons/likeComment/Messagecircle.svg";
   static String likeIcon = "assets/icons/likeComment/likeIcon.svg";
   static String likeIcon2 = "assets/icons/likeComment/likeIcon2.svg";
+   static String chatMessage = "assets/icons/likeComment/chatMessage.svg";
+    static String likeBulb = "assets/icons/likeComment/likeBulb.svg";
+      static String likedBulb = "assets/icons/likeComment/likedBulb.svg";
+        static String savePost = "assets/icons/likeComment/savePost.svg";
+          static String commentPost = "assets/icons/likeComment/commentPost.svg";
+            static String sharePost = "assets/icons/likeComment/sharePost.svg";
+             static String savedPost = "assets/icons/likeComment/savedPost.svg";
 
   static String manualTransaction =
       "assets/icons/likeComment/manualTransaction.svg";
@@ -905,6 +912,7 @@ class FontSizeFactor {
 
 class MaskedAvatars {
   static String profileIcon1 = "assets/icons/maskAvatars/profileIcon1.svg";
+   static String profileIcon11 = "assets/icons/maskAvatars/profileIcon11.png";
   static String profileIcon2 = "assets/icons/maskAvatars/profileIcon2.svg";
   static String profileIcon3 = "assets/icons/maskAvatars/profileIcon3.svg";
   static String profileIcon4 = "assets/icons/maskAvatars/profileIcon4.svg";
@@ -914,4 +922,5 @@ class MaskedAvatars {
   static String profileIcon8 = "assets/icons/maskAvatars/profileIcon8.svg";
   static String profileIcon9 = "assets/icons/maskAvatars/profileIcon9.svg";
   static String profileIcon10 = "assets/icons/maskAvatars/profileIcon10.svg";
+  static String profileIcon12 = "assets/icons/maskAvatars/profileIcon12.svg";
 }
