@@ -185,9 +185,11 @@ void getPost() async {
 
 void getTranding() async {
   var response = await getDataApiCall('${url}/post/trending/1');
+
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
+    print("response from trending api :$obj");
     historyListData.clear();
     historyListData.addAll(obj);
     getAllPostData.clear();
@@ -198,7 +200,7 @@ void getTranding() async {
       postCommentCount[element["_id"]] = element['comments'];
     });
     isPostTranding.value = true;
-  } else {}
+  }
 }
 
 void savePostData(context, data) async {
@@ -216,26 +218,19 @@ void savePostData(context, data) async {
 
 Future<List<dynamic>> savePostGetData(context) async {
   try {
-   
     var urlPath = "${url}/post/saved";
     // Print the URL being called
 
     var response = await getDataApiCall(urlPath);
-   
 
-   
     if (getFlagOfResponse(response)) {
       var responseData = jsonDecode(response.body); // Decode the response body
-     
+
       return responseData['data'] ?? [];
     } else {
-      
-     
       return [];
     }
   } catch (e) {
-   
-   
     return [];
   }
 }

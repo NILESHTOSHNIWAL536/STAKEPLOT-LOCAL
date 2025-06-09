@@ -21,11 +21,13 @@ class ExploreCard extends StatefulWidget {
 class _ExploreCardState extends State<ExploreCard> {
   final ScrollController _scrollController = ScrollController();
 
- bool _showFullDescription = false;
+  bool _showFullDescription = false;
 
   // Helper method to get responsive font size
   double _getResponsiveFontSize(BuildContext context, double baseSize) {
-    return baseSize * MediaQuery.of(context).size.width / 375; // Based on a standard width (e.g., iPhone 8)
+    return baseSize *
+        MediaQuery.of(context).size.width /
+        375; // Based on a standard width (e.g., iPhone 8)
   }
 
   @override
@@ -121,59 +123,63 @@ class _ExploreCardState extends State<ExploreCard> {
     );
   }
 
- Widget _buildImageSection(BuildContext context) {
-  bool hasMultipleImages = widget.extractdata['pictures'] != null && widget.extractdata['pictures'].length > 1;
+  Widget _buildImageSection(BuildContext context) {
+    bool hasMultipleImages = widget.extractdata['images'] != null &&
+        widget.extractdata['images'].length > 1;
 
-  return Padding(
-    padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.015),
-    child: Stack(
-      children: [
-        widget.extractdata['pictures'] != null
-            ? SizedBox(
-                height: MediaQuery.of(context).size.height * 0.35,
-                width: double.infinity,
-                child: ListView.builder(
-                  controller: _scrollController,
-                  shrinkWrap: true,
-                  physics: const ClampingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: widget.extractdata['pictures'].length,
-                  itemBuilder: (context, index) => _buildImageItem(context, index),
-                ),
-              )
-            : _buildSingleImage(context, widget.dataObj['image']),
+    return Padding(
+      padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.015),
+      child: Stack(
+        children: [
+          widget.extractdata['images'] != null
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.35,
+                  width: double.infinity,
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    shrinkWrap: true,
+                    physics: const ClampingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: widget.extractdata['images'].length,
+                    itemBuilder: (context, index) =>
+                        _buildImageItem(context, index),
+                  ),
+                )
+              : _buildSingleImage(context, widget.dataObj['image']),
 
-        // Show swipe icon only if multiple images exist
-        if (hasMultipleImages)
-          Positioned(
-            right: 10,
-            bottom: 10,
-            child: Icon(
-              Icons.swipe,
-              color: Colors.black,
-              size: _getResponsiveFontSize(context, 24),
+          // Show swipe icon only if multiple images exist
+          if (hasMultipleImages)
+            Positioned(
+              right: 10,
+              bottom: 10,
+              child: Icon(
+                Icons.swipe,
+                color: Colors.black,
+                size: _getResponsiveFontSize(context, 24),
+              ),
             ),
-          ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 
   Widget _buildImageItem(BuildContext context, int index) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.025),
+      padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width * 0.025),
       child: GFImageOverlay(
         width: MediaQuery.of(context).size.width * 0.7,
         height: MediaQuery.of(context).size.height * 0.35,
         borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
-        image: NetworkImage(widget.extractdata['pictures'][index]),
+        image: NetworkImage(widget.extractdata['images'][index]),
       ),
     );
   }
 
   Widget _buildSingleImage(BuildContext context, String imageUrl) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.015),
+      padding: EdgeInsets.symmetric(
+          vertical: MediaQuery.of(context).size.height * 0.015),
       child: Center(
         child: GFImageOverlay(
           width: MediaQuery.of(context).size.width * 0.85,
@@ -188,17 +194,20 @@ class _ExploreCardState extends State<ExploreCard> {
 
   Widget _buildPlaceInfo(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.015),
+      margin: EdgeInsets.symmetric(
+          vertical: MediaQuery.of(context).size.height * 0.015),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(Icons.my_location_outlined, size: _getResponsiveFontSize(context, 18), color: AppColors.bg1),
+              Icon(Icons.my_location_outlined,
+                  size: _getResponsiveFontSize(context, 18),
+                  color: AppColors.bg1),
               SizedBox(width: MediaQuery.of(context).size.width * 0.02),
               Expanded(
                 child: Text(
-                  "Place: ${widget.extractdata['place']['name']}",
+                  "Place: ${widget.extractdata['name']}",
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.w500,
@@ -214,11 +223,13 @@ class _ExploreCardState extends State<ExploreCard> {
           SizedBox(height: MediaQuery.of(context).size.height * 0.01),
           Row(
             children: [
-              Icon(Icons.location_on, size: _getResponsiveFontSize(context, 18), color: AppColors.bg1),
+              Icon(Icons.location_on,
+                  size: _getResponsiveFontSize(context, 18),
+                  color: AppColors.bg1),
               SizedBox(width: MediaQuery.of(context).size.width * 0.02),
               Expanded(
                 child: Text(
-                  "Location: ${widget.extractdata['place']['location']}",
+                  "Location: ${widget.extractdata['location']}",
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.w400,
@@ -311,11 +322,12 @@ class _ExploreCardState extends State<ExploreCard> {
             color: AppColors.bg1,
           ),
         ),
-         SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.01),
         Container(
           //width: double.infinity,
           padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
-          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.01),
+          margin:
+              EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.01),
           decoration: BoxDecoration(
             color: AppColors.button,
             borderRadius: BorderRadius.circular(12),
@@ -324,12 +336,12 @@ class _ExploreCardState extends State<ExploreCard> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
-              Icons.tips_and_updates, // Added icon for Trip Highlights
-              size: _getResponsiveFontSize(context, 20),
-              color: AppColors.bg1,
-            ),
+                Icons.tips_and_updates, // Added icon for Trip Highlights
+                size: _getResponsiveFontSize(context, 20),
+                color: AppColors.bg1,
+              ),
               Text(
-                "${widget.extractdata['tripHighlight']}",
+                "${widget.extractdata['tripHighlights']}",
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.w500,
@@ -345,73 +357,73 @@ class _ExploreCardState extends State<ExploreCard> {
     );
   }
 
-
   Widget _buildDescription(BuildContext context) {
-  // Check if text exceeds one line
-  final TextPainter textPainter = TextPainter(
-    text: TextSpan(
-      text: widget.extractdata['description'],
-      style: FontManager().getTextStyle(
-        context,
-        lWeight: FontWeight.w400,
-        fontSize: _getResponsiveFontSize(context, 14),
-        color: AppColors.bg1,
-      ),
-    ),
-    maxLines: 2,
-    textDirection: TextDirection.ltr,
-  )..layout(maxWidth: MediaQuery.of(context).size.width * 0.9);
-
-  bool isTextOverflowing = textPainter.didExceedMaxLines;
-
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        "Description",
+    // Check if text exceeds one line
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(
+        text: widget.extractdata['description'],
         style: FontManager().getTextStyle(
           context,
-          lWeight: FontWeight.w600,
-          fontSize: _getResponsiveFontSize(context, 16),
+          lWeight: FontWeight.w400,
+          fontSize: _getResponsiveFontSize(context, 14),
           color: AppColors.bg1,
         ),
       ),
-      Padding(
-        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.extractdata['description'],
-              maxLines: _showFullDescription ? null : 2,
-              overflow: _showFullDescription ? TextOverflow.visible : TextOverflow.ellipsis,
-              style: FontManager().getTextStyle(
-                context,
-                lWeight: FontWeight.w400,
-                fontSize: _getResponsiveFontSize(context, 14),
-                color: AppColors.bg1,
-              ),
-            ),
-            if (isTextOverflowing) // Show button only if text exceeds one line
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _showFullDescription = !_showFullDescription;
-                  });
-                },
-                child: Text(
-                  _showFullDescription ? "Show Less" : "Show More",
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold,
-                  ),
+      maxLines: 2,
+      textDirection: TextDirection.ltr,
+    )..layout(maxWidth: MediaQuery.of(context).size.width * 0.9);
+
+    bool isTextOverflowing = textPainter.didExceedMaxLines;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Description",
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.w600,
+            fontSize: _getResponsiveFontSize(context, 16),
+            color: AppColors.bg1,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.extractdata['description'],
+                maxLines: _showFullDescription ? null : 2,
+                overflow: _showFullDescription
+                    ? TextOverflow.visible
+                    : TextOverflow.ellipsis,
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w400,
+                  fontSize: _getResponsiveFontSize(context, 14),
+                  color: AppColors.bg1,
                 ),
               ),
-          ],
+              if (isTextOverflowing) // Show button only if text exceeds one line
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _showFullDescription = !_showFullDescription;
+                    });
+                  },
+                  child: Text(
+                    _showFullDescription ? "Show Less" : "Show More",
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
-      ),
-    ],
-  );
-}
-
+      ],
+    );
+  }
 }
