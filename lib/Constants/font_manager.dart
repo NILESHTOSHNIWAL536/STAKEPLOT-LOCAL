@@ -16,7 +16,7 @@ class FontManager {
     decorationColor = Colors.black,
     double fontSize = 18.0,
     decoration = TextDecoration.none,
-    letterSpacing = 0.0,
+    letterSpacing = 0.24,
     TextOverflow overflow = TextOverflow.visible,
     decorationThickness = 0.0,
     decorationStyle = TextDecorationStyle.solid,

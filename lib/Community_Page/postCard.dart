@@ -41,7 +41,7 @@ class PostCard extends StatelessWidget {
         : {}; //  dataObj.containsKey('place') && dataObj.containsKey('tripHighlight')
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       child: Column(
         children: [
           GestureDetector(
@@ -85,7 +85,7 @@ class PostCard extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(
-                        left: 10.0, right: 27.0, top: 0, bottom: 16),
+                        left: 10.0, right: 10.0, top: 0, bottom: 0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -98,8 +98,8 @@ class PostCard extends StatelessWidget {
                                 child: AvatarProfile(
                                   name: (dataObj["author"]['maskedName'] ??
                                       dataObj["author"]['name']),
-                                  width: 9.7,
-                                  height: 20,
+                                  width: 11,
+                                  height: 21,
                                   background: dataObj["author"]
                                           ['avatarBackGround'] ??
                                       defaultBackGround.value,
@@ -139,18 +139,19 @@ class PostCard extends StatelessWidget {
                       : (dataObj['isPoll'] ?? false)
                           ? Padding(
                               padding: const EdgeInsets.only(
-                                  left: 27.0, right: 27.0),
+                                  left: 14.0, right: 12.0),
                               child: Text(
-                                dataObj['pollData']['question'] + "?",
+                                dataObj['pollData']['question'] ,
                                 style: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.w600,
                                     fontSize: 18,
                                     color: AppColors.bg1),
                               ),
                             )
-                          : Padding(
+                          : (dataObj['title']?.isNotEmpty ?? false)
+            ? Padding(
                               padding: const EdgeInsets.only(
-                                  left: 27.0, right: 27.0),
+                                  left: 14.0, right: 12.0),
                               child: Text(
                                 (dataObj['title']),
                                 style: FontManager().getTextStyle(context,
@@ -158,7 +159,7 @@ class PostCard extends StatelessWidget {
                                     fontSize: 16,
                                     color: AppColors.bg1),
                               ),
-                            ),
+                            ) : SizedBox.shrink(),
                   // Image Section (Exploria or Others)
                   isExploria
                       ? SizedBox.shrink()
@@ -191,12 +192,12 @@ class PostCard extends StatelessWidget {
                                       vertical: Colorcodes.borderRadius),
                                   child: Center(
                                     child: GFImageOverlay(
-                                      width: MediaQuery.of(context).size.width /
-                                          1.2,
-                                      height:
-                                          MediaQuery.of(context).size.height /
-                                              3,
-                                      boxFit: BoxFit.fill,
+                                     width: MediaQuery.of(context).size.width,
+                                  height: MediaQuery.of(context).size.width *
+                                      214 /
+                                      402,
+                                  boxFit: BoxFit.fill,
+                                     
                                       borderRadius: BorderRadius.circular(
                                           Colorcodes.borderRadius),
                                       image: NetworkImage(
@@ -220,13 +221,16 @@ class PostCard extends StatelessWidget {
                   // Content for Non-Exploria Posts
                   !isExploria
                       ? (dataObj['isPoll'] ?? false)
-                          ? getQuestionsAndOptions(dataObj['pollData'], context,
-                              true, dataObj['_id'])
+                          ? Padding(
+                            padding: EdgeInsets.only(left: 12.0, right: 12.0),
+                            child: getQuestionsAndOptions(dataObj['pollData'], context,
+                                true, dataObj['_id']),
+                          )
                           : Container(
-                              padding: !(dataObj['image'] != 'none' &&
+                              padding: !(dataObj['image'] != 'none' && // for 
                                       dataObj["postType"] == "feed")
                                   ? const EdgeInsets.only(
-                                      left: 27.0, right: 27.0)
+                                      left: 14.0, right: 12.0)
                                   : EdgeInsets.only(left: 0.0, right: 0.0),
                               // child: !dataObj['isItenary']
                               // ? text(dataObj):SizedBox.shrink()
@@ -237,32 +241,36 @@ class PostCard extends StatelessWidget {
                             )
                       : SizedBox.shrink(),
                   Padding(
-                    padding: (dataObj['image'] != 'none' &&
+                    padding: (dataObj['image'] != 'none' &&     // for image
                             dataObj["postType"] == "feed")
-                        ? const EdgeInsets.only(left: 27.0, right: 27.0)
+                        ? const EdgeInsets.only(left: 14.0, right: 27.0)
                         : EdgeInsets.only(left: 0.0, right: 0.0),
-                    child: !(dataObj['image'] != 'none' &&
+                    child: !(dataObj['image'] != 'none' && // for image show text second
                             dataObj["postType"] == "feed")
                         ? vote(context, dataObj, dataObj)
-                        : text(dataObj),
+                        : text(dataObj,),
                   ),
                   // After description, show createdAt
                   if (dataObj['createdAt'] != null)
                     Padding(
                       padding: const EdgeInsets.only(
-                          left: 27.0, right: 27.0, top: 4),
+                          left: 14.0, right: 27.0, top: 1),
                       child: Text(
                         formatDateToIST(dataObj['createdAt']),
                         style: FontManager().getTextStyle(context,
                             lWeight: FontWeight.w400,
-                            fontSize: 9,
-                            color: AppColors.bg3),
+                            fontSize: 10,
+                            color: AppColors.grey),
                       ),
                     ),
                 ],
               ),
             ),
           ),
+        Divider(
+          color: AppColors.unSelectedOption,
+          thickness: 0.8,
+        ),
         ],
       ),
     );
@@ -270,11 +278,56 @@ class PostCard extends StatelessWidget {
 
   Widget text(item) {
     try {
-      return Readmore(str: item['description']['message'].toString());
+      return Readmore(str: item['description']['message'].toString(),  tName:(item['image'] != 'none' && item["postType"] == "feed") ? item["author"]['maskedName'] ?? item["author"]['name'] : "",);
     } catch (e) {
-      return Readmore(str: item['description'].toString());
+      return Readmore(str: item['description'].toString(),  tName:(item['image'] != 'none' && item["postType"] == "feed") ? item["author"]['maskedName'] ?? item["author"]['name'] : "",);
     }
   }
+//   Widget text(item,BuildContext context) {
+//   try {
+//     String username = item["author"]['maskedName'] ?? item["author"]['name'];
+//     String description = item['description']['message']?.toString() ?? item['description'].toString();
+
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         const SizedBox(height: 10),
+//         RichText(
+//           text: TextSpan(
+//             children: [
+//               // Username
+//               TextSpan(
+//                 text: username,
+//                 style: FontManager().getTextStyle(
+//                   context,
+//                   lWeight: FontWeight.w600, // Bold for username, like Instagram
+//                   fontSize: 14,
+//                   color: AppColors.bg1,
+//                 ),
+//               ),
+//               // Space between username and description
+//               const TextSpan(text: ' '),
+//               // Description
+//               TextSpan(
+//                 text: description,
+//                 style: FontManager().getTextStyle(
+//                   context,
+//                   lWeight: FontWeight.w400, // Regular weight for description
+//                   fontSize: 14,
+//                   color: AppColors.accentColor,
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//         const SizedBox(height: 10),
+//       ],
+//     );
+//   } catch (e) {
+//     // Fallback in case of error
+//     return Readmore(str: item['description'].toString());
+//   }
+// }
 
 String formatDateToIST(String dateStr) {
   try {

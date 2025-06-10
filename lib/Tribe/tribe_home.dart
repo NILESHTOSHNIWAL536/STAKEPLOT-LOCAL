@@ -100,6 +100,7 @@ Widget vote(context, dataObj, data) {
           children: [
             Container(
               child: Row(
+               
                 children: [
                   GestureDetector(
                     onTap: () {
@@ -139,11 +140,11 @@ Widget vote(context, dataObj, data) {
                           : (postCount[dataObj['_id']].toString()),
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.w400,
-                          fontSize: 20,
+                          fontSize: 14,
                           color: AppColors.bg1),
                     ),
                   ),
-                  SizedBox(width: 10),
+                  SizedBox(width: 4),
                   // GestureDetector(
                   //   onTap: () {
                   //     savePostData(context, data);
@@ -171,7 +172,7 @@ Widget vote(context, dataObj, data) {
                               : postCommentCount[idData].toString(),
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.w400,
-                              fontSize: 20,
+                              fontSize: 14,
                               color: AppColors.likesharecommentCount),
                         ),
                       ],

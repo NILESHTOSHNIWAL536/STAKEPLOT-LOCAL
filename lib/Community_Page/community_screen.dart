@@ -68,7 +68,7 @@ class _CommunityState extends State<Community> {
               children: [
                 _buildWelcomeRow(),
                 Padding(
-                  padding: const EdgeInsets.only(left: 27.0, right: 27.0,top: 4),
+                  padding: const EdgeInsets.only(left: 12.0, right: 12.0,top: 4),
                   child: Obx(() =>isTrending.value ? getTabs(context) : getTabs(context)),
                 ),
                  Obx(() => isTrending.value ? getTranding() : getFeed())
@@ -185,8 +185,8 @@ class _CommunityState extends State<Community> {
               child: textStyleImage(
                   context: context,
                   text: strings.feed,
-                  fontsize: !isTrending.value ? 20 : 16,
-                  fontWeight: !isTrending.value ? FontWeight.bold : FontWeight.w400,
+                  fontsize: !isTrending.value ? 18 : 14,
+                  fontWeight: !isTrending.value ? FontWeight.w700 : FontWeight.w400,
                   c: AppColors.accentColor)),
                   
         ),
@@ -197,8 +197,8 @@ class _CommunityState extends State<Community> {
      child: textStyleImage(
          context: context,
          text: strings.trending,
-         fontsize: isTrending.value ? 20 : 16,
-         fontWeight:isTrending.value ? FontWeight.bold : FontWeight.w400,
+         fontsize: isTrending.value ? 18 : 14,
+         fontWeight:isTrending.value ? FontWeight.w700 : FontWeight.w400,
          c: AppColors.accentColor)),
       ]),
     );
@@ -211,7 +211,7 @@ class _CommunityState extends State<Community> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-         padding: const EdgeInsets.only(left: 27.0, right: 23.0),
+         padding: const EdgeInsets.only(left: 10.0, right: 10.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -224,14 +224,14 @@ class _CommunityState extends State<Community> {
                     strings.welcomeBack,
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w500,
-                        fontSize: h / 60,
+                        fontSize: 16,
                         color: AppColors.accentColor),
                   ),
                   Text(
                     strings.finspace,
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w700,
-                        fontSize: h / 50,
+                        fontSize: 16,
                         color: AppColors.finSpaceColor),
                   ),
                 ],
@@ -275,7 +275,7 @@ class _CommunityState extends State<Community> {
           height: 6,
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 27.0, right: 27.0),
+          padding: const EdgeInsets.only(left: 10.0, right: 10.0),
           child: Hero(
             tag: "TribeSearch",
             child: InkWell(
@@ -283,7 +283,7 @@ class _CommunityState extends State<Community> {
                 Navigator.pushNamed(context, '/TribeSearch');
               },
               child: Container(
-                width: MediaQuery.sizeOf(context).width * 348 / 390,
+                width: MediaQuery.sizeOf(context).width/1.07,
                 height: MediaQuery.sizeOf(context).width *(32/348),
                 child: TextField(
                   controller: _searchController,

@@ -91,6 +91,7 @@ class _ExploreModalState extends State<ExploreModal> {
                     cropController: cropController,
                     image: FileImage(imageFile),
                     shape: CustomCropShape.Square,
+                     ratio: Ratio(width: 402, height: 214),
                     overlayColor: Colors.black.withOpacity(0.3),
                     cropPercentage: 0.9,
                     outlineStrokeWidth: 0.0,

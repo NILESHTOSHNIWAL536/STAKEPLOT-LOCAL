@@ -112,8 +112,9 @@ Widget getQuestionsAndOptions(e, context, flag, PostId) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-              width: width <= 500 ? width / 1.3 : width / 1.3,
+             
+              padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+              width: width <= 500 ? width / 1.2 : width / 1.2,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -178,16 +179,16 @@ Widget getQuestionsAndOptions(e, context, flag, PostId) {
                                     decoration: BoxDecoration(
                                         color: op['option'] == s
                                             ? null
-                                            : AppColors.backgroundColor,
+                                            : AppColors.unSelectedOption,
                                         borderRadius: BorderRadius.circular(
-                                            Colorcodes.borderRadius),
+                                            Colorcodes.borderRadius/2),
                                         gradient: op['option'] == s
                                             ? LinearGradient(
                                                 begin: Alignment.centerLeft,
                                                 end: Alignment.centerRight,
                                                 colors: [
-                                                  AppColors.pollSelected,
-                                                  AppColors.pollSelected,
+                                                  AppColors.finSpaceColor,
+                                                  AppColors.finSpaceColor,
                                                 ],
                                               )
                                             : null,
@@ -213,7 +214,7 @@ Widget getQuestionsAndOptions(e, context, flag, PostId) {
                                                   lWeight: FontWeight.w500,
                                                   fontSize: 14,
                                                   color: isSe
-                                                      ? AppColors.bg1
+                                                      ? AppColors.backgroundColor
                                                       : AppColors.bg1)),
                                         ),
                                         myvote.value
@@ -229,7 +230,7 @@ Widget getQuestionsAndOptions(e, context, flag, PostId) {
                                                             FontWeight.bold,
                                                         fontSize: 14,
                                                         color: isSe
-                                                            ? AppColors.bg1
+                                                            ? AppColors.backgroundColor
                                                             : AppColors.bg1))
                                             : SizedBox.shrink(),
                                       ],

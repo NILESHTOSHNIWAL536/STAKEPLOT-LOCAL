@@ -28,6 +28,7 @@ class AppColors {
   static const Color debitColor =  Color.fromARGB(255, 207, 118, 113);
   static  Color creditColor = Colors.green.shade700;
   static  Color grey = Colors.black54;
+  static const Color unSelectedOption = Color(0xFFE4E4E4);
 
  
 }
