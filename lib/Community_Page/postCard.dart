@@ -13,7 +13,6 @@ import 'package:flutter_application_code_stakeplot/readmore.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 
-
 class ChartData {
   ChartData(this.x, this.y, [this.color, this.name]);
   final String x;
@@ -45,8 +44,10 @@ class PostCard extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+      
       child: Column(
         children: [
+
           GestureDetector(
             onTap: flag
                 ? null
@@ -79,16 +80,24 @@ class PostCard extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 color: AppColors.backgroundColor,
+  //               border: Border(
+   
+  //   bottom: BorderSide(
+  //     color: Colors.grey.shade400,
+  //     width: 4.0,          // Thickness of the bottom border
+  //   ),
+  // ),
                 // borderRadius:
                 //     BorderRadius.circular(Colorcodes.borderRadius)
               ),
+              
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(
-                        left: 10.0, right: 27.0, top: 0, bottom: 16),
+                        left: 10.0, right: 27.0, top: 0, bottom: 3),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -101,8 +110,8 @@ class PostCard extends StatelessWidget {
                                 child: AvatarProfile(
                                   name: (dataObj["author"]['maskedName'] ??
                                       dataObj["author"]['name']),
-                                  width: 9.7,
-                                  height: 20,
+                                  width: 11,
+                                  height: 21,
                                   background: dataObj["author"]
                                           ['avatarBackGround'] ??
                                       defaultBackGround.value,
@@ -144,7 +153,7 @@ class PostCard extends StatelessWidget {
                               dataObj['pollData']['question'] != null
                           ? Padding(
                               padding: const EdgeInsets.only(
-                                  left: 27.0, right: 27.0),
+                                  left: 10.0, right: 27.0),
                               child: Text(
                                 dataObj['pollData']['question'],
                                 style: FontManager().getTextStyle(context,
@@ -153,20 +162,20 @@ class PostCard extends StatelessWidget {
                                     color: AppColors.bg1),
                               ),
                             )
-                          : isWrite?
-                          Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 27.0, right: 27.0),
-                              child: Text(
-                                (dataObj['title']),
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                    color: AppColors.bg1),
-                              ),
-                            ):
-                             SizedBox.shrink(),
-                            
+                          : isWrite
+                              ? Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 14.0, right: 27.0),
+                                  child: Text(
+                                    (dataObj['title']),
+                                    style: FontManager().getTextStyle(context,
+                                        lWeight: FontWeight.w600,
+                                        fontSize: 16,
+                                        color: AppColors.bg1),
+                                  ),
+                                )
+                              : SizedBox.shrink(),
+
                   // Image Section (Exploria or Others)
                   isExploria
                       ? SizedBox.shrink()
@@ -228,27 +237,35 @@ class PostCard extends StatelessWidget {
                   // Content for Non-Exploria Posts
                   !isExploria
                       ? isPoll
-                          ? getQuestionsAndOptions(dataObj['pollData'], context,
-                              true, dataObj['_id'])
+                          ? Padding(
+                              padding: EdgeInsets.only(left: 27.0, right: 27.0),
+                              child: getQuestionsAndOptions(dataObj['pollData'],
+                                  context, true, dataObj['_id']),
+                            )
                           : Container(
-                             
-                              padding: const EdgeInsets.only(left: 27.0, right: 27.0),
-                              child: !dataObj['isItenary']
-                                  ? text(dataObj):SizedBox.shrink()
-            
+                              // padding: const EdgeInsets.only(left: 27.0, right: 27.0),
+                              // child: !dataObj['isItenary']
+                              // ? text(dataObj):SizedBox.shrink()
+                              padding:!isImage
+                                  ? const EdgeInsets.only(
+                                      left: 14.0, right: 27.0)
+                                  : EdgeInsets.only(left: 0.0, right: 0.0),
+                              // child: !dataObj['isItenary']
+                              // ? text(dataObj):SizedBox.shrink()
+                              child: isImage
+                                  ? vote(context, dataObj, dataObj)
+                                  : text(dataObj),
                             )
                       : SizedBox.shrink(),
                   Padding(
-                    padding: (dataObj['image'] != 'none' &&
-                            dataObj["postType"] == "feed")
-                        ? const EdgeInsets.only(left: 27.0, right: 27.0)
+                    padding: isImage
+                        ? const EdgeInsets.only(left: 10.0, right: 27.0)
                         : EdgeInsets.only(left: 0.0, right: 0.0),
-                    child: !(dataObj['image'] != 'none' &&
-                            dataObj["postType"] == "feed")
+                    child: !isImage
                         ? vote(context, dataObj, dataObj)
                         : text(dataObj),
                   ),
-                  // After description, show createdAt
+                 
                   if (dataObj['createdAt'] != null)
                     Padding(
                       padding: const EdgeInsets.only(
@@ -265,6 +282,7 @@ class PostCard extends StatelessWidget {
               ),
             ),
           ),
+          
         ],
       ),
     );
@@ -278,34 +296,41 @@ class PostCard extends StatelessWidget {
     }
   }
 
-String formatDateToIST(String dateStr) {
-  try {
-    // Parse input date
-    DateTime utcDate = DateTime.parse(dateStr).toUtc();
+  String formatDateToIST(String dateStr) {
+    try {
+      // Parse input date
+      DateTime utcDate = DateTime.parse(dateStr).toUtc();
 
-    // Convert to IST (UTC+5:30)
-    DateTime istDate = utcDate.add(Duration(hours: 5, minutes: 30));
+      // Convert to IST (UTC+5:30)
+      DateTime istDate = utcDate.add(Duration(hours: 5, minutes: 30));
 
-    // Get hour in 12-hour format
-    int hour = istDate.hour % 12 == 0 ? 12 : istDate.hour % 12;
-    String minute = istDate.minute.toString().padLeft(2, '0');
-    String period = istDate.hour >= 12 ? 'PM' : 'AM';
-    String month = _getMonthAbbreviation(istDate.month);
+      // Get hour in 12-hour format
+      int hour = istDate.hour % 12 == 0 ? 12 : istDate.hour % 12;
+      String minute = istDate.minute.toString().padLeft(2, '0');
+      String period = istDate.hour >= 12 ? 'PM' : 'AM';
+      String month = _getMonthAbbreviation(istDate.month);
 
-    return "$hour:$minute $period · $month ${istDate.day}, ${istDate.year}";
-  } catch (e) {
-    return dateStr; // Return original if parsing fails
+      return "$hour:$minute $period · $month ${istDate.day}, ${istDate.year}";
+    } catch (e) {
+      return dateStr; // Return original if parsing fails
+    }
   }
-}
 
-String _getMonthAbbreviation(int month) {
-  const months = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-  ];
-  return (month >= 1 && month <= 12) ? months[month - 1] : '';
-}
-
- 
- 
+  String _getMonthAbbreviation(int month) {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
+    return (month >= 1 && month <= 12) ? months[month - 1] : '';
+  }
 }

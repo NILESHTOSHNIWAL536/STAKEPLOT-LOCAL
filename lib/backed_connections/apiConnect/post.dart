@@ -74,26 +74,26 @@ void reportPost(context, String id, String spam, String type, int index) async {
   // getPost();
 }
 
-Future<Map<String, dynamic>> createPost(BuildContext context, String title,
-    String description, File imageFile) async {
+Future<Map<String, dynamic>> createPost(
+  BuildContext context,
+  String title,
+  String description,
+  File imageFile,
+) async {
   try {
     String urlPath = await addImageToCloud2(imageFile);
     final TagList = [...selectedSubCategories, ...selectedCategories];
 
     var body = {
-      'title': title,
-      'description': {'message': description},
+      'description': description,
       'image': urlPath,
-      'fileName': '',
-      'tag': TagList
+      'tag': TagList,
+      'postType': 'image'
     };
-
-    print(body);
 
     String apiCall = '${url}/post';
 
     var response = await postDataApiCall(apiCall, body);
-    print(response.body);
     if (getFlagOfResponse(response)) {
       clearInterest();
       var postData = jsonDecode(response.body);
@@ -121,15 +121,13 @@ Future<Map<String, dynamic>> createPost(BuildContext context, String title,
 }
 
 void createPostWithOutImage(context, String title, String description) async {
-  var urlPath = '${url}/post/withOutImage';
+  var urlPath = '${url}/post/';
   final TagList = [...selectedSubCategories, ...selectedCategories];
   var body = {
     'title': title,
-    'description': {
-      'message': description,
-    },
-    'isPoll': false,
-    'tag': TagList
+    'description': description,
+    'tags': TagList,
+    "postType": "write"
   };
 
   var response = await postDataApiCall(urlPath, body);

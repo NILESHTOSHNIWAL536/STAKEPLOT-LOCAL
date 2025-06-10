@@ -45,7 +45,7 @@ class _ExploreModalState extends State<ExploreModal> {
   final List<TextEditingController> _textControllers = [];
   final List<TextEditingController> _amountControllers = [];
   bool exploreSubmitted = false;
- final CommunityScreenStrings strings = CommunityScreenStrings();
+  final CommunityScreenStrings strings = CommunityScreenStrings();
   @override
   void initState() {
     super.initState();
@@ -55,7 +55,7 @@ class _ExploreModalState extends State<ExploreModal> {
 
   Future<void> _pickAndCropImage() async {
     if (selectedImages.length >= maxImages) {
-      snackBarCalled(context,SnackbarData().maxFiveImagesAllowed );
+      snackBarCalled(context, SnackbarData().maxFiveImagesAllowed);
       return;
     }
 
@@ -64,7 +64,6 @@ class _ExploreModalState extends State<ExploreModal> {
       await _showCropDialog(File(image.path));
     }
   }
-
 
   Future<void> _showCropDialog(File imageFile, [int? existingIndex]) async {
     final cropController = CustomImageCropController();
@@ -114,7 +113,7 @@ class _ExploreModalState extends State<ExploreModal> {
                           color: Colors.grey[300],
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Text( strings.cancelButton,
+                        child: Text(strings.cancelButton,
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.normal,
                                 fontSize: 12,
@@ -161,7 +160,7 @@ class _ExploreModalState extends State<ExploreModal> {
                                   strokeWidth: 2,
                                 ),
                               )
-                            : Text( strings.saveButton,
+                            : Text(strings.saveButton,
                                 style: FontManager().getTextStyle(context,
                                     lWeight: FontWeight.normal,
                                     fontSize: 12,
@@ -277,9 +276,9 @@ class _ExploreModalState extends State<ExploreModal> {
   }
 
   Future<void> _submitPost() async {
-     
-    if (locationNameController.text.isEmpty || locationAddressController.text.isEmpty) {
-       snackBarCalled(context, SnackbarData().fillAllRequiredFields);
+    if (locationNameController.text.isEmpty ||
+        locationAddressController.text.isEmpty) {
+      snackBarCalled(context, SnackbarData().fillAllRequiredFields);
       return;
     }
 
@@ -303,38 +302,27 @@ class _ExploreModalState extends State<ExploreModal> {
         String url = await postImageToCloud(image, context);
         imageUrls.add(url);
       } catch (e) {
-        snackBarCalled(context,SnackbarData().errorUploadingImage);
+        snackBarCalled(context, SnackbarData().errorUploadingImage);
         setState(() => _isSubmitting = false);
         return;
       }
     }
 
     Map<String, dynamic> requestBody = {
-      "pictures": imageUrls,
-      "place": {
-        "name": locationNameController.text,
-        "location": locationAddressController.text,
-      },
+      "images": imageUrls,
+      "name": locationNameController.text,
+      "location": locationAddressController.text,
       "budget": budget,
       "rating": _rating,
-      "tripHighlight": titleController.text,
+      "tripHighlights": titleController.text,
       "description": contentController.text,
-      "comments": 0,
-      "shares": 0,
-      "upvotes": 0,
+      "postType": "exploria"
     };
 
-    var body = {
-      'title': titleController.text,
-      'description': {'message': requestBody},
-      'image': imageUrls.isNotEmpty
-          ? imageUrls[0]
-          : '', // Use first image as main image
-      'fileName': '',
-      'type': 'explore'
-    };
+    print("req body for the server: $requestBody");
 
     try {
+      print('cam till here');
       var accessToken = await getToken();
       final response = await http.post(
         Uri.parse('$url/post/'),
@@ -342,8 +330,10 @@ class _ExploreModalState extends State<ExploreModal> {
           'Content-Type': 'application/json',
           "Authorization": "$accessToken",
         },
-        body: jsonEncode(body),
+        body: jsonEncode(requestBody),
       );
+
+      print("response from the server: ${response.body}");
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         setState(() {
@@ -363,12 +353,11 @@ class _ExploreModalState extends State<ExploreModal> {
         widget.onPostCreated(jsonDecode(response.body));
         Navigator.pop(context);
       } else {
-        snackBarCalled(context,SnackbarData().failedToSubmitPost);
+        snackBarCalled(context, SnackbarData().failedToSubmitPost);
         setState(() => _isSubmitting = false);
       }
     } catch (e) {
-      
-      snackBarCalled(context,SnackbarData().errorSubmittingPost);
+      snackBarCalled(context, SnackbarData().errorSubmittingPost);
       setState(() => _isSubmitting = false);
     }
   }
@@ -394,7 +383,6 @@ class _ExploreModalState extends State<ExploreModal> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      
       child: Padding(
         padding: const EdgeInsets.only(top: 20),
         child: Container(
@@ -436,7 +424,7 @@ class _ExploreModalState extends State<ExploreModal> {
       children: [
         const Icon(Icons.explore_sharp, size: 24, color: AppColors.accentColor),
         const SizedBox(width: 8),
-        Text(strings.exploria, 
+        Text(strings.exploria,
             style: FontManager().getTextStyle(context,
                 lWeight: FontWeight.bold, fontSize: 18, color: Colors.black)),
       ],
@@ -449,7 +437,7 @@ class _ExploreModalState extends State<ExploreModal> {
             CrossAxisAlignment.center, // Align items vertically centered
         children: [
           Text(
-             strings.rateThisPlace,
+            strings.rateThisPlace,
             style: FontManager().getTextStyle(
               context,
               lWeight: FontWeight.w500,
@@ -487,7 +475,8 @@ class _ExploreModalState extends State<ExploreModal> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-           strings.photosLabel.replaceFirst('{count}', selectedImages.length.toString()),
+          strings.photosLabel
+              .replaceFirst('{count}', selectedImages.length.toString()),
           style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.bold,
@@ -507,7 +496,7 @@ class _ExploreModalState extends State<ExploreModal> {
           child: selectedImages.isEmpty
               ? Center(
                   child: Text(
-                   strings.noImagesSelected,
+                    strings.noImagesSelected,
                     style: TextStyle(color: Colors.grey[600]),
                   ),
                 )
@@ -592,7 +581,7 @@ class _ExploreModalState extends State<ExploreModal> {
                 const Icon(Icons.add_a_photo, color: Colors.white, size: 20),
                 const SizedBox(width: 8),
                 Text(
-                   strings.addPhoto,
+                  strings.addPhoto,
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.normal,
@@ -612,7 +601,7 @@ class _ExploreModalState extends State<ExploreModal> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text( strings.aboutPlace,
+        Text(strings.aboutPlace,
             style: FontManager().getTextStyle(context,
                 lWeight: FontWeight.normal, fontSize: 16, color: Colors.black)),
         const SizedBox(height: 10),
@@ -623,7 +612,8 @@ class _ExploreModalState extends State<ExploreModal> {
         const SizedBox(height: 10),
         TextField(
           controller: locationAddressController,
-         decoration: _inputDecoration(strings.locationAddress, Icons.location_pin),
+          decoration:
+              _inputDecoration(strings.locationAddress, Icons.location_pin),
         ),
       ],
     );
@@ -654,8 +644,8 @@ class _ExploreModalState extends State<ExploreModal> {
                 Expanded(
                   child: TextField(
                     controller: _textControllers[index],
-                    decoration:
-                        _inputDecoration(strings.addCategory, Icons.description),
+                    decoration: _inputDecoration(
+                        strings.addCategory, Icons.description),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -664,8 +654,8 @@ class _ExploreModalState extends State<ExploreModal> {
                     controller: _amountControllers[index],
                     keyboardType: TextInputType.number,
                     inputFormatters: allowDecimalInput(),
-                    decoration:
-                        _inputDecoration(strings.addBudget, Icons.currency_rupee),
+                    decoration: _inputDecoration(
+                        strings.addBudget, Icons.currency_rupee),
                   ),
                 ),
               ],
@@ -676,16 +666,17 @@ class _ExploreModalState extends State<ExploreModal> {
     );
   }
 
-    Widget _buildHighlightSection() {
+  Widget _buildHighlightSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           strings.tripHighlights, // Updated
-          style: FontManager().getTextStyle(context,
-              lWeight: FontWeight.normal,
-              fontSize: 16,
-              color: Colors.black,
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.normal,
+            fontSize: 16,
+            color: Colors.black,
           ),
         ),
         const SizedBox(height: 10),
@@ -704,15 +695,13 @@ class _ExploreModalState extends State<ExploreModal> {
     );
   }
 
-    void callBack()async
-  {
-      final isEnabled = locationNameController.text.isNotEmpty &&
+  void callBack() async {
+    final isEnabled = locationNameController.text.isNotEmpty &&
         locationAddressController.text.isNotEmpty &&
         !_isSubmitting;
 
-       isEnabled ? _submitPost() : null;
+    isEnabled ? _submitPost() : null;
   }
- 
 
   Widget _buildSubmitButton() {
     final isEnabled = locationNameController.text.isNotEmpty &&
@@ -721,7 +710,7 @@ class _ExploreModalState extends State<ExploreModal> {
 
     return GestureDetector(
       onTap: () {
-         showTagListOfInterestModal(context:  context,onConfirm: callBack);
+        showTagListOfInterestModal(context: context, onConfirm: callBack);
       },
       child: _isSubmitting
           ? Center(child: const CircularProgressIndicator(color: Colors.black))
@@ -733,7 +722,7 @@ class _ExploreModalState extends State<ExploreModal> {
                   borderRadius: BorderRadius.circular(24)),
               child: Center(
                 child: Text(
-                 strings.continueButton, 
+                  strings.continueButton,
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.bold,
