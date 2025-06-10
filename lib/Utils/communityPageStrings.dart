@@ -16,7 +16,7 @@ class CommunityScreenStrings {
   String featuredPosts = "Featured Posts";
   String noFriendsMessage = "Make friends to see their posts or upload post";
   String createPost = "Create Post";
-  String textOption = "Text";
+  String textOption = "Write";
   String imageOption = "Image";
   String pollOption = "Poll";
   String exploria = "Exploria";

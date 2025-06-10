@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -7,7 +9,9 @@ import 'dart:convert';
 class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     clientId:
-        '442849932576-2qqrgh9mdpi0r5cdkt2nvfln0ogaqepn.apps.googleusercontent.com',
+    Platform.isAndroid?
+    
+        '442849932576-2qqrgh9mdpi0r5cdkt2nvfln0ogaqepn.apps.googleusercontent.com':"442849932576-3u02sono33ouamo2cn9mpnrp8i4k53v8.apps.googleusercontent.com",
     serverClientId:
         '442849932576-9pjdtqgiedibia1apagj12nbi22mgb56.apps.googleusercontent.com', // For iOS, optional for Android
     scopes: [

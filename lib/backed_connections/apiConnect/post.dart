@@ -170,6 +170,7 @@ void getPost() async {
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
+    print("response for feed :$obj");
     historyListData.clear();
     historyListData.addAll(obj);
     getTrendingData.clear();

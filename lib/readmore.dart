@@ -11,19 +11,25 @@ String str;
 
   @override
   Widget build(BuildContext context){
-    return ReadMoreText(
-                                                    str.toString(),
-                                                    style: FontManager().getTextStyle(context,
-                                      lWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                      color: AppColors.accentColor),
-                                                    trimMode: TrimMode.Line,
-                                                    trimLines: 4,
-                                                    colorClickableText:AppColors.accentColor,
-                                                    trimCollapsedText: 'Show more',
-                                                    trimExpandedText: 'Show less',
-                                                    moreStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                                                    lessStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                    );
+    return Column(
+      children: [
+        SizedBox(height: 10,),
+        ReadMoreText(
+                                                        str.toString(),
+                                                        style: FontManager().getTextStyle(context,
+                                          lWeight: FontWeight.w500,
+                                          fontSize: 14,
+                                          color: AppColors.accentColor),
+                                                        trimMode: TrimMode.Line,
+                                                        trimLines: 4,
+                                                        colorClickableText:AppColors.accentColor,
+                                                        trimCollapsedText: 'Show more',
+                                                        trimExpandedText: 'Show less',
+                                                        moreStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                                                        lessStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 10,),
+      ],
+    );
   }
 }

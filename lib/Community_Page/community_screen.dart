@@ -185,9 +185,8 @@ class _CommunityState extends State<Community> {
               child: textStyleImage(
                   context: context,
                   text: strings.feed,
-                  fontsize: !isTrending.value ? 20 : 18,
-                  fontWeight:
-                      !isTrending.value ? FontWeight.bold : FontWeight.w500,
+                  fontsize: !isTrending.value ? 20 : 16,
+                  fontWeight: !isTrending.value ? FontWeight.bold : FontWeight.w400,
                   c: AppColors.accentColor)),
                   
         ),
@@ -198,9 +197,8 @@ class _CommunityState extends State<Community> {
      child: textStyleImage(
          context: context,
          text: strings.trending,
-         fontsize: isTrending.value ? 20 : 18,
-         fontWeight:
-             isTrending.value ? FontWeight.bold : FontWeight.w500,
+         fontsize: isTrending.value ? 20 : 16,
+         fontWeight:isTrending.value ? FontWeight.bold : FontWeight.w400,
          c: AppColors.accentColor)),
       ]),
     );
