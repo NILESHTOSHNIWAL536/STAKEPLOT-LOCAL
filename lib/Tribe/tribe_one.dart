@@ -624,7 +624,7 @@ Widget dataComments(Comments data, int index) {
                       Container(
                         margin: EdgeInsets.symmetric(vertical: 6),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Padding(
@@ -667,21 +667,24 @@ Widget dataComments(Comments data, int index) {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 5.0),
-                                    child: Text(
-                                      data.sId == null
-                                          ? '0'
-                                          : (reRender.value
-                                              ? postCount[data.sId]! < 0
-                                                  ? postCount[dataObj['_id']]
-                                                      .toString()
-                                                  : (postCount[data.sId]
-                                                      .toString())
-                                              : (postCount[data.sId].toString())),
-                                      style: FontManager().getTextStyle(context,
-                                          lWeight: FontWeight.w400,
-                                          fontSize: 20,
-                                          color: Colors.black),
+                                        horizontal: 2.0),
+                                    child: Container(
+                                      color: AppColors.button,
+                                      child: Text(
+                                        data.sId == null
+                                            ? '0'
+                                            : (reRender.value
+                                                ? postCount[data.sId]! < 0
+                                                    ? postCount[dataObj['_id']]
+                                                        .toString()
+                                                    : (postCount[data.sId]
+                                                        .toString())
+                                                : (postCount[data.sId].toString())),
+                                        style: FontManager().getTextStyle(context,
+                                            lWeight: FontWeight.w400,
+                                            fontSize: 14,
+                                            color: Colors.black),
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -700,13 +703,26 @@ Widget dataComments(Comments data, int index) {
                               },
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(horizontal: 2.0),
-                                child: Text(
-                                  'Reply',
-                                  style: FontManager().getTextStyle(context,
-                                      lWeight: FontWeight.w500,
-                                      fontSize: 13,
-                                      color: AppColors.message),
+                                    const EdgeInsets.symmetric(horizontal: 6.0),
+                                child: Container(
+                                  height: MediaQuery.sizeOf(context).height/40,
+                                   width: MediaQuery.sizeOf(context).width/8,
+
+                                  decoration: BoxDecoration(
+                                    color: AppColors.finSpaceColor,
+                                    
+                                    borderRadius:
+                    BorderRadius.circular(Colorcodes.borderRadius)
+
+                                  ),
+                                  
+                                  child: Text(
+                                    'Reply',
+                                    style: FontManager().getTextStyle(context,
+                                        lWeight: FontWeight.w500,
+                                        fontSize: 13,
+                                        color: AppColors.backgroundColor),
+                                  ),
                                 ),
                               ),
                             ),
