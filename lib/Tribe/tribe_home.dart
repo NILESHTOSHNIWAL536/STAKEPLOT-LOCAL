@@ -5,6 +5,7 @@ import 'package:flutter_application_code_stakeplot/Community_Page/maskedNameDial
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/resportHide.dart';
+import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_share.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
@@ -111,7 +112,6 @@ Widget vote(context, dataObj, data) {
           children: [
             Container(
               child: Row(
-               
                 children: [
                   GestureDetector(
                     onTap: () {
@@ -164,29 +164,60 @@ Widget vote(context, dataObj, data) {
                   // )
                   // declare this in your StatefulWidget
 
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                    child: Row(
-                      children: [
-                        Container(
-                            height: 22,
-                            child: SvgPicture.asset(
-                              LikeComment.commentPost,
+                  InkWell(
+                    onTap: () {
+                      if (maskedName.value.trim().isEmpty) {
+                        MaskedNameDialogBox.showMaskedNameDialog(context);
+                      } else {
+                        showModalBottomSheet(
+                          context: context,
+                          backgroundColor: AppColors.commentbg,
+                           isScrollControlled: true,
+                          builder: (context) {
+                            return Container(
+                                padding: const EdgeInsets.symmetric(vertical:16.0),
+                                  width: MediaQuery.sizeOf(context).width,
+                                  decoration: BoxDecoration(
+                                      color: AppColors.commentbg,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(36),
+                                          topRight: Radius.circular(36))),
+                              child: TribeUnique(
+                                                          id: dataObj["_id"],
+                                                          dataObj: dataObj,
+                                                          popBox: true.obs,
+                                                          
+                                                        
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                      child: Row(
+                        children: [
+                          Container(
                               height: 22,
-                            )),
-                        const SizedBox(
-                          width: 6,
-                        ),
-                        Text(
-                          postCommentCount[idData].toString() == 'null'
-                              ? dataObj["comments"].toString()
-                              : postCommentCount[idData].toString(),
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.w400,
-                              fontSize: 14,
-                              color: AppColors.likesharecommentCount),
-                        ),
-                      ],
+                              child: SvgPicture.asset(
+                                LikeComment.commentPost,
+                                height: 22,
+                              )),
+                          const SizedBox(
+                            width: 6,
+                          ),
+                          Text(
+                            postCommentCount[idData].toString() == 'null'
+                                ? dataObj["comments"].toString()
+                                : postCommentCount[idData].toString(),
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.w400,
+                                fontSize: 14,
+                                color: AppColors.likesharecommentCount),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -209,7 +240,9 @@ Widget vote(context, dataObj, data) {
                             savePostData(context, data);
                         },
                         child: SvgPicture.asset(
-                          isSaved ? LikeComment.savedPost : LikeComment.savePost,
+                          isSaved
+                              ? LikeComment.savedPost
+                              : LikeComment.savePost,
                           height: 22,
                         ));
                   }),
@@ -222,7 +255,7 @@ Widget vote(context, dataObj, data) {
                         } else {
                           showModalBottomSheet(
                             context: context,
-                            backgroundColor: AppColors.backgroundColor,
+                            backgroundColor: AppColors.unSelectedOption,
                             builder: (context) {
                               return TribeShare(data: data, dataObj: dataObj);
                             },

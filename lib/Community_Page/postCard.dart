@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/readmore.dart';
+import 'package:get/get.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 
@@ -55,6 +56,7 @@ class PostCard extends StatelessWidget {
                             TribeUnique(
                           id: dataObj["_id"],
                           dataObj: dataObj,
+                         popBox: false.obs,
                         ),
                         transitionsBuilder:
                             (context, animation, secondaryAnimation, child) {

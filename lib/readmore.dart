@@ -70,7 +70,7 @@ class _ReadmoreState extends State<Readmore> {
             final textSpan = TextSpan(
               children: [
                 TextSpan(
-                  text: "${widget.tName}" +" ",
+                  text:  (widget.tName).isNotEmpty? "${widget.tName}" +" ":"",
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.w700,

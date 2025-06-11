@@ -23,7 +23,9 @@ RxBool toggle = false.obs;
 class TribeUnique extends StatefulWidget {
   final String id;
   Map<String, dynamic> dataObj;
-  TribeUnique({Key? key, required this.id, required this.dataObj})
+  RxBool popBox;
+  TribeUnique(
+      {Key? key, required this.id, required this.dataObj, required this.popBox})
       : super(key: key);
 
   @override
@@ -233,39 +235,90 @@ class _TribeHomeState extends State<TribeUnique> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      // bottomNavigationBar: BottomNavigations(data: sizeRoom ? 3 : 2),
-      extendBody: true,
+    if (!widget.popBox.value) {
+      return Scaffold(
+        backgroundColor: AppColors.backgroundColor,
 
-      body: SafeArea(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          color: AppColors.backgroundColor,
-          // padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Obx(() => PostCard(
-                      data: reloadUniquePost.value
-                          ? uniquePostDeatils
-                          : uniquePostDeatils,
-                      flag: true,
-                      index: -1,
-                    )),
-                uploadData(uniquePostDeatils),
-                SizedBox(
-                  height: 100,
+        // bottomNavigationBar: BottomNavigations(data: sizeRoom ? 3 : 2),
+        extendBody: true,
+
+        body: SafeArea(
+          child: Container(
+            // height: MediaQuery.of(context).size.height,
+            //  padding: const EdgeInsets.fromLTRB(20, 30, 20, 12),
+            
+            // decoration: BoxDecoration(
+              
+            //     borderRadius: BorderRadius.only(
+            //         topLeft: Radius.circular(36),
+            //         topRight: Radius.circular(36))),
+
+            // padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: AnimatedPadding(
+             padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context)
+                      .viewInsets
+                      .bottom), // Adjusts padding when keyboard appears
+              duration: const Duration(milliseconds: 100),
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Obx(() => !widget.popBox.value
+                        ? PostCard(
+                            data: reloadUniquePost.value
+                                ? uniquePostDeatils
+                                : uniquePostDeatils,
+                            flag: true,
+                            index: -1,
+                          )
+                        : SizedBox.shrink()),
+                    // Obx(() => widget.popBox.value
+                    //     ? uploadData(uniquePostDeatils)
+                    //     : SizedBox.shrink()),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    } else {
+      return SafeArea(
+        child: Container(
+          // height: MediaQuery.of(context).size.height,
+          //  padding: const EdgeInsets.fromLTRB(20, 30, 20, 12),
+          // decoration: BoxDecoration(
+             
+          //     borderRadius: BorderRadius.only(
+          //         topLeft: Radius.circular(36), topRight: Radius.circular(36))),
+
+          // padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: AnimatedPadding(
+           padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context)
+                      .viewInsets
+                      .bottom), // Adjusts padding when keyboard appears
+              duration: const Duration(milliseconds: 100),
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                 
+                  Obx(() => widget.popBox.value
+                      ? uploadData(uniquePostDeatils)
+                      : SizedBox.shrink()),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   Widget imageurl(url) {
@@ -277,90 +330,303 @@ class _TribeHomeState extends State<TribeUnique> {
 
   Widget uploadData(dataObj) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 15),
-      child: Column(
-        children: [
-          commentedData(),
-          InputComment(
-            str,
-            TextInputType.name,
-            replyController,
-            replyid,
-          ),
-        ],
+      padding: const EdgeInsets.only(bottom: 15, top: 10),
+      child: Container(
+        child: Column(
+          children: [
+            Text(
+              "Comments",
+              style: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.w600, fontSize: 20, color: Colors.black),
+            ),
+            Divider(
+              color: AppColors.buttonBorder,
+              thickness: 0.8,
+            ),
+            commentedData(),
+            // InputComment(
+            //   str,
+            //   TextInputType.name,
+            //   replyController,
+            //   replyid,
+            // ),
+            // SizedBox(height:400)
+          ],
+        ),
       ),
     );
   }
 
   Widget commentedData() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Container(
-          width: MediaQuery.sizeOf(context).width / 1,
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
+    return Container(
+        width: MediaQuery.sizeOf(context).width / 1,
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
 
-              // color: const Color.fromRGBO(249, 246, 238, 1),
-              borderRadius: BorderRadius.circular(20)),
-          child: Column(
-            children: [
-              //  commentText:
+            // color: const Color.fromRGBO(249, 246, 238, 1),
+            borderRadius: BorderRadius.circular(20)),
+        child: Column(
+          children: [
+            //  commentText:
 
-              const SizedBox(
-                height: 6,
-              ),
+            Obx(
+              () => Container(
+                width: MediaQuery.sizeOf(context).width / 1,
+                margin: EdgeInsets.only(bottom: 10),
+                decoration: BoxDecoration(
 
-              Obx(
-                () => Container(
-                  width: MediaQuery.sizeOf(context).width / 1,
-                  margin: EdgeInsets.only(bottom: 10),
-                  decoration: BoxDecoration(
-
-                      //  color: Colorcodes.budgetLightGreen,
-                      borderRadius: BorderRadius.circular(12),
-                      border:
-                          Border.all(width: .3, color: AppColors.accentColor)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        children: indexArray
-                            .map((index) =>
-                                dataComments(commentList[index], index))
-                            .toList(),
-                      ),
-                      replyid != ""
-                          ? Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      replyid = "";
-                                      FocusScope.of(context)
-                                          .requestFocus(_replyFocusNode);
-                                    });
-                                  },
-                                  child: Text("Add a comment")),
-                            )
-                          : SizedBox.shrink()
-                    ],
-                  ),
+                    //  color: Colorcodes.budgetLightGreen,
+                    ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    replyid == "" // adding comment
+                        ? InputDate("Add a comment", TextInputType.name,
+                            calController1, widget.id)
+                        : SizedBox.shrink(),
+                    Column(
+                      children: indexArray
+                          .map((index) =>
+                              dataComments(commentList[index], index))
+                          .toList(),
+                    ),
+                    replyid != "" // replying to comment
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    replyid = "";
+                                    FocusScope.of(context)
+                                        .requestFocus(_replyFocusNode);
+                                  });
+                                },
+                                child: Text("Add a comment")),
+                          )
+                        : SizedBox.shrink()
+                  ],
                 ),
               ),
+            ),
 
-              replyid == ""
-                  ? InputDate("Add a comment", TextInputType.name,
-                      calController1, widget.id)
-                  : SizedBox.shrink(),
-            ],
-          )),
-    );
+            // replyid == "" // adding comment
+            //     ? InputDate("Add a comment", TextInputType.name,
+            //         calController1, widget.id)
+            //     : SizedBox.shrink(),
+          ],
+        ));
   }
 
-  Widget dataComments(Comments data, int index) {
-    //  RxList<Comments> data=data.obs;
+  // Widget dataComments(Comments data, int index) {
+  //   //  RxList<Comments> data=data.obs;
 
-    List<Replies> list = data.replies!;
+  //   List<Replies> list = data.replies!;
+
+  //   String idData = data.sId == null ? "" : data.sId.toString();
+  //   double width = MediaQuery.of(context).size.width;
+
+  //   return Obx(() => Column(
+  //         children: [
+  //           Container(
+  //             // width: MediaQuery.of(context).size.width/1.2,
+  //             padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+  //             child: Row(
+  //                 mainAxisAlignment: MainAxisAlignment.start,
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   // const Icon(
+  //                   //   Icons.person_pin_sharp,
+  //                   //   size: 35,
+  //                   //   color: Colors.black,
+  //                   // ),
+  //                   AvatarProfile(
+  //                       name: data.author!.name.toString(),
+  //                       width: 10,
+  //                       height: 23,
+  //                       background: data.author!.avatarBackGround.toString()),
+
+  //                   const SizedBox(
+  //                     width: 0,
+  //                   ),
+  //                   Container(
+  //                     width: width <= 430
+  //                         ? width / 1.4
+  //                         : width <= 500
+  //                             ? width / 1.3
+  //                             : MediaQuery.of(context).size.width / 1.3,
+  //                     child: Column(
+  //                       mainAxisAlignment: MainAxisAlignment.start,
+  //                       crossAxisAlignment: CrossAxisAlignment.start,
+  //                       children: [
+  //                         Padding(
+  //                           padding: const EdgeInsets.symmetric(vertical: 10),
+  //                           child: Text((data.author!.name ?? "name"),
+  //                               style: FontManager().getTextStyle(context,
+  //                                   lWeight: FontWeight.bold,
+  //                                   fontSize: 20,
+  //                                   color: Colors.black)),
+  //                         ),
+  //                         SizedBox(
+  //                           // color: Colors.cyan,
+  //                           // width: MediaQuery.of(context).size.width/1.4,
+  //                           // width: width<=430?  width/1.6:  width<=500?  width/2 : width/1.7,
+  //                           child: Text((data.commentText!),
+  //                               //  overflow: TextOverflow.visible,
+  //                               style: FontManager().getTextStyle(context,
+  //                                   lWeight: FontWeight.w500,
+  //                                   fontSize: 16,
+  //                                   color: Colors.black)),
+  //                         ),
+  //                         Container(
+  //                           margin: EdgeInsets.symmetric(vertical: 6),
+  //                           // width:  width<=430?  width/1.4: width<=500?  width/1.3: MediaQuery.of(context).size.width/1.3,
+  //                           // color: Colorcodes.budgetDarkGreen,
+  //                           child: Row(
+  //                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                             crossAxisAlignment: CrossAxisAlignment.center,
+  //                             children: [
+  //                               Padding(
+  //                                 padding: const EdgeInsets.only(top: 1.0),
+  //                                 child: Row(
+  //                                   crossAxisAlignment:
+  //                                       CrossAxisAlignment.center,
+  //                                   children: [
+  //                                     GestureDetector(
+  //                                         onTap: () {
+  //                                           if (maskedName.value
+  //                                               .trim()
+  //                                               .isEmpty) {
+  //                                             MaskedNameDialogBox
+  //                                                 .showMaskedNameDialog(
+  //                                                     context);
+  //                                           } else {
+  //                                             upvote2(
+  //                                                 context,
+  //                                                 "Comment",
+  //                                                 data.sId!,
+  //                                                 data,
+  //                                                 historyListData,
+  //                                                 data,
+  //                                                 index);
+
+  //                                             String l1 = "liked" + idData;
+  //                                             bool liked =
+  //                                                 likedList.contains(l1);
+
+  //                                             String l2 = "disliked" + idData;
+  //                                             bool disliked =
+  //                                                 likedList.contains(l2);
+  //                                             // upvoteGlobal(context,"Post",dataObj["_id"],dataObj);
+  //                                             // likedList.remove("liked"+dataObj["_id"])  :likedList.add("liked"+dataObj["_id"]);
+
+  //                                             if (liked) {
+  //                                               likedList.remove(l1);
+  //                                               postCount[idData] =
+  //                                                   postCount[idData]! - 1;
+  //                                               if (postCount[idData]! < 0) {
+  //                                                 postCount[idData] = 0;
+  //                                               }
+  //                                             } else {
+  //                                               likedList.add(l1);
+  //                                               postCount[idData] =
+  //                                                   postCount[idData]! + 1;
+  //                                             }
+  //                                             likedList.remove(l2);
+  //                                             reRender.value = !reRender.value;
+  //                                           }
+  //                                         },
+  //                                         // child: const Icon(
+  //                                         //   Icons.arrow_drop_up_outlined,
+  //                                         //   size: 35,
+  //                                         //   color: Colors.black,
+  //                                         // ),
+  //                                         child: likeIcon(
+  //                                             context,
+  //                                             likedList.contains("liked" +
+  //                                                 data.sId.toString()))),
+  //                                     //   child: likedList.contains(
+  //                                     //           "liked" + data.sId.toString())
+  //                                     //       ? upvoteLiked(context, false)
+  //                                     //       : upvoteLike(context, false),
+  //                                     // ),
+
+  //                                     Padding(
+  //                                       padding: const EdgeInsets.symmetric(
+  //                                           horizontal: 5.0),
+  //                                       child: Text(
+  //                                           data.sId == null
+  //                                               ? '0'
+  //                                               : (reRender.value
+  //                                                   ? postCount[data.sId]! < 0
+  //                                                       ? postCount[
+  //                                                               dataObj['_id']]
+  //                                                           .toString()
+  //                                                       : (postCount[data.sId]
+  //                                                           .toString())
+  //                                                   : (postCount[data.sId]
+  //                                                       .toString())),
+  //                                           style: FontManager().getTextStyle(
+  //                                               context,
+  //                                               lWeight: FontWeight.w400,
+  //                                               fontSize: 20,
+  //                                               color: Colors.black)),
+  //                                     ),
+  //                                   ],
+  //                                 ),
+  //                               ),
+  //                               InkWell(
+  //                                 onTap: () {
+  //                                   // Request focus for the reply text field
+  //                                   FocusScope.of(context)
+  //                                       .requestFocus(_replyNode);
+  //                                   _scrollToTextField();
+  //                                   autofocus.value = true;
+  //                                   setState(() {
+  //                                     commentObj = data;
+  //                                     str = "reply to " + data.commentText!;
+  //                                     replyid = data.sId!;
+  //                                   });
+  //                                 },
+  //                                 child: Padding(
+  //                                   padding: const EdgeInsets.symmetric(
+  //                                       horizontal: 2.0),
+  //                                   child: Text(('Reply'),
+  //                                       style: FontManager().getTextStyle(
+  //                                           context,
+  //                                           lWeight: FontWeight.w500,
+  //                                           fontSize: 13,
+  //                                           color: AppColors.message)),
+  //                                 ),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         ),
+  //                         Column(
+  //                           children: list
+  //                               .map(
+  //                                 (obj) => replyDatas(obj, data),
+  //                               )
+  //                               .toList(),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   )
+  //                 ]),
+  //           ),
+  //           index + 1 == indexArray.length
+  //               ? SizedBox.shrink()
+  //               : Divider(
+  //                   color: Colorcodes.budgetLightGreen,
+  //                   thickness: index + 1 == indexArray.length ? 0 : .8,
+  //                   endIndent: 5,
+  //                   indent: 5,
+  //                 )
+  //         ],
+  //       ));
+  // }
+
+  Widget dataComments(Comments data, int index) {
+    List<Replies> list = data.replies ?? [];
 
     String idData = data.sId == null ? "" : data.sId.toString();
     double width = MediaQuery.of(context).size.width;
@@ -368,199 +634,207 @@ class _TribeHomeState extends State<TribeUnique> {
     return Obx(() => Column(
           children: [
             Container(
-              // width: MediaQuery.of(context).size.width/1.2,
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
               child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // const Icon(
-                    //   Icons.person_pin_sharp,
-                    //   size: 35,
-                    //   color: Colors.black,
-                    // ),
-                    AvatarProfile(
-                        name: data.author!.name.toString(),
-                        width: 10,
-                        height: 23,
-                        background: data.author!.avatarBackGround.toString()),
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AvatarProfile(
+                    name: data.author!.name.toString(),
+                    width: 10,
+                    height: 23,
+                    background: data.author!.avatarBackGround.toString(),
+                  ),
+                  const SizedBox(width: 0),
+                  Container(
+                    width: width <= 430
+                        ? width / 1.4
+                        : width <= 500
+                            ? width / 1.3
+                            : MediaQuery.of(context).size.width / 1.3,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Text(
+                            (data.author!.name ?? "name"),
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.w600,
+                                fontSize: 16,
+                                color: AppColors.bg1),
+                          ),
+                        ),
+                        SizedBox(
+                          child: Text(
+                            (data.commentText!),
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.w400,
+                                fontSize: 14,
+                                color: AppColors.commentColor),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 6),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 1.0),
+                                child: Container(
+                                  height:
+                                      MediaQuery.sizeOf(context).height / 36,
+                                  width: MediaQuery.sizeOf(context).width / 7,
+                                  decoration: BoxDecoration(
+                                      //                 color: AppColors.button,
 
-                    const SizedBox(
-                      width: 0,
-                    ),
-                    Container(
-                      width: width <= 430
-                          ? width / 1.4
-                          : width <= 500
-                              ? width / 1.3
-                              : MediaQuery.of(context).size.width / 1.3,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Text((data.author!.name ?? "name"),
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    color: Colors.black)),
-                          ),
-                          SizedBox(
-                            // color: Colors.cyan,
-                            // width: MediaQuery.of(context).size.width/1.4,
-                            // width: width<=430?  width/1.6:  width<=500?  width/2 : width/1.7,
-                            child: Text((data.commentText!),
-                                //  overflow: TextOverflow.visible,
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    color: Colors.black)),
-                          ),
-                          Container(
-                            margin: EdgeInsets.symmetric(vertical: 6),
-                            // width:  width<=430?  width/1.4: width<=500?  width/1.3: MediaQuery.of(context).size.width/1.3,
-                            // color: Colorcodes.budgetDarkGreen,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 1.0),
+                                      //                 borderRadius:
+                                      // BorderRadius.circular(Colorcodes.borderRadius)
+
+                                      ),
                                   child: Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
                                       GestureDetector(
-                                          onTap: () {
-                                            if (maskedName.value
-                                                .trim()
-                                                .isEmpty) {
-                                              MaskedNameDialogBox
-                                                  .showMaskedNameDialog(
-                                                      context);
-                                            } else {
-                                              upvote2(
-                                                  context,
-                                                  "Comment",
-                                                  data.sId!,
-                                                  data,
-                                                  historyListData,
-                                                  data,
-                                                  index);
-
-                                              String l1 = "liked" + idData;
-                                              bool liked =
-                                                  likedList.contains(l1);
-
-                                              String l2 = "disliked" + idData;
-                                              bool disliked =
-                                                  likedList.contains(l2);
-                                              // upvoteGlobal(context,"Post",dataObj["_id"],dataObj);
-                                              // likedList.remove("liked"+dataObj["_id"])  :likedList.add("liked"+dataObj["_id"]);
-
-                                              if (liked) {
-                                                likedList.remove(l1);
-                                                postCount[idData] =
-                                                    postCount[idData]! - 1;
-                                                if (postCount[idData]! < 0) {
-                                                  postCount[idData] = 0;
-                                                }
-                                              } else {
-                                                likedList.add(l1);
-                                                postCount[idData] =
-                                                    postCount[idData]! + 1;
+                                        onTap: () {
+                                          if (maskedName.value.trim().isEmpty) {
+                                            MaskedNameDialogBox
+                                                .showMaskedNameDialog(context);
+                                          } else {
+                                            upvote2(
+                                                context,
+                                                "Comment",
+                                                data.sId!,
+                                                data,
+                                                historyListData,
+                                                data,
+                                                index);
+                                            String l1 = "liked" + idData;
+                                            bool liked = likedList.contains(l1);
+                                            String l2 = "disliked" + idData;
+                                            bool disliked =
+                                                likedList.contains(l2);
+                                            if (liked) {
+                                              likedList.remove(l1);
+                                              postCount[idData] =
+                                                  postCount[idData]! - 1;
+                                              if (postCount[idData]! < 0) {
+                                                postCount[idData] = 0;
                                               }
-                                              likedList.remove(l2);
-                                              reRender.value = !reRender.value;
+                                            } else {
+                                              likedList.add(l1);
+                                              postCount[idData] =
+                                                  postCount[idData]! + 1;
                                             }
-                                          },
-                                          // child: const Icon(
-                                          //   Icons.arrow_drop_up_outlined,
-                                          //   size: 35,
-                                          //   color: Colors.black,
-                                          // ),
-                                          child: likeIcon(
-                                              context,
-                                              likedList.contains("liked" +
-                                                  data.sId.toString()))),
-                                      //   child: likedList.contains(
-                                      //           "liked" + data.sId.toString())
-                                      //       ? upvoteLiked(context, false)
-                                      //       : upvoteLike(context, false),
-                                      // ),
-
+                                            likedList.remove(l2);
+                                            reRender.value = !reRender.value;
+                                          }
+                                        },
+                                        child: likeIcon(
+                                            context,
+                                            likedList.contains(
+                                                "liked" + data.sId.toString())),
+                                      ),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 5.0),
+                                            horizontal: 2.0),
                                         child: Text(
-                                            data.sId == null
-                                                ? '0'
-                                                : (reRender.value
-                                                    ? postCount[data.sId]! < 0
-                                                        ? postCount[
-                                                                dataObj['_id']]
-                                                            .toString()
-                                                        : (postCount[data.sId]
-                                                            .toString())
-                                                    : (postCount[data.sId]
-                                                        .toString())),
-                                            style: FontManager().getTextStyle(
-                                                context,
-                                                lWeight: FontWeight.w400,
-                                                fontSize: 20,
-                                                color: Colors.black)),
+                                          data.sId == null
+                                              ? '0'
+                                              : (reRender.value
+                                                  ? postCount[data.sId]! < 0
+                                                      ? postCount[
+                                                              dataObj['_id']]
+                                                          .toString()
+                                                      : (postCount[data.sId]
+                                                          .toString())
+                                                  : (postCount[data.sId]
+                                                      .toString())),
+                                          style: FontManager().getTextStyle(
+                                              context,
+                                              lWeight: FontWeight.w400,
+                                              fontSize: 14,
+                                              color: Colors.black),
+                                        ),
                                       ),
                                     ],
                                   ),
                                 ),
-                                InkWell(
-                                  onTap: () {
-                                    // Request focus for the reply text field
-                                    FocusScope.of(context)
-                                        .requestFocus(_replyNode);
-                                    _scrollToTextField();
-                                    autofocus.value = true;
-                                    setState(() {
-                                      commentObj = data;
-                                      str = "reply to " + data.commentText!;
-                                      replyid = data.sId!;
-                                    });
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 2.0),
-                                    child: Text(('Reply'),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  FocusScope.of(context)
+                                      .requestFocus(_replyNode);
+                                  // _scrollToTextField(); 
+                                  autofocus.value = true;
+                                  setState(() {
+                                    commentObj = data;
+                                    str = "reply to " + data.commentText!;
+                                    replyid = data.sId!;
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6.0),
+                                  child: Container(
+                                    height:
+                                        MediaQuery.sizeOf(context).height / 36,
+                                    width: MediaQuery.sizeOf(context).width / 7,
+                                    decoration: BoxDecoration(
+                                        // color: AppColors.finSpaceColor,
+
+                                        // borderRadius:
+                                        // BorderRadius.circular(Colorcodes.borderRadius)
+
+                                        ),
+                                    child: Center(
+                                      child: Text(
+                                        'Reply',
                                         style: FontManager().getTextStyle(
                                             context,
                                             lWeight: FontWeight.w500,
                                             fontSize: 13,
-                                            color: AppColors.message)),
+                                            color: AppColors.commentColor),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                          Column(
-                            children: list
-                                .map(
-                                  (obj) => replyDatas(obj, data),
-                                )
-                                .toList(),
-                          ),
-                        ],
-                      ),
-                    )
-                  ]),
+                        ),
+                        Column(
+                          children:
+                              list.map((obj) => replyDatas(obj, data)).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
+            // Add InputComment here if replying to this specific comment
+            if (replyid == idData)
+              Padding(
+                padding: const EdgeInsets.only(left: 40.0, top: 4.0),
+                child: InputComment(
+                  str,
+                  TextInputType.name,
+                  replyController,
+                  replyid,
+                ),
+              ),
             index + 1 == indexArray.length
                 ? SizedBox.shrink()
                 : Divider(
-                    color: Colorcodes.budgetLightGreen,
+                    color:AppColors.buttonBorder,
                     thickness: index + 1 == indexArray.length ? 0 : .8,
                     endIndent: 5,
                     indent: 5,
-                  )
+                  ),
           ],
         ));
   }
@@ -598,15 +872,16 @@ class _TribeHomeState extends State<TribeUnique> {
               suffixIcon: suffixcomment(Textcontroller, postId),
               hintText: lableText,
               hintStyle: FontManager().getTextStyle(context,
-                  lWeight: FontWeight.w400, fontSize: 14, color: AppColors.bg2),
+                  lWeight: FontWeight.w400,
+                  fontSize: 14,
+                  color: AppColors.buttonBorder),
               enabledBorder: const OutlineInputBorder(
                   // borderRadius: BorderRadius.circular(40),
                   ),
               focusedBorder: const OutlineInputBorder(
                   // borderRadius: BorderRadius.circular(40),
-                  borderSide:
-                      BorderSide(color: Color.fromRGBO(246, 246, 246, 1))),
-              fillColor: AppColors.button,
+                  borderSide: BorderSide(color: AppColors.buttonBorder)),
+              fillColor: AppColors.backgroundColor,
               border: InputBorder.none,
               contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             ),
@@ -616,41 +891,62 @@ class _TribeHomeState extends State<TribeUnique> {
     );
   }
 
-  Widget InputComment(lableText, keyBoard, TextEditingController Textcontroller,
-      String commentId) {
+  Widget InputComment(
+    lableText,
+    keyBoard,
+    TextEditingController Textcontroller,
+    String commentId,
+  ) {
     if (commentId == "") return SizedBox.shrink();
     return Obx(() => Center(
           child: Container(
-            height: 50,
-            width: MediaQuery.of(context).size.width / 1.1,
-            child: Center(
-              child: TextField(
-                focusNode: _replyNode,
-                autofocus: autofocus.value,
-                keyboardType: keyBoard,
-                controller: Textcontroller,
-                readOnly: commentId == "",
-                onSubmitted: (value) {
-                  reply(value, commentId, Textcontroller);
-                },
-                decoration: InputDecoration(
-                  filled: true,
-                  hintText: lableText,
-                  suffixIcon:
-                      suffix(Textcontroller.text, commentId, Textcontroller),
-                  enabledBorder: OutlineInputBorder(
-                      // borderRadius: BorderRadius.circular(40),
-                      borderSide: const BorderSide(color: Colors.white
-                          // color: Color.fromRGBO(249, 246, 238, 1)
-                          )),
-                  focusedBorder: OutlineInputBorder(
-                      // borderRadius: BorderRadius.circular(40),
-                      borderSide:
-                          BorderSide(color: Color.fromRGBO(246, 246, 246, 1))),
-                  fillColor: Colorcodes.textFeild,
-                  border: InputBorder.none,
+            padding:
+                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                AvatarProfile(
+                  name: name, // Use the user's name from state
+                  width: 30,
+                  height: 30,
+                  background: userAvatarBackGround
+                      .value, // Use the user's avatar background
                 ),
-              ),
+                Container(
+                  height: MediaQuery.of(context).size.height / 20,
+                  width: MediaQuery.of(context).size.width / 1.6,
+                  child: Center(
+                    child: TextField(
+                      focusNode: _replyNode,
+                      autofocus: autofocus.value,
+                      keyboardType: keyBoard,
+                      controller: Textcontroller,
+                      readOnly: commentId == "",
+                      onSubmitted: (value) {
+                        reply(value, commentId, Textcontroller);
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        hintText: lableText,
+                        contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                        suffixIcon: suffix(
+                            Textcontroller.text, commentId, Textcontroller),
+                        enabledBorder: OutlineInputBorder(
+                            // borderRadius: BorderRadius.circular(40),
+                            borderSide: const BorderSide(color: Colors.white
+                                // color: Color.fromRGBO(249, 246, 238, 1)
+                                )),
+                        focusedBorder: OutlineInputBorder(
+                            // borderRadius: BorderRadius.circular(40),
+                            borderSide:
+                                BorderSide(color: AppColors.buttonBorder)),
+                        fillColor: AppColors.backgroundColor,
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ));
@@ -740,9 +1036,9 @@ class _TribeHomeState extends State<TribeUnique> {
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Text((replayObj.author!.name.toString()),
                         style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: Colors.black)),
+                            lWeight: FontWeight.w600,
+                            fontSize: 16,
+                            color: AppColors.bg1)),
                   ),
                   SizedBox(
                     //  color: Colors.cyan,
@@ -751,8 +1047,8 @@ class _TribeHomeState extends State<TribeUnique> {
                         style: FontManager().getTextStyle(
                           context,
                           lWeight: FontWeight.w400,
-                          fontSize: 16,
-                          color: Colors.black,
+                          fontSize: 14,
+                          color: AppColors.commentColor,
                         )),
                   ),
                 ],
