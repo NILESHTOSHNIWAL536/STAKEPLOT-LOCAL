@@ -149,10 +149,9 @@ FinvuStrings().finvuOtpMessage,
                     ),
                   ),
                   // TextField for entering phone number
-                Obx(()=>  TextFormField(
+                 TextFormField(
                     controller: _phoneController,
                     maxLength: 10,
-                    obscureText: show.value, 
                     enableInteractiveSelection: false, 
                     autocorrect: false,
                     enableSuggestions: false,
@@ -183,22 +182,12 @@ FinvuStrings().finvuOtpMessage,
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide.none,
                       ),
-                      suffixIcon:  Obx(() => GestureDetector(
-                                  onTap: () {
-                                    show.value = !show.value;
-                                  },
-                                  child: Icon(
-                                    !show.value
-                                        ? Icons.visibility_outlined
-                                        : Icons.visibility_off_outlined,
-                                    color: AppColors.primaryColor,
-                                  ))))
+                    )
                                   
-    
                       //prefixIcon: Icon(Icons.phone),
                       //hintText: 'Mobile Number',
                     ),
-                  ),
+                  
                   SizedBox(
                       height: 60), // Add spacing between TextField and button
                   // Button for "Get OTP"

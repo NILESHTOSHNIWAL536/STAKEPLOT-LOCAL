@@ -112,6 +112,18 @@ void getuserPost(id) async {
   } else {}
 }
 
+void getMaskendUsers() async {
+    String urlPath = "${url}/user/getMaskedUsers/true";
+    var response=await getDataApiCall(urlPath);
+    if(getFlagOfResponse(response))
+    {
+           var his = jsonDecode(response.body);
+           var obj = his['data'];  
+         MaskedFriendsList.clear();
+          MaskedFriendsList.addAll(obj);
+    }
+}
+
 void getSaved() async {
   String urlPath = "${url}/post/saved";
   final SharedPreferences _pref = await SharedPreferences.getInstance();
@@ -181,6 +193,7 @@ void getUserInfomations() async {
 
     getuserPost(data['_id']);
     getSaved();
+    getMaskendUsers();
     currentId.value = data['_id'];
     userName.value = data['name'];
     avatar.value = avaterUrlPath(userName.value);
@@ -198,9 +211,9 @@ void getUserInfomations() async {
     savedPostIds.clear();
     savedPostIds.addAll((data['saved'] as List).whereType<String>());
     friendsList.clear();
-    MaskedFriendsList.clear();
+   
     friendsList.addAll(obj['friendsList']);
-    MaskedFriendsList.addAll(obj['maskedConnections']);
+    // MaskedFriendsList.addAll(obj['maskedConnections']);
     friendsList.forEach((element) {
       friendsListDetails[element['_id']] = {
         'name': element['name'],
