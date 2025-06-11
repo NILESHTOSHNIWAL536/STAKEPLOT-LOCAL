@@ -160,14 +160,25 @@ Widget vote(context, dataObj, data) {
                       } else {
                         showModalBottomSheet(
                           context: context,
-                          backgroundColor: AppColors.unSelectedOption,
+                          backgroundColor: AppColors.commentbg,
+                           isScrollControlled: true,
                           builder: (context) {
-                            return  TribeUnique(
-                          id: dataObj["_id"],
-                          dataObj: dataObj,
-                          popBox: true.obs,
-                          
-                        );
+                            return Container(
+                                padding: const EdgeInsets.symmetric(vertical:16.0),
+                                  width: MediaQuery.sizeOf(context).width,
+                                  decoration: BoxDecoration(
+                                      color: AppColors.commentbg,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(36),
+                                          topRight: Radius.circular(36))),
+                              child: TribeUnique(
+                                                          id: dataObj["_id"],
+                                                          dataObj: dataObj,
+                                                          popBox: true.obs,
+                                                          
+                                                        
+                              ),
+                            );
                           },
                         );
                       }

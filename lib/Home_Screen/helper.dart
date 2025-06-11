@@ -823,7 +823,7 @@ int getDaysInCurrentMonth() {
 
 const List<Map<String, dynamic>> reportOptions = [
   {
-    'title': 'Helps us understand the issue',
+    'title': 'Helps us to understand the issue and look into it',
     'subtitle': 'Provide details about the problem',
     'isDescription': true
   },

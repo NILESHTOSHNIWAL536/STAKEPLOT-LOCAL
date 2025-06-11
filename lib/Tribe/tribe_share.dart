@@ -90,7 +90,7 @@ class _TribeHomeState extends State<TribeShare> {
       child: Container(
         padding: const EdgeInsets.fromLTRB(20, 30, 20, 12),
         decoration: BoxDecoration(
-            color: AppColors.unSelectedOption,
+            color: AppColors.commentbg,
             borderRadius: BorderRadius.only(topLeft: Radius.circular(36),topRight: Radius.circular(36))),
         child: Column(
           children: [
@@ -314,8 +314,8 @@ class _TribeHomeState extends State<TribeShare> {
               hintText: lableText,
               hintStyle:FontManager().getTextStyle(context,
                               lWeight: FontWeight.w400,
-                              fontSize: 12,
-                              color: AppColors.likesharecommentCount),
+                              fontSize: 14,
+                              color: AppColors.buttonBorder),
               fillColor: AppColors.backgroundColor,
               contentPadding: EdgeInsets.symmetric(horizontal: 4,vertical: 6),
               
