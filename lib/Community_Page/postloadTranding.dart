@@ -22,25 +22,29 @@ class _LazyLoadingListState extends State<LazyLoadingTranding> {
   @override
   void initState() {
     super.initState();
-    displayedData.clear();
-    loadInitialData();
-    scrollControllerPost.addListener(_onScroll);
+    // displayedData.clear();
+    // loadInitialData();
+    // scrollControllerPost.addListener(_onScroll);
   }
 
  
 
-  void _onScroll() {
-    if (scrollControllerPost.position.pixels >= scrollControllerPost.position.maxScrollExtent * 0.9) {
-      _loadMoreData();
-    }
-  }
+  // void _onScroll() {
+  //   if (scrollControllerPost.position.pixels >= scrollControllerPost.position.maxScrollExtent * 0.9) {
+  //     _loadMoreData();
+  //   }
+  // }
 
-  void _loadMoreData() {
-    if (displayedData.length < getAllPostData.length) {
-      int nextItems = (displayedData.length + itemsPerLoad).clamp(0, getAllPostData.length);
-      displayedData.addAll(getAllPostData.sublist(displayedData.length, nextItems));
-    }
-  }
+  // void _loadMoreData() {
+  //   // if (displayedData.length < getAllPostData.length) {
+  //   //   int nextItems = (displayedData.length + itemsPerLoad).clamp(0, getAllPostData.length);
+  //   //   displayedData.addAll(getAllPostData.sublist(displayedData.length, nextItems));
+  //   // }
+  //    if(getAllPostData.length>5)
+  //    {
+  //          displayedData.addAll(getAllPostData);
+  //    }
+  // }
 
 
   @override
@@ -50,9 +54,9 @@ class _LazyLoadingListState extends State<LazyLoadingTranding> {
       child: ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: displayedData.length,
+              itemCount: getAllPostData.length,
               itemBuilder: (context, index) {
-                return   Obx(()=> ( postData[displayedData[index]['_id']] ??false) ?   PostCard(data: displayedData[index],index: index,) :PostCard(data: displayedData[index],index: index,));
+                return   Obx(()=> ( postData[getAllPostData[index]['_id']] ??false) ?   PostCard(data: getAllPostData[index],index: index,) :PostCard(data: getAllPostData[index],index: index,));
               },
             ),
     ));

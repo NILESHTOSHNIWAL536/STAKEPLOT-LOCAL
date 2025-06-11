@@ -16,26 +16,28 @@ class _LazyLoadingListState extends State<LazyLoadingList> {
   @override
   void initState() {
     super.initState();
-    displayedData.clear();
-    loadInitialData();
-    scrollControllerPost.addListener(_onScroll);
+    // displayedData.clear();
+    // loadInitialData();
+    // scrollControllerPost.addListener(_onScroll);
   }
 
-  void _onScroll() {
-    if (scrollControllerPost.position.pixels >=
-        scrollControllerPost.position.maxScrollExtent * 0.9) {
-      _loadMoreData();
-    }
-  }
+  // void _onScroll() {
+  //   if (scrollControllerPost.position.pixels >=
+  //       scrollControllerPost.position.maxScrollExtent * 0.9) {
+  //     _loadMoreData();
+  //   }
+  // }
 
-  void _loadMoreData() {
-    if (displayedData.length < getTrendingData.length) {
-      int nextItems = (displayedData.length + itemsPerLoad)
-          .clamp(0, getTrendingData.length);
-      displayedData
-          .addAll(getTrendingData.sublist(displayedData.length, nextItems));
-    }
-  }
+  // void _loadMoreData() {
+  //   // if (displayedData.length < getTrendingData.length) {
+  //   //   int nextItems = (displayedData.length + itemsPerLoad).clamp(0, getTrendingData.length);
+  //   //   displayedData.addAll(getTrendingData.sublist(displayedData.length, nextItems));
+  //   // }
+  //   if(getTrendingData.length>5){
+  //          displayedData.addAll(getTrendingData);
+  //   }
+
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -44,17 +46,15 @@ class _LazyLoadingListState extends State<LazyLoadingList> {
           child: ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: displayedData.length,
+            itemCount: getTrendingData.length,
             itemBuilder: (context, index) {
-              print(
-                  'Building PostCard for index:${postData[displayedData[index]['_id']]}');
-              return Obx(() => (postData[displayedData[index]['_id']] ?? false)
+              return Obx(() => (postData[getTrendingData[index]['_id']] ?? false)
                   ? PostCard(
-                      data: displayedData[index],
+                      data: getTrendingData[index],
                       index: index,
                     )
                   : PostCard(
-                      data: displayedData[index],
+                      data: getTrendingData[index],
                       index: index,
                       
                     ));
@@ -64,9 +64,9 @@ class _LazyLoadingListState extends State<LazyLoadingList> {
   }
 }
 
-void loadInitialData() {
-  displayedData
-      .addAll(getTrendingData.take(itemsPerLoad).toList()); // Load first batch
+void loadInitialData() 
+{
+  displayedData.addAll(getTrendingData.take(itemsPerLoad).toList()); // Load first batch
 }
 
 void resetAndLoadData() {

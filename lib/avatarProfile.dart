@@ -169,7 +169,7 @@ class AvatarProfile extends StatelessWidget {
       alignment: Alignment.center,
       child: img2(context,width,size)
       ):Container(
-      margin: EdgeInsets.all(5),
+      margin: EdgeInsets.all(4),
       padding: EdgeInsets.all(2),
       alignment: Alignment.center,
       child: img(context,size)

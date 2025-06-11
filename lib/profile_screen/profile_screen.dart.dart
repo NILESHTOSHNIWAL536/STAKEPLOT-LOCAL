@@ -189,21 +189,22 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                                   Navigator.pushNamed(context, '/Friends');
                                 },
                               ),
-                              Divider(),
-                              _buildOption(
-                                ProfileImage(url: ProfileIcons.friends),
-                                ProfileScreenStrings().friendsListLabelMasked, // Direct access
-                                ProfileScreenStrings().friendsListSubLabelMasked, // Direct access
-                                onTap: () {
+                              // Divider(),
+                              // _buildOption(
+                              //   ProfileImage(url: ProfileIcons.friends),
+                              //   ProfileScreenStrings().friendsListLabelMasked, // Direct access
+                              //   ProfileScreenStrings().friendsListSubLabelMasked, // Direct access
+                              //   onTap: () {
 
-                                  Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>Friends(isMasked: true,),
-                            ),
-                          );
-                                },
-                              ),
+                              //     Navigator.push(
+                              //       context,
+                              //       MaterialPageRoute(
+                              //         builder: (context) =>Friends(isMasked: true,),
+                              //       ),
+                              //     );
+
+                              //   },
+                              // ),
                             ],
                       ),
                     ),

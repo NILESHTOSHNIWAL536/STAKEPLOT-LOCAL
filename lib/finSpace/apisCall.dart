@@ -50,7 +50,6 @@ Future<void> addMyIntreastAndName(BuildContext context, var body,
       }
     }
   } catch (e) {
-    print("Error fetching bank accounts: $e");
   }
 
   Navigator.of(context).pushNamedAndRemoveUntil(

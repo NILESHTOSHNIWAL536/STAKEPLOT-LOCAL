@@ -249,16 +249,13 @@ class _TribeHomeState extends State<TribeUnique> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Obx(() => PostCard(
-                        data: reloadUniquePost.value
-                            ? uniquePostDeatils
-                            : uniquePostDeatils,
-                        flag: true,
-                        index: -1,
-                      )),
-                ),
+                Obx(() => PostCard(
+                      data: reloadUniquePost.value
+                          ? uniquePostDeatils
+                          : uniquePostDeatils,
+                      flag: true,
+                      index: -1,
+                    )),
                 uploadData(uniquePostDeatils),
                 SizedBox(
                   height: 100,

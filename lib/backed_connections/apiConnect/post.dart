@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
@@ -166,44 +167,54 @@ void createPollOfCommunity(context, String title, String description) async {
 }
 
 void getPost() async {
-  var response = await getDataApiCall('${url}/post/feed/1');
+  var response = await getDataApiCall('${url}/post/feed/${currentPageFeed.value}');
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
     historyListData.clear();
     historyListData.addAll(obj);
-    getTrendingData.clear();
+    // getTrendingData.clear();
     getTrendingData.addAll(obj);
+    if(historyListData.length<5){
+       hasMorePostFeed.value=false;
+    }
+    currentPageFeed.value++;
     historyListData.forEach((element) {
       postData[element["_id"]] = true;
       postCount[element["_id"]] = element['upvotes'];
       postCommentCount[element["_id"]] = element['comments'];
     });
+    isPostloading.value=false;
     isPost.value = true;
   } else {}
 }
 
 void getTranding() async {
-  var response = await getDataApiCall('${url}/post/trending/1');
+  var response = await getDataApiCall('${url}/post/trending/${currentPageTranding.value}');
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
     historyListData.clear();
     historyListData.addAll(obj);
-    getAllPostData.clear();
+    // getAllPostData.clear();
     getAllPostData.addAll(obj);
+    if(historyListData.length<5){
+       hasMorePostTranding.value=false;
+    }
+    currentPageTranding.value++;
     historyListData.forEach((element) {
       postData[element["_id"]] = true;
       postCount[element["_id"]] = element['upvotes'];
       postCommentCount[element["_id"]] = element['comments'];
     });
+    isPostloading.value=false;
     isPostTranding.value = true;
   } else {}
 }
 
 void savePostData(context, data) async {
 
-  var urlPath = "${url}/post/save";
+  var urlPath = "${url}/post/save/${data['_id']}";
   var body = {"postId": data['_id']};
   var response = await postDataApiCall(urlPath, body);
 
@@ -216,26 +227,19 @@ void savePostData(context, data) async {
 
 Future<List<dynamic>> savePostGetData(context) async {
   try {
-   
     var urlPath = "${url}/post/saved";
     // Print the URL being called
 
     var response = await getDataApiCall(urlPath);
-   
 
-   
     if (getFlagOfResponse(response)) {
       var responseData = jsonDecode(response.body); // Decode the response body
-     
+
       return responseData['data'] ?? [];
     } else {
-      
-     
       return [];
     }
   } catch (e) {
-   
-   
     return [];
   }
 }

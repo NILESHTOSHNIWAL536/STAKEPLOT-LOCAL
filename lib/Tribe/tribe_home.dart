@@ -25,7 +25,7 @@ RxInt indexFlag = 0.obs;
 RxBool isPost = false.obs;
 RxBool isPostTranding = false.obs;
 RxBool isTrending = false.obs;
-RxSet<String> savedPostIds = <String>{}.obs;
+
 Widget noFriend(context,[text = "",bool isMasked=false,]) {
   return GestureDetector(
     onTap: () {
@@ -104,13 +104,14 @@ Widget vote(context, dataObj, data) {
   String likeKey = "liked" + dataObj["_id"];
   bool isLiked = likedList.contains(likeKey);
   return Obx(() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
+        padding: const EdgeInsets.only(left: 16.0, right: 23.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
               child: Row(
+               
                 children: [
                   GestureDetector(
                     onTap: () {
@@ -150,46 +151,19 @@ Widget vote(context, dataObj, data) {
                           : (postCount[dataObj['_id']].toString()),
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.w400,
-                          fontSize: 20,
+                          fontSize: 14,
                           color: AppColors.bg1),
                     ),
                   ),
-                  SizedBox(width: 10),
+                  SizedBox(width: 4),
                   // GestureDetector(
                   //   onTap: () {
                   //     savePostData(context, data);
                   //   },
                   //   child: Icon(Icons.save),
                   // )
-                   // declare this in your StatefulWidget
+                  // declare this in your StatefulWidget
 
-
-
-   Obx(() {
-     bool isSaved = savedPostIds.contains(dataObj['_id']);
-     return GestureDetector(
-       onTap: () {
-         if (isSaved) {
-           savedPostIds.remove(dataObj['_id']);
-         } else {
-           savedPostIds.add(dataObj['_id']);
-           savePostData(context, data);
-         }
-       },
-       child: Icon(
-         isSaved ? Icons.bookmark : Icons.bookmark_border,
-         color: isSaved ? Colors.blue : Colors.grey,
-       ),
-     );
-   }),
-
-                ],
-              ),
-            ),
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                     child: Row(
@@ -197,7 +171,7 @@ Widget vote(context, dataObj, data) {
                         Container(
                             height: 22,
                             child: SvgPicture.asset(
-                              LikeComment.comments,
+                              LikeComment.commentPost,
                               height: 22,
                             )),
                         const SizedBox(
@@ -209,12 +183,36 @@ Widget vote(context, dataObj, data) {
                               : postCommentCount[idData].toString(),
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.w400,
-                              fontSize: 20,
+                              fontSize: 14,
                               color: AppColors.likesharecommentCount),
                         ),
                       ],
                     ),
                   ),
+                ],
+              ),
+            ),
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Obx(() {
+                    bool isSaved = savedPostIds.contains(dataObj['_id']);
+                    return GestureDetector(
+                        onTap: () {
+                          if (isSaved) {
+                            savedPostIds.remove(dataObj['_id']);
+                          } else
+                          {
+                            savedPostIds.add(dataObj['_id']);
+                          }
+                            savePostData(context, data);
+                        },
+                        child: SvgPicture.asset(
+                          isSaved ? LikeComment.savedPost : LikeComment.savePost,
+                          height: 22,
+                        ));
+                  }),
                   const SizedBox(width: 10),
                   Container(
                     child: InkWell(
@@ -232,7 +230,7 @@ Widget vote(context, dataObj, data) {
                         }
                       },
                       child: SvgPicture.asset(
-                        LikeComment.share,
+                        LikeComment.sharePost,
                         height: 22,
                       ),
                     ),
@@ -249,17 +247,18 @@ Widget vote(context, dataObj, data) {
 // Helper function to get the appropriate SVG based on like status
 Widget likeIcon(BuildContext context, bool isLiked) {
   return AnimatedContainer(
-    width: 50,
-    // color: Colors.green,
-    duration: const Duration(milliseconds: 300), // Animation duration
-    curve: Curves.easeInOut, // Animation curve
-    height: isLiked ? 24 : 22, // Change height on like
-    child: SvgPicture.asset(
-      isLiked
-          ? LikeComment.likeIcon2
-          : LikeComment.likeIcon, // Path to your outlined heart SVG
-    ),
-  );
+      width: 30,
+      // color: Colors.green,
+      duration: const Duration(milliseconds: 300), // Animation duration
+      curve: Curves.easeInOut, // Animation curve
+      height: isLiked ? 24 : 22, // Change height on like
+      child: !isLiked
+          ? SvgPicture.asset(
+              LikeComment.likeBulb, // Path to your outlined heart SVG
+            )
+          : SvgPicture.asset(
+              LikeComment.likedBulb, //
+            ));
 }
 
 void upvoteGlobal(context, String str, String objectId, dataObj) async {

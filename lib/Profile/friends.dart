@@ -156,69 +156,14 @@ class _FriendsState extends State<Friends> {
 
               AvatarProfile(name: data['name'], width: 30, height: 13,background:data['avatarBackGround'] ?? defaultBackGround.value,),
              
+              // Text((data),
               Text((data['name']),
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.w500,
                       fontSize: 18,
                       color: Colors.black)),
               const Spacer(),
-              // GestureDetector(
-              //     onTap: () {
-              //       showDialog(
-              //         context: context,
-              //         builder: (context) {
-              //           return Center(
-              //             child: Container(
-              //               width: MediaQuery.of(context).size.width / 1.2,
-              //               height: MediaQuery.of(context).size.height / 4,
-              //               padding: EdgeInsets.symmetric(
-              //                   vertical: 20, horizontal: 10),
-              //               decoration: BoxDecoration(
-              //                   color: Colorcodes.white,
-              //                   borderRadius: BorderRadius.circular(5)),
-              //               child: Column(
-              //                 mainAxisAlignment: MainAxisAlignment.center,
-              //                 crossAxisAlignment: CrossAxisAlignment.center,
-              //                 children: [
-              //                   Text(
-              //                     "Are you sure you want to remove ${data['name']} ?",
-              //                     style: FontManager().getTextStyle(
-              //                       context,
-              //                       fontSize: 18,
-              //                       color: Colorcodes.budgetDarkGreen,
-              //                       lWeight: FontWeight.bold,
-              //                       //  fontFamily: AutofillHints.birthdayDay
-              //                     ),
-              //                   ),
-              //                   const SizedBox(
-              //                     height: 20,
-              //                   ),
-              //                   Row(
-              //                     mainAxisAlignment: MainAxisAlignment.end,
-              //                     children: [
-              //                       textStyleColor(
-              //                           "Remove", Colorcodes.red, data),
-              //                       const SizedBox(
-              //                         width: 20,
-              //                       ),
-              //                       textStyleColor(
-              //                           "Go Back", Colorcodes.blue, data),
-              //                     ],
-              //                   ),
-              //                 ],
-              //               ),
-              //             ),
-              //           );
-              //         },
-              //       );
-
-                   
-              //     },
-              //     child: Container(
-              //         child: ProfileImage(
-              //       url: "assets/images2/user-minus.svg",
-              //     ))
-              //     ),
+             
             ],
           ),
         ),

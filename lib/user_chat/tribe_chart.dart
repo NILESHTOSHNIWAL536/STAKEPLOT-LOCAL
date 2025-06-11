@@ -157,7 +157,7 @@ class _TribeSearchState extends State<TribeChats> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Hi, ${myprofile != null ? myprofile['name'] ?? 'User' : 'User'}', // Null check for myprofile and myprofile['name']
+                  'Hi, ${userName.value}', // Null check for myprofile and myprofile['name']
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.bold,
@@ -176,7 +176,8 @@ class _TribeSearchState extends State<TribeChats> {
                   ),
                 )),
                 
-                 SizedBox(height:ismaskedUsers.value ?0: 8),
+                Obx(()=>ismaskedUsers.value ? SizedBox.shrink():SizedBox(height:8)),
+
                 chatSplitAccount.isNotEmpty && !ismaskedUsers.value
                     ? SizedBox(
                         height: 40,

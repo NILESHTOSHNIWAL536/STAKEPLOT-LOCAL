@@ -164,6 +164,7 @@ class _ImageScreenState extends State<ImageScreen> {
                             image: FileImage(selectedImage!),
                             cropController: _cropController,
                             shape: CustomCropShape.Square,
+                             ratio: Ratio(width: 402, height: 214),
                             outlineStrokeWidth: 0.0,
                             //  ratio: Ratio(16, 9),
                             // forceInsideCropArea:true,
@@ -180,22 +181,22 @@ class _ImageScreenState extends State<ImageScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                TextField(
-                  controller: titleController,
-                  decoration: InputDecoration(
-                   hintText: strings.enterTitle,
-                    hintStyle: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: AppColors.bg1),
-                    border: InputBorder.none,
-                  ),
-                ),
+                // TextField(
+                  // controller: titleController,
+                  // decoration: InputDecoration(
+                  //  hintText: strings.enterTitle,
+                    // hintStyle: FontManager().getTextStyle(context,
+                        // lWeight: FontWeight.w600,
+                        // fontSize: 18,
+                        // color: AppColors.bg1),
+                    // border: InputBorder.none,
+                  // ),
+                // ),
                 const SizedBox(height: 10),
                 TextField(
                   controller: textController,
                   // focusNode: _contentFocusNode,
-                  maxLines: 5,
+                  maxLines: null,
                   decoration: InputDecoration(
                     hintText: strings.addThoughts,
                     border: InputBorder.none,
@@ -255,7 +256,7 @@ class _ImageScreenState extends State<ImageScreen> {
                       return;
                     }
 
-                    if (titleController.text.trim().isEmpty ||
+                    if (
                         textController.text.trim().isEmpty) {
                       snackBarAllFeilds(context);
                       return;

@@ -64,7 +64,18 @@
         <string>stakeplot</string>
       </array>
     </dict>
+    <dict>
+      <key>CFBundleTypeRole</key>
+      <string>Editor</string>
+      <key>CFBundleURLName</key>
+      <string>com.google.GIDSignIn</string>
+      <key>CFBundleURLSchemes</key>
+      <array>
+        <string>com.googleusercontent.apps.442849932576-3u02sono33ouamo2cn9mpnrp8i4k53v8</string> 
+      </array>
+    </dict>
   </array>
+  
   <key>NSPhotoLibraryUsageDescription</key>
   <string>We need access to your photo library to select images for your Stakeplot profile or content.</string>
   <!-- Optional: Add if saving images to library -->

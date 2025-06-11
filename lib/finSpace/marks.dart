@@ -197,6 +197,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
     MaskedAvatars.profileIcon8,
     MaskedAvatars.profileIcon9,
     MaskedAvatars.profileIcon10,
+    MaskedAvatars.profileIcon12,
   ];
 
   void _showAvatarSelectionSheet(BuildContext context) {

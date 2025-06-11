@@ -39,11 +39,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
   RxString buttonValue = "Add".obs;
   RxString frdRequest = "Friend Request not sent before".obs;
   RxString frdRequestCheck = "Friend Request not sent before".obs;
-  File? _coverImage;
-
-  String _networkImageUrl =
-      "https://static.vecteezy.com/system/resources/thumbnails/045/713/367/small_2x/aesthetic-leaves-on-a-dark-background-free-photo.jpg"; // This can be dynamically set
-
+ 
   @override
   void initState() {
     getDis();
@@ -59,7 +55,6 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
       var his = jsonDecode(response.body);
       var obj = his['data'];
      
-
       setState(() {
         getTrendingData = obj;
         findData = false;
@@ -74,12 +69,11 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
   }
 
   void getConnections() async {
-    var response =
-        await getDataApiCall('${url}/user/connections/${widget.data['_id']}');
+    var response = await getDataApiCall('${url}/user/connections/${widget.data['_id']}');
 
-    if (getFlagOfResponse(response)) {
+    if (getFlagOfResponse(response)) 
+    {
       var his = jsonDecode(response.body);
-
       count.value = his['data']['connections'];
       score.value = his['data']['score'];
     } else {}

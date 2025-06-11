@@ -9,8 +9,11 @@ import 'package:get/get.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
+RxInt currentPageTranding=1.obs;
+RxInt currentPageFeed=1.obs;
+
 bool flag = true;
-String portNo = flag ? "192.168.1.37" : "localhost";
+String portNo = flag ? "192.168.1.8" : "localhost";
 String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Fields";
@@ -80,7 +83,7 @@ RxBool setBankAccountPassword = false.obs;
 RxBool hideBackAccountPassword = false.obs;
 RxBool AttemptCount = false.obs;
 var coin = "Loading....";
-
+RxSet<String> savedPostIds = <String>{}.obs;
 bool sizeRoom = false;
 double fontSize = 20;
 RxInt budgetLength = 0.obs;

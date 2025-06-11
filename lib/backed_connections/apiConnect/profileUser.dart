@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Profile/notifications.dart';
+import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
@@ -194,14 +195,12 @@ void getUserInfomations() async {
     isFected.value = data['fetchInProgress'] ?? false;
     cupertinoPin.value = data['cupertino_pin']; //?? '0';
     getPhoneNo(his);
-    // savedList.clear();
-    // savedList.addAll(data['saved'] );
-
+    savedPostIds.clear();
+    savedPostIds.addAll((data['saved'] as List).whereType<String>());
     friendsList.clear();
     MaskedFriendsList.clear();
     friendsList.addAll(obj['friendsList']);
     MaskedFriendsList.addAll(obj['maskedConnections']);
-
     friendsList.forEach((element) {
       friendsListDetails[element['_id']] = {
         'name': element['name'],

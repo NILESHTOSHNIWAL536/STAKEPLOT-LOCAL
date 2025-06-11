@@ -395,7 +395,7 @@ void updateRoom(
 
 void getChatLoader(bool flag) async {
 
-  var response =await getDataApiCall(url + '/chat/users/order/${flag}');
+  var response =await getDataApiCall(url + '/chat/order/${flag}');
   
   if (response.statusCode == 200 || response.statusCode == 201) {
     var his = jsonDecode(response.body);
@@ -432,15 +432,14 @@ void getChatLoader(bool flag) async {
           
         }
        
-        var data = {
+       var data = {
           '_id': key,
           'name': name,
-          'avatar': friendsListDetails[key]['avatar'] ?? defaultBackGround.value,
-          'item': friendsListDetails[key]['avatar'],
+          'avatar': defaultBackGround.value,
+          'item':  defaultBackGround.value ,
           'count': element['chats']['unseenCount'],
           'type': type,
         };
-       
         count +=  int.parse(data['count'].toString());
         chatList.add(data);
         chatListOriginal.add(data);
@@ -584,7 +583,7 @@ void getChats2(data, key) async {
   var accessToken = _pref.getString("accessToken");
 
   final response = await http.get(
-    Uri.parse('${url}/chat/${data['_id']}'),
+    Uri.parse('${url}/chat/${data['_id']}/${ismaskedUsers.value}'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       "Authorization": "$accessToken",
@@ -622,8 +621,8 @@ void unSeenChat(context, String id) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
 
-  final response = await http.post(
-    Uri.parse('${url}/chat/updateUnseen/${id}'),
+  final response = await http.patch(
+    Uri.parse('${url}/chat/${id}/${ismaskedUsers.value}'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       "Authorization": "$accessToken",
@@ -632,24 +631,7 @@ void unSeenChat(context, String id) async {
   );
 }
 
-void getPolls(id) async {
-  final SharedPreferences _pref = await SharedPreferences.getInstance();
-  var accessToken = _pref.getString("accessToken");
-  final response = await http.get(
-    Uri.parse('https://stakeplot.in/api/v1/poll/room/${id}'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Authorization": "$accessToken",
-    },
-  );
-  if (response.statusCode == 200) {
-    var his = jsonDecode(response.body);
-    var obj = his['data'];
 
-    questionRoom.clear();
-    questionRoom.addAll(obj);
-  } else {}
-}
 
 void clear(data) {
   int index = 0;

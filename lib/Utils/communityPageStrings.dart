@@ -16,7 +16,7 @@ class CommunityScreenStrings {
   String featuredPosts = "Featured Posts";
   String noFriendsMessage = "Make friends to see their posts or upload post";
   String createPost = "Create Post";
-  String textOption = "Text";
+  String textOption = "Write";
   String imageOption = "Image";
   String pollOption = "Poll";
   String exploria = "Exploria";
@@ -27,8 +27,8 @@ class CommunityScreenStrings {
   String addThoughts = "Add your thoughts";
   String continueButton = "Continue";
   String postedSuccess = "Posted";
-  String trending = "Trending";
-  String feed = "Feed";
+  String trending = "Now";
+  String feed = "ForYou";
   String maskeduser = "maskeduser";
   String All = "All";
 

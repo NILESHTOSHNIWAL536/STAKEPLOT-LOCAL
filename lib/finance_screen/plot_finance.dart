@@ -47,6 +47,8 @@ class _PlotFinanceState extends State<PlotFinance> {
     );
   }
 
+   final CommunityScreenStrings strings = CommunityScreenStrings();
+
   @override
   void initState() {
     super.initState();
@@ -57,6 +59,9 @@ class _PlotFinanceState extends State<PlotFinance> {
 
   @override
   Widget build(BuildContext context) {
+    double w = MediaQuery.of(context).size.width;
+    double h = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       bottomNavigationBar: SafeArea(child: BottomNavigations(data: 1)),
@@ -76,7 +81,7 @@ class _PlotFinanceState extends State<PlotFinance> {
                 // Budget List
                 FinanceWidgets.budgetHorizontalList(context),
                 const SizedBox(height: 10),
-                 getSearch(),
+                getSearch(w,h),
                 const SizedBox(height: 10),
 
                 // Budget and Debt Calculator
@@ -114,11 +119,9 @@ class _PlotFinanceState extends State<PlotFinance> {
     );
   }
 
-  Widget getSearch(){
-    double w = MediaQuery.of(context).size.width;
-    double h = MediaQuery.of(context).size.height;
-    final CommunityScreenStrings strings = CommunityScreenStrings();
-
+  Widget getSearch(double w,double h){
+   
+  
     return Column(
       children: [
          InkWell(
@@ -139,28 +142,31 @@ class _PlotFinanceState extends State<PlotFinance> {
             children: [
               Hero(
                 tag: "TribeSearch",
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/TribeSearch');
-                  },
-                  child: Container(
-                    width: MediaQuery.sizeOf(context).width / 1.1,
-                    height: MediaQuery.sizeOf(context).height / 20,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                        filled: true,
-                        enabled: false,
-                        hintText: strings.searchHint,
-                        fillColor: AppColors.button,
-                        hintStyle: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.normal,
-                            fontSize: 14,
-                            color: Colors.black),
-                        prefixIcon: Icon(Icons.search),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(24.0),
+                child: Material(
+                   color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/TribeSearch');
+                    },
+                    child: Container(
+                      width: MediaQuery.sizeOf(context).width / 1.1,
+                      height: MediaQuery.sizeOf(context).height / 20,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                          filled: true,
+                          enabled: false,
+                          hintText: strings.searchHint,
+                          fillColor: AppColors.button,
+                          hintStyle: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.normal,
+                              fontSize: 14,
+                              color: Colors.black),
+                          prefixIcon: Icon(Icons.search),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(24.0),
+                          ),
                         ),
                       ),
                     ),
