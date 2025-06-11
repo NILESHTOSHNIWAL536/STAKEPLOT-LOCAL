@@ -88,10 +88,10 @@ class _TribeHomeState extends State<TribeShare> {
     double height = MediaQuery.of(context).size.height / 3;
     return Container(
       child: Container(
-        padding: const EdgeInsets.fromLTRB(16, 20, 16, 12),
+        padding: const EdgeInsets.fromLTRB(20, 30, 20, 12),
         decoration: BoxDecoration(
-            color: AppColors.backgroundColor,
-            borderRadius: BorderRadius.circular(24)),
+            color: AppColors.unSelectedOption,
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(36),topRight: Radius.circular(36))),
         child: Column(
           children: [
             InputDate('Search', TextInputType.name, Textcontroller),
@@ -101,7 +101,7 @@ class _TribeHomeState extends State<TribeShare> {
                     ? Container(
                         height: height,
                         child: Center(child: Text("No Friend Found")))
-                    : listOfUsres(height),
+                    : listOfUsers(height),
             shareButton()
           ],
         ),
@@ -110,8 +110,8 @@ class _TribeHomeState extends State<TribeShare> {
   }
 
   Widget shareButton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
+      // mainAxisAlignment: MainAxisAlignment.center,
       children: [
         InkWell(
           onTap: () {
@@ -170,100 +170,117 @@ class _TribeHomeState extends State<TribeShare> {
             Navigator.pop(context);
           },
           child: Container(
-            width: MediaQuery.of(context).size.width / 1.4,
+            width: MediaQuery.of(context).size.width / 1.1,
             padding: const EdgeInsets.symmetric(vertical: 13),
             decoration: BoxDecoration(
                 color:
-                    addedUser.isEmpty ? AppColors.bg6 : AppColors.primaryColor,
-                borderRadius: BorderRadius.circular(24)),
+                    addedUser.isEmpty ? AppColors.bg6 : AppColors.finSpaceColor,
+                borderRadius: BorderRadius.circular(8)),
             child: Center(
-              child: Text((frdsList.isEmpty ? "Add Friends" : "Share"),
+              child: Text((frdsList.isEmpty ? "Add Friends" : "Continue"),
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.w400,
-                      fontSize: 20,
+                      fontSize: 18,
                       color: AppColors.mt)),
             ),
           ),
         ),
+        SizedBox(height:6),
+        InkWell(
+          onTap:(){
+            Navigator.pop(context);
+          },
+         child: Container(
+            width: MediaQuery.of(context).size.width / 1.1,
+            padding: const EdgeInsets.symmetric(vertical: 13),
+            decoration: BoxDecoration(
+                color:
+                     AppColors.unSelectedOption,
+                borderRadius: BorderRadius.circular(8)),
+            child: Center(
+              child: Text(("Cancel"),
+                  style: FontManager().getTextStyle(context,
+                      lWeight: FontWeight.w400,
+                      fontSize: 18,
+                      color: AppColors.bg3)),
+            ),
+          ),
+        )
       ],
     );
   }
 
-  Widget listOfUsres(height) {
-    return Padding(
-      padding: const EdgeInsets.all(4.0),
-      child: SizedBox(
-        height: height,
-        child: GridView.builder(
-          itemCount: frdsList.length, // +1 for loading more indicator
-          itemBuilder: (context, index) {
-            String values = frdsList[index]['_id'];
-            String name = frdsList[index]['name'];
-            return InkWell(
-              onTap: () {},
-              child: Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        addedUser.contains(values)
-                            ? addedUser.remove(values)
-                            : addedUser.add(values);
-                        nameList.contains(name)
-                            ? nameList.remove(name)
-                            : nameList.add(name);
-                      });
-                    },
-                    child: Container(
-                      // color:Colors.deepOrangeAccent,
-                      width: MediaQuery.of(context).size.width / 5,
-                      //  height: 50,
-                      // backgroundColor:const Color.fromRGBO(249, 246, 238, 1),
-                      child: Stack(
-                        children: [
-                          AvatarProfile(
-                              name: frdsList[index]['name'],
-                              width: 21,
-                              height: height,
-                              background: frdsList[index]['avatarBackGround'] ??
-                                  defaultBackGround.value),
-                          addedUser.contains(values)
-                              ? const Positioned(
-                                  right: 2,
-                                  top: 0,
-                                  child: Icon(
-                                    Icons.check_circle,
-                                    size: 25,
-                                    color: Colors.green,
-                                  ),
-                                )
-                              : const SizedBox.shrink(),
-                        ],
-                      ),
+  Widget listOfUsers(height) {
+  return Padding(
+    padding: const EdgeInsets.all(4.0),
+    child: SizedBox(
+      height: height,
+      child: GridView.builder(
+        itemCount: frdsList.length, // +1 for loading more indicator
+        itemBuilder: (context, index) {
+          String values = frdsList[index]['_id'];
+          String name = frdsList[index]['name'];
+          return InkWell(
+            onTap: () {},
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  addedUser.contains(values)
+                      ? addedUser.remove(values)
+                      : addedUser.add(values);
+                  nameList.contains(name)
+                      ? nameList.remove(name)
+                      : nameList.add(name);
+                });
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  border: addedUser.contains(values)
+                      ? Border.all(
+                          color: AppColors.buttonBorder,
+                          width: 1.0,
+                        )
+                      : Border.all(
+                          color: Colors.transparent,
+                          width: 0.0,
+                        ),
+                  borderRadius: BorderRadius.circular(8.0), // Optional: for rounded corners
+                ),
+                padding: const EdgeInsets.all(4.0), // Optional: padding inside the border
+                child: Column(
+                  children: [
+                    AvatarProfile(
+                      name: frdsList[index]['name'],
+                      width: 21,
+                      height: height,
+                      background: frdsList[index]['avatarBackGround'] ??
+                          defaultBackGround.value,
                     ),
-                  ),
-                  Text(
-                    (frdsList[index]['name']),
-                    style: FontManager().getTextStyle(context,
+                    Text(
+                      frdsList[index]['name'],
+                      style: FontManager().getTextStyle(
+                        context,
                         lWeight: FontWeight.w400,
                         fontSize: 14,
-                        color: AppColors.bg1),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+                        color: AppColors.bg1,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
               ),
-            );
-          },
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4, // Number of columns
-            crossAxisSpacing: 0.0, // Spacing between columns
-            mainAxisSpacing: 0.0, // Spacing between rows
-          ),
+            ),
+          );
+        },
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4, // Number of columns
+          crossAxisSpacing: 0.0, // Spacing between columns
+          mainAxisSpacing: 0.0, // Spacing between rows
         ),
       ),
-    );
-  }
-
+    ),
+  );
+}
   void sendPost(context, jsonData) async {
     var responce = await postDataApiCall("${url}/chat/", jsonData);
     if (getFlagOfResponse(responce)) {
@@ -277,9 +294,9 @@ class _TribeHomeState extends State<TribeShare> {
   Widget InputDate(lableText, keyBoard, Textcontroller) {
     return Center(
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 5),
+        padding: EdgeInsets.symmetric(vertical: 2),
         width: MediaQuery.of(context).size.width / 1.1,
-        // height: 50,
+         height: MediaQuery.of(context).size.width / 9,
         child: Center(
           child: TextFormField(
             keyboardType: keyBoard,
@@ -293,13 +310,20 @@ class _TribeHomeState extends State<TribeShare> {
             decoration: InputDecoration(
               //contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
               filled: true,
+              prefixIcon: Icon(Icons.search),
               hintText: lableText,
-              fillColor: AppColors.mt,
+              hintStyle:FontManager().getTextStyle(context,
+                              lWeight: FontWeight.w400,
+                              fontSize: 12,
+                              color: AppColors.likesharecommentCount),
+              fillColor: AppColors.backgroundColor,
+              contentPadding: EdgeInsets.symmetric(horizontal: 4,vertical: 6),
+              
               border: OutlineInputBorder(
                 borderRadius:
-                    BorderRadius.circular(24), // Add your desired radius here
-                borderSide:
-                    BorderSide.none, // Keep the border invisible if needed
+                    BorderRadius.circular(8), // Add your desired radius here
+               borderSide:
+                      BorderSide(color: AppColors.buttonBorder) // Keep the border invisible if needed
               ),
             ),
           ),

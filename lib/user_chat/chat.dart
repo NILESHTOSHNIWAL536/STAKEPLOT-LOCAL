@@ -1042,6 +1042,7 @@ class _ChatState extends State<Chat> {
                   child: TribeUnique(
                     id: dataObj["_id"],
                     dataObj: dataObj,
+                    popBox: false.obs,
                   ),
                   isIos: true,
                 ),

@@ -23,7 +23,8 @@ RxBool toggle = false.obs;
 class TribeUnique extends StatefulWidget {
   final String id;
   Map<String, dynamic> dataObj;
-  TribeUnique({Key? key, required this.id, required this.dataObj})
+  RxBool popBox;
+  TribeUnique({Key? key, required this.id, required this.dataObj, required this.popBox})
       : super(key: key);
 
   @override
@@ -249,14 +250,16 @@ class _TribeHomeState extends State<TribeUnique> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Obx(() => PostCard(
+                Obx(() => !widget.popBox.value?PostCard(
                       data: reloadUniquePost.value
                           ? uniquePostDeatils
                           : uniquePostDeatils,
                       flag: true,
                       index: -1,
-                    )),
-                uploadData(uniquePostDeatils),
+                    ):SizedBox.shrink()
+                    ),
+
+                Obx(() => widget.popBox.value?uploadData(uniquePostDeatils):SizedBox.shrink()),
                 SizedBox(
                   height: 100,
                 ),
@@ -280,13 +283,14 @@ class _TribeHomeState extends State<TribeUnique> {
       padding: const EdgeInsets.only(bottom: 15),
       child: Column(
         children: [
-          commentedData(),
-          InputComment(
-            str,
-            TextInputType.name,
-            replyController,
-            replyid,
-          ),
+          
+           commentedData(),
+          // InputComment(
+          //   str,
+          //   TextInputType.name,
+          //   replyController,
+          //   replyid,
+          // ),
         ],
       ),
     );
@@ -317,19 +321,21 @@ class _TribeHomeState extends State<TribeUnique> {
                   decoration: BoxDecoration(
 
                       //  color: Colorcodes.budgetLightGreen,
-                      borderRadius: BorderRadius.circular(12),
-                      border:
-                          Border.all(width: .3, color: AppColors.accentColor)),
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                       replyid == "" // adding comment 
+                  ? InputDate("Add a comment", TextInputType.name,
+                      calController1, widget.id)
+                  : SizedBox.shrink(),
                       Column(
                         children: indexArray
                             .map((index) =>
                                 dataComments(commentList[index], index))
                             .toList(),
                       ),
-                      replyid != ""
+                      replyid != "" // replying to comment
                           ? Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: InkWell(
@@ -348,223 +354,395 @@ class _TribeHomeState extends State<TribeUnique> {
                 ),
               ),
 
-              replyid == ""
-                  ? InputDate("Add a comment", TextInputType.name,
-                      calController1, widget.id)
-                  : SizedBox.shrink(),
+              // replyid == "" // adding comment 
+              //     ? InputDate("Add a comment", TextInputType.name,
+              //         calController1, widget.id)
+              //     : SizedBox.shrink(),
             ],
           )),
     );
   }
 
-  Widget dataComments(Comments data, int index) {
-    //  RxList<Comments> data=data.obs;
+  // Widget dataComments(Comments data, int index) {
+  //   //  RxList<Comments> data=data.obs;
 
-    List<Replies> list = data.replies!;
+  //   List<Replies> list = data.replies!;
 
-    String idData = data.sId == null ? "" : data.sId.toString();
-    double width = MediaQuery.of(context).size.width;
+  //   String idData = data.sId == null ? "" : data.sId.toString();
+  //   double width = MediaQuery.of(context).size.width;
 
-    return Obx(() => Column(
-          children: [
-            Container(
-              // width: MediaQuery.of(context).size.width/1.2,
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // const Icon(
-                    //   Icons.person_pin_sharp,
-                    //   size: 35,
-                    //   color: Colors.black,
-                    // ),
-                    AvatarProfile(
-                        name: data.author!.name.toString(),
-                        width: 10,
-                        height: 23,
-                        background: data.author!.avatarBackGround.toString()),
+  //   return Obx(() => Column(
+  //         children: [
+  //           Container(
+  //             // width: MediaQuery.of(context).size.width/1.2,
+  //             padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+  //             child: Row(
+  //                 mainAxisAlignment: MainAxisAlignment.start,
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   // const Icon(
+  //                   //   Icons.person_pin_sharp,
+  //                   //   size: 35,
+  //                   //   color: Colors.black,
+  //                   // ),
+  //                   AvatarProfile(
+  //                       name: data.author!.name.toString(),
+  //                       width: 10,
+  //                       height: 23,
+  //                       background: data.author!.avatarBackGround.toString()),
 
-                    const SizedBox(
-                      width: 0,
-                    ),
-                    Container(
-                      width: width <= 430
-                          ? width / 1.4
-                          : width <= 500
-                              ? width / 1.3
-                              : MediaQuery.of(context).size.width / 1.3,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Text((data.author!.name ?? "name"),
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    color: Colors.black)),
-                          ),
-                          SizedBox(
-                            // color: Colors.cyan,
-                            // width: MediaQuery.of(context).size.width/1.4,
-                            // width: width<=430?  width/1.6:  width<=500?  width/2 : width/1.7,
-                            child: Text((data.commentText!),
-                                //  overflow: TextOverflow.visible,
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    color: Colors.black)),
-                          ),
-                          Container(
-                            margin: EdgeInsets.symmetric(vertical: 6),
-                            // width:  width<=430?  width/1.4: width<=500?  width/1.3: MediaQuery.of(context).size.width/1.3,
-                            // color: Colorcodes.budgetDarkGreen,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 1.0),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      GestureDetector(
-                                          onTap: () {
-                                            if (maskedName.value
-                                                .trim()
-                                                .isEmpty) {
-                                              MaskedNameDialogBox
-                                                  .showMaskedNameDialog(
-                                                      context);
-                                            } else {
-                                              upvote2(
-                                                  context,
-                                                  "Comment",
-                                                  data.sId!,
-                                                  data,
-                                                  historyListData,
-                                                  data,
-                                                  index);
+  //                   const SizedBox(
+  //                     width: 0,
+  //                   ),
+  //                   Container(
+  //                     width: width <= 430
+  //                         ? width / 1.4
+  //                         : width <= 500
+  //                             ? width / 1.3
+  //                             : MediaQuery.of(context).size.width / 1.3,
+  //                     child: Column(
+  //                       mainAxisAlignment: MainAxisAlignment.start,
+  //                       crossAxisAlignment: CrossAxisAlignment.start,
+  //                       children: [
+  //                         Padding(
+  //                           padding: const EdgeInsets.symmetric(vertical: 10),
+  //                           child: Text((data.author!.name ?? "name"),
+  //                               style: FontManager().getTextStyle(context,
+  //                                   lWeight: FontWeight.bold,
+  //                                   fontSize: 20,
+  //                                   color: Colors.black)),
+  //                         ),
+  //                         SizedBox(
+  //                           // color: Colors.cyan,
+  //                           // width: MediaQuery.of(context).size.width/1.4,
+  //                           // width: width<=430?  width/1.6:  width<=500?  width/2 : width/1.7,
+  //                           child: Text((data.commentText!),
+  //                               //  overflow: TextOverflow.visible,
+  //                               style: FontManager().getTextStyle(context,
+  //                                   lWeight: FontWeight.w500,
+  //                                   fontSize: 16,
+  //                                   color: Colors.black)),
+  //                         ),
+  //                         Container(
+  //                           margin: EdgeInsets.symmetric(vertical: 6),
+  //                           // width:  width<=430?  width/1.4: width<=500?  width/1.3: MediaQuery.of(context).size.width/1.3,
+  //                           // color: Colorcodes.budgetDarkGreen,
+  //                           child: Row(
+  //                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                             crossAxisAlignment: CrossAxisAlignment.center,
+  //                             children: [
+  //                               Padding(
+  //                                 padding: const EdgeInsets.only(top: 1.0),
+  //                                 child: Row(
+  //                                   crossAxisAlignment:
+  //                                       CrossAxisAlignment.center,
+  //                                   children: [
+  //                                     GestureDetector(
+  //                                         onTap: () {
+  //                                           if (maskedName.value
+  //                                               .trim()
+  //                                               .isEmpty) {
+  //                                             MaskedNameDialogBox
+  //                                                 .showMaskedNameDialog(
+  //                                                     context);
+  //                                           } else {
+  //                                             upvote2(
+  //                                                 context,
+  //                                                 "Comment",
+  //                                                 data.sId!,
+  //                                                 data,
+  //                                                 historyListData,
+  //                                                 data,
+  //                                                 index);
 
-                                              String l1 = "liked" + idData;
-                                              bool liked =
-                                                  likedList.contains(l1);
+  //                                             String l1 = "liked" + idData;
+  //                                             bool liked =
+  //                                                 likedList.contains(l1);
 
-                                              String l2 = "disliked" + idData;
-                                              bool disliked =
-                                                  likedList.contains(l2);
-                                              // upvoteGlobal(context,"Post",dataObj["_id"],dataObj);
-                                              // likedList.remove("liked"+dataObj["_id"])  :likedList.add("liked"+dataObj["_id"]);
+  //                                             String l2 = "disliked" + idData;
+  //                                             bool disliked =
+  //                                                 likedList.contains(l2);
+  //                                             // upvoteGlobal(context,"Post",dataObj["_id"],dataObj);
+  //                                             // likedList.remove("liked"+dataObj["_id"])  :likedList.add("liked"+dataObj["_id"]);
 
-                                              if (liked) {
-                                                likedList.remove(l1);
-                                                postCount[idData] =
-                                                    postCount[idData]! - 1;
-                                                if (postCount[idData]! < 0) {
-                                                  postCount[idData] = 0;
-                                                }
-                                              } else {
-                                                likedList.add(l1);
-                                                postCount[idData] =
-                                                    postCount[idData]! + 1;
-                                              }
-                                              likedList.remove(l2);
-                                              reRender.value = !reRender.value;
-                                            }
-                                          },
-                                          // child: const Icon(
-                                          //   Icons.arrow_drop_up_outlined,
-                                          //   size: 35,
-                                          //   color: Colors.black,
-                                          // ),
-                                          child: likeIcon(
-                                              context,
-                                              likedList.contains("liked" +
-                                                  data.sId.toString()))),
-                                      //   child: likedList.contains(
-                                      //           "liked" + data.sId.toString())
-                                      //       ? upvoteLiked(context, false)
-                                      //       : upvoteLike(context, false),
-                                      // ),
+  //                                             if (liked) {
+  //                                               likedList.remove(l1);
+  //                                               postCount[idData] =
+  //                                                   postCount[idData]! - 1;
+  //                                               if (postCount[idData]! < 0) {
+  //                                                 postCount[idData] = 0;
+  //                                               }
+  //                                             } else {
+  //                                               likedList.add(l1);
+  //                                               postCount[idData] =
+  //                                                   postCount[idData]! + 1;
+  //                                             }
+  //                                             likedList.remove(l2);
+  //                                             reRender.value = !reRender.value;
+  //                                           }
+  //                                         },
+  //                                         // child: const Icon(
+  //                                         //   Icons.arrow_drop_up_outlined,
+  //                                         //   size: 35,
+  //                                         //   color: Colors.black,
+  //                                         // ),
+  //                                         child: likeIcon(
+  //                                             context,
+  //                                             likedList.contains("liked" +
+  //                                                 data.sId.toString()))),
+  //                                     //   child: likedList.contains(
+  //                                     //           "liked" + data.sId.toString())
+  //                                     //       ? upvoteLiked(context, false)
+  //                                     //       : upvoteLike(context, false),
+  //                                     // ),
 
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 5.0),
-                                        child: Text(
-                                            data.sId == null
-                                                ? '0'
-                                                : (reRender.value
-                                                    ? postCount[data.sId]! < 0
-                                                        ? postCount[
-                                                                dataObj['_id']]
-                                                            .toString()
-                                                        : (postCount[data.sId]
-                                                            .toString())
-                                                    : (postCount[data.sId]
-                                                        .toString())),
-                                            style: FontManager().getTextStyle(
-                                                context,
-                                                lWeight: FontWeight.w400,
-                                                fontSize: 20,
-                                                color: Colors.black)),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    // Request focus for the reply text field
-                                    FocusScope.of(context)
-                                        .requestFocus(_replyNode);
-                                    _scrollToTextField();
-                                    autofocus.value = true;
-                                    setState(() {
-                                      commentObj = data;
-                                      str = "reply to " + data.commentText!;
-                                      replyid = data.sId!;
-                                    });
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 2.0),
-                                    child: Text(('Reply'),
-                                        style: FontManager().getTextStyle(
-                                            context,
-                                            lWeight: FontWeight.w500,
-                                            fontSize: 13,
-                                            color: AppColors.message)),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Column(
-                            children: list
-                                .map(
-                                  (obj) => replyDatas(obj, data),
-                                )
-                                .toList(),
-                          ),
-                        ],
+  //                                     Padding(
+  //                                       padding: const EdgeInsets.symmetric(
+  //                                           horizontal: 5.0),
+  //                                       child: Text(
+  //                                           data.sId == null
+  //                                               ? '0'
+  //                                               : (reRender.value
+  //                                                   ? postCount[data.sId]! < 0
+  //                                                       ? postCount[
+  //                                                               dataObj['_id']]
+  //                                                           .toString()
+  //                                                       : (postCount[data.sId]
+  //                                                           .toString())
+  //                                                   : (postCount[data.sId]
+  //                                                       .toString())),
+  //                                           style: FontManager().getTextStyle(
+  //                                               context,
+  //                                               lWeight: FontWeight.w400,
+  //                                               fontSize: 20,
+  //                                               color: Colors.black)),
+  //                                     ),
+  //                                   ],
+  //                                 ),
+  //                               ),
+  //                               InkWell(
+  //                                 onTap: () {
+  //                                   // Request focus for the reply text field
+  //                                   FocusScope.of(context)
+  //                                       .requestFocus(_replyNode);
+  //                                   _scrollToTextField();
+  //                                   autofocus.value = true;
+  //                                   setState(() {
+  //                                     commentObj = data;
+  //                                     str = "reply to " + data.commentText!;
+  //                                     replyid = data.sId!;
+  //                                   });
+  //                                 },
+  //                                 child: Padding(
+  //                                   padding: const EdgeInsets.symmetric(
+  //                                       horizontal: 2.0),
+  //                                   child: Text(('Reply'),
+  //                                       style: FontManager().getTextStyle(
+  //                                           context,
+  //                                           lWeight: FontWeight.w500,
+  //                                           fontSize: 13,
+  //                                           color: AppColors.message)),
+  //                                 ),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         ),
+  //                         Column(
+  //                           children: list
+  //                               .map(
+  //                                 (obj) => replyDatas(obj, data),
+  //                               )
+  //                               .toList(),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   )
+  //                 ]),
+  //           ),
+  //           index + 1 == indexArray.length
+  //               ? SizedBox.shrink()
+  //               : Divider(
+  //                   color: Colorcodes.budgetLightGreen,
+  //                   thickness: index + 1 == indexArray.length ? 0 : .8,
+  //                   endIndent: 5,
+  //                   indent: 5,
+  //                 )
+  //         ],
+  //       ));
+  // }
+
+Widget dataComments(Comments data, int index) {
+  List<Replies> list = data.replies ?? [];
+
+  String idData = data.sId == null ? "" : data.sId.toString();
+  double width = MediaQuery.of(context).size.width;
+
+  return Obx(() => Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AvatarProfile(
+                  name: data.author!.name.toString(),
+                  width: 10,
+                  height: 23,
+                  background: data.author!.avatarBackGround.toString(),
+                ),
+                const SizedBox(width: 0),
+                Container(
+                  width: width <= 430
+                      ? width / 1.4
+                      : width <= 500
+                          ? width / 1.3
+                          : MediaQuery.of(context).size.width / 1.3,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Text(
+                          (data.author!.name ?? "name"),
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.black),
+                        ),
                       ),
-                    )
-                  ]),
+                      SizedBox(
+                        child: Text(
+                          (data.commentText!),
+                          style: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: Colors.black),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 6),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 1.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (maskedName.value.trim().isEmpty) {
+                                        MaskedNameDialogBox
+                                            .showMaskedNameDialog(context);
+                                      } else {
+                                        upvote2(context, "Comment", data.sId!,
+                                            data, historyListData, data, index);
+                                        String l1 = "liked" + idData;
+                                        bool liked = likedList.contains(l1);
+                                        String l2 = "disliked" + idData;
+                                        bool disliked = likedList.contains(l2);
+                                        if (liked) {
+                                          likedList.remove(l1);
+                                          postCount[idData] =
+                                              postCount[idData]! - 1;
+                                          if (postCount[idData]! < 0) {
+                                            postCount[idData] = 0;
+                                          }
+                                        } else {
+                                          likedList.add(l1);
+                                          postCount[idData] =
+                                              postCount[idData]! + 1;
+                                        }
+                                        likedList.remove(l2);
+                                        reRender.value = !reRender.value;
+                                      }
+                                    },
+                                    child: likeIcon(
+                                        context,
+                                        likedList
+                                            .contains("liked" + data.sId.toString())),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5.0),
+                                    child: Text(
+                                      data.sId == null
+                                          ? '0'
+                                          : (reRender.value
+                                              ? postCount[data.sId]! < 0
+                                                  ? postCount[dataObj['_id']]
+                                                      .toString()
+                                                  : (postCount[data.sId]
+                                                      .toString())
+                                              : (postCount[data.sId].toString())),
+                                      style: FontManager().getTextStyle(context,
+                                          lWeight: FontWeight.w400,
+                                          fontSize: 20,
+                                          color: Colors.black),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                FocusScope.of(context).requestFocus(_replyNode);
+                                _scrollToTextField();
+                                autofocus.value = true;
+                                setState(() {
+                                  commentObj = data;
+                                  str = "reply to " + data.commentText!;
+                                  replyid = data.sId!;
+                                });
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 2.0),
+                                child: Text(
+                                  'Reply',
+                                  style: FontManager().getTextStyle(context,
+                                      lWeight: FontWeight.w500,
+                                      fontSize: 13,
+                                      color: AppColors.message),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        children: list
+                            .map((obj) => replyDatas(obj, data))
+                            .toList(),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            index + 1 == indexArray.length
-                ? SizedBox.shrink()
-                : Divider(
-                    color: Colorcodes.budgetLightGreen,
-                    thickness: index + 1 == indexArray.length ? 0 : .8,
-                    endIndent: 5,
-                    indent: 5,
-                  )
-          ],
-        ));
-  }
-
+          ),
+          // Add InputComment here if replying to this specific comment
+          if (replyid == idData)
+            InputComment(
+              str,
+              TextInputType.name,
+              replyController,
+              replyid,
+            ),
+          index + 1 == indexArray.length
+              ? SizedBox.shrink()
+              : Divider(
+                  color: Colorcodes.budgetLightGreen,
+                  thickness: index + 1 == indexArray.length ? 0 : .8,
+                  endIndent: 5,
+                  indent: 5,
+                ),
+        ],
+      ));
+}
   Widget InputDate(lableText, keyBoard, TextEditingController Textcontroller,
       String postId) {
     return Center(
@@ -605,8 +783,8 @@ class _TribeHomeState extends State<TribeUnique> {
               focusedBorder: const OutlineInputBorder(
                   // borderRadius: BorderRadius.circular(40),
                   borderSide:
-                      BorderSide(color: Color.fromRGBO(246, 246, 246, 1))),
-              fillColor: AppColors.button,
+                      BorderSide(color: AppColors.buttonBorder)),
+              fillColor: AppColors.backgroundColor,
               border: InputBorder.none,
               contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             ),
