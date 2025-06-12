@@ -27,8 +27,8 @@ String writePost = "Write a Post";
   String postExploria = "Post Exploria";
   // TextScreen and ImageScreen (shared)
   String newPost = "New post";
-  String enterTitle = "Enter title";
-  String addThoughts = "Add your thoughts";
+  String enterTitle = "Title";
+  String addThoughts = "Add a caption";
   String continueButton = "Continue";
   String postedSuccess = "Posted";
   String trending = "Now";

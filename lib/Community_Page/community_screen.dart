@@ -90,7 +90,7 @@ class _CommunityState extends State<Community> {
       bottomNavigationBar: SafeArea(child: BottomNavigations(data: 2)),
       body: SafeArea(
         child: Container(
-          height: MediaQuery.of(context).size.height / 1.1,
+         height : MediaQuery.of(context).size.height / 1.1,
           padding:
               const EdgeInsets.only(left: 0.0, right: 0.0, bottom: 0, top: 8.0),
           child: SingleChildScrollView(
@@ -284,7 +284,7 @@ class _CommunityState extends State<Community> {
                             strings.createPost,
                             style: FontManager().getTextStyle(
                               context,
-                              lWeight: FontWeight.bold,
+                              lWeight: FontWeight.w500,
                               fontSize:
                                   MediaQuery.of(context).size.width * 0.05,
                               color: AppColors.accentColor,
@@ -305,18 +305,10 @@ class _CommunityState extends State<Community> {
                           onTap: () {
                             posting.value = false;
                             Navigator.of(context).pop();
-                            showModalBottomSheet(
-                              isScrollControlled: true,
-                              backgroundColor: AppColors.backgroundColor,
-                              context: context,
-                              builder: (context) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(16),
-                                          topRight: Radius.circular(16))),
-                                  child: TextScreen(
+                              Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TextScreen(
                                     userInfo: post,
                                     onPostCreated: (newPost) {
                                       setState(() {
@@ -325,9 +317,32 @@ class _CommunityState extends State<Community> {
                                       });
                                     },
                                   ),
-                                );
-                              },
-                            );
+        ),
+      );
+                            // showModalBottomSheet(
+                            //   isScrollControlled: true,
+                            //   backgroundColor: AppColors.backgroundColor,
+                            //   context: context,
+                            //   builder: (context) {
+                            //     return Container(
+                            //       decoration: const BoxDecoration(
+                            //           color: Colors.white,
+                            //           borderRadius: BorderRadius.only(
+                            //               topLeft: Radius.circular(16),
+                            //               topRight: Radius.circular(16))),
+                            //       child: TextScreen(
+                            //         userInfo: post,
+                            //         onPostCreated: (newPost) {
+                            //           setState(() {
+                            //             posts.add(newPost);
+                            //             k = 1;
+                            //           });
+                            //         },
+                            //       ),
+                            //     );
+                            //   },
+                            // );
+                          
                           },
                         ),
                         buildOptionButton(
@@ -337,18 +352,10 @@ class _CommunityState extends State<Community> {
                           onTap: () {
                             posting.value = false;
                             Navigator.of(context).pop();
-                            showModalBottomSheet(
-                              isScrollControlled: true,
-                              backgroundColor: AppColors.backgroundColor,
-                              context: context,
-                              builder: (context) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(16),
-                                          topRight: Radius.circular(16))),
-                                  child: ImageScreen(
+                             Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ImageScreen(
                                     userInfo: post,
                                     onPostCreated: (newPost) {
                                       setState(() {
@@ -356,9 +363,31 @@ class _CommunityState extends State<Community> {
                                       });
                                     },
                                   ),
-                                );
-                              },
-                            );
+        ),
+      );
+                            // showModalBottomSheet(
+                            //   isScrollControlled: true,
+                            //   backgroundColor: AppColors.backgroundColor,
+                            //   context: context,
+                            //   builder: (context) {
+                            //     return Container(
+                            //       decoration: BoxDecoration(
+                            //           color: Colors.white,
+                            //           borderRadius: BorderRadius.only(
+                            //               topLeft: Radius.circular(16),
+                            //               topRight: Radius.circular(16))),
+                            //       child: ImageScreen(
+                            //         userInfo: post,
+                            //         onPostCreated: (newPost) {
+                            //           setState(() {
+                            //             posts.add(newPost);
+                            //           });
+                            //         },
+                            //       ),
+                            //     );
+                            //   },
+                            // );
+                          
                           },
                         ),
                         buildOptionButton(
@@ -368,20 +397,10 @@ class _CommunityState extends State<Community> {
                           onTap: () {
                             posting.value = false;
                             Navigator.of(context).pop();
-                            showModalBottomSheet(
-                              isScrollControlled: true,
-                              backgroundColor: AppColors.backgroundColor,
-                              context: context,
-                              builder: (context) {
-                                return Container(
-                                  padding: const EdgeInsets.all(16.0),
-                                  width: MediaQuery.sizeOf(context).width,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(16),
-                                          topRight: Radius.circular(16))),
-                                  child: PollScreen(
+                            Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>  PollScreen(
                                     userInfo: post,
                                     onPollPosted: (pollData) {
                                       setState(() {
@@ -390,9 +409,34 @@ class _CommunityState extends State<Community> {
                                       Navigator.pop(context);
                                     },
                                   ),
-                                );
-                              },
-                            );
+        ),
+      );
+                            // showModalBottomSheet(
+                            //   isScrollControlled: true,
+                            //   backgroundColor: AppColors.backgroundColor,
+                            //   context: context,
+                            //   builder: (context) {
+                            //     return Container(
+                            //       padding: const EdgeInsets.all(16.0),
+                            //       width: MediaQuery.sizeOf(context).width,
+                            //       decoration: BoxDecoration(
+                            //           color: Colors.white,
+                            //           borderRadius: BorderRadius.only(
+                            //               topLeft: Radius.circular(16),
+                            //               topRight: Radius.circular(16))),
+                            //       child: PollScreen(
+                            //         userInfo: post,
+                            //         onPollPosted: (pollData) {
+                            //           setState(() {
+                            //             posts.add(pollData);
+                            //           });
+                            //           Navigator.pop(context);
+                            //         },
+                            //       ),
+                            //     );
+                            //   },
+                            // );
+                          
                           },
                         ),
                       ],

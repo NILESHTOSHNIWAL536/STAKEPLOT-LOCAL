@@ -159,143 +159,133 @@ class _TextScreenState extends State<TextScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: modalHeight + MediaQuery.of(context).viewInsets.bottom,
-      // height: MediaQuery.of(context).size.height /1.1,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      child: postSubmitted
-          ?SuccessPost(celebrationText: strings.postedSuccess)
-          : SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Scaffold(
+       appBar: AppBar(
+       centerTitle: true,
+       leading:  IconButton(
+                              icon: Icon(Icons.arrow_back, 
+                                color: AppColors.bg1,
+                                size: 20,
+                              ),
+                              onPressed: () => Navigator.pop(context),
+                            ),
+       automaticallyImplyLeading: false,
+       title: Text(
+                                          strings.writePost,
+                                          style: FontManager().getTextStyle(
+                                            context,
+                                            lWeight: FontWeight.w500,
+                                            fontSize: 16,
+                                            color:AppColors.bg1,
+                                          ),
+                                        ),
+       ),
+      body: SafeArea(
+        child: Container(
+          // height: modalHeight + MediaQuery.of(context).viewInsets.bottom,
+          // height: MediaQuery.of(context).size.height /1.1,
+          decoration: BoxDecoration(
+            color: AppColors.backgroundColor,
+            // borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+          ),
+          child: postSubmitted
+              ?SuccessPost(celebrationText: strings.postedSuccess)
+              : SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                      IconButton(
-                          icon: Icon(Icons.arrow_back, 
-                            color: AppColors.accentColor,
-                            size: 20,
+                        
+                        const SizedBox(height: 10),
+                        TextField(
+                          controller: titleController,
+                          focusNode: _titleFocusNode,
+                          decoration: InputDecoration(
+                            hintText: strings.enterTitle,
+                             filled:true,
+                              fillColor: AppColors.textBgColor,
+                            hintStyle: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.w500,
+                                fontSize: 18,
+                                color: AppColors.bg1),
+                            border: InputBorder.none,
                           ),
-                          onPressed: () => Navigator.pop(context),
                         ),
-                       Text(
-                                    strings.writePost,
-                                    style: FontManager().getTextStyle(
-                                      context,
-                                      lWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                      color: titleController.text.isNotEmpty &&
-                                              contentController.text.isNotEmpty
-                                          ? Colors.white
-                                          : Colors.black,
-                                    ),
-                                  ),
+                        const SizedBox(height: 10),
+                        
+                        Flexible(
+                          child: TextField(
+                            controller: contentController,
+                            focusNode: _contentFocusNode,
+                            maxLines: 6,
+                            
+                            decoration: InputDecoration(
+                              filled:true,
+                              fillColor: AppColors.textBgColor,
+                               hintText: strings.addThoughts, 
+                               border: InputBorder.none,
+                              hintStyle: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                  color: AppColors.bg1),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        
+                        GestureDetector(
+                          onTap: () async {
+                             if (titleController.text.trim().isEmpty) {
+                    snackBarAllFeilds2(context, "Please add title");
+                    return;
+                  }
+                  if (contentController.text.trim().isEmpty) {
+                    snackBarAllFeilds2(context, "Please add your thoughts");
+                    return;
+                  }
+                            
+                                          showTagListOfInterestModal(context:  context,onConfirm: callBack);
+                                      
+
+                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width / 1.1,
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+                            decoration: BoxDecoration(
+                              color: titleController.text.isNotEmpty &&
+                                      contentController.text.isNotEmpty
+                                  ? AppColors.primaryColor
+                                  : AppColors.button,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Center(
+                              child: Obx(
+                                () => posting.value
+                                    ? Spinner(size: 30, color: Colorcodes.white)
+                                    : Text(
+                                        strings.continueButton,
+                                        style: FontManager().getTextStyle(
+                                          context,
+                                          lWeight: FontWeight.bold,
+                                          fontSize: 15,
+                                          color: titleController.text.isNotEmpty &&
+                                                  contentController.text.isNotEmpty
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                      ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: titleController,
-                      focusNode: _titleFocusNode,
-                      decoration: InputDecoration(
-                        hintText: strings.enterTitle,
-                        hintStyle: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w700,
-                            fontSize: 18,
-                            color: AppColors.bg1),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    if (showImage)
-                      GestureDetector(
-                        onTap: _pickImage,
-                        child: Container(
-                          height: 200,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: selectedImage != null
-                              ?  CustomImageCrop(
-                              image: FileImage(selectedImage!),
-                              cropController: _cropController,
-                              shape: CustomCropShape.Square,
-                             outlineStrokeWidth:0.0,
-                           //  ratio: Ratio(16, 9),
-                            // forceInsideCropArea:true,
-                           
-                              overlayColor: Colors.black.withOpacity(0.5),
-                              cropPercentage: 0.92, // Increased crop size
-                              // Increased crop size
-                            )
-                              : const Icon(Icons.add_photo_alternate,
-                                  size: 50, color: Colors.grey),
-                        ),
-                      ),
-                    if (showImage) const SizedBox(height: 10),
-                    Flexible(
-                      child: TextField(
-                        controller: contentController,
-                        focusNode: _contentFocusNode,
-                        maxLines: null,
-                        decoration: InputDecoration(
-                           hintText: strings.addThoughts, 
-                          border: InputBorder.none,
-                          hintStyle: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.normal,
-                              fontSize: 14,
-                              color: AppColors.bg1),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    
-                    GestureDetector(
-                      onTap: () async {
-                          showTagListOfInterestModal(context:  context,onConfirm: callBack);
-                      },
-                      child: Container(
-                        width: MediaQuery.of(context).size.width / 1.1,
-                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
-                        decoration: BoxDecoration(
-                          color: titleController.text.isNotEmpty &&
-                                  contentController.text.isNotEmpty
-                              ? AppColors.primaryColor
-                              : AppColors.button,
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        child: Center(
-                          child: Obx(
-                            () => posting.value
-                                ? Spinner(size: 30, color: Colorcodes.white)
-                                : Text(
-                                    strings.continueButton,
-                                    style: FontManager().getTextStyle(
-                                      context,
-                                      lWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                      color: titleController.text.isNotEmpty &&
-                                              contentController.text.isNotEmpty
-                                          ? Colors.white
-                                          : Colors.black,
-                                    ),
-                                  ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
+        ),
+      ),
     );
   }
 
@@ -303,10 +293,7 @@ class _TextScreenState extends State<TextScreen> {
   void callBack()async
   {
        if (contentController.text.isNotEmpty) {
-                          if (showImage && selectedImage == null) {
-                            snackBarAllFeilds2(context,SnackbarData().uploadError);
-                            return;
-                          }
+                          
 
                           if (posting.value) return;
                           posting.value = true;

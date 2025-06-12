@@ -104,71 +104,82 @@ class _PollScreenState extends State<PollScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return pollSubmitted
-        ?SuccessPost(celebrationText: strings.postedSuccess)
-        : Container(
-          
-            child: AnimatedPadding(
-              padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context)
-                      .viewInsets
-                      .bottom), // Adjusts padding when keyboard appears
-              duration: const Duration(milliseconds: 100),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                         getProfile(),
-                          const SizedBox(width: 8),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                userName.value.toString(),
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w600,
-                                    fontSize: 18,
-                                    color: AppColors.bg1),
-                              ),
-                              Text( strings.newPost,
-                                  style: FontManager().getTextStyle(context,
+    return Scaffold(
+ appBar: AppBar(
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: AppColors.bg1,
+            size: 20,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+        automaticallyImplyLeading: false,
+        title: Text(
+          strings.createPoll,
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.w500,
+            fontSize: 16,
+            color: AppColors.bg1,
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: pollSubmitted
+            ?SuccessPost(celebrationText: strings.postedSuccess)
+            : Container(
+              
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        
+                        if (question == null) ...[
+                          Center(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width / 1.1,
+                              child: TextField(
+                                controller: _questionController,
+                                maxLines: null,
+                                maxLength: 80,
+                                 textInputAction: TextInputAction.next,
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: AppColors.textBgColor,
+                                 hintText: strings.askQuestion,
+                                  hintStyle: FontManager().getTextStyle(context,
                                       lWeight: FontWeight.w400,
-                                      fontSize: 14,
-                                      color: AppColors.bg1)),
-                            ],
+                                      fontSize: 16,
+                                      color: AppColors.bg1),
+                                    focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(color: AppColors.textBgColor),
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(color: AppColors.textBgColor),
+                                                  borderRadius: BorderRadius.all(
+                                                      Radius.circular(8))),
+                                  contentPadding: const EdgeInsets.all(16),
+                                counterText: '',
+                                ),
+                                
+                              ),
+                            ),
                           ),
-                        ],
-                      ),
-                      if (question == null) ...[
-                        TextField(
-                          controller: _questionController,
-                          maxLines: null,
-                          maxLength: 80,
-                           textInputAction: TextInputAction.next,
-                           
-                          decoration: InputDecoration(
-                           hintText: strings.askQuestion,
-                            hintStyle: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.w400,
-                                fontSize: 16,
-                                color: AppColors.bg1),
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.all(16),
-                          counterText: '',
-                          ),
-                          
-                        ),
-                        const SizedBox(height: 10),
-                        ...List.generate(_optionControllers.length, (index) {
-                          return Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
+                          const SizedBox(height: 10),
+                          ...List.generate(_optionControllers.length, (index) {
+                            return Column(
+                              // mainAxisAlignment: MainAxisAlignment.center,
+                               crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width / 1.1,
                                     child: TextField(
                                       controller: _optionControllers[index],
                                       maxLines: null,
@@ -176,14 +187,22 @@ class _PollScreenState extends State<PollScreen> {
                                       
                                       decoration: InputDecoration(
                                         hintText: "${strings.optionPrefix} ${index + 1}", 
+                                        filled: true,
+                                                                fillColor: AppColors.textBgColor,
                                         hintStyle: FontManager().getTextStyle(
                                             context,
                                             lWeight: FontWeight.normal,
                                             fontSize: 14,
                                             color: AppColors.bg1),
-                                        border: OutlineInputBorder(
+                                                  
+                                            focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: AppColors.textBgColor),
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: AppColors.textBgColor),
                                             borderRadius: BorderRadius.all(
-                                                Radius.circular(16))),
+                                                Radius.circular(8))),
                                         // fillColor: AppColors.button,
                                         // filled: true,
                                          contentPadding: const EdgeInsets.all(12),
@@ -192,7 +211,7 @@ class _PollScreenState extends State<PollScreen> {
                                             ? IconButton(
                                                 onPressed: () =>
                                                     _removeOption(index),
-                                                icon: const Icon(Icons.close),
+                                                 icon: Icon(Icons.delete, color: Colors.red),
                                               )
                                             : null,
                                       ),
@@ -210,145 +229,146 @@ class _PollScreenState extends State<PollScreen> {
                                   },
                                     ),
                                   ),
-                                  //const SizedBox(width: 8),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                            ],
-                          );
-                        }),
-                        if (_optionControllers.length < 4)
-                          TextButton.icon(
-                              onPressed: _addOptionController,
-                              icon: const Icon(Icons.add),
-                              label: Text(
-                                strings.addOption,
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: FontWeight.normal,
-                                  fontSize: 14,
-                                  color: AppColors.bg1,
-                                ),
-                              )),
-                        GestureDetector(
-                            onTap: (){
-                               showTagListOfInterestModal(context:  context,onConfirm: callBack);
-                            },
-                            child: Container(
-                              width: MediaQuery.of(context).size.width / 1.1,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 14),
-                              decoration: BoxDecoration(
-                                  color: _questionController.text.isNotEmpty &&
-                                          _optionControllers.every(
-                                              (controller) =>
-                                                  controller.text.isNotEmpty)
-                                      ? AppColors.primaryColor
-                                      : AppColors.button,
-                                  borderRadius: BorderRadius.circular(24)),
-                              child: Center(
-                                child: Obx(() => posting.value
-                                    ? Spinner(
-                                        size: 30,
-                                        color: Colorcodes.white,
-                                      )
-                                    : Text(
-                                         strings.continueButton, 
-                                        style: FontManager().getTextStyle(
-                                          context,
-                                          lWeight: FontWeight.bold,
-                                          fontSize: 15,
-                                          color: _questionController
-                                                      .text.isNotEmpty &&
-                                                  _optionControllers.every(
-                                                      (controller) => controller
-                                                          .text.isNotEmpty)
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
-                                      )),
-                              ),
-                            )),
-                      ] else ...[
-                        Card(
-                          elevation: 4,
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  question!,
-                                  style: FontManager().getTextStyle(context,
-                                      lWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                      color: Colors.black),
                                 ),
                                 const SizedBox(height: 10),
-                          for (var option in ( options==null? [] : options!))
-                                  GestureDetector(
-                                    onTap: () => _vote(option),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          option,
-                                          style: FontManager().getTextStyle(
-                                              context,
-                                              lWeight: FontWeight.normal,
-                                              fontSize: 18,
-                                              color: Colors.black),
-                                        ),
-                                        const SizedBox(height: 5),
-                                        Stack(
-                                          children: [
-                                            Container(
-                                              height: 10,
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey[300],
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                              ),
-                                            ),
-                                            Container(
-                                              height: 10,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.8 *
-                                                  (_getPercentage(option) /
-                                                      100),
-                                              decoration: BoxDecoration(
-                                                color: Colors.blue,
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 5),
-                                        Text(
-                                          '${_getPercentage(option).toStringAsFixed(1)}%',
-                                          style: const TextStyle(
-                                              color: Colors.grey),
-                                        ),
-                                        const SizedBox(height: 10),
-                                      ],
-                                    ),
-                                  ),
                               ],
+                            );
+                          }),
+                          if (_optionControllers.length < 4)
+                            TextButton.icon(
+                                onPressed: _addOptionController,
+                                icon: const Icon(Icons.add),
+                                label: Text(
+                                  strings.addOption,
+                                  style: FontManager().getTextStyle(
+                                    context,
+                                    lWeight: FontWeight.normal,
+                                    fontSize: 14,
+                                    color: AppColors.bg1,
+                                  ),
+                                )),
+                          Center(
+                            child: GestureDetector(
+                                onTap: (){
+                                   showTagListOfInterestModal(context:  context,onConfirm: callBack);
+                                },
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width / 1.1,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 14),
+                                  decoration: BoxDecoration(
+                                      color: _questionController.text.isNotEmpty &&
+                                              _optionControllers.every(
+                                                  (controller) =>
+                                                      controller.text.isNotEmpty)
+                                          ? AppColors.primaryColor
+                                          : AppColors.button,
+                                      borderRadius: BorderRadius.circular(8)),
+                                  child: Center(
+                                    child: Obx(() => posting.value
+                                        ? Spinner(
+                                            size: 30,
+                                            color: Colorcodes.white,
+                                          )
+                                        : Text(
+                                             strings.continueButton, 
+                                            style: FontManager().getTextStyle(
+                                              context,
+                                              lWeight: FontWeight.bold,
+                                              fontSize: 15,
+                                              color: _questionController
+                                                          .text.isNotEmpty &&
+                                                      _optionControllers.every(
+                                                          (controller) => controller
+                                                              .text.isNotEmpty)
+                                                  ? Colors.white
+                                                  : Colors.black,
+                                            ),
+                                          )),
+                                  ),
+                                )),
+                          ),
+                        ] else ...[
+                          Card(
+                            elevation: 4,
+                            margin: const EdgeInsets.symmetric(vertical: 10),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    question!,
+                                    style: FontManager().getTextStyle(context,
+                                        lWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.black),
+                                  ),
+                                  const SizedBox(height: 10),
+                            for (var option in ( options==null? [] : options!))
+                                    GestureDetector(
+                                      onTap: () => _vote(option),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            option,
+                                            style: FontManager().getTextStyle(
+                                                context,
+                                                lWeight: FontWeight.normal,
+                                                fontSize: 18,
+                                                color: Colors.black),
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Stack(
+                                            children: [
+                                              Container(
+                                                height: 10,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey[300],
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                ),
+                                              ),
+                                              Container(
+                                                height: 10,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.8 *
+                                                    (_getPercentage(option) /
+                                                        100),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.blue,
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Text(
+                                            '${_getPercentage(option).toStringAsFixed(1)}%',
+                                            style: const TextStyle(
+                                                color: Colors.grey),
+                                          ),
+                                          const SizedBox(height: 10),
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
+      ),
+    );
   }
 
 
