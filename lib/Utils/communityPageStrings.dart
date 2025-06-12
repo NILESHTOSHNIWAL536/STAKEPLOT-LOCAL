@@ -20,11 +20,15 @@ class CommunityScreenStrings {
   String imageOption = "Image";
   String pollOption = "Poll";
   String exploria = "Exploria";
-
+String writePost = "Write a Post";
+  String createPoll = "Create Poll";
+  String postCard = "Post Card";
+  
+  String postExploria = "Post Exploria";
   // TextScreen and ImageScreen (shared)
   String newPost = "New post";
-  String enterTitle = "Enter title";
-  String addThoughts = "Add your thoughts";
+  String enterTitle = "Title";
+  String addThoughts = "Add a caption";
   String continueButton = "Continue";
   String postedSuccess = "Posted";
   String trending = "Now";
@@ -87,6 +91,10 @@ class CommunityScreenStrings {
         imageOption = data['imageOption'] ?? imageOption;
         pollOption = data['pollOption'] ?? pollOption;
         exploria = data['exploria'] ?? exploria;
+         writePost = data['writePost'] ?? writePost;
+          createPoll = data['createPoll'] ?? createPoll;
+           postCard = data['postCard'] ?? postCard;
+            postExploria = data['postExploria'] ?? postExploria;
 
         // TextScreen and ImageScreen
         newPost = data['newPost'] ?? newPost;

@@ -46,9 +46,9 @@ void showTagListOfInterestModal({
             ),
             // Title
             Semantics(
-              label: 'Select Your Interests',
+              label: 'Add Interest',
               child: Text(
-                'Select Your Interests',
+                'Add Interest',
                 style: FontManager2().getTextStyle(
                   context,
                   lWeight: FontWeight.bold,
@@ -68,6 +68,7 @@ void showTagListOfInterestModal({
             
             SizedBox(height: screenSize.height * 0.02),
             // Continue button
+            
             Obx(()=> InkWell(
               onTap: ()
               {
@@ -75,7 +76,7 @@ void showTagListOfInterestModal({
                 onConfirm();// Call the passed function
                 Navigator.pop(context); // Close the modal
               },
-              child: isListEnabled.value? getButton(context, "Continue"): getButton(context, "Select Interest", Colors.grey.shade400,AppColors.bg1,)),
+              child: isListEnabled.value? getButton(context, "Continue"): getButton(context, "Add", Colors.grey.shade400,AppColors.bg1,)),
             ),
           ],
         ),

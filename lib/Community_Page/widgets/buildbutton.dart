@@ -11,7 +11,6 @@ import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.da
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
-import 'package:page_transition/page_transition.dart';
 
 Widget buildOptionButton({
     required BuildContext context,
@@ -141,7 +140,7 @@ Widget buildWelcomeRow(context) {
           padding: const EdgeInsets.only(left: 10.0, right: 10.0),
           child: Hero(
             tag: "TribeSearch",
-            child: InkWell(
+            child: GestureDetector(
               onTap: () {
                 // Navigator.pushNamed(context, '/TribeSearch');
                 Navigator.push(
@@ -151,24 +150,26 @@ Widget buildWelcomeRow(context) {
                   ),
                 );
               },
-              child: Container(
-                width: MediaQuery.sizeOf(context).width/1.07,
-                height: MediaQuery.sizeOf(context).width *(32/348),
-                child: TextField(
-                  decoration: InputDecoration(
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                    filled: true,
-                    enabled: false,
-                    hintText: strings.searchHint,
-                    fillColor: AppColors.backgroundColor,
-                    hintStyle: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.normal,
-                        fontSize: 14,
-                        color: Colors.black),
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
+              child: Material(
+                child: Container(
+                  width: MediaQuery.sizeOf(context).width/1.07,
+                  height: MediaQuery.sizeOf(context).width *(32/348),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                      filled: true,
+                      enabled: false,
+                      hintText: strings.searchHint,
+                      fillColor: AppColors.backgroundColor,
+                      hintStyle: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.normal,
+                          fontSize: 14,
+                          color: Colors.black),
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
                     ),
                   ),
                 ),

@@ -83,6 +83,7 @@ Future<Map<String, dynamic>> createPost(
 ) async {
   try {
     String urlPath = await addImageToCloud2(imageFile);
+
     final TagList = [...selectedSubCategories, ...selectedCategories];
 
     var body = {
@@ -95,6 +96,7 @@ Future<Map<String, dynamic>> createPost(
     String apiCall = '${url}/post';
 
     var response = await postDataApiCall(apiCall, body);
+   
     if (getFlagOfResponse(response)) {
       clearInterest();
       var postData = jsonDecode(response.body);
@@ -165,7 +167,8 @@ void createPollOfCommunity(context, String title, String description) async {
 }
 
 void getPost() async {
-  var response = await getDataApiCall('${url}/post/feed/${currentPageFeed.value}');
+  var response =
+      await getDataApiCall('${url}/post/feed/${currentPageFeed.value}');
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
@@ -173,8 +176,8 @@ void getPost() async {
     historyListData.addAll(obj);
     // getTrendingData.clear();
     getTrendingData.addAll(obj);
-    if(historyListData.length<5){
-       hasMorePostFeed.value=false;
+    if (historyListData.length < 5) {
+      hasMorePostFeed.value = false;
     }
     currentPageFeed.value++;
     historyListData.forEach((element) {
@@ -182,21 +185,22 @@ void getPost() async {
       postCount[element["_id"]] = element['upvotes'];
       postCommentCount[element["_id"]] = element['comments'];
     });
-    isPostloading.value=false;
+    isPostloading.value = false;
     isPost.value = true;
   } else {}
 }
 
 void getTranding() async {
-  var response = await getDataApiCall('${url}/post/trending/${currentPageTranding.value}');
+  var response =
+      await getDataApiCall('${url}/post/trending/${currentPageTranding.value}');
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
     historyListData.clear();
     historyListData.addAll(obj);
     getAllPostData.addAll(obj);
-    if(historyListData.length<5){
-       hasMorePostTranding.value=false;
+    if (historyListData.length < 5) {
+      hasMorePostTranding.value = false;
     }
     currentPageTranding.value++;
     historyListData.forEach((element) {
@@ -204,13 +208,12 @@ void getTranding() async {
       postCount[element["_id"]] = element['upvotes'];
       postCommentCount[element["_id"]] = element['comments'];
     });
-    isPostloading.value=false;
+    isPostloading.value = false;
     isPostTranding.value = true;
   }
 }
 
 void savePostData(context, data) async {
-
   var urlPath = "${url}/post/save/${data['_id']}";
   var body = {"postId": data['_id']};
   var response = await postDataApiCall(urlPath, body);

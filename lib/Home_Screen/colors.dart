@@ -32,6 +32,7 @@ class AppColors {
   static const Color buttonBorder = Color(0xFFC7C9E5);
   static const Color commentbg = Color(0xFFF8F8F8);
   static const Color commentColor = Color(0xFF7B7B7B);
+   static const Color textBgColor = Color(0xFFEEEEEE);
 
  
 }

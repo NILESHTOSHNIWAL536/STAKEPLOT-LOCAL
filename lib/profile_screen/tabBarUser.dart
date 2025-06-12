@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -7,81 +8,68 @@ import 'package:get/get.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
 
 class TabBarUser extends StatelessWidget {
-  List userPostList;
-  TabBarUser({Key? key, required this.userPostList}) : super(key: key);
+  final List userPostList;
+  const TabBarUser({Key? key, required this.userPostList}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2, // Number of tabs
+      length: 2,
       child: Column(
         children: [
           Container(
-            // color: Colors.amber,
-                      decoration: BoxDecoration(
-              border: Border.all(color: AppColors.grey, width: 0.1), // Added border
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.grey, width: 0.1),
             ),
-            padding: EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: TabBar(
-              indicatorPadding: EdgeInsets.zero, // Ensures no extra spacing
-              labelPadding: EdgeInsets.zero, // Controls padding inside tabs
-              // indicator: BoxDecoration(
-              //   color: AppColors.tab, // Background for selected tab
-              //   borderRadius: BorderRadius.circular(12),
-              // ),
-              labelColor: AppColors.finSpaceColor, // Text color for selected tab
-              unselectedLabelColor:
-                  AppColors.grey, // Text color for unselected tabs
-               indicatorSize: TabBarIndicatorSize.tab,
-               indicatorColor: AppColors.finSpaceColor, // Indicator fills the tab
+              indicatorPadding: EdgeInsets.zero,
+              labelPadding: EdgeInsets.zero,
+              labelColor: AppColors.finSpaceColor,
+              unselectedLabelColor: AppColors.grey,
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicatorColor: AppColors.finSpaceColor,
               tabs: [
                 Tab(
                   child: AnimatedContainer(
-                    duration: Duration(milliseconds: 200),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4), // Adjusted for smaller size
+                    duration: const Duration(milliseconds: 200),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color:
-                          Colors.transparent, // No background when unselected
+                      color: Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                   child: Text('Aa',
-                         style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.w500,
-                           
-                          )),
+                    child: Text(
+                      'Aa',
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                 ),
-                
                 Tab(
                   child: AnimatedContainer(
-                    duration: Duration(milliseconds: 200),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 8, vertical: 4), // Smaller padding
+                    duration: const Duration(milliseconds: 200),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color:
-                          Colors.transparent, // No background when unselected
+                      color: Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(Icons.image_outlined, size: 20),
+                    child: const Icon(Icons.image_outlined, size: 20),
                   ),
                 ),
               ],
             ),
           ),
-          // const SizedBox(height: 10),
           SizedBox(
             height: MediaQuery.of(context).size.height / 1.46,
             child: TabBarView(
               children: [
-                 Padding(
-                 padding:
-                  const EdgeInsets.symmetric(vertical: 0, horizontal: 10.0),
-                  child: pollWidgets("poll"),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: pollWidgets(),
                 ),
-                feedWidgets("post"),
-               
+                feedWidgets(),
               ],
             ),
           ),
@@ -89,48 +77,64 @@ class TabBarUser extends StatelessWidget {
       ),
     );
   }
-Widget feedWidgets(String type, {bool showOnlyImages = false}) {
-  final validPosts = userPostList.where((item) =>(item['image']!=null || item['image']!= ""  || item['image'] != 'none')).toList();
-  final hasPosts = validPosts.isNotEmpty;
 
-  if (!hasPosts) {
-    return buildEmptyState(
-        'No Posts Found', 'This user hasn\'t shared any posts yet.');
-  }
+  Widget feedWidgets() {
+    // Filter posts with postType other than "write" or "poll" (media posts)
+    final validPosts = userPostList
+        .where((item) => item['postType'] != 'write' && item['postType'] != 'poll')
+        .toList();
+    final hasPosts = validPosts.isNotEmpty;
 
-  if (!showOnlyImages) {
+    print('Media posts: $validPosts'); // Debug log
+
+    if (!hasPosts) {
+      return buildEmptyState('No Media Found', 'This user hasn\'t shared any media posts yet.');
+    }
+
     return GridView.builder(
       padding: EdgeInsets.zero,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, 
+        crossAxisCount: 2,
         crossAxisSpacing: 0,
         mainAxisSpacing: 0,
-        
-        childAspectRatio: 1, // Square images
+        childAspectRatio: 1,
       ),
       itemCount: validPosts.length,
       itemBuilder: (context, index) {
         var item = validPosts[index];
+        // Check if image exists; otherwise, use placeholder
+        String? imageUrl;
+        if (item['images'] != null && item['images'] is List && item['images'].isNotEmpty) {
+          // Select the first valid URL from the images list
+          imageUrl = (item['images'] as List)
+              .firstWhere(
+                (url) => url != null && url != 'none' && url is String,
+                orElse: () => null,
+              );
+        }
+        // Fallback to image field if images list is invalid or empty
+        imageUrl ??= item['image'] != null && item['image'] != 'none' && item['image'] is String
+            ? item['image']
+            : null;
+
+
         return GestureDetector(
           onTap: () {
-            // Optionally, navigate to post details
             Navigator.push(
               context,
               PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    TribeUnique(
-                  id: item["_id"],
+                pageBuilder: (context, animation, secondaryAnimation) => TribeUnique(
+                  id: item['_id'],
                   dataObj: item,
-                  popBox:  false.obs,
+                  popBox: false.obs,
                 ),
                 transitionsBuilder: (context, animation, secondaryAnimation, child) {
                   const begin = Offset(1.0, 0.0);
                   const end = Offset.zero;
                   const curve = Curves.easeInOut;
                   var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                  var offsetAnimation = animation.drive(tween);
                   return SlideTransition(
-                    position: offsetAnimation,
+                    position: animation.drive(tween),
                     child: child,
                   );
                 },
@@ -139,17 +143,18 @@ Widget feedWidgets(String type, {bool showOnlyImages = false}) {
             );
           },
           child: Container(
-             margin: EdgeInsets.zero,
+            margin: EdgeInsets.zero,
             child: GFImageOverlay(
               width: double.infinity,
               height: double.infinity,
               boxFit: BoxFit.cover,
-              // borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
-              image: NetworkImage(item['image']),
+              image: imageUrl != null
+                  ? NetworkImage(imageUrl)
+                  : const AssetImage('assets/icons/maskAvatars/profileIcon11.png'), // Ensure this asset exists
               colorFilter: null,
               color: Colors.transparent,
               border: Border.all(color: AppColors.grey.withOpacity(0.1)),
-              margin: EdgeInsets.zero, // Ensure GFImageOverlay has no margin
+              margin: EdgeInsets.zero,
               padding: EdgeInsets.zero,
             ),
           ),
@@ -158,94 +163,26 @@ Widget feedWidgets(String type, {bool showOnlyImages = false}) {
     );
   }
 
-  return SingleChildScrollView(
-    child: Column(
-      children: [
-        Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: validPosts.asMap().entries.map((entry) {
-              int index = entry.key;
-              var item = entry.value;
-              return (item['image'] == 'none')
-                  ? const SizedBox.shrink()
-                  : PostCard(data: item, index: index);
-            }).toList(),
-          ),
-        ),
-        SizedBox(
-          height: 100,
-        ),
-      ],
-    ),
-  );
-}
-  // Widget feedWidgets(String type) {
-  //   // final hasPosts = userPostList.any((item) => !(item['isPoll'] ?? false));
-  //    final validPosts = userPostList.where((item) => item['image'] != 'none').toList();
-  //   print('Valid posts with images: ${validPosts.map((item) => item['image']).toList()}'); // Log valid images
-  //   final hasPosts = validPosts.isNotEmpty; // Check if there are valid posts
-  //   print('Checking for posts with images: hasPosts = $hasPosts'); // Print statement to check if there are posts with images// Print statement to check if there are posts with images
-  //   if (!hasPosts) {
-  //     return buildEmptyState(
-  //         'No Posts Found', 'This user hasn\'t shared any posts yet.');
-  //   }
-  //   return SingleChildScrollView(
-  //     child: Column(
-  //       children: [
-  //         Container(
-  //           child: Column(
-  //             mainAxisAlignment: MainAxisAlignment.start,
-  //             children: validPosts.asMap().entries.map((entry) {
-  //               int index = entry.key;
-  //               var item = entry.value;
-  //               // return (item['isPoll'] ?? false)
-  //               return (item['image'] == 'none')
-  //                   ? const SizedBox.shrink()
-  //                   : PostCard(data: item, index: index);
-  //             }).toList(),
-  //           ),
-  //         ),
-  //         SizedBox(
-  //           height: 100,
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
+  Widget pollWidgets() {
+    // Filter posts with postType "write" or "poll"
+    final validPosts = userPostList
+        .where((item) => item['postType'] == 'write' || item['postType'] == 'poll')
+        .toList();
+    final hasPosts = validPosts.isNotEmpty;
 
-  Widget pollWidgets(String type) {
-    // final hasPolls = userPostList.any((item) => item['isPoll'] ?? false);
-    final hasPolls = userPostList.any((item) => item['image'] == 'none');
-    // Log whether there are polls
-    if (!hasPolls) {
-      return buildEmptyState(
-          'No Polls Found', 'This user hasn\'t created any polls yet.');
+    print('Text/Poll posts: $validPosts'); // Debug log
+
+    if (!hasPosts) {
+      return buildEmptyState('No Posts Found', 'This user hasn\'t shared any text or poll posts yet.');
     }
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            child: Column(
-              children: userPostList.asMap().entries.map((entry) {
-                int index = entry.key;
-                var item = entry.value;
-                // Log each item being processed
-                // return (item['isPoll'] ?? false)
-                return (item['image'] == 'none' ?? false)
-                    ? PostCard(
-                        data: item,
-                        index:
-                            index) //change here if incase anything goes wrong
-                    : const SizedBox.shrink();
-              }).toList(),
-            ),
-          ),
-          SizedBox(
-            height: 100,
-          ),
-        ],
-      ),
+
+    return ListView.builder(
+      padding: EdgeInsets.zero,
+      itemCount: validPosts.length,
+      itemBuilder: (context, index) {
+        var item = validPosts[index];
+        return PostCard(data: item, index: index);
+      },
     );
   }
 
@@ -254,14 +191,12 @@ Widget feedWidgets(String type, {bool showOnlyImages = false}) {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Icon for visual appeal
           Icon(
             Icons.info_outline,
             size: 60,
             color: AppColors.bg1.withOpacity(0.5),
           ),
           const SizedBox(height: 16),
-          // Title
           Text(
             title,
             style: TextStyle(
@@ -271,6 +206,13 @@ Widget feedWidgets(String type, {bool showOnlyImages = false}) {
             ),
           ),
           const SizedBox(height: 8),
+          Text(
+            subtitle,
+            style: TextStyle(
+              fontSize: 14,
+              color: AppColors.grey,
+            ),
+          ),
         ],
       ),
     );
