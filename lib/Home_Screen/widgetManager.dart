@@ -8,7 +8,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 class WidgetManager {
   static Future<void> initialize() async {
     try {
-      await HomeWidget.setAppGroupId('group.com.stakeplot.adnan.dev');
+      await HomeWidget.setAppGroupId('group.com.stakeplot.pfa');
       // Fetch initial data
        getRemainders(Get.context!);
       // Update all widgets

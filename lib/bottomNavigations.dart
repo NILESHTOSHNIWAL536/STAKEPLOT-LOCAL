@@ -74,7 +74,7 @@ class _BottomNavigationsState extends State<BottomNavigations> {
       }
 
       // iOS deep link (for future support)
-      const channel = MethodChannel('com.stakeplot.adnan.dev/navigation');
+      const channel = MethodChannel('com.stakeplot.pfa/navigation');
       channel.setMethodCallHandler((call) async {
        
         if (call.method == 'navigateToFinance') {

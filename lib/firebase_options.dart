@@ -63,6 +63,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '442849932576',
     projectId: 'stakeplot-adnan',
     storageBucket: 'stakeplot-adnan.firebasestorage.app',
-    iosBundleId: 'com.stakeplot.adnan.dev',
+    iosBundleId: 'com.stakeplot.pfa',
   );
 }
