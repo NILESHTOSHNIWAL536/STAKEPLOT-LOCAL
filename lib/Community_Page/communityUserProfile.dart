@@ -197,13 +197,15 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
                 value: canMessageUser.value,
                 onChanged: (value)async {
                    canMessageUser.value=value;
-                   
+
                try{
                   var body = {
                         "canMaskMessage": canMessageUser.value,
                   };
                    await updateDataApiCall2("${url}/user/", body);
-                }catch(e){}
+                }catch(e){
+                  
+                }
 
                 },
                 // padding: EdgeInsets.zero,

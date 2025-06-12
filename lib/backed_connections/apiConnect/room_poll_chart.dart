@@ -401,6 +401,7 @@ void getChatLoader(bool flag) async {
             : userInfo['sender'];
         var typed = element['chats']['details']['messageType'];
         String type = "message...";
+         bool canMaskMessage = ismaskedUsers.value? (element['chats']['details']['canMaskMessage'] ?? true):true;
         try {
           type = typed == null
               ? "message"
@@ -426,6 +427,7 @@ void getChatLoader(bool flag) async {
           'item':  defaultBackGround.value ,
           'count': element['chats']['unseenCount'],
           'type': type,
+          'canMaskMessage':canMaskMessage
         };
         count +=  int.parse(data['count'].toString());
         chatList.add(data);

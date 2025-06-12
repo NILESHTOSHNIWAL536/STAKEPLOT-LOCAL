@@ -370,7 +370,7 @@ class _TribeSearchState extends State<TribeChats> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       child: GestureDetector(
-        onTap: canMaskMessage? null:()
+        onTap: !canMaskMessage? null:()
          {
           messages.clear();
           unSeenChat(context, item['_id']);
