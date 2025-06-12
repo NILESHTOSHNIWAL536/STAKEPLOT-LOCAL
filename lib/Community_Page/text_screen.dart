@@ -12,7 +12,6 @@ import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
-import 'package:flutter_application_code_stakeplot/finSpace/InterestSelectionScreen.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -177,55 +176,27 @@ class _TextScreenState extends State<TextScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            getProfile(),
-                            // AvatarProfileImage(url: avatar.value, width: 20, height: 20),
-                            const SizedBox(width: 8),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  userName.value.toString(),
-                                  style: FontManager().getTextStyle(context,
-                                      lWeight: FontWeight.w600,
-                                      fontSize: 18,
-                                      color: AppColors.bg1),
-                                ),
-                                Text(
-                                  strings.newPost,
-                                  style: FontManager().getTextStyle(context,
-                                      lWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                      color: AppColors.bg1),
-                                ),
-                              ],
-                            ),
-                          ],
+                      IconButton(
+                          icon: Icon(Icons.arrow_back, 
+                            color: AppColors.accentColor,
+                            size: 20,
+                          ),
+                          onPressed: () => Navigator.pop(context),
                         ),
-                        // Stack(
-                          // children: [
-                            // DecoratedContainer(
-                              // borderRadius: 10,
-                              // child: IconButton(
-                                // onPressed: () {
-                                  // setState(() {
-                                    // showImage = !showImage;
-                                    // _adjustHeight(); // Adjust height when toggling showImage
-                                  // });
-                                // },
-                                // icon: FaIcon(FontAwesomeIcons.images),
-                              // ),
-                            // ),
-                            // const Positioned(
-                              // top: 10,
-                              // right: 2,
-                              // child: Icon(Icons.add),
-                            // ),
-                          // ],
-                        // ),
+                       Text(
+                                    strings.writePost,
+                                    style: FontManager().getTextStyle(
+                                      context,
+                                      lWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                      color: titleController.text.isNotEmpty &&
+                                              contentController.text.isNotEmpty
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
                       ],
                     ),
                     const SizedBox(height: 10),
