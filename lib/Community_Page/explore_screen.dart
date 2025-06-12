@@ -318,6 +318,7 @@ class _ExploreModalState extends State<ExploreModal> {
       "tripHighlights": titleController.text,
       "description": contentController.text,
       "postType": "exploria"
+      
     };
 
     print("req body for the server: $requestBody");

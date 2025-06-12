@@ -11,11 +11,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:http/http.dart' as http;
 
-void addReply(context, String data, String postId) async {
-  var body = {
-    'commentId': postId,
-    'replyText': data,
-  };
+void addReply(context, String data, String commentId, String postId) async {
+  var body = {'comment': commentId, 'reply': data, 'post': postId};
   var response = await postDataApiCall('${url}/reply/', body);
   if (!getFlagOfResponse(response)) {
     snackBarCalled(context, SnackbarData().unableToAddReply, Colors.red);
@@ -89,14 +86,14 @@ Future<Map<String, dynamic>> createPost(
     var body = {
       'description': description,
       'image': urlPath,
-      'tag': TagList,
+      'tags': TagList,
       'postType': 'image'
     };
 
     String apiCall = '${url}/post';
 
     var response = await postDataApiCall(apiCall, body);
-   
+
     if (getFlagOfResponse(response)) {
       clearInterest();
       var postData = jsonDecode(response.body);
@@ -152,7 +149,7 @@ void createPollOfCommunity(context, String title, String description) async {
       'message': description,
     },
     'isPoll': true,
-    'tag': TagList
+    'tags': TagList
   };
 
   var response = await postDataApiCall(urlPath, body);
@@ -172,6 +169,7 @@ void getPost() async {
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
+    print("tags for $obj");
     historyListData.clear();
     historyListData.addAll(obj);
     // getTrendingData.clear();

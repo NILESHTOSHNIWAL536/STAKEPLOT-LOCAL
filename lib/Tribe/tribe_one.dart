@@ -248,16 +248,16 @@ class _TribeHomeState extends State<TribeUnique> {
           child: Container(
             // height: MediaQuery.of(context).size.height,
             //  padding: const EdgeInsets.fromLTRB(20, 30, 20, 12),
-            
+
             // decoration: BoxDecoration(
-              
+
             //     borderRadius: BorderRadius.only(
             //         topLeft: Radius.circular(36),
             //         topRight: Radius.circular(36))),
 
             // padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: AnimatedPadding(
-             padding: EdgeInsets.only(
+              padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context)
                       .viewInsets
                       .bottom), // Adjusts padding when keyboard appears
@@ -293,24 +293,23 @@ class _TribeHomeState extends State<TribeUnique> {
           // height: MediaQuery.of(context).size.height,
           //  padding: const EdgeInsets.fromLTRB(20, 30, 20, 12),
           // decoration: BoxDecoration(
-             
+
           //     borderRadius: BorderRadius.only(
           //         topLeft: Radius.circular(36), topRight: Radius.circular(36))),
 
           // padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: AnimatedPadding(
-           padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context)
-                      .viewInsets
-                      .bottom), // Adjusts padding when keyboard appears
-              duration: const Duration(milliseconds: 100),
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context)
+                    .viewInsets
+                    .bottom), // Adjusts padding when keyboard appears
+            duration: const Duration(milliseconds: 100),
             child: SingleChildScrollView(
               controller: _scrollController,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                 
                   Obx(() => widget.popBox.value
                       ? uploadData(uniquePostDeatils)
                       : SizedBox.shrink()),
@@ -770,7 +769,7 @@ class _TribeHomeState extends State<TribeUnique> {
                                 onTap: () {
                                   FocusScope.of(context)
                                       .requestFocus(_replyNode);
-                                  // _scrollToTextField(); 
+                                  // _scrollToTextField();
                                   autofocus.value = true;
                                   setState(() {
                                     commentObj = data;
@@ -832,7 +831,7 @@ class _TribeHomeState extends State<TribeUnique> {
             index + 1 == indexArray.length
                 ? SizedBox.shrink()
                 : Divider(
-                    color:AppColors.buttonBorder,
+                    color: AppColors.buttonBorder,
                     thickness: index + 1 == indexArray.length ? 0 : .8,
                     endIndent: 5,
                     indent: 5,
@@ -924,7 +923,8 @@ class _TribeHomeState extends State<TribeUnique> {
                       decoration: InputDecoration(
                         filled: true,
                         hintText: lableText,
-                        contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 10.0),
                         suffixIcon: suffix(
                             Textcontroller.text, commentId, Textcontroller),
                         enabledBorder: OutlineInputBorder(
@@ -972,7 +972,7 @@ class _TribeHomeState extends State<TribeUnique> {
           MaskedNameDialogBox.showMaskedNameDialog(context);
         } else {
           String value = Textcontroller.text;
-          print("heyyyyyyyyyy   ${widget.dataObj}");
+         
 
           addComment(
             context,
@@ -1112,7 +1112,7 @@ class _TribeHomeState extends State<TribeUnique> {
       }
 
       if (commentId == "") return;
-      addReply(context, value, commentId);
+      addReply(context, value, commentId, widget.id);
       replyid = "";
       Replies rep = Replies();
       rep.commentId = replyid;

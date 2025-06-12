@@ -40,6 +40,7 @@ class PostCard extends StatelessWidget {
     bool isPoll = dataObj['postType'] == "poll";
     bool isWrite = dataObj['postType'] == "write";
     bool isImage = dataObj['postType'] == "image";
+    
     var extractdata = dataObj;
 
     return Padding(
@@ -251,7 +252,30 @@ class PostCard extends StatelessWidget {
                         ? vote(context, dataObj, dataObj)
                         : text(dataObj,),
                   ),
-                 
+                  if (dataObj['tags'] != null && dataObj['tags'].isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 12.0, right: 12.0, top: 4.0, bottom: 4.0),
+                      child: Wrap(
+                        spacing: 4.0,
+                        runSpacing: 2.0,
+                        children: dataObj['tags'].map<Widget>((tag) => Chip(
+                              label: Text(
+                                tag,
+                                style: FontManager().getTextStyle(context,
+                                    lWeight: FontWeight.w400,
+                                    fontSize: 10,
+                                    color: AppColors.bg1),
+                              ),
+                              backgroundColor: AppColors.grey.withOpacity(0.1),
+                              padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                                side: BorderSide(color: AppColors.grey.withOpacity(0.3)),
+                              ),
+                            )).toList(),
+                      ),
+                    ),
                   if (dataObj['createdAt'] != null)
                     Padding(
                       padding: const EdgeInsets.only(
