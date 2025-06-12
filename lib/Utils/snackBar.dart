@@ -91,6 +91,7 @@ String budgetAmountMismatch = "Total amount is not equal to the sum of all categ
 
   String paymentAdded = "Payment has been successfully added!";
   String paymentAddFailed = "Unable to add the payment!";
+  String offReplays = "user restricted to messge";
 
 
   // posts
@@ -250,6 +251,7 @@ String amountExceed = "Amount exceeds the total budget!";
         otpSendFail1 = data['otpSendFail1'] ?? otpSendFail1;
         otpResentSuccess = data['otpResentSuccess'] ?? otpResentSuccess;
         otpSendFail2 = data['otpSendFail2'] ?? otpSendFail2;
+        offReplays = data['offReplays'] ?? offReplays;
 
 
         budgetAdded = data['budgetAdded'] ?? budgetAdded;

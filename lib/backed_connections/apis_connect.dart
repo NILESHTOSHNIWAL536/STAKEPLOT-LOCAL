@@ -62,6 +62,7 @@ RxList savedList = [].obs;
 RxList myPostList = [].obs;
 RxList friendsList = [].obs;
 RxList MaskedFriendsList = [].obs;
+RxList maskedConnected = [].obs;
 
 RxList chatList = [].obs;
 RxList chatListOriginal = [].obs;

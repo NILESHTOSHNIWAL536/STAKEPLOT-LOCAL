@@ -8,17 +8,18 @@ const Loader({ Key? key }) : super(key: key);
 
   @override
   Widget build(BuildContext context){
-    return  Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children:  [
-          SizedBox(width: 20,),
-         Text("Loading.....   ",style: FontManager().getTextStyle(context)),
-        const  CircularProgressIndicator(
-           strokeWidth: 1.3,
-           color: Colors.black,
-        )
-      ],
-    );
+    return Spinner(size: 30,);
+    // return  Row(
+    //   mainAxisAlignment: MainAxisAlignment.center,
+    //   children:  [
+    //       SizedBox(width: 20,),
+    //      Text("Loading.....   ",style: FontManager().getTextStyle(context)),
+    //     const  CircularProgressIndicator(
+    //        strokeWidth: 1.3,
+    //        color: Colors.black,
+    //     )
+    //   ],
+    // );
   }
 }
 

@@ -61,7 +61,9 @@ class ProfileScreenStrings {
 
     // ✅ Field labels (for Friends List or similar screen)
   String networkLabel = "Connections";
+  String networkLabelConnected = "Connected";
   String postsLabel = "Posts";
+  String connected = "Connect";
   String friendsListTitle = "Friends list";
   String friendsListTitleMaked = "Masked Friends list";
   String searchHint = "Search...";
@@ -110,6 +112,7 @@ class ProfileScreenStrings {
         resetLabel = data['resetLabel'] ?? resetLabel;
   // Friends List or similar screen strings
         networkLabel = data['networkLabel'] ?? networkLabel;
+        networkLabelConnected = data['networkLabelConnected'] ?? networkLabelConnected;
         postsLabel = data['postsLabel'] ?? postsLabel;
         friendsListTitle = data['friendsListTitle'] ?? friendsListTitle;
         friendsListTitleMaked = data['friendsListTitleMaked'] ?? friendsListTitleMaked;

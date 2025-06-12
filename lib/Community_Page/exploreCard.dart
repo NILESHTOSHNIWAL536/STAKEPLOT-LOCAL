@@ -199,6 +199,9 @@ class _ExploreCardState extends State<ExploreCard> {
                                 boxFit: BoxFit.fill,
         // borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
         image: NetworkImage(imageUrl),
+        colorFilter: null, // Disable any color tint
+                                  color: Colors.transparent,
+                                  border: Border.all(color: AppColors.bg5),
       ),
     );
   }
@@ -395,8 +398,8 @@ class _ExploreCardState extends State<ExploreCard> {
         "Description",
         style: FontManager().getTextStyle(
           context,
-          lWeight: FontWeight.w400,
-          fontSize: _getResponsiveFontSize(context, 14),
+          lWeight: FontWeight.w600,
+          fontSize: _getResponsiveFontSize(context, 16),
           color: AppColors.bg1,
         ),
       ),
@@ -411,7 +414,7 @@ class _ExploreCardState extends State<ExploreCard> {
               overflow: _showFullDescription ? TextOverflow.visible : TextOverflow.ellipsis,
               style: FontManager().getTextStyle(
                 context,
-                lWeight: FontWeight.w400,
+                lWeight: FontWeight.w500,
                 fontSize: _getResponsiveFontSize(context, 14),
                 color: AppColors.bg1,
                  lineHeight: 1.2, // Approximating line-height: normal

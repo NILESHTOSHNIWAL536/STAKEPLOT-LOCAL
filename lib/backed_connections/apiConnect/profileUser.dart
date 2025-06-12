@@ -102,7 +102,8 @@ void getuserPost(id) async {
   if (response.statusCode == 200) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-   
+    print("response for tab user : $obj");
+
     myPostList.clear();
     myPostList.addAll(obj);
     myPostList.forEach((element) {
@@ -112,16 +113,20 @@ void getuserPost(id) async {
   } else {}
 }
 
-void getMaskendUsers() async {
-    String urlPath = "${url}/user/getMaskedUsers/true";
-    var response=await getDataApiCall(urlPath);
-    if(getFlagOfResponse(response))
-    {
-           var his = jsonDecode(response.body);
-           var obj = his['data'];  
-         MaskedFriendsList.clear();
-          MaskedFriendsList.addAll(obj);
+void getMaskendUsers(bool flag) async {
+  String urlPath = "${url}/user/getMaskedUsers/${flag}";
+  var response = await getDataApiCall(urlPath);
+  if (getFlagOfResponse(response)) {
+    var his = jsonDecode(response.body);
+    var obj = his['data'];
+    if (flag) {
+      MaskedFriendsList.clear();
+      MaskedFriendsList.addAll(obj);
+    } else {
+      maskedConnected.clear();
+      maskedConnected.addAll(obj);
     }
+  }
 }
 
 void getSaved() async {
@@ -177,11 +182,12 @@ void getUserInfomations() async {
     aboutMe.value = (obj['aboutMe'] == "Hello");
     aboutUS.value = obj['aboutMe'];
     selectedBank.value = obj['selectedBank'] ?? "";
-    AttemptCount.value = obj['cupertinoAttemptCount'] != null ?  obj['cupertinoAttemptCount'] > 5:false;
+    AttemptCount.value = obj['cupertinoAttemptCount'] != null
+        ? obj['cupertinoAttemptCount'] > 5
+        : false;
     userAvatarBackGround.value = obj['avatarBackGround'] ?? "#FA7070";
     interestedTags.value = obj['interestedTags'] ?? [];
     maskedName.value = obj['maskedName'] ?? "";
-
 
     List s = obj['accounts'];
     income.value = 0;
@@ -193,7 +199,8 @@ void getUserInfomations() async {
 
     getuserPost(data['_id']);
     getSaved();
-    getMaskendUsers();
+    getMaskendUsers(true);
+    getMaskendUsers(false);
     currentId.value = data['_id'];
     userName.value = data['name'];
     avatar.value = avaterUrlPath(userName.value);
@@ -206,13 +213,13 @@ void getUserInfomations() async {
     expenses.value = data['expense'].toString();
     isBankAccountLink.value = data['isBankAccountLinked'] ?? false;
     isFected.value = data['fetchInProgress'] ?? false;
-    cupertinoPin.value = data['cupertino_pin']; 
-    canMessageUser.value = data['canMaskMessage'] ?? false; 
+    cupertinoPin.value = data['cupertino_pin'];
+    canMessageUser.value = data['canMaskMessage'] ?? false;
     getPhoneNo(his);
     savedPostIds.clear();
     savedPostIds.addAll((data['saved'] as List).whereType<String>());
     friendsList.clear();
-   
+
     friendsList.addAll(obj['friendsList']);
     // MaskedFriendsList.addAll(obj['maskedConnections']);
     friendsList.forEach((element) {

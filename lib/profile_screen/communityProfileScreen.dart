@@ -110,6 +110,17 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
                        child: networkFriends( ProfileScreenStrings().networkLabel, MaskedFriendsList.length.toString(),
                                            Icons.person_2_outlined),
                      ),
+                     InkWell(
+                      onTap: (){
+                           Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>Friends(isMasked: true,isMaskedConnect: true,),
+                                  ),
+                           );
+                      },
+                       child: networkFriends( ProfileScreenStrings().networkLabelConnected, maskedConnected.length.toString(),Icons.person_2_outlined),
+                     ),
               ],
             ),
           ),
@@ -123,8 +134,8 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
 
   Widget networkFriends(String network, String count, IconData icon) {
     return Container(
-      width: MediaQuery.sizeOf(context).width/2.4,
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      // width: MediaQuery.sizeOf(context).width/2.4,
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 7),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: AppColors.primaryColor, width: .5),
@@ -139,16 +150,16 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
                 text: count.toString(),
                 fontWeight: FontWeight.w500,
                 c: AppColors.finSpaceColor,
-                fontsize: 16),
+                fontsize: 15),
                  const SizedBox(
-      width: 5,
-    ),
+                width: 5,
+              ),
                  textStyle(
         context: context,
         text: network.toString(),
         fontWeight: FontWeight.w400,
         c: AppColors.finSpaceColor,
-        fontsize: 16),
+        fontsize: 15),
           ],
         ));
   }

@@ -154,7 +154,7 @@ class _TribeHomeState extends State<TribeUnique> {
       var obj = his['data'];
 
       setState(() {
-        dataObj = obj;
+        dataObj = obj[0];
       });
     } else {}
   }
@@ -178,7 +178,7 @@ class _TribeHomeState extends State<TribeUnique> {
         fill.value = postList.contains(widget.id);
         name = obj['name'];
         userId = obj['_id'];
-        avatar = obj['avatarType'];
+        avatar.value = obj['avatarType'];
       });
     } else {}
   }

@@ -8,8 +8,6 @@ import 'package:get/get.dart';
 final RxList displayedData = [].obs;
 final int itemsPerLoad = 10;
 
-
-
 class LazyLoadingTranding extends StatefulWidget 
 {
   @override
