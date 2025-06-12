@@ -1,7 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/plotFinanceStringsPage.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
@@ -13,6 +15,7 @@ import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_dis
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_service.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/cardBuilders.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/financeWidgets.dart';
+import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'package:get/get.dart';
 
 class PlotFinance extends StatefulWidget {
@@ -24,7 +27,6 @@ class PlotFinance extends StatefulWidget {
 
 class _PlotFinanceState extends State<PlotFinance> {
   
-
 
 
   Future<void> _navigateToCreateDebtScreen() async {
@@ -45,6 +47,8 @@ class _PlotFinanceState extends State<PlotFinance> {
     );
   }
 
+   final CommunityScreenStrings strings = CommunityScreenStrings();
+
   @override
   void initState() {
     super.initState();
@@ -55,6 +59,9 @@ class _PlotFinanceState extends State<PlotFinance> {
 
   @override
   Widget build(BuildContext context) {
+    double w = MediaQuery.of(context).size.width;
+    double h = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       bottomNavigationBar: SafeArea(child: BottomNavigations(data: 1)),
@@ -73,7 +80,10 @@ class _PlotFinanceState extends State<PlotFinance> {
                 ),
                 // Budget List
                 FinanceWidgets.budgetHorizontalList(context),
-                // const SizedBox(height: 10),
+                const SizedBox(height: 10),
+                getSearch(w,h),
+                const SizedBox(height: 10),
+
                 // Budget and Debt Calculator
                 Padding(
                   padding: const EdgeInsets.all(12.0),
@@ -106,6 +116,70 @@ class _PlotFinanceState extends State<PlotFinance> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget getSearch(double w,double h){
+   
+  
+    return Column(
+      children: [
+         InkWell(
+             onTap: () {
+              ismaskedUsers.value=false;
+               Navigator.pushNamed(context, '/TribeChats');
+             },
+             child: AvatarProfileImage(
+               url: LikeComment.message,
+               height: 26,
+               width: 26,
+             ),
+          ),
+         Container(
+          width: w / 0.8,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Hero(
+                tag: "TribeSearch",
+                child: Material(
+                   color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/TribeSearch');
+                    },
+                    child: Container(
+                      width: MediaQuery.sizeOf(context).width / 1.1,
+                      height: MediaQuery.sizeOf(context).height / 20,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                          filled: true,
+                          enabled: false,
+                          hintText: strings.searchHint,
+                          fillColor: AppColors.button,
+                          hintStyle: FontManager().getTextStyle(context,
+                              lWeight: FontWeight.normal,
+                              fontSize: 14,
+                              color: Colors.black),
+                          prefixIcon: Icon(Icons.search),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(24.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+      ],
     );
   }
 }

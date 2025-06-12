@@ -72,7 +72,8 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen>
                                   "interestedTags": combinedList,
                                 };
                                 addMyIntreastAndName(context,body);
-                              },
+                            },
+
                             ),
                           )
                       ),

@@ -1,9 +1,12 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 
-Widget showModel(BuildContext context, String id, [bool flag = false,int indexElement=-1]) {
+Widget showModel(BuildContext context, String id, [bool flag = false, int indexElement = -1]) {
+  String? selectedOption; // To track the selected report option
+
   return AnimatedContainer(
     duration: const Duration(milliseconds: 300),
     curve: Curves.easeInOut,
@@ -19,109 +22,157 @@ Widget showModel(BuildContext context, String id, [bool flag = false,int indexEl
         ),
       ],
     ),
-    child: Column(
-      children: [
-        // Header
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          child: Column(
-            children: [
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                "Report Content",
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
+    child: StatefulBuilder(
+      builder: (BuildContext context, StateSetter setState) {
+        return Column(
+          children: [
+            // Header
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Column(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(2),
                     ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Report",
+                    style: FontManager().getTextStyle(
+                                context,
+                                lWeight:  FontWeight.w500,
+                                fontSize: 18,
+                                color: AppColors.bg1,
+                              ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-        // Report Options
-        Expanded(
-          child: ListView.separated(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            itemCount: reportOptions.length,
-            separatorBuilder: (context2, index) => Divider(
-              height: 1,
-              color: Colors.grey[200],
             ),
-            itemBuilder: (context2, index) {
-              final option = reportOptions[index];
-              return InkWell(
-                onTap: () {
-                  // Handle report submission with id and flag
-                  Navigator.pop(context);
-                  // Add your reporting logic here using id and flag
-                  reportPost(context, id, option['title'], "report",indexElement);
-                 
+            // Report Options
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                itemCount: reportOptions.length,
+                itemBuilder: (context2, index) {
+                  final option = reportOptions[index];
+                  return InkWell(
+                    onTap: () {
+                      if (option['isDescription'] == true) {
+                        return;
+                      }
+                      setState(() {
+                        selectedOption = option['title']; // Update selected option
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      child: Row(
+                        children: [
+                          option['isDescription'] == true
+                              ? const SizedBox(width: 0) // Placeholder for alignment
+                              :  Checkbox(
+                                    value: selectedOption == option['title'],
+                                    onChanged: (bool? value) {
+                                      if (value == true) {
+                                        setState(() {
+                                          selectedOption = option['title']; // Update selected option
+                                        });
+                                      }
+                                    },
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4), 
+                                      // Square shape
+                                    ),
+                                    activeColor: AppColors.finSpaceColor,
+                                    checkColor: Colors.white,
+                                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    visualDensity: VisualDensity.compact,
+                                    
+                                  ),
+                              
+                           Container(
+                             width: option['isDescription'] == true?MediaQuery.sizeOf(context).width/1.1:MediaQuery.sizeOf(context).width/1.4,
+                             child: Text(
+                                option['title']!,
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: option['isDescription'] == true
+                                      ? FontWeight.w600
+                                      : FontWeight.w500,
+                                  fontSize: option['isDescription'] == true ? 16 : 14,
+                                  color: AppColors.bg1,
+                                  overflow: TextOverflow.visible,
+                                  maxLines: 4
+                                ),
+                              ),
+                           ),
+                          
+                        ],
+                      ),
+                    ),
+                  );
                 },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        option['title']!,
+              ),
+            ),
+            // Report and Cancel Buttons
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    TextButton(
+                      onPressed: selectedOption == null
+                          ? null
+                          : () {
+                              Navigator.pop(context);
+                              reportPost(context, id, selectedOption!, "report", indexElement);
+                            },
+                      style: TextButton.styleFrom(
+                        minimumSize: const Size(double.infinity, 48),
+                        backgroundColor:  AppColors.finSpaceColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Text(
+                        'Report',
+                       style: FontManager().getTextStyle(
+                                context,
+                                lWeight:  FontWeight.w500,
+                                fontSize: 16,
+                                color: AppColors.backgroundColor,
+                              ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: TextButton.styleFrom(
+                        minimumSize: const Size(double.infinity, 48),
+                        backgroundColor: Colors.grey[100],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Text(
+                        'Cancel',
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontWeight: option['isDescription'] == true
-                                  ? FontWeight.w400
-                                  : FontWeight.w500,
-                              color: option['isDescription'] == true
-                                  ? Colors.grey[600]
-                                  : Colors.black,
+                              color: Colors.grey[800],
+                              fontWeight: FontWeight.w600,
                             ),
                       ),
-                      if (option['subtitle']!.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4),
-                          child: Text(
-                            option['subtitle']!,
-                            style:
-                                Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Colors.grey[500],
-                                    ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        // Cancel Button
-        SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: TextButton(
-              onPressed: () => Navigator.pop(context),
-              style: TextButton.styleFrom(
-                minimumSize: const Size(double.infinity, 48),
-                backgroundColor: Colors.grey[100],
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: Text(
-                'Cancel',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Colors.grey[800],
-                      fontWeight: FontWeight.w600,
                     ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     ),
   );
 }

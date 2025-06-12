@@ -5,14 +5,15 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 
-void   addUserAsFrd(id,context)async
+void   addUserAsFrd(id,context,[type="friend"])async
 {
-    var urlPath='${url}/user/friend/add/${id}';
+    var urlPath='${url}/user/friend/add/${id}/${type}';
     var response=await postDataApiCall(urlPath, {});
       if(getFlagOfResponse(response))
       {
             sendNotificationsToDevice(id,context,"${userName.value} has accepted your friend request..","/friends");
-            snackBarCalled(context,SnackbarData().addingFriend,Colors.black);      
+            snackBarCalled(context,SnackbarData().addingFriend,Colors.black);  
+            getUserInfomations();    
       }else{
            snackBarCalled(context,SnackbarData().addFriendFail,Colors.red);
       }

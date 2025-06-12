@@ -20,8 +20,9 @@ class ExploreCard extends StatefulWidget {
 
 class _ExploreCardState extends State<ExploreCard> {
   final ScrollController _scrollController = ScrollController();
-
-  bool _showFullDescription = false;
+ final PageController _pageController = PageController(); 
+  int _currentPage = 0; 
+ bool _showFullDescription = false;
 
   // Helper method to get responsive font size
   double _getResponsiveFontSize(BuildContext context, double baseSize) {
@@ -32,49 +33,51 @@ class _ExploreCardState extends State<ExploreCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        vertical: MediaQuery.of(context).size.height * 0.015,
-        horizontal: MediaQuery.of(context).size.width * 0.025,
-      ),
-      child: Container(
-        //decoration: _buildBackgroundDecoration(),
-        child: Padding(
-          padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.03),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(context),
-              _buildImageSection(context),
-              _buildPlaceInfo(context),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-              _buildBudgetSection(context),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-              _buildTripHighlights(context),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-              _buildDescription(context),
-            ],
+    return Container(
+      //decoration: _buildBackgroundDecoration(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+             padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.036,
+            ),
+            child: _buildHeader(context),
           ),
-        ),
+          _buildImageSection(context),
+          Padding(
+             padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.036,
+            ),
+            child: _buildPlaceInfo(context),
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+          Padding(
+             padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.036,
+            ),
+            child: _buildBudgetSection(context),
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+          Padding(
+             padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.036,
+            ),
+            child: _buildTripHighlights(context),
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.036,
+            ),
+            child: _buildDescription(context),
+          ),
+        ],
       ),
     );
   }
 
-  BoxDecoration _buildBackgroundDecoration() {
-    return BoxDecoration(
-      borderRadius: BorderRadius.circular(12),
-      image: const DecorationImage(
-        image: NetworkImage(
-          'https://drifttravel.com/wp-content/uploads/2023/01/travel-aesthetic-content-japan.jpg',
-        ),
-        fit: BoxFit.cover,
-        colorFilter: ColorFilter.mode(
-          Colors.black26,
-          BlendMode.dstATop,
-        ),
-      ),
-    );
-  }
+  
 
   Widget _buildHeader(BuildContext context) {
     return Row(
@@ -124,78 +127,85 @@ class _ExploreCardState extends State<ExploreCard> {
   }
 
   Widget _buildImageSection(BuildContext context) {
-    bool hasMultipleImages = widget.extractdata['images'] != null &&
-        widget.extractdata['images'].length > 1;
+    bool hasMultipleImages = widget.extractdata['images'] != null && widget.extractdata['images'].length > 1;
 
     return Padding(
       padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.015),
       child: Stack(
+        alignment: Alignment.bottomCenter, // Align dots at the bottom center
         children: [
-          widget.extractdata['images'] != null
+         hasMultipleImages
               ? SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.35,
-                  width: double.infinity,
-                  child: ListView.builder(
-                    controller: _scrollController,
-                    shrinkWrap: true,
-                    physics: const ClampingScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
+                  height: MediaQuery.of(context).size.width * 214 / 402,
+                  width: MediaQuery.of(context).size.width,
+                  child: PageView.builder(
+                    controller: _pageController,
                     itemCount: widget.extractdata['images'].length,
-                    itemBuilder: (context, index) =>
-                        _buildImageItem(context, index),
+                    itemBuilder: (context, index) => _buildImageItem(context, index),
+                    onPageChanged: (index) {
+                      setState(() {
+                        _currentPage = index; // Update current page for dots
+                      });
+                    },
                   ),
                 )
-              : _buildSingleImage(context, widget.dataObj['image']),
-
-          // Show swipe icon only if multiple images exist
+              : _buildSingleImage(context, widget.extractdata['images'][0]),
+          // Show dot indicators only if multiple images exist
           if (hasMultipleImages)
             Positioned(
-              right: 10,
               bottom: 10,
-              child: Icon(
-                Icons.swipe,
-                color: Colors.black,
-                size: _getResponsiveFontSize(context, 24),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  widget.extractdata['images'].length,
+                  (index) => Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    width: _currentPage == index ? 10 : 6,
+                    height: _currentPage == index ? 10 : 6,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _currentPage == index ? Colors.white : Colors.grey,
+                    ),
+                  ),
+                ),
               ),
             ),
+          // Show swipe icon only if multiple images exist
+         
         ],
       ),
     );
   }
 
   Widget _buildImageItem(BuildContext context, int index) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width * 0.025),
-      child: GFImageOverlay(
-        width: MediaQuery.of(context).size.width * 0.7,
-        height: MediaQuery.of(context).size.height * 0.35,
-        borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
-        image: NetworkImage(widget.extractdata['images'][index]),
-      ),
+    return GFImageOverlay(
+      width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.width *
+                                    214 /
+                                    402,
+                                boxFit: BoxFit.fill,
+      // borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
+      image: NetworkImage(widget.extractdata['images'][index]),
     );
   }
 
   Widget _buildSingleImage(BuildContext context, String imageUrl) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-          vertical: MediaQuery.of(context).size.height * 0.015),
-      child: Center(
-        child: GFImageOverlay(
-          width: MediaQuery.of(context).size.width * 0.85,
-          height: MediaQuery.of(context).size.height * 0.4,
-          boxFit: BoxFit.fill,
-          borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
-          image: NetworkImage(imageUrl),
-        ),
+    return Center(
+      child: GFImageOverlay(
+       width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.width *
+                                    214 /
+                                    402,
+                                boxFit: BoxFit.fill,
+        // borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
+        image: NetworkImage(imageUrl),
       ),
     );
   }
 
   Widget _buildPlaceInfo(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(
-          vertical: MediaQuery.of(context).size.height * 0.015),
+      margin: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.01),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -260,7 +270,7 @@ class _ExploreCardState extends State<ExploreCard> {
             color: AppColors.bg1,
           ),
         ),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.01),
         Wrap(
           spacing: MediaQuery.of(context).size.width * 0.025,
           runSpacing: MediaQuery.of(context).size.height * 0.015,
@@ -275,23 +285,25 @@ class _ExploreCardState extends State<ExploreCard> {
   Widget _buildBudgetItem(BuildContext context, dynamic budgetItem) {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: MediaQuery.of(context).size.width * 0.03,
-        vertical: MediaQuery.of(context).size.height * 0.01,
+        horizontal: MediaQuery.of(context).size.width * 0.02,
+        vertical: MediaQuery.of(context).size.height * 0.006,
       ),
       decoration: BoxDecoration(
-        color: AppColors.button,
-        borderRadius: BorderRadius.circular(16),
+        color: AppColors.unSelectedOption,
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(color: AppColors.button),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        // mainAxisAlignment: MainAxisAlignment.center,
+        // crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             "${budgetItem['category']}:",
             style: FontManager().getTextStyle(
               context,
               lWeight: FontWeight.w500,
-              fontSize: _getResponsiveFontSize(context, 14),
+              fontSize: _getResponsiveFontSize(context, 12),
               color: AppColors.bg1,
             ),
           ),
@@ -300,7 +312,7 @@ class _ExploreCardState extends State<ExploreCard> {
             style: FontManager().getTextStyle(
               context,
               lWeight: FontWeight.w400,
-              fontSize: _getResponsiveFontSize(context, 14),
+              fontSize: _getResponsiveFontSize(context, 12),
               color: AppColors.bg1,
             ),
           ),
@@ -326,42 +338,61 @@ class _ExploreCardState extends State<ExploreCard> {
         Container(
           //width: double.infinity,
           padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
-          margin:
-              EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.01),
+          // margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.01),
           decoration: BoxDecoration(
-            color: AppColors.button,
-            borderRadius: BorderRadius.circular(12),
+            color: AppColors.unSelectedOption,
+            borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
-                Icons.tips_and_updates, // Added icon for Trip Highlights
-                size: _getResponsiveFontSize(context, 20),
-                color: AppColors.bg1,
-              ),
+              Icons.tips_and_updates, // Added icon for Trip Highlights
+              size: _getResponsiveFontSize(context, 16),
+              color: AppColors.bg1,
+            ),
               Text(
                 "${widget.extractdata['tripHighlights']}",
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.w500,
-                  fontSize: _getResponsiveFontSize(context, 14),
+                  fontSize: _getResponsiveFontSize(context, 12),
                   color: AppColors.bg1,
                 ),
               ),
             ],
           ),
         ),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+       
       ],
     );
   }
 
   Widget _buildDescription(BuildContext context) {
-    // Check if text exceeds one line
-    final TextPainter textPainter = TextPainter(
-      text: TextSpan(
-        text: widget.extractdata['description'],
+  // Check if text exceeds one line
+  final TextPainter textPainter = TextPainter(
+    text: TextSpan(
+      text: widget.extractdata['description'],
+      style: FontManager().getTextStyle(
+        context,
+        lWeight: FontWeight.w400,
+        fontSize: _getResponsiveFontSize(context, 14),
+        color: AppColors.bg1,
+         lineHeight: 1.2, // Approximating line-height: normal
+            letterSpacing: 0.24,
+      ),
+    ),
+    maxLines: 2,
+    textDirection: TextDirection.ltr,
+  )..layout(maxWidth: MediaQuery.of(context).size.width * 0.9);
+
+  bool isTextOverflowing = textPainter.didExceedMaxLines;
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        "Description",
         style: FontManager().getTextStyle(
           context,
           lWeight: FontWeight.w400,
@@ -369,40 +400,41 @@ class _ExploreCardState extends State<ExploreCard> {
           color: AppColors.bg1,
         ),
       ),
-      maxLines: 2,
-      textDirection: TextDirection.ltr,
-    )..layout(maxWidth: MediaQuery.of(context).size.width * 0.9);
-
-    bool isTextOverflowing = textPainter.didExceedMaxLines;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Description",
-          style: FontManager().getTextStyle(
-            context,
-            lWeight: FontWeight.w600,
-            fontSize: _getResponsiveFontSize(context, 16),
-            color: AppColors.bg1,
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.extractdata['description'],
-                maxLines: _showFullDescription ? null : 2,
-                overflow: _showFullDescription
-                    ? TextOverflow.visible
-                    : TextOverflow.ellipsis,
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.w400,
-                  fontSize: _getResponsiveFontSize(context, 14),
-                  color: AppColors.bg1,
+      Padding(
+        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.extractdata['description'],
+              maxLines: _showFullDescription ? null : 2,
+              overflow: _showFullDescription ? TextOverflow.visible : TextOverflow.ellipsis,
+              style: FontManager().getTextStyle(
+                context,
+                lWeight: FontWeight.w400,
+                fontSize: _getResponsiveFontSize(context, 14),
+                color: AppColors.bg1,
+                 lineHeight: 1.2, // Approximating line-height: normal
+            letterSpacing: 0.24,
+              ),
+            ),
+            if (isTextOverflowing) // Show button only if text exceeds one line
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _showFullDescription = !_showFullDescription;
+                  });
+                },
+                child: Text(
+                  _showFullDescription ? "Show Less" : "Show More",
+                    style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: AppColors.accentColor,
+                         lineHeight: 1.2, // Approximating line-height: normal
+            letterSpacing: 0.24,
+                      ),
                 ),
               ),
               if (isTextOverflowing) // Show button only if text exceeds one line

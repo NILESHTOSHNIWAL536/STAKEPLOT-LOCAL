@@ -53,8 +53,8 @@ class _TribeSearchState extends State<TribeChats> {
     super.initState();
     getUserInfomations();
     totalUnopenedMessages.value=0;
-    ismaskedUsers.value = false;
-    getChatLoader(false);
+    // ismaskedUsers.value = false;
+    getChatLoader(ismaskedUsers.value);
     getTransactions();
     getChatsSplitAccounts(context, myId);
     socket = IO.io(urlWithLocallHost,IO.OptionBuilder().setTransports(['websocket']).enableForceNewConnection().build());
@@ -139,7 +139,7 @@ class _TribeSearchState extends State<TribeChats> {
           automaticallyImplyLeading: true,
           backgroundColor: AppColors.appIcon,
           titleSpacing: 0,
-          toolbarHeight: chatSplitAccount.isNotEmpty ? 140 : 100,
+          toolbarHeight: chatSplitAccount.isNotEmpty && !ismaskedUsers.value ? 140 : 100,
           leading: InkWell(
             onTap: () {
               Navigator.pop(context);
@@ -157,7 +157,7 @@ class _TribeSearchState extends State<TribeChats> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Hi, ${myprofile != null ? myprofile['name'] ?? 'User' : 'User'}', // Null check for myprofile and myprofile['name']
+                  'Hi, ${userName.value}', // Null check for myprofile and myprofile['name']
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.bold,
@@ -176,15 +176,16 @@ class _TribeSearchState extends State<TribeChats> {
                   ),
                 )),
                 
-                const SizedBox(height: 8),
-                chatSplitAccount.isNotEmpty
+                Obx(()=>ismaskedUsers.value ? SizedBox.shrink():SizedBox(height:8)),
+
+                chatSplitAccount.isNotEmpty && !ismaskedUsers.value
                     ? SizedBox(
                         height: 40,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: chatSplitAccount?.length ??0, 
+                          itemCount: chatSplitAccount.length, 
                           itemBuilder: (context, index) {
-                            var friend = chatSplitAccount?[index]; 
+                            var friend = chatSplitAccount[index]; 
                             if (friend == null) {
                               return const SizedBox.shrink(); 
                             }
@@ -241,8 +242,7 @@ class _TribeSearchState extends State<TribeChats> {
               const SizedBox(
                 height: 16,
               ),
-              Obx(()=>  ismaskedUsers.value? getTabs(context): getTabs(context) ),
-
+              // Obx(()=>  ismaskedUsers.value? getTabs(context): getTabs(context) ),
               Obx(() => reloadCharts.value ? getChatList( ) : getChatList()),
             ],
           ),
@@ -363,13 +363,14 @@ class _TribeSearchState extends State<TribeChats> {
   Widget profileContainer(item) {
     var id = {'_id': item['_id']};
     String key = item['_id'];
+    bool canMaskMessage = ismaskedUsers.value? (item['canMaskMessage'] ?? true):true;
     getChats2(id, key);
     double width = MediaQuery.of(context).size.width;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       child: GestureDetector(
-        onTap: ()
+        onTap: canMaskMessage? null:()
          {
           messages.clear();
           unSeenChat(context, item['_id']);
@@ -391,6 +392,7 @@ class _TribeSearchState extends State<TribeChats> {
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+                color: canMaskMessage? Colors.transparent:Colorcodes.greyLight ,
                 //width: width / 1,
                 child: Row(
                   children: [

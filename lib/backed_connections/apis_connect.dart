@@ -9,6 +9,9 @@ import 'package:get/get.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
+RxInt currentPageTranding=1.obs;
+RxInt currentPageFeed=1.obs;
+
 bool flag = true;
 String portNo = flag ? "192.168.1.8" : "localhost";
 String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
@@ -58,6 +61,7 @@ RxList userPostList = [].obs;
 RxList savedList = [].obs;
 RxList myPostList = [].obs;
 RxList friendsList = [].obs;
+RxList MaskedFriendsList = [].obs;
 
 RxList chatList = [].obs;
 RxList chatListOriginal = [].obs;
@@ -79,7 +83,7 @@ RxBool setBankAccountPassword = false.obs;
 RxBool hideBackAccountPassword = false.obs;
 RxBool AttemptCount = false.obs;
 var coin = "Loading....";
-
+RxSet<String> savedPostIds = <String>{}.obs;
 bool sizeRoom = false;
 double fontSize = 20;
 RxInt budgetLength = 0.obs;
@@ -112,6 +116,7 @@ RxList  frequentPaymentsWeek = [].obs;
 Map<String, dynamic> loginUsersList = Map<String, dynamic>();
 RxList dueAmountRemainders = [].obs;
 RxBool getdueUsers = false.obs;
+RxBool canMessageUser = false.obs;
  RxInt selectedYear = DateTime.now().year.obs;
  RxInt selectedMonth = DateTime.now().month.obs;
 RxList inSights = [].obs;

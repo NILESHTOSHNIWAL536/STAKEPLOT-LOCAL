@@ -1,46 +1,8 @@
-// buildscript {
-//     repositories {
-//         google()   // Add Google repository
-//         mavenCentral() // Ensure Maven Central is present
-//     }
-//     dependencies {
-//         classpath 'com.android.tools.build:gradle:8.2.2'
-//         classpath "com.google.gms:google-services:4.4.2"
-//     }
-// }
-
-// allprojects {
-//     repositories {12
-//         google()
-//         mavenCentral()
-//         maven { 
-//             url 'https://maven.pkg.github.com/Cookiejar-technologies/finvu_android_sdk' 
-//             credentials {
-//                 username = "NILESHTOSHNIWAL536"
-//                 password = "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"
-//             }
-//         }
-//     }
-// }
-
-// rootProject.buildDir = "../build"
-// subprojects {
-//     project.buildDir = "${rootProject.buildDir}/${project.name}"
-// }
-
-// subprojects {
-//     project.evaluationDependsOn(":app")
-// }
-
-// tasks.register("clean", Delete) {
-//     delete rootProject.buildDir
-// }
-
 buildscript {
     ext.kotlin_version = "1.9.0"
     repositories {
-        google()   // Add Google repository
-        mavenCentral() // Ensure Maven Central is present
+        google()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.2.2'
@@ -49,26 +11,36 @@ buildscript {
     }
 }
 
+// Load GitHub credentials from credentials.properties
+def credentialsFile = rootProject.file("credentials.properties")
+def credentialsProps = new Properties()
+
+if (credentialsFile.exists()) {
+    credentialsFile.withInputStream {
+        credentialsProps.load(it)
+    }
+} else {
+    throw new GradleException("Missing credentials.properties file!")
+}
+
 allprojects {
     repositories {
         google()
         mavenCentral()
-        maven { 
-            url 'https://maven.pkg.github.com/Cookiejar-technologies/finvu_android_sdk' 
+        maven {
+            url credentialsProps['FINVUURL']
             credentials {
-                username = "NILESHTOSHNIWAL536"
-                password = "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"
+                username = credentialsProps['USERNAME']
+                password = credentialsProps['PASSWORD']
             }
         }
     }
 }
 
 rootProject.buildDir = "../build"
-subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
 
 subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
     project.evaluationDependsOn(":app")
 }
 

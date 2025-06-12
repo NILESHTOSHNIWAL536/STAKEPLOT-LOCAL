@@ -5,6 +5,8 @@ import 'package:flutter_application_code_stakeplot/Community_Page/maskedNameDial
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/resportHide.dart';
+import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
+import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_share.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
@@ -24,11 +26,21 @@ RxInt indexFlag = 0.obs;
 RxBool isPost = false.obs;
 RxBool isPostTranding = false.obs;
 RxBool isTrending = false.obs;
-RxSet<String> savedPostIds = <String>{}.obs;
-Widget noFriend(context, [text = ""]) {
+
+Widget noFriend(context,[text = "",bool isMasked=false,]) {
   return GestureDetector(
     onTap: () {
-      Navigator.pushNamed(context, "/TribeSearch");
+                if( friendsList.isEmpty)
+                        {
+                          if(isMasked){
+                             Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>TribeSearch(isMasked: true,),
+                            ),
+                          );
+                          }else Navigator.pushNamed(context, '/TribeSearch');
+                        }
     },
     child: Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
@@ -139,11 +151,11 @@ Widget vote(context, dataObj, data) {
                           : (postCount[dataObj['_id']].toString()),
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.w400,
-                          fontSize: 20,
+                          fontSize: 14,
                           color: AppColors.bg1),
                     ),
                   ),
-                  SizedBox(width: 10),
+                  SizedBox(width: 4),
                   // GestureDetector(
                   //   onTap: () {
                   //     savePostData(context, data);
@@ -152,29 +164,60 @@ Widget vote(context, dataObj, data) {
                   // )
                   // declare this in your StatefulWidget
 
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                    child: Row(
-                      children: [
-                        Container(
-                            height: 22,
-                            child: SvgPicture.asset(
-                              LikeComment.commentPost,
+                  InkWell(
+                    onTap: () {
+                      if (maskedName.value.trim().isEmpty) {
+                        MaskedNameDialogBox.showMaskedNameDialog(context);
+                      } else {
+                        showModalBottomSheet(
+                          context: context,
+                          backgroundColor: AppColors.commentbg,
+                           isScrollControlled: true,
+                          builder: (context) {
+                            return Container(
+                                padding: const EdgeInsets.symmetric(vertical:16.0),
+                                  width: MediaQuery.sizeOf(context).width,
+                                  decoration: BoxDecoration(
+                                      color: AppColors.commentbg,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(36),
+                                          topRight: Radius.circular(36))),
+                              child: TribeUnique(
+                                                          id: dataObj["_id"],
+                                                          dataObj: dataObj,
+                                                          popBox: true.obs,
+                                                          
+                                                        
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                      child: Row(
+                        children: [
+                          Container(
                               height: 22,
-                            )),
-                        const SizedBox(
-                          width: 6,
-                        ),
-                        Text(
-                          postCommentCount[idData].toString() == 'null'
-                              ? dataObj["comments"].toString()
-                              : postCommentCount[idData].toString(),
-                          style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.w400,
-                              fontSize: 20,
-                              color: AppColors.likesharecommentCount),
-                        ),
-                      ],
+                              child: SvgPicture.asset(
+                                LikeComment.commentPost,
+                                height: 22,
+                              )),
+                          const SizedBox(
+                            width: 6,
+                          ),
+                          Text(
+                            postCommentCount[idData].toString() == 'null'
+                                ? dataObj["comments"].toString()
+                                : postCommentCount[idData].toString(),
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.w400,
+                                fontSize: 14,
+                                color: AppColors.likesharecommentCount),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -190,13 +233,16 @@ Widget vote(context, dataObj, data) {
                         onTap: () {
                           if (isSaved) {
                             savedPostIds.remove(dataObj['_id']);
-                          } else {
+                          } else
+                          {
                             savedPostIds.add(dataObj['_id']);
-                            savePostData(context, data);
                           }
+                            savePostData(context, data);
                         },
                         child: SvgPicture.asset(
-                          isSaved ? LikeComment.savedPost : LikeComment.savePost,
+                          isSaved
+                              ? LikeComment.savedPost
+                              : LikeComment.savePost,
                           height: 22,
                         ));
                   }),
@@ -209,7 +255,7 @@ Widget vote(context, dataObj, data) {
                         } else {
                           showModalBottomSheet(
                             context: context,
-                            backgroundColor: AppColors.backgroundColor,
+                            backgroundColor: AppColors.unSelectedOption,
                             builder: (context) {
                               return TribeShare(data: data, dataObj: dataObj);
                             },

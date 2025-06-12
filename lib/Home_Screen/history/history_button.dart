@@ -9,11 +9,8 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 
 
-
-Widget historyButton(double fontSizeFactor,BuildContext context) {
-    return InkWell(
-      onTap: (){
-                    HapticFeedback.selectionClick();
+void navToHistory(context){
+                  HapticFeedback.selectionClick();
                     isLoadingMore.value=false;
                     clearTransactions(context: context,f: false);
                      Navigator.push(
@@ -22,6 +19,21 @@ Widget historyButton(double fontSizeFactor,BuildContext context) {
                         builder: (context) => const TransactionHistoryScreen(),
                       ),
                     );
+}
+
+Widget historyButton(double fontSizeFactor,BuildContext context) {
+    return InkWell(
+      onTap: (){
+                    // HapticFeedback.selectionClick();
+                    // isLoadingMore.value=false;
+                    // clearTransactions(context: context,f: false);
+                    //  Navigator.push(
+                    //   context,  
+                    //   MaterialPageRoute(
+                    //     builder: (context) => const TransactionHistoryScreen(),
+                    //   ),
+                    // );
+                    navToHistory(context);
 
       },
       child:Container(

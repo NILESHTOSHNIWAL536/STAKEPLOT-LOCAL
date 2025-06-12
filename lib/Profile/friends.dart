@@ -3,6 +3,7 @@ import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
+import "package:flutter_application_code_stakeplot/Tribe/tribe_search.dart";
 import "package:flutter_application_code_stakeplot/Utils/profileScreenStrings.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends.dart";
@@ -15,7 +16,8 @@ import "package:flutter_application_code_stakeplot/profile_screen/usercommunityP
 import "package:get/get.dart";
 
 class Friends extends StatefulWidget {
-  const Friends({Key? key}) : super(key: key);
+  bool isMasked=false;
+   Friends({Key? key,this.isMasked=false}) : super(key: key);
 
   @override
   _FriendsState createState() => _FriendsState();
@@ -30,7 +32,7 @@ class _FriendsState extends State<Friends> {
   void initState() {
     super.initState();
     frdsList.clear();
-    frdsList.addAll(friendsList);
+    frdsList.addAll(widget.isMasked ?MaskedFriendsList:friendsList);
   }
 
   @override
@@ -44,7 +46,7 @@ class _FriendsState extends State<Friends> {
           backgroundColor: AppColors.backgroundColor,
           title: textStyle(
                   context: context,
-                  text: ProfileScreenStrings().friendsListTitle,
+                  text: widget.isMasked? ProfileScreenStrings().friendsListTitle:ProfileScreenStrings().friendsListTitle,
                   fontsize: 18,
                   fontWeight: FontWeight.w600),
         ),
@@ -62,7 +64,17 @@ class _FriendsState extends State<Friends> {
                     tag: "TribeSearch",
                     child: GestureDetector(
                       onTap: () {
-                        if( friendsList.isEmpty)Navigator.pushNamed(context, '/TribeSearch');
+                        if( friendsList.isEmpty)
+                        {
+                          if(widget.isMasked){
+                             Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>TribeSearch(isMasked: true,),
+                            ),
+                          );
+                          }else Navigator.pushNamed(context, '/TribeSearch');
+                        }
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 18),
@@ -98,7 +110,7 @@ class _FriendsState extends State<Friends> {
                   ),
                   SizedBox(height: 10),
                   Obx(() => frdsList.isEmpty
-                      ? noFriend(context)
+                      ? noFriend(context,"",widget.isMasked)
                       : Column(
                           children: frdsList
                               .map((d) =>
@@ -120,12 +132,12 @@ class _FriendsState extends State<Friends> {
           child: GestureDetector(
         onTap: () {
         
-          // Navigator.push(
-          //             context,
-          //             MaterialPageRoute(
-          //               builder: (context) => CommunityUserProfile(data: data,ids:[],flag: true,),
-          //             ),
-          //         );
+          Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CommunityUserProfile(data: data,ids:[],flag: true,),
+                      ),
+                  );
         },
         child: Container(
           
@@ -144,69 +156,14 @@ class _FriendsState extends State<Friends> {
 
               AvatarProfile(name: data['name'], width: 30, height: 13,background:data['avatarBackGround'] ?? defaultBackGround.value,),
              
+              // Text((data),
               Text((data['name']),
                   style: FontManager().getTextStyle(context,
                       lWeight: FontWeight.w500,
                       fontSize: 18,
                       color: Colors.black)),
               const Spacer(),
-              // GestureDetector(
-              //     onTap: () {
-              //       showDialog(
-              //         context: context,
-              //         builder: (context) {
-              //           return Center(
-              //             child: Container(
-              //               width: MediaQuery.of(context).size.width / 1.2,
-              //               height: MediaQuery.of(context).size.height / 4,
-              //               padding: EdgeInsets.symmetric(
-              //                   vertical: 20, horizontal: 10),
-              //               decoration: BoxDecoration(
-              //                   color: Colorcodes.white,
-              //                   borderRadius: BorderRadius.circular(5)),
-              //               child: Column(
-              //                 mainAxisAlignment: MainAxisAlignment.center,
-              //                 crossAxisAlignment: CrossAxisAlignment.center,
-              //                 children: [
-              //                   Text(
-              //                     "Are you sure you want to remove ${data['name']} ?",
-              //                     style: FontManager().getTextStyle(
-              //                       context,
-              //                       fontSize: 18,
-              //                       color: Colorcodes.budgetDarkGreen,
-              //                       lWeight: FontWeight.bold,
-              //                       //  fontFamily: AutofillHints.birthdayDay
-              //                     ),
-              //                   ),
-              //                   const SizedBox(
-              //                     height: 20,
-              //                   ),
-              //                   Row(
-              //                     mainAxisAlignment: MainAxisAlignment.end,
-              //                     children: [
-              //                       textStyleColor(
-              //                           "Remove", Colorcodes.red, data),
-              //                       const SizedBox(
-              //                         width: 20,
-              //                       ),
-              //                       textStyleColor(
-              //                           "Go Back", Colorcodes.blue, data),
-              //                     ],
-              //                   ),
-              //                 ],
-              //               ),
-              //             ),
-              //           );
-              //         },
-              //       );
-
-                   
-              //     },
-              //     child: Container(
-              //         child: ProfileImage(
-              //       url: "assets/images2/user-minus.svg",
-              //     ))
-              //     ),
+             
             ],
           ),
         ),

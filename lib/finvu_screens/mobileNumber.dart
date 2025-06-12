@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/finvuStrings.dart';
@@ -20,6 +21,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
+import 'package:uuid/uuid.dart';
 
 RxBool loadConsentId=false.obs;
 RxBool isOtpWrong = false.obs;
@@ -47,8 +49,8 @@ class _MobileNumberState extends State<MobileNumber> {
   final String termsUrl = "https://finvu.in/terms"; // Replace with actual URL
 
   late final WebViewController controller;
-  
- 
+  final RxBool show = true.obs;
+  final regex = RegExp(r'^[0-9]*$');
 
   @override
   void initState() {
@@ -147,15 +149,24 @@ FinvuStrings().finvuOtpMessage,
                     ),
                   ),
                   // TextField for entering phone number
-                  TextFormField(
-                    controller: _phoneController, // Attach the controller
+                 TextFormField(
+                    controller: _phoneController,
                     maxLength: 10,
-                    autocorrect: true,
-                    keyboardType: TextInputType.phone, // Phone input keyboard
+                    enableInteractiveSelection: false, 
+                    autocorrect: false,
+                    enableSuggestions: false,
+                    keyboardType: TextInputType.phone,
+                    inputFormatters:  [
+                      FilteringTextInputFormatter.allow(regex),
+                    ],
                     onChanged: (c){
                        loadConsentId.value=false;
                     },
+                    contextMenuBuilder: (context, editableTextState) {
+                          return Container(); // returns empty widget to disable menu
+                        },
                     decoration: InputDecoration(
+                      
                       prefixIcon: const Icon(Icons.phone_android_outlined),
                       prefixIconColor: AppColors.primaryColor,
                       hintText: FinvuStrings().enter10DigitNumber,
@@ -171,11 +182,12 @@ FinvuStrings().finvuOtpMessage,
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide.none,
                       ),
-
+                    )
+                                  
                       //prefixIcon: Icon(Icons.phone),
                       //hintText: 'Mobile Number',
                     ),
-                  ),
+                  
                   SizedBox(
                       height: 60), // Add spacing between TextField and button
                   // Button for "Get OTP"
@@ -187,7 +199,10 @@ FinvuStrings().finvuOtpMessage,
                         snackBarCalled(context,SnackbarData().enterValidMobile, Colorcodes.red);
                         return;
                       }
-                      ;
+
+                      // final uuid = Uuid();
+                      // handleId.value = uuid.v4();
+
                       String phoneNumber = _phoneController.text;
                       number.value = phoneNumber;
 
@@ -254,6 +269,8 @@ FinvuStrings().finvuOtpMessage,
       ),
     );
   }
+
+
 
   void click() {
     // Step 4: Reuse the initialized controller instead of creating a new one

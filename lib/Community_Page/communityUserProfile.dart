@@ -4,11 +4,13 @@ import 'package:flutter_application_code_stakeplot/Community_Page/savedPosts.dar
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/InterestSelectionScreen.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/updateInterestScreen.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/communityProfileScreen.dart';
+import 'package:get/get.dart';
 
 class CommunityUserProfileScreen extends StatefulWidget {
   const CommunityUserProfileScreen({Key? key}) : super(key: key);
@@ -31,6 +33,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
     return Scaffold(
       bottomNavigationBar: SafeArea(child: BottomNavigations(data: 2)),
       backgroundColor: AppColors.backgroundColor,
+      
       body: SafeArea(
         child: Stack(
           clipBehavior: Clip.none, 
@@ -40,7 +43,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
                 _buildHeader(),
 
                    Container(
-                    height: MediaQuery.sizeOf(context).height/1.27,
+                    height: MediaQuery.sizeOf(context).height/1.28,
                     color: const Color(0xFFC2C3D5),
                     child: Column(
                       children: [
@@ -83,12 +86,17 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
           onTap: () => Navigator.pop(context),
           child: Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                child:  Icon(
-                  Icons.arrow_back,
-                  color: AppColors.grey,
-                  size: 24,
+              InkWell(
+                onTap: (){
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child:  Icon(
+                    Icons.arrow_back,
+                    color: AppColors.grey,
+                    size: 24,
+                  ),
                 ),
               ),
             ],
@@ -181,24 +189,28 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
             )
           else if (hasToggle)
             Container(
-            //  color: Colors.green,
               height: 20,
               width: 30,
-              child: Transform.scale(
+              child:Obx(()=> Transform.scale(
                 scale: 0.7,
                 child:Switch(
-                value: _messageRepliesEnabled,
-                onChanged: (value) {
-                  setState(() {
-                    _messageRepliesEnabled = value;
-                  });
+                value: canMessageUser.value,
+                onChanged: (value)async {
+                   canMessageUser.value=value;
+                   
+               try{
+                  var body = {
+                        "canMaskMessage": canMessageUser.value,
+                  };
+                   await updateDataApiCall2("${url}/user/", body);
+                }catch(e){}
+
                 },
-                padding: EdgeInsets.zero,
-                
+                // padding: EdgeInsets.zero,
                 activeColor: const Color(0xFF4A4A68),
                 inactiveThumbColor: Colors.grey,
                 inactiveTrackColor: Colors.grey.withOpacity(0.3),
-              ),),
+              )),),
             )
         ],
       ),

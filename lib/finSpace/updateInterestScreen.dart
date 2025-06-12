@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/finspaceStrings.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/InterestSelectionScreen.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
@@ -93,7 +91,7 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
                             alignment: Alignment.topCenter,
                             child: Padding(
                               padding: EdgeInsets.all(12),
-                              child: UpdateButtonWidget(
+                              child: isListEnabled.value? UpdateButtonWidget(
                                 onPressed: () {
                                   final combinedList = [
                                     ...selectedSubCategories,
@@ -108,7 +106,7 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
                                   addMyIntreastAndName(context, body,false,true);
                                  
                                 },
-                              ),
+                              ):null,
                             ),
                           ),
                   ),

@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart'
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
+import 'package:get/get.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
 
 class TabBarUser extends StatelessWidget {
@@ -120,6 +121,7 @@ Widget feedWidgets(String type, {bool showOnlyImages = false}) {
                     TribeUnique(
                   id: item["_id"],
                   dataObj: item,
+                  popBox:  false.obs,
                 ),
                 transitionsBuilder: (context, animation, secondaryAnimation, child) {
                   const begin = Offset(1.0, 0.0);

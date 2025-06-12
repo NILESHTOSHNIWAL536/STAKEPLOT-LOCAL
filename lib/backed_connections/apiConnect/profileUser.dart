@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Profile/notifications.dart';
+import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
@@ -111,6 +112,18 @@ void getuserPost(id) async {
   } else {}
 }
 
+void getMaskendUsers() async {
+    String urlPath = "${url}/user/getMaskedUsers/true";
+    var response=await getDataApiCall(urlPath);
+    if(getFlagOfResponse(response))
+    {
+           var his = jsonDecode(response.body);
+           var obj = his['data'];  
+         MaskedFriendsList.clear();
+          MaskedFriendsList.addAll(obj);
+    }
+}
+
 void getSaved() async {
   String urlPath = "${url}/post/saved";
   final SharedPreferences _pref = await SharedPreferences.getInstance();
@@ -180,6 +193,7 @@ void getUserInfomations() async {
 
     getuserPost(data['_id']);
     getSaved();
+    getMaskendUsers();
     currentId.value = data['_id'];
     userName.value = data['name'];
     avatar.value = avaterUrlPath(userName.value);
@@ -192,14 +206,15 @@ void getUserInfomations() async {
     expenses.value = data['expense'].toString();
     isBankAccountLink.value = data['isBankAccountLinked'] ?? false;
     isFected.value = data['fetchInProgress'] ?? false;
-    cupertinoPin.value = data['cupertino_pin']; //?? '0';
+    cupertinoPin.value = data['cupertino_pin']; 
+    canMessageUser.value = data['canMaskMessage'] ?? false; 
     getPhoneNo(his);
-    // savedList.clear();
-    // savedList.addAll(data['saved'] );
-
+    savedPostIds.clear();
+    savedPostIds.addAll((data['saved'] as List).whereType<String>());
     friendsList.clear();
+   
     friendsList.addAll(obj['friendsList']);
-
+    // MaskedFriendsList.addAll(obj['maskedConnections']);
     friendsList.forEach((element) {
       friendsListDetails[element['_id']] = {
         'name': element['name'],

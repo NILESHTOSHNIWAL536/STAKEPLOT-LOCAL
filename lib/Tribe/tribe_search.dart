@@ -1,9 +1,11 @@
 import "dart:convert";
 import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
+import "package:flutter_application_code_stakeplot/Community_Page/maskedNameDialogbox.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/colors.dart";
 import "package:flutter_application_code_stakeplot/Home_Screen/helper.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
+import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/friends.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/room_poll_chart.dart";
 import "package:flutter_application_code_stakeplot/bottomNavigations.dart";
@@ -22,7 +24,8 @@ import "package:flutter_application_code_stakeplot/backed_connections/apis_conne
 List ids = [];
 
 class TribeSearch extends StatefulWidget {
-  const TribeSearch({Key? key}) : super(key: key);
+  bool isMasked=false;
+   TribeSearch({Key? key,this.isMasked=false}) : super(key: key);
 
   @override
   _TribeSearchState createState() => _TribeSearchState();
@@ -109,6 +112,17 @@ class _TribeSearchState extends State<TribeSearch> {
   void getStatus(data) async {
     final SharedPreferences _pref = await SharedPreferences.getInstance();
     var accessToken = _pref.getString("accessToken");
+    print(widget.isMasked);
+    if(widget.isMasked){
+      print('-----------------------');
+      print(MaskedFriendsList);
+
+         bool isMasked = MaskedFriendsList.any((friend) => friend['_id'] == data['_id']);
+          if(!isMasked) buttonValue.value="Add";
+          else  buttonValue.value="Remove";
+
+      return;
+    }
     
     final response = await http.post(
       Uri.parse("${url}/user/friend/acceptRequestStatus"),
@@ -143,26 +157,16 @@ class _TribeSearchState extends State<TribeSearch> {
 
 
  
-  void getTransaction() async {
-    final SharedPreferences _pref = await SharedPreferences.getInstance();
-    var accessToken = _pref.getString("accessToken");
-    final response = await http.get(
-      Uri.parse('${url}/user/friends/find'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "Authorization": "$accessToken",
-      },
-    );
+  void getTransaction() async {   
+    var response=await getDataApiCall("${url}/user/friends/find/${widget.isMasked}");
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
-
       var obj = his['data'];
-
       setState(() {
         frdsList = obj;
         frdsListOrigin = obj;
         frdsThere = true;
-        frdsList =[]; 
+        // frdsList =[]; 
       });
     } else {}
   }
@@ -244,8 +248,9 @@ Widget profileContainer(data) {
   }
 
   // Ensure non-null values with defaults
-  String name = data['name'] ?? "Unknown User";
+  String name =widget.isMasked? (data['maskedName'] ?? ""):(data['name'] ?? "Unknown User");
   String background = data['avatarBackGround'] ?? defaultBackGround.value ?? "#FFFFFF"; // Fallback to a default color
+  if(name=="")return SizedBox.shrink();
 
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
@@ -361,6 +366,9 @@ void showmodalWidget(data){
      String avatar= data['avatarType'] !=null ? data['avatarType']
     :data['avatar']!=null?data['avatar']:userAvatar;
 
+      String name =widget.isMasked? (data['maskedName'] ?? ""):(data['name'] ?? "Unknown User");
+
+
       return Container(
          width: MediaQuery.of(context).size.width,
          height: MediaQuery.of(context).size.height/2.7,
@@ -391,12 +399,12 @@ void showmodalWidget(data){
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                    networkFriends("Network",count.toString(),Icons.person_2_outlined),
-                    AvatarProfile(name: data['name'], width: 5, height: 10,background:data['avatarBackGround'] ?? defaultBackGround.value,flag: true,),
+                    AvatarProfile(name: name, width: 5, height: 10,background:data['avatarBackGround'] ?? defaultBackGround.value,flag: true,),
                     networkFriends("Posts",getTrendingData.length.toString(),Icons.post_add),
                   ],
                 ),
                 const SizedBox(height: 5,),     
-                Text(data['name'].toString(),
+                Text(name.toString(),
                     style: FontManager().getTextStyle(context,
                         lWeight: FontWeight.w600,
                        color: AppColors.bg1)),
@@ -405,16 +413,26 @@ void showmodalWidget(data){
 
                  InkWell(
                   onTap: (){
-                       if (buttonValue.value=="Remove") {
+          if (buttonValue.value=="Remove") {
                 getRemoveFrds(context, data['_id']);
                  buttonValue.value="Add";
             } else if (buttonValue.value=="Add"){
+                if(widget.isMasked){
+                   if(maskedName.value.trim().isEmpty)MaskedNameDialogBox.showMaskedNameDialog(context);
+                   else{
+                      buttonValue.value="Remove";
+                      addUserAsFrd(data['_id'], context,"Masked");
+                   }
+                }
+                else{
                 buttonValue.value="Requested";
                 addUsersendRequest(data['_id'], data['name'], context);
+                }
             }
-              else if(buttonValue.value=="Requested"){
-                   buttonValue.value="Add";
-                   removeRequest(data['_id'], data['name'], context);
+              else if(buttonValue.value=="Requested")
+              {
+                      buttonValue.value="Add";
+                      removeRequest(data['_id'], data['name'], context);
               }
             else {
                buttonValue.value="Remove";
