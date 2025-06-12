@@ -116,6 +116,7 @@ RxList  frequentPaymentsWeek = [].obs;
 Map<String, dynamic> loginUsersList = Map<String, dynamic>();
 RxList dueAmountRemainders = [].obs;
 RxBool getdueUsers = false.obs;
+RxBool canMessageUser = false.obs;
  RxInt selectedYear = DateTime.now().year.obs;
  RxInt selectedMonth = DateTime.now().month.obs;
 RxList inSights = [].obs;

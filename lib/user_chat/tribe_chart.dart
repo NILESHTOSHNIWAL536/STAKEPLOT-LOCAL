@@ -363,13 +363,14 @@ class _TribeSearchState extends State<TribeChats> {
   Widget profileContainer(item) {
     var id = {'_id': item['_id']};
     String key = item['_id'];
+    bool canMaskMessage = ismaskedUsers.value? (item['canMaskMessage'] ?? true):true;
     getChats2(id, key);
     double width = MediaQuery.of(context).size.width;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       child: GestureDetector(
-        onTap: ()
+        onTap: canMaskMessage? null:()
          {
           messages.clear();
           unSeenChat(context, item['_id']);
@@ -391,6 +392,7 @@ class _TribeSearchState extends State<TribeChats> {
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+                color: canMaskMessage? Colors.transparent:Colorcodes.greyLight ,
                 //width: width / 1,
                 child: Row(
                   children: [

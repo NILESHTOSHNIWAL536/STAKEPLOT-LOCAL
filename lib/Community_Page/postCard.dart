@@ -36,15 +36,17 @@ class PostCard extends StatelessWidget {
   }
 
   Widget uploadData(dataObj, bool flag, BuildContext context) {
-    bool isExploria = dataObj['postType'] == "explore";
-    var extractdata = isExploria
-        ? dataObj['description']['message']
-        : {}; //  dataObj.containsKey('place') && dataObj.containsKey('tripHighlight')
+    bool isExploria = dataObj['postType'] == "exploria";
+    bool isPoll = dataObj['postType'] == "poll";
+    bool isWrite = dataObj['postType'] == "write";
+    bool isImage = dataObj['postType'] == "image";
+    var extractdata = dataObj;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       child: Column(
         children: [
+
           GestureDetector(
             onTap: flag
                 ? null
@@ -78,9 +80,8 @@ class PostCard extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 color: AppColors.backgroundColor,
-                // borderRadius:
-                //     BorderRadius.circular(Colorcodes.borderRadius)
               ),
+              
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,7 +139,9 @@ class PostCard extends StatelessWidget {
                           extractdata: extractdata,
                           dataObj: dataObj,
                         )
-                      : (dataObj['isPoll'] ?? false)
+                      : isPoll &&
+                              dataObj['pollData'] != null &&
+                              dataObj['pollData']['question'] != null
                           ? Padding(
                               padding: const EdgeInsets.only(
                                   left: 14.0, right: 12.0),
@@ -150,18 +153,20 @@ class PostCard extends StatelessWidget {
                                     color: AppColors.bg1),
                               ),
                             )
-                          : (dataObj['title']?.isNotEmpty ?? false)
-            ? Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 14.0, right: 12.0),
-                              child: Text(
-                                (dataObj['title']),
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                    color: AppColors.bg1),
-                              ),
-                            ) : SizedBox.shrink(),
+                          : isWrite
+                              ? Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 14.0, right: 27.0),
+                                  child: Text(
+                                    (dataObj['title']),
+                                    style: FontManager().getTextStyle(context,
+                                        lWeight: FontWeight.w600,
+                                        fontSize: 16,
+                                        color: AppColors.bg1),
+                                  ),
+                                )
+                              : SizedBox.shrink(),
+
                   // Image Section (Exploria or Others)
                   isExploria
                       ? SizedBox.shrink()
@@ -222,37 +227,31 @@ class PostCard extends StatelessWidget {
                               : SizedBox.shrink(),
                   // Content for Non-Exploria Posts
                   !isExploria
-                      ? (dataObj['isPoll'] ?? false)
+                      ? isPoll
                           ? Padding(
-                            padding: EdgeInsets.only(left: 12.0, right: 12.0),
-                            child: getQuestionsAndOptions(dataObj['pollData'], context,
-                                true, dataObj['_id']),
-                          )
+                              padding: EdgeInsets.only(left: 12.0, right: 12.0),
+                              child: getQuestionsAndOptions(dataObj['pollData'],
+                                  context, true, dataObj['_id']),
+                            )
                           : Container(
-                              padding: !(dataObj['image'] != 'none' && // for 
-                                      dataObj["postType"] == "feed")
+                              padding:!isImage
                                   ? const EdgeInsets.only(
-                                      left: 14.0, right: 12.0)
+                                      left: 14.0, right: 27.0)
                                   : EdgeInsets.only(left: 0.0, right: 0.0),
-                              // child: !dataObj['isItenary']
-                              // ? text(dataObj):SizedBox.shrink()
-                              child: (dataObj['image'] != 'none' &&
-                                      dataObj["postType"] == "feed")
+                              child: isImage
                                   ? vote(context, dataObj, dataObj)
                                   : text(dataObj),
                             )
                       : SizedBox.shrink(),
                   Padding(
-                    padding: (dataObj['image'] != 'none' &&     // for image
-                            dataObj["postType"] == "feed")
-                        ? const EdgeInsets.only(left: 14.0, right: 27.0)
+                    padding: isImage
+                        ? const EdgeInsets.only(left: 10.0, right: 27.0)
                         : EdgeInsets.only(left: 0.0, right: 0.0),
-                    child: !(dataObj['image'] != 'none' && // for image show text second
-                            dataObj["postType"] == "feed")
+                    child: !isImage
                         ? vote(context, dataObj, dataObj)
                         : text(dataObj,),
                   ),
-                  // After description, show createdAt
+                 
                   if (dataObj['createdAt'] != null)
                     Padding(
                       padding: const EdgeInsets.only(
@@ -285,80 +284,42 @@ class PostCard extends StatelessWidget {
       return Readmore(str: item['description'].toString(),  tName:(item['image'] != 'none' && item["postType"] == "feed") ? item["author"]['maskedName'] ?? item["author"]['name'] : "",);
     }
   }
-//   Widget text(item,BuildContext context) {
-//   try {
-//     String username = item["author"]['maskedName'] ?? item["author"]['name'];
-//     String description = item['description']['message']?.toString() ?? item['description'].toString();
 
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         const SizedBox(height: 10),
-//         RichText(
-//           text: TextSpan(
-//             children: [
-//               // Username
-//               TextSpan(
-//                 text: username,
-//                 style: FontManager().getTextStyle(
-//                   context,
-//                   lWeight: FontWeight.w600, // Bold for username, like Instagram
-//                   fontSize: 14,
-//                   color: AppColors.bg1,
-//                 ),
-//               ),
-//               // Space between username and description
-//               const TextSpan(text: ' '),
-//               // Description
-//               TextSpan(
-//                 text: description,
-//                 style: FontManager().getTextStyle(
-//                   context,
-//                   lWeight: FontWeight.w400, // Regular weight for description
-//                   fontSize: 14,
-//                   color: AppColors.accentColor,
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//         const SizedBox(height: 10),
-//       ],
-//     );
-//   } catch (e) {
-//     // Fallback in case of error
-//     return Readmore(str: item['description'].toString());
-//   }
-// }
+  String formatDateToIST(String dateStr) {
+    try {
+      // Parse input date
+      DateTime utcDate = DateTime.parse(dateStr).toUtc();
 
-String formatDateToIST(String dateStr) {
-  try {
-    // Parse input date
-    DateTime utcDate = DateTime.parse(dateStr).toUtc();
+      // Convert to IST (UTC+5:30)
+      DateTime istDate = utcDate.add(Duration(hours: 5, minutes: 30));
 
-    // Convert to IST (UTC+5:30)
-    DateTime istDate = utcDate.add(Duration(hours: 5, minutes: 30));
+      // Get hour in 12-hour format
+      int hour = istDate.hour % 12 == 0 ? 12 : istDate.hour % 12;
+      String minute = istDate.minute.toString().padLeft(2, '0');
+      String period = istDate.hour >= 12 ? 'PM' : 'AM';
+      String month = _getMonthAbbreviation(istDate.month);
 
-    // Get hour in 12-hour format
-    int hour = istDate.hour % 12 == 0 ? 12 : istDate.hour % 12;
-    String minute = istDate.minute.toString().padLeft(2, '0');
-    String period = istDate.hour >= 12 ? 'PM' : 'AM';
-    String month = _getMonthAbbreviation(istDate.month);
-
-    return "$hour:$minute $period · $month ${istDate.day}, ${istDate.year}";
-  } catch (e) {
-    return dateStr; // Return original if parsing fails
+      return "$hour:$minute $period · $month ${istDate.day}, ${istDate.year}";
+    } catch (e) {
+      return dateStr; // Return original if parsing fails
+    }
   }
-}
 
-String _getMonthAbbreviation(int month) {
-  const months = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-  ];
-  return (month >= 1 && month <= 12) ? months[month - 1] : '';
-}
-
- 
- 
+  String _getMonthAbbreviation(int month) {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
+    return (month >= 1 && month <= 12) ? months[month - 1] : '';
+  }
 }

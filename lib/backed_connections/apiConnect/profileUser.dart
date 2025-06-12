@@ -206,7 +206,8 @@ void getUserInfomations() async {
     expenses.value = data['expense'].toString();
     isBankAccountLink.value = data['isBankAccountLinked'] ?? false;
     isFected.value = data['fetchInProgress'] ?? false;
-    cupertinoPin.value = data['cupertino_pin']; //?? '0';
+    cupertinoPin.value = data['cupertino_pin']; 
+    canMessageUser.value = data['canMaskMessage'] ?? false; 
     getPhoneNo(his);
     savedPostIds.clear();
     savedPostIds.addAll((data['saved'] as List).whereType<String>());

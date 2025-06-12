@@ -66,8 +66,12 @@ class _TribeHomeState extends State<TribeUnique> {
     Colors.cyanAccent
   ];
 
-  void addComment(context, String data, String postId, String authorId,
-      String postName, String name) async {
+  void addComment(
+    context,
+    String data,
+    String postId,
+  ) async {
+    print("hiiii   $data");
     if (data == "") {
       FocusScope.of(context).requestFocus(_replyFocusNode);
       snackBarCalled(
@@ -82,7 +86,7 @@ class _TribeHomeState extends State<TribeUnique> {
     Author auth = Author();
     PostDetails post = PostDetails();
 
-    auth.id = authorId;
+    // auth.id = authorId;
     auth.name = userName.value;
     auth.avatar = avatar.value;
     auth.avatarBackGround = userAvatarBackGround.value;
@@ -105,13 +109,12 @@ class _TribeHomeState extends State<TribeUnique> {
         "Authorization": "$accessToken",
       },
       body: jsonEncode({
-        'postId': postId,
-        'authorId': authorId,
-        'commentText': data,
-        'postName': postName,
+        'post': postId,
+        // 'user': authorId,
+        'comment': data,
       }),
     );
-
+    print("response of comment ${response.statusCode}");
     if (response.statusCode == 200 || response.statusCode == 201) {
       final body = json.decode(response.body);
 
@@ -190,12 +193,11 @@ class _TribeHomeState extends State<TribeUnique> {
         "Authorization": "$accessToken",
       },
     );
+
     if (response.statusCode == 200) {
       var his = jsonDecode(response.body);
+      print("response for get call  $his");
       var obj = his['data'];
-
-      // setState(() {
-      // });
       historyListData = obj;
 
       commentList.clear();
@@ -854,13 +856,7 @@ class _TribeHomeState extends State<TribeUnique> {
               if (maskedName.value.trim().isEmpty) {
                 MaskedNameDialogBox.showMaskedNameDialog(context);
               } else {
-                addComment(
-                    context,
-                    value,
-                    postId,
-                    widget.dataObj['author']['id'],
-                    widget.dataObj['title'],
-                    name);
+                addComment(context, value, postId);
                 postCommentCount.putIfAbsent(
                     postId, () => widget.dataObj["comments"] ?? 0);
                 postCommentCount.update(postId, (value) => value + 1);
@@ -976,9 +972,13 @@ class _TribeHomeState extends State<TribeUnique> {
           MaskedNameDialogBox.showMaskedNameDialog(context);
         } else {
           String value = Textcontroller.text;
+          print("heyyyyyyyyyy   ${widget.dataObj}");
 
-          addComment(context, value, postId, widget.dataObj['author']['id'],
-              widget.dataObj['title'], name);
+          addComment(
+            context,
+            value,
+            postId,
+          );
           postCommentCount.putIfAbsent(
               postId, () => widget.dataObj["comments"] ?? 0);
           postCommentCount.update(postId, (value) => value + 1);

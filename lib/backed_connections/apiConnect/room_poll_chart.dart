@@ -264,47 +264,31 @@ void createPoll(context, String question, List options, roomDetails, members,
 
 void createPollOfCommunityPost(context, String question, List options,
     roomDetails, members, String type) async {
-  
-  String urlPath = '${url}/post/createPollPost';
+  String urlPath = '${url}/post/';
 
-  var body={
-      'question': question,
-      'options': options,
-      'pollType': type, 
-      'roomDetails': roomDetails,
-      'myVote': 'none',
-      'title': "Poll is Added in the Post",
-      'description': {
-        'message': "description",
-      },
-      'isPoll': true,
-    };
+  var body = {'question': question, 'options': options, 'postType': "poll"};
 
-  final response = await  postDataApiCall(urlPath, body);
+  final response = await postDataApiCall(urlPath, body);
 
   if (response.statusCode == 200 || response.statusCode == 201) {
-      final data = (json.decode(response.body));
-      uploadRefreshCall( data['data'],context);
-      // Navigator.pop(context);
-  } else
-  {
-      snackBarCalledSignup(context, " 'An error occurred while uploading...!'", Colors.red);
+    final data = (json.decode(response.body));
+    uploadRefreshCall(data['data'], context);
+    // Navigator.pop(context);
+  } else {
+    snackBarCalledSignup(
+        context, " 'An error occurred while uploading...!'", Colors.red);
   }
 }
 
-
-
-void uploadRefreshCall(postData,BuildContext context)
-{
-      getTrendingData.insert(0, postData);
-      postCount[postData["_id"]] = 0;
-      postCommentCount[postData["_id"]] = 0;
-      posting.value = false;
-      postDis.value = false;
-      getPosted.value = !getPosted.value;
-      resetAndLoadData();
+void uploadRefreshCall(postData, BuildContext context) {
+  getTrendingData.insert(0, postData);
+  postCount[postData["_id"]] = 0;
+  postCommentCount[postData["_id"]] = 0;
+  posting.value = false;
+  postDis.value = false;
+  getPosted.value = !getPosted.value;
+  resetAndLoadData();
 }
-
 
 void votePoll(context, String id, int index) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
@@ -403,12 +387,15 @@ void getChatLoader(bool flag) async {
 
     chatList.clear();
     chatListOriginal.clear();
-    totalUnopenedMessages.value=0;
+    totalUnopenedMessages.value = 0;
     int count = 0;
     obj.forEach((element) {
       try {
         var userInfo = element['chats']['details']['_id'];
-        String name =(element['chats']['details']['name'] == null || element['chats']['details']['name'] == "null") ? "": element['chats']['details']['name'];
+        String name = (element['chats']['details']['name'] == null ||
+                element['chats']['details']['name'] == "null")
+            ? ""
+            : element['chats']['details']['name'];
         String key = userInfo['sender'] == currentId.value
             ? userInfo['receiver']
             : userInfo['sender'];
@@ -444,17 +431,12 @@ void getChatLoader(bool flag) async {
         chatList.add(data);
         chatListOriginal.add(data);
       } catch (e) {
-
-          print("Error in chat loader: $e");
+        print("Error in chat loader: $e");
       }
     });
 
-    totalUnopenedMessages.value=count;
-
+    totalUnopenedMessages.value = count;
   } else {}
-
-  
-
 }
 
 void addMessage(
@@ -521,7 +503,6 @@ void addChatSplitAmount(
   } catch (e) {}
 }
 
-
 Future<String> addImageToCloud2(imageFile) async {
   final url2 = Uri.parse('https://api.cloudinary.com/v1_1/deus5rcgl/upload');
 
@@ -544,8 +525,7 @@ Future<String> addImageToCloud2(imageFile) async {
 
 void addMessageImage(context, String messageType, String messageObj, String id,
     File imageFile, data, me, socket, myId, roomIdVal) async {
-
-  String urlPath = await addImageToCloud2(imageFile);  
+  String urlPath = await addImageToCloud2(imageFile);
 
   messages.insert(
       0,
@@ -554,8 +534,7 @@ void addMessageImage(context, String messageType, String messageObj, String id,
           isMe: true,
           type: messageType,
           image: urlPath.toString(),
-          poll: id
-        ));
+          poll: id));
 
   var imageJson = {
     "messageType": messageType,
@@ -570,12 +549,11 @@ void addMessageImage(context, String messageType, String messageObj, String id,
     'isMasked': ismaskedUsers.value,
   };
 
-    socket.emit("message", imageJson);
-    socket.emit("LoadCharts",{
-        "roomId": data['name'] + "" + data['name'],
-        'isMasked': ismaskedUsers.value,
-    });
-
+  socket.emit("message", imageJson);
+  socket.emit("LoadCharts", {
+    "roomId": data['name'] + "" + data['name'],
+    'isMasked': ismaskedUsers.value,
+  });
 }
 
 void getChats2(data, key) async {

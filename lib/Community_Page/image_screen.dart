@@ -39,7 +39,7 @@ class _ImageScreenState extends State<ImageScreen> {
   final ImagePicker _picker = ImagePicker();
   final CustomImageCropController _cropController = CustomImageCropController();
   File? selectedImage;
- final CommunityScreenStrings strings = CommunityScreenStrings();
+  final CommunityScreenStrings strings = CommunityScreenStrings();
   Future<void> _pickImage() async {
     try {
       final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -53,21 +53,20 @@ class _ImageScreenState extends State<ImageScreen> {
     }
   }
 
-
   Future<File?> _cropAndSaveImage() async {
     try {
       if (selectedImage == null) {
-        return null; 
+        return null;
       }
 
       final croppedImage = await _cropController.onCropImage();
       if (croppedImage == null) {
-        return null; 
+        return null;
       }
 
       final byteData = await _imageProviderToByteData(croppedImage);
       if (byteData == null) {
-        return null; 
+        return null;
       }
 
       final Uint8List bytes = byteData.buffer.asUint8List();
@@ -137,7 +136,7 @@ class _ImageScreenState extends State<ImageScreen> {
                                   color: AppColors.bg1),
                             ),
                             Text(
-                               strings.newPost, 
+                              strings.newPost,
                               style: FontManager().getTextStyle(context,
                                   lWeight: FontWeight.w400,
                                   fontSize: 12,
@@ -164,7 +163,7 @@ class _ImageScreenState extends State<ImageScreen> {
                             image: FileImage(selectedImage!),
                             cropController: _cropController,
                             shape: CustomCropShape.Square,
-                             ratio: Ratio(width: 402, height: 214),
+                            ratio: Ratio(width: 402, height: 214),
                             outlineStrokeWidth: 0.0,
                             //  ratio: Ratio(16, 9),
                             // forceInsideCropArea:true,
@@ -182,15 +181,15 @@ class _ImageScreenState extends State<ImageScreen> {
                 ),
                 const SizedBox(height: 10),
                 // TextField(
-                  // controller: titleController,
-                  // decoration: InputDecoration(
-                  //  hintText: strings.enterTitle,
-                    // hintStyle: FontManager().getTextStyle(context,
-                        // lWeight: FontWeight.w600,
-                        // fontSize: 18,
-                        // color: AppColors.bg1),
-                    // border: InputBorder.none,
-                  // ),
+                // controller: titleController,
+                // decoration: InputDecoration(
+                //  hintText: strings.enterTitle,
+                // hintStyle: FontManager().getTextStyle(context,
+                // lWeight: FontWeight.w600,
+                // fontSize: 18,
+                // color: AppColors.bg1),
+                // border: InputBorder.none,
+                // ),
                 // ),
                 const SizedBox(height: 10),
                 TextField(
@@ -207,9 +206,9 @@ class _ImageScreenState extends State<ImageScreen> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () async
-                  {
-                      showTagListOfInterestModal(context:  context,onConfirm: callBack);
+                  onTap: () async {
+                    showTagListOfInterestModal(
+                        context: context, onConfirm: callBack);
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width / 1.1,
@@ -225,7 +224,7 @@ class _ImageScreenState extends State<ImageScreen> {
                       child: Obx(() => posting.value
                           ? Spinner(size: 20, color: Colorcodes.white)
                           : Text(
-                             strings.continueButton, 
+                              strings.continueButton,
                               style: FontManager().getTextStyle(
                                 context,
                                 lWeight: FontWeight.bold,
@@ -247,55 +246,47 @@ class _ImageScreenState extends State<ImageScreen> {
     );
   }
 
+  void callBack() async {
+    if (selectedImage == null) {
+      snackBarAllFeilds2(context, SnackbarData().uploadError);
+      return;
+    }
 
- void callBack()async
-{
+    if (textController.text.trim().isEmpty) {
+      snackBarAllFeilds(context);
+      return;
+    }
 
- if (selectedImage == null) {
-                      snackBarAllFeilds2(context,SnackbarData().uploadError);
-                      return;
-                    }
+    if (posting.value) return;
 
-                    if (
-                        textController.text.trim().isEmpty) {
-                      snackBarAllFeilds(context);
-                      return;
-                    }
+    try {
+      posting.value = true;
 
-                    if (posting.value) return;
+      final croppedImageFile = await _cropAndSaveImage();
+      if (croppedImageFile == null) {
+        posting.value = false;
+        return;
+      }
 
-                    try {
-                      posting.value = true;
+      await createPost(
+        context,
+        titleController.text.toString().trim(),
+        textController.text.toString().trim(),
+        croppedImageFile,
+      );
 
-                      final croppedImageFile = await _cropAndSaveImage();
-                      if (croppedImageFile == null) {
-                        posting.value = false;
-                        return;
-                      }
-
-                      await createPost(
-                        context,
-                        titleController.text.toString().trim(),
-                        textController.text.toString().trim(),
-                        croppedImageFile,
-                      );
-
-                      if (mounted) {
-                        Navigator.pop(context);
-                        Get.to(() => const SuccessPost(
-                              celebrationText: "Posted",
-                            ));
-                      }
-                    } catch (e) {
-                      // Log error instead of showing snackbar
-                    } finally {
-                      if (mounted) {
-                        posting.value = false;
-                      }
-                    }
-                    
-}
-
-    
-
+      if (mounted) {
+        Navigator.pop(context);
+        Get.to(() => const SuccessPost(
+              celebrationText: "Posted",
+            ));
+      }
+    } catch (e) {
+      // Log error instead of showing snackbar
+    } finally {
+      if (mounted) {
+        posting.value = false;
+      }
+    }
+  }
 }
