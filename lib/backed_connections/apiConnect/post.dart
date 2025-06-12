@@ -166,6 +166,7 @@ void createPollOfCommunity(context, String title, String description) async {
 
 void getPost() async {
   var response = await getDataApiCall('${url}/post/feed/${currentPageFeed.value}');
+  
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
