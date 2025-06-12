@@ -9,6 +9,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
+import 'package:flutter_application_code_stakeplot/profile_screen/delete_account.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/resetPin.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/userstats.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
@@ -90,32 +91,40 @@ class _EditDetailsState extends State<EditDetails> {
             icon: Icon(Icons.delete, color: Colors.red),
             onPressed: () {
               // Show dialog box for confirmation
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Delete Account'),
-                    content: Text(
-                        'Are you sure you want to delete your account? This action cannot be undone.'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(); // Close the dialog
-                        },
-                        child: Text('Cancel'),
-                      ),
-                      TextButton(
-                        onPressed: () {
+               Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => DeleteAccountScreen()),
+                            );
+
+              // showDialog(
+              //   context: context,
+              //   builder: (BuildContext context) {
+              //     return AlertDialog(
+              //       title: Text('Delete Account'),
+              //       content: Text(
+              //           'Are you sure you want to delete your account? This action cannot be undone.'),
+              //       actions: [
+              //         TextButton(
+              //           onPressed: () {
+              //             Navigator.of(context).pop(); // Close the dialog
+              //           },
+              //           child: Text('Cancel'),
+              //         ),
+              //         TextButton(
+              //           onPressed: () {
                           
-                          deleteUserAccount(context);
-                           // Close the dialog
-                        },
-                        child: Text('Delete'),
-                      ),
-                    ],
-                  );
-                },
-              );
+              //               // DeleteAccountScreen
+                            
+
+              //             // deleteUserAccount(context);
+              //              // Close the dialog
+              //           },
+              //           child: Text('Delete'),
+              //         ),
+              //       ],
+              //     );
+                // },
+              // );
             },
           ),
         ],

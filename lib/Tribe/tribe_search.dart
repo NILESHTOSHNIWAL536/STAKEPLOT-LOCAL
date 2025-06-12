@@ -12,6 +12,7 @@ import "package:flutter_application_code_stakeplot/bottomNavigations.dart";
 import "package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart";
 import "package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart";
 import "package:flutter_application_code_stakeplot/loader.dart";
+import "package:flutter_application_code_stakeplot/profile_screen/communityProfileScreen.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/usercommunityProfile.dart";
 import "package:flutter_application_code_stakeplot/user_chat/chat.dart";
 import "package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart";
@@ -257,11 +258,19 @@ Widget profileContainer(data) {
     child: Center(
       child: InkWell(
         onTap: () {
-          getDis(data);
-          getStatus(data);
-          getConnections(data);
-          showmodalWidget(data);
-        },
+          //************Dont remove this lines....
+              // getDis(data);
+              // getStatus(data);
+              // getConnections(data);
+              // showmodalWidget(data);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CommunityUserProfile(data: data,ids:[],flag: true,isMasked: widget.isMasked,),
+                      ),
+                  );
+
+            },
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
           width: MediaQuery.of(context).size.width,

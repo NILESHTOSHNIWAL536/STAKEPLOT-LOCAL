@@ -90,7 +90,7 @@ class TabBarUser extends StatelessWidget {
     );
   }
 Widget feedWidgets(String type, {bool showOnlyImages = false}) {
-  final validPosts = userPostList.where((item) => item['image'] != 'none').toList();
+  final validPosts = userPostList.where((item) =>(item['image']!=null || item['image']!= ""  || item['image'] != 'none')).toList();
   final hasPosts = validPosts.isNotEmpty;
 
   if (!hasPosts) {

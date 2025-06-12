@@ -192,10 +192,8 @@ void getTranding() async {
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-    print("response from trending api :$obj");
     historyListData.clear();
     historyListData.addAll(obj);
-    // getAllPostData.clear();
     getAllPostData.addAll(obj);
     if(historyListData.length<5){
        hasMorePostTranding.value=false;

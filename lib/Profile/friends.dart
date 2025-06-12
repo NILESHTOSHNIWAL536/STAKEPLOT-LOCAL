@@ -17,7 +17,9 @@ import "package:get/get.dart";
 
 class Friends extends StatefulWidget {
   bool isMasked=false;
-   Friends({Key? key,this.isMasked=false}) : super(key: key);
+  bool isMaskedConnect=false;
+
+   Friends({Key? key,this.isMasked=false,this.isMaskedConnect=false}) : super(key: key);
 
   @override
   _FriendsState createState() => _FriendsState();
@@ -32,7 +34,7 @@ class _FriendsState extends State<Friends> {
   void initState() {
     super.initState();
     frdsList.clear();
-    frdsList.addAll(widget.isMasked ?MaskedFriendsList:friendsList);
+    frdsList.addAll(widget.isMasked ? widget.isMaskedConnect?maskedConnected :MaskedFriendsList:friendsList);
   }
 
   @override
@@ -135,7 +137,7 @@ class _FriendsState extends State<Friends> {
           Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CommunityUserProfile(data: data,ids:[],flag: true,),
+                        builder: (context) => CommunityUserProfile(data: data,ids:[],flag: true,isMasked: widget.isMasked,),
                       ),
                   );
         },

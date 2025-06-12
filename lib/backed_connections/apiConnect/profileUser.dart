@@ -112,15 +112,20 @@ void getuserPost(id) async {
   } else {}
 }
 
-void getMaskendUsers() async {
-    String urlPath = "${url}/user/getMaskedUsers/true";
+void getMaskendUsers(bool flag) async {
+    String urlPath = "${url}/user/getMaskedUsers/${flag}";
     var response=await getDataApiCall(urlPath);
     if(getFlagOfResponse(response))
     {
            var his = jsonDecode(response.body);
-           var obj = his['data'];  
-         MaskedFriendsList.clear();
-          MaskedFriendsList.addAll(obj);
+           var obj = his['data'];
+          if(flag){  
+              MaskedFriendsList.clear();
+              MaskedFriendsList.addAll(obj);
+          }else{
+             maskedConnected.clear();
+             maskedConnected.addAll(obj);
+          }
     }
 }
 
@@ -193,7 +198,8 @@ void getUserInfomations() async {
 
     getuserPost(data['_id']);
     getSaved();
-    getMaskendUsers();
+    getMaskendUsers(true);
+    getMaskendUsers(false);
     currentId.value = data['_id'];
     userName.value = data['name'];
     avatar.value = avaterUrlPath(userName.value);
