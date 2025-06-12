@@ -64,6 +64,8 @@ class _CommunityState extends State<Community> {
     getAllPostData.clear();
     hasMorePostTranding.value=true;
     hasMorePostFeed.value=true;
+    isPost.value=false;
+    isPostTranding.value=false;
     getPost();
     getTranding();
     setUpSocketListenerMainPage(context);

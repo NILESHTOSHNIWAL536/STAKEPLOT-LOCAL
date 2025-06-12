@@ -5,6 +5,7 @@ import "package:flutter_application_code_stakeplot/Constants/app_styles.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/Tribe/tribe_home.dart";
 import "package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart";
+import "package:flutter_application_code_stakeplot/Utils/snackBar.dart";
 import "package:flutter_application_code_stakeplot/avatarProfile.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart";
@@ -370,7 +371,9 @@ class _TribeSearchState extends State<TribeChats> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       child: GestureDetector(
-        onTap: !canMaskMessage? null:()
+        onTap: !canMaskMessage? (){
+            snackBarCalledfail(context, SnackbarData().offReplays);
+        }:()
          {
           messages.clear();
           unSeenChat(context, item['_id']);
