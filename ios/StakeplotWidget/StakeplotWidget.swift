@@ -22,7 +22,7 @@ struct Provider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<SimpleEntry>) -> ()) {
-        let defaults = UserDefaults(suiteName: "group.com.stakeplot.adnan.dev")
+        let defaults = UserDefaults(suiteName: "group.com.stakeplot.pfa")
         let totalSpending = defaults?.string(forKey: "total_spending") ?? "₹0"
         let categories = defaults?.string(forKey: "categories") ?? "Categories: None"
         let timestamp = defaults?.string(forKey: "timestamp") ?? "01 Jan - 01 Jan"

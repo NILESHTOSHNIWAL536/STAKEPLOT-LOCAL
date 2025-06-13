@@ -834,3 +834,18 @@ const List<Map<String, dynamic>> reportOptions = [
   {'title': 'False information or misleading', 'subtitle': ''},
   {'title': 'Spam', 'subtitle': ''},
 ];
+
+
+String formatDateToIST(String dateStr) {
+  try {
+    DateTime utcDate = DateTime.parse(dateStr).toUtc();
+    DateTime istDate = utcDate.add(Duration(hours: 5, minutes: 30));
+    int hour = istDate.hour % 12 == 0 ? 12 : istDate.hour % 12;
+    String minute = istDate.minute.toString().padLeft(2, '0');
+    String period = istDate.hour >= 12 ? 'PM' : 'AM';
+    String month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][istDate.month - 1];
+    return "$hour:$minute $period · $month ${istDate.day}, ${istDate.year}";
+  } catch (e) {
+    return dateStr;
+  }
+}

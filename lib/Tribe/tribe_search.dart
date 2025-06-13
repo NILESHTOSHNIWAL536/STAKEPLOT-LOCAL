@@ -177,7 +177,7 @@ class _TribeSearchState extends State<TribeSearch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigations(data: sizeRoom ? 3 : 2),
+      bottomNavigationBar: BottomNavigations(data: widget.isMasked ? 2 : 1),
       extendBody: true,
       body: Container(
         color: Colors.white,
@@ -259,16 +259,20 @@ Widget profileContainer(data) {
       child: InkWell(
         onTap: () {
           //************Dont remove this lines....
-              // getDis(data);
-              // getStatus(data);
-              // getConnections(data);
-              // showmodalWidget(data);
+          if(!widget.isMasked)
+          {
+              getDis(data);
+              getStatus(data);
+              getConnections(data);
+              showmodalWidget(data);
+          }else{
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => CommunityUserProfile(data: data,ids:[],flag: true,isMasked: widget.isMasked,),
                       ),
                   );
+          }
 
             },
         child: Container(
@@ -380,7 +384,7 @@ void showmodalWidget(data){
 
       return Container(
          width: MediaQuery.of(context).size.width,
-         height: MediaQuery.of(context).size.height/2.7,
+         height: MediaQuery.of(context).size.height/3,
          decoration: const BoxDecoration(
         //  color: Colorcodes.white,
          borderRadius: BorderRadius.only(
@@ -450,35 +454,36 @@ void showmodalWidget(data){
                   },
                    child: Padding(
                      padding: const EdgeInsets.symmetric(vertical: 10),
-                     child:Obx(()=> getButton(context, buttonValue.value =="Add" ? "Connect":buttonValue.value)),
+                     child:Obx(()=> getButton(context, buttonValue.value =="Add" ?  widget.isMasked? "Connect":buttonValue.value:buttonValue.value)),
                    ),
                  ),
 
-                 Row(
-                   children: [
-                     GestureDetector(
-                  onTap: (){
-                          messages.clear();
-                          var item={
-                            '_id': data['_id'],
-                            'name': data['name'],
-                            'avatar': avatar,
-                            'avatarBackGround': data['avatarBackGround'] ?? defaultBackGround.value,
-                          };
-                          unSeenChat(context, item['_id']);
-                          getChatLoader(ismaskedUsers.value);
-                          getChats(item);
-                          clear(item);
-                          ismaskedUsers.value = true;
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  Chat(data: item, myId: currentId.value, myprofile: {}),
-                            ),
-                          );
-                  },
-                  child: getButton(context, "chat",AppColors.bg5,AppColors.primaryColor)),
+                //  Row(
+                //    children: [
+                //      GestureDetector(
+                //   onTap: (){
+                //           messages.clear();
+                //           var item={
+                //             '_id': data['_id'],
+                //             'name': data['name'],
+                //             'avatar': avatar,
+                //             'avatarBackGround': data['avatarBackGround'] ?? defaultBackGround.value,
+                //           };
+                //           unSeenChat(context, item['_id']);
+                //           getChatLoader(ismaskedUsers.value);
+                //           getChats(item);
+                //           clear(item);
+                //           ismaskedUsers.value = true;
+                //           Navigator.push(
+                //             context,
+                //             MaterialPageRoute(
+                //               builder: (context) =>
+                //                   Chat(data: item, myId: currentId.value, myprofile: {}),
+                //             ),
+                //           );
+                //   },
+                //   child: getButton(context, "chat",AppColors.bg5,AppColors.primaryColor)
+                // ),
                     //  GestureDetector(
                     //   onTap: (){
                     //      Navigator.push(
@@ -489,8 +494,8 @@ void showmodalWidget(data){
                     //     );
                     //   },
                     //   child: getButton(context, "View Profile",AppColors.bg5,AppColors.primaryColor)),
-                   ],
-                 ),
+                  //  ],
+                //  ),
                  
 
                      

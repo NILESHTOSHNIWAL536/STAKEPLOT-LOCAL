@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/exploreCard.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postCard.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_one.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
@@ -72,12 +73,18 @@ class _ChatState extends State<Chat> {
 
     String room3 = maskedName.value + data['name'];
     String room4 = data['name'] + maskedName.value;
-   
-    roomId.value =  ismaskedUsers.value?  (room3.compareTo(room4) <= 0) ? room3 : room4  :(room1.compareTo(room2) <= 0) ? room1 : room2;
+
+    roomId.value = ismaskedUsers.value
+        ? (room3.compareTo(room4) <= 0)
+            ? room3
+            : room4
+        : (room1.compareTo(room2) <= 0)
+            ? room1
+            : room2;
 
     getChats(data);
-    path = avatar.value; 
-    
+    path = avatar.value;
+
     socket = IO.io(urlWithLocallHost,
         IO.OptionBuilder().setTransports(['websocket']).build());
     socket.connect();
@@ -152,7 +159,7 @@ class _ChatState extends State<Chat> {
       "poll": null,
       "post": null,
       "split": null,
-      "roomId": roomId.value, 
+      "roomId": roomId.value,
       'isMasked': ismaskedUsers.value,
     };
 
@@ -186,7 +193,6 @@ class _ChatState extends State<Chat> {
     } else if (message.type == "image") {
       return imageDisplay(message.text, message.isMe, message.image);
     } else if (message.type == "post") {
-      
       return postDisplay(message.text, message.isMe, message.image, message);
     } else if (message.type == "split") {
       return spliDisplay(message.text, message.isMe, message.image, message);
@@ -200,7 +206,7 @@ class _ChatState extends State<Chat> {
         ? Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              uploadData((message.post)),
+              uploadData((message.post),message ),
               // PostCard(data: message.post),
               // profilepath(bool),
             ],
@@ -209,7 +215,7 @@ class _ChatState extends State<Chat> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               //profilepath(bool),
-              uploadData((message.post)),
+              uploadData((message.post), message),
               //  PostCard(data: message.post),
             ],
           );
@@ -362,8 +368,6 @@ class _ChatState extends State<Chat> {
     }
   }
 
-
-
   Widget _buildMessage(Message message) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -394,7 +398,6 @@ class _ChatState extends State<Chat> {
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -447,7 +450,6 @@ class _ChatState extends State<Chat> {
           ),
           child: Column(
             children: [
-             
               Obx(() => Expanded(
                     child: ListView.builder(
                       shrinkWrap: true,
@@ -459,7 +461,6 @@ class _ChatState extends State<Chat> {
                     ),
                   )),
               Container(
-               
                 child: SafeArea(
                     child: InputDate("Message", TextInputType.name, search)),
               ),
@@ -608,7 +609,12 @@ class _ChatState extends State<Chat> {
   }
 
   Widget profilepath(boolFlag) {
-    return AvatarProfile(name: data['name'], width: 1, height: 1, background: userAvatarBackGround.value,);
+    return AvatarProfile(
+      name: data['name'],
+      width: 1,
+      height: 1,
+      background: userAvatarBackGround.value,
+    );
     // return chatAvatartImage(
     //     url: boolFlag ? path : avaterUrlPath(data['name']),
     //     width: 17,
@@ -705,7 +711,6 @@ class _ChatState extends State<Chat> {
           hintText: labelText,
           filled: true,
           fillColor: AppColors.mt,
-          
           suffixIcon: Row(
             mainAxisSize: MainAxisSize.min, // Takes minimum space needed
             children: [
@@ -729,7 +734,8 @@ class _ChatState extends State<Chat> {
                   if (value.isNotEmpty) {
                     _handleSubmitted(value);
                   } else {
-                    snackBarCalled(context,SnackbarData().pleaseEnterValidData);
+                    snackBarCalled(
+                        context, SnackbarData().pleaseEnterValidData);
                   }
                   textController.clear();
                   getChatLoader(ismaskedUsers.value);
@@ -827,7 +833,7 @@ class _ChatState extends State<Chat> {
                             EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                         width: MediaQuery.of(context).size.width / 1.5,
                         decoration: BoxDecoration(
-                          color: index == s ? null :  AppColors.backgroundColor,
+                          color: index == s ? null : AppColors.backgroundColor,
                           borderRadius:
                               BorderRadius.circular(Colorcodes.borderRadius),
                           gradient: index == s
@@ -858,9 +864,8 @@ class _ChatState extends State<Chat> {
                                       fontSize: 14,
                                       color: index == s
                                           ? AppColors.backgroundColor
-                                          :  AppColors.accentColor)),
+                                          : AppColors.accentColor)),
                             ),
-
                           ],
                         )),
                   );
@@ -906,7 +911,7 @@ class _ChatState extends State<Chat> {
                             EdgeInsets.symmetric(vertical: 13, horizontal: 10),
                         width: MediaQuery.of(context).size.width / 1.5,
                         decoration: BoxDecoration(
-                          color:  AppColors.backgroundColor,
+                          color: AppColors.backgroundColor,
                           borderRadius: BorderRadius.circular(5),
                           // border: Border.all()
                         ),
@@ -972,7 +977,8 @@ class _ChatState extends State<Chat> {
                     const SizedBox(
                       width: 5,
                     ),
-                    textStyleColor(" Send ", AppColors.primaryColor, data, imageData),
+                    textStyleColor(
+                        " Send ", AppColors.primaryColor, data, imageData),
                   ],
                 ),
               ],
@@ -1012,7 +1018,9 @@ class _ChatState extends State<Chat> {
           child: Text(
             str,
             style: FontManager().getTextStyle(context,
-                fontSize: 14, lWeight: FontWeight.w500, color:  AppColors.backgroundColor
+                fontSize: 14,
+                lWeight: FontWeight.w500,
+                color: AppColors.backgroundColor
                 //  fontStyle: FontStyle.italic
                 ),
           ),
@@ -1021,124 +1029,226 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  Widget uploadData(dataObj2) {
-    var dataObj = jsonDecode(dataObj2);
-    bool isExploria = dataObj['postType'] == "explore";
-    var extractdata = isExploria
-        ? dataObj['description']['message']
-        : {}; //  dataObj.containsKey('place') && dataObj.containsKey('tripHighlight')
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                PageTransition(
-                  type: PageTransitionType.fade,
-                  duration: Durations.long1,
-                  child: TribeUnique(
-                    id: dataObj["_id"],
-                    dataObj: dataObj,
-                    popBox: false.obs,
+ Widget uploadData(String dataObj2, Message message) {
+  var dataObj = jsonDecode(dataObj2);
+  print("data for share posts $dataObj");
+  bool isExploria = dataObj['postType'] == "exploria";
+  bool isPoll = dataObj['postType'] == "poll";
+  bool isImage = dataObj['postType'] == "image";
+  bool isWrite = dataObj['postType'] == "write";
+
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+    child: GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          PageTransition(
+            type: PageTransitionType.fade,
+            duration: Durations.long1,
+            child: TribeUnique(
+              id: dataObj["_id"],
+              dataObj: dataObj,
+              popBox: false.obs,
+            ),
+            isIos: true,
+          ),
+        );
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width / 1.4,
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppColors.mt,
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(16),
+            topRight: const Radius.circular(16),
+            bottomLeft: message.isMe ? const Radius.circular(16) : Radius.zero,
+            bottomRight: message.isMe ? Radius.zero : const Radius.circular(16),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Author Section
+            Row(
+              children: [
+                
+               
+                Expanded(
+                  child: Text(
+                    (dataObj["author"]['maskedName'] ?? dataObj["author"]['name']),
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w600,
+                      fontSize: 15,
+                      color:  AppColors.bg1,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
-                  isIos: true,
                 ),
-              );
-            },
-            //poll in chat code
-            child: Container(
-              width: MediaQuery.of(context).size.width / 1.5,
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                  color: AppColors.mt,
-                  border: Border.all(width: .5, color: Colorcodes.poll1),
-                  borderRadius: BorderRadius.circular(20)),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+              ],
+            ),
+            const SizedBox(height: 10),
+            // Content Preview
+            if (isPoll && dataObj['pollData'] != null && dataObj['pollData']['question'] != null)
+              Text(
+                "${dataObj['pollData']['question']}?",
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w600,
+                  fontSize: 14,
+                  color:  AppColors.bg1,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            if (isWrite)
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        child: Row(
-                          children: [
-                            AvatarProfile(name: dataObj["author"]['name'], width: 1, height: 1, background: userAvatarBackGround.value,),
-                            // UserAvatar(
-                            //   url: avaterUrlPath(dataObj["author"]['name']),
-                            //   width: 15,
-                            //   height: 15,
-                            // ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            Text((dataObj["author"]['name']),
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w400,
-                                    fontSize: 18,
-                                    color: Colors.black)),
-                          ],
-                        ),
+                  if (dataObj['title'] != null && dataObj['title'].isNotEmpty)
+                    Text(
+                      dataObj['title'],
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.w600,
+                        fontSize: 14,
+                        color:  AppColors.bg1,
                       ),
-                    ],
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  if (dataObj['title'] != null && dataObj['title'].isNotEmpty) const SizedBox(height: 6),
+                  Text(
+                    (dataObj['description'] is Map ? dataObj['description']['message'] : dataObj['description']) ?? '',
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w400,
+                      fontSize: 13,
+                      color: AppColors.bg1.withOpacity(0.8),
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-
-                  // var dataObj = jsonDecode(message.post);
-
-                  isExploria
-                      ? SizedBox.shrink()
-                      : dataObj['isPoll']
-                          ? poll(
-                              dataObj['pollData'],
-                            )
-                          : Container(
-                              width: MediaQuery.of(context).size.width / 1.3,
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: Text((dataObj['title']),
-                                  style: FontManager().getTextStyle(context,
-                                      lWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      color: Colors.black)),
-                            ),
-
-                  isExploria
-                      ? ExploreCard(extractdata: extractdata, dataObj: dataObj)
-                      : (dataObj['chartType'] == "bargraph" ||
-                              dataObj['chartType'] == "piechart")
-                          ? dataObj['chartType'] == "bargraph"
-                              ? barGraph(dataObj)
-                              : pieChart(dataObj)
-                          : getMessage(dataObj),
-
-                  isExploria
-                      ? SizedBox.shrink()
-                      : dataObj['image'] != null &&
-                              dataObj['image'] != "none" &&
-                              dataObj['image'] != ""
-                          ? Image.network(
-                              dataObj['image'],
-                              width: MediaQuery.of(context).size.width / 1.3,
-                              height: MediaQuery.of(context).size.height / 5,
-                              fit: BoxFit.cover,
-                              color: Colors.black.withOpacity(0.0),
-                              colorBlendMode: BlendMode.exclusion,
-                            )
-                          : SizedBox.shrink(),
                 ],
               ),
-            ),
-          ),
-        ],
+            if (isImage)
+              Text(
+                (dataObj['description'] is Map ? dataObj['description']['message'] : dataObj['description']) ?? '',
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w400,
+                  fontSize: 13,
+                  color: AppColors.bg1.withOpacity(0.8),
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            if (isExploria)
+              Text(
+                (dataObj['description'] is Map ? dataObj['description']['message'] : dataObj['description']) ?? '',
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w400,
+                  fontSize: 13,
+                  color: AppColors.bg1.withOpacity(0.8),
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            // Image Thumbnail (if applicable)
+            if (isImage && dataObj['image'] != null && dataObj['image'] != "none" && dataObj['image'] != "")
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    dataObj['image'],
+                    width: MediaQuery.of(context).size.width / 1.6,
+                    height: 120,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      width: MediaQuery.of(context).size.width / 1.6,
+                      height: 120,
+                      color: AppColors.grey.withOpacity(0.2),
+                      child:  Icon(Icons.error, size: 40, color: AppColors.grey),
+                    ),
+                  ),
+                ),
+              ),
+            if (isExploria && dataObj['images'] != null && dataObj['images'].isNotEmpty && dataObj['images'][0] != "none" && dataObj['images'][0] != "")
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    dataObj['images'][0],
+                    width: MediaQuery.of(context).size.width / 1.6,
+                    height: 120,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      width: MediaQuery.of(context).size.width / 1.6,
+                      height: 120,
+                      color: AppColors.grey.withOpacity(0.2),
+                      child:  Icon(Icons.error, size: 40, color: AppColors.grey),
+                    ),
+                  ),
+                ),
+              ),
+            // Tags (Show only one or hint)
+            if (dataObj['tags'] != null && dataObj['tags'].isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppColors.finSpaceColor.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    "#${dataObj['tags'][0]}",
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w500,
+                      fontSize: 12,
+                      color: AppColors.finSpaceColor,
+                    ),
+                  ),
+                ),
+              ),
+            // Timestamp
+            if (dataObj['createdAt'] != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(
+                  formatDateToIST(dataObj['createdAt']),
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w400,
+                    fontSize: 11,
+                    color: AppColors.grey,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget getMessage(dataObj) {
-    if (dataObj['isPoll'] ?? false) return SizedBox.shrink();
+    if (dataObj['postType'] == "poll") return SizedBox.shrink();
 
     try {
       return Container(

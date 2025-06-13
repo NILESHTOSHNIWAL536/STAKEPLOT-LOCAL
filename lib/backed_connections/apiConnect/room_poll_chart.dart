@@ -274,7 +274,7 @@ final TagList = [...selectedSubCategories, ...selectedCategories];
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     final data = (json.decode(response.body));
-    uploadRefreshCall(data['data'], context);
+    uploadRefreshCall(data, context);
     // Navigator.pop(context);
   } else {
     snackBarCalledSignup(

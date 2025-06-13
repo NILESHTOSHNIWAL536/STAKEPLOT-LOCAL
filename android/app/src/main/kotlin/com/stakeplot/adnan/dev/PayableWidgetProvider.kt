@@ -1,4 +1,4 @@
-package com.stakeplot.adnan.dev
+package com.stakeplot.pfa
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager

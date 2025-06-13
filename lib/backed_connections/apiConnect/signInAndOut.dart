@@ -98,8 +98,7 @@ void loginCalledData(response, context) async {
   acceptReset.value = false;
   getPhoneNo(body);
   await getBankAccounts();
-  Navigator.of(context)
-      .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+  Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
 }
 
 void getPhoneNo(body) {
@@ -176,7 +175,19 @@ void addThisDeviceToBackendDevice(SharedPreferences pref, context) async {
 }
 
 Future<void> addThisDeviceToBackend(deviceData, context) async {
-  await postDataApiCall('${url}/notify/addDeviceToNotify/', deviceData);
+  try{
+
+    var response= await postDataApiCall('${url}/notify/addDeviceToNotify/', deviceData);
+    printData(response);
+    if(getFlagOfResponse(response)){
+      print("object");
+    
+    }
+  }catch(e)
+  {
+    print(e);
+    print("error");
+  }
 }
 
 Future<Widget> checkAuthAndNavigate() async {

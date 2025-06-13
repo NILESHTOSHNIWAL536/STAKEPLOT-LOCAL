@@ -247,7 +247,7 @@ class InstallationChecker {
 
 catWidgetBindUpdate(){
   WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await HomeWidget.setAppGroupId('group.com.stakeplot.adnan.dev');
+      await HomeWidget.setAppGroupId('group.com.stakeplot.pfa');
       getCategoryData();
       await updateWidgetSpendingCategories();
     });
@@ -259,7 +259,7 @@ HomeWidgetBindUpdate()
 {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
-        await HomeWidget.setAppGroupId('group.com.stakeplot.adnan.dev');
+        await HomeWidget.setAppGroupId('group.com.stakeplot.pfa');
         await updateWidget();
       } catch (e) {
       }

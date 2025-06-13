@@ -22,7 +22,7 @@ class AppColors {
   static const Color bottomBarColor = Color(0xFF111111);
   static const Color green = Color.fromARGB(255, 88, 241, 49);
   static const Color chatcolor = Color(0xFFF0EBEB);
-  static const Color appIcon =  Color(0xFF004856);//Color(0xFF636486);
+  static const Color appIcon = Color(0xFF4B4D73);// Color(0xFF004856);
  static const Color finSpaceColor =  Color(0xFF4B4D73);
   static const Color likesharecommentCount = Color(0xFF454545);
   static const Color debitColor =  Color.fromARGB(255, 207, 118, 113);

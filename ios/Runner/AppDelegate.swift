@@ -16,7 +16,7 @@ import Flutter
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
-  private let channel = "com.stakeplot.adnan.dev/navigation"
+  private let channel = "com.stakeplot.pfa/navigation"
 
   override func application(
     _ application: UIApplication,
