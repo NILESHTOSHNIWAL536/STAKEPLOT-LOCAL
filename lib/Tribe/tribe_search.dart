@@ -282,7 +282,8 @@ Widget profileContainer(data) {
             children: [
               Row(
                 children: [
-                  AvatarProfile(
+             widget.isMasked?  AvatarProfile2(url: data['avatarType'], width: 20, height: 20)
+                   :   AvatarProfile(
                     name: name,
                     width: 30,
                     height: 13,

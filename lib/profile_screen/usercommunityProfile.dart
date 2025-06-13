@@ -18,8 +18,9 @@ class CommunityUserProfile extends StatefulWidget {
   final List ids;
   bool flag = false;
   bool isMasked = false;
+  bool isMaskedConnect = false;
   CommunityUserProfile(
-      {Key? key, required this.data, required this.ids, this.flag = false,this.isMasked=false})
+      {Key? key, required this.data, required this.ids, this.flag = false,this.isMasked=false,this.isMaskedConnect=false})
       : super(key: key);
 
   @override
@@ -153,7 +154,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
       // height: 200,
       child: Column(
         children: [
-          AvatarProfile(
+        widget.isMasked? AvatarProfile2(url: data['avatarType'], width: 20, height: 20,flag: true,): AvatarProfile(
             name: data['name'],
             width: 5,
             height: 10,
@@ -182,10 +183,12 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
                                addUserAsFrd(data['_id'], context,"Masked");
                          }else
                          {
-
-                           
-                              
+                              getRemoveFrds(context, data['_id'],widget.isMaskedConnect?"connected":"connection"); 
+                              connect.value=ProfileScreenStrings().connected;
                          }
+                          getConnections();
+                          getDis();
+                          getStatus();
                       }
                   },
                   child: Obx(()=> networkFriends(widget.isMasked? connect.value:buttonValue.value =="Add"?"Connect":buttonValue.value,"", Icons.post_add))),

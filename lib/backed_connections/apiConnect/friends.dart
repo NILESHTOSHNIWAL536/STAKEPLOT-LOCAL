@@ -67,9 +67,9 @@ void  removeRequest(id,name,context)async
 
 
 
-  void  getRemoveFrds(context,id)async
+  void  getRemoveFrds(context,id,[type="friend"])async
 {   
-    var urlPath='${url}/user/friend/remove/${id}';
+    var urlPath='${url}/user/friend/remove/${id}/${type}';
     var response=await postDataApiCall(urlPath, {});
       if(getFlagOfResponse(response))
       {

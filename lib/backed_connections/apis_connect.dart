@@ -30,6 +30,7 @@ RxInt scrollBankPage = 0.obs;
 double maxDC = 0;
 double minDC = 0;
 RxList notificationList = [].obs;
+
 RxList<String> listofLinkedAccount = <String>[].obs;
 RxList trasactionsData = [].obs;
 RxList listOfRecentTrasactionsData = [].obs;

@@ -80,9 +80,8 @@ class _FriendsUiState extends State<FriendsUi> {
                                     Padding(
                                       padding: EdgeInsets.all(0.0),
                                       child: Center(
-                                          child: AvatarProfileImage(
-                                              url: element['avatar'] ??
-                                                  userAvatar,
+                                          child:  AvatarProfileImage(
+                                              url: element['avatar'] ?? userAvatar,
                                               width: 10,
                                               height: 20)),
                                     ),

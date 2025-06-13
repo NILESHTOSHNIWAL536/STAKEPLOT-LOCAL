@@ -3,8 +3,10 @@ import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/InterestSelectionScreen.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
+import 'package:get/get.dart';
 
 final TextEditingController maskNameController = TextEditingController();
 
@@ -27,12 +29,7 @@ class _MaskNameScreenState extends State<MaskNameScreen> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // Background pattern
-          // Positioned.fill(
-          //   child: CustomPaint(
-          //     painter: WavePatternPainter(),
-          //   ),
-          // ),
+        
           AvatarProfileImage(
             url: FinSpaceIcons.bgMarks,
             height: 1,
@@ -61,7 +58,7 @@ class _MaskNameScreenState extends State<MaskNameScreen> {
 
                   // Avatar and form section
                   Container(
-                    height: MediaQuery.sizeOf(context).height / 2,
+                    height: MediaQuery.sizeOf(context).height / 1.8,
                     child: Center(
                       child: SingleChildScrollView(
                         child: MaskNameFormWidget(
@@ -155,15 +152,15 @@ class TitleWidget extends StatelessWidget {
                     color: AppColors.finSpaceColor)),
           ],
         ),
-        Container(
-          width: 180,
-          height: 2,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.blue.shade100, Colors.blue, Colors.blue.shade100],
-            ),
-          ),
-        ),
+        // Container(
+        //   width: 180,
+        //   height: 2,
+        //   decoration: BoxDecoration(
+        //     gradient: LinearGradient(
+        //       colors: [Colors.blue.shade100, Colors.blue, Colors.blue.shade100],
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }
@@ -185,19 +182,18 @@ class MaskNameFormWidget extends StatefulWidget {
 }
 
 class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
-  String selectedAvatarInital = MaskedAvatars.profileIcon1;
   final List<String> maskedAvatarsList = [
     MaskedAvatars.profileIcon1,
     MaskedAvatars.profileIcon2,
     MaskedAvatars.profileIcon3,
     MaskedAvatars.profileIcon4,
     MaskedAvatars.profileIcon5,
-    MaskedAvatars.profileIcon6,
-    MaskedAvatars.profileIcon7,
-    MaskedAvatars.profileIcon8,
-    MaskedAvatars.profileIcon9,
-    MaskedAvatars.profileIcon10,
-    MaskedAvatars.profileIcon12,
+    // MaskedAvatars.profileIcon6,
+    // MaskedAvatars.profileIcon7,
+    // MaskedAvatars.profileIcon8,
+    // MaskedAvatars.profileIcon9,
+    // MaskedAvatars.profileIcon10,
+    // MaskedAvatars.profileIcon12,
   ];
 
   void _showAvatarSelectionSheet(BuildContext context) {
@@ -232,26 +228,24 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                   ),
                   itemCount: maskedAvatarsList.length,
                   itemBuilder: (context, index) {
-                    final avatar = maskedAvatarsList[index];
+                    final avatarv = maskedAvatarsList[index];
                     return GestureDetector(
                       onTap: () {
-                        setState(() {
-                          selectedAvatarInital = avatar;
-                        });
+                        avatar.value = avatarv;
                         Navigator.pop(context); // Close bottom sheet
                       },
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: selectedAvatarInital == avatar
+                            color:  avatar.value == avatarv
                                 ? Colors.blue
                                 : Colors.transparent,
                             width: 2,
                           ),
                           borderRadius: BorderRadius.circular(50),
                         ),
-                        child: AvatarProfileImage(
-                            url: avatar, width: 6, height: 6),
+                        child: AvatarProfileImagePng(
+                            url: avatarv, width: 6, height: 6),
                       ),
                     );
                   },
@@ -309,10 +303,9 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
               children: [
                 CircleAvatar(
                   radius: 40,
-
                   // backgroundColor: Colors.grey.shade200,
-                  child: AvatarProfileImage(
-                      url: selectedAvatarInital, width: 6, height: 6),
+                  child:Obx(()=> AvatarProfileImagePng(
+                      url:  avatar.value, width: 6, height: 6)),
                 ),
                 Positioned(
                   bottom: 0,
@@ -378,13 +371,6 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
           // Description text
           Text(
               'Create a masked name to interact within the community while keeping your identity private.',
-              
-              // textAlign: TextAlign.center,
-              // style: TextStyle(
-              //   fontSize: widget.isSmallScreen ? 12 : 14,
-              //   color: Colors.black54,
-              //   height: 1.4,
-              // ),
               style: FontManager2().getTextStyle(context,
                   lWeight: FontWeight.w500,
                   fontSize: widget.isSmallScreen ? 12 : 14,
@@ -414,7 +400,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
               onPressed: () {
                 // Handle done action
 
-                var body = {"maskedName": maskNameController.text};
+                var body = {"maskedName": maskNameController.text,"avatarType":avatar.value};
                 addMyIntreastAndName(context, body, true,widget.flag);
               },
               style: ElevatedButton.styleFrom(

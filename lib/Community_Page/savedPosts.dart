@@ -74,7 +74,7 @@ class _SavedPostsScreenState extends State<SavedPostsScreen> {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: AppColors.bg1),
-          onPressed: () => Get.back(),
+          onPressed: () => Navigator.pop(context)
         ),
       ),
       body: Obx(

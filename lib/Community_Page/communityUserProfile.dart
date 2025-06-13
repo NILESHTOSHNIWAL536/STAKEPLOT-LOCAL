@@ -61,11 +61,11 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
               left: 0,
               right: 0,
               child: Center(
-                child: AvatarProfile(
-                  name: userName.value,
-                  width: 4.4,
-                  height: 10,
-                  background: userAvatarBackGround.value ?? defaultBackGround.value,
+                child: AvatarProfile2(
+                  url: avatar.value,
+                  width: 7,
+                  height: 8,
+                  // background: userAvatarBackGround.value ?? defaultBackGround.value,
                   flag: true,
                 ),
               ),
