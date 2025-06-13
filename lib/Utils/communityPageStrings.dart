@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart'; // For url
 
 class CommunityScreenStrings {
-  static final CommunityScreenStrings _instance = CommunityScreenStrings._internal();
+  static final CommunityScreenStrings _instance =
+      CommunityScreenStrings._internal();
 
   factory CommunityScreenStrings() => _instance;
 
@@ -20,10 +21,10 @@ class CommunityScreenStrings {
   String imageOption = "Image";
   String pollOption = "Poll";
   String exploria = "Exploria";
-String writePost = "Write a Post";
+  String writePost = "Write a Post";
   String createPoll = "Create Poll";
   String postCard = "Post Card";
-  
+
   String postExploria = "Post Exploria";
   // TextScreen and ImageScreen (shared)
   String newPost = "New post";
@@ -35,12 +36,13 @@ String writePost = "Write a Post";
   String feed = "ForYou";
   String maskeduser = "maskeduser";
   String All = "All";
-
+  int limitTag = 3;
   // PollScreen
   String askQuestion = "Ask a question";
   String optionPrefix = "Option";
   String addOption = "Add Option";
-  String pollIncompleteError = "Please fill in all fields before posting the poll.";
+  String pollIncompleteError =
+      "Please fill in all fields before posting the poll.";
 
   // ExploreModal
   String photosLabel = "Photos ({count}/5)";
@@ -57,13 +59,13 @@ String writePost = "Write a Post";
   String tripHighlights = "Trip Highlights";
   String rateThisPlace = "Rate this place:";
 // tribechat
-   String messagesTitle = "Messages";
+  String messagesTitle = "Messages";
   String messagesReceived = "{count} messages received";
   String noChatsAvailable = "Oops! Inbox is empty";
   String noMessagesYet = "No messages yet";
 
-  //chat 
-    String chatHi = "Messages";
+  //chat
+  String chatHi = "Messages";
   String rupeeSymbol = "₹";
   String totalExpenseSplit = "Total expense: ";
   String shareSplit = "Share: ";
@@ -73,13 +75,12 @@ String writePost = "Write a Post";
   String cancel = "Cancel";
   String send = "Send";
 
-
   Future<bool> fetchConstants() async {
     try {
       final response = await http.get(Uri.parse("$url/constant/community"));
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body)['data'] ?? {};
-
+        limitTag = data['limitTag'] ?? limitTag;
         // Community Screen
         welcomeBack = data['welcomeBack'] ?? welcomeBack;
         finspace = data['finspace'] ?? finspace;
@@ -91,10 +92,10 @@ String writePost = "Write a Post";
         imageOption = data['imageOption'] ?? imageOption;
         pollOption = data['pollOption'] ?? pollOption;
         exploria = data['exploria'] ?? exploria;
-         writePost = data['writePost'] ?? writePost;
-          createPoll = data['createPoll'] ?? createPoll;
-           postCard = data['postCard'] ?? postCard;
-            postExploria = data['postExploria'] ?? postExploria;
+        writePost = data['writePost'] ?? writePost;
+        createPoll = data['createPoll'] ?? createPoll;
+        postCard = data['postCard'] ?? postCard;
+        postExploria = data['postExploria'] ?? postExploria;
 
         // TextScreen and ImageScreen
         newPost = data['newPost'] ?? newPost;
@@ -107,7 +108,8 @@ String writePost = "Write a Post";
         askQuestion = data['askQuestion'] ?? askQuestion;
         optionPrefix = data['optionPrefix'] ?? optionPrefix;
         addOption = data['addOption'] ?? addOption;
-        pollIncompleteError = data['pollIncompleteError'] ?? pollIncompleteError;
+        pollIncompleteError =
+            data['pollIncompleteError'] ?? pollIncompleteError;
 
         // ExploreModal
         photosLabel = data['photosLabel'] ?? photosLabel;
@@ -124,7 +126,7 @@ String writePost = "Write a Post";
         tripHighlights = data['tripHighlights'] ?? tripHighlights;
         rateThisPlace = data['rateThisPlace'] ?? rateThisPlace;
 //tribe chat
-         messagesTitle = data['messagesTitle'] ?? messagesTitle;
+        messagesTitle = data['messagesTitle'] ?? messagesTitle;
         messagesReceived = data['messagesReceived'] ?? messagesReceived;
         noChatsAvailable = data['noChatsAvailable'] ?? noChatsAvailable;
         noMessagesYet = data['noMessagesYet'] ?? noMessagesYet;
@@ -139,10 +141,8 @@ String writePost = "Write a Post";
         imageSendQue = data['imageSendQue'] ?? imageSendQue;
         shareSplit = data['shareSplit'] ?? shareSplit;
         cancel = data['cancel'] ?? cancel;
-       
+
         send = data['send'] ?? send;
-      
-  
 
         return true;
       } else {

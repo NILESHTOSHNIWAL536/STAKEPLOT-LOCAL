@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/finspaceStrings.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:get/get.dart';
 
@@ -14,21 +17,21 @@ class InterestSelectionScreen extends StatefulWidget {
   const InterestSelectionScreen({Key? key}) : super(key: key);
 
   @override
-  State<InterestSelectionScreen> createState() => _InterestSelectionScreenState();
+  State<InterestSelectionScreen> createState() =>
+      _InterestSelectionScreenState();
 }
 
 class _InterestSelectionScreenState extends State<InterestSelectionScreen>
     with TickerProviderStateMixin {
-  
   @override
   void initState() {
     super.initState();
-     clearInterest();
+    clearInterest();
   }
 
   @override
   Widget build(BuildContext context) {
-   final screenSize = MediaQuery.of(context).size;
+    final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -59,24 +62,28 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen>
                   // Categories List
                   GetListOfInterest(),
                   // Done Button
-                Obx(()=> !isListEnabled.value? SizedBox.shrink(): AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    height:   70,
-                    alignment:  Alignment.topCenter, // Change alignment
-                    child:   Padding(
-                            padding: EdgeInsets.all(12),
-                            child: DoneButtonWidget(
-                              onPressed: () {
-                               final combinedList = [...selectedSubCategories, ...selectedCategories];
-                                var body = {
-                                  "interestedTags": combinedList,
-                                };
-                                addMyIntreastAndName(context,body);
-                            },
-
-                            ),
-                          )
-                      ),
+                  Obx(
+                    () => !isListEnabled.value
+                        ? SizedBox.shrink()
+                        : AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            height: 70,
+                            alignment: Alignment.topCenter, // Change alignment
+                            child: Padding(
+                              padding: EdgeInsets.all(12),
+                              child: DoneButtonWidget(
+                                onPressed: () {
+                                  final combinedList = [
+                                    ...selectedSubCategories,
+                                    ...selectedCategories
+                                  ];
+                                  var body = {
+                                    "interestedTags": combinedList,
+                                  };
+                                  addMyIntreastAndName(context, body);
+                                },
+                              ),
+                            )),
                   ),
                 ],
               ),
@@ -88,20 +95,24 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen>
   }
 }
 
-
-class GetListOfInterest extends StatefulWidget  {
-  double height=0.63;
-  GetListOfInterest({Key? key,this.height=0.63}) : super(key: key);
+class GetListOfInterest extends StatefulWidget {
+  double height = 0.63;
+  final bool limitTagbool;
+  GetListOfInterest({
+    Key? key,
+    this.height = 0.63,
+    this.limitTagbool = false,
+  }) : super(key: key);
 
   @override
   State<GetListOfInterest> createState() => _GetListOfInterestState();
 }
 
-class _GetListOfInterestState extends State<GetListOfInterest>  with TickerProviderStateMixin  {
-    late AnimationController _animationController;
+class _GetListOfInterestState extends State<GetListOfInterest>
+    with TickerProviderStateMixin {
+  late AnimationController _animationController;
 
-
-     @override
+  @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
@@ -110,21 +121,32 @@ class _GetListOfInterestState extends State<GetListOfInterest>  with TickerProvi
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    return  Container(
-                    height: screenSize.height * widget.height, // 60% of screen height for categories
-                    child: CategoriesListWidget(
-                      onCategoryToggle: _toggleCategory,
-                      onSubCategoryToggle: _toggleSubCategory,
-                    ),
-          );
+    return Container(
+      height: screenSize.height *
+          widget.height, // 60% of screen height for categories
+      child: CategoriesListWidget(
+        onCategoryToggle: _toggleCategory,
+        onSubCategoryToggle: _toggleSubCategory,
+        limitTagbool: widget.limitTagbool,
+      ),
+    );
   }
 
-   void _toggleCategory(String category) {
+  void _toggleCategory(String category) {
     setState(() {
+      final totalSelected =
+          selectedCategories.length + selectedSubCategories.length;
+      if (widget.limitTagbool &&
+          totalSelected >= CommunityScreenStrings().limitTag &&
+          !selectedCategories.contains(category)) {
+        // Show a snackbar or dialog to inform the user
+       
+        snackBarCalledfail(context, SnackbarData().limitTagSnackbar);
+        return;
+      }
       if (selectedCategories.contains(category)) {
         selectedCategories.remove(category);
         selectedSubCategories
@@ -136,20 +158,29 @@ class _GetListOfInterestState extends State<GetListOfInterest>  with TickerProvi
     _animationController.forward().then((_) {
       _animationController.reset();
     });
-     isListEnabled.value = selectedCategories.isNotEmpty ||
-        selectedSubCategories.isNotEmpty;
+    isListEnabled.value =
+        selectedCategories.isNotEmpty || selectedSubCategories.isNotEmpty;
   }
 
   void _toggleSubCategory(String subCategory) {
     setState(() {
+      final totalSelected =
+          selectedCategories.length + selectedSubCategories.length;
+      if (widget.limitTagbool &&
+          totalSelected >= CommunityScreenStrings().limitTag &&
+          !selectedSubCategories.contains(subCategory)) {
+        // Show a snackbar or dialog to inform the user
+        snackBarCalledfail(context, SnackbarData().limitTagSnackbar);
+        return;
+      }
       if (selectedSubCategories.contains(subCategory)) {
         selectedSubCategories.remove(subCategory);
       } else {
         selectedSubCategories.add(subCategory);
       }
     });
-    isListEnabled.value = selectedCategories.isNotEmpty ||
-        selectedSubCategories.isNotEmpty;
+    isListEnabled.value =
+        selectedCategories.isNotEmpty || selectedSubCategories.isNotEmpty;
   }
 }
 
@@ -171,20 +202,16 @@ class HeaderWidget extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Welcome to',
-                style: FontManager2().getTextStyle(context,
+              Text('Welcome to',
+                  style: FontManager2().getTextStyle(context,
                       lWeight: FontWeight.w500,
                       fontSize: 20,
-                      color: Colors.black54)
-              ),
-              Text(
-                'Finspace',
-                style: FontManager2().getTextStyle(context,
+                      color: Colors.black54)),
+              Text('Finspace',
+                  style: FontManager2().getTextStyle(context,
                       lWeight: FontWeight.bold,
                       fontSize: 20,
-                      color: AppColors.finSpaceColor)
-              ),
+                      color: AppColors.finSpaceColor)),
             ],
           ),
         ],
@@ -203,19 +230,17 @@ class TitleWidget extends StatelessWidget {
         Text(
           'Select Your Interest',
           style: FontManager2().getTextStyle(context,
-                      lWeight: FontWeight.w500,
-                      fontSize: 20,
-                      color: Colors.black87),
+              lWeight: FontWeight.w500, fontSize: 20, color: Colors.black87),
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 8),
         Text(
           'Choose some categories you like. You can change them anytime',
           style: FontManager2().getTextStyle(context,
-                      lWeight: FontWeight.w500,
-                      fontSize: 14,
-                      lineHeight: 1.4,
-                      color: Colors.black54),
+              lWeight: FontWeight.w500,
+              fontSize: 14,
+              lineHeight: 1.4,
+              color: Colors.black54),
           textAlign: TextAlign.center,
         ),
       ],
@@ -223,15 +248,15 @@ class TitleWidget extends StatelessWidget {
   }
 }
 
-
 class CategoriesListWidget extends StatefulWidget {
   final Function(String) onCategoryToggle;
   final Function(String) onSubCategoryToggle;
-
+  final bool limitTagbool;
   const CategoriesListWidget({
     Key? key,
     required this.onCategoryToggle,
     required this.onSubCategoryToggle,
+    required this.limitTagbool,
   }) : super(key: key);
 
   @override
@@ -240,11 +265,12 @@ class CategoriesListWidget extends StatefulWidget {
 
 class _CategoriesListWidgetState extends State<CategoriesListWidget>
     with TickerProviderStateMixin {
-  final Map<String, List<String>> categoriesInterest = FinspaceStrings().categories;
+  final Map<String, List<String>> categoriesInterest =
+      FinspaceStrings().categories;
   late List<AnimationController> _controllers;
   late List<Animation<Offset>> _animations;
- 
- @override
+
+  @override
   void initState() {
     super.initState();
     _controllers = categoriesInterest.keys.map((_) {
@@ -264,13 +290,18 @@ class _CategoriesListWidgetState extends State<CategoriesListWidget>
 
       if (totalCategories % 2 == 1 && index == totalCategories - 1) {
         // Single category in the last row
-        beginOffset = Offset(0, rowIndex % 2 == 0 ? -2 : 2); // Top or bottom, increased distance
-      } else if (estimatedRows >= 3 && rowIndex > 0 && rowIndex < estimatedRows - 1) {
+        beginOffset = Offset(
+            0, rowIndex % 2 == 0 ? -2 : 2); // Top or bottom, increased distance
+      } else if (estimatedRows >= 3 &&
+          rowIndex > 0 &&
+          rowIndex < estimatedRows - 1) {
         // Middle rows: alternate top/bottom per category
-        beginOffset = Offset(0, index % 2 == 0 ? -2 : 2); // Top for even index, bottom for odd
+        beginOffset = Offset(
+            0, index % 2 == 0 ? -2 : 2); // Top for even index, bottom for odd
       } else {
         // First and last rows: left/right
-        beginOffset = index % 2 == 0 ? Offset(-2, 0) : Offset(2, 0); // Increased distance
+        beginOffset =
+            index % 2 == 0 ? Offset(-2, 0) : Offset(2, 0); // Increased distance
       }
 
       return Tween<Offset>(
@@ -282,6 +313,7 @@ class _CategoriesListWidgetState extends State<CategoriesListWidget>
       ));
     }).toList();
   }
+
   @override
   void dispose() {
     for (var controller in _controllers) {
@@ -301,7 +333,8 @@ class _CategoriesListWidgetState extends State<CategoriesListWidget>
           spacing: screenSize.width * 0.015,
           runSpacing: screenSize.height * 0.005,
           alignment: WrapAlignment.start,
-          children: categoriesInterest.keys.toList().asMap().entries.map((entry) {
+          children:
+              categoriesInterest.keys.toList().asMap().entries.map((entry) {
             final index = entry.key;
             final category = entry.value;
             final subCategories = categoriesInterest[category] ?? [];
@@ -322,6 +355,11 @@ class _CategoriesListWidgetState extends State<CategoriesListWidget>
                       isSelected: isSelected,
                       onTap: () => widget.onCategoryToggle(category),
                       isSubCategory: false,
+                      isEnabled: !widget.limitTagbool ||
+                          selectedCategories.length +
+                                  selectedSubCategories.length <
+                              CommunityScreenStrings().limitTag ||
+                          isSelected,
                     ),
                   ),
                   // Subcategories (if main category is selected)
@@ -334,12 +372,19 @@ class _CategoriesListWidgetState extends State<CategoriesListWidget>
                         spacing: screenSize.width * 0.015,
                         runSpacing: screenSize.height * 0.005,
                         children: subCategories.map((subCategory) {
-                          final isSubSelected = selectedSubCategories.contains(subCategory);
+                          final isSubSelected =
+                              selectedSubCategories.contains(subCategory);
                           return CategoryChip(
                             label: subCategory,
                             isSelected: isSubSelected,
-                            onTap: () => widget.onSubCategoryToggle(subCategory),
+                            onTap: () =>
+                                widget.onSubCategoryToggle(subCategory),
                             isSubCategory: true,
+                            isEnabled: !widget.limitTagbool ||
+                                selectedCategories.length +
+                                        selectedSubCategories.length <
+                                    CommunityScreenStrings().limitTag ||
+                                isSubSelected,
                           );
                         }).toList(),
                       ),
@@ -353,56 +398,60 @@ class _CategoriesListWidgetState extends State<CategoriesListWidget>
     );
   }
 }
+
 class CategoryChip extends StatelessWidget {
   final String label;
   final bool isSelected;
   final VoidCallback onTap;
   final bool isSubCategory;
-
+  final bool isEnabled;
   const CategoryChip({
     Key? key,
     required this.label,
     required this.isSelected,
     required this.onTap,
     this.isSubCategory = false,
+    this.isEnabled = true,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      child: IntrinsicWidth(
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(10),
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 10, vertical: 6), // Further reduced padding
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? AppColors.finSpaceColor
-                  : AppColors.backgroundColor,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
+        duration: const Duration(milliseconds: 200),
+        child: IntrinsicWidth(
+          child: InkWell(
+            onTap: isEnabled ? onTap : null,
+            borderRadius: BorderRadius.circular(10),
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 10, vertical: 6), // Further reduced padding
+              decoration: BoxDecoration(
                 color: isSelected
-                    ? const Color(0xFF4A4E69)
-                    : const Color(0xFF8A8A8A),
-                width: 1,
+                    ? AppColors.finSpaceColor
+                    : AppColors.backgroundColor,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: isSelected
+                      ? const Color(0xFF4A4E69)
+                      : const Color(0xFF8A8A8A),
+                  width: 1,
+                ),
+              ),
+              child: Text(
+                label,
+                style: FontManager2().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w400,
+                  fontSize: isSubCategory ? 12 : 14,
+                  color: isSelected
+                      ? AppColors.backgroundColor
+                      : (isEnabled ? AppColors.bg1 : Colors.grey),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
-            child: Text(
-              label,
-              style: FontManager2().getTextStyle(context,
-                      lWeight: FontWeight.w400,
-                      fontSize:  isSubCategory ? 12 : 14,
-                      color: isSelected ? AppColors.backgroundColor : AppColors.bg1),
-              
-              textAlign: TextAlign.center,
-            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }
 
@@ -417,7 +466,7 @@ class DoneButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-       width: MediaQuery.sizeOf(context).width/4,
+      width: MediaQuery.sizeOf(context).width / 4,
       height: 40,
       child: ElevatedButton(
         onPressed: onPressed,
@@ -429,13 +478,11 @@ class DoneButtonWidget extends StatelessWidget {
           ),
           elevation: 0,
         ),
-        child: Text(
-          'Done',
-           style:FontManager2().getTextStyle(context,
-                      lWeight: FontWeight.w500,
-                      fontSize: 16,
-                      color:  AppColors.backgroundColor)
-        ),
+        child: Text('Done',
+            style: FontManager2().getTextStyle(context,
+                lWeight: FontWeight.w500,
+                fontSize: 16,
+                color: AppColors.backgroundColor)),
       ),
     );
   }

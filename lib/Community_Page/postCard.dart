@@ -253,29 +253,32 @@ class PostCard extends StatelessWidget {
                         : text(dataObj,),
                   ),
                   if (dataObj['tags'] != null && dataObj['tags'].isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 12.0, right: 12.0, top: 2.0, bottom: 2.0),
-                      child: Wrap(
-                        spacing: 4.0,
-                        runSpacing: 2.0,
-                        children: dataObj['tags'].map<Widget>((tag) => Chip(
-                              label: Text(
-                                tag,
-                                style: FontManager().getTextStyle(context,
-                                    lWeight: FontWeight.w400,
-                                    fontSize: 10,
-                                    color: AppColors.bg1),
-                              ),
-                              backgroundColor: AppColors.grey.withOpacity(0.1),
-                              padding: EdgeInsets.symmetric(horizontal: 8.0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0),
-                                side: BorderSide(color: AppColors.grey.withOpacity(0.3)),
-                              ),
-                            )).toList(),
-                      ),
-                    ),
+                   Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 2.0),
+  child: SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: Row(
+      children: dataObj['tags'].map<Widget>((tag) => Container(
+        margin: const EdgeInsets.only(right: 6.0), // spacing between containers
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+        decoration: BoxDecoration(
+          color: AppColors.finSpaceColor,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          tag,
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.w400,
+            fontSize: 12,
+            color: AppColors.backgroundColor,
+          ),
+        ),
+      )).toList(),
+    ),
+  ),
+),
+
                   if (dataObj['createdAt'] != null)
                     Padding(
                       padding: const EdgeInsets.only(

@@ -105,6 +105,7 @@ String budgetAmountMismatch = "Total amount is not equal to the sum of all categ
   String errorCreatingPost = "Error creating post";
   String postSavedSuccessfully = "Post saved successfully.";
   String failedToSavePost = "Failed to save the post.";
+  String limitTagSnackbar = "You can select a maximum of 3 interests.";
 
 
   // updated onces
@@ -252,6 +253,7 @@ String amountExceed = "Amount exceeds the total budget!";
         otpResentSuccess = data['otpResentSuccess'] ?? otpResentSuccess;
         otpSendFail2 = data['otpSendFail2'] ?? otpSendFail2;
         offReplays = data['offReplays'] ?? offReplays;
+        limitTagSnackbar = data['limitTagSnackbar'] ?? limitTagSnackbar;
 
 
         budgetAdded = data['budgetAdded'] ?? budgetAdded;

@@ -63,7 +63,7 @@ void showTagListOfInterestModal({
               Container(
                 height: MediaQuery.sizeOf(context).height/2,
                 
-                child: GetListOfInterest(height: 0), // Let it take available space
+                child: GetListOfInterest(height: 0, limitTagbool: true, ), // Let it take available space
               ),
             
             SizedBox(height: screenSize.height * 0.02),
