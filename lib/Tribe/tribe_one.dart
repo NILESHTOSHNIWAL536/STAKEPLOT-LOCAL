@@ -1096,7 +1096,7 @@ class _TribeHomeState extends State<TribeUnique> {
       commentList.add(dataObj);
       commentList.removeLast();
     } else {
-      snackBarCalled(context, SnackbarData().errorLikingComment, Colors.red);
+      // snackBarCalled(context, SnackbarData().errorLikingComment, Colors.red);
     }
   }
 
