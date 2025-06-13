@@ -12,11 +12,10 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/CreateDebtScreen.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_display.dart';
-import 'package:flutter_application_code_stakeplot/finance_screen/Debts/debt_service.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/cardBuilders.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/financeWidgets.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
-import 'package:get/get.dart';
+
 
 class PlotFinance extends StatefulWidget {
   const PlotFinance({super.key});
@@ -69,7 +68,7 @@ class _PlotFinanceState extends State<PlotFinance> {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(top: 12, left: 0, right: 0, bottom: 0),
-            child: Column(
+            child:  Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Profile Image
@@ -122,21 +121,11 @@ class _PlotFinanceState extends State<PlotFinance> {
   Widget getSearch(double w,double h){
    
   
-    return Column(
+    return Row(
       children: [
-         InkWell(
-             onTap: () {
-              ismaskedUsers.value=false;
-               Navigator.pushNamed(context, '/TribeChats');
-             },
-             child: AvatarProfileImage(
-               url: LikeComment.message,
-               height: 26,
-               width: 26,
-             ),
-          ),
+        
          Container(
-          width: w / 0.8,
+          width: w / 1.25,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -149,7 +138,7 @@ class _PlotFinanceState extends State<PlotFinance> {
                       Navigator.pushNamed(context, '/TribeSearch');
                     },
                     child: Container(
-                      width: MediaQuery.sizeOf(context).width / 1.1,
+                      width: MediaQuery.sizeOf(context).width / 1.25,
                       height: MediaQuery.sizeOf(context).height / 20,
                       child: TextField(
                         decoration: InputDecoration(
@@ -176,9 +165,18 @@ class _PlotFinanceState extends State<PlotFinance> {
             ],
           ),
         ),
-        SizedBox(
-          height: 10,
-        ),
+         InkWell(
+             onTap: () {
+              ismaskedUsers.value=false;
+               Navigator.pushNamed(context, '/TribeChats');
+             },
+             child: AvatarProfileImage(
+               url: LikeComment.message,
+               height: 26,
+               width: 26,
+             ),
+          ),
+        
       ],
     );
   }

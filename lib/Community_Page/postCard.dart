@@ -283,7 +283,7 @@ class PostCard extends StatelessWidget {
                   if (dataObj['createdAt'] != null)
                     Padding(
                       padding: const EdgeInsets.only(
-                          left: 14.0, right: 27.0, top: 1),
+                          left: 14.0, right: 27.0, top: 6),
                       child: Text(
                         formatDateToIST(dataObj['createdAt']),
                         style: FontManager().getTextStyle(context,

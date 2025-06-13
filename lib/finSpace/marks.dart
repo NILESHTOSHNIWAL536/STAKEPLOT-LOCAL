@@ -198,9 +198,8 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
   @override
   void initState() {
     super.initState();
-    if(avatar.value=="")
-    {
-        avatar.value = maskedAvatarsList[0];
+    if (avatar.value == "") {
+      avatar.value = maskedAvatarsList[0];
     }
   }
 
@@ -213,7 +212,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
       builder: (context) {
         return Container(
           padding: EdgeInsets.all(16),
-          height: 300, // Adjust height as needed
+           height: MediaQuery.sizeOf(context).height/2.5, // Adjust height as needed
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -226,7 +225,8 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                 ),
               ),
               SizedBox(height: 16),
-              Expanded(
+              Container(
+                height: MediaQuery.sizeOf(context).height/3.3,
                 child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4, // 4 avatars per row
@@ -236,7 +236,8 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                   ),
                   itemCount: 12,
                   itemBuilder: (context, index) {
-                    final avatarv = "assets/icons/maskAvatars/mask${index+1}.png";
+                    final avatarv =
+                        "assets/icons/maskAvatars/mask${index + 1}.png";
                     return GestureDetector(
                       onTap: () {
                         avatar.value = avatarv;
@@ -287,6 +288,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Avatar
           // CircleAvatar(
@@ -311,9 +313,11 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
               children: [
                 CircleAvatar(
                   radius: 40,
-                   backgroundColor: AppColors.backgroundColor,
-                  child: Obx(() => AvatarProfileImagePng(
-                      url: avatar.value, width: 6, height: 6)),
+                  backgroundColor: AppColors.backgroundColor,
+                  child: Obx(()=>AvatarProfileImagePng(
+                      url: avatar.value,
+                      width: 4,
+                      height: 4)),
                 ),
                 Positioned(
                   bottom: 0,
@@ -321,13 +325,13 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                   child: Container(
                     padding: EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                     
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 1),
+                      color: AppColors.finSpaceColor,
+                      border: Border.all(color: AppColors.finSpaceColor, width: 1),
                     ),
                     child: Icon(
                       Icons.edit,
-                      color: Colors.white,
+                      color: AppColors.backgroundColor,
                       size: 16,
                     ),
                   ),
@@ -339,38 +343,65 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
           SizedBox(height: 6),
 
           // Mask name input field
-          Padding(
-            padding: const EdgeInsets.only(left: 40),
+          Center(
             child: Container(
-              //  color: Colors.amber,
-              width: screenSize.width / 2.3,
-              child: TextField(
-                controller: widget.controller,
-                textAlign: TextAlign.center,
-                readOnly: true,
-                decoration: InputDecoration(
-                  hintText: '',
-                  hintStyle: FontManager2().getTextStyle(context,
-                      lWeight: FontWeight.w600,
-                      fontSize: 14,
-                      color: AppColors.bg1),
-                  border: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-                  suffixIcon: Padding(
-                    padding: EdgeInsets.only(right: 4, bottom: 2),
-                    child: IconButton(
-                      icon: Icon(Icons.auto_fix_high,
-                          color: AppColors.finSpaceColor),
-                      onPressed: () async {
-                        await getMaskedNumber(context);
-                      },
-                    ),
+              
+                
+              child: Row(
+                //  mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                 mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  //  SizedBox(width:90),
+                 Obx(()=> Container(
+                   width: screenSize.width / 3,
+                   
+                   child: Text(maskedName.value,
+                   style: FontManager2().getTextStyle(context,
+                    lWeight: FontWeight.w500,
+                    fontSize: widget.isSmallScreen ? 12 : 14,
+                    lineHeight: 1.4,
+                    color: AppColors.bg1)
+                   ),
+                 )),
+                  SizedBox(width:10),
+                  IconButton(
+                    icon: Icon(Icons.auto_fix_high,
+                        color: AppColors.finSpaceColor),
+                    onPressed: () async {
+                      await getMaskedNumber(context);
+                    },
                   ),
-                ),
+                 
+                ],
               ),
+              // child: TextField(
+              //   controller: widget.controller,
+              //   textAlign: TextAlign.center,
+              //   readOnly: true,
+              //   decoration: InputDecoration(
+              //     hintText: '',
+              //     hintStyle: FontManager2().getTextStyle(context,
+              //         lWeight: FontWeight.w600,
+              //         fontSize: 14,
+              //         color: AppColors.bg1),
+              //     border: InputBorder.none,
+              //     enabledBorder: InputBorder.none,
+              //     focusedBorder: InputBorder.none,
+              //     contentPadding:
+              //         EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+              //     suffixIcon: Padding(
+              //       padding: EdgeInsets.only(right: 4, bottom: 2),
+              //       child: IconButton(
+              //         icon: Icon(Icons.auto_fix_high,
+              //             color: AppColors.finSpaceColor),
+              //         onPressed: () async {
+              //           await getMaskedNumber(context);
+              //         },
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ),
           ),
 
@@ -407,9 +438,12 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
             child: ElevatedButton(
               onPressed: () {
                 // Handle done action
-                 
-                var body = {"maskedName": maskNameController.text,"avatarType":avatar.value};
-                addMyIntreastAndName(context, body, true,widget.flag);
+
+                var body = {
+                  "maskedName": maskNameController.text,
+                  "avatarType": avatar.value
+                };
+                addMyIntreastAndName(context, body, true, widget.flag);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF4A4E69),
