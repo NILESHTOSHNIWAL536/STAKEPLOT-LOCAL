@@ -18,10 +18,11 @@ Future<void> initializeOneSignal(BuildContext context) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   String key = "deviceInfo";
   var json;
-
   if(pref.containsKey(key)){
      json = jsonDecode(pref.getString("deviceInfo") ?? "{}");
   }
+ print("json");
+ print(json);
   
   if (!pref.containsKey(key) || json["deviceId"]=="deviceData.value")
   {
@@ -154,18 +155,22 @@ try {
     } else if (Platform.isIOS) {
       // For iOS devices
       final IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      deviceData.value = {
+      deviceData.value =
+       {
         'deviceId': playerId,
-        'deviceName': iosInfo.name,
+        'device': iosInfo.name,
+        'brand': iosInfo.model,
+        'modal': iosInfo.model ,
         'os': 'iOS',
         'osVersion': iosInfo.systemVersion
       };
     } else {
       deviceData.value = {
         'deviceId':( playerId==""||playerId==null)?"":playerId,
-        'deviceName': 'Unknown',
+        'device': 'Unknown',
         'os': 'Unknown',
-        'brand': 'Unknown',
+        'brand': '',
+        'modal': '' ,
         'osVersion': 'Unknown',
       };
     }
@@ -173,7 +178,7 @@ try {
   
     deviceData.value = {
         'deviceId':( playerId==""||playerId==null)?"":playerId,
-        'deviceName': 'Unknown',
+        'device': 'Unknown',
         'os': 'Unknown',
         'brand': 'Unknown',
         'osVersion': 'Unknown',
