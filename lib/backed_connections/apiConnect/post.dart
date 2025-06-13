@@ -21,6 +21,7 @@ void addReply(context, String data, String commentId, String postId) async {
 
 void deletePost(id, context) async {
   var responce = await deleteDataApiCall("${url}/post/${id}");
+
   if (getFlagOfResponse(responce)) {
     snackBarCalled(context, "Deleted Post");
   } else {
@@ -123,6 +124,7 @@ Future<Map<String, dynamic>> createPost(
 void createPostWithOutImage(context, String title, String description) async {
   var urlPath = '${url}/post/';
   final TagList = [...selectedSubCategories, ...selectedCategories];
+ 
   var body = {
     'title': title,
     'description': description,
@@ -143,6 +145,7 @@ void createPostWithOutImage(context, String title, String description) async {
 void createPollOfCommunity(context, String title, String description) async {
   var urlPath = '${url}/createPollPost';
   final TagList = [...selectedSubCategories, ...selectedCategories];
+
   var body = {
     'title': title,
     'description': {
@@ -151,7 +154,7 @@ void createPollOfCommunity(context, String title, String description) async {
     'isPoll': true,
     'tags': TagList
   };
-
+ 
   var response = await postDataApiCall(urlPath, body);
 
   if (getFlagOfResponse(response)) {
@@ -169,7 +172,7 @@ void getPost() async {
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
-    print("tags for $obj");
+  
     historyListData.clear();
     historyListData.addAll(obj);
     // getTrendingData.clear();
@@ -215,9 +218,11 @@ void savePostData(context, data) async {
   var urlPath = "${url}/post/save/${data['_id']}";
   var body = {"postId": data['_id']};
   var response = await postDataApiCall(urlPath, body);
+  var decodedResponse = json.decode(response.body);
 
-  if (getFlagOfResponse(response)) {
-    snackBarCalled(context, SnackbarData().postSavedSuccessfully);
+  if (getFlagOfResponse(response) ) {
+
+    snackBarCalled(context, decodedResponse['data'].toString());
   } else {
     snackBarCalled(context, SnackbarData().failedToSavePost, Colors.red);
   }
@@ -226,8 +231,7 @@ void savePostData(context, data) async {
 Future<List<dynamic>> savePostGetData(context) async {
   try {
     var urlPath = "${url}/post/saved";
-    // Print the URL being called
-
+  
     var response = await getDataApiCall(urlPath);
 
     if (getFlagOfResponse(response)) {

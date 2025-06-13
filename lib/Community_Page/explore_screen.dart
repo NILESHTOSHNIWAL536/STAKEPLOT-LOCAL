@@ -10,6 +10,7 @@ import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.da
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:custom_image_crop/custom_image_crop.dart';
@@ -308,7 +309,7 @@ class _ExploreModalState extends State<ExploreModal> {
         return;
       }
     }
-
+ final TagList = [...selectedSubCategories, ...selectedCategories];
     Map<String, dynamic> requestBody = {
       "images": imageUrls,
       "name": locationNameController.text,
@@ -317,7 +318,8 @@ class _ExploreModalState extends State<ExploreModal> {
       "rating": _rating,
       "tripHighlights": titleController.text,
       "description": contentController.text,
-      "postType": "exploria"
+      "postType": "exploria",
+      "tags":TagList
       
     };
 

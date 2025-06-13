@@ -13,7 +13,7 @@ RxInt currentPageTranding=1.obs;
 RxInt currentPageFeed=1.obs;
 
 bool flag = true;
-String portNo = flag ? "192.168.1.8" : "localhost";
+String portNo = flag ? "192.168.1.5" : "localhost";
 String urlWithLocallHost = !flag ? "https://stakeplot.in/" : "http://${portNo}:5000/";
 String url = "${urlWithLocallHost}api/v1";
 String valid = "Please Enter All Fields";

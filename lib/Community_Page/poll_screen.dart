@@ -77,7 +77,7 @@ class _PollScreenState extends State<PollScreen> {
 
       if (posting.value) return;
       posting.value = true;
-      clearInterest();
+      // clearInterest();
       createPollOfCommunityPost(context, question.toString(), options, {}, [], "casual");
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

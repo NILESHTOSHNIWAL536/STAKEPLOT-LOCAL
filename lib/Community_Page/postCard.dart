@@ -255,7 +255,7 @@ class PostCard extends StatelessWidget {
                   if (dataObj['tags'] != null && dataObj['tags'].isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.only(
-                          left: 12.0, right: 12.0, top: 4.0, bottom: 4.0),
+                          left: 12.0, right: 12.0, top: 2.0, bottom: 2.0),
                       child: Wrap(
                         spacing: 4.0,
                         runSpacing: 2.0,
