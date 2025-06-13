@@ -400,7 +400,7 @@ class _TribeSearchState extends State<TribeChats> {
                 child: Row(
                   children: [
                     
-                    AvatarProfile(
+                 ismaskedUsers.value?AvatarProfile2(url: item['avatar'], width: 20, height: 20) :   AvatarProfile(
                         name: item['name'].toString() ,
                         width: 1,
                         height: 1,

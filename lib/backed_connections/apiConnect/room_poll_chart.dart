@@ -425,7 +425,7 @@ void getChatLoader(bool flag) async {
        var data = {
           '_id': key,
           'name': name,
-          'avatar': defaultBackGround.value,
+          'avatar': element['chats']['details']['avatarType'],
           'item':  defaultBackGround.value ,
           'count': element['chats']['unseenCount'],
           'type': type,

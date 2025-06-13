@@ -118,12 +118,10 @@ Widget buildWelcomeRow(context) {
                         onTap: () async {
                           navigatorToMyOwnPage(context);
                         },
-                        child: AvatarProfile(
-                          name: userName.value,
+                        child: AvatarProfile2 (
+                          url: avatar.value,
                           width: 9,
                           height: 14,
-                          background: userAvatarBackGround.value,
-                          flag: true,
                         ),
                       ),
                     ),

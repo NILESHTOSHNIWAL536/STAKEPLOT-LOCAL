@@ -69,8 +69,10 @@ class _CommunityState extends State<Community> {
     scrollController.addListener(_onScroll);
   }
 
-  void _onScroll() {
-    scrollController.addListener(() async {
+  void _onScroll()
+  {
+    scrollController.addListener(() async
+    {
       if (scrollController.position.pixels >=
               scrollController.position.maxScrollExtent - 50 &&
           !isPostloading.value) {
@@ -82,6 +84,7 @@ class _CommunityState extends State<Community> {
         }
       }
     });
+
   }
 
   @override
@@ -116,14 +119,14 @@ class _CommunityState extends State<Community> {
     );
   }
 
-  Widget getFeed() {
+  Widget getFeed()
+  {
     return getTrendingData.isEmpty && !isPost.value
         ? const Loader()
         : isPost.value && getTrendingData.isEmpty
             ? noFriend(
                 context, "Make friends to see their posts or upload post")
-            : Obx(
-                () => getPosted.value ? LazyLoadingList() : LazyLoadingList());
+            : Obx(() => getPosted.value ? LazyLoadingList() : LazyLoadingList());
   }
 
   Widget getTrandingWidget() {

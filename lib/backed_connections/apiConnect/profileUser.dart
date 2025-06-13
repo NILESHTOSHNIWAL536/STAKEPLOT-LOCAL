@@ -203,7 +203,7 @@ void getUserInfomations() async {
     getMaskendUsers(false);
     currentId.value = data['_id'];
     userName.value = data['name'];
-    avatar.value = avaterUrlPath(userName.value);
+    avatar.value = data['avatarType']; // avaterUrlPath(userName.value);
     userAvatar = avatar.value;
     email.value = data['email'];
     currency.value = data['currency'];

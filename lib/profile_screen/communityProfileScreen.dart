@@ -54,20 +54,18 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
   }
 
   Widget topUserProfile() {
-    print("user mask name : $userPostList");
     return Container(
       height: MediaQuery.of(context).size.height / 5.4,
       // height: 200,
       child: Column(
         children: [
-          AvatarProfile(
-            name: userName.value,
+          AvatarProfile2(
+            url: avatar.value,
             width: 4.4,
             height: 10,
-            background: userAvatarBackGround.value ?? defaultBackGround.value,
             flag: true,
           ),
-          Text(userName.value.toString(),
+          Text(maskedName.value.toString(),
               style: FontManager().getTextStyle(context,
                   lWeight: FontWeight.w600, color: AppColors.bg1)),
           SizedBox(
@@ -87,6 +85,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
                       MaterialPageRoute(
                         builder: (context) => Friends(
                           isMasked: true,
+
                         ),
                       ),
                     );

@@ -1,11 +1,34 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/routes.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
 
 
+
+class AvatarProfileImagePng extends StatelessWidget {
+String url;
+double width;
+double height;
+AvatarProfileImagePng({ Key? key,required this.url,required this.width,required this.height }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context){
+    return  Container(
+        margin: EdgeInsets.symmetric(horizontal: 5),
+        padding: EdgeInsetsDirectional.all(4),
+        alignment: Alignment.center,
+        child:Image.asset(
+            url.toString().trim(),
+              width: MediaQuery.of(context).size.width/ width,
+              height: MediaQuery.of(context).size.height/ height,
+        )
+    );
+  }
+}
 
 class AvatarProfileImage extends StatelessWidget {
 String url;
@@ -176,7 +199,6 @@ class AvatarProfile extends StatelessWidget {
     );
   }
 
-
   Widget img(BuildContext context, double size) {
   return Container(
     width: size / 10,  // Diameter
@@ -234,6 +256,51 @@ class AvatarProfile extends StatelessWidget {
 
 
 
+
+
 bool isSvgUrl(String url) {
   return url.toLowerCase().endsWith('.svg');
+}
+
+
+
+
+
+class AvatarProfile2 extends StatelessWidget {
+  final String url;
+  final double width;
+  final double height;
+   double fontsize=25;
+   bool flag=false;
+
+   AvatarProfile2({
+    Key? key,
+    required this.url,
+    required this.width,
+    required this.height,
+     this.flag=false,
+     this.fontsize=20,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    double size=MediaQuery.of(context).size.width;
+    return flag? Container(
+          padding: EdgeInsets.all(2),
+          alignment: Alignment.center,
+          // color: AppColors.appIcon,
+          child: CircleAvatar(
+              radius:35,
+             backgroundImage: AssetImage(url.toString().trim()),
+             backgroundColor: Colors.transparent, // optional: removes default grey bg
+          ),
+      ):Container(
+          padding: EdgeInsets.all(2),
+          alignment: Alignment.center,
+          child: CircleAvatar(
+             backgroundImage: AssetImage(url.toString().trim()),
+             backgroundColor: Colors.transparent, // optional: removes default grey bg
+          ),
+      );
+  }
 }

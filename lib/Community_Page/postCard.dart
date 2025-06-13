@@ -97,19 +97,20 @@ class PostCard extends StatelessWidget {
                         Container(
                           child: Row(
                             children: [
-                              Container(
-                                //  color: Colors.green,
-                                child: AvatarProfile(
-                                  name: (dataObj["author"]['maskedName'] ??
-                                      dataObj["author"]['name']),
-                                  width: 11,
-                                  height: 21,
-                                  background: dataObj["author"]
-                                          ['avatarBackGround'] ??
-                                      defaultBackGround.value,
-                                  flag: true,
-                                ),
-                              ),
+                               AvatarProfile2(url: dataObj["author"]['avatarType'], width: 20, height: 20),
+                              // Container(
+                              //   //  color: Colors.green,
+                              //   child: AvatarProfile(
+                              //     name: (dataObj["author"]['maskedName'] ??
+                              //         dataObj["author"]['name']),
+                              //     width: 11,
+                              //     height: 21,
+                              //     background: dataObj["author"]
+                              //             ['avatarBackGround'] ??
+                              //         defaultBackGround.value,
+                              //     flag: true,
+                              //   ),
+                              // ),
                               const SizedBox(width: 3),
                               Text(
                                 (dataObj["author"]['maskedName'] ??

@@ -137,7 +137,7 @@ class _FriendsState extends State<Friends> {
           Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CommunityUserProfile(data: data,ids:[],flag: true,isMasked: widget.isMasked,),
+                        builder: (context) => CommunityUserProfile(data: data,ids:[],flag: true,isMasked: widget.isMasked,isMaskedConnect: widget.isMaskedConnect,),
                       ),
                   );
         },
@@ -156,7 +156,7 @@ class _FriendsState extends State<Friends> {
               // AvatarProfileImage(
               //     url:avaterUrlPath(data['name']), width: 15, height: 15),
 
-              AvatarProfile(name: data['name'], width: 30, height: 13,background:data['avatarBackGround'] ?? defaultBackGround.value,),
+           widget.isMasked?  AvatarProfile2(url: data['avatarType'], width: 20, height: 20): AvatarProfile(name: data['name'], width: 30, height: 13,background:data['avatarBackGround'] ?? defaultBackGround.value,),
              
               // Text((data),
               Text((data['name']),
