@@ -85,7 +85,7 @@ class TabBarUser extends StatelessWidget {
         .toList();
     final hasPosts = validPosts.isNotEmpty;
 
-    print('Media posts: $validPosts'); // Debug log
+   
 
     if (!hasPosts) {
       return buildEmptyState('No Media Found', 'This user hasn\'t shared any media posts yet.');
@@ -170,7 +170,7 @@ class TabBarUser extends StatelessWidget {
         .toList();
     final hasPosts = validPosts.isNotEmpty;
 
-    print('Text/Poll posts: $validPosts'); // Debug log
+  
 
     if (!hasPosts) {
       return buildEmptyState('No Posts Found', 'This user hasn\'t shared any text or poll posts yet.');

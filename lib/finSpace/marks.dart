@@ -377,7 +377,24 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
 
           // Description text
           Text(
-              'You can create a mask name to keep your identity private, or use the name and interact anonymously. You\'re always in control.',
+              'Create a masked name to interact within the community while keeping your identity private.',
+              
+              // textAlign: TextAlign.center,
+              // style: TextStyle(
+              //   fontSize: widget.isSmallScreen ? 12 : 14,
+              //   color: Colors.black54,
+              //   height: 1.4,
+              // ),
+              style: FontManager2().getTextStyle(context,
+                  lWeight: FontWeight.w500,
+                  fontSize: widget.isSmallScreen ? 12 : 14,
+                  lineHeight: 1.4,
+                  color: AppColors.bg1)),
+
+          SizedBox(height: 4),
+           Text(
+              'This name is only visible inside the community section — for discussions, comments, and polls. When you split bills, share posts, or engage in other features outside the community, your masked name isn’t used. Those activities remain linked to your actual Stakeplot profile.',
+              
               // textAlign: TextAlign.center,
               // style: TextStyle(
               //   fontSize: widget.isSmallScreen ? 12 : 14,
@@ -389,8 +406,6 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                   fontSize: widget.isSmallScreen ? 12 : 14,
                   lineHeight: 1.4,
                   color: Colors.black54)),
-
-          SizedBox(height: 10),
 
           // Done button
           SizedBox(

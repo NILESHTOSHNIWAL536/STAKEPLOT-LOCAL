@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/profileUser.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -265,8 +266,9 @@ void createPoll(context, String question, List options, roomDetails, members,
 void createPollOfCommunityPost(context, String question, List options,
     roomDetails, members, String type) async {
   String urlPath = '${url}/post/';
-
-  var body = {'question': question, 'options': options, 'postType': "poll"};
+final TagList = [...selectedSubCategories, ...selectedCategories];
+  print("tags for poll $TagList");
+  var body = {'question': question, 'options': options, 'postType': "poll", 'tags':TagList};
 
   final response = await postDataApiCall(urlPath, body);
 

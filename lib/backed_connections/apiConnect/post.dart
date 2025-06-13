@@ -11,11 +11,8 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
 import 'package:http/http.dart' as http;
 
-void addReply(context, String data, String postId) async {
-  var body = {
-    'commentId': postId,
-    'replyText': data,
-  };
+void addReply(context, String data, String commentId, String postId) async {
+  var body = {'comment': commentId, 'reply': data, 'post': postId};
   var response = await postDataApiCall('${url}/reply/', body);
   if (!getFlagOfResponse(response)) {
     snackBarCalled(context, SnackbarData().unableToAddReply, Colors.red);
@@ -24,6 +21,7 @@ void addReply(context, String data, String postId) async {
 
 void deletePost(id, context) async {
   var responce = await deleteDataApiCall("${url}/post/${id}");
+
   if (getFlagOfResponse(responce)) {
     snackBarCalled(context, "Deleted Post");
   } else {
@@ -89,14 +87,14 @@ Future<Map<String, dynamic>> createPost(
     var body = {
       'description': description,
       'image': urlPath,
-      'tag': TagList,
+      'tags': TagList,
       'postType': 'image'
     };
 
     String apiCall = '${url}/post';
 
     var response = await postDataApiCall(apiCall, body);
-   
+
     if (getFlagOfResponse(response)) {
       clearInterest();
       var postData = jsonDecode(response.body);
@@ -126,6 +124,7 @@ Future<Map<String, dynamic>> createPost(
 void createPostWithOutImage(context, String title, String description) async {
   var urlPath = '${url}/post/';
   final TagList = [...selectedSubCategories, ...selectedCategories];
+ 
   var body = {
     'title': title,
     'description': description,
@@ -146,15 +145,16 @@ void createPostWithOutImage(context, String title, String description) async {
 void createPollOfCommunity(context, String title, String description) async {
   var urlPath = '${url}/createPollPost';
   final TagList = [...selectedSubCategories, ...selectedCategories];
+
   var body = {
     'title': title,
     'description': {
       'message': description,
     },
     'isPoll': true,
-    'tag': TagList
+    'tags': TagList
   };
-
+ 
   var response = await postDataApiCall(urlPath, body);
 
   if (getFlagOfResponse(response)) {
@@ -172,6 +172,7 @@ void getPost() async {
   if (getFlagOfResponse(response)) {
     var his = jsonDecode(response.body);
     var obj = his['data'];
+  
     historyListData.clear();
     historyListData.addAll(obj);
     // getTrendingData.clear();
@@ -217,9 +218,11 @@ void savePostData(context, data) async {
   var urlPath = "${url}/post/save/${data['_id']}";
   var body = {"postId": data['_id']};
   var response = await postDataApiCall(urlPath, body);
+  var decodedResponse = json.decode(response.body);
 
-  if (getFlagOfResponse(response)) {
-    snackBarCalled(context, SnackbarData().postSavedSuccessfully);
+  if (getFlagOfResponse(response) ) {
+
+    snackBarCalled(context, decodedResponse['data'].toString());
   } else {
     snackBarCalled(context, SnackbarData().failedToSavePost, Colors.red);
   }
@@ -228,8 +231,7 @@ void savePostData(context, data) async {
 Future<List<dynamic>> savePostGetData(context) async {
   try {
     var urlPath = "${url}/post/saved";
-    // Print the URL being called
-
+  
     var response = await getDataApiCall(urlPath);
 
     if (getFlagOfResponse(response)) {

@@ -292,6 +292,7 @@ class _ImageScreenState extends State<ImageScreen> {
         titleController.text.toString().trim(),
         textController.text.toString().trim(),
         croppedImageFile,
+        
       );
 
       if (mounted) {
