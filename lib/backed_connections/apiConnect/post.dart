@@ -95,7 +95,8 @@ Future<Map<String, dynamic>> createPost(
 
     var response = await postDataApiCall(apiCall, body);
 
-    if (getFlagOfResponse(response)) {
+    if (getFlagOfResponse(response)) 
+    {
       clearInterest();
       var postData = jsonDecode(response.body);
       uploadRefreshCall(postData, context);
