@@ -170,7 +170,7 @@ RxBool reRender = false.obs;
 RxBool reGraph = false.obs;
 RxBool setDonectChat = false.obs;
 RxList likedList = [].obs;
-late Map<String, dynamic> uniquePostDeatils;
+late Map<dynamic, dynamic> uniquePostDeatils;
 RxList likedCommentList = [].obs;
 RxList likedProducts = [].obs;
 RxMap<String, int> postCount = <String, int>{}.obs;

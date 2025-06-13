@@ -286,7 +286,7 @@ void storeData(context, data, String opt, Avatarurl) async {
       'userpassword': password,
       'confirmPassword': conform,
       'dob': dob,
-      'avatarType': Avatarurl,
+      'avatarType': "",
       'otp': opt,
       'avatarBackGround': colorString
     }),

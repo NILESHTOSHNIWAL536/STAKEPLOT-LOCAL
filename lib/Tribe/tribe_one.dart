@@ -22,7 +22,7 @@ RxBool toggle = false.obs;
 
 class TribeUnique extends StatefulWidget {
   final String id;
-  Map<String, dynamic> dataObj;
+  Map<dynamic, dynamic> dataObj;
   RxBool popBox;
   TribeUnique(
       {Key? key, required this.id, required this.dataObj, required this.popBox})
@@ -880,7 +880,7 @@ class _TribeHomeState extends State<TribeUnique> {
       commentList.add(dataObj);
       commentList.removeLast();
     } else {
-      snackBarCalled(context, SnackbarData().errorLikingComment, Colors.red);
+      // snackBarCalled(context, SnackbarData().errorLikingComment, Colors.red);
     }
   }
 

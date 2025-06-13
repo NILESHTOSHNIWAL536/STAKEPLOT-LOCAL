@@ -289,7 +289,7 @@ void uploadRefreshCall(postData, BuildContext context) {
   posting.value = false;
   postDis.value = false;
   getPosted.value = !getPosted.value;
-  resetAndLoadData();
+  // resetAndLoadData();
 }
 
 void votePoll(context, String id, int index) async {
@@ -342,9 +342,9 @@ void votePollInPost(context, String id, int index) async {
     var data = body['data'];
     for (int i = 0; i < getTrendingData.length; i++) {
       if (getTrendingData[i]['_id'] == data['_id']) {
-        getTrendingData[i] = data;
+        getTrendingData[i] ={...data,'author':getTrendingData[i]['author']};
         getPosted.value = !getPosted.value;
-        break; // Stops loop after update
+        return; // Stops loop after update
       }
     }
   } else {}
@@ -422,7 +422,8 @@ void getChatLoader(bool flag) async {
           
         }
        
-       var data = {
+       var data = 
+       {
           '_id': key,
           'name': name,
           'avatar': element['chats']['details']['avatarType'],

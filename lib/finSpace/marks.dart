@@ -195,6 +195,15 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
     MaskedAvatars.profileIcon12,
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    if(avatar.value=="")
+    {
+        avatar.value = maskedAvatarsList[0];
+    }
+  }
+
   void _showAvatarSelectionSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -398,12 +407,9 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
             child: ElevatedButton(
               onPressed: () {
                 // Handle done action
-
-                var body = {
-                  "maskedName": maskNameController.text,
-                  "avatarType": avatar.value
-                };
-                addMyIntreastAndName(context, body, true, widget.flag);
+                 
+                var body = {"maskedName": maskNameController.text,"avatarType":avatar.value};
+                addMyIntreastAndName(context, body, true,widget.flag);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF4A4E69),
