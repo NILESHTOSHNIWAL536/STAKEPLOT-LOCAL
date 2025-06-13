@@ -911,23 +911,23 @@ class FontSizeFactor {
 
 
 class MaskedAvatars {
-  static String profileIcon1 = "assets/onboarding/Avatar1.png";
-  static String profileIcon2 = "assets/onboarding/Avatar2.png";
-  static String profileIcon3 = "assets/onboarding/Avatar3.png";
-  static String profileIcon4 = "assets/onboarding/Avatar4.png";
-  static String profileIcon5 = "assets/onboarding/Avatar6.png";
+  // static String profileIcon1 = "assets/onboarding/Avatar1.png";
+  // static String profileIcon2 = "assets/onboarding/Avatar2.png";
+  // static String profileIcon3 = "assets/onboarding/Avatar3.png";
+  // static String profileIcon4 = "assets/onboarding/Avatar4.png";
+  // static String profileIcon5 = "assets/onboarding/Avatar6.png";
 
-  // static String profileIcon1 = "assets/icons/maskAvatars/profileIcon1.svg";
-  // static String profileIcon11 = "assets/icons/maskAvatars/profileIcon11.png";
-  // static String profileIcon2 = "assets/icons/maskAvatars/profileIcon2.svg";
-  // static String profileIcon3 = "assets/icons/maskAvatars/profileIcon3.svg";
-  // static String profileIcon4 = "assets/icons/maskAvatars/profileIcon4.svg";
-  // static String profileIcon5 = "assets/icons/maskAvatars/profileIcon5.svg";
-  // static String profileIcon6 = "assets/icons/maskAvatars/profileIcon6.svg";
-  // static String profileIcon7 = "assets/icons/maskAvatars/profileIcon7.svg";
-  // static String profileIcon8 = "assets/icons/maskAvatars/profileIcon8.svg";
-  // static String profileIcon9 = "assets/icons/maskAvatars/profileIcon9.svg";
-  // static String profileIcon10 = "assets/icons/maskAvatars/profileIcon10.svg";
-  // static String profileIcon12 = "assets/icons/maskAvatars/profileIcon12.svg";
-
+  static String profileIcon1 = "assets/icons/maskAvatars/mask1.png";
+  static String profileIcon2 = "assets/icons/maskAvatars/mask2.png";
+  static String profileIcon3 = "assets/icons/maskAvatars/mask3.png";
+  static String profileIcon4 = "assets/icons/maskAvatars/mask4.png";
+  static String profileIcon5 = "assets/icons/maskAvatars/mask5.png";
+  static String profileIcon6 = "assets/icons/maskAvatars/mask6.png";
+  static String profileIcon7 = "assets/icons/maskAvatars/mask7.png";
+  static String profileIcon8 = "assets/icons/maskAvatars/mask8.png";
+  static String profileIcon9 = "assets/icons/maskAvatars/mask9.png";
+  static String profileIcon10 = "assets/icons/maskAvatars/mask10.png";
+  static String profileIcon11= "assets/icons/maskAvatars/mask11.png";
+  static String profileIcon12 = "assets/icons/maskAvatars/mask12.png";
+ 
 }

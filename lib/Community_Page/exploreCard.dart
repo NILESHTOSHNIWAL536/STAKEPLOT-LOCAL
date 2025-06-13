@@ -184,6 +184,8 @@ class _ExploreCardState extends State<ExploreCard> {
                                     214 /
                                     402,
                                 boxFit: BoxFit.fill,
+                                 colorFilter: null, // Disable any color tint
+                                  color: Colors.transparent,
       // borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
       image: NetworkImage(widget.extractdata['images'][index]),
     );

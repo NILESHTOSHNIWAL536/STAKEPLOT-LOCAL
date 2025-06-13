@@ -12,7 +12,7 @@ final TextEditingController maskNameController = TextEditingController();
 
 class MaskNameScreen extends StatefulWidget {
   bool isupdate = false;
-   MaskNameScreen({Key? key,this. isupdate=false}) : super(key: key);
+  MaskNameScreen({Key? key, this.isupdate = false}) : super(key: key);
 
   @override
   State<MaskNameScreen> createState() => _MaskNameScreenState();
@@ -29,7 +29,6 @@ class _MaskNameScreenState extends State<MaskNameScreen> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-        
           AvatarProfileImage(
             url: FinSpaceIcons.bgMarks,
             height: 1,
@@ -188,12 +187,12 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
     MaskedAvatars.profileIcon3,
     MaskedAvatars.profileIcon4,
     MaskedAvatars.profileIcon5,
-    // MaskedAvatars.profileIcon6,
-    // MaskedAvatars.profileIcon7,
-    // MaskedAvatars.profileIcon8,
-    // MaskedAvatars.profileIcon9,
-    // MaskedAvatars.profileIcon10,
-    // MaskedAvatars.profileIcon12,
+    MaskedAvatars.profileIcon6,
+    MaskedAvatars.profileIcon7,
+    MaskedAvatars.profileIcon8,
+    MaskedAvatars.profileIcon9,
+    MaskedAvatars.profileIcon10,
+    MaskedAvatars.profileIcon12,
   ];
 
   void _showAvatarSelectionSheet(BuildContext context) {
@@ -226,9 +225,9 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                     mainAxisSpacing: 10,
                     childAspectRatio: 1,
                   ),
-                  itemCount: maskedAvatarsList.length,
+                  itemCount: 12,
                   itemBuilder: (context, index) {
-                    final avatarv = maskedAvatarsList[index];
+                    final avatarv = "assets/icons/maskAvatars/mask${index+1}.png";
                     return GestureDetector(
                       onTap: () {
                         avatar.value = avatarv;
@@ -237,10 +236,10 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color:  avatar.value == avatarv
+                            color: avatar.value == avatarv
                                 ? Colors.blue
                                 : Colors.transparent,
-                            width: 2,
+                            width: 1,
                           ),
                           borderRadius: BorderRadius.circular(50),
                         ),
@@ -303,9 +302,9 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
               children: [
                 CircleAvatar(
                   radius: 40,
-                  // backgroundColor: Colors.grey.shade200,
-                  child:Obx(()=> AvatarProfileImagePng(
-                      url:  avatar.value, width: 6, height: 6)),
+                   backgroundColor: AppColors.backgroundColor,
+                  child: Obx(() => AvatarProfileImagePng(
+                      url: avatar.value, width: 6, height: 6)),
                 ),
                 Positioned(
                   bottom: 0,
@@ -313,9 +312,9 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                   child: Container(
                     padding: EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: Colors.indigo,
+                     
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 2),
+                      border: Border.all(color: Colors.white, width: 1),
                     ),
                     child: Icon(
                       Icons.edit,
@@ -378,9 +377,9 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                   color: AppColors.bg1)),
 
           SizedBox(height: 4),
-           Text(
+          Text(
               'This name is only visible inside the community section — for discussions, comments, and polls. When you split bills, share posts, or engage in other features outside the community, your masked name isn’t used. Those activities remain linked to your actual Stakeplot profile.',
-              
+
               // textAlign: TextAlign.center,
               // style: TextStyle(
               //   fontSize: widget.isSmallScreen ? 12 : 14,
@@ -400,8 +399,11 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
               onPressed: () {
                 // Handle done action
 
-                var body = {"maskedName": maskNameController.text,"avatarType":avatar.value};
-                addMyIntreastAndName(context, body, true,widget.flag);
+                var body = {
+                  "maskedName": maskNameController.text,
+                  "avatarType": avatar.value
+                };
+                addMyIntreastAndName(context, body, true, widget.flag);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF4A4E69),
