@@ -164,7 +164,7 @@ class _TribeHomeState extends State<TribeShare> {
                   context,
                   "Hey there! 👋, ${userName.value} has shared a post 📩. Please check it out 🛒 ",
                   "/chat/${currentId.value}",
-                  widget.dataObj['title'],
+                   "New Post",
                   widget.dataObj['image']);
             });
             Navigator.pop(context);

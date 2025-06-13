@@ -1027,7 +1027,11 @@ class _ChatState extends State<Chat> {
     var extractdata = isExploria
         ? dataObj['description']['message']
         : {}; //  dataObj.containsKey('place') && dataObj.containsKey('tripHighlight')
-
+    return Container(
+          width: MediaQuery.of(context).size.width/1.2,
+          height: MediaQuery.of(context).size.height/2.7,
+          child:PostCard(data: dataObj, index: 0)
+        );
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
       child: Column(
@@ -1091,7 +1095,7 @@ class _ChatState extends State<Chat> {
 
                   isExploria
                       ? SizedBox.shrink()
-                      : dataObj['isPoll']
+                      : dataObj['postType'] == "poll"
                           ? poll(
                               dataObj['pollData'],
                             )
@@ -1138,7 +1142,7 @@ class _ChatState extends State<Chat> {
   }
 
   Widget getMessage(dataObj) {
-    if (dataObj['isPoll'] ?? false) return SizedBox.shrink();
+    if (dataObj['postType']=="poll") return SizedBox.shrink();
 
     try {
       return Container(
