@@ -55,7 +55,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
 
   Widget topUserProfile() {
     return Container(
-      height: MediaQuery.of(context).size.height / 5.6,
+      height: MediaQuery.of(context).size.height / 5.7,
       // height: 200,
       child: Column(
         children: [

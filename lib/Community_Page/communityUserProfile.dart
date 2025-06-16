@@ -43,7 +43,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
                 _buildHeader(),
 
                    Container(
-                    height: MediaQuery.sizeOf(context).height/1.28,
+                    height: MediaQuery.sizeOf(context).height/1.3,
                     color: const Color(0xFFC2C3D5),
                     child: Column(
                       children: [

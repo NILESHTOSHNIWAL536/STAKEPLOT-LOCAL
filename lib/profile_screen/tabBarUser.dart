@@ -33,7 +33,7 @@ class TabBarUser extends StatelessWidget {
                 Tab(
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
                       color: Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
@@ -50,7 +50,7 @@ class TabBarUser extends StatelessWidget {
                 Tab(
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
                       color: Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
@@ -62,7 +62,7 @@ class TabBarUser extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height / 1.44,
+            height: MediaQuery.of(context).size.height / 1.49,
             child: TabBarView(
               children: [
                 Padding(

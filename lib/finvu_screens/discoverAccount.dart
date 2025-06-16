@@ -59,7 +59,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: SafeArea(child: BottomBar()),
       extendBody: true,
       appBar: getAppBar(context),
       body: SafeArea(

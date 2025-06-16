@@ -30,7 +30,7 @@ class _FetchTransactionState extends State<FetchTransaction> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: SafeArea(child: BottomBar()),
       // bottomNavigationBar: BottomNavigations(data: sizeRoom?3:2),
       extendBody: true,
       //bottomSheet: bottomSheet(context),

@@ -93,7 +93,7 @@ class _AccessState extends State<Access> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        bottomNavigationBar: BottomBar(),
+        bottomNavigationBar: SafeArea(child: BottomBar()),
         appBar: getAppBar(context),
         // backgroundColor: AppColors.backgroundColor,
         body: SafeArea(

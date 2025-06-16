@@ -241,6 +241,16 @@ class _TribeHomeState extends State<TribeUnique> {
         backgroundColor: AppColors.backgroundColor,
 
         // bottomNavigationBar: BottomNavigations(data: sizeRoom ? 3 : 2),
+         appBar: AppBar(
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: AppColors.bg1,
+            size: 20,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),),
         extendBody: true,
 
         body: SafeArea(

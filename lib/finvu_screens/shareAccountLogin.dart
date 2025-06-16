@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
@@ -82,7 +84,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       extendBody: true,
-      bottomSheet: bottomSheet(context),
+      bottomNavigationBar: bottomSheet(context),
       body: SafeArea(
         child: Container(
           height: MediaQuery.of(context).size.height,
@@ -184,7 +186,7 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
     child: AnimatedContainer(
       duration: const Duration(milliseconds: 800),
       curve: Curves.easeInOut,
-       margin: EdgeInsets.only(bottom: 14),
+       margin: EdgeInsets.only(bottom: Platform.isIOS ? 14 : 14),
       width: MediaQuery.of(context).size.width,
       constraints: BoxConstraints(
         minHeight: MediaQuery.of(context).size.height / 14,

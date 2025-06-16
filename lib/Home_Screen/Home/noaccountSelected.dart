@@ -453,7 +453,7 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
                   ],
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _buildBottomNavItem(
                       icon: AvatarProfileImage(
@@ -522,7 +522,7 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: EdgeInsets.all(screenWidth * 0.01),
+              // padding: EdgeInsets.all(screenWidth * 0.01),
               // decoration: BoxDecoration(
               //   color: isSelected ? AppColors.primaryColor.withOpacity(0.1) : Colors.transparent,
               //   borderRadius: BorderRadius.circular(8),

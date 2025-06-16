@@ -93,7 +93,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
     count.value=0;
 
     return Scaffold(
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: SafeArea(child: BottomBar()),
       appBar: getAppBar(context),
       body: SafeArea(
         child: Container(

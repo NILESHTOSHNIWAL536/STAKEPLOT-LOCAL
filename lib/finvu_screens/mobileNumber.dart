@@ -115,7 +115,7 @@ class _MobileNumberState extends State<MobileNumber> {
       },
       child: Scaffold(
         backgroundColor: AppColors.backgroundColor,
-        bottomNavigationBar: BottomBar(),
+        bottomNavigationBar: SafeArea(child: BottomBar()),
          appBar: getAppBar(context),
         body: Container(
           height: MediaQuery.of(context).size.height,
