@@ -167,20 +167,20 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                       padding: const EdgeInsets.fromLTRB(6, 8, 8, 4),
                       child: Column(
                         children: [
-                              _buildOption(
-                                ProfileImage(url: ProfileIcons.communityProf),
-                                ProfileScreenStrings().communityProfileLabel, // Direct access
-                                ProfileScreenStrings().communityProfileSubLabel, // Direct access
-                                onTap: () {
-                                  // navigatorToMyOwnPage(context);
-                                   Navigator.push(
-         context,
-         MaterialPageRoute(
-             builder: (context) =>CommunityProfileScreen( id: currentId.value,)));
-      //  );
-                                },
-                              ),
-                              Divider(),
+      //                         _buildOption(
+      //                           ProfileImage(url: ProfileIcons.communityProf),
+      //                           ProfileScreenStrings().communityProfileLabel, // Direct access
+      //                           ProfileScreenStrings().communityProfileSubLabel, // Direct access
+      //                           onTap: () {
+      //                             // navigatorToMyOwnPage(context);
+      //                              Navigator.push(
+      //    context,
+      //    MaterialPageRoute(
+      //        builder: (context) =>CommunityProfileScreen( id: currentId.value,)));
+      // //  );
+      //                           },
+      //                         ),
+      //                         Divider(),
                               _buildOption(
                                 ProfileImage(url: ProfileIcons.friends),
                                 ProfileScreenStrings().friendsListLabel, // Direct access

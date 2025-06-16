@@ -136,38 +136,35 @@ Widget buildWelcomeRow(context) {
         ),
         Padding(
           padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-          child: Hero(
-            tag: "TribeSearch",
-            child: GestureDetector(
-              onTap: () {
-                // Navigator.pushNamed(context, '/TribeSearch');
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TribeSearch(isMasked: true),
-                  ),
-                );
-              },
-              child: Material(
-                child: Container(
-                  width: MediaQuery.sizeOf(context).width/1.07,
-                  height: MediaQuery.sizeOf(context).width *(32/348),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                      filled: true,
-                      enabled: false,
-                      hintText: strings.searchHint,
-                      fillColor: AppColors.backgroundColor,
-                      hintStyle: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.normal,
-                          fontSize: 14,
-                          color: Colors.black),
-                      prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
+          child: GestureDetector(
+            onTap: () {
+              // Navigator.pushNamed(context, '/TribeSearch');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TribeSearch(isMasked: true),
+                ),
+              );
+            },
+            child: Material(
+              child: Container(
+                width: MediaQuery.sizeOf(context).width/1.07,
+                height: MediaQuery.sizeOf(context).width *(32/348),
+                child: TextField(
+                  decoration: InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                    filled: true,
+                    enabled: false,
+                    hintText: strings.searchHint,
+                    fillColor: AppColors.backgroundColor,
+                    hintStyle: FontManager().getTextStyle(context,
+                        lWeight: FontWeight.normal,
+                        fontSize: 14,
+                        color: Colors.black),
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
                 ),

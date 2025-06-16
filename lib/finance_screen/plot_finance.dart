@@ -126,33 +126,30 @@ class _PlotFinanceState extends State<PlotFinance> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           
-           Hero(
-             tag: "TribeSearch",
-             child: Material(
-                color: Colors.transparent,
-               child: InkWell(
-                 onTap: () {
-                   Navigator.pushNamed(context, '/TribeSearch');
-                 },
-                 child: Container(
-                   width: MediaQuery.sizeOf(context).width / 1.26,
-                   height: MediaQuery.sizeOf(context).height / 20,
-                   child: TextField(
-                     decoration: InputDecoration(
-                       contentPadding:
-                           EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                       filled: true,
-                       enabled: false,
-                       hintText: strings.searchHint,
-                       fillColor: AppColors.button,
-                       hintStyle: FontManager().getTextStyle(context,
-                           lWeight: FontWeight.normal,
-                           fontSize: 14,
-                           color: Colors.black),
-                       prefixIcon: Icon(Icons.search),
-                       border: OutlineInputBorder(
-                         borderRadius: BorderRadius.circular(24.0),
-                       ),
+           Material(
+              color: Colors.transparent,
+             child: InkWell(
+               onTap: () {
+                 Navigator.pushNamed(context, '/TribeSearch');
+               },
+               child: Container(
+                 width: MediaQuery.sizeOf(context).width / 1.26,
+                 height: MediaQuery.sizeOf(context).height / 20,
+                 child: TextField(
+                   decoration: InputDecoration(
+                     contentPadding:
+                         EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                     filled: true,
+                     enabled: false,
+                     hintText: strings.searchHint,
+                     fillColor: AppColors.button,
+                     hintStyle: FontManager().getTextStyle(context,
+                         lWeight: FontWeight.normal,
+                         fontSize: 14,
+                         color: Colors.black),
+                     prefixIcon: Icon(Icons.search),
+                     border: OutlineInputBorder(
+                       borderRadius: BorderRadius.circular(24.0),
                      ),
                    ),
                  ),
