@@ -200,7 +200,34 @@ class _CommunityState extends State<Community> {
           },
         ));
   }
-
+ Widget _buildDottedDivider() {
+    return Container(
+      height: 1,
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          final boxWidth = constraints.constrainWidth();
+          final dashWidth = 5.0;
+          final dashHeight = 1.0;
+          final dashCount = (boxWidth / (2 * dashWidth)).floor();
+          return Flex(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            direction: Axis.horizontal,
+            children: List.generate(dashCount, (_) {
+              return SizedBox(
+                width: dashWidth,
+                height: dashHeight,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: AppColors.backgroundColor.withOpacity(0.4),
+                  ),
+                ),
+              );
+            }),
+          );
+        },
+      ),
+    );
+  }
   Widget getTabs(context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -293,25 +320,24 @@ class _CommunityState extends State<Community> {
                               ),
                             );
                           },
-                          child: Padding(
-                            padding:
-                                EdgeInsets.only(left: horizontalPadding / 2),
-                            child: Text(
-                              strings.textOption,
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w500,
-                                fontSize:
-                                    MediaQuery.of(context).size.width * 0.05,
-                                color: AppColors.backgroundColor,
+                          child: Container(
+                            width: MediaQuery.sizeOf(context).width,
+                            child: Padding(
+                              padding:
+                                  EdgeInsets.symmetric(horizontal: 8, vertical: 20),
+                              child: Text(
+                                strings.textOption,
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w500,
+                                  fontSize:16,
+                                  color: AppColors.backgroundColor,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                        Divider(
-                          color: AppColors.unSelectedOption,
-                          thickness: 0.8,
-                        ),
+                        _buildDottedDivider(),
                         GestureDetector(
                           onTap: () {
                             posting.value = false;
@@ -332,23 +358,22 @@ class _CommunityState extends State<Community> {
                           },
                           child: Padding(
                             padding:
-                                EdgeInsets.only(left: horizontalPadding / 2),
-                            child: Text(
-                              strings.imageOption,
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w500,
-                                fontSize:
-                                    MediaQuery.of(context).size.width * 0.05,
-                                color: AppColors.backgroundColor,
+                                EdgeInsets.symmetric(horizontal: 8, vertical: 20),
+                            child: Container(
+                               width: MediaQuery.sizeOf(context).width,
+                              child: Text(
+                                "PostCard",
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w500,
+                                 fontSize:16,
+                                  color: AppColors.backgroundColor,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                        Divider(
-                          color: AppColors.unSelectedOption,
-                          thickness: 0.8,
-                        ),
+                       _buildDottedDivider(),
                         GestureDetector(
                           onTap: () {
                             posting.value = false;
@@ -370,25 +395,25 @@ class _CommunityState extends State<Community> {
                           },
                           child: Padding(
                             padding:
-                                EdgeInsets.only(left: horizontalPadding / 2),
-                            child: Text(
-                              strings.pollOption,
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w500,
-                                fontSize:
-                                    MediaQuery.of(context).size.width * 0.05,
-                                color: AppColors.backgroundColor,
+                                EdgeInsets.symmetric(horizontal: 8, vertical: 20),
+                            child: Container(
+                               width: MediaQuery.sizeOf(context).width,
+                              child: Text(
+                                strings.pollOption,
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w500,
+                                  fontSize:16,
+                                  color: AppColors.backgroundColor,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                        Divider(
-                          color: AppColors.unSelectedOption,
-                          thickness: 0.8,
-                        ),
+                        _buildDottedDivider(),
                         GestureDetector(
                           onTap: () {
+                            posting.value = false;
                              Navigator.of(context).pop();
                               Navigator.push(
                               context,
@@ -406,229 +431,24 @@ class _CommunityState extends State<Community> {
                           },
                           child: Padding(
                             padding:
-                                EdgeInsets.only(left: horizontalPadding / 2),
-                            child: Text(
-                              strings.exploria,
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w500,
-                                fontSize:
-                                    MediaQuery.of(context).size.width * 0.05,
-                                color: AppColors.backgroundColor,
+                                EdgeInsets.symmetric(horizontal: 8, vertical: 20),
+                            child: Container(
+                               width: MediaQuery.sizeOf(context).width,
+                              child: Text(
+                                strings.exploria,
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w500,
+                                  fontSize:16,
+                                  color: AppColors.backgroundColor,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ],
                     ),
-                    //               SizedBox(height: verticalPadding),
-                    //               Row(
-                    //                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //                 children: [
-                    //                   buildOptionButton(
-                    //                     context: context,
-                    //                     icon: Icons.text_fields,
-                    //                     label: strings.textOption,
-                    //                     onTap: () {
-                    //                       posting.value = false;
-                    //                       Navigator.of(context).pop();
-                    //                         Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => TextScreen(
-                    //                               userInfo: post,
-                    //                               onPostCreated: (newPost) {
-                    //                                 setState(() {
-                    //                                   posts.add(newPost);
-                    //                                   k = 1;
-                    //                                 });
-                    //                               },
-                    //                             ),
-                    //   ),
-                    // );
-                    //                       // showModalBottomSheet(
-                    //                       //   isScrollControlled: true,
-                    //                       //   backgroundColor: AppColors.backgroundColor,
-                    //                       //   context: context,
-                    //                       //   builder: (context) {
-                    //                       //     return Container(
-                    //                       //       decoration: const BoxDecoration(
-                    //                       //           color: Colors.white,
-                    //                       //           borderRadius: BorderRadius.only(
-                    //                       //               topLeft: Radius.circular(16),
-                    //                       //               topRight: Radius.circular(16))),
-                    //                       //       child: TextScreen(
-                    //                       //         userInfo: post,
-                    //                       //         onPostCreated: (newPost) {
-                    //                       //           setState(() {
-                    //                       //             posts.add(newPost);
-                    //                       //             k = 1;
-                    //                       //           });
-                    //                       //         },
-                    //                       //       ),
-                    //                       //     );
-                    //                       //   },
-                    //                       // );
-
-                    //                     },
-                    //                   ),
-                    //                   buildOptionButton(
-                    //                     context: context,
-                    //                     icon: Icons.image_rounded,
-                    //                     label: strings.imageOption,
-                    //                     onTap: () {
-                    //                       posting.value = false;
-                    //                       Navigator.of(context).pop();
-                    //                        Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => ImageScreen(
-                    //                               userInfo: post,
-                    //                               onPostCreated: (newPost) {
-                    //                                 setState(() {
-                    //                                   posts.add(newPost);
-                    //                                 });
-                    //                               },
-                    //                             ),
-                    //   ),
-                    // );
-                    //                       // showModalBottomSheet(
-                    //                       //   isScrollControlled: true,
-                    //                       //   backgroundColor: AppColors.backgroundColor,
-                    //                       //   context: context,
-                    //                       //   builder: (context) {
-                    //                       //     return Container(
-                    //                       //       decoration: BoxDecoration(
-                    //                       //           color: Colors.white,
-                    //                       //           borderRadius: BorderRadius.only(
-                    //                       //               topLeft: Radius.circular(16),
-                    //                       //               topRight: Radius.circular(16))),
-                    //                       //       child: ImageScreen(
-                    //                       //         userInfo: post,
-                    //                       //         onPostCreated: (newPost) {
-                    //                       //           setState(() {
-                    //                       //             posts.add(newPost);
-                    //                       //           });
-                    //                       //         },
-                    //                       //       ),
-                    //                       //     );
-                    //                       //   },
-                    //                       // );
-
-                    //                     },
-                    //                   ),
-                    //                   buildOptionButton(
-                    //                     context: context,
-                    //                     icon: Icons.poll_outlined,
-                    //                     label: strings.pollOption,
-                    //                     onTap: () {
-                    //                       posting.value = false;
-                    //                       Navigator.of(context).pop();
-                    //                       Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) =>  PollScreen(
-                    //                               userInfo: post,
-                    //                               onPollPosted: (pollData) {
-                    //                                 setState(() {
-                    //                                   posts.add(pollData);
-                    //                                 });
-                    //                                 Navigator.pop(context);
-                    //                               },
-                    //                             ),
-                    //   ),
-                    // );
-                    //                       // showModalBottomSheet(
-                    //                       //   isScrollControlled: true,
-                    //                       //   backgroundColor: AppColors.backgroundColor,
-                    //                       //   context: context,
-                    //                       //   builder: (context) {
-                    //                       //     return Container(
-                    //                       //       padding: const EdgeInsets.all(16.0),
-                    //                       //       width: MediaQuery.sizeOf(context).width,
-                    //                       //       decoration: BoxDecoration(
-                    //                       //           color: Colors.white,
-                    //                       //           borderRadius: BorderRadius.only(
-                    //                       //               topLeft: Radius.circular(16),
-                    //                       //               topRight: Radius.circular(16))),
-                    //                       //       child: PollScreen(
-                    //                       //         userInfo: post,
-                    //                       //         onPollPosted: (pollData) {
-                    //                       //           setState(() {
-                    //                       //             posts.add(pollData);
-                    //                       //           });
-                    //                       //           Navigator.pop(context);
-                    //                       //         },
-                    //                       //       ),
-                    //                       //     );
-                    //                       //   },
-                    //                       // );
-
-                    //                     },
-                    //                   ),
-                    //                 ],
-                    //               ),
-                    //               SizedBox(height: verticalPadding),
-                    //               GestureDetector(
-                    //                 onTap: () {
-                    //                   Navigator.of(context).pop();
-                    //                   showModalBottomSheet(
-                    //                     context: context,
-                    //                     backgroundColor: AppColors.backgroundColor,
-                    //                     isScrollControlled: true,
-                    //                     builder: (context) {
-                    //                       return Container(
-                    //                         child: ExploreModal(
-                    //                           onPostCreated: (newPost) {
-                    //                             setState(() {
-                    //                               posts.add(newPost);
-                    //                             });
-                    //                           },
-                    //                         ),
-                    //                       );
-                    //                     },
-                    //                   );
-                    //                 },
-                    //                 child: Container(
-                    //                   width: double.infinity,
-                    //                   margin: EdgeInsets.symmetric(
-                    //                       horizontal: horizontalPadding / 2),
-                    //                   padding: EdgeInsets.symmetric(
-                    //                     vertical: verticalPadding,
-                    //                     horizontal: horizontalPadding,
-                    //                   ),
-                    //                   decoration: BoxDecoration(
-                    //                     color: AppColors.accentColor.withOpacity(0.1),
-                    //                     borderRadius: BorderRadius.circular(12),
-                    //                   ),
-                    //                   child: Row(
-                    //                     mainAxisAlignment: MainAxisAlignment.center,
-                    //                     children: [
-                    //                       Icon(
-                    //                         Icons.explore,
-                    //                         color: AppColors.primaryColor,
-                    //                         size: MediaQuery.of(context).size.width *
-                    //                             0.06, // Responsive icon size
-                    //                       ),
-                    //                       SizedBox(width: horizontalPadding / 2),
-                    //                       Flexible(
-                    //                         child: Text(
-                    //                           strings.exploria,
-                    //                           style: FontManager().getTextStyle(
-                    //                             context,
-                    //                             lWeight: FontWeight.w600,
-                    //                             fontSize: MediaQuery.of(context).size.width *
-                    //                                 0.045, // Responsive font size
-                    //                             color: AppColors.accentColor,
-                    //                           ),
-                    //                           overflow: TextOverflow.ellipsis,
-                    //                         ),
-                    //                       ),
-                    //                     ],
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //               SizedBox(height: verticalPadding),
+                    
                   ],
                 ),
               ),

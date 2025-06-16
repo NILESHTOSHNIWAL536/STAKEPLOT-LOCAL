@@ -47,6 +47,8 @@ class _ExploreModalState extends State<ExploreModal> {
   final List<TextEditingController> _amountControllers = [];
   bool exploreSubmitted = false;
   final CommunityScreenStrings strings = CommunityScreenStrings();
+    final List<String> _cropShapes = []; // New: Store crop shape for each image
+  String _selectedCropShape = 'Square';
   @override
   void initState() {
     super.initState();
@@ -69,7 +71,7 @@ class _ExploreModalState extends State<ExploreModal> {
   Future<void> _showCropDialog(File imageFile, [int? existingIndex]) async {
     final cropController = CustomImageCropController();
     bool isLoading = false; // Track loading state
-
+  String localCropShape = _selectedCropShape;
     final croppedFile = await showDialog<File?>(
       context: context,
       builder: (context) => StatefulBuilder(
@@ -81,23 +83,92 @@ class _ExploreModalState extends State<ExploreModal> {
 
             return AlertDialog(
               contentPadding: EdgeInsets.zero,
-              content: Container(
-                width: dialogWidth,
-                height: dialogHeight,
-                padding: const EdgeInsets.all(10),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: CustomImageCrop(
-                    cropController: cropController,
-                    image: FileImage(imageFile),
-                    shape: CustomCropShape.Square,
-                     ratio: Ratio(width: 402, height: 214),
-                    overlayColor: Colors.black.withOpacity(0.3),
-                    cropPercentage: 0.9,
-                    outlineStrokeWidth: 0.0,
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: dialogWidth,
+                    height: dialogHeight,
+                    padding: const EdgeInsets.all(10),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: CustomImageCrop(
+                        cropController: cropController,
+                        image: FileImage(imageFile),
+                        shape: CustomCropShape.Square,
+                         ratio: _selectedCropShape == 'Square'
+                                          ?  Ratio(width: 402, height: 400)
+                                          :  Ratio(width: 402, height: 214),
+                                      outlineStrokeWidth: 0.0,
+                                      //  ratio: Ratio(16, 9),
+                                      // forceInsideCropArea:true,
+                  
+                                      overlayColor: Colors.black.withOpacity(0.5),
+                                      cropPercentage: 0.92, //
+                      
+                      ),
+                    ),
                   ),
-                ),
+                      Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ChoiceChip(
+                          label: Text(
+                            'Square',
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: localCropShape == 'Square'
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                              fontSize: 14,
+                              color: AppColors.bg1,
+                            ),
+                          ),
+                          selected: localCropShape == 'Square',
+                          onSelected: (selected) {
+                            if (selected) {
+                              setDialogState(() {
+                                localCropShape = 'Square';
+                              });
+                            }
+                          },
+                          selectedColor: AppColors.primaryColor,
+                          backgroundColor: AppColors.textBgColor,
+                        ),
+                        const SizedBox(width: 10),
+                        ChoiceChip(
+                          label: Text(
+                            'Custom (402:214)',
+                            style: FontManager().getTextStyle(
+                              context,
+                              lWeight: localCropShape == 'Custom'
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                              fontSize: 14,
+                              color: AppColors.bg1,
+                            ),
+                          ),
+                          selected: localCropShape == 'Custom',
+                          onSelected: (selected) {
+                            if (selected) {
+                              setDialogState(() {
+                                localCropShape = 'Custom';
+                              });
+                            }
+                          },
+                          selectedColor: AppColors.primaryColor,
+                          backgroundColor: AppColors.textBgColor,
+                        ),
+                      ],
+                    ),
+                  ),
+              
+                ],
               ),
+               // Crop shape selection
+              
               actionsPadding:
                   const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               actions: [
@@ -404,30 +475,26 @@ class _ExploreModalState extends State<ExploreModal> {
           padding: const EdgeInsets.only(top: 20),
           child: Container(
             color: AppColors.backgroundColor,
-            child: AnimatedPadding(
-              padding: MediaQuery.of(context).viewInsets,
-              duration: const Duration(milliseconds: 100),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                     
-                     
-                      _buildImageSection(),
-                      const SizedBox(height: 10),
-                      _buildPlaceSection(),
-                      const SizedBox(height: 10),
-                      _buildBudgetSection(),
-                      _buildRatingSection(),
-                      const SizedBox(height: 20),
-                      _buildHighlightSection(),
-                      const SizedBox(height: 20),
-                      _buildSubmitButton(),
-                    ],
-                  ),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                   
+                   
+                    _buildImageSection(),
+                    const SizedBox(height: 10),
+                    _buildPlaceSection(),
+                    const SizedBox(height: 10),
+                    _buildBudgetSection(),
+                    _buildRatingSection(),
+                    const SizedBox(height: 20),
+                    _buildHighlightSection(),
+                    const SizedBox(height: 20),
+                    _buildSubmitButton(),
+                  ],
                 ),
               ),
             ),

@@ -39,6 +39,8 @@ class _ImageScreenState extends State<ImageScreen> {
   final ImagePicker _picker = ImagePicker();
   final CustomImageCropController _cropController = CustomImageCropController();
   File? selectedImage;
+    // New state variable for crop shape
+  String _selectedCropShape = 'Square';
   final CommunityScreenStrings strings = CommunityScreenStrings();
   Future<void> _pickImage() async {
     try {
@@ -147,7 +149,7 @@ class _ImageScreenState extends State<ImageScreen> {
                       GestureDetector(
                         onTap: _pickImage,
                         child: Container(
-                          height: MediaQuery.of(context).size.height / 3.1,
+                          height: MediaQuery.of(context).size.height / 2.8,
                           width: MediaQuery.of(context).size.width / 0.5,
                           decoration: BoxDecoration(
                             color: Colors.grey[300],
@@ -158,7 +160,10 @@ class _ImageScreenState extends State<ImageScreen> {
                                   image: FileImage(selectedImage!),
                                   cropController: _cropController,
                                   shape: CustomCropShape.Square,
-                                  ratio: Ratio(width: 402, height: 214),
+                                  // ratio: Ratio(width: 402, height: 214),
+                                    ratio: _selectedCropShape == 'Square'
+                                      ?  Ratio(width: 402, height: 400)
+                                      :  Ratio(width: 402, height: 214),
                                   outlineStrokeWidth: 0.0,
                                   //  ratio: Ratio(16, 9),
                                   // forceInsideCropArea:true,
@@ -188,6 +193,62 @@ class _ImageScreenState extends State<ImageScreen> {
                                 ),
                         ),
                       ),
+                        // Crop shape selection UI
+                      if (selectedImage != null) ...[
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ChoiceChip(
+                              label: Text(
+                                'Square',
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: _selectedCropShape == 'Square'
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                  fontSize: 14,
+                                  color: AppColors.bg1,
+                                ),
+                              ),
+                              selected: _selectedCropShape == 'Square',
+                              onSelected: (selected) {
+                                if (selected) {
+                                  setState(() {
+                                    _selectedCropShape = 'Square';
+                                  });
+                                }
+                              },
+                              selectedColor: AppColors.primaryColor,
+                              backgroundColor: AppColors.textBgColor,
+                            ),
+                            const SizedBox(width: 10),
+                            ChoiceChip(
+                              label: Text(
+                                'Custom (402:214)',
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: _selectedCropShape == 'Custom'
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                  fontSize: 14,
+                                  color: AppColors.bg1,
+                                ),
+                              ),
+                              selected: _selectedCropShape == 'Custom',
+                              onSelected: (selected) {
+                                if (selected) {
+                                  setState(() {
+                                    _selectedCropShape = 'Custom';
+                                  });
+                                }
+                              },
+                              selectedColor: AppColors.primaryColor,
+                              backgroundColor: AppColors.textBgColor,
+                            ),
+                          ],
+                        ),
+                      ],
                       const SizedBox(height: 10),
                       TextField(
                         controller: textController,

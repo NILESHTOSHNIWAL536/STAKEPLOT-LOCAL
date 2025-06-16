@@ -34,7 +34,8 @@ class PostCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return uploadData(data, flag, context);
   }
-
+  // Determine image height based on crop shape
+   
   Widget uploadData(dataObj, bool flag, BuildContext context) {
     bool isExploria = dataObj['postType'] == "exploria";
     bool isPoll = dataObj['postType'] == "poll";
@@ -42,7 +43,16 @@ class PostCard extends StatelessWidget {
     bool isImage = dataObj['postType'] == "image";
 
     var extractdata = dataObj;
-
+ double getImageHeight(BuildContext context) {
+      double width = MediaQuery.of(context).size.width;
+      // Check if cropShape is available; default to Custom (402:214) if not
+      String? cropShape = dataObj['cropShape'];
+      if (cropShape == 'Square') {
+        return width* 400 / 402; // 1:1 aspect ratio
+      } else {
+        return width * 214 / 402; // 402:214 aspect ratio
+      }
+    }
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       child: Column(
@@ -182,15 +192,16 @@ class PostCard extends StatelessWidget {
                               child: Center(
                                 child: GFImageOverlay(
                                   width: MediaQuery.of(context).size.width,
-                                  height: MediaQuery.of(context).size.width *
-                                      214 /
-                                      402,
+                                  // height: MediaQuery.of(context).size.width *
+                                  //     214 /
+                                  //     402,
+                                  height:getImageHeight(context),
                                   boxFit: BoxFit.fill,
                                   // borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
                                   image: NetworkImage(dataObj['image']),
                                   colorFilter: null, // Disable any color tint
                                   color: Colors.transparent,
-                                  border: Border.all(color: AppColors.bg5),
+                                  // border: Border.all(color: App),
                                 ),
                               ),
                             )
@@ -203,13 +214,13 @@ class PostCard extends StatelessWidget {
                                   child: Center(
                                     child: GFImageOverlay(
                                       width: MediaQuery.of(context).size.width,
-                                      height:
-                                          MediaQuery.of(context).size.width *
-                                              214 /
-                                              402,
+                                      // height:
+                                      //     MediaQuery.of(context).size.width *
+                                      //         214 /
+                                      //         402,
+                                      height: getImageHeight(context),
                                       boxFit: BoxFit.fill,
-                                      borderRadius: BorderRadius.circular(
-                                          Colorcodes.borderRadius),
+                                     
                                       image: NetworkImage(
                                           dataObj['backGroundPicture']),
                                       child: Container(
@@ -292,7 +303,7 @@ class PostCard extends StatelessWidget {
                   if (dataObj['createdAt'] != null)
                     Padding(
                       padding: const EdgeInsets.only(
-                          left: 14.0, right: 27.0, top: 6),
+                          left: 14.0, right: 27.0, top: 6,bottom:10),
                       child: Text(
                         formatDateToIST(dataObj['createdAt']),
                         style: FontManager().getTextStyle(context,
