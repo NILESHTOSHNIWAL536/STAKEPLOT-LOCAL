@@ -62,7 +62,7 @@ class TabBarUser extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height / 1.46,
+            height: MediaQuery.of(context).size.height / 1.44,
             child: TabBarView(
               children: [
                 Padding(

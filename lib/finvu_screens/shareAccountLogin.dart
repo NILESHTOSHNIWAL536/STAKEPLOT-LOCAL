@@ -180,131 +180,133 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
 
 
   Widget bottomSheet(BuildContext context) {
-  return AnimatedContainer(
-    duration: const Duration(milliseconds: 800),
-    curve: Curves.easeInOut,
-     margin: EdgeInsets.only(bottom: 14),
-    width: MediaQuery.of(context).size.width,
-    constraints: BoxConstraints(
-      minHeight: MediaQuery.of(context).size.height / 14,
-      maxHeight: _isExpanded
-          ? MediaQuery.of(context).size.height / 2 // Expanded height
-          : MediaQuery.of(context).size.height / 14, // Collapsed height
-    ),
-    decoration:  BoxDecoration(
-       color: Colorcodes.white,
-    ),
-    child: SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            decoration: const BoxDecoration(
-              color: AppColors.rbi1,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    //AvatarProfileImage(url: Sign.india, width: w, height: h),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Text(
-                            FinvuStrings().connectBankAccounts,
-                            style: FontManager().getTextStyle(context,
-                                lWeight: FontWeight.w500,
-                                fontSize: 12,
-                                color: AppColors.bg1),
-                          ),
-                        ),
-                        // Text(
-                        //   "India",
-                        //   style: FontManager().getTextStyle(context,
-                        //       lWeight: FontWeight.w500,
-                        //       fontSize: 14,
-                        //       color: AppColors.bg1),
-                        // ),
-                      ],
-                    ),
-                  ],
-                ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _isExpanded = !_isExpanded;
-                    });
-                  },
-                  child: AvatarProfileImage(
-                    url: _isExpanded ? Sign.minimise : Sign.maximise,
-                    width: 40,
-                    height: 40,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          if (_isExpanded)
+  return SafeArea(
+    child: AnimatedContainer(
+      duration: const Duration(milliseconds: 800),
+      curve: Curves.easeInOut,
+       margin: EdgeInsets.only(bottom: 14),
+      width: MediaQuery.of(context).size.width,
+      constraints: BoxConstraints(
+        minHeight: MediaQuery.of(context).size.height / 14,
+        maxHeight: _isExpanded
+            ? MediaQuery.of(context).size.height / 2 // Expanded height
+            : MediaQuery.of(context).size.height / 14, // Collapsed height
+      ),
+      decoration:  BoxDecoration(
+         color: Colorcodes.white,
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
             Container(
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
                 color: AppColors.rbi1,
               ),
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                        FinvuStrings().whatAreAccountAggregators, // Direct access
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w600, fontSize: 12, color: AppColors.bg1),
+                  Row(
+                    children: [
+                      //AvatarProfileImage(url: Sign.india, width: w, height: h),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Text(
+                              FinvuStrings().connectBankAccounts,
+                              style: FontManager().getTextStyle(context,
+                                  lWeight: FontWeight.w500,
+                                  fontSize: 12,
+                                  color: AppColors.bg1),
+                            ),
+                          ),
+                          // Text(
+                          //   "India",
+                          //   style: FontManager().getTextStyle(context,
+                          //       lWeight: FontWeight.w500,
+                          //       fontSize: 14,
+                          //       color: AppColors.bg1),
+                          // ),
+                        ],
                       ),
-                      const SizedBox(height: 4.0),
-                      Text(
-                        FinvuStrings().accountAggregatorsDescription, // Direct access
-                        style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.w400, fontSize: 12, color: AppColors.bg1),
-                      ),
-                  // const SizedBox(height: 5.0),
-                  //  Text("Supported by:",style: FontManager().getTextStyle(context,
-                  //             lWeight: FontWeight.w500,
-                  //             fontSize: 12,
-                  //             color: AppColors.bg1),),
+                    ],
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _isExpanded = !_isExpanded;
+                      });
+                    },
+                    child: AvatarProfileImage(
+                      url: _isExpanded ? Sign.minimise : Sign.maximise,
+                      width: 40,
+                      height: 40,
+                    ),
+                  ),
                 ],
               ),
             ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-           
-            decoration: const BoxDecoration(
-              color: AppColors.rbi2,
-            ),
-            child: Row(
-              children: [
-                AvatarProfileImage(url: Sign.protection, width: 40, height: 40),
-                Column(
+            if (_isExpanded)
+              Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: const BoxDecoration(
+                  color: AppColors.rbi1,
+                ),
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                          FinvuStrings().secureQuickSharing, // Direct access
+                          FinvuStrings().whatAreAccountAggregators, // Direct access
                           style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.bold, fontSize: 12, color: Colors.green),
+                              lWeight: FontWeight.w600, fontSize: 12, color: AppColors.bg1),
                         ),
+                        const SizedBox(height: 4.0),
                         Text(
-                          FinvuStrings().viaRbiAuthorised, // Direct access
+                          FinvuStrings().accountAggregatorsDescription, // Direct access
                           style: FontManager().getTextStyle(context,
-                              lWeight: FontWeight.bold, fontSize: 12, color: Colors.green),
+                              lWeight: FontWeight.w400, fontSize: 12, color: AppColors.bg1),
                         ),
-                    
+                    // const SizedBox(height: 5.0),
+                    //  Text("Supported by:",style: FontManager().getTextStyle(context,
+                    //             lWeight: FontWeight.w500,
+                    //             fontSize: 12,
+                    //             color: AppColors.bg1),),
                   ],
                 ),
-              ],
+              ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+             
+              decoration: const BoxDecoration(
+                color: AppColors.rbi2,
+              ),
+              child: Row(
+                children: [
+                  AvatarProfileImage(url: Sign.protection, width: 40, height: 40),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                            FinvuStrings().secureQuickSharing, // Direct access
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.bold, fontSize: 12, color: Colors.green),
+                          ),
+                          Text(
+                            FinvuStrings().viaRbiAuthorised, // Direct access
+                            style: FontManager().getTextStyle(context,
+                                lWeight: FontWeight.bold, fontSize: 12, color: Colors.green),
+                          ),
+                      
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     ),
   );
