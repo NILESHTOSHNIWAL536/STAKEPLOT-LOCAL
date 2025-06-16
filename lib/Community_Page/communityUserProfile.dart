@@ -7,7 +7,7 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
-import 'package:flutter_application_code_stakeplot/finSpace/InterestSelectionScreen.dart';
+
 import 'package:flutter_application_code_stakeplot/finSpace/updateInterestScreen.dart';
 import 'package:flutter_application_code_stakeplot/profile_screen/communityProfileScreen.dart';
 import 'package:get/get.dart';
@@ -20,7 +20,7 @@ class CommunityUserProfileScreen extends StatefulWidget {
 }
 
 class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen> {
-  bool _messageRepliesEnabled = true;
+
   
   @override
   void initState() {
@@ -43,11 +43,11 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
                 _buildHeader(),
 
                    Container(
-                    height: MediaQuery.sizeOf(context).height/1.28,
+                    height: MediaQuery.sizeOf(context).height/1.3,
                     color: const Color(0xFFC2C3D5),
                     child: Column(
                       children: [
-                        const SizedBox(height: 50), // Space for half of the avatar
+                         SizedBox(height: MediaQuery.sizeOf(context).height/15), // Space for half of the avatar
                         _buildMenuItems(),
                       ],
                     ),
@@ -57,7 +57,7 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
             ),
             // Position the AvatarProfile to straddle the boundary
             Positioned(
-              top: MediaQuery.sizeOf(context).height/18, // Adjust this value based on your header height
+              top: MediaQuery.sizeOf(context).height/26, // Adjust this value based on your header height
               left: 0,
               right: 0,
               child: Center(
@@ -79,9 +79,9 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
   
   Widget _buildHeader() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
       child: Container(
-         height: MediaQuery.sizeOf(context).height/12,
+         height: MediaQuery.sizeOf(context).height/14,
         child: GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Row(
@@ -109,7 +109,9 @@ class _CommunityUserProfileScreenState extends State<CommunityUserProfileScreen>
   
 
   Widget _buildMenuItems() {
-    return Expanded(
+    return Container(
+    
+      height: MediaQuery.sizeOf(context).height/2,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(

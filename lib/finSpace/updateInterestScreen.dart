@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Utils/finspaceStrings.dart';
 import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -58,10 +59,11 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
             // Main Content
             SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header (reused from InterestSelectionScreen)
+                
                   HeaderWidget(),
-                  // Title Section (modified for update context)
+                  
                   Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: screenSize.width * 0.05,
@@ -70,7 +72,7 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
                     child: UpdateTitleWidget(),
                   ),
                   // Categories List (filtered to exclude selected interests)
-                  GetListOfInterest(height: 0.5),
+                   GetListOfInterest(),
                   // Previously Selected Interests (now with deselection)
                   Padding(
                     padding: EdgeInsets.symmetric(
@@ -83,33 +85,41 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
                     ),
                   ),
                   // Update Button
-                  Obx(
-                    () => 
-                     AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            height: 70,
-                            alignment: Alignment.topCenter,
-                            child: Padding(
-                              padding: EdgeInsets.all(12),
-                              child: isListEnabled.value? UpdateButtonWidget(
-                                onPressed: () {
-                                  final combinedList = [
-                                    ...selectedSubCategories,
-                                    ...selectedCategories
-                                  ];
-                                  // Update interestedTags
-                                 
-                                  var body = {
-                                    "interestedTags": combinedList,
-                                  };
-                                  // Call API to update interests
-                                  addMyIntreastAndName(context, body,false,true);
-                                 
-                                },
-                              ):null,
-                            ),
-                          ),
+                  Align(
+                     alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Obx(
+                        () => 
+                         AnimatedContainer(
+                                duration: const Duration(milliseconds: 300),
+                                height: MediaQuery.sizeOf(context).height/14,
+                                alignment: Alignment.topCenter,
+                               
+                                child: Padding(
+                                  padding: EdgeInsets.all(12),
+                                  child: isListEnabled.value? UpdateButtonWidget(
+                                    onPressed: () {
+                                      final combinedList = [
+                                        ...selectedSubCategories,
+                                        ...selectedCategories
+                                      ];
+                                      // Update interestedTags
+                                     
+                                      var body = {
+                                        "interestedTags": combinedList,
+                                      };
+                                      // Call API to update interests
+                                      addMyIntreastAndName(context, body,false,true);
+                                     
+                                    },
+                                  ):null,
+                                ),
+                              ),
+                      ),
+                    ),
                   ),
+                   SizedBox(height: 16),
                 ],
               ),
             ),
@@ -145,9 +155,9 @@ class _UpdateInterestScreenState extends State<UpdateInterestScreen>
 }
 
 
+
 class GetListOfInterest extends StatefulWidget {
-  final double height;
-  GetListOfInterest({Key? key, this.height = 0.63}) : super(key: key);
+  const GetListOfInterest({Key? key}) : super(key: key);
 
   @override
   State<GetListOfInterest> createState() => _GetListOfInterestState();
@@ -173,29 +183,29 @@ class _GetListOfInterestState extends State<GetListOfInterest> with TickerProvid
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    return Container(
-      height: screenSize.height * widget.height,
-      child: FilteredCategoriesListWidget(
-        onCategoryToggle: (category) {
-          setState(() {
-            selectedCategories.add(category);
-            isListEnabled.value = selectedCategories.isNotEmpty || selectedSubCategories.isNotEmpty;
-          });
-          _animationController.forward().then((_) => _animationController.reset());
-        },
-        onSubCategoryToggle: (subCategory) {
-          setState(() {
-            selectedSubCategories.add(subCategory);
-            isListEnabled.value = selectedCategories.isNotEmpty || selectedSubCategories.isNotEmpty;
-          });
-        },
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min, // Take only the space needed
+      children: [
+        FilteredCategoriesListWidget(
+          onCategoryToggle: (category) {
+            setState(() {
+              selectedCategories.add(category);
+              isListEnabled.value = selectedCategories.isNotEmpty || selectedSubCategories.isNotEmpty;
+            });
+            _animationController.forward().then((_) => _animationController.reset());
+          },
+          onSubCategoryToggle: (subCategory) {
+            setState(() {
+              selectedSubCategories.add(subCategory);
+              isListEnabled.value = selectedCategories.isNotEmpty || selectedSubCategories.isNotEmpty;
+            });
+          },
+        ),
+      ],
     );
   }
 }
 
-// FilteredCategoriesListWidget to exclude selected interests
 class FilteredCategoriesListWidget extends StatelessWidget {
   final Function(String) onCategoryToggle;
   final Function(String) onSubCategoryToggle;
@@ -211,66 +221,128 @@ class FilteredCategoriesListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-
-    return SingleChildScrollView(
+if (categoriesInterest.keys.every((category) => selectedCategories.contains(category))) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 16),
+        child: Center(
+          child: Text(
+            'All interests selected',
+            style: FontManager2().getTextStyle(
+              context,
+              lWeight: FontWeight.w600,
+              fontSize: 16,
+              color: Colors.black54,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.05),
         child: Wrap(
-          spacing: screenSize.width * 0.015,
-          runSpacing: screenSize.height * 0.005,
-          alignment: WrapAlignment.start,
+          spacing: screenSize.width * 0.015, // Horizontal spacing between chips
+          runSpacing: screenSize.height * 0.005, // Vertical spacing between rows
+          alignment: WrapAlignment.start, // Align chips to the start
           children: categoriesInterest.keys.where((category) {
             // Only show categories that are not selected
             return !selectedCategories.contains(category);
-          }).map((category) {
+          }).expand((category) {
             final subCategories = categoriesInterest[category] ?? [];
-            final hasSubCategories = subCategories.isNotEmpty;
-
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Main Category Chip
-                AnimatedContainer(
+            // Create a list starting with the category chip, followed by its subcategories
+            return [
+              // Category Chip
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                margin: const EdgeInsets.symmetric(vertical: 1),
+                child: CategoryChip(
+                  label: category,
+                  isSelected: false,
+                  onTap: () => onCategoryToggle(category),
+                  isSubCategory: false,
+                ),
+              ),
+              // Subcategory Chips
+              ...subCategories.where((subCategory) {
+                return !selectedSubCategories.contains(subCategory);
+              }).map((subCategory) {
+                return AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   margin: const EdgeInsets.symmetric(vertical: 1),
                   child: CategoryChip(
-                    label: category,
+                    label: subCategory,
                     isSelected: false,
-                    onTap: () => onCategoryToggle(category),
-                    isSubCategory: false,
+                    onTap: () => onSubCategoryToggle(subCategory),
+                    isSubCategory: true,
                   ),
-                ),
-                // Subcategories (filtered to exclude selected ones)
-                if (hasSubCategories)
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    margin: const EdgeInsets.only(bottom: 2),
-                    child: Wrap(
-                      alignment: WrapAlignment.start,
-                      spacing: screenSize.width * 0.015,
-                      runSpacing: screenSize.height * 0.005,
-                      children: subCategories.where((subCategory) {
-                        return !selectedSubCategories.contains(subCategory);
-                      }).map((subCategory) {
-                        return CategoryChip(
-                          label: subCategory,
-                          isSelected: false,
-                          onTap: () => onSubCategoryToggle(subCategory),
-                          isSubCategory: true,
-                        );
-                      }).toList(),
-                    ),
-                  ),
-              ],
-            );
+                );
+              }),
+            ];
           }).toList(),
         ),
       ),
     );
+    // return SingleChildScrollView(
+    //   child: Padding(
+    //     padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.05),
+    //     child: Wrap(
+    //       spacing: screenSize.width * 0.015,
+    //       runSpacing: screenSize.height * 0.005,
+    //       alignment: WrapAlignment.start,
+    //       children: categoriesInterest.keys.where((category) {
+    //         // Only show categories that are not selected
+    //         return !selectedCategories.contains(category);
+    //       }).map((category) {
+    //         final subCategories = categoriesInterest[category] ?? [];
+    //         final hasSubCategories = subCategories.isNotEmpty;
+
+    //         return Column(
+    //           crossAxisAlignment: CrossAxisAlignment.start,
+    //           children: [
+    //             // Main Category Chip
+    //             AnimatedContainer(
+    //               duration: const Duration(milliseconds: 200),
+    //               margin: const EdgeInsets.symmetric(vertical: 1),
+    //               child: CategoryChip(
+    //                 label: category,
+    //                 isSelected: false,
+    //                 onTap: () => onCategoryToggle(category),
+    //                 isSubCategory: false,
+    //               ),
+    //             ),
+    //             // Subcategories (filtered to exclude selected ones)
+    //             if (hasSubCategories)
+    //               AnimatedContainer(
+    //                 duration: const Duration(milliseconds: 300),
+    //                 margin: const EdgeInsets.only(bottom: 2),
+    //                 child: Wrap(
+    //                   alignment: WrapAlignment.start,
+    //                   spacing: screenSize.width * 0.015,
+    //                   runSpacing: screenSize.height * 0.005,
+    //                   children: subCategories.where((subCategory) {
+    //                     return !selectedSubCategories.contains(subCategory);
+    //                   }).map((subCategory) {
+    //                     return CategoryChip(
+    //                       label: subCategory,
+    //                       isSelected: false,
+    //                       onTap: () => onSubCategoryToggle(subCategory),
+    //                       isSubCategory: true,
+    //                     );
+    //                   }).toList(),
+    //                 ),
+    //               ),
+    //           ],
+    //         );
+    //       }).toList(),
+    //     ),
+    //   ),
+    // );
+  
   }
 }
 
-// Modified Title Widget for Update Screen
+
 class UpdateTitleWidget extends StatelessWidget {
   const UpdateTitleWidget({Key? key}) : super(key: key);
 
@@ -284,7 +356,7 @@ class UpdateTitleWidget extends StatelessWidget {
             context,
             lWeight: FontWeight.w500,
             fontSize: 20,
-            color: Colors.black87,
+            color: AppColors.accentColor,
           ),
           textAlign: TextAlign.center,
         ),
@@ -329,13 +401,14 @@ class PreviouslySelectedInterestsWidget extends StatelessWidget {
               context,
               lWeight: FontWeight.w500,
               fontSize: 16,
-              color: Colors.black87,
+              color: AppColors.bg1,
             ),
           ),
           SizedBox(height: 8),
           Wrap(
-            spacing: screenSize.width * 0.015,
-            runSpacing: screenSize.height * 0.005,
+           alignment: WrapAlignment.start, // Ensure chips start from the left
+                  spacing: screenSize.width * 0.015, // Consistent with FilteredCategoriesListWidget
+                  runSpacing: screenSize.height * 0.005,
             children: [
               ...selectedCategories.map((category) => CategoryChip(
                     label: category,
@@ -374,8 +447,8 @@ class UpdateButtonWidget extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color(0xFF4A4E69),
-          foregroundColor: Colors.white,
+          backgroundColor: AppColors.finSpaceColor,
+          foregroundColor: AppColors.backgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),

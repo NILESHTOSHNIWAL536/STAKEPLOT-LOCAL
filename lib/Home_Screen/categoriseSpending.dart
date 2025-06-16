@@ -183,33 +183,33 @@ class CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-       if (category.toLowerCase() == 'untagged' ||
-            category.toLowerCase() == 'uncategorized') {
-           Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FutureBuilder(
-                        future: getAllTransactionHistory(context, false, false, isRefreshing: true),
-                        builder: (context, AsyncSnapshot snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            print('FutureBuilder: Waiting for transaction history');
-                            return const Scaffold(
-                              body: Center(child: CircularProgressIndicator()),
-                            );
-                          }
-                          if (snapshot.hasError) {
-                            print('FutureBuilder: Error - ${snapshot.error}');
-                            return Scaffold(
-                              body: Center(child: Text("Error: ${snapshot.error}")),
-                            );
-                          }
-                          print('FutureBuilder: Navigating to UntaggedTransactionScreen');
-                          return const UntaggedTransactionScreen();
-                        },
-                      ),
-                    ),
-                  );
-        } else {
+      //  if (category.toLowerCase() == 'untagged' ||
+      //       category.toLowerCase() == 'uncategorized') {
+      //      Navigator.push(
+      //               context,
+      //               MaterialPageRoute(
+      //                 builder: (context) => FutureBuilder(
+      //                   future: getAllTransactionHistory(context, false, false, isRefreshing: true),
+      //                   builder: (context, AsyncSnapshot snapshot) {
+      //                     if (snapshot.connectionState == ConnectionState.waiting) {
+      //                       print('FutureBuilder: Waiting for transaction history');
+      //                       return const Scaffold(
+      //                         body: Center(child: CircularProgressIndicator()),
+      //                       );
+      //                     }
+      //                     if (snapshot.hasError) {
+      //                       print('FutureBuilder: Error - ${snapshot.error}');
+      //                       return Scaffold(
+      //                         body: Center(child: Text("Error: ${snapshot.error}")),
+      //                       );
+      //                     }
+      //                     print('FutureBuilder: Navigating to UntaggedTransactionScreen');
+      //                     return const UntaggedTransactionScreen();
+      //                   },
+      //                 ),
+      //               ),
+      //             );
+      //   } else {
           searchController.text = category.toLowerCase();
           onChanedAutoTransactionStatus(context);
           Navigator.push(
@@ -218,7 +218,7 @@ class CategoryCard extends StatelessWidget {
               builder: (context) => TransactionHistoryScreen(),
             ),
           );
-        }
+        // }
       },
       child: Container(
         height: MediaQuery.sizeOf(context).height / 5,

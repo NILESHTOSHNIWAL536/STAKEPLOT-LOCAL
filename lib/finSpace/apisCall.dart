@@ -18,6 +18,7 @@ Future<void> getMaskedNumber(BuildContext context) async {
     print(body);
     if (body['data'] != null) {
       maskNameController.text = body['data'];
+      maskedName.value = body['data'];
     } else {
       maskNameController.text = "";
     }
@@ -32,10 +33,11 @@ Future<void> addMyIntreastAndName(BuildContext context, var body,
     if (getFlagOfResponse(response)) {
       if (falg) {
         maskedName.value = maskNameController.text;
-        if(ifFromUpdate){
-             Navigator.pop(context);
-             Navigator.pop(context);
-        }else Navigator.pushNamed(context, '/interestScreen');
+        if (ifFromUpdate) {
+          Navigator.pop(context);
+          Navigator.pop(context);
+        } else
+          Navigator.pushNamed(context, '/interestScreen');
         return;
       } else {
         interestedTags.clear();
@@ -49,8 +51,7 @@ Future<void> addMyIntreastAndName(BuildContext context, var body,
         return;
       }
     }
-  } catch (e) {
-  }
+  } catch (e) {}
 
   Navigator.of(context).pushNamedAndRemoveUntil(
       '/interestScreen', (Route<dynamic> route) => false);

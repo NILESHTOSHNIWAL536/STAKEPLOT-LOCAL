@@ -31,7 +31,7 @@ PreferredSizeWidget getAppBar(context){
                 children: [
                   GestureDetector(
                     onTap: (){
-                       navigatorToMyOwnPage(context);
+                      //  navigatorToMyOwnPage(context);
                     },
                     child: Obx(()=> AvatarProfile(name: userName.value, width: 30, height: 13,background: userAvatarBackGround.value,))),
                   Column(

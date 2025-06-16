@@ -42,7 +42,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
               topUserProfile(),
               Column(
                 children: [
-                  const SizedBox(height: 10),
+                  // const SizedBox(height: 10),
                   TabBarUser(userPostList: myPostList)
                 ],
               ),
@@ -55,7 +55,7 @@ class _CommunityProfileScreenState extends State<CommunityProfileScreen> {
 
   Widget topUserProfile() {
     return Container(
-      height: MediaQuery.of(context).size.height / 5.4,
+      height: MediaQuery.of(context).size.height / 5.7,
       // height: 200,
       child: Column(
         children: [

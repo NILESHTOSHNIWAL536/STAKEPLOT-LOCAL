@@ -568,7 +568,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
           limitedFriends.isEmpty
               ? Center(
                   child: Text(
-                    PlotFinanceStaticData().calculateButton,
+                    PlotFinanceStaticData().noFriendsAvailable,
                     style: FontManager().getTextStyle(
                       context,
                       lWeight: FontWeight.w500,

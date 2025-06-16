@@ -33,6 +33,10 @@ class HomePageIcons {
   static String none = "assets/icons/Home-page/none.svg";
   static String isSplit = "assets/icons/Home-page/isSplit.svg";
   static String transactionSplit = "assets/icons/Home-page/TransactionSplitIcon.svg";
+  static String cashIn = "assets/icons/Home-page/cashIn.svg";
+  static String cashOut = "assets/icons/Home-page/cashOut.svg";
+  static String transactionHistoryIcon = "assets/icons/Home-page/historyIcon.svg";
+  static String noAccLink = "assets/icons/Home-page/noAccLink.svg";
 }
 
 class Categories {

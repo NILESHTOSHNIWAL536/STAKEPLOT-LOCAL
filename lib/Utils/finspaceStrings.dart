@@ -30,6 +30,7 @@ class FinspaceStrings
     'Behavioural Finance': [],
     'Smart Savers': [],
     'Alternative Investments': ['Art', 'Collectibles', 'P2P Lending'],
+    'Budgeting': [],
     'Retirement & Pension Planning': [],
     'Side Hustles & Passive Income': [],
     'Tech Trends in Finance': [],
@@ -37,7 +38,7 @@ class FinspaceStrings
     'College & Education Funding': [],
     'Spent Stories': [],
     'Scholarships and Stipends': [],
-    'Budgeting': [],
+   
     'Global Market News & Analysis': [],
   };
 

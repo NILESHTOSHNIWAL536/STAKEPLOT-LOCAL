@@ -29,32 +29,33 @@ class _SavedPostsScreenState extends State<SavedPostsScreen> {
     _savedPostsFuture = _fetchSavedPosts();
   }
 
-   Future<List<dynamic>> _fetchSavedPosts() async {
-  try {
-    isLoading.value = true;
-    var urlPath = "${url}/post/saved";
-   
+  Future<List<dynamic>> _fetchSavedPosts() async {
+    try {
+      isLoading.value = true;
+      var urlPath = "${url}/post/saved";
 
-    var response = await getDataApiCall(urlPath);
-   
+      var response = await getDataApiCall(urlPath);
 
-    isLoading.value = false;
-    if (getFlagOfResponse(response)) {
-      var responseData = jsonDecode(response.body); 
-     
-      return responseData['data'] ?? [];
-    } else {
-      errorMessage.value = 'Failed to load saved posts';
-     
+      isLoading.value = false;
+      if (getFlagOfResponse(response)) {
+        var responseData = jsonDecode(response.body);
+        print("response data for saved $responseData['data']");
+
+        return responseData['data'] ?? [];
+        
+      } else {
+        errorMessage.value = 'Failed to load saved posts';
+
+        return [];
+      }
+    } catch (e) {
+      isLoading.value = false;
+      errorMessage.value = 'Error: $e';
+
       return [];
     }
-  } catch (e) {
-    isLoading.value = false;
-    errorMessage.value = 'Error: $e';
-   
-    return [];
+    
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -73,13 +74,13 @@ class _SavedPostsScreenState extends State<SavedPostsScreen> {
         backgroundColor: AppColors.mt,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: AppColors.bg1),
-          onPressed: () => Navigator.pop(context)
-        ),
+            icon: Icon(Icons.arrow_back, color: AppColors.bg1),
+            onPressed: () => Navigator.pop(context)),
       ),
       body: Obx(
         () => isLoading.value
-            ? Center(child: CircularProgressIndicator(color: AppColors.primaryColor))
+            ? Center(
+                child: CircularProgressIndicator(color: AppColors.primaryColor))
             : errorMessage.value.isNotEmpty
                 ? Center(
                     child: Column(
@@ -103,7 +104,8 @@ class _SavedPostsScreenState extends State<SavedPostsScreen> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primaryColor,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
+                              borderRadius: BorderRadius.circular(
+                                  Colorcodes.borderRadius),
                             ),
                           ),
                           child: Text(
@@ -122,7 +124,9 @@ class _SavedPostsScreenState extends State<SavedPostsScreen> {
                     future: _savedPostsFuture,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator(color: AppColors.primaryColor));
+                        return Center(
+                            child: CircularProgressIndicator(
+                                color: AppColors.primaryColor));
                       }
                       if (snapshot.hasError) {
                         return Center(
@@ -150,12 +154,13 @@ class _SavedPostsScreenState extends State<SavedPostsScreen> {
                         );
                       }
                       return ListView.builder(
+                        
                         padding: EdgeInsets.symmetric(vertical: 8),
                         itemCount: posts.length,
                         itemBuilder: (context, index) {
                           return PostCard(
                             data: posts[index],
-                             // Indicate saved post context
+                            // Indicate saved post context
                             index: index,
                           );
                         },
