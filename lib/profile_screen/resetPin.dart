@@ -107,6 +107,7 @@ import 'package:local_auth/local_auth.dart';
                 if (response.statusCode == 200) {
                 //  hideBackAccountPassword.value=false;
                   cupertinoPin.value = "0";
+                  hideBackAccountPassword.value =true;
                   AttemptCount.value = false;
                   Navigator.of(dialogContext).pop();
                 } else {

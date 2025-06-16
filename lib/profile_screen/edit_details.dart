@@ -201,7 +201,7 @@ class _EditDetailsState extends State<EditDetails> {
                 ),
                 Obx(() => (bankAccountLinkedList.isEmpty ||
                         (hideBackAccountPassword.value ||
-                            cupertinoPin.value == "0"))
+                            cupertinoPin.value == "0" || cupertinoPin.value == "00"))
                     ? SizedBox.shrink()
                     : InkWell(
                         onTap: () {
