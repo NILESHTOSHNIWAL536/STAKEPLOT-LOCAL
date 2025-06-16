@@ -198,7 +198,8 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
   @override
   void initState() {
     super.initState();
-    if (avatar.value == "") {
+    if (!maskedAvatarsList.contains(avatar.value))
+    {
       avatar.value = maskedAvatarsList[0];
     }
   }
@@ -270,7 +271,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-
+    
     return Container(
       width: screenSize.width * 0.85,
       padding: EdgeInsets.all(12),
@@ -315,7 +316,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                   radius: 40,
                   backgroundColor: AppColors.backgroundColor,
                   child: Obx(()=>AvatarProfileImagePng(
-                      url: avatar.value,
+                      url:avatar.value,
                       width: 4,
                       height: 4)),
                 ),
