@@ -73,8 +73,7 @@ class _CommunityState extends State<Community> {
   {
     scrollController.addListener(() async
     {
-      if (scrollController.position.pixels >=
-              scrollController.position.maxScrollExtent - 50 &&
+      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 50 &&
           !isPostloading.value) {
         isPostloading.value = true;
         if (isTrending.value) {
@@ -213,6 +212,7 @@ class _CommunityState extends State<Community> {
           child: GestureDetector(
               onTap: () {
                 isTrending.value = false;
+                isPostloading.value=false;
               },
               child: textStyleImage(
                   context: context,
