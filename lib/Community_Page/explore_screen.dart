@@ -386,34 +386,48 @@ class _ExploreModalState extends State<ExploreModal> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 20),
-        child: Container(
-          color: AppColors.backgroundColor,
-          child: AnimatedPadding(
-            padding: MediaQuery.of(context).viewInsets,
-            duration: const Duration(milliseconds: 100),
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildHeader(),
-                    const SizedBox(height: 20),
-                    _buildImageSection(),
-                    const SizedBox(height: 10),
-                    _buildPlaceSection(),
-                    const SizedBox(height: 10),
-                    _buildBudgetSection(),
-                    _buildRatingSection(),
-                    const SizedBox(height: 20),
-                    _buildHighlightSection(),
-                    const SizedBox(height: 20),
-                    _buildSubmitButton(),
-                  ],
+    return Scaffold(
+       appBar: AppBar(
+       centerTitle: true,
+       leading:  IconButton(
+                              icon: Icon(Icons.arrow_back, 
+                                color: AppColors.bg1,
+                                size: 20,
+                              ),
+                              onPressed: () => Navigator.pop(context),
+                            ),
+       automaticallyImplyLeading: false,
+       title:  _buildHeader(),
+       ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20),
+          child: Container(
+            color: AppColors.backgroundColor,
+            child: AnimatedPadding(
+              padding: MediaQuery.of(context).viewInsets,
+              duration: const Duration(milliseconds: 100),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                     
+                     
+                      _buildImageSection(),
+                      const SizedBox(height: 10),
+                      _buildPlaceSection(),
+                      const SizedBox(height: 10),
+                      _buildBudgetSection(),
+                      _buildRatingSection(),
+                      const SizedBox(height: 20),
+                      _buildHighlightSection(),
+                      const SizedBox(height: 20),
+                      _buildSubmitButton(),
+                    ],
+                  ),
                 ),
               ),
             ),
