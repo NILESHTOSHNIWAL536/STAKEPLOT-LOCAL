@@ -85,26 +85,24 @@ class _TribeHomeState extends State<TribeShare> {
   }
 
   Widget commentedData() {
-    double height = MediaQuery.of(context).size.height / 3;
+    double height = MediaQuery.of(context).size.height / 2.7;
     return Container(
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(20, 30, 20, 12),
-        decoration: BoxDecoration(
-            color: AppColors.commentbg,
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(36),topRight: Radius.circular(36))),
-        child: Column(
-          children: [
-            InputDate('Search', TextInputType.name, Textcontroller),
-            frdsThere.value
-                ? Container(height: height, child: Center(child: Loader()))
-                : frdsList.isEmpty
-                    ? Container(
-                        height: height,
-                        child: Center(child: Text("No Friend Found")))
-                    : listOfUsers(height),
-            shareButton()
-          ],
-        ),
+      padding: const EdgeInsets.fromLTRB(20, 30, 20, 12),
+      decoration: BoxDecoration(
+          color: AppColors.commentbg,
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(36),topRight: Radius.circular(36))),
+      child: Column(
+        children: [
+          InputDate('Search', TextInputType.name, Textcontroller),
+          frdsThere.value
+              ? Container(height: height, child: Center(child: Loader()))
+              : frdsList.isEmpty
+                  ? Container(
+                      height: height,
+                      child: Center(child: Text("No Friend Found")))
+                  : listOfUsers(height),
+          shareButton()
+        ],
       ),
     );
   }
@@ -159,13 +157,14 @@ class _TribeHomeState extends State<TribeShare> {
                 "roomId": userToSend,
               });
               index++;
+              String  img= widget.dataObj['postType']=="image"?  widget.dataObj['image']:"";
               sendNotificationsToDevice(
                   rec,
                   context,
                   "Hey there! 👋, ${userName.value} has shared a post 📩. Please check it out 🛒 ",
                   "/chat/${currentId.value}",
                    "New Post",
-                  widget.dataObj['image']);
+                  img);
             });
             Navigator.pop(context);
           },
@@ -173,9 +172,8 @@ class _TribeHomeState extends State<TribeShare> {
             width: MediaQuery.of(context).size.width / 1.1,
             padding: const EdgeInsets.symmetric(vertical: 13),
             decoration: BoxDecoration(
-                color:
-                    addedUser.isEmpty ? AppColors.bg6 : AppColors.finSpaceColor,
-                borderRadius: BorderRadius.circular(8)),
+            color:addedUser.isEmpty ? AppColors.bg6 : AppColors.finSpaceColor,
+            borderRadius: BorderRadius.circular(8)),
             child: Center(
               child: Text((frdsList.isEmpty ? "Add Friends" : "Continue"),
                   style: FontManager().getTextStyle(context,
@@ -185,7 +183,7 @@ class _TribeHomeState extends State<TribeShare> {
             ),
           ),
         ),
-        SizedBox(height:6),
+        SizedBox(height:2),
         InkWell(
           onTap:(){
             Navigator.pop(context);
@@ -212,12 +210,12 @@ class _TribeHomeState extends State<TribeShare> {
 
   Widget listOfUsers(height) {
   return Padding(
-    padding: const EdgeInsets.all(4.0),
+    padding: const EdgeInsets.all(2.0),
     child: SizedBox(
-      height: height,
+      height: height/1.1,
       child: GridView.builder(
         itemCount: frdsList.length, // +1 for loading more indicator
-        itemBuilder: (context, index) {
+        itemBuilder: (context,index) {
           String values = frdsList[index]['_id'];
           String name = frdsList[index]['name'];
           return InkWell(
@@ -234,6 +232,7 @@ class _TribeHomeState extends State<TribeShare> {
                 });
               },
               child: Container(
+                margin: EdgeInsets.all(2),
                 decoration: BoxDecoration(
                   border: addedUser.contains(values)
                       ? Border.all(

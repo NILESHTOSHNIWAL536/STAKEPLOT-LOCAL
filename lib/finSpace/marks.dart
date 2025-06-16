@@ -316,19 +316,18 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                       url: avatar.value, width: 6, height: 6)),
                 ),
                 Positioned(
-                  bottom: 0,
-                  right: 0,
+                  bottom: 7,
+                  right: 7,
                   child: Container(
-                    padding: EdgeInsets.all(4),
+                    padding: EdgeInsets.all(2),
                     decoration: BoxDecoration(
-                     
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 1),
+                      border: Border.all(color: AppColors.primaryColor, width: 1),
                     ),
                     child: Icon(
                       Icons.edit,
-                      color: Colors.white,
-                      size: 16,
+                      color: AppColors.primaryColor,
+                      size: 14,
                     ),
                   ),
                 ),
