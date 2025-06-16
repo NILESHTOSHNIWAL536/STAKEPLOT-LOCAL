@@ -119,6 +119,8 @@ class _GetListOfInterestState extends State<GetListOfInterest>
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
+    selectedCategories.clear();
+    selectedSubCategories.clear();
   }
 
   @override

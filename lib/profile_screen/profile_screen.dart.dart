@@ -169,7 +169,7 @@ class _ProfileScreenDartState extends State<ProfileScreenDart> {
                         children: [
       //                         _buildOption(
       //                           ProfileImage(url: ProfileIcons.communityProf),
-      //                           ProfileScreenStrings().communityProfileLabel, // Direct access
+      //                  cls         ProfileScreenStrings().communityProfileLabel, // Direct access
       //                           ProfileScreenStrings().communityProfileSubLabel, // Direct access
       //                           onTap: () {
       //                             // navigatorToMyOwnPage(context);

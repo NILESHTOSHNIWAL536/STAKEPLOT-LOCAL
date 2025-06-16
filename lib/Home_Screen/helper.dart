@@ -716,6 +716,7 @@ Widget filterTransaction(context) {
           getHeader(context, "Select Filter"),
           getCheckBoxwithText(context, "Credit"),
           getCheckBoxwithText(context, "Debit"),
+          getCheckBoxwithText(context, "Cash"),
           bankAccountLinkedList.length >= 2
               ? getBankAccountList(context)
               : SizedBox.shrink(),
@@ -723,10 +724,12 @@ Widget filterTransaction(context) {
           InkWell(
               onTap: () {
                 if (accountIdPdf.value.toLowerCase().startsWith("credit") ||
-                    accountIdPdf.value.toLowerCase().startsWith("debit")) {
+                    accountIdPdf.value.toLowerCase().startsWith("debit") || accountIdPdf.value=="Cash")
+                {
                   searchController.text = accountIdPdf.value.toLowerCase();
                 }
-                 else if(accountIdPdf.value=="-"){
+                 else if(accountIdPdf.value=="-")
+                 {
                          searchController.text="";
                   }
                      

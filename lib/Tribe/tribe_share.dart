@@ -98,7 +98,7 @@ class _TribeHomeState extends State<TribeShare> {
               ? Container(height: height, child: Center(child: Loader()))
               : frdsList.isEmpty
                   ? Container(
-                      height: height,
+                      height:  height/1.1,
                       child: Center(child: Text("No Friend Found")))
                   : listOfUsers(height),
           shareButton()
