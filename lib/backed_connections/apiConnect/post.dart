@@ -66,7 +66,7 @@ void reportPost(context, String id, String spam, String type, int index) async {
             : SnackbarData().reportedSuccessfully,
         Colors.green);
 
-    if (index > -1) clearPostReportHide(index);
+    clearPostReportHide(index);
   } else {
     snackBarCalled(context, SnackbarData().errorWhileReporting, Colors.red);
   }

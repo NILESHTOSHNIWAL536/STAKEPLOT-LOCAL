@@ -26,8 +26,9 @@ class PostCard extends StatelessWidget {
   var data;
   bool flag = false;
   int index;
+  bool isTribeOne=false;
   PostCard(
-      {Key? key, required this.data, this.flag = false, required this.index})
+      {Key? key, required this.data, this.flag = false, required this.index,this.isTribeOne=false})
       : super(key: key);
 
   @override
@@ -138,6 +139,7 @@ class PostCard extends StatelessWidget {
                                 dataObj["author"]['name'],
                                 index,
                                 flag,
+                                isTribeOne
                               ),
                       ],
                     ),

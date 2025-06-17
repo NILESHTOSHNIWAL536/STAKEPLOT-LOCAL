@@ -72,4 +72,5 @@ void loadInitialData()
 void resetAndLoadData() {
   // displayedData.clear();
   // loadInitialData();
+  
 }
