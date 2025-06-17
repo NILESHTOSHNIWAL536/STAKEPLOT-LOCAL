@@ -145,7 +145,7 @@ class _GetListOfInterestState extends State<GetListOfInterest>
           totalSelected >= CommunityScreenStrings().limitTag &&
           !selectedCategories.contains(category)) {
         // Show a snackbar or dialog to inform the user
-       
+
         snackBarCalledfail(context, SnackbarData().limitTagSnackbar);
         return;
       }
@@ -249,6 +249,7 @@ class TitleWidget extends StatelessWidget {
     );
   }
 }
+
 class CategoriesListWidget extends StatefulWidget {
   final Function(String) onCategoryToggle;
   final Function(String) onSubCategoryToggle;
@@ -329,7 +330,8 @@ class _CategoriesListWidgetState extends State<CategoriesListWidget>
           spacing: screenSize.width * 0.015,
           runSpacing: screenSize.height * 0.005,
           alignment: WrapAlignment.start,
-          children: categoriesInterest.keys.toList().asMap().entries.expand((entry) {
+          children:
+              categoriesInterest.keys.toList().asMap().entries.expand((entry) {
             final index = entry.key;
             final category = entry.value;
             final subCategories = categoriesInterest[category] ?? [];
@@ -349,7 +351,8 @@ class _CategoriesListWidgetState extends State<CategoriesListWidget>
                     onTap: () => widget.onCategoryToggle(category),
                     isSubCategory: false,
                     isEnabled: !widget.limitTagbool ||
-                        selectedCategories.length + selectedSubCategories.length <
+                        selectedCategories.length +
+                                selectedSubCategories.length <
                             CommunityScreenStrings().limitTag ||
                         isSelected,
                   ),
@@ -360,7 +363,8 @@ class _CategoriesListWidgetState extends State<CategoriesListWidget>
             // Add subcategory chips if the category is selected and has subcategories
             if (isSelected && hasSubCategories) {
               chipList.addAll(subCategories.map((subCategory) {
-                final isSubSelected = selectedSubCategories.contains(subCategory);
+                final isSubSelected =
+                    selectedSubCategories.contains(subCategory);
                 return AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   margin: const EdgeInsets.symmetric(vertical: 1),
@@ -370,7 +374,8 @@ class _CategoriesListWidgetState extends State<CategoriesListWidget>
                     onTap: () => widget.onSubCategoryToggle(subCategory),
                     isSubCategory: true,
                     isEnabled: !widget.limitTagbool ||
-                        selectedCategories.length + selectedSubCategories.length <
+                        selectedCategories.length +
+                                selectedSubCategories.length <
                             CommunityScreenStrings().limitTag ||
                         isSubSelected,
                   ),

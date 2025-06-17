@@ -231,13 +231,20 @@ Widget vote(context, dataObj, data) {
                     bool isSaved = savedPostIds.contains(dataObj['_id']);
                     return GestureDetector(
                         onTap: () {
-                          if (isSaved) {
+                           if (maskedName.value.trim().isEmpty) {
+                          MaskedNameDialogBox.showMaskedNameDialog(context);
+                        }
+                          else {
+                            if (isSaved) {
                             savedPostIds.remove(dataObj['_id']);
                           } else
                           {
                             savedPostIds.add(dataObj['_id']);
                           }
                             savePostData(context, data);
+
+                          }
+                          
                         },
                         child: SvgPicture.asset(
                           isSaved

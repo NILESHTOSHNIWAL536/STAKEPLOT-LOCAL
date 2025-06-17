@@ -356,7 +356,7 @@ class _MaskNameFormWidgetState extends State<MaskNameFormWidget> {
                  Obx(()=> Container(
                    width: screenSize.width / 3,
                    
-                   child: Text(maskedName.value,
+                   child: Text(maskedNameLocal.value,
                    style: FontManager2().getTextStyle(context,
                     lWeight: FontWeight.w500,
                     fontSize: widget.isSmallScreen ? 12 : 14,

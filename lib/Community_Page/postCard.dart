@@ -35,24 +35,20 @@ class PostCard extends StatelessWidget {
     return uploadData(data, flag, context);
   }
   // Determine image height based on crop shape
-   
+
   Widget uploadData(dataObj, bool flag, BuildContext context) {
     bool isExploria = dataObj['postType'] == "exploria";
     bool isPoll = dataObj['postType'] == "poll";
     bool isWrite = dataObj['postType'] == "write";
     bool isImage = dataObj['postType'] == "image";
-
+    print("type of image $dataObj['isSquareImage']");
     var extractdata = dataObj;
- double getImageHeight(BuildContext context) {
+    double getImageHeight(BuildContext context) {
       double width = MediaQuery.of(context).size.width;
-      // Check if cropShape is available; default to Custom (402:214) if not
-      String? cropShape = dataObj['cropShape'];
-      if (cropShape == 'Square') {
-        return width* 400 / 402; // 1:1 aspect ratio
-      } else {
-        return width * 214 / 402; // 402:214 aspect ratio
-      }
+      bool isSquare = dataObj['isSquareImage'] ?? false; // Default to Rectangle
+      return isSquare ? width : width * 214 / 402;
     }
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       child: Column(
@@ -195,7 +191,7 @@ class PostCard extends StatelessWidget {
                                   // height: MediaQuery.of(context).size.width *
                                   //     214 /
                                   //     402,
-                                  height:getImageHeight(context),
+                                  height: getImageHeight(context),
                                   boxFit: BoxFit.fill,
                                   // borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
                                   image: NetworkImage(dataObj['image']),
@@ -220,7 +216,7 @@ class PostCard extends StatelessWidget {
                                       //         402,
                                       height: getImageHeight(context),
                                       boxFit: BoxFit.fill,
-                                     
+
                                       image: NetworkImage(
                                           dataObj['backGroundPicture']),
                                       child: Container(
@@ -303,7 +299,7 @@ class PostCard extends StatelessWidget {
                   if (dataObj['createdAt'] != null)
                     Padding(
                       padding: const EdgeInsets.only(
-                          left: 14.0, right: 27.0, top: 6,bottom:10),
+                          left: 14.0, right: 27.0, top: 6, bottom: 10),
                       child: Text(
                         formatDateToIST(dataObj['createdAt']),
                         style: FontManager().getTextStyle(context,

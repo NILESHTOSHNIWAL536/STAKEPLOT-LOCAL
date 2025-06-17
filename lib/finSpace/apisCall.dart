@@ -18,7 +18,7 @@ Future<void> getMaskedNumber(BuildContext context) async {
     print(body);
     if (body['data'] != null) {
       maskNameController.text = body['data'];
-      maskedName.value = body['data'];
+      maskedNameLocal.value = body['data'];
     } else {
       maskNameController.text = "";
     }
@@ -32,7 +32,7 @@ Future<void> addMyIntreastAndName(BuildContext context, var body,
     printData(response);
     if (getFlagOfResponse(response)) {
       if (falg) {
-        maskedName.value = maskNameController.text;
+        maskedName.value = maskedNameLocal.value;
         if (ifFromUpdate) {
           Navigator.pop(context);
           Navigator.pop(context);

@@ -40,7 +40,7 @@ class _ImageScreenState extends State<ImageScreen> {
   final CustomImageCropController _cropController = CustomImageCropController();
   File? selectedImage;
     // New state variable for crop shape
-  String _selectedCropShape = 'Square';
+ bool _selectedCropShape = true;
   final CommunityScreenStrings strings = CommunityScreenStrings();
   Future<void> _pickImage() async {
     try {
@@ -161,7 +161,7 @@ class _ImageScreenState extends State<ImageScreen> {
                                   cropController: _cropController,
                                   shape: CustomCropShape.Square,
                                   // ratio: Ratio(width: 402, height: 214),
-                                    ratio: _selectedCropShape == 'Square'
+                                    ratio: _selectedCropShape
                                       ?  Ratio(width: 402, height: 400)
                                       :  Ratio(width: 402, height: 214),
                                   outlineStrokeWidth: 0.0,
@@ -204,18 +204,18 @@ class _ImageScreenState extends State<ImageScreen> {
                                 'Square',
                                 style: FontManager().getTextStyle(
                                   context,
-                                  lWeight: _selectedCropShape == 'Square'
+                                  lWeight: _selectedCropShape 
                                       ? FontWeight.bold
                                       : FontWeight.normal,
                                   fontSize: 14,
                                   color: AppColors.bg1,
                                 ),
                               ),
-                              selected: _selectedCropShape == 'Square',
+                              selected: _selectedCropShape ,
                               onSelected: (selected) {
                                 if (selected) {
                                   setState(() {
-                                    _selectedCropShape = 'Square';
+                                    _selectedCropShape = true;
                                   });
                                 }
                               },
@@ -228,18 +228,18 @@ class _ImageScreenState extends State<ImageScreen> {
                                 'Custom (402:214)',
                                 style: FontManager().getTextStyle(
                                   context,
-                                  lWeight: _selectedCropShape == 'Custom'
+                                  lWeight: !_selectedCropShape
                                       ? FontWeight.bold
                                       : FontWeight.normal,
                                   fontSize: 14,
                                   color: AppColors.bg1,
                                 ),
                               ),
-                              selected: _selectedCropShape == 'Custom',
+                              selected: !_selectedCropShape,
                               onSelected: (selected) {
                                 if (selected) {
                                   setState(() {
-                                    _selectedCropShape = 'Custom';
+                                    _selectedCropShape = false;
                                   });
                                 }
                               },
@@ -353,6 +353,7 @@ class _ImageScreenState extends State<ImageScreen> {
         titleController.text.toString().trim(),
         textController.text.toString().trim(),
         croppedImageFile,
+         _selectedCropShape,
         
       );
 

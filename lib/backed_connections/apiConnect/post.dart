@@ -78,6 +78,8 @@ Future<Map<String, dynamic>> createPost(
   String title,
   String description,
   File imageFile,
+  bool cropShape,
+
 ) async {
   try {
     String urlPath = await addImageToCloud2(imageFile);
@@ -88,7 +90,9 @@ Future<Map<String, dynamic>> createPost(
       'description': description,
       'image': urlPath,
       'tags': TagList,
-      'postType': 'image'
+      'postType': 'image',
+      'isSquareImage': cropShape,
+
     };
 
     String apiCall = '${url}/post';

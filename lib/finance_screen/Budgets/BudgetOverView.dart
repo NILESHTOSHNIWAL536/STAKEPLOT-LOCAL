@@ -42,6 +42,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
   @override
   void initState() {
     super.initState();
+     createBudget.value = false;
     // Initialize controllers and focus nodes for each category
     for (var category in widget.categoryList) {
       _controllers.add(TextEditingController(
