@@ -13,6 +13,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/wave.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -32,52 +33,8 @@ class ResetOtp extends StatefulWidget {
 }
 
 class _SigninState extends State<ResetOtp> {
-  Widget InputDate(lableText, keyBoard, Textcontroller, index) {
-    double width = MediaQuery.of(context).size.width;
-    return Center(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 3),
-        // color: Color.fromRGBO(249, 246, 238, 1),
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 1, horizontal: 5),
-          width: width <= 350
-              ? width / 6
-              : width <= 500
-                  ? width / 7
-                  : width / 8,
-          alignment: Alignment.center,
-          child: Center(
-            child: TextFormField(
-              keyboardType: keyBoard,
-              maxLength: 1,
-              controller: _controllers[index],
-              focusNode: _focusNodes[index],
-              // controller: Textcontroller,
-
-              decoration: InputDecoration(
-                counterText: '', // Hide the counter
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(100),
-                    borderSide: BorderSide(color: Colorcodes.budgetDarkGreen)),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(100),
-                    borderSide: BorderSide(color: Colorcodes.budgetDarkGreen)),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(100),
-                    borderSide: BorderSide(color: Colorcodes.budgetDarkGreen)),
-              ),
-
-              onChanged: (value) => _handleTextChanged(value, index),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  //  final int _otpLength = 6;
-  // late List<TextEditingController> _controllers= List.generate(_otpLength, (_) => TextEditingController());
-  // late List<FocusNode> _focusNodes=List.generate(_otpLength, (_) => FocusNode());
+  
+  
   final int _otpLength = 6;
   late List<TextEditingController> _controllers =
       List.generate(_otpLength, (_) => TextEditingController());
@@ -97,8 +54,6 @@ class _SigninState extends State<ResetOtp> {
   void initState() {
     super.initState();
     startOtpTimer3();
-    // _controllers = List.generate(_otpLength, (_) => TextEditingController());
-    // _focusNodes = List.generate(_otpLength, (_) => FocusNode());
   }
 
   void startOtpTimer3() {
@@ -136,37 +91,67 @@ class _SigninState extends State<ResetOtp> {
     return Scaffold(
       backgroundColor: Colorcodes.white,
       body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          height: MediaQuery.of(context).size.height / 1.3,
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              topHeader(),
-              textStyle(
-                  context: context,
-                  text: StringConstant.otpText,
-                  fontWeight: FontWeight.w400,
-                  fontsize: 10),
-              const SizedBox(
-                height: 40,
-              ),
-              verifyOpt(),
-              acceptButton(),
-              SizedBox(
-                height: Colorcodes.paddingSize * 2,
-              ),
-              InkWell(
-                  onTap: () {
-                    //  resendOptUser(context,widget.data['email'],widget.data['name']);
-                  },
-                  child: resendOtp()),
-            ],
+        child: SingleChildScrollView(
+          child: Container(
+            // padding: const EdgeInsets.symmetric(horizontal: 20),
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+             decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFF6568A7),
+                Color(0xFF272841),
+                
+              ],
+            ),
+          ),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      topHeader(),
+                      textStyleOnly2(
+                          context: context,
+                          text: "Enter the 6-digit OTP sent to your email",
+                          fontWeight: FontWeight.w300,
+                          fontsize: 14,
+                          color:Colorcodes.white
+                        ),
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      verifyOpt(),
+                      acceptButton(),
+                      SizedBox(
+                        height: Colorcodes.paddingSize * 2,
+                      ),
+                      InkWell(
+                          onTap: () {
+                            //  resendOptUser(context,widget.data['email'],widget.data['name']);
+                          },
+                          child: resendOtp()),
+                   
+                    ],
+                  ),
+                ),
+          
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: buildBottomWaves(context),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -176,9 +161,10 @@ class _SigninState extends State<ResetOtp> {
   Widget topHeader() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 20),
-      child: Text(("Verification Code"),
-          style: FontManager().getTextStyle(context,
-              lWeight: FontWeight.bold, fontSize: 22, color: Colors.black)),
+      child: Text(
+        "Verify Your Email",
+        style: FontManager().getTextStyle(context, lWeight: FontWeight.bold, fontSize: 22, color: Colorcodes.white),
+      ),
     );
   }
 
@@ -193,12 +179,13 @@ class _SigninState extends State<ResetOtp> {
   Widget acceptButton() {
     return Center(
       child: Container(
-        width: MediaQuery.of(context).size.width / 1.1,
+        width: MediaQuery.of(context).size.width ,
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         padding: const EdgeInsets.symmetric(vertical: 10),
-        decoration: BoxDecoration(
-            color: AppColors.primaryColor,
-            borderRadius: BorderRadius.circular(Colorcodes.borderRadius10)),
+       decoration: BoxDecoration(
+          color:Colorcodes.white,
+          borderRadius: BorderRadius.circular(Colorcodes.borderRadius10),
+        ),
         child: InkWell(
           onTap: () {
             acceptReset.value = true;
@@ -212,9 +199,7 @@ class _SigninState extends State<ResetOtp> {
                       )
                     : Text(("Accept"),
                         style: FontManager().getTextStyle(context,
-                            lWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: Colorcodes.white)),
+                          lWeight: FontWeight.w500, fontSize: 16, color: Colorcodes.black)),
               )),
         ),
       ),
@@ -233,8 +218,8 @@ class _SigninState extends State<ResetOtp> {
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.w400,
-                  fontSize: 13,
-                  color: Colorcodes.iconBackGround,
+                  fontSize: 14,
+                    color: Colorcodes.white,
                   // decoration: TextDecoration.underline
                 )),
             Obx(
@@ -254,9 +239,7 @@ class _SigninState extends State<ResetOtp> {
                       context,
                       lWeight: FontWeight.bold,
                       fontSize: 12,
-                      color: canResendOtp3.value
-                          ? AppColors.primaryColor
-                          : Colors.grey,
+                     color: canResendOtp3.value ? Colorcodes.black : Colors.black,
                       // decoration: TextDecoration.underline
                     )),
               )
@@ -297,12 +280,12 @@ class _SigninState extends State<ResetOtp> {
               borderRadius: BorderRadius.circular(10),
               fieldHeight: MediaQuery.of(context).size.width * 0.13,
               fieldWidth: MediaQuery.of(context).size.width * 0.13,
-              activeFillColor: Colors.white,
-              activeColor: Colors.blue,
-              selectedFillColor: Colors.white,
-              selectedColor: Colors.blue,
-              inactiveFillColor: Colors.grey[200],
-              inactiveColor: Colors.grey,
+               activeFillColor: Colors.white,
+          activeColor: AppColors.primaryColor,
+          selectedFillColor: Colors.white,
+          selectedColor: Colors.blue,
+          inactiveFillColor: Colors.grey[200],
+          inactiveColor: Colors.white,
             ),
             enableActiveFill: true,
             textStyle: TextStyle(fontSize: 20, color: Colors.black),

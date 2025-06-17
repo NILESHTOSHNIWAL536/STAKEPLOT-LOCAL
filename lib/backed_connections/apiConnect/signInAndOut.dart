@@ -6,11 +6,16 @@ import 'package:flutter_application_code_stakeplot/animated/userLoginedAlready.d
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/opt_email.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/screenTime.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/confirm.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/resetPas.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
+import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/create_new_password.dart';
+import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/forgot.dart';
+import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/signin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Utils/snackBar.dart';
@@ -164,7 +169,8 @@ void getforgotPassword(context, String name, String email) async {
         ),
       ),
     );
-  } else {
+  } else 
+  {
     snackBarCalled(context, SnackbarData().emailIdNotValid, Colors.red);
   }
 }
@@ -193,5 +199,5 @@ Future<void> addThisDeviceToBackend(deviceData, context) async {
 Future<Widget> checkAuthAndNavigate() async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   final bool isLoggedIn = _pref.containsKey("accessToken");
-  return isLoggedIn ? HomePage() : Signin();
+  return isLoggedIn ? HomePage() : LoginScreen();
 }

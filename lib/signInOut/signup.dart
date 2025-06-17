@@ -312,28 +312,22 @@ class _SigninState extends State<SignUp> {
     String phone = phoneController.text;
     String dob = dobController.text;
 
-    print(
-        "Storing data: name=$name, email=$email, phone=$phone, dob=$dob"); // Debugging statement
 
     if (name.isEmpty) {
-      print("Error: Name is empty"); // Debugging statement
       snackBarCalledfail(context, SignupData().emptyUsername, Colors.red);
       return;
     }
     if (!RegExp(r'^[a-zA-Z]').hasMatch(name)) {
-      print("Error: Invalid username format"); // Debugging statement
       snackBarCalledfail(context, SignupData().invalidUsername, Colors.red);
       return;
     }
 
     if (name.length < 3) {
-      print("Error: Username is too short"); // Debugging statement
       snackBarCalledfail(context, SignupData().shortUsername, Colors.red);
       return;
     }
 
     if (email.isEmpty) {
-      print("Error: Email is empty"); // Debugging statement
       snackBarCalledfail(context, SignupData().emptyEmail, Colors.red);
       return;
     }

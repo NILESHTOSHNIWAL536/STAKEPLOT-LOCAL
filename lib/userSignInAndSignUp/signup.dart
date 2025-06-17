@@ -1,6 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/Utils/signUp.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/confirm.dart';
+import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/wave.dart';
+import 'package:get/get.dart';
 import 'dart:math' as math;
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -10,12 +25,12 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _dateOfBirthController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
-  
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController dobController = TextEditingController(text: DateFormat('yyyy-MM-dd').format(DateTime.now()).toString());
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+  RxBool flag = false.obs;
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
 
@@ -28,8 +43,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF9B8BC6),
-              Color(0xFF6568A7),
+              // Color(0xFF9B8BC6),
+              // Color(0xFF6568A7),
+              // Color(0xFF272841),
+               Color(0xFF6568A7),
               Color(0xFF272841),
             ],
           ),
@@ -37,76 +54,77 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: SafeArea(
           child: SingleChildScrollView(
             child: Container(
-              constraints: BoxConstraints(
-                minHeight: MediaQuery.of(context).size.height - 
-                          MediaQuery.of(context).padding.top,
-              ),
-              child: Column(
+              height: MediaQuery.of(context).size.height,
+              child: Stack(
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Status Bar
-               
-                  // Main Content
+                   Positioned(
+                    bottom: 40,
+                    left: 0,
+                    child: buildBottomWaves(context)
+                  ),
+
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24.0),
                     child: Column(
                       children: [
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 20),
                         
                         // Welcome Text
                         _buildWelcomeText(),
                         
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 20),
                         
                         // Username Field
                         _buildUsernameField(),
                         
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
                         
                         // Date of Birth Field
                         _buildDateOfBirthField(),
                         
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
                         
                         // Email Field
                         _buildEmailField(),
                         
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
                         
                         // Password Field
                         _buildPasswordField(),
                         
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
                         
                         // Confirm Password Field
                         _buildConfirmPasswordField(),
                         
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 20),
                         
                         // Sign Up Button
                         _buildSignUpButton(),
                         
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 20),
                         
                         // Or login with
                         _buildDivider(),
                         
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 15),
                         
                         // Google Sign In
                         _buildGoogleSignIn(),
                         
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 20),
                         
                         // Sign In Link
                         _buildSignInLink(),
                         
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
                       ],
                     ),
                   ),
                   
                   // Bottom Wave Design
-                  _buildBottomWave(),
+                 
                 ],
               ),
             ),
@@ -120,23 +138,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _buildWelcomeText() {
     return Column(
       children: [
-        const Text(
-          'Create Account',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 32,
-            fontWeight: FontWeight.w300,
-          ),
-        ),
+        textStyle(context: context,text: 'Create Account',fontWeight: FontWeight.bold,fontsize: 32,c: Colorcodes.white),
         const SizedBox(height: 8),
-        const Text(
-          'to get started now!',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w300,
-          ),
-        ),
+        textStyle(context: context,text: 'to get started now!',fontWeight: FontWeight.w300,fontsize: 18,c: Colorcodes.white),
       ],
     );
   }
@@ -148,9 +152,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
         border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
       ),
       child: TextField(
-        controller: _usernameController,
+        controller: usernameController,
+        onChanged: (c){
+            flag.value=false;
+        },
         style: const TextStyle(color: Colors.white),
+         inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                      LowerCaseTextFormatter(),
+          ],
         decoration: InputDecoration(
+          
           hintText: 'Username',
           hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
           border: InputBorder.none,
@@ -170,7 +182,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
       ),
       child: TextField(
-        controller: _dateOfBirthController,
+        controller: dobController,
         style: const TextStyle(color: Colors.white),
         readOnly: true,
         onTap: () => _selectDate(context),
@@ -199,9 +211,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
       ),
       child: TextField(
-        controller: _emailController,
+        controller: emailController,
         style: const TextStyle(color: Colors.white),
         keyboardType: TextInputType.emailAddress,
+         onChanged: (c){
+            flag.value=false;
+        },
         decoration: InputDecoration(
           hintText: 'Email',
           hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
@@ -222,9 +237,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
       ),
       child: TextField(
-        controller: _passwordController,
+        controller: passwordController,
         obscureText: !_isPasswordVisible,
         style: const TextStyle(color: Colors.white),
+         onChanged: (c){
+            flag.value=false;
+        },
         decoration: InputDecoration(
           hintText: 'Password',
           hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
@@ -256,8 +274,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
         border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
       ),
       child: TextField(
-        controller: _confirmPasswordController,
+        controller: confirmPasswordController,
         obscureText: !_isConfirmPasswordVisible,
+         onChanged: (c){
+            flag.value=false;
+        },
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           hintText: 'Confirm Password',
@@ -299,14 +320,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
           elevation: 0,
         ),
-        child: const Text(
+        child: Obx(()=> flag.value
+                    ? Spinner(
+                        size: 20,
+                        color: AppColors.primaryColor,
+                      ): Text(
           'Sign Up',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
         ),
-      ),
+      )),
     );
   }
 
@@ -393,12 +418,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Widget _buildBottomWave() {
-    return CustomPaint(
-      size: Size(MediaQuery.of(context).size.width, 100),
-      painter: WavePainter(),
-    );
-  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -423,36 +442,161 @@ class _SignUpScreenState extends State<SignUpScreen> {
     
     if (picked != null) {
       setState(() {
-        _dateOfBirthController.text = 
-            "${picked.day}/${picked.month}/${picked.year}";
+        dobController.text = "${picked.year}-${picked.month}-${picked.day}";
       });
+      flag.value=false;
     }
+    
   }
 
   void _handleSignUp() {
-    // Validate form
-    if (_usernameController.text.isEmpty ||
-        _dateOfBirthController.text.isEmpty ||
-        _emailController.text.isEmpty ||
-        _passwordController.text.isEmpty ||
-        _confirmPasswordController.text.isEmpty) {
-      _showSnackBar('Please fill in all fields');
-      return;
-    }
-
-    if (_passwordController.text != _confirmPasswordController.text) {
-      _showSnackBar('Passwords do not match');
-      return;
-    }
-
-    if (_passwordController.text.length < 6) {
-      _showSnackBar('Password must be at least 6 characters');
-      return;
-    }
-
-    // Handle sign up logic here
-    _showSnackBar('Account created successfully!');
+       storeData();
   }
+
+
+  void storeData() async {
+    String name = usernameController.text;
+    String email = emailController.text;
+    String password = passwordController.text;
+    String conform = confirmPasswordController.text;
+    String phone = "0";
+    String dob = dobController.text;
+
+
+    if (name.isEmpty) {
+      snackBarCalledfail(context, SignupData().emptyUsername, Colors.red);
+      return;
+    }
+    if (!RegExp(r'^[a-zA-Z]').hasMatch(name)) {
+      snackBarCalledfail(context, SignupData().invalidUsername, Colors.red);
+      return;
+    }
+
+    if (name.length < 3) {
+      snackBarCalledfail(context, SignupData().shortUsername, Colors.red);
+      return;
+    }
+
+    if (email.isEmpty) {
+      snackBarCalledfail(context, SignupData().emptyEmail, Colors.red);
+      return;
+    }
+
+    // Email format validation
+    if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+        .hasMatch(email)) {
+      print("Error: Invalid email format"); // Debugging statement
+      snackBarCalledfail(context, SignupData().invalidEmail, Colors.red);
+      return;
+    }
+
+    if (password.isEmpty) {
+      print("Error: Password is empty"); // Debugging statement
+      snackBarCalledfail(context, SignupData().emptyPassword, Colors.red);
+      return;
+    }
+
+    if (password.length < 8) {
+      print("Error: Password is too short"); // Debugging statement
+      snackBarCalledfail(context, SignupData().shortPassword, Colors.red);
+      return;
+    }
+
+    if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~])')
+        .hasMatch(password)) {
+      print("Error: Weak password"); // Debugging statement
+      snackBarCalledfail(context, SignupData().weakPassword, Colors.red);
+      return;
+    }
+
+    if (conform.isEmpty) {
+      print("Error: Confirm password is empty"); // Debugging statement
+      snackBarCalledfail(
+          context, SignupData().emptyConfirmPassword, Colors.red);
+      return;
+    }
+
+    if (password != conform) {
+      print("Error: Passwords do not match"); // Debugging statement
+      snackBarCalledfail(context, SignupData().passwordMismatch, Colors.red);
+      return;
+    }
+
+    if (dob.isEmpty) {
+      print("Error: Date of birth is empty"); // Debugging statement
+      snackBarCalledfail(context, SignupData().emptyDob, Colors.red);
+      return;
+    }
+
+    flag.value = true;
+    final response = await http.post(
+      Uri.parse('${url}/user/register'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        'name': usernameController.text,
+        'email': emailController.text,
+        'userpassword': passwordController.text,
+        'phone': phone,
+        'confirmPassword': confirmPasswordController.text,
+        'dob': dobController.text,
+        'avatarType': url,
+        'otp': "opts",
+      }),
+    );
+
+    var responce = jsonDecode(response.body);
+    print("Response from server: $responce"); // Debugging statement
+
+    bool boolvar = responce['success'];
+
+    if (!boolvar && responce['error'] == "Invalid Otp") {
+      flag.value = false;
+      call();
+    }
+
+    if (!boolvar) {
+      print(
+          "Error: ${responce['error']['explanation']}"); // Debugging statement
+      snackBarCalledSignup(
+          context, responce['error']['explanation'], Colors.red);
+      flag.value = false;
+      return;
+    }
+  }
+
+
+
+  void call() {
+    var data = {
+      'name': usernameController.text,
+      'email': emailController.text,
+      'userpassword': passwordController.text,
+      // 'phone': phoneController.text,
+      'confirmPassword': confirmPasswordController.text,
+      'dob': dobController.text,
+    };
+    flag.value = false;
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => Avatar(data: data),
+    //   ),
+    // );
+    getOTP(context, usernameController.text, emailController.text);
+    // openShowModal();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => conform(
+          data: data,
+          url: "",
+        ),
+      ),
+    );
+  }
+  
 
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -462,34 +606,4 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
-}
-
-class WavePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.white.withOpacity(0.1)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
-
-    final path = Path();
-    
-    // Create multiple wave lines
-    for (int i = 0; i < 5; i++) {
-      path.reset();
-      final yOffset = i * 15.0;
-      path.moveTo(0, size.height - 50 + yOffset);
-      
-      for (double x = 0; x <= size.width; x += 10) {
-        final y = size.height - 50 + yOffset + 
-                 (10 * math.sin((x / size.width) * 2 * math.pi));
-        path.lineTo(x, y);
-      }
-      
-      canvas.drawPath(path, paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
