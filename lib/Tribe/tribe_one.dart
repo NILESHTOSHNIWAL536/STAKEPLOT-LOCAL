@@ -153,7 +153,7 @@ class _TribeHomeState extends State<TribeUnique> {
       var obj = his['data'];
 
       setState(() {
-        dataObj = obj[0];
+        dataObj = obj.length>0? obj[0]:dataObj;
       });
     } else {}
   }

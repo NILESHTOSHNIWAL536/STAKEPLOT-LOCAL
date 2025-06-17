@@ -193,7 +193,7 @@ class _SigninState extends State<Signin> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              containerIconSiginWith(FontAwesomeIcons.google, Colorcodes.white),
+              containerIconSiginWith(FontAwesomeIcons.google, Colorcodes.white,context),
             ],
           ),
           const SizedBox(height: 10),
@@ -222,37 +222,7 @@ class _SigninState extends State<Signin> {
     );
   }
 
-  Widget containerIconSiginWith(IconData icon, Color color) {
-    return InkWell(
-      onTap: () async {
-        final userdata = await AuthService().signInWithGoogle(context);
-        print("User data received: $userdata");
-        if (userdata != "") {
-          if (userdata!['data']['accessToken'] != null) {
-            print("Access token is present.");
-          } else {
-            print("Navigating to UserDetailsPage with userdata: $userdata");
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => UserDetailsPage(data: userdata!)),
-            );
-          }
-        } else {
-          print("No user data received.");
-        }
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-        decoration: BoxDecoration(
-          color: Colorcodes.greyLight,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: FaIcon(icon, size: 30, color: color),
-      ),
-    );
-  }
-
+ 
   Widget siginButton() {
     return Center(
       child: Container(
@@ -303,3 +273,35 @@ class _SigninState extends State<Signin> {
     );
   }
 }
+
+
+ Widget containerIconSiginWith(IconData icon, Color color,context) {
+    return InkWell(
+      onTap: () async {
+        final userdata = await AuthService().signInWithGoogle(context);
+        print("User data received: $userdata");
+        if (userdata != "") {
+          if (userdata!['data']['accessToken'] != null) {
+            print("Access token is present.");
+          } else {
+            print("Navigating to UserDetailsPage with userdata: $userdata");
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => UserDetailsPage(data: userdata!)),
+            );
+          }
+        } else {
+          print("No user data received.");
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+        decoration: BoxDecoration(
+          color: Colorcodes.greyLight,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: FaIcon(icon, size: 30, color: color),
+      ),
+    );
+  }

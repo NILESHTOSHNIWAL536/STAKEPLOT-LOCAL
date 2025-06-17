@@ -10,7 +10,9 @@ import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/confirm.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
 import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/wave.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'dart:math' as math;
 import 'package:http/http.dart' as http;
@@ -111,7 +113,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         const SizedBox(height: 15),
                         
                         // Google Sign In
-                        _buildGoogleSignIn(),
+                        // _buildGoogleSignIn(),
+                    containerIconSiginWith(FontAwesomeIcons.google, Colorcodes.white,context),
+
                         
                         const SizedBox(height: 20),
                         
