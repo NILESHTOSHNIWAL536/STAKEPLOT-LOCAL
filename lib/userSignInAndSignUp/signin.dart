@@ -28,84 +28,83 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-                   Color(0xFF6568A7),
-                  Color(0xFF272841),
-            ],
+      body: SingleChildScrollView(
+        child: Container(
+           height: MediaQuery.of(context).size.height,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                     Color(0xFF6568A7),
+                    Color(0xFF272841),
+              ],
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              child: Stack(
-                children: [
-                  // Main Content
-                   Positioned(
-                    bottom: 0,
-                    left: 0,
-                    child: buildBottomWaves(context)),
-            
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 30),
-                        
-                        // Welcome Text
-                        _buildWelcomeText(),
-                        
-                        const SizedBox(height: 20),
-                        
-                        // Email Field
-                        _buildEmailField(),
-                        
-                        const SizedBox(height: 20),
-                        
-                        // Password Field
-                        _buildPasswordField(),
-                        
-                        const SizedBox(height: 10),
-                        
-                        // Forgot Password
-                        _buildForgotPassword(),
-                        
-                        const SizedBox(height:10),
-                        
-                        // Sign In Button
-                        _buildSignInButton(),
-                        
-                        const SizedBox(height: 40),
-                        
-                        // Or login with
-                        _buildDivider(),
-                        
-                        const SizedBox(height: 20),
-                        
-                        // Google Sign In
-                        buildGoogleSignIn(),
-                  
-                        const SizedBox(height: 20),
-                        
-                        // const Spacer(),
-                        
-                        // Sign Up Link
-                        buildSignUpLink(),
-                        
-                        
-                      ],
-                    ),
+          child: Container(
+             height: MediaQuery.of(context).size.height,
+            child: Stack(
+              children: [
+                // Main Content
+                 Positioned(
+                  bottom: 20,
+                  left: 0,
+                  child: buildBottomWaves(context)),
+          
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 50),
+                      
+                      // Welcome Text
+                      _buildWelcomeText(),
+                      
+                      const SizedBox(height: 20),
+                      
+                      // Email Field
+                      _buildEmailField(),
+                      
+                      const SizedBox(height: 20),
+                      
+                      // Password Field
+                      _buildPasswordField(),
+                      
+                      const SizedBox(height: 10),
+                      
+                      // Forgot Password
+                      _buildForgotPassword(),
+                      
+                      const SizedBox(height:10),
+                      
+                      // Sign In Button
+                      _buildSignInButton(),
+                      
+                      const SizedBox(height: 40),
+                      
+                      // Or login with
+                      _buildDivider(),
+                      
+                      const SizedBox(height: 20),
+                      
+                      // Google Sign In
+                      buildGoogleSignIn(),
+                
+                      const SizedBox(height: 20),
+                      
+                      // const Spacer(),
+                      
+                      // Sign Up Link
+                      buildSignUpLink(),
+                      
+                      
+                    ],
                   ),
-                  
-                  // Bottom Wave Design
-                   
-                ],
-              ),
+                ),
+                
+                // Bottom Wave Design
+                 
+              ],
             ),
           ),
         ),

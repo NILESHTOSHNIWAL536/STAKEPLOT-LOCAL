@@ -7,6 +7,7 @@ import 'package:flutter_application_code_stakeplot/Utils/signUp.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/headersList/textfeild.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/confirm.dart';
 import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/wave.dart';
@@ -156,7 +157,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
             flag.value=false;
         },
         style: const TextStyle(color: Colors.white),
+         inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                      LowerCaseTextFormatter(),
+          ],
         decoration: InputDecoration(
+          
           hintText: 'Username',
           hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
           border: InputBorder.none,
