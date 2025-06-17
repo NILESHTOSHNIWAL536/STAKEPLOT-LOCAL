@@ -129,6 +129,7 @@ RxString searchAccountId = "".obs;
 RxString accountIdPdf = "".obs;
 
 RxString maskedName="".obs;
+RxString maskedNameLocal="".obs;
 RxList interestedTags = [].obs;
 
 RxString allOrGroupTransactionsName = "All".obs;

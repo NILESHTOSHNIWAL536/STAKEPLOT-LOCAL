@@ -53,6 +53,7 @@ void getBudget() async {
     var responce = await getDataApiCall(urlPath);
     if (getFlagOfResponse(responce)) {
       var his = jsonDecode(responce.body);
+      print("body for get budget $his");
       var obj = his['data'];
       budgetList.clear();
       budgetList.addAll(obj);
@@ -61,7 +62,7 @@ void getBudget() async {
   } catch (e) {}
 }
 
-  getBills() async {
+getBills() async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
 
@@ -83,10 +84,10 @@ void getBudget() async {
 }
 
 bool isZeroAmount(String amount) {
-  try{
-  double parsed = double.parse(amount.trim().toString());
-  return  parsed == 0.0 || parsed == 0.00 || parsed == 0;
-  }catch (e) {
+  try {
+    double parsed = double.parse(amount.trim().toString());
+    return parsed == 0.0 || parsed == 0.00 || parsed == 0;
+  } catch (e) {
     return true;
   }
 }
@@ -95,10 +96,11 @@ void addBudget(BuildContext context, String name, String amount,
     List expenseCategory, String budgetPeriod) async {
   final SharedPreferences _pref = await SharedPreferences.getInstance();
   var accessToken = _pref.getString("accessToken");
+  print("budget data ");
+  List filteredCategories = expenseCategory
+      .where((e) => !isZeroAmount(e['amount'].toString() ?? '0'))
+      .toList();
 
- List filteredCategories = expenseCategory
-        .where((e) => !isZeroAmount(e['amount'].toString() ?? '0'))
-        .toList();
   if (filteredCategories.isEmpty) {
     createBudget.value = false;
     snackBarCalledfail(context, SnackbarData().budgetAddFailed, Colors.red);

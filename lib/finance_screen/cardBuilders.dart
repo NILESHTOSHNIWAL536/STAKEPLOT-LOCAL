@@ -119,6 +119,7 @@ class CardBuilders {
 
     return GestureDetector(
       onTap: () {
+       
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => MyBudgetScreen(
@@ -151,6 +152,8 @@ class CardBuilders {
           child: InkWell(
             borderRadius: BorderRadius.circular(20),
             onTap: () {
+                print("data for budget: $data");
+                
               Navigator.push(
                 context,
                 MaterialPageRoute(

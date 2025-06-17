@@ -354,18 +354,19 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
       inputFormatters: allowDecimalInput(),
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.currency_rupee),
-           suffixIcon: widget.isDebit 
-            ? IconButton(
-                icon: Icon(
-                  speechService.isListening ? Icons.mic : Icons.mic_none,
-                  color: AppColors.primaryColor,
-                ),
-                onPressed: speechService.isListening
-                    ? speechService.stopListening
-                    : speechService.startListening,
-                tooltip: 'Speech to Text',
-              )
-            : null,
+        // Speech to text for future 
+          //  suffixIcon: widget.isDebit 
+          //   ? IconButton(
+          //       icon: Icon(
+          //         speechService.isListening ? Icons.mic : Icons.mic_none,
+          //         color: AppColors.primaryColor,
+          //       ),
+          //       onPressed: speechService.isListening
+          //           ? speechService.stopListening
+          //           : speechService.startListening,
+          //       tooltip: 'Speech to Text',
+          //     )
+          //   : null,
         hintText: HomepageStringsDart().enterAmount,
         fillColor: AppColors.button,
         filled: true,

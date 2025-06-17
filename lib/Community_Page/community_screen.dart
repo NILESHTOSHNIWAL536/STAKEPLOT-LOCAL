@@ -163,7 +163,9 @@ class _CommunityState extends State<Community> {
         child: InkWell(
           borderRadius: BorderRadius.circular(30),
           onTap: () async {
-            maskedName.value.trim().isEmpty
+            maskedName.value.isEmpty ||
+                    maskedName.value == "" ||
+                    maskedName.value == Null
                 ? MaskedNameDialogBox.showMaskedNameDialog(context)
                 : await showModal({});
           },
@@ -200,7 +202,8 @@ class _CommunityState extends State<Community> {
           },
         ));
   }
- Widget _buildDottedDivider() {
+
+  Widget _buildDottedDivider() {
     return Container(
       height: 1,
       child: LayoutBuilder(
@@ -228,6 +231,7 @@ class _CommunityState extends State<Community> {
       ),
     );
   }
+
   Widget getTabs(context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -323,14 +327,14 @@ class _CommunityState extends State<Community> {
                           child: Container(
                             width: MediaQuery.sizeOf(context).width,
                             child: Padding(
-                              padding:
-                                  EdgeInsets.symmetric(horizontal: 8, vertical: 20),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 20),
                               child: Text(
                                 strings.textOption,
                                 style: FontManager().getTextStyle(
                                   context,
                                   lWeight: FontWeight.w500,
-                                  fontSize:16,
+                                  fontSize: 16,
                                   color: AppColors.backgroundColor,
                                 ),
                               ),
@@ -357,23 +361,23 @@ class _CommunityState extends State<Community> {
                             );
                           },
                           child: Padding(
-                            padding:
-                                EdgeInsets.symmetric(horizontal: 8, vertical: 20),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 20),
                             child: Container(
-                               width: MediaQuery.sizeOf(context).width,
+                              width: MediaQuery.sizeOf(context).width,
                               child: Text(
                                 "PostCard",
                                 style: FontManager().getTextStyle(
                                   context,
                                   lWeight: FontWeight.w500,
-                                 fontSize:16,
+                                  fontSize: 16,
                                   color: AppColors.backgroundColor,
                                 ),
                               ),
                             ),
                           ),
                         ),
-                       _buildDottedDivider(),
+                        _buildDottedDivider(),
                         GestureDetector(
                           onTap: () {
                             posting.value = false;
@@ -394,16 +398,16 @@ class _CommunityState extends State<Community> {
                             );
                           },
                           child: Padding(
-                            padding:
-                                EdgeInsets.symmetric(horizontal: 8, vertical: 20),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 20),
                             child: Container(
-                               width: MediaQuery.sizeOf(context).width,
+                              width: MediaQuery.sizeOf(context).width,
                               child: Text(
                                 strings.pollOption,
                                 style: FontManager().getTextStyle(
                                   context,
                                   lWeight: FontWeight.w500,
-                                  fontSize:16,
+                                  fontSize: 16,
                                   color: AppColors.backgroundColor,
                                 ),
                               ),
@@ -414,32 +418,31 @@ class _CommunityState extends State<Community> {
                         GestureDetector(
                           onTap: () {
                             posting.value = false;
-                             Navigator.of(context).pop();
-                              Navigator.push(
+                            Navigator.of(context).pop();
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ExploreModal(
-                                              onPostCreated: (newPost) {
-                                                setState(() {
-                                                  posts.add(newPost);
-                                                });
-                                              },
-                                            ),
+                                  onPostCreated: (newPost) {
+                                    setState(() {
+                                      posts.add(newPost);
+                                    });
+                                  },
+                                ),
                               ),
                             );
-                                     
                           },
                           child: Padding(
-                            padding:
-                                EdgeInsets.symmetric(horizontal: 8, vertical: 20),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 20),
                             child: Container(
-                               width: MediaQuery.sizeOf(context).width,
+                              width: MediaQuery.sizeOf(context).width,
                               child: Text(
                                 strings.exploria,
                                 style: FontManager().getTextStyle(
                                   context,
                                   lWeight: FontWeight.w500,
-                                  fontSize:16,
+                                  fontSize: 16,
                                   color: AppColors.backgroundColor,
                                 ),
                               ),
@@ -448,7 +451,6 @@ class _CommunityState extends State<Community> {
                         ),
                       ],
                     ),
-                    
                   ],
                 ),
               ),

@@ -47,8 +47,7 @@ class _ExploreModalState extends State<ExploreModal> {
   final List<TextEditingController> _amountControllers = [];
   bool exploreSubmitted = false;
   final CommunityScreenStrings strings = CommunityScreenStrings();
-    final List<String> _cropShapes = []; // New: Store crop shape for each image
-  String _selectedCropShape = 'Square';
+ bool? _isSquare;
   @override
   void initState() {
     super.initState();
@@ -71,8 +70,9 @@ class _ExploreModalState extends State<ExploreModal> {
   Future<void> _showCropDialog(File imageFile, [int? existingIndex]) async {
     final cropController = CustomImageCropController();
     bool isLoading = false; // Track loading state
-  String localCropShape = _selectedCropShape;
-    final croppedFile = await showDialog<File?>(
+   bool localIsSquare = _isSquare ?? true; 
+     bool showCropSelection = _isSquare == null;
+    final croppedFile = await showDialog<Map<String, dynamic>?>(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) => LayoutBuilder(
@@ -96,19 +96,19 @@ class _ExploreModalState extends State<ExploreModal> {
                         cropController: cropController,
                         image: FileImage(imageFile),
                         shape: CustomCropShape.Square,
-                         ratio: _selectedCropShape == 'Square'
-                                          ?  Ratio(width: 402, height: 400)
-                                          :  Ratio(width: 402, height: 214),
-                                      outlineStrokeWidth: 0.0,
-                                      //  ratio: Ratio(16, 9),
-                                      // forceInsideCropArea:true,
-                  
-                                      overlayColor: Colors.black.withOpacity(0.5),
-                                      cropPercentage: 0.92, //
-                      
+                        ratio: localIsSquare
+                            ? Ratio(width: 1, height: 1) // Square
+                            : Ratio(width: 402, height: 214),
+                        outlineStrokeWidth: 0.0,
+                        //  ratio: Ratio(16, 9),
+                        // forceInsideCropArea:true,
+
+                        overlayColor: Colors.black.withOpacity(0.5),
+                        cropPercentage: 0.92, //
                       ),
                     ),
                   ),
+                   if (showCropSelection)
                       Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12.0),
                     child: Row(
@@ -119,18 +119,18 @@ class _ExploreModalState extends State<ExploreModal> {
                             'Square',
                             style: FontManager().getTextStyle(
                               context,
-                              lWeight: localCropShape == 'Square'
+                              lWeight: localIsSquare == 'true'
                                   ? FontWeight.bold
                                   : FontWeight.normal,
                               fontSize: 14,
                               color: AppColors.bg1,
                             ),
                           ),
-                          selected: localCropShape == 'Square',
+                          selected: localIsSquare == 'true',
                           onSelected: (selected) {
                             if (selected) {
                               setDialogState(() {
-                                localCropShape = 'Square';
+                                localIsSquare = true;
                               });
                             }
                           },
@@ -143,18 +143,18 @@ class _ExploreModalState extends State<ExploreModal> {
                             'Custom (402:214)',
                             style: FontManager().getTextStyle(
                               context,
-                              lWeight: localCropShape == 'Custom'
+                              lWeight: localIsSquare == 'false'
                                   ? FontWeight.bold
                                   : FontWeight.normal,
                               fontSize: 14,
                               color: AppColors.bg1,
                             ),
                           ),
-                          selected: localCropShape == 'Custom',
+                          selected: localIsSquare == 'false',
                           onSelected: (selected) {
                             if (selected) {
                               setDialogState(() {
-                                localCropShape = 'Custom';
+                                localIsSquare = false;
                               });
                             }
                           },
@@ -164,11 +164,10 @@ class _ExploreModalState extends State<ExploreModal> {
                       ],
                     ),
                   ),
-              
                 ],
               ),
-               // Crop shape selection
-              
+              // Crop shape selection
+
               actionsPadding:
                   const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               actions: [
@@ -207,7 +206,11 @@ class _ExploreModalState extends State<ExploreModal> {
                                 final croppedFile =
                                     await _saveCroppedImage(croppedImage);
                                 if (croppedFile != null) {
-                                  Navigator.pop(context, croppedFile);
+                                  // Navigator.pop(context, croppedFile);
+                                  Navigator.pop(context, {
+                                    'file': croppedFile,
+                                    'isSquare': localIsSquare,
+                                  });
                                 }
                               }
                               setDialogState(() {
@@ -249,17 +252,27 @@ class _ExploreModalState extends State<ExploreModal> {
       ),
     );
 
-    if (croppedFile != null) {
+    // if (croppedFile != null) {
+    //   setState(() {
+    //     if (existingIndex != null) {
+    //       selectedImages[existingIndex] = croppedFile;
+    //     } else {
+    //       selectedImages.add(croppedFile);
+    //       _cropControllers.add(cropController);
+    //     }
+    //   });
+    // }
+   if (croppedFile != null) {
       setState(() {
         if (existingIndex != null) {
-          selectedImages[existingIndex] = croppedFile;
+          selectedImages[existingIndex] = croppedFile['file'];
         } else {
-          selectedImages.add(croppedFile);
+          selectedImages.add(croppedFile['file']);
           _cropControllers.add(cropController);
+          _isSquare = croppedFile['isSquare']; // Set crop shape for all images
         }
       });
     }
-
     if (existingIndex == null) {
       cropController.dispose();
     }
@@ -286,6 +299,9 @@ class _ExploreModalState extends State<ExploreModal> {
       selectedImages.removeAt(index);
       _cropControllers[index].dispose();
       _cropControllers.removeAt(index);
+      if (selectedImages.isEmpty) {
+        _isSquare = null; // Reset crop shape if no images remain
+      }
     });
   }
 
@@ -380,7 +396,7 @@ class _ExploreModalState extends State<ExploreModal> {
         return;
       }
     }
- final TagList = [...selectedSubCategories, ...selectedCategories];
+    final TagList = [...selectedSubCategories, ...selectedCategories];
     Map<String, dynamic> requestBody = {
       "images": imageUrls,
       "name": locationNameController.text,
@@ -390,8 +406,8 @@ class _ExploreModalState extends State<ExploreModal> {
       "tripHighlights": titleController.text,
       "description": contentController.text,
       "postType": "exploria",
-      "tags":TagList
-      
+      "tags": TagList,
+      "isSquareImage": _isSquare ?? true,
     };
 
     print("req body for the server: $requestBody");
@@ -458,18 +474,19 @@ class _ExploreModalState extends State<ExploreModal> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: AppBar(
-       centerTitle: true,
-       leading:  IconButton(
-                              icon: Icon(Icons.arrow_back, 
-                                color: AppColors.bg1,
-                                size: 20,
-                              ),
-                              onPressed: () => Navigator.pop(context),
-                            ),
-       automaticallyImplyLeading: false,
-       title:  _buildHeader(),
-       ),
+      appBar: AppBar(
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: AppColors.bg1,
+            size: 20,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+        automaticallyImplyLeading: false,
+        title: _buildHeader(),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(top: 20),
@@ -482,8 +499,6 @@ class _ExploreModalState extends State<ExploreModal> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                   
-                   
                     _buildImageSection(),
                     const SizedBox(height: 10),
                     _buildPlaceSection(),

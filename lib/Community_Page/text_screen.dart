@@ -315,12 +315,12 @@ class _TextScreenState extends State<TextScreen> {
                           return;
                         }
 
-                        await createPost(
-                          context,
-                          titleController.text.toString().trim(),
-                          contentController.text.toString().trim(),
-                          croppedImageFile,
-                        );
+                        // await createPost(
+                        //   context,
+                        //   titleController.text.toString().trim(),
+                        //   contentController.text.toString().trim(),
+                        //   croppedImageFile,
+                        // );
 
                         if (mounted) {
                           Navigator.pop(context);
