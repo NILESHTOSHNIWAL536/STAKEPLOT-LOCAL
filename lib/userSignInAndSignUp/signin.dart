@@ -49,6 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Container(
             height: MediaQuery.of(context).size.height,
             child: Stack(
+
               children: [
                 // Main Content
                 Positioned(
@@ -57,9 +58,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const SizedBox(height: 50),
-
                       // Welcome Text
                       _buildWelcomeText(),
 

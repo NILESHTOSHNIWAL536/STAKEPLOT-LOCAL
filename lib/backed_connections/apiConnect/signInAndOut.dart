@@ -94,15 +94,14 @@ void loginCalledData(response, context) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   print(response);
   final body = json.decode(response.body);
-
   String accessToken = body['data']['accessToken'];
   pref.setString("accessToken", "Bearer " + accessToken);
+  await getBankAccounts();
   await initializeOneSignal(context);
   currentId.value = body['data']['_id'];
   isBankAccountLink.value = body['data']['isBankAccountLinked'];
   acceptReset.value = false;
   getPhoneNo(body);
-  await getBankAccounts();
   Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
 }
 

@@ -278,6 +278,7 @@ class _TribeHomeState extends State<TribeUnique> {
                               : uniquePostDeatils,
                           flag: true,
                           index: -1,
+                          isTribeOne: true,
                         )
                       ),
                   

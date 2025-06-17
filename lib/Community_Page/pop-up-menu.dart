@@ -8,7 +8,7 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 
-Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2) {
+Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2,bool isTribeOne) {
      
     return PopupMenuButton(
       initialValue: 2,
@@ -23,27 +23,33 @@ Widget popUpBoxHideDelete(id, context, userId, int index,bool flag2) {
         if (value == 0 && userId == userName.value)
         {
           deletePost(id, context);
-          clearPostReportHide(index);
+           if(isTribeOne)
+            {
+                Navigator.pop(context);
+            }
+           clearPostReportHide(index);
         }
         else if (value == 1) {
           BuildContext c=context;
           showModalBottomSheet(
             context: context,
             builder: (contextBuild) {
-              return showModel(c, id, flag2,index);
+              return showModel(c, id, flag2,index,isTribeOne);
             },
           );
+
+           
 
         } else {
           reportPost(context, id, "hide post", "hide",index);
           if (flag2)
           {
             getPost();
+            clearPostReportHide(index);
             Navigator.pop(context);
           }
-         
         }
-
+      
     
       },
       itemBuilder: (context) {

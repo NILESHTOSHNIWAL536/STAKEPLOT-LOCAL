@@ -1,17 +1,20 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/Community_Page/community_screen.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/categoriseSpending.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/history.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/Home/home_page.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/insightsController.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/history/transactionHistoryScreen.dart';
+import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/bankinfo.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/FriendsUi.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/login.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/nextFetch.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/home.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -73,11 +76,24 @@ void expire(response, BuildContext context) {
 }
 
   void clearPostReportHide(int index,[bool f=true]){
-       if(f) getTrendingData.removeAt(index);
+        // if(f && index !=-1) getTrendingData.removeAt(index);
         resetAndLoadData();
+        currentPageTranding.value = 1;
+        currentPageFeed.value = 1;
+        isPostloading.value = false;
+        getTrendingData.clear();
+        getAllPostData.clear();
+        hasMorePostTranding.value = true;
+        hasMorePostFeed.value = true;
+        isPost.value = false;
+        isPostTranding.value = false;
+        getPost();
+        getTranding();
         posting.value = false;
         postDis.value = false;
-        getPosted.value = !getPosted.value;
+        getPostedTranding.value=!getPostedTranding.value;
+        getPosted.value=!getPosted.value;
+
   }
 
 
