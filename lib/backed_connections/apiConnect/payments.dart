@@ -97,7 +97,7 @@ void addBudget(BuildContext context, String name, String amount,
   var accessToken = _pref.getString("accessToken");
 
  List filteredCategories = expenseCategory
-        .where((e) => !isZeroAmount(e['amount'] ?? '0'))
+        .where((e) => !isZeroAmount(e['amount'].toString() ?? '0'))
         .toList();
   if (filteredCategories.isEmpty) {
     createBudget.value = false;

@@ -31,7 +31,7 @@ class BudgetSearch extends StatefulWidget {
 
 class _BudgetSearchState extends State<BudgetSearch> {
   TextEditingController nameController = TextEditingController(text: "");
-  String selectedValue = categoriesSeleted[0] ?? "";
+  String selectedValue =  categoriesSeleted.length>0? categoriesSeleted[0] : "";
   RxList<String> filteredCategories = <String>[].obs;
   RxBool isCategoriesUpdated = false.obs;
   final FocusNode _searchFocusNode = FocusNode(); // FocusNode for search field
