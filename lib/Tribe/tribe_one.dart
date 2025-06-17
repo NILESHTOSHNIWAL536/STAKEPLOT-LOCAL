@@ -239,18 +239,20 @@ class _TribeHomeState extends State<TribeUnique> {
     if (!widget.popBox.value) { // post screen withoutv comments
       return Scaffold(
         backgroundColor: AppColors.backgroundColor,
-
+        appBar: AppBar(
+          leading: InkWell(
+            onTap: (){
+               Navigator.pop(context);
+            },
+            child: Icon(Icons.arrow_back,size: 30,)),
+            title: Text(
+                                   "FinSpace",
+                                   style: FontManager().getTextStyle(context,
+                                       lWeight: FontWeight.w600, fontSize: 20, color: AppColors.finSpaceColor),
+                                 ),
+                                 
+        ),
         // bottomNavigationBar: BottomNavigations(data: sizeRoom ? 3 : 2),
-         appBar: AppBar(
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: AppColors.bg1,
-            size: 20,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),),
         extendBody: true,
 
         body: SafeArea(
@@ -263,12 +265,12 @@ class _TribeHomeState extends State<TribeUnique> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                    Padding(
-                     padding: const EdgeInsets.all(8.0),
-                     child: Text(
-                                   "FinSpace",
-                                   style: FontManager().getTextStyle(context,
-                                       lWeight: FontWeight.w600, fontSize: 20, color: AppColors.finSpaceColor),
-                                 ),
+                     padding: const EdgeInsets.symmetric(vertical: 10),
+                    //  child: Text(
+                    //                "FinSpace",
+                    //                style: FontManager().getTextStyle(context,
+                    //                    lWeight: FontWeight.w600, fontSize: 20, color: AppColors.finSpaceColor),
+                    //              ),
                    ),
                   Obx(() =>  PostCard(
                           data: reloadUniquePost.value

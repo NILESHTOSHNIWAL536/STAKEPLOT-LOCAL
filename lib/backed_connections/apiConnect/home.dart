@@ -184,7 +184,6 @@ Future<void> getAllTransactionHistory(
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       var obj = data['data'];
-      print("data for history_________$obj");
 
       if (obj != null && obj is List<dynamic>) {
         if (isRefreshing) {

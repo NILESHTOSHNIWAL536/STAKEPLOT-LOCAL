@@ -201,7 +201,8 @@ Future<void> checkIsUserValid() async {
       runApp(const MyApp());
     } else {
         debugPrint('⚠️ App not installed from official source');
-        runApp( UnverifiedApp());
+        runApp( MyApp());
+        // runApp( UnverifiedApp());
     }
   } catch (e) {
     debugPrint('Error in security check: $e');

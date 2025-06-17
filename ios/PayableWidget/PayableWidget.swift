@@ -20,7 +20,7 @@
 //     }
 
 //     func getTimeline(in context: Context, completion: @escaping (Timeline<PayableEntry>) -> ()) {
-//         let defaults = UserDefaults(suiteName: "group.com.stakeplot.pfa")
+//         let defaults = UserDefaults(suiteName: "group.com.stakeplot.adnan.dev")
 //         let toReceive = defaults?.string(forKey: "to_receive") ?? "None: ₹0"
 //         let toPay = defaults?.string(forKey: "to_pay") ?? "None: ₹0"
 
@@ -138,7 +138,7 @@ struct PayableProvider: TimelineProvider {
     }
 
     func getSnapshot(in context: Context, completion: @escaping (PayableEntry) -> ()) {
-        let defaults = UserDefaults(suiteName: "group.com.stakeplot.pfa")
+        let defaults = UserDefaults(suiteName: "group.com.stakeplot.adnan.dev")
         let toReceive = defaults?.string(forKey: "to_receive") ?? "None: ₹0"
         let toPay = defaults?.string(forKey: "to_pay") ?? "None: ₹0"
 
@@ -151,7 +151,7 @@ struct PayableProvider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<PayableEntry>) -> ()) {
-        let defaults = UserDefaults(suiteName: "group.com.stakeplot.pfa")
+        let defaults = UserDefaults(suiteName: "group.com.stakeplot.adnan.dev")
         let toReceive = defaults?.string(forKey: "to_receive") ?? "None: ₹0"
         let toPay = defaults?.string(forKey: "to_pay") ?? "None: ₹0"
 

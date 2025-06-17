@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,15 +25,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -50,19 +41,53 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBUTymgsIjMpxyPuIeiLhNO1SU5aZ8p3iI',
-    appId: '1:442849932576:android:490393355777bcee715345',
-    messagingSenderId: '442849932576',
-    projectId: 'stakeplot-adnan',
-    storageBucket: 'stakeplot-adnan.firebasestorage.app',
+    apiKey: 'AIzaSyAPLlFwWzO_WJS_fb4cGBglhR2iizF-6zY',
+    appId: '1:437443695891:android:3137c41f516db70df7f6e6',
+    messagingSenderId: '437443695891',
+    projectId: 'stakeplot-9f34b',
+    storageBucket: 'stakeplot-9f34b.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA0D_7inPaPqOLnGoInDZr_qXHdZUVFei4',
-    appId: '1:442849932576:ios:32c60e8592d0c841715345',
-    messagingSenderId: '442849932576',
-    projectId: 'stakeplot-adnan',
-    storageBucket: 'stakeplot-adnan.firebasestorage.app',
+    apiKey: 'AIzaSyCsLQjLKVD8LJ7-cwanwi81ji0nIaHX8Wg',
+    appId: '1:437443695891:ios:2847cc592d577612f7f6e6',
+    messagingSenderId: '437443695891',
+    projectId: 'stakeplot-9f34b',
+    storageBucket: 'stakeplot-9f34b.firebasestorage.app',
+    androidClientId: '437443695891-nqfnov7duvd3j5olorsuab5kv7mbuqgb.apps.googleusercontent.com',
+    iosClientId: '437443695891-m14tpii5cje8ql2up3avtso1d1dhf108.apps.googleusercontent.com',
     iosBundleId: 'com.stakeplot.pfa',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyDJCPCXlWdtucIGGxgEvpGQq4tBWtrVUpU',
+    appId: '1:437443695891:web:aa9cc4d4652ef6bdf7f6e6',
+    messagingSenderId: '437443695891',
+    projectId: 'stakeplot-9f34b',
+    authDomain: 'stakeplot-9f34b.firebaseapp.com',
+    storageBucket: 'stakeplot-9f34b.firebasestorage.app',
+    measurementId: 'G-0T97YEWBGB',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyCsLQjLKVD8LJ7-cwanwi81ji0nIaHX8Wg',
+    appId: '1:437443695891:ios:cdb6e3a2d41a2173f7f6e6',
+    messagingSenderId: '437443695891',
+    projectId: 'stakeplot-9f34b',
+    storageBucket: 'stakeplot-9f34b.firebasestorage.app',
+    androidClientId: '437443695891-nqfnov7duvd3j5olorsuab5kv7mbuqgb.apps.googleusercontent.com',
+    iosClientId: '437443695891-u0prp24l7ktkkhn9jhgh886263i3sq56.apps.googleusercontent.com',
+    iosBundleId: 'com.example.flutterApplicationCodeStakeplot',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyDJCPCXlWdtucIGGxgEvpGQq4tBWtrVUpU',
+    appId: '1:437443695891:web:cb4d080959e3fd67f7f6e6',
+    messagingSenderId: '437443695891',
+    projectId: 'stakeplot-9f34b',
+    authDomain: 'stakeplot-9f34b.firebaseapp.com',
+    storageBucket: 'stakeplot-9f34b.firebasestorage.app',
+    measurementId: 'G-F1L2L7FYG8',
+  );
+
 }
