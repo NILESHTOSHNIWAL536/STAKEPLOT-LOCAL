@@ -632,8 +632,7 @@ class _VegNonVegCalculatorState extends State<VegNonVegCalculator> {
                                   name: limitedFriends[index]['name'],
                                   width: 10,
                                   height: 10,
-                                  background: limitedFriends[index]
-                                      ['avatarBackGround'],
+                                  background: limitedFriends[index]['avatarBackGround'] ?? "",
                                   flag: true,
                                   fontsize: 7,
                                 ),

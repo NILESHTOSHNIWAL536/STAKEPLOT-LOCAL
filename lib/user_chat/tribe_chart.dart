@@ -404,7 +404,7 @@ class _TribeSearchState extends State<TribeChats> {
                         name: item['name'].toString() ,
                         width: 1,
                         height: 1,
-                        background: item['avatar']),
+                        background: item['avatar'] ?? ""),
                     const SizedBox(width: 8),
                     Container(
                       width: width >= 500

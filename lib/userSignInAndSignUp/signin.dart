@@ -6,6 +6,7 @@ import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
 import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/wave.dart';
 import 'dart:math' as math;
 
@@ -88,7 +89,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 20),
                       
                       // Google Sign In
-                      buildGoogleSignIn(),
+                       containerIconSiginWith(FontAwesomeIcons.google, Colorcodes.white,context),
+                      // buildGoogleSignIn(),
                 
                       const SizedBox(height: 20),
                       

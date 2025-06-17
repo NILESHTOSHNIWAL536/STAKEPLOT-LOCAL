@@ -46,7 +46,7 @@ class _MaskNameScreenState extends State<MaskNameScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Header with welcome text and skip button
-                  HeaderWidget(),
+                  HeaderWidget(update: widget.isupdate),
 
                   SizedBox(height: screenSize.height * 0.05),
 
@@ -79,7 +79,8 @@ class _MaskNameScreenState extends State<MaskNameScreen> {
 }
 
 class HeaderWidget extends StatelessWidget {
-  const HeaderWidget({Key? key}) : super(key: key);
+  bool update;
+   HeaderWidget({Key? key,required this.update}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +113,10 @@ class HeaderWidget extends StatelessWidget {
         TextButton(
           onPressed: () {
             // Handle skip action
-            Navigator.push(
+            if(update){
+               Navigator.pop(context);
+            }
+           else Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => InterestSelectionScreen()),
