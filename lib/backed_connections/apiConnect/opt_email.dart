@@ -3,6 +3,7 @@ import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiAutomations/curd.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/reset.dart';
+import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/create_new_password.dart';
 import 'package:page_transition/page_transition.dart';
 
 void checkEmail(context, email, otp, name) async {
@@ -23,7 +24,7 @@ void checkEmail(context, email, otp, name) async {
           type: PageTransitionType.fade,
           alignment: Alignment.bottomRight,
           duration: Durations.long1,
-          child: ResetPassword(
+          child: CreateNewPasswordScreen(
             email: email,
             name: name,
           ),

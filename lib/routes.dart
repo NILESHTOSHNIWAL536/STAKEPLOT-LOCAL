@@ -21,6 +21,7 @@ import 'package:flutter_application_code_stakeplot/profile_screen/edit_details.d
 import 'package:flutter_application_code_stakeplot/signInOut/forgot.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/signin.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/signup.dart';
+import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/forgot.dart';
 import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/signin.dart';
 import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/signup.dart';
 import 'Home_Screen/Home/home_page.dart';
@@ -31,9 +32,10 @@ import 'onboarding_screens/onboarding_screen.dart';
 var routes =
  {  
       '/splash': (context) =>  SplashScreen(),   
-      '/': (context) =>  Signin(),   
-      '/signup': (context) => SignUp(),  
-      // '/signup': (context) => SignUpScreen(),  
+      '/': (context) =>  LoginScreen(),   
+      // '/signup': (context) => SignUp(),  
+      '/signup': (context) => SignUpScreen(),  
+      '/forgot': (context) => ForgotPasswordScreen(),  
       '/home': (context) => HomePage(),  
       '/Notifications': (context) => Notifications(),  
       '/comment': (context) => Notifications(),  

@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
+import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
+import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/wave.dart';
 import 'dart:math' as math;
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -15,8 +21,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   bool _isPasswordVisible = false;
 
   @override
@@ -28,75 +34,76 @@ class _LoginScreenState extends State<LoginScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              // Color(0xFF6B5B95),
-              // Color(0xFF8B7CB6),
-              Color(0xFF9B8BC6),
-              Color(0xFF6568A7),
-              Color(0xFF272841),
+                   Color(0xFF6568A7),
+                  Color(0xFF272841),
             ],
           ),
         ),
         child: SafeArea(
           child: SingleChildScrollView(
             child: Container(
-              height: MediaQuery.of(context).size.height - 
-                     MediaQuery.of(context).padding.top,
-              child: Column(
+              height: MediaQuery.of(context).size.height,
+              child: Stack(
                 children: [
-                  
                   // Main Content
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 40),
-                          
-                          // Welcome Text
-                          _buildWelcomeText(),
-                          
-                          const SizedBox(height: 30),
-                          
-                          // Email Field
-                          _buildEmailField(),
-                          
-                          const SizedBox(height: 20),
-                          
-                          // Password Field
-                          _buildPasswordField(),
-                          
-                          const SizedBox(height: 16),
-                          
-                          // Forgot Password
-                          _buildForgotPassword(),
-                          
-                          const SizedBox(height: 40),
-                          
-                          // Sign In Button
-                          _buildSignInButton(),
-                          
-                          const SizedBox(height: 40),
-                          
-                          // Or login with
-                          _buildDivider(),
-                          
-                          const SizedBox(height: 30),
-                          
-                          // Google Sign In
-                          // _buildGoogleSignIn(),
-                          
-                          // const Spacer(),
-                          
-                          // Sign Up Link
-                          _buildSignUpLink(),
-                          
-                        ],
-                      ),
+                   Positioned(
+                    bottom: 0,
+                    left: 0,
+                    child: buildBottomWaves(context)),
+            
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 30),
+                        
+                        // Welcome Text
+                        _buildWelcomeText(),
+                        
+                        const SizedBox(height: 20),
+                        
+                        // Email Field
+                        _buildEmailField(),
+                        
+                        const SizedBox(height: 20),
+                        
+                        // Password Field
+                        _buildPasswordField(),
+                        
+                        const SizedBox(height: 10),
+                        
+                        // Forgot Password
+                        _buildForgotPassword(),
+                        
+                        const SizedBox(height:10),
+                        
+                        // Sign In Button
+                        _buildSignInButton(),
+                        
+                        const SizedBox(height: 40),
+                        
+                        // Or login with
+                        _buildDivider(),
+                        
+                        const SizedBox(height: 20),
+                        
+                        // Google Sign In
+                        buildGoogleSignIn(),
+                  
+                        const SizedBox(height: 20),
+                        
+                        // const Spacer(),
+                        
+                        // Sign Up Link
+                        buildSignUpLink(),
+                        
+                        
+                      ],
                     ),
                   ),
                   
                   // Bottom Wave Design
-                  _buildBottomWave(),
+                   
                 ],
               ),
             ),
@@ -137,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
         border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
       ),
       child: TextField(
-        controller: _emailController,
+        controller: emailController,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           hintText: 'Email Address',
@@ -159,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
         border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
       ),
       child: TextField(
-        controller: _passwordController,
+        controller: passwordController,
         obscureText: !_isPasswordVisible,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
@@ -192,6 +199,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: TextButton(
         onPressed: () {
           // Handle forgot password
+          Navigator.pushNamed(context, "/forgot");
         },
         child: Text(
           'Forgot Password?',
@@ -209,8 +217,23 @@ class _LoginScreenState extends State<LoginScreen> {
       width: double.infinity,
       height: 50,
       child: ElevatedButton(
-        onPressed: () {
+        onPressed: () async{
           // Handle sign in
+          if (acceptReset.value) return;
+
+            if (emailController.text.isEmpty ||
+                passwordController.text.isEmpty) {
+              snackBarCalledfail(
+                  context,
+                  SnackbarData()
+                      .enterAllFields); // You might want to update this to use signinData validation messages
+              return;
+            }
+
+            acceptReset.value = true;
+
+            await getDeviceInfo("deviceData.value".toString(), context,
+                emailController, passwordController);
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
@@ -220,7 +243,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           elevation: 0,
         ),
-        child: const Text(
+        child:Obx(()=> acceptReset.value? Spinner(size: 30,): Text(
           'Sign In',
           style: TextStyle(
             fontSize: 16,
@@ -228,7 +251,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
-    );
+    ));
   }
 
   Widget _buildDivider() {
@@ -274,22 +297,22 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildSignUpLink() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "Don't have an account? ",
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.7),
-            fontSize: 14,
+  Widget buildSignUpLink() {
+    return InkWell(
+      onTap: (){
+        Navigator.pushNamed(context, "/signup");
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "Don't have an account? ",
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.7),
+              fontSize: 14,
+            ),
           ),
-        ),
-        GestureDetector(
-          onTap: () {
-            // Handle sign up
-          },
-          child: const Text(
+          const Text(
             'Sign Up Now',
             style: TextStyle(
               color: Colors.white,
@@ -297,49 +320,35 @@ class _LoginScreenState extends State<LoginScreen> {
               fontWeight: FontWeight.w600,
             ),
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildBottomWave() {
-    return CustomPaint(
-      child: Container(
-        color: Colorcodes.appBarColor,
+        ],
       ),
-      size: Size(MediaQuery.of(context).size.width, 100),
-      painter: WavePainter(),
     );
   }
-}
 
-class WavePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.white.withOpacity(0.1)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
 
-    final path = Path();
-    
-    
-    // Create multiple wave lines
-    for (int i = 0; i < 5; i++) {
-      path.reset();
-      final yOffset = i * 15.0;
-      path.moveTo(0, size.height - 50 + yOffset);
-      
-      for (double x = 0; x <= size.width; x += 10) {
-        final y = size.height - 50 + yOffset + 
-                 (10 * math.sin((x / size.width) * 2 * math.pi));
-        path.lineTo(x, y);
-      }
-      
-      canvas.drawPath(path, paint);
-    }
+    Widget buildGoogleSignIn() {
+    return GestureDetector(
+      onTap: () {
+        // Handle Google sign in
+      },
+      child: Container(
+        width: 60,
+        height: 50,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Center(
+          child: Text(
+            'G',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue,
+            ),
+          ),
+        ),
+      ),
+    );
   }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

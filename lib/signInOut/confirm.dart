@@ -3,15 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/opt_email.dart';
-import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
-import 'package:flutter_application_code_stakeplot/finvu_screens/mobileNumber.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_application_code_stakeplot/signInOut/avatar.dart';
+import 'package:flutter_application_code_stakeplot/userSignInAndSignUp/wave.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -81,27 +79,53 @@ class _SigninState extends State<conform> {
       child: Scaffold(
         backgroundColor: Colorcodes.white,
         body: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          height: MediaQuery.of(context).size.height / 1.3,
+          // padding: const EdgeInsets.symmetric(horizontal: 20),
+          height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
+         decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              // Color(0xFF9B8BC6),
+              // Color(0xFF6568A7),
+              // Color(0xFF272841),
+             Color(0xFF6568A7),
+              Color(0xFF272841),
+              
+            ],
+          ),
+        ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 20),
-              topHeader(),
-              textStyleOnly2(
-                  context: context,
-                  text: "Enter the 6-digit OTP sent to your email",
-                  fontWeight: FontWeight.w400,
-                  fontsize: 14,
-                  color:AppColors.bg1
+              Padding(
+               padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 20),
+                    topHeader(),
+                    textStyleOnly2(
+                        context: context,
+                        text: "Enter the 6-digit OTP sent to your email",
+                        fontWeight: FontWeight.w300,
+                        fontsize: 14,
+                        color:Colorcodes.white
+                      ),
+                    const SizedBox(height: 40),
+                    verifyOpt(),
+                    acceptButton(),
+                    SizedBox(height: Colorcodes.paddingSize * 2),
+                    resendOtp(), 
+                   
+                    // Simplified structure
+                  ],
                 ),
-              const SizedBox(height: 40),
-              verifyOpt(),
-              acceptButton(),
-              SizedBox(height: Colorcodes.paddingSize * 2),
-              resendOtp(), // Simplified structure
+              ),
+                    buildBottomWaves(context),
             ],
           ),
         ),
@@ -113,8 +137,8 @@ class _SigninState extends State<conform> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 20),
       child: Text(
-        "Verify OTP",
-        style: FontManager().getTextStyle(context, lWeight: FontWeight.bold, fontSize: 22, color: Colors.black),
+        "Verify Your Email",
+        style: FontManager().getTextStyle(context, lWeight: FontWeight.bold, fontSize: 22, color: Colorcodes.white),
       ),
     );
   }
@@ -134,7 +158,7 @@ class _SigninState extends State<conform> {
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: AppColors.primaryColor,
+          color:Colorcodes.white,
           borderRadius: BorderRadius.circular(Colorcodes.borderRadius10),
         ),
         child: InkWell(
@@ -149,7 +173,7 @@ class _SigninState extends State<conform> {
                   : Text(
                       "Verify & Accept",
                       style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.w500, fontSize: 16, color: Colorcodes.white),
+                          lWeight: FontWeight.w500, fontSize: 16, color: Colorcodes.black),
                     ),
             ),
           ),
@@ -172,7 +196,7 @@ class _SigninState extends State<conform> {
                 context,
                 lWeight: FontWeight.w400,
                 fontSize: 14,
-                color: Colorcodes.iconBackGround,
+                color: Colorcodes.white,
               ),
             ),
             Obx(
@@ -193,7 +217,7 @@ class _SigninState extends State<conform> {
                     context,
                     lWeight: FontWeight.bold,
                     fontSize: 12,
-                    color: canResendOtp2.value ? AppColors.primaryColor : Colors.grey,
+                    color: canResendOtp2.value ? Colorcodes.black : Colors.black,
                   ),
                 ),
               ),
@@ -220,11 +244,11 @@ class _SigninState extends State<conform> {
           fieldHeight: MediaQuery.of(context).size.width * 0.13,
           fieldWidth: MediaQuery.of(context).size.width * 0.13,
           activeFillColor: Colors.white,
-          activeColor: Colors.blue,
+          activeColor: AppColors.primaryColor,
           selectedFillColor: Colors.white,
           selectedColor: Colors.blue,
           inactiveFillColor: Colors.grey[200],
-          inactiveColor: Colors.grey,
+          inactiveColor: Colors.white,
         ),
         enableActiveFill: true,
         textStyle: TextStyle(fontSize: 20, color: Colors.black),
