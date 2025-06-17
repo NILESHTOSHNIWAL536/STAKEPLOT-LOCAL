@@ -3,10 +3,12 @@ import 'dart:ui';
 import 'package:custom_image_crop/custom_image_crop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/post_interest.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
@@ -197,57 +199,88 @@ class _ImageScreenState extends State<ImageScreen> {
                       if (selectedImage != null) ...[
                         const SizedBox(height: 10),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            ChoiceChip(
-                              label: Text(
-                                'Square',
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: _selectedCropShape 
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                                  fontSize: 14,
-                                  color: AppColors.bg1,
-                                ),
-                              ),
-                              selected: _selectedCropShape ,
-                              onSelected: (selected) {
-                                if (selected) {
-                                  setState(() {
-                                    _selectedCropShape = true;
-                                  });
-                                }
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _selectedCropShape = true;
+                                });
                               },
-                              selectedColor: AppColors.primaryColor,
-                              backgroundColor: AppColors.textBgColor,
+                              child: AvatarProfileImage(
+                                                url: FinSpaceIcons.square,
+                                                width: 20,
+                                                height: 20,
+                                                // background: userAvatarBackGround.value ?? defaultBackGround.value,
+                                               
+                                              ),
                             ),
-                            const SizedBox(width: 10),
-                            ChoiceChip(
-                              label: Text(
-                                'Custom (402:214)',
-                                style: FontManager().getTextStyle(
-                                  context,
-                                  lWeight: !_selectedCropShape
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                                  fontSize: 14,
-                                  color: AppColors.bg1,
-                                ),
-                              ),
-                              selected: !_selectedCropShape,
-                              onSelected: (selected) {
-                                if (selected) {
-                                  setState(() {
-                                    _selectedCropShape = false;
-                                  });
-                                }
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _selectedCropShape = false;
+                                });
                               },
-                              selectedColor: AppColors.primaryColor,
-                              backgroundColor: AppColors.textBgColor,
+                              child: AvatarProfileImage(
+                                                url: FinSpaceIcons.custom,
+                                                width: 20,
+                                                height: 20,
+                                                // background: userAvatarBackGround.value ?? defaultBackGround.value,
+                                               
+                                              ),
                             ),
+                            
+                            // ChoiceChip(
+                            //   label: Text(
+                            //     'Square',
+                            //     style: FontManager().getTextStyle(
+                            //       context,
+                            //       lWeight: _selectedCropShape 
+                            //           ? FontWeight.bold
+                            //           : FontWeight.normal,
+                            //       fontSize: 14,
+                            //       color: AppColors.bg1,
+                            //     ),
+                            //   ),
+                            //   selected: _selectedCropShape ,
+                            //   onSelected: (selected) {
+                            //     if (selected) {
+                            //       setState(() {
+                            //         _selectedCropShape = true;
+                            //       });
+                            //     }
+                            //   },
+                            //   selectedColor: AppColors.primaryColor,
+                            //   backgroundColor: AppColors.textBgColor,
+                            // ),
+                            // const SizedBox(width: 10),
+                            // ChoiceChip(
+                            //   label: Text(
+                            //     'Custom (402:214)',
+                            //     style: FontManager().getTextStyle(
+                            //       context,
+                            //       lWeight: !_selectedCropShape
+                            //           ? FontWeight.bold
+                            //           : FontWeight.normal,
+                            //       fontSize: 14,
+                            //       color: AppColors.bg1,
+                            //     ),
+                            //   ),
+                            //   selected: !_selectedCropShape,
+                            //   onSelected: (selected) {
+                            //     if (selected) {
+                            //       setState(() {
+                            //         _selectedCropShape = false;
+                            //       });
+                            //     }
+                            //   },
+                            //   selectedColor: AppColors.primaryColor,
+                            //   backgroundColor: AppColors.textBgColor,
+                            // ),
+                          
                           ],
                         ),
+                      
                       ],
                       const SizedBox(height: 10),
                       TextField(

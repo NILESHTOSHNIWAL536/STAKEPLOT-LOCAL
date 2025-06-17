@@ -8,6 +8,7 @@ import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/helper.dart';
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
@@ -15,6 +16,7 @@ import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:custom_image_crop/custom_image_crop.dart';
 import 'dart:io';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -111,58 +113,93 @@ class _ExploreModalState extends State<ExploreModal> {
                    if (showCropSelection)
                       Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ChoiceChip(
-                          label: Text(
-                            'Square',
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: localIsSquare == 'true'
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
-                              fontSize: 14,
-                              color: AppColors.bg1,
-                            ),
-                          ),
-                          selected: localIsSquare == 'true',
-                          onSelected: (selected) {
-                            if (selected) {
-                              setDialogState(() {
+                    child:Row(
+                      children:[
+                        GestureDetector(
+                              onTap: () {
+                                setDialogState(() {
                                 localIsSquare = true;
                               });
-                            }
-                          },
-                          selectedColor: AppColors.primaryColor,
-                          backgroundColor: AppColors.textBgColor,
-                        ),
-                        const SizedBox(width: 10),
-                        ChoiceChip(
-                          label: Text(
-                            'Custom (402:214)',
-                            style: FontManager().getTextStyle(
-                              context,
-                              lWeight: localIsSquare == 'false'
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
-                              fontSize: 14,
-                              color: AppColors.bg1,
+                              },
+                              child: AvatarProfileImage(
+                                                url: FinSpaceIcons.square,
+                                                width: 20,
+                                                height: 20,
+                                                // background: userAvatarBackGround.value ?? defaultBackGround.value,
+                                               
+                                              ),
                             ),
-                          ),
-                          selected: localIsSquare == 'false',
-                          onSelected: (selected) {
-                            if (selected) {
-                              setDialogState(() {
-                                localIsSquare = false;
-                              });
-                            }
-                          },
-                          selectedColor: AppColors.primaryColor,
-                          backgroundColor: AppColors.textBgColor,
-                        ),
-                      ],
+                            GestureDetector(
+                              onTap: () {
+                                setDialogState(() {
+                                  localIsSquare = false;
+                                });
+                              },
+                              child: AvatarProfileImage(
+                                                url: FinSpaceIcons.custom,
+                                                width: 20,
+                                                height: 20,
+                                                // background: userAvatarBackGround.value ?? defaultBackGround.value,
+                                               
+                                              ),
+                            ),
+                      ]
+
                     ),
+                   
+                    // child: Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    //     ChoiceChip(
+                    //       label: Text(
+                    //         'Square',
+                    //         style: FontManager().getTextStyle(
+                    //           context,
+                    //           lWeight: localIsSquare == 'true'
+                    //               ? FontWeight.bold
+                    //               : FontWeight.normal,
+                    //           fontSize: 14,
+                    //           color: AppColors.bg1,
+                    //         ),
+                    //       ),
+                    //       selected: localIsSquare == 'true',
+                    //       onSelected: (selected) {
+                    //         if (selected) {
+                    //           setDialogState(() {
+                    //             localIsSquare = true;
+                    //           });
+                    //         }
+                    //       },
+                    //       selectedColor: AppColors.primaryColor,
+                    //       backgroundColor: AppColors.textBgColor,
+                    //     ),
+                    //     const SizedBox(width: 10),
+                    //     ChoiceChip(
+                    //       label: Text(
+                    //         'Custom (402:214)',
+                    //         style: FontManager().getTextStyle(
+                    //           context,
+                    //           lWeight: localIsSquare == 'false'
+                    //               ? FontWeight.bold
+                    //               : FontWeight.normal,
+                    //           fontSize: 14,
+                    //           color: AppColors.bg1,
+                    //         ),
+                    //       ),
+                    //       selected: localIsSquare == 'false',
+                    //       onSelected: (selected) {
+                    //         if (selected) {
+                    //           setDialogState(() {
+                    //             localIsSquare = false;
+                    //           });
+                    //         }
+                    //       },
+                    //       selectedColor: AppColors.primaryColor,
+                    //       backgroundColor: AppColors.textBgColor,
+                    //     ),
+                    //   ],
+                    // ),
+                  
                   ),
                 ],
               ),

@@ -30,7 +30,11 @@ class _ExploreCardState extends State<ExploreCard> {
         MediaQuery.of(context).size.width /
         375; // Based on a standard width (e.g., iPhone 8)
   }
-
+double getImageHeight(BuildContext context) {
+      double width = MediaQuery.of(context).size.width;
+      bool isSquare = widget.extractdata['isSquareImage'] ?? false; // Default to Rectangle
+      return isSquare ? width : width * 214 / 402;
+    }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -136,7 +140,8 @@ class _ExploreCardState extends State<ExploreCard> {
         children: [
          hasMultipleImages
               ? SizedBox(
-                  height: MediaQuery.of(context).size.width * 214 / 402,
+                height: getImageHeight(context),
+                  // height: MediaQuery.of(context).size.width * 214 / 402,
                   width: MediaQuery.of(context).size.width,
                   child: PageView.builder(
                     controller: _pageController,
@@ -180,9 +185,10 @@ class _ExploreCardState extends State<ExploreCard> {
   Widget _buildImageItem(BuildContext context, int index) {
     return GFImageOverlay(
       width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.width *
-                                    214 /
-                                    402,
+                                // height: MediaQuery.of(context).size.width *
+                                //     214 /
+                                //     402,
+                                 height: getImageHeight(context),
                                 boxFit: BoxFit.fill,
                                  colorFilter: null, // Disable any color tint
                                   color: Colors.transparent,

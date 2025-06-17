@@ -278,7 +278,7 @@ class _SigninState extends State<Signin> {
  Widget containerIconSiginWith(IconData icon, Color color,context) {
     return InkWell(
       onTap: () async {
-        final userdata = await AuthService().signInWithGoogle(context);
+      final userdata = await AuthService().signInWithGoogle(context);
         print("User data received: $userdata");
         if (userdata != "") {
           if (userdata!['data']['accessToken'] != null) {

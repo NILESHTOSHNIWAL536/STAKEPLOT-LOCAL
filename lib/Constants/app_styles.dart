@@ -16,10 +16,9 @@ class FinSpaceIcons {
   static String welcome = "assets/icons/finSpaceIcons/finspaceWelcome.svg";
    static String bgMarks = "assets/icons/finSpaceIcons/finspaceBg.svg";
  static String empty = "assets/icons/finSpaceIcons/emptyChats.svg";
-  // static String community1 = "assets/icons/Navigation_bar/communityInactive.svg";
-  // static String community = "assets/icons/Navigation_bar/communityActive.svg";
-  // static String screen21 = "assets/icons/Navigation_bar/financeActive.svg";
-  // static String screen2 = "assets/icons/Navigation_bar/financeInActive.svg";
+ static String square = "assets/icons/finSpaceIcons/squareIcon.svg";
+ static String custom = "assets/icons/finSpaceIcons/customIcon.svg";
+  
   
 }
 
