@@ -336,16 +336,16 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: MediaQuery.sizeOf(context).height / 11),
-        Row(
+        // SizedBox(height: MediaQuery.sizeOf(context).height / 11),
+        Column(
           children: [
             // Decorative background with wallet icon
             Container(
               // color: Colors.green,
               child: AvatarProfileImage(
                 url: HomePageIcons.noAccLink,
-                height: 8,
-                width: 7,
+                height: 4,
+                width: 3,
               ),
             ),
 
@@ -353,9 +353,9 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
             // Title
             Container(
               // color: Colors.amber,
-              width: MediaQuery.sizeOf(context).width / 1.77,
+              width: MediaQuery.sizeOf(context).width ,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     'No account Linked',
@@ -370,14 +370,17 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
                   SizedBox(height: screenHeight * 0.01),
 
                   // Description
-                  Text(
-                    'Your money, your view! Connect your bank to see all your expenses in one place. Super easy.',
-                    style: FontManager().getTextStyle(context,
-                        lWeight: FontWeight.w500,
-                        fontSize: 12,
-                        color: Colors.black54,
-                        maxLines: null,
-                        overflow: TextOverflow.visible),
+                  Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: Text(
+                      'Your money, your view! Connect your bank to see all your expenses in one place. Super easy.',
+                      style: FontManager().getTextStyle(context,
+                          lWeight: FontWeight.w500,
+                          fontSize: 14,
+                          color: Colors.black54,
+                          maxLines: null,
+                          overflow: TextOverflow.visible),
+                    ),
                   ),
 
                   SizedBox(height: screenHeight * 0.01),
@@ -425,7 +428,7 @@ class _NoAccountScreenState extends State<NoAccountScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
           child: Container(
-            width: MediaQuery.sizeOf(context).width / 1.1,
+            width: MediaQuery.sizeOf(context).width ,
             decoration: BoxDecoration(
               color: AppColors.backgroundColor,
               boxShadow: [

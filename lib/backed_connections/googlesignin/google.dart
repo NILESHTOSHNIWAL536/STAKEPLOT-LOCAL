@@ -8,12 +8,11 @@ import 'dart:convert';
 
 class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn(
-    clientId:
-    Platform.isAndroid?
-    
-        '442849932576-2qqrgh9mdpi0r5cdkt2nvfln0ogaqepn.apps.googleusercontent.com':"442849932576-3u02sono33ouamo2cn9mpnrp8i4k53v8.apps.googleusercontent.com",
+    clientId: Platform.isAndroid
+        ? '907682114982-g9ke4hcp10mpfb53hnbejg5q4btjpsam.apps.googleusercontent.com'
+        : "907682114982-3nr2b1vgipnq5348u4fieeemr74vmuol.apps.googleusercontent.com",
     serverClientId:
-        '442849932576-9pjdtqgiedibia1apagj12nbi22mgb56.apps.googleusercontent.com', // For iOS, optional for Android
+        '907682114982-ja3qjtdj38f1p16q1hq9c868ga6sfn8b.apps.googleusercontent.com', // For iOS, optional for Android
     scopes: [
       'email',
       'profile',
@@ -28,13 +27,13 @@ class AuthService {
       if (googleUser == null) {
         return null;
       }
-
+      print("google user : $googleUser");
       // Get authentication details
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
       final String? idToken = googleAuth.idToken;
       // final String? accessToken = googleAuth.accessToken;
-
+      print("google userid : $idToken");
       if (idToken != null) {
         final response = await http.post(
           Uri.parse('$url/user/google-auth'),
@@ -43,16 +42,12 @@ class AuthService {
         );
 
         if (response.statusCode == 200) {
-        
+          print("google userid body : ${response.body}");
           loginCalledData(response, context);
           return json.decode(response.body);
-        } else {
-         
-        }
-      } else {
-      }
-    } catch (e) {
-    }
+        } else {}
+      } else {}
+    } catch (e) {}
     return null;
   }
 }

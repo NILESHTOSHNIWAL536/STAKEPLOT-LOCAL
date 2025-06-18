@@ -256,16 +256,18 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
       ),
       builder: (BuildContext context) {
-        return AmountEntryModal(
-          selectedFriends: addedMembers.toList(),
-          totalAmount: widget.totalAmount,
-          userId: widget.userId,
-          userName: widget.userName,
-          userAvatar: widget.userAvatar,
-          cate: category,
-          subcate: subcategory,
-          flag: widget.flag,
-          ismanual: widget.ismanual,
+        return SafeArea(
+          child: AmountEntryModal(
+            selectedFriends: addedMembers.toList(),
+            totalAmount: widget.totalAmount,
+            userId: widget.userId,
+            userName: widget.userName,
+            userAvatar: widget.userAvatar,
+            cate: category,
+            subcate: subcategory,
+            flag: widget.flag,
+            ismanual: widget.ismanual,
+          ),
         );
       },
     );

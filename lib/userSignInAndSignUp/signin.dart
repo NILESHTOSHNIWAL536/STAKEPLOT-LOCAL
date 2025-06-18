@@ -13,7 +13,6 @@ import 'dart:math' as math;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -25,34 +24,37 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+  @override
+  void initState() {
+    super.initState();
+    acceptReset.value = false;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-           height: MediaQuery.of(context).size.height,
+          height: MediaQuery.of(context).size.height,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                     Color(0xFF6568A7),
-                    Color(0xFF272841),
+                Color(0xFF6568A7),
+                Color(0xFF272841),
               ],
             ),
           ),
           child: Container(
-             height: MediaQuery.of(context).size.height,
+            height: MediaQuery.of(context).size.height,
             child: Stack(
 
               children: [
                 // Main Content
-                 Positioned(
-                  bottom: 20,
-                  left: 0,
-                  child: buildBottomWaves(context)),
-          
+                Positioned(
+                    bottom: 20, left: 0, child: buildBottomWaves(context)),
+
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: Column(
@@ -61,52 +63,50 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 50),
                       // Welcome Text
                       _buildWelcomeText(),
-                      
+
                       const SizedBox(height: 20),
-                      
+
                       // Email Field
                       _buildEmailField(),
-                      
+
                       const SizedBox(height: 20),
-                      
+
                       // Password Field
                       _buildPasswordField(),
-                      
+
                       const SizedBox(height: 10),
-                      
+
                       // Forgot Password
                       _buildForgotPassword(),
-                      
-                      const SizedBox(height:10),
-                      
+
+                      const SizedBox(height: 10),
+
                       // Sign In Button
                       _buildSignInButton(),
-                      
+
                       const SizedBox(height: 40),
-                      
+
                       // Or login with
                       _buildDivider(),
-                      
+
                       const SizedBox(height: 20),
-                      
+
                       // Google Sign In
-                       containerIconSiginWith(FontAwesomeIcons.google, Colorcodes.white,context),
+                      containerIconSiginWith(
+                          FontAwesomeIcons.google, Colorcodes.white, context),
                       // buildGoogleSignIn(),
-                
+
                       const SizedBox(height: 20),
-                      
+
                       // const Spacer(),
-                      
+
                       // Sign Up Link
                       buildSignUpLink(),
-                      
-                      
                     ],
                   ),
                 ),
-                
+
                 // Bottom Wave Design
-                 
               ],
             ),
           ),
@@ -216,12 +216,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildSignInButton() {
     return SizedBox(
-      width: double.infinity,
-      height: 50,
-      child: ElevatedButton(
-        onPressed: () async{
-          // Handle sign in
-          if (acceptReset.value) return;
+        width: double.infinity,
+        height: 50,
+        child: ElevatedButton(
+          onPressed: () async {
+            // Handle sign in
+            if (acceptReset.value) return;
 
             if (emailController.text.isEmpty ||
                 passwordController.text.isEmpty) {
@@ -236,24 +236,29 @@ class _LoginScreenState extends State<LoginScreen> {
 
             await getDeviceInfo("deviceData.value".toString(), context,
                 emailController, passwordController);
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            elevation: 0,
           ),
-          elevation: 0,
-        ),
-        child:Obx(()=> acceptReset.value? Spinner(size: 30,): Text(
-          'Sign In',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+          child: Obx(
+            () => acceptReset.value
+                ? Spinner(
+                    size: 30,
+                  )
+                : Text(
+                    'Sign In',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
           ),
-        ),
-      ),
-    ));
+        ));
   }
 
   Widget _buildDivider() {
@@ -294,14 +299,15 @@ class _LoginScreenState extends State<LoginScreen> {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Center(
-        child: FaIcon(FontAwesomeIcons.google, size: 30, color: AppColors.primaryColor),
+        child: FaIcon(FontAwesomeIcons.google,
+            size: 30, color: AppColors.primaryColor),
       ),
     );
   }
 
   Widget buildSignUpLink() {
     return InkWell(
-      onTap: (){
+      onTap: () {
         Navigator.pushNamed(context, "/signup");
       },
       child: Row(
@@ -327,8 +333,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-
-    Widget buildGoogleSignIn() {
+  Widget buildGoogleSignIn() {
     return GestureDetector(
       onTap: () {
         // Handle Google sign in

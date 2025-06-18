@@ -821,12 +821,14 @@ class _ModalContentState extends State<ModalContent> with TickerProviderStateMix
         borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
       ),
       builder: (BuildContext context) {
-        return NewFriendsUi(
-          totalAmount: totalAmount,
-          userId: currentId.value,
-          userName: userName.value,
-          userAvatar: avatar.value,
-          isLendMode: isLendMode,
+        return SafeArea(
+          child: NewFriendsUi(
+            totalAmount: totalAmount,
+            userId: currentId.value,
+            userName: userName.value,
+            userAvatar: avatar.value,
+            isLendMode: isLendMode,
+          ),
         );
       },
     );
