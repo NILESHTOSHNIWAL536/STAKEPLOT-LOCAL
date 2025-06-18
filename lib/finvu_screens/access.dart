@@ -18,26 +18,19 @@ import 'package:flutter_application_code_stakeplot/onboarding_screens/onboarding
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class Access extends StatefulWidget
-{
+class Access extends StatefulWidget {
   const Access({super.key});
 
   @override
   State<Access> createState() => _AccessState();
 }
 
-
-
 class _AccessState extends State<Access> {
-
   RxBool flag = true.obs;
   @override
   void initState() {
     super.initState();
   }
-
-
-
 
   String formatDate(String dateString) {
     DateTime date = DateTime.parse(dateString);
@@ -52,7 +45,7 @@ class _AccessState extends State<Access> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                 FinvuStrings().givePermission,
+                FinvuStrings().givePermission,
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.bold,
@@ -63,7 +56,8 @@ class _AccessState extends State<Access> {
               SizedBox(height: 10),
               RichText(
                 text: TextSpan(
-                   text: FinvuStrings().shareAccountsWithStakeplot,// Regular text
+                  text:
+                      FinvuStrings().shareAccountsWithStakeplot, // Regular text
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.w400,
@@ -72,7 +66,8 @@ class _AccessState extends State<Access> {
                   ),
                   children: [
                     TextSpan(
-                      text: FinvuStrings().smartFinanceInsights,// Highlighted text
+                      text: FinvuStrings()
+                          .smartFinanceInsights, // Highlighted text
                       style: FontManager().getTextStyle(
                         context,
                         lWeight:
@@ -108,14 +103,14 @@ class _AccessState extends State<Access> {
                       // color: Colorcodes.moneyOrange,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Column(
-                             children: [
-                                  topHeader(),
-                                  informationBankAccount(),
-                                  pauseOrCancle(),
-                             ],
+                            children: [
+                              topHeader(),
+                              informationBankAccount(),
+                              pauseOrCancle(),
+                            ],
                           ),
                           givePermissionOrDecline(),
                         ],
@@ -134,7 +129,7 @@ class _AccessState extends State<Access> {
         formatDate(
             finvuConsentRequestDetailInfo.consentDateTimeRange.to.toString());
     return Container(
-      height: MediaQuery.of(context).size.height / 2.1,
+      height: MediaQuery.of(context).size.height / 2,
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
         child: Column(
@@ -143,8 +138,12 @@ class _AccessState extends State<Access> {
                 FinvuStrings().accountsSharedTitle, // Direct access
                 "${seletedAccountIds.length} ${FinvuStrings().accountsSharedValue}",
                 Icons.account_balance_wallet_outlined),
-            accounts(FinvuStrings().permissionValidity, range, Icons.date_range_rounded), // Direct access
-            accounts(FinvuStrings().frequencyOfAccess, FinvuStrings().frequencyOfAccessSubText, Icons.access_time), // Direct access
+            accounts(FinvuStrings().permissionValidity, range,
+                Icons.date_range_rounded), // Direct access
+            accounts(
+                FinvuStrings().frequencyOfAccess,
+                FinvuStrings().frequencyOfAccessSubText,
+                Icons.access_time), // Direct access
             getInfomationsAboutUserConsnt(),
           ],
         ),
@@ -196,7 +195,7 @@ class _AccessState extends State<Access> {
       },
       child: Center(
         child: Text(
-         FinvuStrings().viewMoreDetails,
+          FinvuStrings().viewMoreDetails,
           style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.w600,
@@ -208,169 +207,165 @@ class _AccessState extends State<Access> {
     );
   }
 
-
-  Widget getInfomationsAboutUserConsnt(){
-
+  Widget getInfomationsAboutUserConsnt() {
     print(finvuConsentRequestDetailInfo.consentDisplayDescriptions);
 
     return Container(
-                width: MediaQuery.of(context).size.width / 1,
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(20.0, 0, 16, 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                     
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0.0, 0, 20, 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: Colorcodes.space),
-                            Text(
-                              FinvuStrings().approvalRequestedOn,
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w400,
-                                fontSize: 16,
-                                color: AppColors.bg1,
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              formatDate(finvuConsentRequestDetailInfo
-                                  .consentDateTimeRange.from
-                                  .toString()),
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w600,
-                                fontSize: 16,
-                                color: AppColors.bg1,
-                              ),
-                            ),
-                            SizedBox(height: Colorcodes.space),
-                            Text(
-                               FinvuStrings().purpose,
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w400,
-                                fontSize: 16,
-                                color: AppColors.bg1,
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                             finvuConsentRequestDetailInfo.consentPurposeInfo.text,
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w600,
-                                fontSize: 16,
-                                color: AppColors.bg1,
-                              ),
-                            ),
-                            SizedBox(height: Colorcodes.space),
-                            Text(
-                              FinvuStrings().accountDetails, 
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w400,
-                                fontSize: 16,
-                                color: AppColors.bg1,
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              FinvuStrings().profileSummaryTransactions, 
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w600,
-                                fontSize: 16,
-                                color: AppColors.bg1,
-                              ),
-                            ),
-                            SizedBox(height: Colorcodes.space),
-                            Text(
-                               FinvuStrings().dataLife,
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w400,
-                                fontSize: 16,
-                                color: AppColors.bg1,
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              finvuConsentRequestDetailInfo
-                                      .consentDataLifePeriod.value
-                                      .toString() +" "+
-                                  finvuConsentRequestDetailInfo
-                                      .consentDataLifePeriod.unit
-                                      .toString(),
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w600,
-                                fontSize: 16,
-                                color: AppColors.bg1,
-                              ),
-                            ),
-                            SizedBox(height: Colorcodes.space),
-                            Text(
-                             FinvuStrings().approvalExpiry,
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w400,
-                                fontSize: 16,
-                                color: AppColors.bg1,
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              formatDate(finvuConsentRequestDetailInfo
-                                  .consentDateTimeRange.to
-                                  .toString()),
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w600,
-                                fontSize: 16,
-                                color: AppColors.bg1,
-                              ),
-                            ),
-                            SizedBox(height: Colorcodes.space),
-                            Text(
-                             FinvuStrings().accountTypes,
-                              style: FontManager().getTextStyle(
-                                context,
-                                lWeight: FontWeight.w400,
-                                fontSize: 16,
-                                color: AppColors.bg1,
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            Wrap(
-                                children: finvuConsentRequestDetailInfo.fiTypes!
-                                    .map((e) => Text(
-                                          e + ",",
-                                          style: FontManager().getTextStyle(
-                                            context,
-                                            lWeight: FontWeight.w600,
-                                            fontSize: 16,
-                                            color: AppColors.bg1,
-                                          ),
-                                        ))
-                                    .toList()),
-                            SizedBox(height: 20),
-                            // InkWell(
-                            //     onTap: () {
-                            //       Navigator.pop(context);
-                            //     },
-                            //     child: getButton(context, "Understand")),
-                          ],
-                        ),
-                      )
-                    ],
+      width: MediaQuery.of(context).size.width / 1,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20.0, 0, 16, 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0.0, 0, 20, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: Colorcodes.space),
+                  Text(
+                    FinvuStrings().approvalRequestedOn,
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w400,
+                      fontSize: 16,
+                      color: AppColors.bg1,
+                    ),
                   ),
-                ),
-              );
+                  SizedBox(height: 5),
+                  Text(
+                    formatDate(finvuConsentRequestDetailInfo
+                        .consentDateTimeRange.from
+                        .toString()),
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: AppColors.bg1,
+                    ),
+                  ),
+                  SizedBox(height: Colorcodes.space),
+                  Text(
+                    FinvuStrings().purpose,
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w400,
+                      fontSize: 16,
+                      color: AppColors.bg1,
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    finvuConsentRequestDetailInfo.consentPurposeInfo.text,
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: AppColors.bg1,
+                    ),
+                  ),
+                  SizedBox(height: Colorcodes.space),
+                  Text(
+                    FinvuStrings().accountDetails,
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w400,
+                      fontSize: 16,
+                      color: AppColors.bg1,
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    FinvuStrings().profileSummaryTransactions,
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: AppColors.bg1,
+                    ),
+                  ),
+                  SizedBox(height: Colorcodes.space),
+                  Text(
+                    FinvuStrings().dataLife,
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w400,
+                      fontSize: 16,
+                      color: AppColors.bg1,
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    finvuConsentRequestDetailInfo.consentDataLifePeriod.value
+                            .toString() +
+                        " " +
+                        finvuConsentRequestDetailInfo.consentDataLifePeriod.unit
+                            .toString(),
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: AppColors.bg1,
+                    ),
+                  ),
+                  SizedBox(height: Colorcodes.space),
+                  Text(
+                    FinvuStrings().approvalExpiry,
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w400,
+                      fontSize: 16,
+                      color: AppColors.bg1,
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    formatDate(finvuConsentRequestDetailInfo
+                        .consentDateTimeRange.to
+                        .toString()),
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: AppColors.bg1,
+                    ),
+                  ),
+                  SizedBox(height: Colorcodes.space),
+                  Text(
+                    FinvuStrings().accountTypes,
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.w400,
+                      fontSize: 16,
+                      color: AppColors.bg1,
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  Wrap(
+                      children: finvuConsentRequestDetailInfo.fiTypes!
+                          .map((e) => Text(
+                                e + ",",
+                                style: FontManager().getTextStyle(
+                                  context,
+                                  lWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                  color: AppColors.bg1,
+                                ),
+                              ))
+                          .toList()),
+                  SizedBox(height: 20),
+                  // InkWell(
+                  //     onTap: () {
+                  //       Navigator.pop(context);
+                  //     },
+                  //     child: getButton(context, "Understand")),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   Widget accounts(String title, String value, IconData icon) {
@@ -448,7 +443,7 @@ class _AccessState extends State<Access> {
       child: Padding(
         padding: const EdgeInsets.only(left: 3, top: 5),
         child: Text(
-        FinvuStrings().viewMore,
+          FinvuStrings().viewMore,
           style: FontManager().getTextStyle(
             context,
             lWeight: FontWeight.w400,
@@ -476,8 +471,8 @@ class _AccessState extends State<Access> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  textStyle( FinvuStrings().linkedBankAccount, 15, AppColors.primaryColor,
-                      FontWeight.bold),
+                  textStyle(FinvuStrings().linkedBankAccount, 15,
+                      AppColors.primaryColor, FontWeight.bold),
                   InkWell(
                       onTap: () {
                         Navigator.pop(context);
@@ -590,7 +585,7 @@ class _AccessState extends State<Access> {
           Container(
             width: MediaQuery.of(context).size.width / 1.2,
             child: Text(
-               FinvuStrings().pauseOrCancelSharing, 
+              FinvuStrings().pauseOrCancelSharing,
               style: FontManager().getTextStyle(
                 context,
                 lWeight: FontWeight.w400,
@@ -623,7 +618,7 @@ class _AccessState extends State<Access> {
               ),
               child: Center(
                 child: Text(
-                 FinvuStrings().givePermission,
+                  FinvuStrings().givePermission,
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.bold,
@@ -636,10 +631,7 @@ class _AccessState extends State<Access> {
           ),
           InkWell(
             onTap: () async {
-             
-                  showDialogBoxForDecline(context);
-              
-
+              showDialogBoxForDecline(context);
             },
             child: Container(
               width: MediaQuery.of(context).size.width / 1.1,
@@ -650,7 +642,7 @@ class _AccessState extends State<Access> {
               ),
               child: Center(
                 child: Text(
-                   FinvuStrings().decline,
+                  FinvuStrings().decline,
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.bold,
@@ -666,22 +658,18 @@ class _AccessState extends State<Access> {
     );
   }
 
-
-
-
   void approveConsentRequest() async {
     try {
-
       FinvuConsentRequestDetailInfo finvuConsentRequestDetailInfo =
           await finvuManager.getConsentRequestDetails(handleId.value);
 
-      FinvuProcessConsentRequestResponse response = await finvuManager.approveConsentRequest(
+      FinvuProcessConsentRequestResponse response =
+          await finvuManager.approveConsentRequest(
               finvuConsentRequestDetailInfo, seletedAccountInfomations);
-  
-      snackBarCalled(context, SnackbarData().consentApproved);
-   
-      FetchTransactionFromFinvuApi(context);
 
+      snackBarCalled(context, SnackbarData().consentApproved);
+
+      FetchTransactionFromFinvuApi(context);
     } catch (e) {
       skipOrLets.value = "Skip";
       snackBarCalled(context, SnackbarData().consentApproveError);
@@ -710,75 +698,82 @@ class _AccessState extends State<Access> {
     );
   }
 
-
-
-void showDialogBoxForDecline(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), // Optional: rounded corners
-        child: Container(
-          width: 300, // Set width
-          height: 180, // Set height
-          padding: EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start, // Prevent excessive height
-            children: [
-              textStyle(
-                FinvuStrings().areYouSure,20,AppColors.primaryColor,FontWeight.bold
-              ),
-              SizedBox(height: 10),
-              textStyle(FinvuStrings().declineConfirmation,15),
-              Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
+  void showDialogBoxForDecline(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(10)), // Optional: rounded corners
+          child: Container(
+            width: 300, // Set width
+            height: 180, // Set height
+            padding: EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment:
+                  CrossAxisAlignment.start, // Prevent excessive height
+              children: [
+                textStyle(FinvuStrings().areYouSure, 20, AppColors.primaryColor,
+                    FontWeight.bold),
+                SizedBox(height: 10),
+                textStyle(FinvuStrings().declineConfirmation, 15),
+                Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
                       style: TextButton.styleFrom(
-                      side: BorderSide(color: AppColors.bg1), // Add border
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8), // Optional: Rounded corners
+                        side: BorderSide(color: AppColors.bg1), // Add border
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              8), // Optional: Rounded corners
+                        ),
                       ),
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: textStyle(FinvuStrings().no, 15),
                     ),
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: textStyle(FinvuStrings().no,15),
-                  ),
-                  const SizedBox(width: 20,),
-                  TextButton(
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    TextButton(
                       style: TextButton.styleFrom(
-                      side: BorderSide(color: AppColors.primaryColor), // Add border
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8), // Optional: Rounded corners
+                        side: BorderSide(
+                            color: AppColors.primaryColor), // Add border
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              8), // Optional: Rounded corners
+                        ),
                       ),
+                      onPressed: () {
+                        decline();
+                      },
+                      child: textStyle(FinvuStrings().yes, 15),
                     ),
-                    onPressed: () {
-                       decline();
-                    },
-                    child: textStyle(FinvuStrings().yes,15),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
-}
-  void decline()async
-  {
-              try {
-                 FinvuConsentRequestDetailInfo consentInfo =await finvuManager.getConsentRequestDetails(handleId.value);
-                finvuManager.denyConsentRequest(consentInfo);
-                 logoutAndDisconnect();
-                 Navigator.of(context).pushNamedAndRemoveUntil('/ShareAccountLogin', (Route<dynamic> route) => false);
-                 Navigator.pushNamed(context, "/ShareAccountLogin");
-                 snackBarCalledSignup(context, SnackbarData().consentDeclined);
-              } catch (e) {
-                snackBarCalledSignup(context,SnackbarData().consentDisapproveError);
-              }    
+        );
+      },
+    );
+  }
+
+  void decline() async {
+    try {
+      FinvuConsentRequestDetailInfo consentInfo =
+          await finvuManager.getConsentRequestDetails(handleId.value);
+      finvuManager.denyConsentRequest(consentInfo);
+      logoutAndDisconnect();
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          '/ShareAccountLogin', (Route<dynamic> route) => false);
+      Navigator.pushNamed(context, "/ShareAccountLogin");
+      snackBarCalledSignup(context, SnackbarData().consentDeclined);
+    } catch (e) {
+      snackBarCalledSignup(context, SnackbarData().consentDisapproveError);
+    }
   }
 }

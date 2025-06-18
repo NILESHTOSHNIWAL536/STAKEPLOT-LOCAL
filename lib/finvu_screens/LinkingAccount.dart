@@ -299,7 +299,7 @@ class _LinkingAccountState extends State<LinkingAccount> {
     loopCount.value = 0;
     return Container(
       width: screenWidth * 0.9,
-      height: screenHeight * 0.6,
+      height: screenHeight * 0.58,
       child: SingleChildScrollView(
         child: Column(
           children: widget.listOfBankAccount.asMap().entries.map((entry) {
