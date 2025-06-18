@@ -116,11 +116,11 @@ void pinPasswordVerify(
 //   }
 // }
 
-// void seletedBankUpdateInfo(id, context) async {
-//   var response = await getDataApiCall("${url}/user/selectedBank/${id}");
-//   if (response.statusCode == 200 || response.statusCode == 200) {
-//   } else {}
-// }
+void seletedBankUpdateInfo(id, context) async {
+  var response = await getDataApiCall("${url}/user/selectedBank/${id}");
+  if (response.statusCode == 200 || response.statusCode == 200) {
+  } else {}
+}
 
 void getAllTransaction(context) async {
   var response = await getDataApiCall(
