@@ -7,6 +7,7 @@ RxBool createDebt = false.obs;
 RxBool createBudget = false.obs;
 RxBool createDebtBool = false.obs;
 RxBool tagBool = false.obs;
+RxBool googleSignInBool = false.obs;
 
 void clearAllFlags() {
   fetchNow.value = false;
@@ -16,4 +17,5 @@ void clearAllFlags() {
   createBudget.value = false;
   createDebtBool.value = false;
   tagBool.value = false;
+  googleSignInBool.value = false;
 }

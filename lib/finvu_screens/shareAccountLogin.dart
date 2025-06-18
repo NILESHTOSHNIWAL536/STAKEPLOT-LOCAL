@@ -179,8 +179,6 @@ class _ShareAccountLoginState extends State<ShareAccountLogin> {
       ),
     );
   }
-
-
   Widget bottomSheet(BuildContext context) {
   return SafeArea(
     child: AnimatedContainer(

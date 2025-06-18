@@ -98,10 +98,12 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen>
 class GetListOfInterest extends StatefulWidget {
   double height = 0.63;
   final bool limitTagbool;
+  final bool enableAnimations;
   GetListOfInterest({
     Key? key,
     this.height = 0.63,
     this.limitTagbool = false,
+    this.enableAnimations = true,
   }) : super(key: key);
 
   @override
@@ -133,6 +135,7 @@ class _GetListOfInterestState extends State<GetListOfInterest>
         onCategoryToggle: _toggleCategory,
         onSubCategoryToggle: _toggleSubCategory,
         limitTagbool: widget.limitTagbool,
+        enableAnimations: widget.enableAnimations,
       ),
     );
   }
@@ -254,12 +257,14 @@ class CategoriesListWidget extends StatefulWidget {
   final Function(String) onCategoryToggle;
   final Function(String) onSubCategoryToggle;
   final bool limitTagbool;
+  final bool enableAnimations;
 
   const CategoriesListWidget({
     Key? key,
     required this.onCategoryToggle,
     required this.onSubCategoryToggle,
     required this.limitTagbool,
+    this.enableAnimations = true,
   }) : super(key: key);
 
   @override
@@ -277,38 +282,45 @@ class _CategoriesListWidgetState extends State<CategoriesListWidget>
   void initState() {
     super.initState();
     // Initialize animation controllers and animations for categories only
-    _controllers = categoriesInterest.keys.map((_) {
-      return AnimationController(
-        duration: const Duration(milliseconds: 1400),
-        vsync: this,
-      )..forward();
-    }).toList();
+    if (widget.enableAnimations) {
+      _controllers = categoriesInterest.keys.map((_) {
+        return AnimationController(
+          duration: const Duration(milliseconds: 1400),
+          vsync: this,
+        )..forward();
+      }).toList();
 
-    _animations = categoriesInterest.keys.toList().asMap().entries.map((entry) {
-      final index = entry.key;
-      Offset beginOffset;
-      final totalCategories = categoriesInterest.keys.length;
-      final estimatedRows = (totalCategories / 2).ceil();
-      final rowIndex = (index / 2).floor();
+      _animations =
+          categoriesInterest.keys.toList().asMap().entries.map((entry) {
+        final index = entry.key;
+        Offset beginOffset;
+        final totalCategories = categoriesInterest.keys.length;
+        final estimatedRows = (totalCategories / 2).ceil();
+        final rowIndex = (index / 2).floor();
 
-      if (totalCategories % 2 == 1 && index == totalCategories - 1) {
-        beginOffset = Offset(0, rowIndex % 2 == 0 ? -2 : 2);
-      } else if (estimatedRows >= 3 &&
-          rowIndex > 0 &&
-          rowIndex < estimatedRows - 1) {
-        beginOffset = Offset(0, index % 2 == 0 ? -2 : 2);
-      } else {
-        beginOffset = index % 2 == 0 ? Offset(-2, 0) : Offset(2, 0);
-      }
+        if (totalCategories % 2 == 1 && index == totalCategories - 1) {
+          beginOffset = Offset(0, rowIndex % 2 == 0 ? -2 : 2);
+        } else if (estimatedRows >= 3 &&
+            rowIndex > 0 &&
+            rowIndex < estimatedRows - 1) {
+          beginOffset = Offset(0, index % 2 == 0 ? -2 : 2);
+        } else {
+          beginOffset = index % 2 == 0 ? Offset(-2, 0) : Offset(2, 0);
+        }
 
-      return Tween<Offset>(
-        begin: beginOffset,
-        end: Offset.zero,
-      ).animate(CurvedAnimation(
-        parent: _controllers[index],
-        curve: Curves.easeOutCubic,
-      ));
-    }).toList();
+        return Tween<Offset>(
+          begin: beginOffset,
+          end: Offset.zero,
+        ).animate(CurvedAnimation(
+          parent: _controllers[index],
+          curve: Curves.easeOutCubic,
+        ));
+      }).toList();
+    }
+    else{
+      _controllers = [];
+      _animations = [];
+    }
   }
 
   @override
@@ -340,6 +352,8 @@ class _CategoriesListWidgetState extends State<CategoriesListWidget>
 
             // List of chips: category chip followed by subcategories (if selected)
             final chipList = <Widget>[
+               widget.enableAnimations
+                  ? 
               SlideTransition(
                 position: _animations[index],
                 child: AnimatedContainer(
@@ -357,7 +371,22 @@ class _CategoriesListWidgetState extends State<CategoriesListWidget>
                         isSelected,
                   ),
                 ),
-              ),
+              ):
+              AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      margin: const EdgeInsets.symmetric(vertical: 1),
+                      child: CategoryChip(
+                        label: category,
+                        isSelected: isSelected,
+                        onTap: () => widget.onCategoryToggle(category),
+                        isSubCategory: false,
+                        isEnabled: !widget.limitTagbool ||
+                            selectedCategories.length +
+                                    selectedSubCategories.length <
+                                CommunityScreenStrings().limitTag ||
+                            isSelected,
+                      ),
+                    ),
             ];
 
             // Add subcategory chips if the category is selected and has subcategories
