@@ -71,7 +71,7 @@ class _DiscoverAccountState extends State<DiscoverAccount> {
               height: MediaQuery.of(context).size.height/1.22,
               // color: Colorcodes.barGraphOrange,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   bankAccountAndSearchBar(),

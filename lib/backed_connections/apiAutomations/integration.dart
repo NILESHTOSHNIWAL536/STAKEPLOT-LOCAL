@@ -18,7 +18,7 @@ void initFinvuManager(BuildContext context) async {
   finvuManager.initialize(
     FinvuConfig(
            finvuEndpoint: 'wss://wsslive.finvu.in/consentapi',
-       //finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
+      //  finvuEndpoint: 'wss://webvwdev.finvu.in/consentapi',
       certificatePins: 
       [
             //  "R6wXZnQsKKyg56qFKQNytvygyr/o4Mkq1VXL5LenBYI=",
