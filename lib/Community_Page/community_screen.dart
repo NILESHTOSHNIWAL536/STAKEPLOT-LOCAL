@@ -8,27 +8,25 @@ import 'package:flutter_application_code_stakeplot/Community_Page/postLoad.dart'
 import 'package:flutter_application_code_stakeplot/Community_Page/postloadTranding.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/text_screen.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/widgets/buildbutton.dart';
-import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
-import 'package:flutter_application_code_stakeplot/NavigatorScreens/userNavigator.dart';
+
 import 'package:flutter_application_code_stakeplot/OneSignal/deviceConfig.dart';
 import 'package:flutter_application_code_stakeplot/Tribe/tribe_home.dart';
-import 'package:flutter_application_code_stakeplot/Tribe/tribe_search.dart';
+
 import 'package:flutter_application_code_stakeplot/Utils/communityPageStrings.dart';
-import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
+
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/bottomNavigations.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/loader.dart';
-import 'package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart';
+
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
+
 import 'package:flutter_application_code_stakeplot/Community_Page/poll_screen.dart';
 import 'package:flutter_application_code_stakeplot/Community_Page/image_screen.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
-import 'package:page_transition/page_transition.dart';
+
 
 RxBool isPostloading = false.obs;
 RxBool hasMorePostTranding = false.obs;

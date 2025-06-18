@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
-import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
 
 class ExploreCard extends StatefulWidget {
@@ -19,10 +18,9 @@ class ExploreCard extends StatefulWidget {
 }
 
 class _ExploreCardState extends State<ExploreCard> {
-  final ScrollController _scrollController = ScrollController();
- final PageController _pageController = PageController(); 
-  int _currentPage = 0; 
- bool _showFullDescription = false;
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+  bool _showFullDescription = false;
 
   // Helper method to get responsive font size
   double _getResponsiveFontSize(BuildContext context, double baseSize) {
@@ -30,11 +28,13 @@ class _ExploreCardState extends State<ExploreCard> {
         MediaQuery.of(context).size.width /
         375; // Based on a standard width (e.g., iPhone 8)
   }
-double getImageHeight(BuildContext context) {
-      double width = MediaQuery.of(context).size.width;
-      bool isSquare = widget.extractdata['isSquareImage'] ?? false; // Default to Rectangle
-      return isSquare ? width : width * 214 / 402;
-    }
+
+  double getImageHeight(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    bool isSquare = widget.extractdata['isSquareImage'] ?? false;
+    return isSquare ? width : width * 214 / 402;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,28 +43,28 @@ double getImageHeight(BuildContext context) {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-             padding: EdgeInsets.symmetric(
+            padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.036,
             ),
             child: _buildHeader(context),
           ),
           _buildImageSection(context),
           Padding(
-             padding: EdgeInsets.symmetric(
+            padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.036,
             ),
             child: _buildPlaceInfo(context),
           ),
           SizedBox(height: MediaQuery.of(context).size.height * 0.01),
           Padding(
-             padding: EdgeInsets.symmetric(
+            padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.036,
             ),
             child: _buildBudgetSection(context),
           ),
           SizedBox(height: MediaQuery.of(context).size.height * 0.01),
           Padding(
-             padding: EdgeInsets.symmetric(
+            padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.036,
             ),
             child: _buildTripHighlights(context),
@@ -80,8 +80,6 @@ double getImageHeight(BuildContext context) {
       ),
     );
   }
-
-  
 
   Widget _buildHeader(BuildContext context) {
     return Row(
@@ -131,22 +129,24 @@ double getImageHeight(BuildContext context) {
   }
 
   Widget _buildImageSection(BuildContext context) {
-    bool hasMultipleImages = widget.extractdata['images'] != null && widget.extractdata['images'].length > 1;
+    bool hasMultipleImages = widget.extractdata['images'] != null &&
+        widget.extractdata['images'].length > 1;
 
     return Padding(
       padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.015),
       child: Stack(
         alignment: Alignment.bottomCenter, // Align dots at the bottom center
         children: [
-         hasMultipleImages
+          hasMultipleImages
               ? SizedBox(
-                height: getImageHeight(context),
+                  height: getImageHeight(context),
                   // height: MediaQuery.of(context).size.width * 214 / 402,
                   width: MediaQuery.of(context).size.width,
                   child: PageView.builder(
                     controller: _pageController,
                     itemCount: widget.extractdata['images'].length,
-                    itemBuilder: (context, index) => _buildImageItem(context, index),
+                    itemBuilder: (context, index) =>
+                        _buildImageItem(context, index),
                     onPageChanged: (index) {
                       setState(() {
                         _currentPage = index; // Update current page for dots
@@ -176,7 +176,6 @@ double getImageHeight(BuildContext context) {
               ),
             ),
           // Show swipe icon only if multiple images exist
-         
         ],
       ),
     );
@@ -185,13 +184,13 @@ double getImageHeight(BuildContext context) {
   Widget _buildImageItem(BuildContext context, int index) {
     return GFImageOverlay(
       width: MediaQuery.of(context).size.width,
-                                // height: MediaQuery.of(context).size.width *
-                                //     214 /
-                                //     402,
-                                 height: getImageHeight(context),
-                                boxFit: BoxFit.fill,
-                                 colorFilter: null, // Disable any color tint
-                                  color: Colors.transparent,
+      // height: MediaQuery.of(context).size.width *
+      //     214 /
+      //     402,
+      height: getImageHeight(context),
+      boxFit: BoxFit.fill,
+      colorFilter: null, // Disable any color tint
+      color: Colors.transparent,
       // borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
       image: NetworkImage(widget.extractdata['images'][index]),
     );
@@ -200,23 +199,22 @@ double getImageHeight(BuildContext context) {
   Widget _buildSingleImage(BuildContext context, String imageUrl) {
     return Center(
       child: GFImageOverlay(
-       width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.width *
-                                    214 /
-                                    402,
-                                boxFit: BoxFit.fill,
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.width * 214 / 402,
+        boxFit: BoxFit.fill,
         // borderRadius: BorderRadius.circular(Colorcodes.borderRadius),
         image: NetworkImage(imageUrl),
         colorFilter: null, // Disable any color tint
-                                  color: Colors.transparent,
-                                  border: Border.all(color: AppColors.bg5),
+        color: Colors.transparent,
+        border: Border.all(color: AppColors.bg5),
       ),
     );
   }
 
   Widget _buildPlaceInfo(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.01),
+      margin: EdgeInsets.symmetric(
+          vertical: MediaQuery.of(context).size.height * 0.01),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -358,12 +356,12 @@ double getImageHeight(BuildContext context) {
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
-              Icons.tips_and_updates, // Added icon for Trip Highlights
-              size: _getResponsiveFontSize(context, 16),
-              color: AppColors.bg1,
-            ),
+                Icons.tips_and_updates, // Added icon for Trip Highlights
+                size: _getResponsiveFontSize(context, 16),
+                color: AppColors.bg1,
+              ),
               Text(
-                "${widget.extractdata['tripHighlights']}",
+                "${widget.extractdata['tripHighlights'][0]}",
                 style: FontManager().getTextStyle(
                   context,
                   lWeight: FontWeight.w500,
@@ -374,80 +372,81 @@ double getImageHeight(BuildContext context) {
             ],
           ),
         ),
-       
       ],
     );
   }
 
   Widget _buildDescription(BuildContext context) {
-  // Check if text exceeds one line
-  final TextPainter textPainter = TextPainter(
-    text: TextSpan(
-      text: widget.extractdata['description'],
-      style: FontManager().getTextStyle(
-        context,
-        lWeight: FontWeight.w400,
-        fontSize: _getResponsiveFontSize(context, 14),
-        color: AppColors.bg1,
-         lineHeight: 1.2, // Approximating line-height: normal
-            letterSpacing: 0.24,
-      ),
-    ),
-    maxLines: 2,
-    textDirection: TextDirection.ltr,
-  )..layout(maxWidth: MediaQuery.of(context).size.width * 0.9);
-
-  bool isTextOverflowing = textPainter.didExceedMaxLines;
-
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        "Description",
+    // Check if text exceeds one line
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(
+        text: widget.extractdata['description'],
         style: FontManager().getTextStyle(
           context,
-          lWeight: FontWeight.w600,
-          fontSize: _getResponsiveFontSize(context, 16),
+          lWeight: FontWeight.w400,
+          fontSize: _getResponsiveFontSize(context, 14),
           color: AppColors.bg1,
+          lineHeight: 1.2, // Approximating line-height: normal
+          letterSpacing: 0.24,
         ),
       ),
-      Padding(
-        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.extractdata['description'],
-              maxLines: _showFullDescription ? null : 2,
-              overflow: _showFullDescription ? TextOverflow.visible : TextOverflow.ellipsis,
-              style: FontManager().getTextStyle(
-                context,
-                lWeight: FontWeight.w500,
-                fontSize: _getResponsiveFontSize(context, 14),
-                color: AppColors.bg1,
-                 lineHeight: 1.2, // Approximating line-height: normal
-            letterSpacing: 0.24,
-              ),
-            ),
-            if (isTextOverflowing) // Show button only if text exceeds one line
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _showFullDescription = !_showFullDescription;
-                  });
-                },
-                child: Text(
-                  _showFullDescription ? "Show Less" : "Show More",
-                    style: FontManager().getTextStyle(
-                        context,
-                        lWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: AppColors.accentColor,
-                         lineHeight: 1.2, // Approximating line-height: normal
-            letterSpacing: 0.24,
-                      ),
+      maxLines: 2,
+      textDirection: TextDirection.ltr,
+    )..layout(maxWidth: MediaQuery.of(context).size.width * 0.9);
+
+    bool isTextOverflowing = textPainter.didExceedMaxLines;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Description",
+          style: FontManager().getTextStyle(
+            context,
+            lWeight: FontWeight.w600,
+            fontSize: _getResponsiveFontSize(context, 16),
+            color: AppColors.bg1,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.extractdata['description'],
+                maxLines: _showFullDescription ? null : 2,
+                overflow: _showFullDescription
+                    ? TextOverflow.visible
+                    : TextOverflow.ellipsis,
+                style: FontManager().getTextStyle(
+                  context,
+                  lWeight: FontWeight.w500,
+                  fontSize: _getResponsiveFontSize(context, 14),
+                  color: AppColors.bg1,
+                  lineHeight: 1.2, // Approximating line-height: normal
+                  letterSpacing: 0.24,
                 ),
               ),
+              if (isTextOverflowing) // Show button only if text exceeds one line
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _showFullDescription = !_showFullDescription;
+                    });
+                  },
+                  child: Text(
+                    _showFullDescription ? "Show Less" : "Show More",
+                    style: FontManager().getTextStyle(
+                      context,
+                      lWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: AppColors.accentColor,
+                      lineHeight: 1.2, // Approximating line-height: normal
+                      letterSpacing: 0.24,
+                    ),
+                  ),
+                ),
               if (isTextOverflowing) // Show button only if text exceeds one line
                 GestureDetector(
                   onTap: () {

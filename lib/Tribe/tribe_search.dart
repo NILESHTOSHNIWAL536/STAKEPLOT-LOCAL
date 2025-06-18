@@ -194,7 +194,7 @@ class _TribeSearchState extends State<TribeSearch> {
             !frdsThere
                 ? Loader()
                 : frdsList.isEmpty
-                    ? Text(search.text.isEmpty?"":"No Users Found...!")
+                    ? Text(search.text.isEmpty?"":"No Users Found!")
                     : Column(
                         children: frdsList
                             .map((data) => profileContainer(data))
