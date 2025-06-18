@@ -28,7 +28,7 @@ class CommunityScreenStrings {
   String postExploria = "Post Exploria";
   // TextScreen and ImageScreen (shared)
   String newPost = "New post";
-  String enterTitle = "Title";
+  String enterTitle = "Enter highlight(s)";
   String addThoughts = "Add a caption";
   String continueButton = "Continue";
   String postedSuccess = "Posted";
