@@ -87,46 +87,46 @@ class _EditDetailsState extends State<EditDetails> {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
         actions: [
-          IconButton(
-            icon: Icon(Icons.delete, color: Colors.red),
-            onPressed: () {
-              // Show dialog box for confirmation
-               Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => DeleteAccountScreen()),
-                            );
+          // IconButton(
+          //   icon: Icon(Icons.delete, color: Colors.red),
+          //   onPressed: () {
+          //     // Show dialog box for confirmation
+          //      Navigator.push(
+          //                     context,
+          //                     MaterialPageRoute(builder: (context) => DeleteAccountScreen()),
+          //                   );
 
-              // showDialog(
-              //   context: context,
-              //   builder: (BuildContext context) {
-              //     return AlertDialog(
-              //       title: Text('Delete Account'),
-              //       content: Text(
-              //           'Are you sure you want to delete your account? This action cannot be undone.'),
-              //       actions: [
-              //         TextButton(
-              //           onPressed: () {
-              //             Navigator.of(context).pop(); // Close the dialog
-              //           },
-              //           child: Text('Cancel'),
-              //         ),
-              //         TextButton(
-              //           onPressed: () {
+          //     // showDialog(
+          //     //   context: context,
+          //     //   builder: (BuildContext context) {
+          //     //     return AlertDialog(
+          //     //       title: Text('Delete Account'),
+          //     //       content: Text(
+          //     //           'Are you sure you want to delete your account? This action cannot be undone.'),
+          //     //       actions: [
+          //     //         TextButton(
+          //     //           onPressed: () {
+          //     //             Navigator.of(context).pop(); // Close the dialog
+          //     //           },
+          //     //           child: Text('Cancel'),
+          //     //         ),
+          //     //         TextButton(
+          //     //           onPressed: () {
                           
-              //               // DeleteAccountScreen
+          //     //               // DeleteAccountScreen
                             
 
-              //             // deleteUserAccount(context);
-              //              // Close the dialog
-              //           },
-              //           child: Text('Delete'),
-              //         ),
-              //       ],
-              //     );
-                // },
-              // );
-            },
-          ),
+          //     //             // deleteUserAccount(context);
+          //     //              // Close the dialog
+          //     //           },
+          //     //           child: Text('Delete'),
+          //     //         ),
+          //     //       ],
+          //     //     );
+          //       // },
+          //     // );
+          //   },
+          // ),
         ],
       ),
       body: SingleChildScrollView(
