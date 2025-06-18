@@ -88,7 +88,7 @@ class TabBarUser extends StatelessWidget {
    
 
     if (!hasPosts) {
-      return buildEmptyState('No Media Found', 'This user hasn\'t shared any media posts yet.');
+      return buildEmptyState('No Media Found');
     }
 
     return GridView.builder(
@@ -173,7 +173,7 @@ class TabBarUser extends StatelessWidget {
   
 
     if (!hasPosts) {
-      return buildEmptyState('No Posts Found', 'This user hasn\'t shared any text or poll posts yet.');
+      return buildEmptyState('No Posts Found',);
     }
 
     return ListView.builder(
@@ -186,7 +186,7 @@ class TabBarUser extends StatelessWidget {
     );
   }
 
-  Widget buildEmptyState(String title, String subtitle) {
+  Widget buildEmptyState(String title) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -206,13 +206,7 @@ class TabBarUser extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            subtitle,
-            style: TextStyle(
-              fontSize: 14,
-              color: AppColors.grey,
-            ),
-          ),
+         
         ],
       ),
     );

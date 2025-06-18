@@ -4,6 +4,7 @@ import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
+import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/Utils/signin.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -29,6 +30,7 @@ class _SigninState extends State<Signin> {
       TextEditingController(text: "nileshtoshniwal74@gmail.com");
   TextEditingController passwordController =
       TextEditingController(text: "Nilesh@123");
+  // Add loading state for Google sign-in
 
   @override
   void initState() {
@@ -193,7 +195,8 @@ class _SigninState extends State<Signin> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              containerIconSiginWith(FontAwesomeIcons.google, Colorcodes.white,context),
+              containerIconSiginWith(
+                  FontAwesomeIcons.google, Colorcodes.white, context),
             ],
           ),
           const SizedBox(height: 10),
@@ -222,7 +225,6 @@ class _SigninState extends State<Signin> {
     );
   }
 
- 
   Widget siginButton() {
     return Center(
       child: Container(
@@ -274,34 +276,76 @@ class _SigninState extends State<Signin> {
   }
 }
 
-
- Widget containerIconSiginWith(IconData icon, Color color,context) {
-    return InkWell(
-      onTap: () async {
-      final userdata = await AuthService().signInWithGoogle(context);
+Widget containerIconSiginWith(IconData icon, Color color, context) {
+  return InkWell(
+    onTap: () async {
+      if (googleSignInBool.value) return; // Prevent multiple clicks
+      googleSignInBool.value = true; // Set loading state
+      try {
+        final userdata = await AuthService().signInWithGoogle(context);
         print("User data received: $userdata");
-        if (userdata != "") {
-          if (userdata!['data']['accessToken'] != null) {
-            print("Access token is present.");
-          } else {
-            print("Navigating to UserDetailsPage with userdata: $userdata");
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => UserDetailsPage(data: userdata!)),
-            );
-          }
+        if (userdata != null && userdata['data']['accessToken'] != null) {
+          print("Access token is present.");
+        } else if (userdata != null) {
+          print("Navigating to UserDetailsPage with userdata: $userdata");
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => UserDetailsPage(data: userdata)),
+          );
         } else {
           print("No user data received.");
         }
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-        decoration: BoxDecoration(
-          color: Colorcodes.greyLight,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: FaIcon(icon, size: 30, color: color),
+      } finally {
+        googleSignInBool.value = false; // Reset loading state
+      }
+    },
+    child: Container(
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+      decoration: BoxDecoration(
+        color: Colorcodes.greyLight,
+        borderRadius: BorderRadius.circular(10),
       ),
-    );
-  }
+      child: Obx(
+        () => googleSignInBool.value
+            ? Spinner(size: 30) // Show spinner when loading
+            : FaIcon(icon,
+                size: 30, color: color), // Show icon when not loading
+      ),
+    ),
+  );
+}
+
+// Widget containerIconSiginWith(IconData icon, Color color, context) {
+//   return InkWell(
+//     onTap: () async {
+//       if (googleSignInBool.value) return;
+//       googleSignInBool.value = true;
+//       final userdata = await AuthService().signInWithGoogle(context);
+//       print("User data received: $userdata");
+//       if (userdata != "") {
+//         if (userdata!['data']['accessToken'] != null) {
+//           print("Access token is present.");
+//         } else {
+//           print("Navigating to UserDetailsPage with userdata: $userdata");
+
+//           Navigator.push(
+//             context,
+//             MaterialPageRoute(
+//                 builder: (context) => UserDetailsPage(data: userdata!)),
+//           );
+//         }
+//       } else {
+//         print("No user data received.");
+//       }
+//     },
+//     child: Container(
+//       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+//       decoration: BoxDecoration(
+//         color: Colorcodes.greyLight,
+//         borderRadius: BorderRadius.circular(10),
+//       ),
+//       child: FaIcon(icon, size: 30, color: color),
+//     ),
+//   );
+// }

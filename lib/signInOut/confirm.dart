@@ -24,8 +24,10 @@ class conform extends StatefulWidget {
 
 class _SigninState extends State<conform> {
   final int _otpLength = 6;
-  late List<TextEditingController> _controllers = List.generate(_otpLength, (_) => TextEditingController());
-  late List<FocusNode> _focusNodes = List.generate(_otpLength, (_) => FocusNode());
+  late List<TextEditingController> _controllers =
+      List.generate(_otpLength, (_) => TextEditingController());
+  late List<FocusNode> _focusNodes =
+      List.generate(_otpLength, (_) => FocusNode());
   final int _otpCodeLength = 6;
   RxString _otpCode = "".obs;
   RxBool _isOtpValid = false.obs;
@@ -82,26 +84,25 @@ class _SigninState extends State<conform> {
           // padding: const EdgeInsets.symmetric(horizontal: 20),
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              // Color(0xFF9B8BC6),
-              // Color(0xFF6568A7),
-              // Color(0xFF272841),
-             Color(0xFF6568A7),
-              Color(0xFF272841),
-              
-            ],
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                // Color(0xFF9B8BC6),
+                // Color(0xFF6568A7),
+                // Color(0xFF272841),
+                Color(0xFF6568A7),
+                Color(0xFF272841),
+              ],
+            ),
           ),
-        ),
           child: Column(
-             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -113,19 +114,18 @@ class _SigninState extends State<conform> {
                         text: "Enter the 6-digit OTP sent to your email",
                         fontWeight: FontWeight.w300,
                         fontsize: 14,
-                        color:Colorcodes.white
-                      ),
+                        color: Colorcodes.white),
                     const SizedBox(height: 40),
                     verifyOpt(),
                     acceptButton(),
                     SizedBox(height: Colorcodes.paddingSize * 2),
-                    resendOtp(), 
-                   
+                    resendOtp(),
+
                     // Simplified structure
                   ],
                 ),
               ),
-                    buildBottomWaves(context),
+              buildBottomWaves(context),
             ],
           ),
         ),
@@ -138,7 +138,8 @@ class _SigninState extends State<conform> {
       padding: EdgeInsets.symmetric(vertical: 20),
       child: Text(
         "Verify Your Email",
-        style: FontManager().getTextStyle(context, lWeight: FontWeight.bold, fontSize: 22, color: Colorcodes.white),
+        style: FontManager().getTextStyle(context,
+            lWeight: FontWeight.bold, fontSize: 22, color: Colorcodes.white),
       ),
     );
   }
@@ -158,13 +159,49 @@ class _SigninState extends State<conform> {
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color:Colorcodes.white,
+          color: Colorcodes.white,
           borderRadius: BorderRadius.circular(Colorcodes.borderRadius10),
         ),
         child: InkWell(
           onTap: () {
+            // Add validation to check if OTP is not empty and all digits are filled
+            if (otpController.text.isEmpty) {
+              // Show error message for empty field
+              snackBarCalledfail(context, 'Please enter the OTP');
+              // ScaffoldMessenger.of(context).showSnackBar(
+              //   SnackBar(
+              //     content: Text('Please enter the OTP'),
+              //     backgroundColor: Colors.red,
+              //   ),
+              // );
+              return;
+            }
+
+            if (otpController.text.length != 6) {
+              // Show error message for incomplete OTP
+              snackBarCalledfail(context, 'Please enter all 6 digits of the OTP');
+              // ScaffoldMessenger.of(context).showSnackBar(
+              //   SnackBar(
+              //     content: Text('Please enter all 6 digits of the OTP'),
+              //     backgroundColor: Colors.red,
+              //   ),
+              // );
+              return;
+            }
+
+            // Check if all characters are digits
+            if (!RegExp(r'^[0-9]{6}$').hasMatch(otpController.text)) {
+               snackBarCalledfail(context, 'Please enter only numeric digits');
+              // ScaffoldMessenger.of(context).showSnackBar(
+              //   SnackBar(
+              //     content: Text('Please enter only numeric digits'),
+              //     backgroundColor: Colors.red,
+              //   ),
+              // );
+              return;
+            }
+
             acceptReset.value = true;
-            
           },
           child: Obx(
             () => Center(
@@ -173,7 +210,9 @@ class _SigninState extends State<conform> {
                   : Text(
                       "Verify & Accept",
                       style: FontManager().getTextStyle(context,
-                          lWeight: FontWeight.w500, fontSize: 16, color: Colorcodes.black),
+                          lWeight: FontWeight.w500,
+                          fontSize: 16,
+                          color: Colorcodes.black),
                     ),
             ),
           ),
@@ -191,7 +230,7 @@ class _SigninState extends State<conform> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "Didn’t you receive the OTP? ",
+              "Didn't you receive the OTP? ",
               style: FontManager().getTextStyle(
                 context,
                 lWeight: FontWeight.w400,
@@ -203,7 +242,8 @@ class _SigninState extends State<conform> {
               () => GestureDetector(
                 onTap: canResendOtp2.value
                     ? () {
-                        resendOptUser(context, widget.data['email'], widget.data['name']);
+                        resendOptUser(
+                            context, widget.data['email'], widget.data['name']);
                         startOtpTimer2();
                         isOtpWrong2.value = false;
                         otpController.clear(); // Clear OTP field on resend
@@ -212,12 +252,15 @@ class _SigninState extends State<conform> {
                       }
                     : null,
                 child: Text(
-                  canResendOtp2.value ? "Resend OTP" : "Resend in ${otpCountdown2.value} seconds",
+                  canResendOtp2.value
+                      ? "Resend OTP"
+                      : "Resend in ${otpCountdown2.value} seconds",
                   style: FontManager().getTextStyle(
                     context,
                     lWeight: FontWeight.bold,
                     fontSize: 12,
-                    color: canResendOtp2.value ? Colorcodes.black : Colors.black,
+                    color:
+                        canResendOtp2.value ? Colorcodes.black : Colors.black,
                   ),
                 ),
               ),
@@ -244,7 +287,7 @@ class _SigninState extends State<conform> {
           fieldHeight: MediaQuery.of(context).size.width * 0.13,
           fieldWidth: MediaQuery.of(context).size.width * 0.13,
           activeFillColor: Colors.white,
-          activeColor: AppColors.primaryColor,
+          activeColor: AppColors.finSpaceColor,
           selectedFillColor: Colors.white,
           selectedColor: Colors.blue,
           inactiveFillColor: Colors.grey[200],

@@ -151,7 +151,7 @@ Widget vote(context, dataObj, data) {
                           : (postCount[dataObj['_id']].toString()),
                       style: FontManager().getTextStyle(context,
                           lWeight: FontWeight.w400,
-                          fontSize: 14,
+                          fontSize: 16,
                           color: AppColors.bg1),
                     ),
                   ),
@@ -199,10 +199,10 @@ Widget vote(context, dataObj, data) {
                       child: Row(
                         children: [
                           Container(
-                              height: 22,
+                              height: 24,
                               child: SvgPicture.asset(
                                 LikeComment.commentPost,
-                                height: 22,
+                                height: 24,
                               )),
                           const SizedBox(
                             width: 6,
@@ -213,7 +213,7 @@ Widget vote(context, dataObj, data) {
                                 : postCommentCount[idData].toString(),
                             style: FontManager().getTextStyle(context,
                                 lWeight: FontWeight.w400,
-                                fontSize: 14,
+                                fontSize: 16,
                                 color: AppColors.likesharecommentCount),
                           ),
                         ],
@@ -250,7 +250,7 @@ Widget vote(context, dataObj, data) {
                           isSaved
                               ? LikeComment.savedPost
                               : LikeComment.savePost,
-                          height: 22,
+                          height: 24,
                         ));
                   }),
                   const SizedBox(width: 10),
@@ -271,7 +271,7 @@ Widget vote(context, dataObj, data) {
                       },
                       child: SvgPicture.asset(
                         LikeComment.sharePost,
-                        height: 22,
+                        height: 24,
                       ),
                     ),
                   ),
@@ -291,7 +291,7 @@ Widget likeIcon(BuildContext context, bool isLiked) {
       // color: Colors.green,
       duration: const Duration(milliseconds: 300), // Animation duration
       curve: Curves.easeInOut, // Animation curve
-      height: isLiked ? 24 : 22, // Change height on like
+      height: isLiked ? 28 : 26, // Change height on like
       child: !isLiked
           ? SvgPicture.asset(
               LikeComment.likeBulb, // Path to your outlined heart SVG

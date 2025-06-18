@@ -233,7 +233,10 @@ class _CommunityState extends State<Community> {
   Widget getTabs(context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(children: [
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
         Padding(
           padding: const EdgeInsets.only(right: 10),
           child: GestureDetector(
@@ -247,7 +250,7 @@ class _CommunityState extends State<Community> {
                   fontsize: !isTrending.value ? 20 : 14,
                   fontWeight:
                       !isTrending.value ? FontWeight.w700 : FontWeight.w400,
-                  c: !isTrending.value?AppColors.accentColor:AppColors.finSpaceColor)),
+                  c: isTrending.value?AppColors.accentColor:AppColors.finSpaceColor)),
         ),
         GestureDetector(
             onTap: () {
@@ -256,7 +259,7 @@ class _CommunityState extends State<Community> {
             child: textStyleImage(
                 context: context,
                 text: strings.trending,
-                fontsize: isTrending.value ? 18 : 14,
+                fontsize: isTrending.value ? 20 : 14,
                 fontWeight:
                     isTrending.value ? FontWeight.w700 : FontWeight.w400,
                 c: !isTrending.value?AppColors.accentColor:AppColors.finSpaceColor)),

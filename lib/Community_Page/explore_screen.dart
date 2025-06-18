@@ -12,6 +12,7 @@ import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/post.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
 import 'package:flutter_application_code_stakeplot/finSpace/apisCall.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:custom_image_crop/custom_image_crop.dart';
@@ -265,13 +266,10 @@ class _ExploreModalState extends State<ExploreModal> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: isLoading
-                            ? const SizedBox(
+                            ?  SizedBox(
                                 width: 20,
                                 height: 20,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2,
-                                ),
+                                child: Spinner()
                               )
                             : Text(strings.saveButton,
                                 style: FontManager().getTextStyle(context,
@@ -850,7 +848,7 @@ class _ExploreModalState extends State<ExploreModal> {
         showTagListOfInterestModal(context: context, onConfirm: callBack);
       },
       child: _isSubmitting
-          ? Center(child: const CircularProgressIndicator(color: Colors.black))
+          ? Center(child: Spinner())
           : Container(
               width: MediaQuery.of(context).size.width / 1.1,
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 14),
