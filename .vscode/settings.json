@@ -3,5 +3,6 @@
     "flutterTools.displayGetxContextMenu": true,
     "flutterTools.displayMobxContextMenu": false,
     "flutterTools.displayRiverpodContextMenu": false,
-    "flutterTools.displayModularContextMenu": false
+    "flutterTools.displayModularContextMenu": false,
+    "postman.settings.dotenv-detection-notification-visibility": false
 }
