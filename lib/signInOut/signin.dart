@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_application_code_stakeplot/Constants/app_styles.dart';
 import 'package:flutter_application_code_stakeplot/Constants/font_manager.dart';
 import 'package:flutter_application_code_stakeplot/Home_Screen/colors.dart';
 import 'package:flutter_application_code_stakeplot/OneSignal/oneSignal_config.dart';
 import 'package:flutter_application_code_stakeplot/Utils/snackBar.dart';
 import 'package:flutter_application_code_stakeplot/animated/booleanFlag.dart';
+import 'package:flutter_application_code_stakeplot/avatarProfile.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/clearstack.dart';
 import 'package:flutter_application_code_stakeplot/Utils/signin.dart';
 import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
@@ -301,16 +303,22 @@ Widget containerIconSiginWith(IconData icon, Color color, context) {
       }
     },
     child: Container(
+      width: MediaQuery.sizeOf(context).width/5,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       decoration: BoxDecoration(
-        color: Colorcodes.greyLight,
+        color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Obx(
         () => googleSignInBool.value
             ? Spinner(size: 30) // Show spinner when loading
-            : FaIcon(icon,
-                size: 30, color: color), // Show icon when not loading
+            : 
+         AvatarProfileImage(
+                      url: Sign.googleIcon,
+                      width: 40,
+                      height: 30,
+                     
+                    ), // Show icon when not loading
       ),
     ),
   );

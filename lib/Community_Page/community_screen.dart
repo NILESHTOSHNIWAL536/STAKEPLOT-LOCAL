@@ -362,7 +362,7 @@ class _CommunityState extends State<Community> {
                             child: Container(
                               width: MediaQuery.sizeOf(context).width,
                               child: Text(
-                                "PostCard",
+                                "Post Card",
                                 style: FontManager().getTextStyle(
                                   context,
                                   lWeight: FontWeight.w500,

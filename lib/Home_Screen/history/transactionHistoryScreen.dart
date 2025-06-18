@@ -57,82 +57,86 @@ void _onScroll() {
       backgroundColor: AppColors.backgroundColor,
      appBar: historyAppBar(context),
     
-     body: Column(
-        children: [
-          Container(
-           // height: MediaQuery.of(context).size.height/1.1,
-            width: MediaQuery.of(context).size.width/.1,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Search Bar
-                Padding(
-                  padding: const EdgeInsets.only(left: 12,right:4),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                  //  height: MediaQuery.of(context).size.height /5,
-                   decoration: BoxDecoration(
-                  color: AppColors.backgroundColor,
-                  borderRadius: BorderRadius.circular(30),
-                  
-                ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-    
-    
-                       const SizedBox(height: 4,),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            getTextFeild(),
-                            InkWell(onTap: ()
-                            { 
-                               showModalBottomSheet(context: context, builder: (_)=>
-                               Container(
-                                width: MediaQuery.of(context).size.width,
-                                decoration:const BoxDecoration(
-                                  color: AppColors.bg5,
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20),
-                                  ),
-                                ),
-                                child: filterTransaction(context)
-                                ));
-                            }, 
-                           child:  Icon(Icons.filter_alt_outlined, 
-                           size:  MediaQuery.of(context).size.height/20,
-                           color: AppColors.accentColor),) 
-                          ],
-                        ),
+     body: SafeArea(
+       child: Column(
+          children: [
+            Container(
+             // height: MediaQuery.of(context).size.height/1.1,
+              width: MediaQuery.of(context).size.width/.1,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Search Bar
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12,right:4),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                    //  height: MediaQuery.of(context).size.height /5,
+                     decoration: BoxDecoration(
+                    color: AppColors.backgroundColor,
+                    borderRadius: BorderRadius.circular(30),
                     
-                       Obx(()=> (groupTransactionList.length!=0 ||  redioButton.isNotEmpty)?  Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: getTab(context),
-                          ):SizedBox.shrink()),
-    
-                    
-                      ],
+                  ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+           
+           
+                         const SizedBox(height: 4,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              getTextFeild(),
+                              InkWell(onTap: ()
+                              { 
+                                 showModalBottomSheet(context: context, builder: (_)=>
+                                 SafeArea(
+                                   child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration:const BoxDecoration(
+                                      color: AppColors.bg5,
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(20),
+                                        topRight: Radius.circular(20),
+                                      ),
+                                    ),
+                                    child: filterTransaction(context)
+                                    ),
+                                 ));
+                              }, 
+                             child:  Icon(Icons.filter_alt_outlined, 
+                             size:  MediaQuery.of(context).size.height/20,
+                             color: AppColors.accentColor),) 
+                            ],
+                          ),
+                      
+                         Obx(()=> (groupTransactionList.length!=0 ||  redioButton.isNotEmpty)?  Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: getTab(context),
+                            ):SizedBox.shrink()),
+           
+                      
+                        ],
+                      ),
                     ),
                   ),
-                ),
-               
-                // Transaction History
-              Obx(()=> Container(
-                width: MediaQuery.of(context).size.width,
-               
-                 height: MediaQuery.sizeOf(context).height/ ((groupTransactionList.length!=0 || redioButton.isNotEmpty)? 1.35:1.25),
-                 child: SingleChildScrollView(
-                   controller: scrollController,
-                   child: transactionsHistoryList(),
-                 ),
-               ))
-              ],
+                 
+                  // Transaction History
+                Obx(()=> Container(
+                  width: MediaQuery.of(context).size.width,
+                 
+                   height: MediaQuery.sizeOf(context).height/ ((groupTransactionList.length!=0 || redioButton.isNotEmpty)? 1.35:1.25),
+                   child: SingleChildScrollView(
+                     controller: scrollController,
+                     child: transactionsHistoryList(),
+                   ),
+                 ))
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+     ),
     );
   }
 

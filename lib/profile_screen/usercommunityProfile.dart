@@ -56,6 +56,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
     getDis();
     getStatus();
     checkName(widget.data);
+   
   }
 
   void getDis() async {

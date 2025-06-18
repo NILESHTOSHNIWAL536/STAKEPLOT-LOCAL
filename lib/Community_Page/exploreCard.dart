@@ -447,21 +447,7 @@ class _ExploreCardState extends State<ExploreCard> {
                     ),
                   ),
                 ),
-              if (isTextOverflowing) // Show button only if text exceeds one line
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _showFullDescription = !_showFullDescription;
-                    });
-                  },
-                  child: Text(
-                    _showFullDescription ? "Show Less" : "Show More",
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+             
             ],
           ),
         ),

@@ -12,7 +12,6 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 import 'package:flutter_application_code_stakeplot/colorcodes.dart';
 import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
 import 'package:flutter_application_code_stakeplot/finvu_screens/shareAccountLogin.dart';
-import 'package:flutter_application_code_stakeplot/loader.dart';
 import 'package:get/get.dart';
 
 class BudgetOverView extends StatefulWidget {
@@ -82,8 +81,8 @@ class _BudgetOverViewState extends State<BudgetOverView> {
     return Container(
       width: width,
       height: height,
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      decoration: BoxDecoration(color: AppColors.backgroundColor),
+      padding:const  EdgeInsets.symmetric(horizontal: 20),
+      decoration:const  BoxDecoration(color: AppColors.backgroundColor),
       child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -104,7 +103,7 @@ class _BudgetOverViewState extends State<BudgetOverView> {
                 children: [
                   Container(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                         const  EdgeInsets.symmetric(horizontal: 10, vertical: 12),
                       decoration: BoxDecoration(
                           color: AppColors.button,
                           borderRadius: BorderRadius.circular(10)),
@@ -264,24 +263,53 @@ class _BudgetOverViewState extends State<BudgetOverView> {
     );
   }
 
-  void onsubmit(index, value) async {
-    categoriesDividedList[index]['amount'] = double.tryParse(value) ?? 0;
-_controllers[index].text = value;
-    var d = await adjustBudget(double.parse(widget.amount),
-        categoriesDividedList[index]['category'], double.parse(value), cat);
-    // {Bills: 1500.67, Insurance: 1791.39, Travel: 2507.94}
-    List categoryList = [];
-    categoriesDividedList.forEach((e) {
-      String name = e['category'];
-      double amount = d[name]!;
-      categoryList
-          .add({'category': e['category'], 'amount': amount.toString()});
-    });
+//   void onsubmit(index, value) async {
+//     categoriesDividedList[index]['amount'] = double.tryParse(value) ?? 0;
+// _controllers[index].text = value;
+//     var d = await adjustBudget(double.parse(widget.amount),
+//         categoriesDividedList[index]['category'], double.parse(value), cat);
+//     // {Bills: 1500.67, Insurance: 1791.39, Travel: 2507.94}
+//     List categoryList = [];
+//     categoriesDividedList.forEach((e) {
+//       String name = e['category'];
+//       double amount = d[name]!;
+//       categoryList
+//           .add({'category': e['category'], 'amount': amount.toString()});
+//     });
 
-    categoriesDividedList.clear();
-    categoriesDividedList.addAll(List.from(categoryList));
+//     categoriesDividedList.clear();
+//     categoriesDividedList.addAll(List.from(categoryList));
+//   }
+void onsubmit(int index, String value) async {
+  double parsedValue = double.tryParse(value) ?? 0;
+  if (!_validateAmount(value, widget.amount)) {
+    snackBarCalled(context, SnackbarData().amountExceed);
+    return;
   }
 
+  // Update the current category's amount
+  categoriesDividedList[index]['amount'] = parsedValue;
+  _controllers[index].text = parsedValue.toString();
+
+  // Call adjustBudget to redistribute the remaining budget
+  var adjustedBudgets = await adjustBudget(
+    double.parse(widget.amount),
+    categoriesDividedList[index]['category'],
+    parsedValue,
+    widget.categoryList.map((e) => e['category'] as String).toList(),
+  );
+
+  // Update categoriesDividedList and controllers with new amounts
+  setState(() {
+    for (int i = 0; i < categoriesDividedList.length; i++) {
+      String category = categoriesDividedList[i]['category'];
+      if (adjustedBudgets.containsKey(category)) {
+        categoriesDividedList[i]['amount'] = adjustedBudgets[category]!;
+        _controllers[i].text = adjustedBudgets[category]!.toStringAsFixed(2);
+      }
+    }
+  });
+}
   Future<Map<String, double>> adjustBudget(
     double totalAmount,
     String updatedCategory,

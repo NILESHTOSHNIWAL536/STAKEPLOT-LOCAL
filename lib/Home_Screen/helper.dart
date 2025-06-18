@@ -420,80 +420,82 @@ void showModalForPdfDownloadBankUiCheckBox(BuildContext context) {
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
-      return AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        child: Container(
-          width: MediaQuery.of(context).size.width, // Full screen width
-          // height:
-          //     (MediaQuery.of(context).size.height / 2.5), // Full screen height
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.white,
-                Colors.grey[50]!,
+      return SafeArea(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          child: Container(
+            width: MediaQuery.of(context).size.width, // Full screen width
+            // height:
+            //     (MediaQuery.of(context).size.height / 2.5), // Full screen height
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.white,
+                  Colors.grey[50]!,
+                ],
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 20,
+                  spreadRadius: 5,
+                  offset: const Offset(0, -5),
+                ),
               ],
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 20,
-                spreadRadius: 5,
-                offset: const Offset(0, -5),
-              ),
-            ],
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Center(
-                    child: Container(
-                  width: 50,
-                  height: 2.2,
-                  color: Colorcodes.claimColor,
-                )),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      textStyle(
-                          context: context,
-                          text: "Select Bank Account",
-                          fontsize: 14,
-                          fontWeight: FontWeight.w500),
-                      InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Icon(
-                          Icons.close_outlined,
-                          size: 20,
-                          color: AppColors.accentColor,
-                        ),
-                      )
-                    ],
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Center(
+                      child: Container(
+                    width: 50,
+                    height: 2.2,
+                    color: Colorcodes.claimColor,
+                  )),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        textStyle(
+                            context: context,
+                            text: "Select Bank Account",
+                            fontsize: 14,
+                            fontWeight: FontWeight.w500),
+                        InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Icon(
+                            Icons.close_outlined,
+                            size: 20,
+                            color: AppColors.accentColor,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                getBankAccountList(context),
-                SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: InkWell(
-                      onTap: () async {
-                        showModalForPdfDownload(context);
-                      },
-                      child: getButton(context, "Continue")),
-                )
-              ],
+                  const SizedBox(height: 20),
+                  getBankAccountList(context),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: InkWell(
+                        onTap: () async {
+                          showModalForPdfDownload(context);
+                        },
+                        child: getButton(context, "Continue")),
+                  )
+                ],
+              ),
             ),
           ),
         ),
@@ -598,40 +600,42 @@ void showModalForPdfDownload(BuildContext context) {
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
-      return Container(
-        //height: MediaQuery.of(context).size.height / 2.4,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30),
+      return SafeArea(
+        child: Container(
+          //height: MediaQuery.of(context).size.height / 2.4,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+            color: Colors.white,
           ),
-          color: Colors.white,
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Center(child: Container()),
-              getHeader(context, "Download Statement"),
-              const SizedBox(height: 20),
-              getListItemListTile("30", "days", context),
-              getListItemListTile("60", "days", context),
-              getListItemListTile("6", "months", context),
-              // getListItemListTile("1", "year", context),
-              SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                child: InkWell(
-                    onTap: () async {
-                      getPdgLoader.value = true;
-                      getPdf(context, selectedValue, selectedValueType);
-                    },
-                    child: Obx(() => getPdgLoader.value
-                        ? getspinner(context, "")
-                        : getButton(context, "Continue"))),
-              )
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Center(child: Container()),
+                getHeader(context, "Download Statement"),
+                const SizedBox(height: 20),
+                getListItemListTile("30", "days", context),
+                getListItemListTile("60", "days", context),
+                getListItemListTile("6", "months", context),
+                // getListItemListTile("1", "year", context),
+                SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: InkWell(
+                      onTap: () async {
+                        getPdgLoader.value = true;
+                        getPdf(context, selectedValue, selectedValueType);
+                      },
+                      child: Obx(() => getPdgLoader.value
+                          ? getspinner(context, "")
+                          : getButton(context, "Continue"))),
+                )
+              ],
+            ),
           ),
         ),
       );
@@ -709,7 +713,7 @@ Widget getCheckBoxwithText(BuildContext context, String text) {
 Widget filterTransaction(context) {
   return Container(
     height: MediaQuery.of(context).size.height /
-        (bankAccountLinkedList.length <= 1 ? 3 : 1.9),
+        (bankAccountLinkedList.length <= 1 ? 3 : 1.5),
     child: SingleChildScrollView(
       child: Column(
         children: [

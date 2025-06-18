@@ -4,12 +4,18 @@ import 'package:flutter/material.dart';
 
 class NavBarIcons {
   //nav bar
-  static String home = "assets/icons/Navigation_bar/homepageActive.svg";
-  static String home1 = "assets/icons/Navigation_bar/homePageInactive.svg";
-  static String community1 = "assets/icons/Navigation_bar/communityInactive.svg";
-  static String community = "assets/icons/Navigation_bar/communityActive.svg";
-  static String screen21 = "assets/icons/Navigation_bar/financeActive.svg";
-  static String screen2 = "assets/icons/Navigation_bar/financeInActive.svg";
+  // static String home = "assets/icons/Navigation_bar/homepageActive.svg";
+  // static String home1 = "assets/icons/Navigation_bar/homePageInactive.svg";
+  // static String community1 = "assets/icons/Navigation_bar/communityInactive.svg";
+  // static String community = "assets/icons/Navigation_bar/communityActive.svg";
+  // static String screen21 = "assets/icons/Navigation_bar/financeActive.svg";
+  // static String screen2 = "assets/icons/Navigation_bar/financeInActive.svg";
+  static String community = "assets/icons/Navigation_bar/community-filled.svg";
+  static String community1 = "assets/icons/Navigation_bar/community-stroke.svg";
+  static String screen2 = "assets/icons/Navigation_bar/finance-stroke.svg";
+  static String screen21 = "assets/icons/Navigation_bar/finance-filled.svg";
+  static String home1 = "assets/icons/Navigation_bar/navstroke.svg";
+  static String home = "assets/icons/Navigation_bar/navfilled.svg";
   //Home page icons
 }
 class FinSpaceIcons {
@@ -248,6 +254,7 @@ class Sign {
   static String comm = "assets/icons/Signup/Comm.svg";
   static String management = "assets/icons/Signup/Management.svg";
   static String finvu = "assets/icons/Signup/finvu.svg";
+  static String googleIcon = "assets/icons/Signup/gIcon.svg";
 }
 
 class Finance {
