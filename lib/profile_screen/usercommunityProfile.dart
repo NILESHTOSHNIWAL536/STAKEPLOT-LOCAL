@@ -129,14 +129,6 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
             children: [
               // Top Cover and Profile Picture
               topUserProfile(widget.data),
-
-              // Text(widget.data['name'].toString(),
-              //     style: FontManager().getTextStyle(context,
-              //         lWeight: FontWeight.w600,
-              //         //fontSize: MediaQuery.of(context).size.width * 0.04,
-              //         //fontSize: 12,
-              //         color: AppColors.bg1)),
-
               Column(
                 children: [
                   const SizedBox(height: 10),
@@ -172,13 +164,13 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
                       data['avatarBackGround'] ?? defaultBackGround.value,
                   flag: true,
                 ),
-          widget.isMasked?Text(widget.data['maskedName'].toString(),
+          widget.isMasked?Text((widget.data['maskedName'] ?? widget.data['name']).toString(),
               style: FontManager().getTextStyle(context,
                   lWeight: FontWeight.w600, color: AppColors.bg1)):Text(widget.data['name'].toString(),
               style: FontManager().getTextStyle(context,
                   lWeight: FontWeight.w600, color: AppColors.bg1)),
           SizedBox(
-            height: 10,
+            height: 6,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),

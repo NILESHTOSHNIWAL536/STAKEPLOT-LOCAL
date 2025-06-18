@@ -21,7 +21,7 @@ class ProfileScreenStrings {
   String historyArchivesLabel = "History archives";
   String termsConditionsLabel = "Terms & conditions";
   String logoutLabel = "Log out";
-  String appVersionLabel = "Stakeplot\nApp version 2.0.0";
+  String appVersionLabel = "Stakeplot\nApp version 1.1.0";
 
   // ✅ Sublabels
   String communityProfileSubLabel = "Check your community profile";
