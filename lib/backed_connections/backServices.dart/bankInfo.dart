@@ -78,20 +78,31 @@ void getdebts() async {
   }
 }
 
-void deleteUserAccount(BuildContext context) async {
+Future<bool> deleteUserAccount(BuildContext context,String password,String msg) async {
   try {
-    var response = await deleteDataApiCall("${url}/user");
-
-    if (response.statusCode == 200) {
-      
-    } else {
-     
+    var body={
+      'password':password,
+      'reason':msg,
+    };
+    var response = await deleteDataApiCallBody("${url}/user",body);
+    printData(response);
+    if (getFlagOfResponse(response))
+    {
+          clearStackLocalInfo();
+          logoutUserFromDevice(context);
     }
-  } catch (e, stackTrace) {
-   
+    else if(response.statusCode==400){
+         var res=jsonDecode(response.body);
+          snackBarCalledfail(context,res['error']['explanation'] ?? "Password incorrect");
+          return false; 
+    }
+  } catch (e)
+  {
+      snackBarCalledfail(context, "error while deleting");  
+      return false;
   }
-  clearStackLocalInfo();
-  clearStack(context);
+  
+  return true;
 }
 
 void deleteBankAccount({required String bankid,required String AccountId,required BuildContext context})async

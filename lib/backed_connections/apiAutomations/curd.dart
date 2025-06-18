@@ -99,6 +99,20 @@ Future<http.Response> deleteDataApiCall(urlPath) async {
   return response;
 }
 
+Future<http.Response> deleteDataApiCallBody(urlPath,body) async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+  var accessToken = pref.getString("accessToken");
+  final response = await http.delete(
+    Uri.parse(urlPath),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      "Authorization": "$accessToken",
+    },
+     body: jsonEncode(body),
+  );
+  return response;
+}
+
 
 bool getFlagOfResponse(response) {
   if (response.statusCode == 200 || response.statusCode == 201) return true;

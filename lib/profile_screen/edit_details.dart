@@ -237,8 +237,8 @@ class _EditDetailsState extends State<EditDetails> {
                   Divider(),
                   _buildNonEditableField(Icons.person,
                       ProfileScreenStrings().nameLabel, userName.value),
-                  Divider(),
-                  _buildNonEditableField(Icons.phone,
+                  number.value=="0"?SizedBox.shrink() :  Divider(),
+                  number.value=="0"?SizedBox.shrink():  _buildNonEditableField(Icons.phone,
                       ProfileScreenStrings().numberLabel, number.value),
                   Divider(),
                   _buildNonEditableField(Icons.calendar_today,
@@ -419,7 +419,7 @@ class _EditDetailsState extends State<EditDetails> {
                     ),
                     TextButton(
                       onPressed: () {
-                        // Add your delete logic here
+                        // Add your delete logic here  jhjbhj 
                         deleteBankAccount(bankid: data['bankId'],AccountId: data['accountId'],context: context);
                          // Close the dialog
                       },
