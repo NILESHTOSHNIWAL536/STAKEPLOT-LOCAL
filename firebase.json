@@ -1,1 +1,22 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"stakeplot-9f34b","appId":"1:437443695891:android:3137c41f516db70df7f6e6","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"stakeplot-9f34b","configurations":{"android":"1:437443695891:android:3137c41f516db70df7f6e6","ios":"1:437443695891:ios:2847cc592d577612f7f6e6"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "stakeplot-9f34b",
+          "appId": "1:437443695891:android:3137c41f516db70df7f6e6",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "stakeplot-9f34b",
+          "configurations": {
+            "android": "1:437443695891:android:3137c41f516db70df7f6e6",
+            "ios": "1:437443695891:ios:2847cc592d577612f7f6e6"
+          }
+        }
+      }
+    }
+  }
+}
