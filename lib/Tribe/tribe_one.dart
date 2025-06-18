@@ -86,7 +86,7 @@ class _TribeHomeState extends State<TribeUnique> {
     PostDetails post = PostDetails();
 
     // auth.id = authorId;
-    auth.name = userName.value;
+    auth.name = maskedName.value;
     auth.avatar = avatar.value;
     auth.avatarBackGround = userAvatarBackGround.value;
 
@@ -97,7 +97,7 @@ class _TribeHomeState extends State<TribeUnique> {
     obj.downvotes = 0;
     obj.postDetails = post;
 
-    commentList.add(obj);
+    commentList.insert(0,obj);
     indexArray.add(i);
     i++;
 
@@ -914,15 +914,15 @@ class _TribeHomeState extends State<TribeUnique> {
       rep.commentId = replyid;
       rep.replyText = value;
       Author author = Author();
-      author.name = name;
+      author.name = maskedName.value;
       author.id = name;
       author.avatar = userAvatar;
-      author.name = userName.value;
+      author.name = maskedName.value;
       author.avatar = avatar.value;
       author.avatarBackGround = userAvatarBackGround.value;
       //  author.avatar=avatar;
       rep.author = author;
-      commentObj.replies!.add(rep);
+      commentObj.replies!.insert(0,rep);
       Textcontroller.clear();
       autofocus.value = false;
       setState(() {});

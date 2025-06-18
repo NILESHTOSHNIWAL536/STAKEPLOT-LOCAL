@@ -244,10 +244,10 @@ class _CommunityState extends State<Community> {
               child: textStyleImage(
                   context: context,
                   text: strings.feed,
-                  fontsize: !isTrending.value ? 18 : 14,
+                  fontsize: !isTrending.value ? 20 : 14,
                   fontWeight:
                       !isTrending.value ? FontWeight.w700 : FontWeight.w400,
-                  c: AppColors.accentColor)),
+                  c: !isTrending.value?AppColors.accentColor:AppColors.finSpaceColor)),
         ),
         GestureDetector(
             onTap: () {
@@ -259,7 +259,7 @@ class _CommunityState extends State<Community> {
                 fontsize: isTrending.value ? 18 : 14,
                 fontWeight:
                     isTrending.value ? FontWeight.w700 : FontWeight.w400,
-                c: AppColors.accentColor)),
+                c: !isTrending.value?AppColors.accentColor:AppColors.finSpaceColor)),
       ]),
     );
   }
