@@ -20,7 +20,12 @@ class CommunityUserProfile extends StatefulWidget {
   bool isMasked = false;
   bool isMaskedConnect = false;
   CommunityUserProfile(
-      {Key? key, required this.data, required this.ids, this.flag = false,this.isMasked=false,this.isMaskedConnect=false})
+      {Key? key,
+      required this.data,
+      required this.ids,
+      this.flag = false,
+      this.isMasked = false,
+      this.isMaskedConnect = false})
       : super(key: key);
 
   @override
@@ -43,8 +48,8 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
   RxString buttonValue = "Add".obs;
   RxString frdRequest = "Friend Request not sent before".obs;
   RxString frdRequestCheck = "Friend Request not sent before".obs;
-  RxString connect=ProfileScreenStrings().connected.obs;
- 
+  RxString connect = ProfileScreenStrings().connected.obs;
+
   @override
   void initState() {
     getConnections();
@@ -60,7 +65,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
     if (getFlagOfResponse(response)) {
       var his = jsonDecode(response.body);
       var obj = his['data'];
-     
+
       setState(() {
         getTrendingData = obj;
         findData = false;
@@ -75,29 +80,28 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
   }
 
   void getConnections() async {
-    try{
-    var response = await getDataApiCall('${url}/user/connections/${widget.data['_id']}/${widget.isMasked}');
+    try {
+      var response = await getDataApiCall(
+          '${url}/user/connections/${widget.data['_id']}/${widget.isMasked}');
 
-    if (getFlagOfResponse(response)) 
-    {
-      var his = jsonDecode(response.body);
-      count.value = his['data']['connections'];
-      score.value = his['data']['score'];
-    } else {}
-    }catch(e){
+      if (getFlagOfResponse(response)) {
+        var his = jsonDecode(response.body);
+        count.value = his['data']['connections'];
+        score.value = his['data']['score'];
+      } else {}
+    } catch (e) {
       print(e);
     }
   }
 
   void getStatus() async {
-    var response = await postDataApiCall(
-        "${url}/user/friend/acceptRequestStatus", {
+    var response =
+        await postDataApiCall("${url}/user/friend/acceptRequestStatus", {
       'userName': widget.data['name'],
       'friendUserId': widget.data['_id'],
     });
 
-    if (getFlagOfResponse(response))
-    {
+    if (getFlagOfResponse(response)) {
       var his = jsonDecode(response.body);
       frdRequestCheck.value = his['data'];
       if (frdRequestCheck.value == "Friend Request already sent") {
@@ -106,8 +110,7 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
         buttonValue.value = "Connect";
       } else if (frdRequestCheck.value == "User is already your friend") {
         buttonValue.value = "Remove";
-      } else
-      {
+      } else {
         buttonValue.value = "Accept";
       }
     } else {}
@@ -147,21 +150,31 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
     );
   }
 
- 
   Widget topUserProfile(data) {
+    print("data for search :$data");
     return Container(
       height: MediaQuery.of(context).size.height / 5.4,
       // height: 200,
       child: Column(
         children: [
-        widget.isMasked? AvatarProfile2(url: data['avatarType'], width: 20, height: 20,flag: true,): AvatarProfile(
-            name: data['name'],
-            width: 5,
-            height: 10,
-            background: data['avatarBackGround'] ?? defaultBackGround.value,
-            flag: true,
-          ),
-          Text(widget.data['name'].toString(),
+          widget.isMasked
+              ? AvatarProfile2(
+                  url: data['avatarType'],
+                  width: 20,
+                  height: 20,
+                  flag: true,
+                )
+              : AvatarProfile(
+                  name: data['name'],
+                  width: 5,
+                  height: 10,
+                  background:
+                      data['avatarBackGround'] ?? defaultBackGround.value,
+                  flag: true,
+                ),
+          widget.isMasked?Text(widget.data['maskedName'].toString(),
+              style: FontManager().getTextStyle(context,
+                  lWeight: FontWeight.w600, color: AppColors.bg1)):Text(widget.data['name'].toString(),
               style: FontManager().getTextStyle(context,
                   lWeight: FontWeight.w600, color: AppColors.bg1)),
           SizedBox(
@@ -173,27 +186,39 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 InkWell(
-                  onTap: (){
-                      if(!widget.isMasked)
-                      {
+                    onTap: () {
+                      if (!widget.isMasked) {
                         ontapConnect(data);
-                      }else{
-                         if(connect.value==ProfileScreenStrings().connected){
-                               connect.value="Remove";
-                               addUserAsFrd(data['_id'], context,"Masked");
-                         }else
-                         {
-                              getRemoveFrds(context, data['_id'],widget.isMaskedConnect?"connected":"connection"); 
-                              connect.value=ProfileScreenStrings().connected;
-                         }
-                          getConnections();
-                          getDis();
-                          getStatus();
+                      } else {
+                        if (connect.value == ProfileScreenStrings().connected) {
+                          connect.value = "Remove";
+                          addUserAsFrd(data['_id'], context, "Masked");
+                        } else {
+                          getRemoveFrds(
+                              context,
+                              data['_id'],
+                              widget.isMaskedConnect
+                                  ? "connected"
+                                  : "connection");
+                          connect.value = ProfileScreenStrings().connected;
+                        }
+                        getConnections();
+                        getDis();
+                        getStatus();
                       }
-                  },
-                  child: Obx(()=> networkFriends(widget.isMasked? connect.value:buttonValue.value =="Add"?"Connect":buttonValue.value,"", Icons.post_add))),
-                networkFriends(ProfileScreenStrings().postsLabel,getTrendingData.length.toString(), Icons.post_add),
-                networkFriends(ProfileScreenStrings().networkLabel,count.toString(), Icons.person_2_outlined),
+                    },
+                    child: Obx(() => networkFriends(
+                        widget.isMasked
+                            ? connect.value
+                            : buttonValue.value == "Add"
+                                ? "Connect"
+                                : buttonValue.value,
+                        "",
+                        Icons.post_add))),
+                networkFriends(ProfileScreenStrings().postsLabel,
+                    getTrendingData.length.toString(), Icons.post_add),
+                networkFriends(ProfileScreenStrings().networkLabel,
+                    count.toString(), Icons.person_2_outlined),
               ],
             ),
           ),
@@ -202,24 +227,20 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
     );
   }
 
-  void ontapConnect(data){
-      if (buttonValue.value=="Remove") {
-                getRemoveFrds(context, data['_id']);
-                 buttonValue.value="Add";
-            } else if (buttonValue.value=="Add")
-            {
-                buttonValue.value="Requested";
-                addUsersendRequest(data['_id'], data['name'], context);
-            }
-              else if(buttonValue.value=="Requested")
-              {
-                      buttonValue.value="Add";
-                      removeRequest(data['_id'], data['name'], context);
-              }
-            else {
-               buttonValue.value="Remove";
-               addUserAsFrd(data['_id'], context);
-            }
+  void ontapConnect(data) {
+    if (buttonValue.value == "Remove") {
+      getRemoveFrds(context, data['_id']);
+      buttonValue.value = "Add";
+    } else if (buttonValue.value == "Add") {
+      buttonValue.value = "Requested";
+      addUsersendRequest(data['_id'], data['name'], context);
+    } else if (buttonValue.value == "Requested") {
+      buttonValue.value = "Add";
+      removeRequest(data['_id'], data['name'], context);
+    } else {
+      buttonValue.value = "Remove";
+      addUserAsFrd(data['_id'], context);
+    }
   }
 
   Widget networkFriends(String network, String count, IconData icon) {
@@ -227,19 +248,22 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
         // width: MediaQuery.sizeOf(context).width / 2.4,
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         decoration: BoxDecoration(
-          color: count==""?AppColors.primaryColor:AppColors.backgroundColor,
+          color:
+              count == "" ? AppColors.primaryColor : AppColors.backgroundColor,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: AppColors.primaryColor, width: .5),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-          count==""? SizedBox.shrink(): textStyle(
-                context: context,
-                text: count.toString(),
-                fontWeight: FontWeight.w500,
-                c: AppColors.finSpaceColor,
-                fontsize: 16),
+            count == ""
+                ? SizedBox.shrink()
+                : textStyle(
+                    context: context,
+                    text: count.toString(),
+                    fontWeight: FontWeight.w500,
+                    c: AppColors.finSpaceColor,
+                    fontsize: 16),
             const SizedBox(
               width: 5,
             ),
@@ -247,20 +271,21 @@ class _CommunityProfileScreenState extends State<CommunityUserProfile> {
                 context: context,
                 text: network.toString(),
                 fontWeight: FontWeight.w400,
-                c: count==""? AppColors.backgroundColor:AppColors.finSpaceColor,
+                c: count == ""
+                    ? AppColors.backgroundColor
+                    : AppColors.finSpaceColor,
                 fontsize: 16),
           ],
         ));
   }
-  
+
   void checkName(data) {
-     if(widget.isMasked)
-     {
-        String _id=data['_id'];
-         bool exists = MaskedFriendsList.any((item) => item['_id'] == _id); 
-         if(exists){
-            connect.value="Remove";
-         }
-     }
+    if (widget.isMasked) {
+      String _id = data['_id'];
+      bool exists = MaskedFriendsList.any((item) => item['_id'] == _id);
+      if (exists) {
+        connect.value = "Remove";
+      }
+    }
   }
 }

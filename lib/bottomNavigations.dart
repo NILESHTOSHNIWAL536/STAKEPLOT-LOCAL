@@ -16,7 +16,6 @@ import "package:flutter_application_code_stakeplot/backed_connections/apiConnect
 import "package:flutter_application_code_stakeplot/backed_connections/apiConnect/signInAndOut.dart";
 import "package:flutter_application_code_stakeplot/finSpace/welcomeScreen.dart";
 import "package:flutter_application_code_stakeplot/finance_screen/plot_finance.dart";
-import "package:flutter_application_code_stakeplot/posts/feed_screen.dart";
 import "package:flutter_application_code_stakeplot/profile_screen/profile_screen.dart.dart";
 import "package:flutter_application_code_stakeplot/user_chat/tribe_chart.dart";
 import "package:get/get.dart";
@@ -25,7 +24,6 @@ import "package:shared_preferences/shared_preferences.dart";
 import "package:flutter_application_code_stakeplot/Constants/font_manager.dart";
 import "package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart";
 import "package:flutter_application_code_stakeplot/colorcodes.dart";
-
 import 'package:flutter_svg/flutter_svg.dart';
 
 class BottomNavigations extends StatefulWidget {

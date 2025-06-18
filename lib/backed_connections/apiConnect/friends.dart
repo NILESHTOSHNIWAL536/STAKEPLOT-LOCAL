@@ -8,10 +8,18 @@ import 'package:flutter_application_code_stakeplot/backed_connections/apis_conne
 void   addUserAsFrd(id,context,[type="friend"])async
 {
     var urlPath='${url}/user/friend/add/${id}/${type}';
+    
     var response=await postDataApiCall(urlPath, {});
       if(getFlagOfResponse(response))
       {
-            sendNotificationsToDevice(id,context,"${userName.value} has accepted your friend request..","/friends");
+            if(type=="Masked"){
+              sendNotificationsToDevice(id,context,"${maskedName.value} has connected to you.","/friends");
+
+            }
+            else{
+                            sendNotificationsToDevice(id,context,"${userName.value} has  accepted your friend request..","/friends");
+            }
+            
             snackBarCalled(context,SnackbarData().addingFriend,Colors.black);  
             getUserInfomations();    
       }else{

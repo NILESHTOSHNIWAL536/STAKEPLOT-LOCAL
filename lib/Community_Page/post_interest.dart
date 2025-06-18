@@ -19,66 +19,68 @@ void showTagListOfInterestModal({
       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
     ),
     builder: (context) {
-      return AnimatedContainer(
-        duration: Duration(milliseconds: 100),
-        curve: Curves.easeInOut,
-        height: screenSize.height * 0.7, // 60% of screen height
-        padding: EdgeInsets.symmetric(
-          horizontal: screenSize.width * 0.05, // Responsive padding
-          vertical: 16,
-        ),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Drag handle
-            Container(
-              width: 40,
-              height: 4,
-              margin: EdgeInsets.symmetric(vertical: 8),
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            // Title
-            Semantics(
-              label: 'Add Interest',
-              child: Text(
-                'Add Interest',
-                style: FontManager2().getTextStyle(
-                  context,
-                  lWeight: FontWeight.bold,
-                  fontSize: screenSize.width < 360 ? 18 : 20,
-                  color: AppColors.finSpaceColor,
+      return SafeArea(
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 100),
+          curve: Curves.easeInOut,
+          height: screenSize.height * 0.7, // 60% of screen height
+          padding: EdgeInsets.symmetric(
+            horizontal: screenSize.width * 0.05, // Responsive padding
+            vertical: 16,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Drag handle
+              Container(
+                width: 40,
+                height: 4,
+                margin: EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
                 ),
               ),
-            ),
-            SizedBox(height: screenSize.height * 0.02), // Responsive spacing
-            // List of interests
-            
-              Container(
-                height: MediaQuery.sizeOf(context).height/2,
-                
-                child: GetListOfInterest(height: 0, limitTagbool: true, ), // Let it take available space
+              // Title
+              Semantics(
+                label: 'Add Interest',
+                child: Text(
+                  'Add Interest',
+                  style: FontManager2().getTextStyle(
+                    context,
+                    lWeight: FontWeight.bold,
+                    fontSize: screenSize.width < 360 ? 18 : 20,
+                    color: AppColors.finSpaceColor,
+                  ),
+                ),
               ),
-            
-            SizedBox(height: screenSize.height * 0.02),
-            // Continue button
-            
-            Obx(()=> InkWell(
-              onTap: ()
-              {
-                if(!isListEnabled.value)return;
-                onConfirm();// Call the passed function
-                Navigator.pop(context); // Close the modal
-              },
-              child: isListEnabled.value? getButton(context, "Continue"): getButton(context, "Add", Colors.grey.shade400,AppColors.bg1,)),
-            ),
-          ],
+              SizedBox(height: screenSize.height * 0.02), // Responsive spacing
+              // List of interests
+              
+                Container(
+                  height: MediaQuery.sizeOf(context).height/2,
+                  
+                  child: GetListOfInterest(height: 0, limitTagbool: true, ), // Let it take available space
+                ),
+              
+              SizedBox(height: screenSize.height * 0.02),
+              // Continue button
+              
+              Obx(()=> InkWell(
+                onTap: ()
+                {
+                  if(!isListEnabled.value)return;
+                  onConfirm();// Call the passed function
+                  Navigator.pop(context); // Close the modal
+                },
+                child: isListEnabled.value? getButton(context, "Continue"): getButton(context, "Add", Colors.grey.shade400,AppColors.bg1,)),
+              ),
+            ],
+          ),
         ),
       );
     },

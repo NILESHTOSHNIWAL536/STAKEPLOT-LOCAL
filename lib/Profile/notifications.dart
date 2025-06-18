@@ -20,7 +20,6 @@ import "package:get/get.dart";
 
 RxBool notificationsFlag = true.obs;
 
-
 class Notifications extends StatefulWidget {
   const Notifications({Key? key}) : super(key: key);
 
@@ -29,8 +28,6 @@ class Notifications extends StatefulWidget {
 }
 
 class _NotificationsState extends State<Notifications> {
-  
-
   @override
   void initState() {
     super.initState();
@@ -41,8 +38,7 @@ class _NotificationsState extends State<Notifications> {
     if (notifyId == null) return;
     String urlPath = '${url}/user/deleteNotifications/$notifyId';
     var response = await getDataApiCall(urlPath);
-    if (response.statusCode != 200)
-    {
+    if (response.statusCode != 200) {
       snackBarCalled(context, SnackbarData().deleteNotificationFailed);
     }
   }
@@ -92,40 +88,40 @@ class _NotificationsState extends State<Notifications> {
         ? Spinner()
         : (notificationList.isEmpty && autoTransactionList.isEmpty)
             ? Container(
-              width: MediaQuery.sizeOf(context).width/1.1,
-              height: MediaQuery.sizeOf(context).height/1.3,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  AvatarProfileImage(
-                    url: HomePageIcons.none,
-                    height: 8,
-                    width: 10,
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                  Text(
-                    "No Notifications",
-                    style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: AppColors.accentColor,
+                width: MediaQuery.sizeOf(context).width / 1.1,
+                height: MediaQuery.sizeOf(context).height / 1.3,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    AvatarProfileImage(
+                      url: HomePageIcons.none,
+                      height: 8,
+                      width: 10,
                     ),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                  Text(
-                    "You're all caught up!",
-                    style: FontManager().getTextStyle(
-                      context,
-                      lWeight: FontWeight.normal,
-                      fontSize: 14,
-                      color: AppColors.bg3,
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                    Text(
+                      "No Notifications",
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: AppColors.accentColor,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            )
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                    Text(
+                      "You're all caught up!",
+                      style: FontManager().getTextStyle(
+                        context,
+                        lWeight: FontWeight.normal,
+                        fontSize: 14,
+                        color: AppColors.bg3,
+                      ),
+                    ),
+                  ],
+                ),
+              )
             : Column(
                 children: [
                   AutocategroiesTransactions(),
@@ -232,8 +228,10 @@ class _NotificationsState extends State<Notifications> {
     switch (type) {
       case "friendRequest":
         if (e['status'] == 'accepted') {
+          print("here check $e['isMaskedConnection']");
+          var msg = e['isMaskedConnection'] ? "connected to you" : "accepted your friend request";
           return _buildMessageCard(
-              "${e['from_name'] ?? 'Someone'} accepted your friend request",
+              "${e['from_name'] ?? 'Someone'} $msg",
               e['from_id'] as String? ?? "",
               e['from_name'] as String? ?? "",
               time);

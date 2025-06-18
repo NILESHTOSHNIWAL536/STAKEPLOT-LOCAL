@@ -31,7 +31,7 @@ class NewFriendsUi extends StatefulWidget {
   final String? subcategory;
   final bool flag;
   final bool ismanual;
-  
+
   const NewFriendsUi({
     Key? key,
     this.showContinueButton = true,
@@ -55,189 +55,189 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
   @override
   void initState() {
     super.initState();
+    addedMembers.clear();
+    addedUser.clear();
   }
- 
- 
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.backgroundColor,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(16),
-          topRight: Radius.circular(16),
+    return SafeArea(
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.backgroundColor,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+          ),
         ),
-      ),
-      width: MediaQuery.of(context).size.width,
-      // height: MediaQuery.of(context).size.height / 2,
-      child: Padding(
-        padding: EdgeInsets.only(
-          top: 24,
-          left: 18,
-          right: 18,
-          bottom:
-              MediaQuery.of(context).viewInsets.bottom, // Adjust for keyboard
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
+        width: MediaQuery.of(context).size.width,
+        // height: MediaQuery.of(context).size.height / 2,
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: 24,
+            left: 18,
+            right: 18,
+            bottom:
+                MediaQuery.of(context).viewInsets.bottom, // Adjust for keyboard
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
                   HomepageStringsDart().selectPeople,
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: AppColors.bg1,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                child: InputDat(HomepageStringsDart().searchLabel, TextInputType.name, textController),
-              ),
-              Text(
-               HomepageStringsDart().myFriends, 
-                style: FontManager().getTextStyle(
-                  context,
-                  lWeight: FontWeight.w600,
-                  fontSize: 16,
-                  color: AppColors.bg1,
-                ),
-              ),
-              const SizedBox(height: 10),
-              addedMembers.isNotEmpty
-                  ? Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.width / 5,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: addedMembers.map((element) {
-                          return Container(
-                            width: MediaQuery.of(context).size.width / 6,
-                            height: MediaQuery.of(context).size.width / 7,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Stack(
-                                  children: [
-                                    Padding(
-                                        padding: const EdgeInsets.all(0.0),
-                                        child: AvatarProfile(
-                                            name: element['name'],
-                                            width: 12,
-                                            height: 12,
-                                            background:
-                                                element['avatarBackGround'])),
-                                    Positioned(
-                                      right: 0,
-                                      top: 0,
-                                      child: InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            addedMembers.removeWhere((ele) =>
-                                                ele['id'] == element['id']);
-                                            addedUser.remove(element['id']);
-                                          });
-                                        },
-                                        child: const Icon(
-                                          Icons.remove_circle,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Center(
-                                  child: Text(
-                                    element['name'],
-                                    style: FontManager().getTextStyle(
-                                      context,
-                                      fontSize: 12,
-                                      maxLines: 1,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    )
-                  : const SizedBox.shrink(),
-              commentedData(),
-             
-
-              if (widget.showContinueButton)
-                Center(
-                  child: InkWell(
-                    onTap: () async {
-                      if (addedMembers.isNotEmpty) {
-                        if (widget.isLendMode) {
-                          if (addedMembers.length > 1) {
-                            
-                            snackBarCalled(
-                                context,
-                               SnackbarData().selectOnlyOneFriendLend,
-                              );
-                            return;
-                          }
-                          // Show LendDetailsModal
-                          final Map<String, String?>? lendDetails =
-                              await showModalBottomSheet<Map<String, String?>>(
-                            context: context,
-                            isScrollControlled: true,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(18)),
-                            ),
-                            builder: (BuildContext context) {
-                              return LendDetailsModal(
-                                amount: widget.totalAmount,
-                                member: addedMembers[0],
-                                category: widget.category ?? 'Uncategorized',
-                                subCategory: widget.subcategory ?? 'General',
-                                onConfirm: () {},
-                              );
-                            },
-                          );
-
-                          if (lendDetails != null) {
-                            // Return a map with member details, message, and due date
-                            Navigator.pop(context, {
-                              'member': addedMembers[0],
-                              'message': lendDetails['message'],
-                              'dueDate': lendDetails['dueDate'],
-                            });
-                          } else 
-                          {
-                            snackBarCalled(context,SnackbarData(). provideLendDetails);
-                          
-                          }
-                        } else {
-                          Navigator.pop(context);
-                          final amounts = await showAmountEntryModal(
-                            context,
-                            widget.category ?? 'Uncategorized',
-                            widget.subcategory ?? 'General',
-                          );
-
-                          if (amounts != null) {
-                            Navigator.pop(context, amounts);
-                          }
-                        }
-                      } else {
-                       
-                        snackBarCalled(context,SnackbarData().selectAtLeastOneFriend);
-                      }
-                    },
-                    child: getButton(context, "Continue"),
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: AppColors.bg1,
                   ),
                 ),
-              const SizedBox(height: 16),
-            ],
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  child: InputDat(HomepageStringsDart().searchLabel,
+                      TextInputType.name, textController),
+                ),
+                Text(
+                  HomepageStringsDart().myFriends,
+                  style: FontManager().getTextStyle(
+                    context,
+                    lWeight: FontWeight.w600,
+                    fontSize: 16,
+                    color: AppColors.bg1,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                addedMembers.isNotEmpty
+                    ? Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.width / 5,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: addedMembers.map((element) {
+                            return Container(
+                              width: MediaQuery.of(context).size.width / 6,
+                              height: MediaQuery.of(context).size.width / 7,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Stack(
+                                    children: [
+                                      Padding(
+                                          padding: const EdgeInsets.all(0.0),
+                                          child: AvatarProfile(
+                                              name: element['name'],
+                                              width: 12,
+                                              height: 12,
+                                              background:
+                                                  element['avatarBackGround'])),
+                                      Positioned(
+                                        right: 0,
+                                        top: 0,
+                                        child: InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              addedMembers.removeWhere((ele) =>
+                                                  ele['id'] == element['id']);
+                                              addedUser.remove(element['id']);
+                                            });
+                                          },
+                                          child: const Icon(
+                                            Icons.remove_circle,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      element['name'],
+                                      style: FontManager().getTextStyle(
+                                        context,
+                                        fontSize: 12,
+                                        maxLines: 1,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+                commentedData(),
+                if (widget.showContinueButton)
+                  Center(
+                    child: InkWell(
+                      onTap: () async {
+                        if (addedMembers.isNotEmpty) {
+                          if (widget.isLendMode) {
+                            if (addedMembers.length > 1) {
+                              snackBarCalled(
+                                context,
+                                SnackbarData().selectOnlyOneFriendLend,
+                              );
+                              return;
+                            }
+                            // Show LendDetailsModal
+                            final Map<String, String?>? lendDetails =
+                                await showModalBottomSheet<Map<String, String?>>(
+                              context: context,
+                              isScrollControlled: true,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(18)),
+                              ),
+                              builder: (BuildContext context) {
+                                return LendDetailsModal(
+                                  amount: widget.totalAmount,
+                                  member: addedMembers[0],
+                                  category: widget.category ?? 'Uncategorized',
+                                  subCategory: widget.subcategory ?? 'General',
+                                  onConfirm: () {},
+                                );
+                              },
+                            );
+      
+                            if (lendDetails != null) {
+                              // Return a map with member details, message, and due date
+                              Navigator.pop(context, {
+                                'member': addedMembers[0],
+                                'message': lendDetails['message'],
+                                'dueDate': lendDetails['dueDate'],
+                              });
+                            } else {
+                              snackBarCalled(
+                                  context, SnackbarData().provideLendDetails);
+                            }
+                          } else {
+                            Navigator.pop(context);
+                            final amounts = await showAmountEntryModal(
+                              context,
+                              widget.category ?? 'Uncategorized',
+                              widget.subcategory ?? 'General',
+                            );
+      
+                            if (amounts != null) {
+                              Navigator.pop(context, amounts);
+                            }
+                          }
+                        } else {
+                          snackBarCalled(
+                              context, SnackbarData().selectAtLeastOneFriend);
+                        }
+                      },
+                      child: getButton(context, "Continue"),
+                    ),
+                  ),
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
         ),
       ),
@@ -291,7 +291,7 @@ class _NewFriendsUiState extends State<NewFriendsUi> {
                 child: frdsList.isEmpty
                     ? Center(
                         child: Text(
-                           HomepageStringsDart().noFriendsAvailable,
+                          HomepageStringsDart().noFriendsAvailable,
                           style: FontManager().getTextStyle(context,
                               lWeight: FontWeight.w500,
                               fontSize: 16,
