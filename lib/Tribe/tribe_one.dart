@@ -266,11 +266,6 @@ class _TribeHomeState extends State<TribeUnique> {
                 children: [
                    Padding(
                      padding: const EdgeInsets.symmetric(vertical: 10),
-                    //  child: Text(
-                    //                "FinSpace",
-                    //                style: FontManager().getTextStyle(context,
-                    //                    lWeight: FontWeight.w600, fontSize: 20, color: AppColors.finSpaceColor),
-                    //              ),
                    ),
                   Obx(() =>  PostCard(
                           data: reloadUniquePost.value
@@ -293,19 +288,11 @@ class _TribeHomeState extends State<TribeUnique> {
     } else {
       return SafeArea(
         child: Container(
-          // height: MediaQuery.of(context).size.height,
-          //  padding: const EdgeInsets.fromLTRB(20, 30, 20, 12),
-          // decoration: BoxDecoration(
-
-          //     borderRadius: BorderRadius.only(
-          //         topLeft: Radius.circular(36), topRight: Radius.circular(36))),
-
-          // padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: AnimatedPadding(
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context)
                     .viewInsets
-                    .bottom), // Adjusts padding when keyboard appears
+                    .bottom),
             duration: const Duration(milliseconds: 100),
             child: SingleChildScrollView(
               controller: _scrollController,
@@ -348,13 +335,7 @@ class _TribeHomeState extends State<TribeUnique> {
               thickness: 0.8,
             ):SizedBox.shrink(),
             commentedData(),
-            // InputComment(
-            //   str,
-            //   TextInputType.name,
-            //   replyController,
-            //   replyid,
-            // ),
-            // SizedBox(height:400)
+
           ],
         ),
       ),
@@ -394,29 +375,10 @@ class _TribeHomeState extends State<TribeUnique> {
                               dataComments(commentList[index], index))
                           .toList(),
                     ),
-                    // replyid != "" // replying to comment
-                    //     ? Padding(
-                    //         padding: const EdgeInsets.all(8.0),
-                    //         child: InkWell(
-                    //             onTap: () {
-                    //               setState(() {
-                    //                 replyid = "";
-                    //                 FocusScope.of(context)
-                    //                     .requestFocus(_replyFocusNode);
-                    //               });
-                    //             },
-                    //             child: Text("Add a comment")),
-                    //       )
-                    //     : SizedBox.shrink()
                   ],
                 ),
               ),
             ),
-
-            // replyid == "" // adding comment
-            //     ? InputDate("Add a comment", TextInputType.name,
-            //         calController1, widget.id)
-            //     : SizedBox.shrink(),
           ],
         ));
   }
@@ -436,11 +398,11 @@ class _TribeHomeState extends State<TribeUnique> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AvatarProfile(
-                    name: data.author!.name.toString(),
+                  AvatarProfileImagePng(
+                    url: data.author!.avatar.toString(),
                     width: 10,
                     height: 23,
-                    background: data.author!.avatarBackGround.toString(),
+                    // background: data.author!.avatarBackGround.toString(),
                   ),
                   const SizedBox(width: 0),
                   Container(
@@ -484,13 +446,7 @@ class _TribeHomeState extends State<TribeUnique> {
                                   height:
                                       MediaQuery.sizeOf(context).height / 36,
                                   width: MediaQuery.sizeOf(context).width / 7,
-                                  decoration: BoxDecoration(
-                                      //                 color: AppColors.button,
-
-                                      //                 borderRadius:
-                                      // BorderRadius.circular(Colorcodes.borderRadius)
-
-                                      ),
+                                 
                                   child: Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
@@ -580,13 +536,6 @@ class _TribeHomeState extends State<TribeUnique> {
                                     height:
                                         MediaQuery.sizeOf(context).height / 36,
                                     width: MediaQuery.sizeOf(context).width / 7,
-                                    decoration: BoxDecoration(
-                                        // color: AppColors.finSpaceColor,
-
-                                        // borderRadius:
-                                        // BorderRadius.circular(Colorcodes.borderRadius)
-
-                                        ),
                                     child: Center(
                                       child: Text(
                                         'Reply',
@@ -613,7 +562,6 @@ class _TribeHomeState extends State<TribeUnique> {
                 ],
               ),
             ),
-            // Add InputComment here if replying to this specific comment
             if (replyid == idData)
               Padding(
                 padding: const EdgeInsets.only(left: 40.0, top: 4.0),
@@ -696,12 +644,10 @@ class _TribeHomeState extends State<TribeUnique> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                AvatarProfile(
-                  name: name, // Use the user's name from state
-                  width: 30,
-                  height: 30,
-                  background: userAvatarBackGround
-                      .value, // Use the user's avatar background
+                AvatarProfileImagePng(
+                  url: avatar.value, // Use the user's name from state
+                  width: 10,
+                  height: 23,
                 ),
                 Container(
                   height: MediaQuery.of(context).size.height / 20,
@@ -724,12 +670,9 @@ class _TribeHomeState extends State<TribeUnique> {
                         suffixIcon: suffix(
                             Textcontroller.text, commentId, Textcontroller),
                         enabledBorder: OutlineInputBorder(
-                            // borderRadius: BorderRadius.circular(40),
                             borderSide: const BorderSide(color: Colors.white
-                                // color: Color.fromRGBO(249, 246, 238, 1)
                                 )),
                         focusedBorder: OutlineInputBorder(
-                            // borderRadius: BorderRadius.circular(40),
                             borderSide:
                                 BorderSide(color: AppColors.buttonBorder)),
                         fillColor: AppColors.backgroundColor,
@@ -804,17 +747,22 @@ class _TribeHomeState extends State<TribeUnique> {
   Widget replyDatas(Replies replayObj, Comments data) {
     double width = MediaQuery.of(context).size.width;
     return Container(
-      //  color: Colors.deepOrangeAccent,
       padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 0),
       child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AvatarProfile(
-                name: replayObj.author!.name.toString(),
-                width: width,
-                height: 23,
-                background: replayObj.author!.avatarBackGround.toString()),
+                AvatarProfileImagePng(
+                    url: replayObj.author!.avatar.toString(),
+                    width: 10,
+                    height: 23,
+                    // background: data.author!.avatarBackGround.toString(),
+                  ),
+            // AvatarProfile(
+            //     name: replayObj.author!.name.toString(),
+            //     width: width,
+            //     height: 23,
+            //     background: replayObj.author!.avatarBackGround.toString()),
             const SizedBox(
               width: 0,
             ),
@@ -837,8 +785,6 @@ class _TribeHomeState extends State<TribeUnique> {
                             color: AppColors.bg1)),
                   ),
                   SizedBox(
-                    //  color: Colors.cyan,
-                    // width:  width<=430?  width/2.3: width<=500?  width/2 : width/1.7,
                     child: Text((replayObj.replyText!),
                         style: FontManager().getTextStyle(
                           context,
@@ -892,7 +838,6 @@ class _TribeHomeState extends State<TribeUnique> {
       commentList.add(dataObj);
       commentList.removeLast();
     } else {
-      // snackBarCalled(context, SnackbarData().errorLikingComment, Colors.red);
     }
   }
 

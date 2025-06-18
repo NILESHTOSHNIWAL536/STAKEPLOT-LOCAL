@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apiConnect/payments.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/apis_connect.dart';
+import 'package:flutter_application_code_stakeplot/backed_connections/backServices.dart/bankInfo.dart';
+import 'package:flutter_application_code_stakeplot/finance_screen/Budgets/Budget.dart';
+import 'package:flutter_application_code_stakeplot/loader.dart';
+import 'package:get/get_state_manager/src/simple/get_widget_cache.dart';
 
 
 class DeleteAccountScreen extends StatefulWidget {
@@ -208,6 +214,8 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                 child: ElevatedButton(
                   onPressed: selectedReason != null
                       ? () {
+                        isGoogleUser.value ? showDeleteConfirmationDialog(context,"",selectedReason.toString()):
+                        // !isGoogleUser.value ? deleteUserAccount(context,"",selectedReason.toString()):
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -229,7 +237,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                     elevation: 0,
                   ),
                   child: Text(
-                    'Continue',
+                     !isGoogleUser.value ? 'Delete':'Continue',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -411,7 +419,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
                 margin: EdgeInsets.only(bottom: 32),
                 child: ElevatedButton(
                   onPressed: _passwordController.text.isNotEmpty
-                      ? () => _showDeleteConfirmationDialog()
+                      ? () => showDeleteConfirmationDialog(context,_passwordController.text,widget.selectedReason)
                       : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _passwordController.text.isNotEmpty
@@ -443,9 +451,20 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
     );
   }
 
-  void _showDeleteConfirmationDialog() {
+ 
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    super.dispose();
+  }
+}
+
+
+
+ void showDeleteConfirmationDialog(context2,passwordText,selectedReason) {
     showDialog(
-      context: context,
+      context: context2,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -464,7 +483,7 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Selected reason: ${widget.selectedReason}',
+                'Selected reason: ${selectedReason}',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
@@ -495,10 +514,11 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
               ),
             ),
             TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Close dialog
-                _performAccountDeletion();
-              },
+              onPressed: () async{
+                Navigator.pop(context); 
+                bool accountDeleted= await deleteUserAccount(context2,passwordText,selectedReason);
+                if(accountDeleted)performAccountDeletion(context2);
+               },
               child: Text(
                 'Delete Account',
                 style: TextStyle(
@@ -514,13 +534,15 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
     );
   }
 
-  void _performAccountDeletion() {
+
+ void performAccountDeletion(context2) {
     // Show loading indicator
     showDialog(
-      context: context,
+      context: context2,
       barrierDismissible: false,
       builder: (context) => Center(
         child: Container(
+          width: MediaQuery.of(context).size.width/1.1,
           padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -529,16 +551,16 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircularProgressIndicator(
+             Spinner(
+                size: 40,
                 color: Color(0xFFDC2626),
               ),
               SizedBox(height: 16),
-              Text(
-                'Deleting account...',
-                style: TextStyle(
-                  fontSize: 16,
+              textStyle(
+                  context: context,
+                  text:  'Deleting account...',
+                  fontsize: 16,
                   fontWeight: FontWeight.w500,
-                ),
               ),
             ],
           ),
@@ -548,12 +570,12 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
 
     // Simulate API call
     Future.delayed(Duration(seconds: 2), () {
-      Navigator.pop(context); // Close loading dialog
-      Navigator.pop(context); // Go back to previous screen
-      Navigator.pop(context); // Go back to main screen
+      Navigator.pop(context2); // Close loading dialog
+      Navigator.pop(context2); // Go back to previous screen
+      Navigator.pop(context2); // Go back to main screen
       
       // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context2).showSnackBar(
         SnackBar(
           content: Row(
             children: [
@@ -571,10 +593,3 @@ class _ConfirmDeleteScreenState extends State<ConfirmDeleteScreen> {
       );
     });
   }
-
-  @override
-  void dispose() {
-    _passwordController.dispose();
-    super.dispose();
-  }
-}

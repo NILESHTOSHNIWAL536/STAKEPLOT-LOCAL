@@ -137,6 +137,7 @@ RxList totalInSights = [].obs;
 RxBool getTotalInsightsHistory = false.obs;
 RxList foodieFundsDetailsRemainders = [].obs;
 RxBool getFoodieFundsUsers = false.obs;
+RxBool isGoogleUser = false.obs;
 late BuildContext contextGlobal;
 bool limitTagbool=false;
 List<String> month = [

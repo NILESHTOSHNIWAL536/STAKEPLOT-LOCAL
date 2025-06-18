@@ -188,6 +188,7 @@ void getUserInfomations() async {
     userAvatarBackGround.value = obj['avatarBackGround'] ?? "#FA7070";
     interestedTags.value = obj['interestedTags'] ?? [];
     maskedName.value = obj['maskedName'] ?? "";
+    isGoogleUser.value = obj['isGoogleUser'] ?? false;
 
     List s = obj['accounts'];
     income.value = 0;

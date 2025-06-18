@@ -27,11 +27,9 @@ import 'package:flutter_application_code_stakeplot/finvu_screens/LinkingAccount.
 
 void clearStack(BuildContext context) {
   try {
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
   } catch (e) {
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
   }
 }
 
